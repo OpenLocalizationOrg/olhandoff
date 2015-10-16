@@ -1,46 +1,46 @@
-ms.ContentId: C2593EA1-B182-4C71-8504-49691F619158
-title: Step 1: Make sure your machine is compatible
+MS. ContentId: C2593EA1-B182-4C71-8504-49691F619158
+Titel: Schritt 1: Stellen Sie sicher, dass Ihr Computer kompatibel ist
 
-##Operating System Compatibility
+##Betriebssystemkompatibilität
 
-The Hyper-V role can only be installed on the Pro, Enterprise and Education editions of Windows 10.
-If you are using the Home, Mobile or Mobile Enterprise edition of Windows 10, the Hyper-V role cannot be used.
-Windows 10 Home edition can be upgraded to Windows 10 Professional.
-To do so open up settings > Update and Security > Activation.
-Here you can visit the store and purchase an upgrade.
+Hyper-V-Rolle kann nur in den Editionen Pro, Enterprise und Ausbildung von 10 für Windows installiert werden.
+Wenn Sie die Homepage, Mobil oder Mobile Enterprise Edition von Windows 10 verwenden, kann Hyper-V-Rolle verwendet werden.
+10 Home Edition kann auf Windows 10 Professional aktualisiert werden.
+Dazu öffnen Sie die Einstellungen > Update und Sicherheit > Aktivierung.
+Hier können Sie den Store besuchen und ein Upgrade erwerben.
 
-##Hardware Compatibility
+##Hardwarekompatibilität
 
-While this document will not provide a complete list of Hyper-V compatible hardware the following items are necessary:
+Während dieses Dokuments keine vollständige Liste der Hyper-V-kompatible Hardware bereitstellen, sind die folgenden Elemente erforderlich:
 
-- 64-bit Processor with Second Level Address Translation (SLAT).
-- VM Monitor Mode Extension must be present.
-- Minimum of 4 GB memory, however because virtual machines will share this memory with the Hyper-V host, you will want to provide enough memory to handle the expected virtual workload.
+- 64-Bit-Prozessor mit Second Level-Adressübersetzung (SLAT).
+- VM-Monitor-Modus-Erweiterung muss vorhanden sein.
+- Mindestens 4 GB Arbeitsspeicher, doch da virtuelle Computer mit Hyper-V-Hosts dieser Arbeitsspeicher freigibt, Bereitstellen von ausreichend Arbeitsspeicher, um die erwartete virtuellen Arbeitslast zu bewältigen.
 
-The following items will need to be enabled in the system bios:
-- Virtualization
+Die folgenden Elemente müssen im Bios aktiviert sein:
+- Virtualisierung
     
-- Data Execution Prevention
+- Datenausführungsverhinderung
 
-##Verify Hardware Compatibility
+##Prüfen der Hardwarekompatibilität
 
-To verify compatibly, open up PowerShell or a command prompt (cmd.exe) and type `systeminfo.exe`.
-This will return information about Hyper-V compatibility.
-If all listed item have a value of ‘Yes’ your system can run the Hyper-V role.
-If any item returns ‘No’, check the requirements listed in this document and make adjustments where possible.
+Um die Anwendungskompatibilität zu überprüfen, Öffnen von PowerShell oder eine Befehlszeile (cmd.exe), geben `systeminfo.exe`.
+Dies gibt Informationen zur Kompatibilität von Hyper-V zurück.
+Wenn alle Artikel aufgeführten Wert "Yes" kann Hyper-V-Rolle auf Ihrem System ausgeführt.
+Wenn ein Element auf "Nein" zurückgibt, überprüfen Sie die in diesem Dokument aufgeführten Anforderungen und nehmen Sie Anpassungen vor, soweit möglich.
 
 ![](media/SystemInfo_upd.png)
 
-##Existing Hyper-V Host
+##Vorhandene Hyper-V-Host
 
-If you run systeminfo.exe on an existing Hyper-V host, the Hyper-V Requirements section will read:
+Wenn systeminfo.exe über einen vorhandenen Hyper-V-Host ausgeführt wird, liest der Anforderungen für Hyper-V-Abschnitt:
 
-```Hyper-V Requirements: A hypervisor has been detected.
-Features required for Hyper-V will not be displayed.```
+'''Hyper-V-Anforderungen: ein Hypervisor erkannt wurde.
+Features erforderlich für Hyper-V nicht angezeigt werden. ""
 
-##Next Step:
+##Nächster Schritt:
 
-[Step 2: Install Hyper-V](walkthrough_install.md)
+[Schritt 2: Installieren der Hyper-V](walkthrough_install.md)
 
 
 

@@ -1,76 +1,76 @@
-ms.ContentId: 7561B149-A147-4F71-9840-6AE149B9DED5
-title: Supported Windows Guest Operating Systems
+MS. ContentId: 7561B149-A147-4F71-9840-6AE149B9DED5
+Titel: unterstützte Windows-Gastbetriebssysteme
 
 
-#Supported Windows guests
+#Unterstützte Windows-Gäste
 
-This article lists the Windows operating systems supported as guests in Hyper-V on Windows, as well provides information about integration services.
-
-
-> Windows 10 runs as a guest operating system on Windows 8.1 and Windows Server 2012 R2 Hyper-V hosts.
-
-##What does support mean?
-
-Support means Microsoft has tested these host/guest combinations.
-Issues with these combinations may receive attention from Product Support Services.
-
-Microsoft provides support for guest operating systems in the following manner:
-* Issues found in Microsoft operating systems and in integration services are supported by Microsoft support.
-* For issues found in other operating systems that have been certified by the operating system vendor to run on Hyper-V, support is provided by the vendor.
-* For issues found in other operating systems, Microsoft submits the issue to the multi-vendor support community, [TSANet](http://www.tsanet.org/).
-
-##What are integration services and why do they matter?
-
-Hyper-V includes integration services for supported guest operating systems.
-Integration services improve interaction between the host system and the virtual machine.
+Dieser Artikel enthält die Windows-Betriebssysteme als Gäste in Hyper-V unter Windows unterstützt, sowie Informationen über Integrationsservices.
 
 
+> Windows-10 wird als Gast-Betriebssystem auf Windows 8.1 und Windows Server 2012 R2 Hyper-V-Hosts.
 
-Some operating systems (including different versions of Windows) have the integration services built-in, while others provide integration services through Windows Update.
+##Was bedeutet unterstützt?
 
-##Supported Windows Server guest operating systems
+Unterstützung bedeutet, dass dieser Host/Gast-Kombinationen von Microsoft getestet wurde.
+Probleme mit diesen Kombinationen möglicherweise Aufmerksamkeit von Product Support Services.
 
-For Windows 10 Hyper-V Hosts:
+Microsoft bietet Unterstützung für Gastbetriebssysteme auf folgende Weise:
+* Der Microsoft-Support hilft beim Lösen von Problemen in Microsoft-Betriebssystemen und -Integrationsdiensten.
+* Für Probleme in anderen Betriebssystemen, die vom Anbieter des Betriebssystems für die Ausführung unter Hyper-V zertifiziert wurden, wird der Support vom Anbieter geleistet.
+* Informationen zu Problemen, die in anderen Betriebssystemen gefunden werden, sendet Microsoft das Problem mit der Community Unterstützung verschiedener Hersteller [TSANet](http://www.tsanet.org/).
+
+##Was sind die Integrationsdienste, und warum sind sie wichtig?
+
+Hyper-V umfasst die Integrationsdienste für unterstützte Gastbetriebssysteme.
+Integrationsservices verbessern die Interaktion zwischen dem Hostsystem und dem virtuellen Computer.
 
 
-| Guest operating system| Maximum number of virtual processors| Integration Services| Notes| |
+
+Einige Betriebssysteme (einschließlich der verschiedene Versionen von Windows) haben den Integrationsservices integriert, während andere Integrationsservices über Windows Update zur Verfügung stellen.
+
+##Unterstützte Gastbetriebssysteme für Windows Server
+
+Windows-10-Hyper-V-Hosts:
+
+
+| Gastbetriebssystem| Maximale Anzahl virtueller Prozessoren| Integration Services| Hinweise| |
 | -----                                | -----                                     | -----                     | -----     | ----- |
-| Windows Server Technical Preview| 64| Built-in| | | |
-| Windows Server 2012 R2| 64| Built-in| | | |
-| Windows Server 2012| 64| Built-in| | | |
-| Windows Server 2008 R2 with Service Pack 1 (SP 1)| 64| Install the integration services after you set up the operating system in the virtual machine.| Datacenter, Enterprise, Standard and Web editions.| |
-| Windows Server 2008 with Service Pack 2 (SP 2)| 4| Install the integration services after you set up the operating system in the virtual machine.| Datacenter, Enterprise, Standard and Web editions (32-bit and 64-bit).| |
-| Windows Home Server 2011| 4| Install the integration services after you set up the operating system in the virtual machine.| |
-| Windows Small Business Server 2011| Essentials edition - 2, Standard edition - 4| Install the integration services after you set up the operating system in the virtual machine.| Essentials and Standard editions.| |
+| Windows Server Technical Preview| 64| Integrierte| | | |
+| Windows Server 2012 R2| 64| Integrierte| | | |
+| Windows Server 2012| 64| Integrierte| | | |
+| Windows Server 2008 R2 mit Service Pack 1 (SP 1)| 64| Installieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Datacenter, Enterprise, Standard und Web Edition.| |
+| Windows Server 2008 mit Service Pack 2 (SP 2)| 4| Installieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Datacenter, Enterprise, Standard und Web Edition (32-Bit und 64-Bit).| |
+| Windows Home Server 2011| 4| Installieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| |
+| Windows Small Business Server 2011| Essentials Edition - 2, Standard Edition - 4| Installieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Essentials und Standard Edition.| |
 
-##Supported Windows guest operating systems
+##Unterstützte Windows-Gastbetriebssysteme
 
-For Windows 10 Hyper-V Hosts:
+Windows-10-Hyper-V-Hosts:
 
-| Guest operating system| Maximum number of virtual processors| Integration Service| Notes| |
+| Gastbetriebssystem| Maximale Anzahl virtueller Prozessoren| Integrationsservice| Hinweise| |
 | ----- | ----- | ----- | ----- | ----- |
-| Windows 10| 32| Built-in| | |
-| Windows 8.1| 32| Built-in| | |
-| Windows 8| 32| Upgrade the integration services after you set up the operating system in the virtual machine.| | |
-| Windows 7 with Service Pack 1 (SP 1)| 4| Upgrade the integration services after you set up the operating system in the virtual machine.| Ultimate, Enterprise, and Professional editions (32-bit and 64-bit).| |
-| Windows 7| 4| Upgrade the integration services after you set up the operating system in the virtual machine.| Ultimate, Enterprise, and Professional editions (32-bit and 64-bit).| |
-| Windows Vista with Service Pack 2 (SP2)| 2| Install the integration services after you set up the operating system in the virtual machine.| Business, Enterprise, and Ultimate, including N and KN editions.| |
- Windows 10 is a guest operating system on Windows 8.1 and Windows Server 2012 R2 Hyper-V hosts.
+| Windows-10| 32| Integrierte| | |
+| Windows 8.1| 32| Integrierte| | |
+| Windows 8| 32| Aktualisieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| | |
+| Windows 7 mit Service Pack 1 (SP 1)| 4| Aktualisieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Ultimate, Enterprise und Professional Edition (32-Bit und 64-Bit).| |
+| Windows 7| 4| Aktualisieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Ultimate, Enterprise und Professional Edition (32-Bit und 64-Bit).| |
+| Windows Vista mit Service Pack 2 (SP2)| 2| Installieren Sie die Integrationsdienste, nachdem Sie das Betriebssystem auf dem virtuellen Computer eingerichtet haben.| Business, Enterprise und Ultimate einschließlich N- und KN-Editionen.| |
+ Windows-10 ist ein Gastbetriebssystem auf Windows 8.1 und Windows Server 2012 R2 Hyper-V-Hosts.
 
-##Linux and Free BSD
+##Linux und kostenlose BSD
 
-For Windows 10 Hyper-V Hosts:
+Windows-10-Hyper-V-Hosts:
 
-| Guest operating system| |
+| Gastbetriebssystem| |
 | -----|------|
-| [CentOS and Red Hat Enterprise Linux ](https://technet.microsoft.com/library/dn531026.aspx)| |
-| [Debian virtual machines on Hyper-V](https://technet.microsoft.com/library/dn614985.aspx)| |
+| [CentOS und Red Hat Enterprise Linux ](https://technet.microsoft.com/library/dn531026.aspx)| |
+| [Debian virtuelle Computer in Hyper-V](https://technet.microsoft.com/library/dn614985.aspx)| |
 | [SUSE](https://technet.microsoft.com/en-us/library/dn531027.aspx)| |
 | [Oracle Linux](https://technet.microsoft.com/en-us/library/dn609828.aspx)| |
 | [Ubuntu](https://technet.microsoft.com/en-us/library/dn531029.aspx)| |
 | [FreeBSD](https://technet.microsoft.com/library/dn848318.aspx)| |
-There are caveats around specific kernel versions.
-For more information, including support information on past versions of Hyper-V, see [Linux and FreeBSD Virtual Machines on Hyper-V](https://technet.microsoft.com/library/dn531030.aspx).
+Vorsichtsmaßnahmen, um bestimmte Kernel-Versionen sind.
+Weitere Informationen, einschließlich Supportinformationen zu früheren Versionen von Hyper-V, finden Sie unter [Linux und FreeBSD virtuellen Maschinen auf Hyper-V-](https://technet.microsoft.com/library/dn531030.aspx).
 
 
 

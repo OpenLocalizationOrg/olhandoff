@@ -1,48 +1,48 @@
-ms.ContentId: fbd49f81-b6cb-4030-9296-413d68a9428f
-title: Container Ecosystem
+MS. ContentId: fbd49f81-b6cb-4030-9296-413d68a9428f
+Titel: Container Ökosystem
 
-#Building a Container Ecosystem
+#Erstellen ein Container-Ökosystem
 
-To understand why building a container ecosystem is so important, let's first talk about Docker.
+Um zu verstehen, warum ein Ökosystem Container erstellen so wichtig ist, zunächst sprechen wir über Docker.
 
-##Docker’s Appeal
+##Docker der Beschwerde
 
-The concept of containers (namespace isolation and resource governance) has been around for a long time, going back to BSD Jails, Solaris Zones and the basic UNIX chroot (change root) mechanism.
-What Docker has done is provide a common toolset, packaging model, and deployment mechanism.
-By doing so, Docker greatly simplified the containerization and distribution of applications.
-Those applications can then run anywhere on any Linux host, a capability we're providing on Windows as well.
+Das Konzept von Containern (Namespace Isolierung und Ressource Governance) wurde für lange Zeit schon zurückgehen BSD Jails, Solaris-Zonen und der grundlegenden UNIX Chroot (Change-Stamm)-Mechanismus.
+Also Docker ist ein gemeinsamer Satz von Tools, Paketerstellungsmodell und Bereitstellungsmechanismus bereitzustellen.
+Auf diese Weise vereinfacht Docker erheblich die Containerization und die Verteilung von Clientanwendungen.
+Diese Anträge können dann an einer beliebigen Stelle auf einem Linux-Host eine Funktion ausführen, die wir unter Windows als auch bereitstellen.
 
-This ubiquitous technology not only simplifies management by offering the same management commands against any host, it also creates a unique opportunity for seamless DevOps.
+Diese weit verbreitete Technologie vereinfacht nicht nur die Verwaltung von bietet die gleichen Management-Befehle für alle Hosts, erstellt auch eine einmalige Gelegenheit für eine nahtlose DevOps.
 
-From a developer’s desktop to a testing machine to a set of production machines, a Docker image can be created that will deploy identically across any environment in seconds.
-This story has created a massive and growing ecosystem of applications packaged in Docker containers, with DockerHub, the public containerized-application registry that Docker maintains.
+Ein Entwickler den Desktop an einen Computer testen, auf einen Satz von Produktionscomputer, ein Docker Bild erstellt werden kann, die in Sekunden genauso wie in jeder Umgebung bereitgestellt wird.
+Dieser Artikel hat eine massive erstellt und wachsenden Ökosystem von Clientanwendungen verpackt in Docker-Containern mit DockerHub, öffentliche Containern Anwendung Registrierung, die Docker verwaltet.
 
-Docker provides a great foundation for development.
+Docker bietet eine großartige Grundlage für die Entwicklung.
 
-Now let's talk about that ecosystem of applications and how you can build on Docker concepts to create a development and deployment workflow suited to your needs.
+Jetzt sehen wir reden, Ökosystem Anwendungstypen und wie Sie Docker Konzepte zum Erstellen eines Workflows für Entwicklung und Bereitstellung erstellen können an Ihre Bedürfnisse geeignet ist.
 
 
-##Components in a container ecosystem
+##Komponenten in einem Container-Ökosystem
 
-Windows Server Containers are a key component of a large container ecosystem.
-We’re working across the industry to deliver developer choice at each layer of the solution stack.
+Windows Server-Container sind ein wesentlicher Bestandteil einer großen Container-Ökosystem.
+Wir arbeiten in der gesamten Branche Developer Wahl auf jeder Ebene des Stapels Lösung bereitstellen.
 
-The container ecosystem provides ways to manage containers, share containers and develop apps that run in containers.
+Das Container-Ökosystem bietet Methoden zum Container verwalten, Freigeben von Containern und Entwickeln von apps, die in Containern ausgeführt.
 
 ![](media/containerEcosystem.png)
 
 
-Microsoft wants to empower developer choice and productivity as they build these next-gen apps.
-Our goal is to fuel developer productivity which means enabling applications to target any Microsoft cloud without having to modify, rewrite, or reconfigure code.
+Microsoft möchte Developer-Auswahl und Produktivität zu ermöglichen, während sie diese apps der nächsten Generation erstellen.
+Unser Ziel ist es, Treibstoff Entwicklerproduktivität, d. ermöglichen des Anwendungszugriffs h. auf die Cloud von Microsoft ohne ändern, schreiben oder neu konfigurieren, Code als Ziel.
 
-Microsoft is committed to being open and ecosystem friendly.
-We actively support the coming together of multiple developer ecosystems of interest – such as Windows and Linux – to drive innovation.
+Microsoft ist bestrebt, die geöffnet wird und das Ökosystem Anzeigenamen.
+Die Einführung von mehrere Entwickler Ökosysteme von Interesse – wie Windows und Linux – Innovationen zusammen unterstützt aktiv.
 
-Over the coming months, we will be providing more information about additional partners in this developing ecosystem.
+In den nächsten Monaten werden weitere Informationen zu zusätzlichen Partnern in dieser Entwicklung Ökosystem bietet.
 
 -------------------
 
-[Back to Container Home](../containers_welcome.md)
+[Zurück zur Startseite von Container](../containers_welcome.md)
 
 
 

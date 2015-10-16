@@ -1,37 +1,37 @@
 #HypeV
 
-##[EULA](EULA.md)
+##[EULA] (EULA.md)
 
-##About
+##Informationen zu
 
-###[about overview](about/about_overview.md)
+###[zu Overview] (about/about_overview.md)
 
-###[container ecosystem](about/container_ecosystem.md)
+###[Container Ökosystem] (about/container_ecosystem.md)
 
-###[faq](about/faq.md)
+###[faq] (about/faq.md)
 
-###[work in progress](about/work_in_progress.md)
+###[In Bearbeitung] (about/work_in_progress.md)
 
-##Quick Start
+##Schnellstart
 
-###[azure setup](quick_start/azure_setup.md)
+###[Azure Setup] (quick_start/azure_setup.md)
 
-###[container setup](quick_start/container_setup.md)
+###[Container Setup] (quick_start/container_setup.md)
 
-###[inplace setup](quick_start/inplace_setup.md)
+###[Inplace Setup] (quick_start/inplace_setup.md)
 
-###[manage docker](quick_start/manage_docker.md)
+###[verwalten Sie Docker] (quick_start/manage_docker.md)
 
-###[manage powershell](quick_start/manage_powershell.md)
+###[Verwalten von Powershell] (quick_start/manage_powershell.md)
 
-###[quickstart](quick_start/quickstart.md)
+###[Schnellstart] (quick_start/quickstart.md)
 
-##Reference
+##Verweis
 
-###[app compat](reference/app_compat.md)
+###[app Compat] (reference/app_compat.md)
 
-###[powershell overview](reference/powershell_overview.md)
+###[Powershell Overview] (reference/powershell_overview.md)
 
-###[ps docker comparison](reference/ps_docker_comparison.md)
+###[Ps Docker Vergleich] (reference/ps_docker_comparison.md)
 
 

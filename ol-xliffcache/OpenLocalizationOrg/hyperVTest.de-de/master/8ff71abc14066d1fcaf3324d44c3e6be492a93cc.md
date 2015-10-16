@@ -1,85 +1,85 @@
-ms.ContentId: 44b138bb-962f-4474-a0c4-284646a872e2
-title: Setup Windows Containers in place
+MS. ContentId: 44b138bb-962f-4474-a0c4-284646a872e2
+Titel: Setup Windows-Containern vorhanden
 
-#Preparing a physical machine or an existing virtual machine for Windows Server Containers
+#Vorbereiten von einem physischen Computer oder einem vorhandenen virtuellen Computer für Windows Server-Container
 
-In order to create and manage Windows Server Containers, the Windows Server 2016 Technical Preview environment must be prepared.
-This guide will walk through configuring Windows Server Containers on bare metal or in an existing virtual machine running Windows Server 2016 Technical Preview.
+Zum Erstellen und Verwalten von Windows Server-Container, muss die Technologievorschau der Windows Server 2016 Umgebung vorbereitet werden.
+Dieses Handbuch führt durch die Konfiguration von Windows Server-Container auf bare-Metal- oder in einem vorhandenen virtuellen Computer unter Windows Server 2016 Technical Preview.
 
 
-> Other getting started guides:
-* Run Windows Server Containers in [Azure](./azure_setup.md).
-* Run Windows Server Containers in [a new Hyper-V VM](./container_setup.md).
+> Handbücher mit anderen ersten Schritten:
+* Führen Sie im Windows Server-Container [Azure](./azure_setup.md).
+* Führen Sie im Windows Server-Container [eine neue Hyper-V-VM](./container_setup.md).
     
-    **PLEASE READ PRIOR TO INSTALLING THE CONTAINER OS IMAGE:**  The license terms of the Microsoft Windows Server Pre-Release software (“License Terms”) apply to your use of the Microsoft Windows Container OS Image supplement (the “supplemental software).
-    By downloading and using the supplemental software, you agree to the License Terms, and you may not use it if you have not accepted the License Terms.
-    Both the Windows Server Pre-Release software and the supplemental software are licensed by Microsoft Corporation.
+    **Bitte lesen Sie vor dem Installieren der CONTAINER BETRIEBSSYSTEMABBILD:**  dem Lizenzvertrag von Microsoft Windows Server-Vorabversion der Software ("Lizenzbedingungen") für die Verwendung des Microsoft Windows-Container-Betriebssystemabbild Zusatzes ("zusätzliche Software) anwenden.
+    Durch Herunterladen und verwenden die Zusatzsoftware, stimmen Sie dem Lizenzvertrag und können Sie nicht verwenden, wenn Sie dem Lizenzvertrag nicht akzeptiert haben.
+    Windows Server-Vorabversion der Software und die Zusatzsoftware werden von der Microsoft Corporation lizenziert.
     
 
 
-**System (or VM) requirements:**
-* System running Windows Server Technical Preview 3 Server Core.
-* 10GB available storage for OS Base Image and setup scripts.
-* Administrator permissions on the machine or VM.
+**Anforderungen für System (oder virtuelle Computer):**
+* Unter Windows Server Technical Preview 3 Server Core-System.
+* 10GB Speicherplatz für OS-Basis-Image und die Setup-Skripts.
+* Administratorberechtigungen auf dem Computer oder den virtuellen Computer.
 
-##Setup an existing Virtual Machine or Bare Metal host for Containers
+##Setup einen vorhandenen virtuellen Maschine oder Bare-Metal-Host für Container
 
-Windows Server Containers require the Container OS Base Image.
-We have put together a script that will download and install this for you.
-Follow these steps to configure your system as a Windows Server Container Host.
+Windows Server-Container erfordern das Container-Betriebssystemabbild Base.
+Wir haben ein Skript zusammengestellt, die heruntergeladen und installiert diese für Sie.
+Führen Sie diese Schritte, um die Konfiguration Ihres Systems als Host für Windows Server-Container.
 
-Start a PowerShell session as administrator.
-This can be done by running the following command from the command line.
+Starten einer PowerShell-Sitzungs als Administrator an.
+Dies kann erfolgen, indem Sie den folgenden Befehl von der Befehlszeile aus ausführen.
 
 ``` powershell
 powershell.exe
 ```
 
-Make sure the title of the windows is "Administrator: Windows PowerShell".
-If it does not say Administrator, run this command to run with admin priveledges:
+Stellen Sie sicher, dass der Titel des Windows "Administrator: Windows PowerShell".
+Wenn sie Administrator nicht dazu aufgefordert werden, führen Sie diesen Befehl mit Admin-Berechtigungen ausgeführt:
 
 ``` powershell
 start-process powershell -Verb runas
 ```
 
-Use the following command to download the setup script.
-The script can also be manually downloaded from this location - [Configuration Script](http://aka.ms/setupcontainers).
+Verwenden Sie den folgenden Befehl aus, um das Setup-Skript herunterzuladen.
+Das Skript kann auch manuell heruntergeladen werden von diesem Speicherort - [-Konfigurationsskript](http://aka.ms/setupcontainers).
 
 ``` PowerShell
 wget -uri https://aka.ms/setupcontainers -OutFile C:\ContainerSetup.ps1
 ```
 
- After the download completes, execute the script.
+ Nachdem der Download abgeschlossen ist, führen Sie das Skript.
 ``` PowerShell
 C:\ContainerSetup.ps1
 ```
 
-The script will then begin to download and configure the Windows Server Container components.
-This process may take quite some time due to the large download.
-The machine may reboot during the process.
-When finished your machine will be configured and ready for you to create and manage Windows Server Containers and Windows Server Container Images with both PowerShell and Docker.
+Das Skript beginnt dann herunterladen und konfigurieren die Komponenten der Windows Server-Container.
+Dieser Vorgang kann einige Zeit aufgrund der großen Download dauern.
+Der Computer kann während des Vorgangs neu gestartet.
+Wenn Sie fertig ist, wird der Computer konfiguriert werden und für Sie erstellen und Verwalten von Windows Server-Container und Windows Server-Container-Images mit PowerShell und Docker.
 
 
- With these items completed your system should be ready for Windows Server Containers.
+ Mit diesen Elementen abgeschlossen sollte Ihr System für die Windows Server-Container bereit.
 
 
 
-##Next Steps - Start Using Containers
+##Nächste Schritte – starten Sie mithilfe von Containern
 
-Now that you are running Windows Server Containers, jump to the following guides to begin working with Windows Server Containers and Windows Server Container images.
-
-
-[Quick Start: Windows Server Containers and Docker](./manage_docker.md)
+Nun, dass Sie Windows Server-Container ausgeführt werden, wechseln Sie zu den folgenden Handbüchern zum Arbeiten mit Bildern von Containern für Windows Server und Windows Server-Container.
 
 
-[Quick Start: Windows Server Containers and PowerShell](./manage_powershell.md)
+[Schnellstart: Windows Server-Container und Docker](./manage_docker.md)
+
+
+[Schnellstart: Windows Server-Container und PowerShell](./manage_powershell.md)
 
 
 -------------------
 
 
-[Back to Container Home](../containers_welcome.md)  
-[Known Issues for Current Release](../about/work_in_progress.md)
+[Zurück zur Startseite von Container](../containers_welcome.md)  
+[Bekannte Probleme bei der aktuellen Version](../about/work_in_progress.md)
 
 
 

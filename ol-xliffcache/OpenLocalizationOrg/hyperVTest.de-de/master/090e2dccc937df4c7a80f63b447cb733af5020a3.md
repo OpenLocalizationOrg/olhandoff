@@ -1,99 +1,99 @@
-ms.ContentId: 5bbac9eb-c31e-40db-97b1-f33ea59ac3a3
-title: Work in Progress
+MS. ContentId: 5bbac9eb-c31e-40db-97b1-f33ea59ac3a3
+Titel: In Bearbeitung
 
-#Work in Progress
+#In Bearbeitung
 
-If you don't see your problem addressed here or have questions, post them on the [forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+Wenn Sie keine finden Sie Ihr Problem hier behandelt oder Fragen haben, stellen Sie sie auf die [Forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
 -----------------------
 
 
-##General functionality
+##Allgemeine Funktionen
 
-###Windows Container Image must exactly match container host
+###Windows-Container-Abbild muss genau mit dem Container Host übereinstimmen.
 
-A Windows Server Container requires an operating system image that matches the container host in respect to build and patch level.
-A mismatch will lead to instability and or unpredictable behavior for the container and/or the host.
+Ein Windows Server-Container erfordert ein Betriebssystemabbild, die den Host Container in Bezug zum Erstellen und Patchen Ebene entspricht.
+Ein Konflikt führen zu Systeminstabilität und oder unvorhersehbaren Verhalten für den Container bzw. den Host.
 
-If you install updates against the Windows container host OS you will need to update the container base OS image to have the matching updates.
-
-
-**Work Around:**   
-Download and install a container base image matching the OS version and patch level of the container host.
+Wenn Sie Updates für die Windows-Container Hostbetriebssystem installieren, die können, Sie den Container Basis aktualisieren müssen, aktualisiert Betriebssystemabbild auf dem entsprechenden.
 
 
-###Commands sporadically fail -- try again
-
-In our testing, commands occasionally need to be run multiple times.
-The same principle applies to other actions.
-For example, if you create a new file and it doesn't appear, try touching the file.
+**Zu umgehen:**   
+Herunterladen und Installieren eines Container-Basisabbilds Abgleich der Betriebssystemebene und Patchebene des Container-Hosts.
 
 
+###Sporadisch Befehle fehlschlagen – versuchen Sie es erneut
 
-If you have to do this, let us know via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
-
-** Work Around:  **  
-Build scripts such that they try commands multiple times.
-If a command fails, try again.
+Bei unseren Tests Befehle gelegentlich mehrere Male ausgeführt werden müssen.
+Das gleiche Prinzip gilt für andere Aktionen.
+Wenn Sie eine neue Datei erstellen nicht angezeigt wird, führen Sie z. B. berührt die Datei.
 
 
 
-###All non-C:/ drives are automatically mapped into new containers
+Wenn Sie dies durchführen müssen, lassen Sie uns wissen über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
-All non-C:/ drives available to the container host are automatically mapped into new running Windows Server Containers.
-
-At this point in time there is no way to selectively map folders into a container, as an interim work around drives are mapped automatically.
-
-**Work Around: **  
-We're working on it.
-In the future there will be folder sharing.
+** Zu umgehen: **  
+Erstellen Sie Skripts so, dass diese Befehle mehrere Male versuchen.
+Wenn ein Befehl fehlschlägt, versuchen Sie es erneut.
 
 
-###Windows Server Containers are starting very slowly
 
-If your container is taking more than 30 seconds to start, it may be performing many duplicate virus scans.
+###Alle nicht-C: / Laufwerke automatisch in den neuen Container zugeordnet sind
 
-Many anti-malware solutions, such as Windows Defender, maybe unnecessarily scanning files with-in container images including all of the OS binaries and files in the container OS image.
-This occurs when ever a new container is created and from the anti-malware’s perspective all of the “container’s files” look like new files that have not previously been scanned.
-So when processes inside the container attempt to read these files the anti-malware components first scan them before allowing access to the files.
-In reality these files were already scanned when the container image was imported or pulled to the server.
-In future previews new infrastructure will be in place such that anti-malware solutions, including Windows Defender, will be aware of these situations and can act accordingly to avoid multiple scans.
+Alle nicht-C: / Laufwerke zur Verfügung, mit dem Host Container automatisch in neue ausgeführten Windows Server-Container zugeordnet.
+
+Zu diesem Zeitpunkt besteht keine Möglichkeit, selektiv Ordner in einem Container zugeordnet, wie eine vorläufige Umgehung Laufwerke werden automatisch zugeordnet.
+
+** Zu umgehen: **  
+Wir arbeiten auf.
+Die zukünftige dort werden Ordner frei.
+
+
+###Windows Server-Container werden nur sehr langsam gestartet.
+
+Wenn Ihr Container zu mehr als 30 Sekunden dauert, möglicherweise viele doppelte Virenscans ausführen werden.
+
+Viele Anti-Malware-Lösungen, wie z. B. Windows Defender, vielleicht Dateien mit-in Container Bilder, einschließlich aller OS-Binärdateien und Dateien im Container Betriebssystemabbild unnötigerweise scannen.
+Dieser Fehler tritt bei jedem ein neuer Container erstellt wird und hinsichtlich der Anti-Malware Aussehen aller Dateien"des Containers" neue Dateien, die zuvor noch nicht gescannt.
+Also wenn Prozesse innerhalb des Containers versuchen, diese Dateien lesen Scannen Antimalware-Komponenten zuerst diese vor dem Zugriff auf die Dateien.
+In Wirklichkeit wurden diese Dateien bereits gescannt, wenn das Container-Bild importiert oder an den Server abgerufen wurde.
+In Zukunft wird neue Vorschau-Infrastruktur vorhanden sein, dass Antimalware-Lösungen, einschließlich Windows Defender, werden diese Situationen kennen und entsprechend vorgehen können, um mehrere Scans zu vermeiden.
 
 
 --------------------------
 
 
-##Networking
+##Netzwerk
 
-###Number of network compartments per container
+###Anzahl der Netzwerk-Depots pro container
 
-In this release we support one network compartment per container.
-This means that if you have a container with multiple network adapters, you cannot access the same network port on each adapter (e.g. 192.168.0.1:80 and 192.168.0.2:80 belonging to the same container).
+In dieser Version wird ein Netzwerk Depot pro Container unterstützt.
+Dies bedeutet, dass wenn Sie einen Container mit mehreren Netzwerkadaptern verfügen, den gleichen Netzwerkport für die einzelnen Adapter zugreifen kann (z. B. 192.168.0.1:80 und 192.168.0.2:80, die auf den gleichen Container gehört).
 
-**Work Around: **  
-If multiple endpoints need to be exposed by a container, use NAT port mapping.
+** Zu umgehen: **  
+Wenn mehrere Endpunkte von einem Container verfügbar gemacht werden müssen, verwenden Sie die NAT-Port-Zuordnung.
 
-###Windows containers are not getting IPs
+###Windows-Container werden IP-Adressen nicht abrufen.
 
-If you're connecting to the windows server containers with DHCP VM Switches it's possible for the container host to recieve an IP wwhile the containers do not.
+Wenn Sie auf die Windows Server-Container mit DHCP-VM-Switches herstellen ist es für den Container-Host eine IP-Wwhile empfangen, die Container nicht, möglich.
 
-The containers get a 169.254.***.*** APIPA IP address.
+Der Container eine 169.254. abgerufen werden.***. *** APIPA IP-Adresse.
 
-**Work around:**
-This is a side effect of sharing the kernel.
-All containers affectively have the same mac address.
+**Zu umgehen:**
+Dies ist ein Nebeneffekt den Kernel freigeben.
+Alle Container haben affectively dieselbe Mac-Adresse.
 
-Enable MAC address spoofing on the container host.
+Aktivieren Sie auf dem Host Container spoofing von MAC-Adresse.
 
-This can be achieved using PowerShell
+Dies kann erreicht werden mithilfe von PowerShell
 ```
 Get-VMNetworkAdapter -VMName "[YourVMNameHere]"  | Set-VMNetworkAdapter -MacAddressSpoofing On
 ```
 
-###Creating file shares does not work in a Container
+###Erstellen von Dateifreigaben funktioniert nicht in einem Container
 
-Currently it is not possible to create a file share within a Container.
-If you run `net share` you will see an error like this:
+Derzeit ist es nicht möglich, eine Dateifreigabe in einem Container zu erstellen.
+Wenn das Ausführen `net Share` erhalten Sie eine Fehlermeldung wie folgt:
 
 ```
 The Server service is not started.
@@ -107,9 +107,9 @@ A service specific error occurred: 2182.
 More help is available by typing NET HELPMSG 3547.
 ```
 
-**Work Around: **
-If you want to copy files into a Container you can use the other way round by running `net use` within the Container.
-For example:
+** Zu umgehen: **
+Sie ggf. zum Kopieren von Dateien in einen Container können umgekehrt round durch Ausführen von `net Use` innerhalb des Containers.
+Beispiel:
 
 ```
 net use S: \\your\sources\here /User:shareuser [yourpassword]
@@ -118,139 +118,139 @@ net use S: \\your\sources\here /User:shareuser [yourpassword]
 --------------------------
 
 
-##Application compatibility
+##Anwendungskompatibilität
 
-There are so mnay questions about which applications work and don't work in Windows Server Containers, we decided to break application compatability information into [its own article](../reference/app_compat.md).
+Sind daher Mnay Fragen dazu, welche Anwendung arbeiten und funktionieren nicht in Windows Server-Container, wir entschieden, Informationen zur Kompatibilität der Anwendung unterbrechen [einen eigenen Artikel](../reference/app_compat.md).
 
-Some of the most common issues are located here as well.
+Einige der häufigsten Probleme befinden sich hier ebenfalls.
 
-###WinRM won't start in a Windows Server Container
+###WinRM wird nicht in einem Windows Server-Container gestartet.
 
-WinRM starts, throws an error, and stops again.
-Errors are not logged in the event log.
+WinRM gestartet wird, löst einen Fehler aus und wieder beendet.
+Fehler werden im Ereignisprotokoll nicht protokolliert.
 
-**Work Around:**
-Use WMI, [RDP](#RemoteDesktopAccessOfContainers), or Enter-PSSession -ContainerID
+**Zu umgehen:**
+Verwenden von WMI, [RDP](#RemoteDesktopAccessOfContainers), oder geben Sie-PSSession - des-Elements
 
-###Can't install ASP.NET 4.5 or ASP.NET 3.5 with IIS in a container using DISM
+###ASP.NET 4.5 oder ASP.NET 3.5 können nicht mit IIS in einem Container mit DISM installiert werden
 
-Installing IIS-ASPNET45 in a container doesn't work inside a Windows Server container.
-The installation progress sticks around 95.5%.
+Installieren von IIS-ASPNET45 in einem Container funktioniert nicht in einem Windows Server-Container.
+Die Installation Fortschritt Sticks rund 95.5 %.
 
 ``` PowerShell
 Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASPNET45
 ```
 
-This fails because ASP.NET 4.5 doesn't run in a container.
+Dies schlägt fehl, da ASP.NET 4.5 nicht in einem Container ausgeführt wird.
 
-**Work Around:**  
-Instead, install the Web-Server role to use IIS.
-ASP 5.0 does work.
+**Zu umgehen:**  
+Installieren Sie stattdessen die Webserverrolle, um IIS zu verwenden.
+ASP 5.0 funktioniert.
 
 
 ``` PowerShell
 Enable-WindowsOptionalFeature -Online -FeatureName Web-Server
 ```
 
-See the [application compatability article](../reference/app_compat.md) for more information about what applications can be containerized.
+Finden Sie die [Anwendungskompatibilität Artikel](../reference/app_compat.md) Weitere Informationen, welche Programme in Containern werden können.
 
 --------------------------
 
 
 
-##Docker management
+##Docker-Verwaltung
 
-###Docker clients unsecured by default
+###Docker-Clients, die nicht standardmäßig gesichert
 
-In this pre-release, docker communication is public if you know where to look.
+In dieser Vorabversion ist Docker Kommunikation öffentlich, wenn Sie wissen, wo Sie suchen.
 
-###Docker commands that don't work with Windows Server Containers
+###Docker-Befehle, die nicht mit Windows Server-Containern funktionieren
 
-Commands known to fail:
+Befehle, die bekanntermaßen fehl:
 
-| **Docker command**| **Where it runs**| **Error**| **Notes**|
+| **Docker-Befehl**| **Bei dem es ausgeführt wird.**| **Fehler**| **Hinweise**|
 |:-----|:-----|:-----|:-----|
-| **docker commit**| image| Docker stops running container and doesn’t show correct error message| Committing a stopped container works.For running containers: We're working on it :)|
-| **docker diff**| daemon| Error: The windows graphdriver does not support Changes()| |
-| **docker kill**| container| Error: Invalid signal: KILL  Error: failed to kill containers:[]| |
-| **docker load**| image| Fails silently| No error but the image isn't loading either|
-| **docker pause**| container| Error: Windows container cannot be paused.May be not supported| |
-| **docker port**| container| | No port is getting listed even we are able to RDP.
-| **docker pull**| daemon| Error: System cannot find the file path.We cant run container using this image.| Image is getting added can't be used.We're working on it :)|
-| **docker restart**| container| Error: A system shutdown is in progress.| |
-| **docker unpause**| container| | Can't test because pause doesn't work yet.|
-If anything that isn't on this list fails (or if a command fails differently than expected), let us know via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+| **Docker Festschreiben**| image| Docker beendet, Container und nicht korrekte Fehlermeldung angezeigt| Ausführen eines Commits für eine beendete Container funktioniert.Für die Ausführung von Containern: Wir arbeiten daran, es :)|
+| **Docker diff**| Daemon| Fehler: Die Windows-Graphdriver Changes() nicht unterstützt| |
+| **Kill docker**| Container| Fehler: Ungültiger Signal: KILL-Fehler: Fehler beim Beenden von Containern:]| |
+| **Docker laden**| image| Im Hintergrund fehlschlägt| Kein Fehler, aber das Abbild nicht entweder geladen.|
+| **Docker anhalten**| Container| Fehler: Windows-Container kann nicht angehalten werden.Möglicherweise wird nicht unterstützt| |
+| **Docker-port**| Container| | Kein Port lautet erste auch wir können RDP.
+| **Docker Abruf**| Daemon| Fehler: Den Pfad nicht System gefunden werden.Wir führen kann-Container, die mit diesem Abbild.| Bild hinzugefügt wird nicht verwendet werden.Wir arbeiten jedoch daran :)|
+| **Docker neu starten**| Container| Fehler: Das Herunterfahren des Systems wird ausgeführt.| |
+| **Docker angehaltenen Status aufzuheben**| Container| | Nicht testen, da anhalten noch funktioniert.|
+Wenn alle Elemente, die nicht in diese fehlschlägt (oder ein Befehl anders als erwartet fehlschlägt), teilen Sie uns Ihre Liste wissen über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
 
 
-###Docker commands that partially work with Windows Server Containers
+###Docker-Befehle, die teilweise mit Windows Server-Container
 
-Commands with partial functionality:
+Befehle mit teilweise Funktionalität:
 
-| **Docker command**| **Runs on...**| **Parameter**| **Notes**|
+| **Docker-Befehl**| **Wird auf wird ausgeführt...**| **Parameter**| **Hinweise**|
 |:-----|:-----|:-----|:-----|
-| **docker attach**| container| --no-stdin=false| The command doesn't exit when Ctrl-P and CTRL-Q is pressed|
-| | | --sig-proxy=true| works|
-| **docker build**| images| -f, --file| Error: Unable to prepare context: Unable to get synlinks|
-| | | --force-rm=false| works|
-| | | --no-cache=false| works|
-| | | -q, --quiet=false| |
-| | | --rm=true| works|
-| | | -t, --tag=""| works|
-| **docker login**| daemon| -e, -p, -u| sporratic behavior|
-| **docker push**| daemon| | Getting occasional "repository does not exit" errors.|
-| **docker rm**| container| -f| Error: A system shutdown is in progress.|
-If anything that isn't on this list fails, if a command fails differently than expected, or if you find a work around, let us know via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+| **Docker anhängen**| Container| --kein Stdin = False| Der Befehl nicht beenden, wenn STRG-P-Q STRG gedrückt wird|
+| | | --Sig-Proxy = True| Works|
+| **Docker erstellen**| Bilder| -f,--Datei| Fehler: Konnte nicht vorbereitet Kontext: konnte nicht abgerufen Synlinks|
+| | | --Force-Rm = False| Works|
+| | | --kein Cache = False| Works|
+| | | -Q,--Quiet = False| |
+| | | --Rm = True| Works|
+| | | -t,--Tag = ""| Works|
+| **Docker Anmeldung**| Daemon| -e, -p, -u| sporratic-Verhalten|
+| **Docker push**| Daemon| | Erste gelegentliche Fehler "Repository ist nicht vorhanden".|
+| **Docker rm**| Container| -f| Fehler: Das Herunterfahren des Systems wird ausgeführt.|
+Wenn alle Elemente, die nicht in dieser Liste schlägt fehl, wenn ein Befehl anders als erwartet ausfällt, oder finden Sie dieses Verhalten umgehen möchten, lassen Sie uns wissen über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
 
-###Pasting commands to interactive Docker session is limited to 50 characters
+###Einfügen von Befehlen zum interaktiven Docker-Sitzung ist auf 50 Zeichen begrenzt.
 
-If you copy a command line into an interactive Docker session, it is currently limited to 50 characters.
-The pasted string is simply truncated.
+Wenn Sie über die Befehlszeile in einer interaktiven Docker Sitzung kopieren, ist es derzeit auf 50 Zeichen begrenzt.
+Die eingefügte Zeichenfolge wird einfach abgeschnitten.
 
-This is not by design, we're working on lifting the restriction.
+Dies ist nicht beabsichtigt, wir arbeiten daran, für die Aufhebung der Einschränkung.
 
-###net use returns System error 1223 instead of prompting for username or password
+###Net Use zurück Systemfehler 1223 Benutzernamens oder Kennworts auffordern, sondern
 
-Workaround: specify both, the username and password, when running net use.
-For example:
+Lösung: Geben Sie an, den Benutzernamen und das Kennwort, wenn net Use ausgeführt.
+Beispiel:
 ```
 net use S: \\your\sources\here /User:shareuser [yourpassword]
 ```
 
-###HCS Shim errors when creating new container images
+###HCS-Shim-Fehler beim Erstellen der neuen Container-images
 
-If you encounter error messages like this:
+Wenn Sie Fehlermeldungen wie folgt auftreten:
 ```
 hcsshim::ExportLayer - Win32 API call returned error r1=2147942523 err=The filename, directory name, or volume label syntax is incorrect. layerId=606a2c430fccd1091b9ad2f930bae009956856cf4e6c66062b188aac48aa2e34 flavour=1 folder=C:\ProgramData\docker\windowsfilter\606a2c430fccd1091b9ad2f930bae009956856cf4e6c66062b188aac48aa2e34-1868857733
 ```
 
-You're hitting an issue addressed by the Zero Day Patch for Windows Server 2016 TP3.
-This error can also occur when running the Python-3.4.3.msi installer or node-v0.12.7.msi in a container.
+Sie haben ein Problem durch die 0 Tage Patch für Windows Server 2016 TP3 drücken.
+Dieser Fehler kann auch auftreten, wenn die Python-3.4.3.msi Installer oder Knoten v0.12.7.msi in einem Container ausgeführt wird.
 
-If you hit other hcsshim errors, let us know via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+Wenn Sie andere Hcsshim Fehler erreicht haben, teilen Sie uns über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
 
-##Accessing windows server container with Remote Desktop
+##Beim Zugriff auf den Windows Server-Container mit Remotedesktop
 
-Windows Server Containers can be managed/interacted with through a RDP session.
+Windows Server-Container kann verwaltet/Interaktion über eine RDP-Sitzung.
 
-The following steps are needed to remotely connect to a Windows Server Container using RDP.
-It is assumed that the Container is connected to the network via a NAT switch.
-This is the default when setting up a Container host through the installation script or creating a new VM in Azure.
+Die folgenden Schritte sind erforderlich, Remoteverbindung mit einem Windows Server-Container mit RDP.
+Es wird vorausgesetzt, dass der Container mit dem Netzwerk über einen NAT-Switch verbunden ist.
+Dies ist die Standardeinstellung, bei der Einrichtung eines Container-Hosts über das Installationsskript oder erstellen einen neuen virtuellen Computer in Azure.
 
-** In the Container you want to connect to **
+** Im Container herstellen sollen **
 
-The following steps require either managing the Container using Docker or, when using PowerShell, specifying the `-RunAsAdministrator` switch when connecting to the Container.
-Please take the following steps in the Container you want to connect to.
+Die folgenden Schritte erfordern, Verwalten von den Container mithilfe von Docker oder bei der Verwendung von PowerShell angeben der `- RunAsAdministrator` beim Verbinden mit dem Container zu wechseln.
+Bitte nehmen Sie die folgenden Schritte aus, in dem Container, um eine Verbindung herstellen möchten.
 
-1. Obtain the Container's IP address
+1. Die IP-Adresse des Containers abrufen
 
   ```
   ipconfig
   ```
 
-  Returns something similar to this
+  Gibt die etwa wie folgt
 
   ```
   Windows IP Configuration
@@ -264,91 +264,91 @@ Please take the following steps in the Container you want to connect to.
   Default Gateway . . . . . . . . . : 172.16.0.1
   ```
 
-  Please note the IPv4 Address which is typically in the format 172.16.x.x
+  Bitte beachten Sie die IPv4-Adresse in der Regel in das Format 172.16.x.x
 
-2. Set the password for the builtin administrator user for the Container
+2. Legen Sie das Kennwort für den Container für den integrierten Administrator-Benutzer
 
   ```
   net user administrator [yourpassword]
   ```
 
-3. Enable the builtin administrator user for the Container
+3. Aktivieren Sie den integrierten Administrator-Benutzer für den Container
 
   ```
   net user administrator /active:yes
   ```
 
-** On the Container host **
+** Auf dem Host Container **
 
-Since Windows Server has the Windows Firewall with Advanced Security enabled by default we need to open some ports for communication in order for RDP to work.
-Additionally a port mapping is created so the Container is reachable through a port on the Container host.
+Seit Windows Server die Windows-Firewall mit erweiterter Sicherheit standardmäßig aktiviert ist, müssen wir einige Ports für die Kommunikation damit RDP zu öffnen.
+Darüber hinaus wird eine Port-Zuordnung erstellt, sodass der Container über einen Port auf dem Container Host erreichbar ist.
 
-The following steps require a PowerShell launched as Administrator on the Container host.
+Die folgenden Schritte erfordern eine PowerShell als Administrator auf dem Host Container gestartet.
 
-1. Allow the default RDP port through the Windows Advanced Firewall
+1. Standard-RDP-Port, über die Windows-Firewall erweiterte zulassen
 
   ```
   New-NetFirewallRule -Name "RDP" -DisplayName "Remote Desktop Protocol" -Protocol TCP -LocalPort @(3389) -Action Allow
   ```
 
-2. Allow an additional port for RDP connection to the Container
+2. Ermöglichen Sie einen zusätzlichen Port für RDP-Verbindung mit dem Container
 
   ```
   New-NetFirewallRule -Name "ContainerRDP" -DisplayName "RDP Port for connecting to Container" -Protocol TCP -LocalPort @(3390) -Action Allow
   ```
 
-This step opens up port 3390 on the Container host.
-It will be used to open a RDP session to the Container.
-If you want to connect to multiple Containers, you can repeat this step while providing additional port numbers.
+Dieser Schritt öffnet Port 3390 auf dem Host des Containers.
+Es wird zum Öffnen einer RDP-Sitzung auf den Container verwendet werden.
+Wenn Sie mehrere Container herstellen möchten, können Sie diesen Schritt wiederholen, und gleichzeitig zusätzliche Portnummern.
 
 
-3. Add a port mapping for the existing NAT
+3. Fügen Sie eine Port-Zuordnung für den vorhandenen NAT
     
-    In this step you need the IP address from step 1 within the Container
+    In diesem Schritt benötigen Sie die IP-Adresse aus Schritt 1 innerhalb des Containers
 
   ```
   Add-NetNatStaticMapping -NatName ContainerNAT -Protocol TCP -ExternalPort 3390 -ExternalIPAddress 0.0.0.0 -InternalPort 3389 -InternalIPAddress [your container IP]
   ```
 
-  Here you ensure that communication to the Container host which is coming in on port 3390 is redirected to port 3389 on the Container running at the IP address you specify.
+  Hier stellen Sie sicher, dass Kommunikation mit dem Container-Host der Port 3390 stammt umgeleitet wird, um Port 3389 für den Container mit der IP-Adresse, die Sie angeben.
 
-** Connect to the container via RDP **
+** Herstellen einer Verbindung mit dem Container über RDP **
 
-Finally you can connect to the Container using RDP.
-In order to do that please run the following command on a system which has the Remote Desktop Client installed (e.g. your system running the Container host VM):
+Schließlich können Sie auf den Container über RDP verbinden.
+Ausführen, führen Sie den folgenden Befehl auf einem System mit Remote Desktop-Client installiert (z. B. Ihr System mit der Container-Host-VM):
 
 
 ```
 mstsc /v:[ContainerHostIP]:3390 /prompt
 ```
 
-Please specify `administrator` as the user name and the password that you chose as the password.
+Geben Sie `Administrator` wie den Benutzernamen und das Kennwort, das Sie als Kennwort gewählt haben.
 
-The Remote Desktop Connection will ask you whether you want connect to the system despite certificate errors.
-If you select "Yes", the RDP connection will be opened.
-
-
-
-**Note:** Exiting the container RDP session without logoff may prevent the container from shutting down.
-Please make sure to exit the RDP session by typing "logoff" (instead of "exit" or just closing the RDP window) before shutting the container down.
-
---------------------------
+Der Remotedesktop-Verbindung werden Sie gefragt, ob das System trotz der Zertifikatfehler herstellen soll.
+Wenn Sie "Ja" auswählen, wird die RDP-Verbindung geöffnet.
 
 
-##PowerShell management
 
-###Enter-PSSession has containerid argument, New-PSSession doesn't
-
-This is correct.
-We're planning on full cimsession support in the future.
-
-
-Feel free to voice feature requests in [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
-
+**Hinweis:** die Container RDP-Sitzung beenden, ohne Abmeldung Container verhindern möglicherweise heruntergefahren.
+Stellen Sie sicher, dass die RDP-Sitzung beenden durch Eingabe von "Abmelden" (anstelle von "exit" oder einfach das RDP-Fenster geschlossen) vor dem Herunterfahren des Containers.
 
 --------------------------
 
-[Back to Container Home](../containers_welcome.md)
+
+##PowerShell-Verwaltung
+
+###Geben Sie PSSession hat Argument des Elements, New-PSSession nicht.
+
+Dies ist korrekt.
+Wir planen zur vollständigen Cimsession-Unterstützung in der Zukunft.
+
+
+Gerne Voice-Feature-Anfragen im [die Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+
+
+--------------------------
+
+[Zurück zur Startseite von Container](../containers_welcome.md)
 
 
 

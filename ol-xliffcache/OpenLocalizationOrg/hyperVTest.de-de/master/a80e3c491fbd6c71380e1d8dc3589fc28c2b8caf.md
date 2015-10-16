@@ -1,139 +1,139 @@
-ms.ContentId: 3fdd690d-4259-4066-8781-360bb0554512
-title: Running Apps in Windows Containers
+MS. ContentId: 3fdd690d-4259-4066-8781-360bb0554512
+Titel: ausgeführten Apps in Windows-Containern
 
-#Application Compatability in Windows Server Containers
+#Anwendung der Anwendungskompatibilität in Windows Server-Containern
 
-Adding this sentence for testing HO-HB process.
-Is something not on this list?
-Let us know what fails and succeeds in your environment via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+Hinzufügen von diesem Satz für HO Kont Testverfahren.
+Ist etwas nicht in dieser Liste?
+Lassen Sie uns wissen, was ein Fehler auftritt und erfolgreich in Ihrer Umgebung über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
-##Which applications run in a Windows Server Container
+##Führen Sie die Anwendung in einem Windows Server-Container
 
-We have tried to running the following applications in a Windows Server Container.
-These results do not guarantee that the application is working.
-The sole purpose is to share our experience.
+Wir haben versucht, auf die folgenden Programme in einem Windows Server-Container ausgeführt werden.
+Diese Ergebnisse garantieren nicht, dass die Anwendung ausgeführt wird.
+Der einzige Zweck besteht unsere Erfahrung freigeben.
 
-| **Name**| **Version**| **Does it work?**| **Comment**|
+| **Name**| **Version**| **Funktioniert das?**| **Anmerkungen**|
 |:-----|:-----|:-----|:-----|
-| .NET| 3.5| No| Fails to install properly|
-| .NET| 4.6| Yes| Included in base image|
-| .NET CLR| 5 beta 6| Yes| Both, x64 and x86|
-| Active Python| 3.4.1| Yes| |
-| Apache CouchDB| 1.6.1| No| |
-| Apache HTTPD| 2.4| Yes| |
-| Apache Tomcat| 8.0.24 x64| Yes| |
-| ASP.NET| 3.5| No| |
-| ASP.NET| 4.5| No| |
-| ASP.NET| 5 beta 6| Yes| Both, x64 and x86|
-| Erlang/OTP| 18.0| No| |
-| FileZilla FTP Server| 0.9| Yes| Has to be installed through an RDP session  into the container|
-| Go Progamming Language| 1.4.2| Yes| |
-| Internet Information Service| 10.0| Yes| |
-| Java| 1.8.0_51| Yes| Use the server version.The client version does not install properly|
-| Jetty| 9.3| Partially| Running demo-base fails|
-| MineCraft Server| 1.8.5| Yes| |
-| MongoDB| 3.0.4| Yes| |
-| MySQL| 5.6.26| Yes| |
-| NGinx| 1.9.3| Yes| |
-| Node.js| 0.12.6| Partially| Running node with js files works.NPM fails to download packages.Running node interactively does not work properly.|
-| PHP| 5.6.11| Partially| With Apache, IIS via FastCGI currently does not work.|
-| PostgreSQL| 9.4.4| Yes| |
-| Python| 3.4.3| Yes| |
-| R| 3.2.1| No| |
-| RabbitMQ| 3.5.x| Yes| Has to be installed through an RDP session  into the container|
-| Redis| 2.8.2101| Yes| |
-| Ruby| 2.2.2| Yes| Both, x64 and x86|
-| Ruby on Rails| 4.2.3| Yes| |
-| SQLite| 3.8.11.1| Yes| |
-| SQL Server Express| 2014 LocalDB| No| |
-| Sysinternals Tools| *| Yes| Only tried those not requiring a GUI.PsExec does not work by current design|
-##What Optional Windows Features can I install?
+| .NET| 3.5| Nein| Nicht ordnungsgemäß installiert.|
+| .NET| 4.6| Ja| Im Basisabbild enthalten|
+| .NET CLR| 5 Beta 6| Ja| X 64- und X 86|
+| Aktive Python| 3.4.1| Ja| |
+| Apache CouchDB| 1.6.1| Nein| |
+| Apache HTTPD| 2.4| Ja| |
+| Apache Tomcat| 8.0.24 X 64| Ja| |
+| ASP.NET| 3.5| Nein| |
+| ASP.NET| 4.5| Nein| |
+| ASP.NET| 5 Beta 6| Ja| X 64- und X 86|
+| Erlang/OTP| 18.0| Nein| |
+| FileZilla FTP-Server| 0.9| Ja| In den Container über eine RDP-Sitzung installiert werden muss|
+| Gehen Sie Progamming Sprache| 1.4.2| Ja| |
+| Internet-Informationsdienste| 10.0| Ja| |
+| Java| 1.8.0_51| Ja| Verwenden Sie die Serverversion.Die Clientversion ist nicht ordnungsgemäß installiert.|
+| Jetty| 9.3| Teilweise| Ausführen von Demo-Basis ein Fehler auftritt.|
+| MineCraft-Server| 1.8.5| Ja| |
+| MongoDB| 3.0.4| Ja| |
+| MySQL| 5.6.26| Ja| |
+| NGinx| 1.9.3| Ja| |
+| Node.js| 0.12.6| Teilweise| Ausführen von Knoten mit Js-Dateien funktioniert.NPM kann keine Pakete herunterzuladen.Interaktives Ausführen von Knoten funktioniert nicht ordnungsgemäß.|
+| PHP| 5.6.11| Teilweise| Mit Apache wird IIS mit FastCGI derzeit nicht ausgeführt.|
+| PostgreSQL| 9.4.4| Ja| |
+| Python| 3.4.3| Ja| |
+| R| 3.2.1| Nein| |
+| RabbitMQ| 3.5.x| Ja| In den Container über eine RDP-Sitzung installiert werden muss|
+| Redis| 2.8.2101| Ja| |
+| Ruby| 2.2.2| Ja| X 64- und X 86|
+| Ruby on Rails| 4.2.3| Ja| |
+| SQLite| 3.8.11.1| Ja| |
+| SQL Server Express| 2014 LocalDB| Nein| |
+| Sysinternals-Tools| *| Ja| Versucht, nur diejenigen, die eine GUI nicht.PsExec kann nicht vom aktuellen Entwurf verwendet werden.|
+##Welche optionale Windows-Features können werden installiert?
 
-The following Windows Optional Features have been confirmed as being able to install.
-Many do not function once they are installed at this point in time.
+Die folgenden optionalen Windows-Funktionen haben bestätigt wurde, als zu installieren.
+Viele funktionieren nicht, wenn sie zu diesem Zeitpunkt installiert sind.
 
-* AD-Certificate
-* ADCS-Cert-Authority
-* File-Services
-    * FS-FileServer
-    * FS-VSS-Agent
+* AD-Zertifikat
+* ADCS Zertifizierungsstelle
+* Dateidienste
+    * EA-Dateiserver
+    * EA-VSS-Agent
 * DirectAccess-VPN
 * Routing
-* Remote-Desktop-Services
+* Remote Desktop Services
 * VolumeActivation
 * Web-Server
 * Web-WebServer
 * Web-Common-Http
 * Web-Default-Doc
 * Web-Dir-Browsing
-* Web-Http-Errors
-* Web-Static-Content
-* Web-Http-Redirect
-* Web-DAV-Publishing
-* Web-Health
-* Web-Http-Logging
-* Web-Custom-Logging
+* Web-Http-Fehler
+* Statische Webinhalte
+* Web-Http-Umleitung
+* DAV-Webpublishing
+* Web-Integrität
+* Web-Http-Protokollierung
+* Web-Custom-Protokollierung
 * Web-Log-Libraries
-* Web-ODBC-Logging
+* Web-ODBC-Protokollierung
 * Web-Request-Monitor
-* Web-Performance
+* Leistung des Webservers
 * Web-Stat-Compression
-* Web-Dyn-Compression
-* Web-Security
-* Web-Filtering
+* Web-Dyn-Komprimierung
+* Web-Sicherheit
+* Web-Filterung
 * Web-Basic-Auth
 * Web-CertProvider
-* Web-Client-Auth
-* Web-Digest-Auth
+* Web-Client-Authentifizierung
+* Web-Digest-Authentifizierung
 * Web-Cert-Auth
-* Web-IP-Security
+* Web-IP-Sicherheit
 * Web-Url-Auth
-* Web-Windows-Auth
-* Web-App-Dev
+* Web-Windows-Authentifizierung
+* Web-App-Entwickler
 * Web-AppInit
 * Web-CGI
-* Web-ISAPI-Ext
+* Web-ISAPI-Erweiterung
 * Web-ISAPI-Filter
-* Web-Includes
+* Web enthält
 * Web-WebSockets
-* Web-Mgmt-Compat
-* Web-Metabase
+* Web-Mgmt-Anwendungskompatibilität
+* Web-Metabasis
 * BitLocker
 * EnhancedStorage
 * GPMC
-* Isolated-UserMode
+* Isolierte UserMode
 * Server-Media-Foundation
 * MSMQ-DCOM
-* MultiPoint-Connector-Feature
+* MultiPoint-Connector-Funktion
 * qWave
 * RDC
 * RSAT-Feature-Tools-BitLocker
 * RSAT-Clustering-PowerShell
-* RSAT-Clustering-AutomationServer
+* RSAT-Clustering-automationserver umgewandelt
 * RSAT-Clustering-CmdInterface
-* RSAT-Shielded-VM-Tools
+* RSAT-abgeschirmt-VM-Tools
 * RSAT-AD-Tools
 * RSAT-AD-PowerShell
-* RSAT-ADDS
+* REMOTESERVER-VERWALTUNGSTOOLS WIRD HINZUGEFÜGT
 * RSAT-AD-AdminCenter
-* RSAT-ADDS-Tools
+* RSAT-fügt-Tools
 * RSAT-ADLDS
 * Hyper-V-PowerShell
 * UpdateServices-API
-* RSAT-NetworkController
+* Remoteserver-Verwaltungstools NetworkController
 * Windows-Fabric-Tools
-* RSAT-HostGuardianService
-* FS-SMBBW
-* Storage-Replica
+* Remoteserver-Verwaltungstools HostGuardianService
+* EA-SMBBW
+* Speicher-Replikat
 * Telnet-Client
-* WAS
-    * WAS-Process-Model
-    * WAS-Config-APIs
-* Windows-Server-Backup
+* WURDE
+    * WAR-Prozessmodell
+    * WAR-Config-APIs
+* Windows Server-Sicherung
 * Migration
 
-Is something not on this list?
-Let us know what fails and succeeds in your environment via [the forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+Ist etwas nicht in dieser Liste?
+Lassen Sie uns wissen, was ein Fehler auftritt und erfolgreich in Ihrer Umgebung über [in den Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
 
 

@@ -1,36 +1,36 @@
-ms.ContentId: D1D4969F-52FD-43A2-982B-B531B0343D2B 
-title: Troubleshooting
+MS. ContentId: D1D4969F-52FD-43A2-982B-B531B0343D2B 
+Titel: Problembehandlung
 
-#Troubleshoot Hyper-V on Windows 10
+#Problembehandlung bei Hyper-V auf Windows 10
 
-##I updated to Windows 10 and now I can't connect to my downlevel (Windows 8.1 or Server 2012 R2) host
+##Ich 10 für Windows aktualisiert, und jetzt kann ich keine Verbindung zu meiner Downlevel-Host (Windows 8.1 oder Server 2012 R2)
 
-In Windows 10, Hyper-V manager moved to WinRM for remote management.
-What that means is now Remote Management has to be enabled on the remote host in order to use Hyper-V manager to manage it.
+In Windows-10 verschoben Hyper-V-Manager WinRM für die Remoteverwaltung.
+Was also ist jetzt die Remoteverwaltung muss auf dem Remotehost aktiviert werden, um die Hyper-V-Manager verwenden, um ihn zu verwalten.
 
-For more information see [Managing Remote Hyper-V Hosts](remote_host_management.md)
+Weitere Informationen finden Sie unter [Remote Hyper-V-Hosts verwalten](remote_host_management.md)
 
-##I changed the checkpoint type, but it is still taking the wrong type of checkpoint
+##Den prüfpunkttyp geändert, aber dauert noch den falschen Typ des Prüfpunkts
 
-If you are taking the checkpoint from VMConnect and you change the checkpoint type in Hyper-V manager the checkpoint taken be whatever checkpoint type was specified when VMConnect was opened.
+Wenn den Prüfpunkt aus VMConnect werden, und Sie den Prüfpunkt in Hyper-V-Manager den Prüfpunkt ändern, werden Sie unabhängig Prüfpunkt beim Öffnen des VMConnect angegeben wurde.
 
-Close VMConnect and reopen it to make it take the correct type of checkpoint.
+Schließen Sie VMConnect und erneut öffnen Sie, damit er den richtigen Typ des Prüfpunkts ausführen wird.
 
-##When I try to create a virtual hard disk on a flash drive, an error message is displayed
+##Wenn ich versuche, eine virtuelle Festplatte auf einem Flashlaufwerk erstellen, wird eine Fehlermeldung angezeigt.
 
-Hyper-V does not support FAT/FAT32 formatted disk drives since these file systems do not provide access control lists (ACLs) and do not support files larger than 4GB.
-ExFAT formatted disks only provide limited ACL functionality and are therefore also not supported for security reasons.
-The error message displayed in PowerShell is "The system failed to create '\[path to VHD\]': The requested operation could not be completed due to a file system limitation (0x80070299)."
+Hyper-V unterstützt keine FAT/FAT32-formatierten Laufwerke, da diese Dateisysteme keine Zugriffssteuerungslisten (ACLs bieten) und Dateien, die größer als 4GB nicht unterstützt.
+ExFAT formatierte Datenträgern nur begrenzte ACL-Funktionen bereitstellen und daher auch nicht unterstützt aus Sicherheitsgründen.
+Die Fehlermeldung angezeigt, die in PowerShell ist "Fehler beim Erstellen ' \[path, VHD\]': der angeforderte Vorgang konnte aufgrund einer Beschränkung der Datei System (0x80070299) nicht abgeschlossen werden."
 
-Use a NTFS formatted drive instead.
+Verwenden einer NTFS formatierten Laufwerk stattdessen.
 
 
-##I get this message when I try to install: "Hyper-V cannot be installed: The processor does not support second level address translation (SLAT)."
+##Diese Meldung wird beim Versuch, zu installieren: "Hyper-V nicht installiert werden: der Prozessor second Level-Adressübersetzung (SLAT) nicht unterstützt."
 
-Hyper-V requires SLAT in order to run virtual machines.
-If you computer does not support SLAT, then it cannot be a host for virtual mahchines.
+Hyper-V erfordert SLAT, um die virtuellen Computer ausgeführt werden.
+Wenn Sie den Computer SLAT nicht unterstützt, kann nicht es einem Host für virtuelle Mahchines sein.
 
-If you are only trying to install the management tools, unselect **Hyper-V Platform** in **Programs and Features** > **Turn Windows features on or off**.
+Wenn Sie nur die Verwaltungstools installieren möchten, deaktivieren Sie **Hyper-V-Plattform** in **Programme und Funktionen** > **Windows-Funktionen ein- oder ausschalten**.
 
 
 

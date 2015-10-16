@@ -1,27 +1,27 @@
-ms.ContentId: 248565F7-5EE6-46C6-B29E-8F1D44658563
-title: Walktrough Overview
+MS. ContentId: 248565F7-5EE6-46C6-B29E-8F1D44658563
+Titel: Walktrough (Übersicht)
 
-#Walkthrough Hyper-V on Windows 10
+#Exemplarische Vorgehensweise Hyper-V auf Windows 10
 
-These topics will help your get acquainted with Hyper-V on Windows 10.
-We'll walk you through all of the steps needed to get a computer up and running with Hyper-V and check out some of the new features and old favorites.
+Das Abrufen dieser Themen können mit Hyper-V auf Windows 10 vertraut.
+Wir führen Sie schrittweise durch alle erforderlichen Schritte zum Einrichten eines Computers und mit Hyper-V und sehen Sie sich einige der neuen Features und alte Favoriten.
 
-[Step 1: Make sure your machine is compatible](walkthrough_compatibility.md)
+[Schritt 1: Stellen Sie sicher, dass Ihr Computer kompatibel ist.](walkthrough_compatibility.md)
 
-[Step 2: Install Hyper-V on Windows 10](walkthrough_install.md)
+[Schritt 2: Installieren der Hyper-V auf Windows 10](walkthrough_install.md)
 
-[Step 3: Create a virtual switch](walkthrough_virtual_switch.md)
+[Schritt 3: Erstellen eines virtuellen switch](walkthrough_virtual_switch.md)
 
 
-[Step 4: Create a Windows virtual machine from an .iso file](walkthrough_create_vm.md)
+[Schritt 4: Erstellen einer virtuellen Windows-Maschine aus einer ISO-Datei](walkthrough_create_vm.md)
 
-[Step 5: Connect to the virtual machine and finish the installation](walkthrough_vmconnect.md)
+[Schritt 5: Herstellen einer Verbindung mit dem virtuellen Computer, und schließen Sie die installation](walkthrough_vmconnect.md)
 
-[Step 6: Experiment with checkpoints](walkthrough_checkpoints.md)
+[Schritt 6: Experimentieren Sie mit Prüfpunkten](walkthrough_checkpoints.md)
 
-[Step 7: Export and import a virtual machine](walkthrough_export_import.md)
+[Schritt 7: Exportieren und Importieren eines virtuellen Computers](walkthrough_export_import.md)
 
-[Step 8: Experiment with Windows Powershell](walkthrough_powershell.md)
+[Schritt 8: Experimentieren Sie mit WindowsPowerShell](walkthrough_powershell.md)
 
 
 

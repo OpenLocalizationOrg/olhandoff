@@ -1,108 +1,108 @@
-ms.ContentId: 93EDAAF5-E4FC-4F3F-AB55-669D2BF47D78
-title: Introduction to Hyper-V on Windows 10
+MS. ContentId: 93EDAAF5-E4FC-4F3F-AB55-669D2BF47D78
+Titel: Einführung in Hyper-V auf Windows-10
 
 
-#Introduction to Hyper-V on Windows 10 test
+#Einführung in Hyper-V auf Windows-10-test
 
-Adding this sentence for testing HO-HB process.
-Whether you are a software developer, an ITPro, or a tech enthusiast, many of you need to run multiple operating systems, occasionally on many different machines.
-Not all of us have access to a full suite of labs to house all these machines, and so virtualization can be a space and time saver.
+Hinzufügen von diesem Satz für HO Kont Testverfahren.
+Sind Sie Software-Entwickler, ein IT-Experten oder eine Technologie-Enthusiast, müssen viele von Ihnen mehrere Betriebssysteme, gelegentlich auf vielen verschiedenen Computern ausgeführt werden.
+Nicht alle von uns haben Zugriff auf ein umfassendes Labs untergebracht werden alle diese Computer und Virtualisierung kann daher einen Platz und Zeit sparen.
 
-##Uses for virtualization
+##Verwendet für die Virtualisierung
 
-Virtualization enables anyone to easily maintain multiple test environments consisting of many operating systems, software configurations, and hardware configurations.
-Hyper-V provides virtualization on Windows as well as a simple mechanism to quickly switch between these environments without incurring additional hardware costs.
+Virtualisierung kann jeder Umgebung mit mehreren Test bestehend aus vielen Betriebssystemen, Software-Konfigurationen und Hardwarekonfigurationen problemlos zu verwalten.
+Hyper-V bietet Virtualisierung auf Windows sowie einen einfachen Mechanismus, wechseln Sie schnell zwischen diesen Umgebungen, ohne dass zusätzliche Hardwarekosten anfallen.
   
 
 
-Hyper-V can be used in many ways, for example:
-- A test environment consisting of multiple virtual machines can be created on a single desktop or laptop computer.
-    Once testing has completed, these virtual machines can be exported and then imported into any other Hyper-V system.
+Hyper-V kann z. B. in vielerlei Hinsicht verwendet werden:
+- Eine Umgebung bestehend aus mehreren virtuellen Computern kann auf einem einzelnen Desktop oder Laptop-Computer erstellt werden.
+    Nachdem die Tests abgeschlossen sind, können diese virtuellen Computer exportiert und anschließend in einem anderen Hyper-V-System importiert.
     
-- Developers can use Hyper-V on their computer to test software on multiple operating systems.
-    For example, if you have an application that must be tested on Windows 8, Windows 7 and a Linux operating system, multiple virtual machines can be created on your development system, one containing each of these operating systems.
+- Entwickler können Hyper-V auf dem Computer zum Testen von Software auf mehreren Betriebssystemen verwenden.
+    Wenn Sie eine Anwendung, auf denen Windows 8, Windows 7 oder Linux-Betriebssystem getestet werden müssen verfügen, können z. B. mehrere virtuelle Computer auf Ihrem Entwicklungssystem, enthält jedes dieser Betriebssysteme erstellt werden.
     
-- You can use Hyper-V to troubleshoot virtual machines from any Hyper-V deployment.
-    You can export a virtual machine from your production environment, open it on your desktop running Hyper-V, perform your required troubleshooting, and then export it back into the production environment.
-    
-
-- Using virtual networking, you can create a multi-machine environment for test/development/demonstration that is secure from affecting the production network.
-    
-- Enthusiasts can use it to experiment with other operating systems.
-    Hyper-V makes it very easy to bring up and tear down different operating systems.
-    
-- You can use Hyper-V on a laptop for demonstrating older versions of Windows or non-Windows operating systems.
+- Hyper-V können virtuelle Computer von Hyper-V-Bereitstellung zu beheben.
+    Sie können exportieren ein virtuellen Computers von der produktionsumgebung, auf dem Desktop mit Hyper-V zu öffnen, führen Sie die Problembehandlung erforderlich und dann wieder in die produktionsumgebung zu exportieren.
     
 
-
-##System requirements
-
-Hyper-V requires a 64-bit system that has Second Level Address Translation (SLAT). SLAT is a feature present in the current generation of 64-bit processors by Intel & AMD. You’ll also need a 64-bit version of Windows 8 or greater, and at least 4GB of RAM. Hyper-V does support creation of both 32-bit and 64-bit operating systems in the VMs.
-
-Hyper-V’s dynamic memory allows memory needed by the VM to be allocated and de-allocated dynamically (you specify a minimum and maximum) and share unused memory between VMs.
-You can run 3 or 4 VMs on a machine that has 4GB of RAM but you'll need more RAM for 5 or more VMs.
-On the other end of the spectrum, you can also create large VMs with 32 processors and 512GB RAM, depending on your physical hardware.
-
-##Operating systems you can run in a virtual machine
-
-The term "guest" refers to a virtual machine and "host" refers to the computer running the virtual machine.
-Hyper-V on Windows supports many different guest operating systems including various releases of Linux, FreeBSD and Windows.
-For information about which operating systems are supported as guests in Hyper-V on Windows, see [Supported Windows Guest Operating Systems](supported_guest_os.md) and [Linux and FreeBSD Virtual Machines on Hyper-V](https://technet.microsoft.com/library/dn531030.aspx).
-
-
-
-##Differences between Hyper-V on Windows and Hyper-V on Windows Server
-
-There are some features that work differently in Hyper-V on Windows than they do Hyper-V running on Windows Server.
-These include the following:
-
-- The memory management model is different for Hyper-V on Windows.
-    On a server, Hyper-V memory is managed with the assumption that only the virtual machines are running on the server.
-    In Hyper-V on Windows, memory is managed with the understanding most client machines are running software in addition to running virtual machines.
-    For example, a developer might be running Visual Studio as well as several virtual machines on the same computer.
+- Virtuelle Netzwerke können Sie eine Umgebung mit mehreren Computern Umgebung für Entwicklungs-/Test/Demo erstellen, die im Produktionsnetzwerk beeinflussen sicher ist.
     
-- SR-IOV on a 64-bit guest works normally, but 32-bit does not and is not supported.
-
-
-###Windows Server features not avilable in Windows Hyper-V
-
-There are some features included in Hyper-V on server that are not included in Hyper-V on Windows.
-These include the following:
-
-- The Remote FX capability to virtualize GPUs
+- Enthusiasten können sie zum Experimentieren mit anderen Betriebssystemen.
+    Hyper-V erleichtert und Beenden von verschiedenen Betriebssystemen.
+    
+- Hyper-V können auf einem Laptop für ältere Versionen von Windows oder nicht-Windows-Betriebssystemen zu veranschaulichen.
     
 
-- Live migration of virtual machines from one host to another
+
+##System requirements (Systemanforderungen)
+
+Hyper-V ist ein 64-Bit-System, Second Level Address Translation (SLAT) ist, erforderlich. SLAT ist eine Funktion, die in die aktuelle Generation von 64-Bit-Prozessoren von Intel und AMD vorhanden. Sie benötigen auch einen 64-Bit-Version von Windows 8 oder höher und mindestens 4 GB RAM. Hyper-V unterstützt die Erstellung von 32-Bit- und 64-Bit-Betriebssysteme auf VMs.
+
+Hyper-V dynamic Memory kann erforderlichen Arbeitsspeichers durch den virtuellen Computer reserviert und dynamisch aufgehoben werden (Sie geben ein Minimum und Maximum) und Freigeben von ungenutztem Speicher zwischen virtuellen Computern.
+Sie können 3 oder 4 virtuellen Computer ausführen, auf einem Computer mit 4 GB RAM, jedoch benötigen Sie mehr RAM für 5 oder mehr virtuelle Computer.
+Am anderen Ende des Spektrums können Sie auch große virtuelle Computer mit 32 Prozessoren und 512 GB RAM, abhängig von der physischen Hardware erstellen.
+
+##Betriebssysteme, die auf einem virtuellen Computer ausgeführt werden kann
+
+Der Begriff "Gast" bezieht sich auf einer virtuellen Maschine und "Host" bezieht sich auf den Computer, auf dem virtuellen Computer ausgeführt wird.
+Hyper-V auf Windows unterstützt viele verschiedene Gastbetriebssysteme einschließlich verschiedener Versionen von Linux, FreeBSD und Windows.
+Informationen darüber, welche Betriebssysteme als Gäste in Hyper-V unter Windows unterstützt werden, finden Sie unter [unterstützten Windows-Gastbetriebssysteme](supported_guest_os.md) und [Linux und FreeBSD virtuellen Maschinen auf Hyper-V-](https://technet.microsoft.com/library/dn531030.aspx).
+
+
+
+##Unterschiede zwischen Hyper-V auf Windows und Hyper-V auf WindowsServer
+
+Es gibt einige Features, die unterschiedlich in Hyper-V auf Windows als bei Hyper-V auf Windows Server ausgeführt wird.
+Diese umfassen Folgendes:
+
+- Das Speicher-Management-Modell unterscheidet sich für Hyper-V unter Windows.
+    Hyper-V-Speicher erfolgt auf einem Server unter der Annahme, die nur die virtuellen Maschinen auf dem Server ausgeführt werden.
+    In Hyper-V unter Windows wird Arbeitsspeicher verwaltet, unter der Voraussetzung, dass die meisten Clientcomputer ausgeführte Software sowie virtuelle Computer ausgeführt werden.
+    Beispielsweise kann ein Entwickler Visual Studio als auch mehrere virtuelle Maschinen auf dem gleichen Computer ausgeführt werden.
     
-- Hyper-V Replica
+- SR-IOV auf einem 64-Bit-Gast funktioniert normal, aber die 32-Bit nicht und wird nicht unterstützt.
+
+
+###Windows Server-Features nicht die Berechtigung in Windows Hyper-V
+
+Es gibt einige Funktionen in Hyper-V auf Server enthalten, die in Hyper-V unter Windows nicht enthalten sind.
+Diese umfassen Folgendes:
+
+- Die Funktion Remote FX GPUs virtualisieren
     
-- Virtual Fibre Channel
+
+- Live-Migration virtueller Maschinen von einem Host zum anderen
     
-- SR-IOV networking
+- Hyper-V-Replikat
     
-- Shared .VHDX
+- Virtueller Fibre Channel
+    
+- SR-IOV-Netzwerke
+    
+- Gemeinsam genutzt. VHDX
 
 
-> **Warning**: Virtual machines running on Hyper-V do not automatically handle moving from a wired to a wireless connection.
-> You must change the virtual machines network adapter settings manually.
+> **Warnung**: virtuelle Computer auf Hyper-V nicht automatisch behandelt Umstellung von einem drahtgebundenen zu einer drahtlosen Verbindung.
+> Sie müssen die Einstellungen für virtuelle Maschinen des Netzwerkadapters ändern manuell.
 
-##Limitations
+##Einschränkungen
 
-Using virtualization does have limitations.
-Features or applications that depend on specific hardware will not work well in a VM.
-For example, games or applications that require processing with GPUs (without providing software fallback) might not work well.
-Also, applications relying on sub 10ms timers, like latency-sensitive high-precision apps such as live music mixing apps, etc. could have issues running in a VM.
-The root OS is also running on top of the Hyper-V virtualization layer, but it is special in that it has direct access to all the hardware.
-This is why applications with special hardware requirements continue to work unhindered in the root OS but latency-sensitive, high-precision apps could still have issues running in the root OS.
+Mithilfe der Virtualisierung begrenzt ist.
+Features oder Apps, die auf bestimmte Hardware abhängig sind funktioniert ebenfalls auf einem virtuellen Computer nicht.
+Z. B. Spiele oder Programme, die Verarbeitung mit GPUs erfordern (ohne Software fallback) funktionieren möglicherweise nicht gut.
+Außerdem konnte Anträge auf Sub 10 ms Zeitgeber verlassen, wie latenzempfindliche Präzisions-apps, z. B. live Musik mischen von apps usw. Probleme, die auf einem virtuellen Computer ausgeführt haben.
+Rootbetriebssystem auch über der Virtualisierungsebene Hyper-V ausgeführt wird, ist es jedoch spezielle, da er direkten Zugriff auf die gesamte Hardware hat.
+Deshalb wird mit besonderen hardwareanforderungen weiterhin im Stammverzeichnis OS ungehindert jedoch latenzempfindliche, Präzisions-apps können immer noch Probleme im Stammverzeichnis Betriebssystem ausgeführt.
 
-As a reminder, you'll need to have a valid license for any operating systems you use in the VMs.
+Zur Erinnerung müssen Sie eine gültige Lizenz für alle Betriebssysteme verfügen, die in den virtuellen Computern verwendet.
 
-##Next step:
+##Nächster Schritt:
 
-[Walkthrough Hyper-V on Windows 10](..\quick_start\walkthrough.md)
+[Exemplarische Vorgehensweise Hyper-V auf Windows 10](..\quick_start\walkthrough.md)
 
 
-Check out [What's New](whats_new.md) in Hyper-V on Windows 10.
+Auschecken [Neues](whats_new.md) in Hyper-V auf Windows-10.
 
 
 

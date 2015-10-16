@@ -1,55 +1,55 @@
-#HyperV
+#Hyper-v
 
-##About
+##Informationen zu
 
-###[Hyperv on Windows](about/hyperv_on_windows.md)
+###[Unter Windows Hyper-v] (about/hyperv_on_windows.md)
 
-###[Supported Guest OS](about/supported_guest_os.md)
+###[Unterstützte Gastbetriebssystem] (about/supported_guest_os.md)
 
-###[Whats New](about/whats_new.md)
+###[Neuigkeiten] (about/whats_new.md)
 
-##[Build](about/build.md)
+##[Erstellen] (about/build.md)
 
-##Develop
+##Entwickeln
 
-###[Make Mgmt Service](develop/make_mgmt_service.md)
+###[Stellen Sie Service-Management] (develop/make_mgmt_service.md)
 
-###[Powershell Snippets](develop/powershell_snippets.md)
+###[Powershell-Codeausschnitte] (develop/powershell_snippets.md)
 
-##Quick Start
+##Schnellstart
 
-###[Walkthrough](quick_start/walkthrough.md)
+###[Exemplarische Vorgehensweise] (quick_start/walkthrough.md)
 
-###[walkthrough checkpoints](quick_start/walkthrough_checkpoints.md)
+###[Exemplarische Vorgehensweise Prüfpunkte] (quick_start/walkthrough_checkpoints.md)
 
-###[walkthrough compatibility](quick_start/walkthrough_compatibility.md)
+###[Exemplarische Vorgehensweise Compatibility] (quick_start/walkthrough_compatibility.md)
 
-###[walkthrough create_vm](quick_start/walkthrough_create_vm.md)
+###[Exemplarische Vorgehensweise Create_vm] (quick_start/walkthrough_create_vm.md)
 
-###[walkthrough export_import](quick_start/walkthrough_export_import.md)
+###[Exemplarische Vorgehensweise Export_import] (quick_start/walkthrough_export_import.md)
 
-###[walkthrough install](quick_start/walkthrough_install.md)
+###[Exemplarische Vorgehensweise Installation] (quick_start/walkthrough_install.md)
 
-###[walkthrough powershell](quick_start/walkthrough_powershell.md)
+###[Exemplarische Vorgehensweise Powershell] (quick_start/walkthrough_powershell.md)
 
-###[walkthrough virtual switch](quick_start/walkthrough_virtual_switch.md)
+###[Exemplarische Vorgehensweise virtuellen Switch] (quick_start/walkthrough_virtual_switch.md)
 
-###[walkthrough vmconnect](quick_start/walkthrough_vmconnect.md)
+###[Exemplarische Vorgehensweise Vmconnect] (quick_start/walkthrough_vmconnect.md)
 
-##User Guide
+##Benutzerhandbuch
 
-###[checkpoints](user_guide/checkpoints.md)
+###[Prüfpunkte] (user_guide/checkpoints.md)
 
-###[export import](user_guide/export_import.md)
+###[Export Import] (user_guide/export_import.md)
 
-###[migrating vms](user_guide/migrating_vms.md)
+###[Migrieren von Vms] (user_guide/migrating_vms.md)
 
-###[remote host management](user_guide/remote_host_management.md)
+###[Remotehost-Management] (user_guide/remote_host_management.md)
 
-###[troubleshooting](user_guide/troubleshooting.md)
+###[Problembehandlung] (user_guide/troubleshooting.md)
 
-###[user guide nav](user_guide/user_guide_nav.md)
+###[User Guide Nav] (user_guide/user_guide_nav.md)
 
-###[vmsession](user_guide/vmsession.md)
+###[Vmsession] (user_guide/vmsession.md)
 
 

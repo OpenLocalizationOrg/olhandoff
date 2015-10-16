@@ -1,55 +1,55 @@
-ms.ContentId: A6DD6776-614C-4D28-9B83-CB2EDFD263A3
-title: Step 2: Install Hyper-V on Windows 10
+MS. ContentId: A6DD6776-614C-4D28-9B83-CB2EDFD263A3
+Titel: Schritt 2: Installieren von Hyper-V auf Windows-10
 
-#Step 2: Install Hyper-V on Windows 10
+#Schritt 2: Installieren der Hyper-V auf Windows 10
 
-Before you can begin using virtual machines on Windows 10 you will need to enable the Hyper-V role.
-This can be done using the Windows 10 graphical user interface, PowerShell or DISM.
-This documents will walk through each of these.
+Bevor Sie virtuelle Maschinen auf Windows 10 verwenden können, müssen Sie die Hyper-V-Rolle.
+Dies kann mithilfe der Windows-10 GUI-Schnittstelle, PowerShell oder DISM.
+Diese Dokumente werden durch jede dieser geführt.
 
-##Enable Hyper-V Through the GUI
+##Aktivieren Sie Hyper-V über die GUI
 
-1. Right click on the Windows button and select ‘Programs and Features’.
+1. Klicken Sie mit der rechten Maustaste auf die Windows-Schaltfläche, und wählen Sie "Programme und Funktionen".
     
-2. Select ‘Turn Windows Features on or off’.
+2. Wählen Sie "Windows-Funktionen ein- oder ausschalten".
     
-3. Select ‘Hyper-V’ and click ‘OK’.
+3. Wählen Sie "Hyper-V", und klicken Sie auf "OK".
     <br />![](media/enable_role_upd.png)
     
-4. When the installation has completed you will be prompted to restart your computer.
+4. Nach Abschluss die Installation werden Sie aufgefordert, den Computer neu starten.
     <br />![](media/restart_upd.png)
 
-##Enable Hyper-V with PowerShell
+##Aktivieren Sie Hyper-V mit PowerShell
 
-1. Open a PowerShell console as Administrator.
+1. Öffnen Sie eine PowerShell-Konsole als Administrator an.
     
-2. Enter the following command:
+2. Geben Sie den folgenden Befehl aus:
 
-`Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V –All`
+`Enable-WindowsOptionalFeature-Online - FeatureName Microsoft Hyper-V – alle`
 
-When the installation has completed you will need to reboot the computer.
+Nach Abschluss die Installation müssen Sie den Computer neu starten.
 
-##Enable Hyper-V with DISM.
+##Hyper-V mit DISM zu aktivieren.
 
-The Deployment Image Servicing and Management tool or DISM is used to service Windows images and prepare Windows Pre installation Evironments.
-DISM can also be used to enable Windows features in running instances of the OS.
+Deployment Image Servicing and Management Tools oder DISM wird zum Warten von Windows-Abbildern und Vorbereiten von Windows vor der Installation Evironments.
+DISM kann auch verwendet werden, zum Aktivieren von Windows-Features in Instanzen des Betriebssystems ausgeführt wird.
 
-To enable the Hyper-V role using DISM:
+So aktivieren Sie die Hyper-V-Rolle mithilfe von DISM
 
-1. Open up a PowerShell or CMD session as Administrator.
+1. Öffnen Sie ein PowerShell oder CMD-Sitzung als Administrator.
     
-2. Type the following command:
+2. Geben Sie den folgenden Befehl ein:
 
-`DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V`
+`DISM / Online/Enable-Feature-all /FeatureName:Microsoft-Hyper-V`
 
-Once completed you will be prompted to reboot.
+Wenn Sie fertig werden Sie aufgefordert, neu zu starten.
 
 ![](media/dism_upd.png)
 
 
-##Next Step
+##Als Nächstes
 
-[Step 3: Create a virtual switch](walkthrough_virtual_switch.md)
+[Schritt 3: Erstellen eines virtuellen switch](walkthrough_virtual_switch.md)
 
 
 

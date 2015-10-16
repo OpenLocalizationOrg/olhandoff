@@ -1,40 +1,40 @@
-ms.ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6
-title: Manage Windows Server Containers with Docker
+MS. ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6
+Titel: Verwalten von Windows Server-Container mit Docker
 
-#Quick Start: Windows Server Containers and Docker
+#Schnellstart: Windows Server-Container und Docker
 
-This article will walk through the fundamentals of managing windows Server Containers with Docker.
-Items covered will include creating Windows Server Containers and Windows Server Container Images, removing Windows Server Containers and Container Images and finally deploying an application into a Windows Server Container.
-The lessons learned in this walkthrough should enable you to begin exploring deployment and management of Windows Server Containers using Docker.
+In diesem Artikel werden die Grundlagen der Verwaltung von Windows Server-Container mit Docker durchlaufen.
+Container für Windows Server und Windows Server-Container-Images erstellen, entfernen Windows Server-Container und Container Bilder und Bereitstellen einer Anwendung in einem Windows Server-Container, werden die behandelten Elemente umfassen.
+Die gewonnenen Erkenntnisse in dieser exemplarischen Vorgehensweise sollten Sie zu untersuchen, Bereitstellung und Verwaltung von Windows Server-Container mit Docker aktivieren.
 
-Have questions?
-Ask them on the [Windows Containers forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
+Haben Sie Fragen?
+Bitten Sie sie auf die [Windows-Containern Forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).
 
-> **Note:** Windows Containers created with PowerShell can not currently be managed with Docker and visa versa.
-> To create containers with PowerShell, see  [Quick Start: Windows Server Containers and PowerShell](./manage_powershell.md).
-> <br /><br /> If you want to know more, [read the FAQ](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement).
+> **Hinweis:** mit PowerShell erstellten Windows-Container kann zurzeit nicht mit Docker und Visa umgekehrt verwaltet werden.
+> Container mit PowerShell erstellen, finden Sie unter  [Schnellstart: Windows Server-Container und PowerShell](./manage_powershell.md).
+> <br /><br /> Wenn Sie mehr wissen möchten, [häufig gestellte Fragen](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement).
 
-##Prerequisites
+##Voraussetzungen
 
-In order to complete this walkthrough the following items need to be in place.
+Zum Durchführen dieser exemplarischen Vorgehensweise müssen die folgenden Elemente vorhanden sein.
 
-- Windows Server 2016 TP3 or later configured with the Windows Server Container Feature.
-    If you have completed the setup guide, this is the VM that was created in Azure or Hyper-V.
-- This system must be connected to a network and able to access the internet.
+- Windows Server 2016 TP3 oder später mit dem Container-Feature von Windows Server konfiguriert.
+    Wenn Sie das Handbuch abgeschlossen haben, ist dies die VM, die in Azure oder Hyper-V erstellt wurde.
+- Dieses System muss mit einem Netzwerk verbunden und auf das Internet zugreifen kann.
 
-If you need to configure the container feature, see the following guides: [Container Setup in Azure](./azure_setup.md) or [Container Setup in Hyper-V](./container_setup.md).
+Wenn Sie die Container-Funktion konfigurieren müssen, finden Sie unter den folgenden Handbüchern: [Container Einrichtung in Azure](./azure_setup.md) oder [Container Setup in Hyper-V-](./container_setup.md).
 
 
-##Basic Container Management with Docker
+##Grundlegender Container-Verwaltung mit Docker
 
-This first example will walk through the basics of creating and removing Windows Server Containers and Windows Server Container Images with Docker.
+In diesem ersten Beispiel werden die Grundlagen zum Erstellen und Entfernen von Containern für Windows Server und Windows Server-Container-Images mit Docker geführt.
 
-To begin the walk through, log into your Windows Server Container Host System, you will see a Windows command prompt.
+Die erörtert, Protokoll in Windows Server-Container Hostsystems zunächst sehen Sie eine Windows-Befehlszeile.
 
 ![](media/cmd.png)
 
-Start a PowerShell session by typing `powershell`.
-You will know that you are in a PowerShell session when the prompt changes from `C:\directory>` to `PS C:\directory>`.
+PowerShell-Sitzung starten, indem Sie eingeben `Powershell`.
+Sehen Sie, dass Sie in einem PowerShell-Sitzung bei die Aufforderung ändert sich werden von `C:\Directory >` auf `PS C:\Directory >`.
 ```
 C:\> powershell
 Windows PowerShell
@@ -42,10 +42,10 @@ Copyright (C) 2015 Microsoft Corporation. All rights reserved.
 
 PS C:\>
 ```
-> This quick start will be focused on Docker commands however some steps such as managing firewall rules and copying files will be run with PowerShell commands.
-> Work through this walkthrough from a PowerShell session.
+> Dieser Schnellstart konzentriert werden, jedoch einige Schritte ausführen, wie z. B. Verwalten von Firewallregeln und Kopieren von Dateien mit PowerShell-Befehlen ausgeführt werden, auf Docker-Befehle.
+> Durcharbeiten dieser exemplarischen Vorgehensweise aus einer PowerShell-Sitzung.
 
-Next make sure that your system has a valid IP Address using `ipconfig` and take note of this address for later use.
+Im nächsten Schritt stellen Sie sicher, dass das System hat eine gültige IP-Adresse mit `Ipconfig` und notieren Sie diese Adresse für die spätere Verwendung.
 ```
 ipconfig
 
@@ -58,15 +58,15 @@ Ethernet adapter Ethernet 3:
    IPv4 Address. . . . . . . . . . . : 192.168.1.25
 ```
 
-If you are working from an Azure VM instead of using `ipconfig` you will need to get the public IP address of the Azure Virtual Machine.
+Wenn Sie statt einer Azure-VM arbeiten `Ipconfig` müssen Sie die öffentliche IP-Adresse der Azure-Computer zu erhalten.
 
 ![](media/newazure9.png)
 
-###Step 1 - Create a New Container
+###Schritt 1: Erstellen eines neuen Containers
 
-Before creating a Windows Server Container with Docker you will need the name or ID of an exsisitng Windows Server Container image.
+Vor dem Erstellen einer Windows Server-Container mit Docker benötigen Sie den Namen oder die ID eines Exsisitng Container für Windows Server-Abbilds.
 
-To see all images loaded on the container host use the `docker images` command.
+Um alle Bilder geladen werden, auf dem Host Container verwenden, finden Sie unter der `Docker Bilder` Befehl.
 
 ``` PowerShell
 docker images
@@ -76,25 +76,25 @@ windowsservercore   latest              9eca9231f4d4        30 hours ago        
 windowsservercore   10.0.10254.0        9eca9231f4d4        30 hours ago        9.613 GB
 ```
 
-Now, use `docker run` To create a new Windows Server Container.
-This command as seen below will instruct the Docker daemon to create a new container named ‘dockerdemo’ from the image ‘windowsservercore’ and open an interactive (-it) console session (cmd) with the container.
+Verwenden Sie nun `Docker ausführen` um einen neuen Windows Server-Container zu erstellen.
+Mit diesem Befehl wie folgt wird den Daemon Docker erstellen einen neuen Container mit dem Namen "Dockerdemo" aus dem Abbild 'Windowsservercore', und öffnen Sie eine interaktive angewiesen (-es)-Konsole Sitzung (Cmd) mit dem Container.
 
 ``` PowerShell
 docker run -it --name dockerdemo windowsservercore cmd
 ```
-When the command completes you will be working in a console session on the container.
+Nach Abschluss des Befehls werden Sie in einer Konsolen-Sitzung für den Container arbeiten.
 
-Working in a container is almost identical to working with Windows installed on a virtual or physical machine.
-You can run commands such as `ipconfig` to return the IP address of the container, `mkdir` to create a new directory, or `powershell` to start a PowerShell session.
-Go ahead and make a change to the container such as creating a file or folder.
-For example, the following command will create a file which contains network configuration data about the container.
+Arbeiten in einem Container ist fast identisch mit der Arbeit mit Windows auf einem virtuellen oder physischen Computer installiert.
+Sie können z. B. Befehle ausführen `Ipconfig` zum Zurückgeben der IP-Adresse des Containers, `Mkdir` ein neues Verzeichnis erstellen oder `Powershell` zum Starten einer PowerShell-Sitzung.
+Fahren Sie fort, und nehmen Sie eine Änderung an dem Container, z. B. das Erstellen einer Datei oder eines Ordners.
+Der folgende Befehl wird beispielsweise eine Datei erstellt die Netzwerkkonfigurationsdaten über den Container enthält.
 
 ``` PowerShell
 ipconfig > c:\ipconfig.txt
 ```
 
-You can read the contents of the file to ensure the command completed successfully.
-Notice that the IP address contained in the text file matches that of the container.
+Lesen Sie den Inhalt der Datei, um sicherzustellen, dass den Befehl erfolgreich ausgeführt.
+Beachten Sie, dass die IP-Adresse, die in der Textdatei enthaltenen des Containers entspricht.
 
 ``` PowerShell
 type c:\ipconfig.txt
@@ -108,14 +108,14 @@ Ethernet adapter vEthernet (Virtual Switch-94a3e12ad262b3059e08edc4d48fca3c8390e
    Default Gateway . . . . . . . . . : 172.16.0.1
 ```
 
-Now that the container has been modified, run the following to stop the console session placing you back in the console session of the container host.
+Jetzt, dass der Container geändert wurde, führen Sie Folgendes ein, um das Beenden der Konsole Sitzung platzieren Sie in der Konsole-Sitzung des Hosts Container zurück.
 
 ``` PowerShell
 exit
 ```
 
-Finally to see a list of containers on the container host use the `docker ps –a` command.
-Notice from the output that a container named 'dockerdemo' has been created.
+Schließlich zu einer Liste von Containern für den Container finden Sie unter Host verwenden, der `Docker Ps – eine` Befehl.
+Beachten Sie, dass in der Ausgabe ein Container mit der Bezeichnung "Dockerdemo" wurde erstellt.
 
 ``` PowerShell
 docker ps -a
@@ -124,20 +124,20 @@ CONTAINER ID        IMAGE               COMMAND        CREATED             STATU
 4f496dbb8048        windowsservercore   "cmd"          2 minutes ago       Exited (0) 2 minutes ago             dockerdemo
 ```
 
-###Step 2 - Create a New Container Image
+###Schritt 2: Erstellen Sie ein neues Container-Bild
 
-An image can now be made from this container.
-This image will behave like a snapshot of the container and can be re-deployed many times.
+Ein Bild kann nun von diesem Container vorgenommen werden.
+Dieses Bild kann verhält sich wie eine Momentaufnahme des Containers und erneut bereitgestellt, oft.
 
-To create a new image run the following.
-This command instructs the Docker engine to create a new image named 'newcontainerimage' that will include all changes made to the 'deckerdemo' container.
+Erstellen Sie ein neues Abbild führen Sie die folgenden.
+Dieser Befehl weist das Modul Docker, erstellen Sie ein neues Bild mit dem Namen "Newcontainerimage", die alle Änderungen an den Container "Deckerdemo" enthalten sein sollen.
 
 ``` PowerShell
 docker commit dockerdemo newcontainerimage
 ```
 
-To see all images on the host, run `docker images`.
-Notice that a new image has been created with the name 'newcontainerimage'.
+Um alle Bilder auf dem Host anzuzeigen, führen `Docker Bilder`.
+Beachten Sie, dass ein neues Bild mit dem Namen "Newcontainerimage" erstellt wurde.
 
 ``` PowerShell
 docker images
@@ -148,40 +148,40 @@ windowsservercore   latest              9eca9231f4d4        30 hours ago        
 windowsservercore   10.0.10254.0        9eca9231f4d4        30 hours ago        9.613 GB
 ```
 
-###Step 3 - Create New Container From Image
+###Schritt 3: Erstellen von neuen Container aus Bild
 
-Now that you have a custom container image, deploy a new container named 'newcontainer' from 'newcontainerimage' and open an interactive shell session with the container.
+Nun, da Sie ein benutzerdefinierter Container Bild haben, Bereitstellen Sie einen neuen Container mit dem Namen 'Newcontainer' von 'Newcontainerimage', und öffnen Sie eine interaktive Shell-Sitzung mit dem Container.
 
 ``` PowerShell
 docker run –it --name newcontainer newcontainerimage cmd
 ```
 
-Take a look at the c:\ drive of this new container and notice that the ipconfig.txt file is present.
+Betrachten Sie das Laufwerk c:\ für diesen Container, und beachten Sie, dass die ipconfig.txt-Datei vorhanden ist.
 
 ![](media/docker3.png)
 
-Exit the newly created container to return to the container hosts console session.
+Beenden Sie den neu erstellten Container mit der Container Hosts Konsole zurückgegeben.
 
 ``` PowerShell
 exit
 ```
 
-This exercise has shown that an image taken from a modified container will include all modifications.
-While the example here was a simple file modification, the same would apply if you were to install software into the container such as a web server.
-Using these methods, custom images can be created that will deploy application ready containers.
+In dieser Übung ergab, dass ein Abbild stammt aus einer geänderten Container alle Änderungen enthalten sein sollen.
+Im Beispiel wird eine einfache Änderung war, zwar gilt die gleiche würden Sie Software in den Container, z. B. einen Webserver zu installieren.
+Mithilfe dieser Methoden können benutzerdefinierte Abbilder erstellen, die Anwendung bereit Containern bereitgestellt werden soll.
 
-###Step 4 - Remove Containers and Images
+###Schritt 4: Entfernen von Containern und Bilder
 
-To remove a container after it is no longer needed use the `docker rm` command.
-The following command will remove the container name 'newcontainer'.
+Um einen Container zu entfernen, wenn es nicht mehr benötigt verwenden die `Docker Rm` Befehl.
+Der folgende Befehl entfernt den Container "Newcontainer".
 
 ``` PowerShell
 docker rm newcontainer
 ```
-To remove container images when they are no longer needed use the `docker rmi` command.
-You cannot remove an image if it is referenced by an existing container.
+Container-Abbilder zu entfernen, wenn sie nicht mehr sind nötig verwenden die `Docker Rmi` Befehl.
+Ein Bild kann nicht entfernt werden, wenn es mit einem vorhandenen Container verwiesen wird.
 
-The following command removes the container image named 'newcontainerimage'.
+Der folgende Befehl entfernt das Container-Abbild mit dem Namen "Newcontainerimage".
 ``` PowerShell
 docker rmi newcontainerimage
 
@@ -189,56 +189,56 @@ Untagged: newcontainerimage:latest
 Deleted: 4f8ebcf0a334601e75070a92294d993b0f182abb6f4c88740c75b05093e6acff
 ```
 
-##Host a Web Server in a Container
+##Hosten von einem Webserver in einem Container
 
-This next example will demonstrate a more practical use case for Windows Server Containers.
-The steps included in this exercise will guide you through creating a web server container image that can be used for deploying web applications hosted inside of a Windows Server Container.
+Im folgenden Beispiel wird einen praktikabler Anwendungsfall für Windows Server-Container gezeigt.
+In dieser Übung enthaltenen Schritte führt Sie durch die Erstellung einer Web-Container Serverabbild, das zum Bereitstellen von Web-Applikationen in einem Windows Server-Container verwendet werden kann.
 
-###Step 1 - Download Web Server Software
+###Schritt 1 - Webserver-Software herunterladen
 
-Before creating a container image the web server software will need to be downloaded and staged on the container host.
-We will be using the nginx for Windows software for this example.
-**Note** that this step will require the container host to be connected to the internet.
-If this step produces a connectivity or name resolution error check the network configuration of the container host.
+Server-Software müssen vor dem Erstellen eines Abbilds Container im Web heruntergeladen und auf dem Host Container bereitgestellt werden.
+Wir werden die Nginx für Windows-Software in diesem Beispiel verwenden.
+**Hinweis** dass dieser Schritt bei den Container-Host mit dem Internet verbunden sein.
+Wenn dieser Schritt führt ein Auflösung Fehler Konnektivität oder den Namen die Netzwerkkonfiguration des Hosts Container überprüfen.
 
-Run the following command on the container host to create the directory structure that will be used for this example.
+Führen Sie den folgenden Befehl auf dem Host Container zum Erstellen der Verzeichnisstruktur, die für dieses Beispiel verwendet werden.
 
 ``` PowerShell
 mkdir c:\build\nginx\source
 ```
 
-Run this command on the container host to download the nginx software to 'c:\nginx-1.9.3.zip'.
+Führen Sie diesen Befehl auf dem Host Container zum Herunterladen der Software Nginx auf 'c:\nginx-1.9.3.zip'.
 
 ``` PowerShell
 wget -uri 'http://nginx.org/download/nginx-1.9.3.zip' -OutFile "c:\nginx-1.9.3.zip"
 ```
 
-Finally the following command will extract the nginx software to 'C:\build\nginx\source'.
+Schließlich wird der folgende Befehl die Nginx-Software für die 'C:\build\nginx\source' extrahiert.
 
 
 ``` PowerShell
 Expand-Archive -Path C:\nginx-1.9.3.zip -DestinationPath C:\build\nginx\source -Force
 ```
 
-###Step 2 - Create Web Server Image
+###Schritt 2: Erstellen von Web-Server-Image
 
-In the previous example, you manually created, updated and captured a container image.
-This example will demonstrate an automated method for creating container images using a Dockerfile.
-Dockerfiles contain instructions that the Docker engine uses to build and modify a container, and then commit the container to a container image.
-For more information on dockerfiles, see [Dockerfile reference](https://docs.docker.com/reference/builder/).
+Im vorherigen Beispiel, indem Sie manuell erstellt, aktualisiert und ein Container-Abbild erfasst.
+In diesem Beispiel wird gezeigt, dass eine automatisierte Methode zum Erstellen von Container-Bildern, die mit einem Dockerfile.
+Dockerfiles Anweisungen enthalten, die das Docker-Modul verwendet wird, einen Container zu erstellen, und übernehmen Sie den Container zu einem Container-Abbild.
+Weitere Informationen über Dockerfiles, finden Sie unter [Dockerfile Verweis](https://docs.docker.com/reference/builder/).
 
-Use the following command to create an empty dockerfile.
+Verwenden Sie den folgenden Befehl aus, um eine leere Dockerfile zu erstellen.
 
 ``` PowerShell
 new-item -Type File c:\build\nginx\dockerfile
 ```
-Open the dockerfile with notepad.
+Öffnen Sie die Dockerfile mit Notepad.
 
 ```
 notepad.exe c:\build\nginx\dockerfile
 ```
 
-Copy and paste the following text into notepad, save the file and close notepad.
+Kopieren Sie den folgenden Text in Editor, speichern Sie die Datei, und schließen Sie Editor.
 
 ``` PowerShell
 FROM windowsservercore
@@ -246,21 +246,21 @@ LABEL Description="nginx For Windows" Vendor="nginx" Version="1.9.3"
 ADD source /nginx
 ```
 
-At this point the dockerfile will be in 'c:\build\nginx' and the nginx software extracted to 'c:\build\nginx\source'.
-You are now ready to build the web server container image based on the instructions in the dockerfile.
-To do this, run the following command on the container host.
+An diesem Punkt werden die Dockerfile in 'c:\build\nginx' und 'c:\build\nginx\source' extrahiert Nginx-Software.
+Sie können nun das Web Container Serverabbild basierend auf den Anweisungen in der Dockerfile zu erstellen.
+Führen Sie dazu den folgenden Befehl auf dem Host des Containers.
 
 ``` PowerShell
 docker build -t nginx_windows C:\build\nginx
 ```
-This command instructs the docker engine to use the dockerfile located at `C:\build\nginx` to create an image named 'nginx_windows'.
+Dieser Befehl weist das Docker-Modul verwenden, die am Dockerfile `C:\build\nginx` ein Abbild mit dem Namen "Nginx_windows" erstellen.
 
-The output will look similar to this:
+Die Ausgabe sieht etwa wie folgt:
 
 ![](media/docker1.png)
 
-When completed, take a look at the images on the host using the `docker images` command.
-You should see a new image named 'nginx_windows'.
+Wenn abgeschlossen ist, sehen Sie sich die Bilder auf dem Host mit der `Docker Bilder` Befehl.
+Ein neues Bild mit dem Namen "Nginx_windows" sollte angezeigt werden.
 ``` PowerShell
 docker images
 
@@ -271,13 +271,13 @@ windowsservercore   10.0.10254.0        9eca9231f4d4        35 hours ago        
 windowsservercore   latest              9eca9231f4d4        35 hours ago        9.613 GB
 ```
 
-###Step 3 – Configure Networking for Container Application
+###Schritt 3 – Konfigurieren Sie Netzwerke für Container-Anwendung
 
-Because you will be hosting a website inside of a container a few networking related configurations need to be made.
-First a firewall rule needs to be created on the container host that will allow access to the website.
-In this example we will be accessing the site through port 80.
-Run the following script to create this firewall rule.
-This script can be copied into the VM.
+Da Sie eine Website in einem Container gehostet werden im Zusammenhang mit einigen Netzwerken Konfigurationen vorgenommen werden müssen.
+Zuerst muss eine Firewallregel auf dem Host Container erstellt werden, die Zugriff auf die Website ermöglichen.
+In diesem Beispiel werden wir die Website über Port 80 zugreifen.
+Führen Sie das folgende Skript aus, um diese Firewallregel zu erstellen.
+Dieses Skript kann auf dem virtuellen Computer kopiert werden.
 
 
 ``` powershell
@@ -286,76 +286,76 @@ if (!(Get-NetFirewallRule | where {$_.Name -eq "TCP80"})) {
 }
 ```
 
-Next if you are working from Azure and have not already created a Virtual Machine endpoint you will need to create one now.
-For more information on Azure VM Endpoints see this article: [Set up Azure VM Endpoints](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/).
+Wenn Sie von Azure arbeiten und nicht bereits einen Endpunkt des virtuellen Computers erstellt haben müssen Sie als Nächstes jetzt eine erstellen.
+Weitere Informationen zum Azure-VM-Endpunkten finden Sie in diesem Artikel: [Azure VM-Endpunkte eingerichtet](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/).
 
-###Step 4 - Deploy Web Server Ready Container
+###Schritt 4: Bereitstellen der Container der Web-Server bereit
 
-To deploy a Windows Server Container based off of the 'nginx_windows' container run the following command.
-This will create a new container named 'nginxcontainer' and start an console session on the container.
-The –p 80:80 portion of this command creates a port mapping between port 80 on the host to port 80 on the container.
+Führen den folgenden Befehl, um einen Windows Server-Container basiert, von der 'Nginx_windows' bereitstellen Container.
+Erstellt einen neuen Container mit dem Namen 'Nginxcontainer' und starten eine konsolensitzung für die für den Container.
+Der – p 80:80 Teil dieser Befehl erstellt eine Port-Zuordnung zwischen Port 80 auf dem Host auf Port 80 für den Container.
 
 
 ``` powershell
 docker run -it --name nginxcontainer -p 80:80 nginx_windows cmd
 ```
-Once working inside the container, the nginx web server can be started and web content staged.
-To start the nginx web server, change to the nginx installation directory.
+Sobald innerhalb des Containers zu arbeiten, kann der Webserver Nginx gestartet werden und Web-Inhalte bereitgestellt werden.
+Um den Nginx-Webserver zu starten, legen Sie zum Installationsverzeichnis von Nginx.
 
 ``` powershell
 cd c:\nginx\nginx-1.9.3
 ```
 
-Start the nginx web server.
+Starten Sie den Nginx-Webserver.
 ``` powershell
 start nginx
 ```
-###Step 5 – Access the Container Hosted Website
+###Schritt 5: Zugriff auf die Container-gehosteten Website
 
-With the web server container created, you can now checkout the application hosted in the container.
-To do so, open up a browser on different machine and enter `http://containerhost-ipaddress`.
-Notice here that you will be browsing to the IP Address of the Container Host and not the container itself.
-If you are working from an Azure Virtual Machine this will be the public IP address or Cloud Service name.
+Mit dem Webcontainer erstellt haben können Sie jetzt zur Kasse gehen die in den Container gehostete Anwendung.
+Hierzu öffnen Sie einen Browser auf anderen Computer aus, und geben Sie `http://containerhost-ipaddress`.
+Beachten Sie, dass Sie die IP-Adresse von Host-Container und der Container selbst nicht durchsuchen.
+Bei Verwendung von virtuellen Azure-Computer werden die öffentlichen IP-Adresse oder Cloud-Dienst.
 
 
-If everything has been correctly configured, you will see the nginx welcome page.
+Wenn alles richtig konfiguriert wurde, sehen Sie die Nginx-Willkommensseite.
 
 ![](media/nginx.png)
 
-At this point, feel free to update the website.
-Copy in your own sample website, or run the following command in the container to replace the nginx welcome page with a ‘Hello World’ web page.
+An diesem Punkt können Sie die Website zu aktualisieren.
+In Ihrer eigenen Beispielwebsite kopieren Sie, oder führen Sie den folgenden Befehl im Container Nginx-Willkommensseite durch eine Webseite "Hello World" zu ersetzen.
 
 ```powershell
 powershell wget -uri 'https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/doc-site/virtualization/windowscontainers/quick_start/SampleFiles/index.html' -OutFile "C:\nginx\nginx-1.9.3\html\index.html"
 ```
 
-After the website has been updated, navigate back to `http://containerhost-ipaddress`.
+Nachdem die Website aktualisiert wurde, navigieren Sie zurück zu `http://containerhost-ipaddress`.
 
 ![](media/hello.png)
 
-> **Note:** If you would like to change the Docker Daemon settings (such as to change the port it listens to, to connect to a container remotely), you will need to edit the file "C:\ProgramData\docker\runDockerDaemon.cmd" in the container, and then you will need to restart the service with PowerShell, using `Restart-Service docker`.
+> **Hinweis:** verwenden, wenn die Docker-Daemon-Einstellungen (z. B. den Port zu ändern, es überwacht, Remoteverbindung zu einem Container) ändern möchten, Sie zum Bearbeiten der Datei "C:\ProgramData\docker\runDockerDaemon.cmd" im Container müssen und Sie den Dienst mit PowerShell neu starten müssen, `Restart-Service-Docker`.
 
-##Video Walkthrough
+##Video zur exemplarischen Vorgehensweise
 
 <iframe src="https://channel9.msdn.com/Blogs/containers/Quick-Start-Deploying-and-Managing-Windows-Server-Containers-with-Docker/player" width="800" height="450" allowFullScreen="true" frameBorder="0" scrolling="no"></iframe>
 
-##Next Steps
+##Nächste Schritte
 
-Now that you have containers set up and an introduction to the tools, go build your own containerized apps.
+Nun die Container einrichten sowie eine Einführung in die Tools, fahren Sie Ihren eigenen Sammelartikeleinheit apps zu erstellen.
 
-Remember, this is a **preview** there are bugs and we have a lot of work in progress.
-[This page](../about/work_in_progress.md) contains many of our known issues.
+Beachten Sie, dass dies ist ein **Vorschau** Fehler vorhanden sind, und wir haben viel Arbeit.
+[Auf dieser Seite](../about/work_in_progress.md) enthält viele unserer bekannter Probleme.
 
-Be aware that there are some known Docker commands that [don't work](../about/work_in_progress.md#DockermanagementDockercommandsthatdontworkwithWindowsServerContainers) and some that only [partially work](../about/work_in_progress.md#DockermanagementDockercommandsthatpartiallyworkwithWindowsServerContainers)
+Beachten Sie, dass es gibt einige bekannte Docker Befehle, die [funktionieren nicht](../about/work_in_progress.md#DockermanagementDockercommandsthatdontworkwithWindowsServerContainers) und einige, die nur [teilweise arbeiten](../about/work_in_progress.md#DockermanagementDockercommandsthatpartiallyworkwithWindowsServerContainers)
 
-We are also monitoring the [forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers) very closely.
+Wir sind auch Überwachung der [Foren](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers) sehr genau.
 
-There are also pre-made samples on [GitHub](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples).
+Dazu gehören auch vorgefertigte Beispiele auf [GitHub](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples).
 
 -----------------------------------
 
-[Back to Container Home](../containers_welcome.md)   
-[Known Issues for Current Release](../about/work_in_progress.md)
+[Zurück zur Startseite von Container](../containers_welcome.md)   
+[Bekannte Probleme bei der aktuellen Version](../about/work_in_progress.md)
 
 
 

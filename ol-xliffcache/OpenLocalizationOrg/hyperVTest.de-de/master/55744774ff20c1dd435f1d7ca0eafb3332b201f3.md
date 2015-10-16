@@ -1,62 +1,62 @@
-ms.ContentId: 040B1B51-0F25-4295-B317-8CC4DE0A1AFF
-title: Export and import virtual machines
+MS. ContentId: 040B1B51-0F25-4295-B317-8CC4DE0A1AFF
+Titel: exportieren und Importieren von virtuellen Computern
 
 
 
 
-#Export and Import virtual machines
+#Exportieren und Importieren von virtuellen Computern
 
-You can use the export and import functionality to quickly duplicate virtual machines or to move them from one host to another.
-You don't need to export a virtual machine to be able to import it.
-You can simply copy a virtual machine and its associated files to the new host, and then use the **Import Virtual Machine** wizard to specify the location of the files.
-This registers the virtual machine with Hyper-V and makes it available to be used.
+Sie können mithilfe der Export und Importieren von Funktionen können Sie virtuelle Computer schnell duplizieren oder von einem Host auf einen anderen verschieben.
+Sie müssen nicht Exportieren eines virtuellen Computers, damit es importiert werden.
+Sie können einfach einen virtuellen Computer und die zugehörigen Dateien auf dem neuen Host kopieren und dann die **virtuellen Computer importieren** -Assistenten den Speicherort der Dateien an.
+Dadurch wird der virtuelle Computer mit Hyper-V registriert und es können verwendet werden.
 
-##Export virtual machines
+##Exportieren von virtuellen Maschinen
 
-An easy way to prepare virtual machines to be imported is the **Export Virtual Machine** wizard.
+Ist eine einfache Möglichkeit zum Vorbereiten von virtuellen Computern importiert werden die **virtuellen Computer exportieren** Assistenten.
 
-1. In Hyper-V Manager, select one or multiple virtual machines, right-click on your selection and select **Export**.
-2. Click **Browse** in the dialog box and choose where you would like to put the exported VM(s) and then click **Select Folder**.
-3. In the **Export Virtual Machine** dialog, click **Export**.
+1. Wählen Sie einen oder mehrere virtuelle Computer in Hyper-V-Manager, mit der rechten Maustaste auf die Auswahl, und wählen Sie **exportieren**.
+2. Klicken Sie auf **Durchsuchen** im Dialogfeld ein, und wählen Sie, wo Sie möchten, setzen den exportierten VMs und auf **Ordner auswählen**.
+3. In der **virtuellen Computer exportieren** Dialogfeld, klicken Sie auf **exportieren**.
 
-For information about using Windows PowerShell to export virtual machines, see [Export-VM](https://technet.microsoft.com/library/hh848491.aspx)
+Informationen zur Verwendung von Windows PowerShell zum Exportieren von virtuellen Maschinen finden Sie unter [Export-VM](https://technet.microsoft.com/library/hh848491.aspx)
 
-##Import virtual machines
+##Importieren von virtuellen Computern
 
-1. In **Hyper-V Manager**, in the **Action** menu, click **Import Virtual Machine**.
-2. In the Locate Folder section, click Browse and navigate to where the virtual machine files are located.
-    Please note that using the wizard you can import one VM at a time and have to select the VM's folder instead of the general export folder.
-    Click **Next** when finished.
-3. Select the virtual machine to import and then click **Next**.
-4. In the Choose Import Type section, you can choose how to import the virtual machine:
-    -  **Register** - Uses the existing unique ID of the virtual machine and registers it in-place.
-        Choose this option if the virtual machines files are already in the correct location.
-    - **Restore** - Uses the original virtual machine’s unique ID and also copies the virtual machine files to the default location specified for the host.
-    - **Copy** - Creates a new unique ID for the virtual machine and also copies the virtual machine files to the default location specified for the host.
+1. In **Hyper-V-Manager**, in den **Aktion** Menü klicken Sie auf **virtuellen Computer importieren**.
+2. Klicken Sie im Abschnitt "Ordner suchen" auf Durchsuchen, und navigieren Sie, in dem Dateien der virtuellen Maschine befinden.
+    Beachten Sie, dass mithilfe des Assistenten können Sie ein virtueller Computer in einem Schritt importieren und die VM-Ordner nicht den allgemeinen Exportordner auswählen müssen.
+    Klicken Sie auf **Weiter** Beendigung.
+3. Wählen Sie die virtuellen Computer importieren, und klicken Sie dann auf **Weiter**.
+4. Im Abschnitt Importtyp auswählen können Sie den virtuellen Computer importieren auswählen:
+    -  **Registrieren** – verwendet die vorhandene eindeutige ID des virtuellen Computers und registriert sie direkte.
+        Wählen Sie diese Option, wenn sich die Dateien des virtuellen Computers bereits am richtigen Speicherort befinden.
+    - **Wiederherstellen** – verwendet die ursprüngliche virtuelle Maschine eindeutige ID und kopiert auch Dateien der virtuellen Maschine am Standardspeicherort für den Host angegeben.
+    - **Kopie** – erstellt eine neue eindeutige ID für den virtuellen Computer, und kopiert auch Dateien der virtuellen Maschine am Standardspeicherort für den Host angegeben.
     
-5. After selecting how to import the VM, click **Next**.
-6. In the Choose Destination section, you can choose where to store the files for the virtual machine or leave them in their current location.
-    When you are finished, click **Next**.
-7. In Choose Storage folders, you can select another place to store the .vhdx file or leave them where they are.
-    When you are finished, click **Next**.
-8. When you have finished importing the VM, you'll see the summary page describing where the new VM files are located.
+5. Nach der Auswahl des virtuellen Computers zu importieren, klicken Sie auf **Weiter**.
+6. Im Abschnitt Ziel auswählen können Sie auswählen, wo die Dateien für den virtuellen Computer speichern, oder lassen Sie sie in ihrem aktuellen Speicherort.
+    Klicken Sie danach auf **Weiter**.
+7. In Ordnern Speicher auswählen können Sie ein anderer Ort für die vhdx-Datei zu speichern, oder lassen sie auswählen, wo sie sind.
+    Klicken Sie danach auf **Weiter**.
+8. Wenn Sie mit dem Importieren des virtuellen Computers abgeschlossen haben, sehen Sie die Seite "Zusammenfassung", die beschreibt, wo sich die neuen VM-Dateien befinden.
 
-The Import Virtual Machine wizard also walks you through the steps of addressing incompatibilities when you import the virtual machine to the new host—so this wizard can help with configuration that is associated with physical hardware, such as memory, virtual switches, and virtual processors.
+Der virtuellen Computer importieren-Assistent führt Sie auch über die Schritte zum Adressieren von Inkompatibilitäten beim Importieren der virtuellen Maschine auf dem neuen Host, damit dieser Assistent bei Konfiguration helfen kann, die physische Hardware, wie z. B. Arbeitsspeicher, virtuelle Switches und virtuelle Prozessoren zugeordnet ist.
 
-To import a virtual machine, the wizard does the following:
-1. Creates a copy of the virtual machine configuration file.
-    This is done as a precaution in case an unexpected restart occurs on the host, such as from a power outage.
-2. Validates hardware.
-    Information in the virtual machine configuration file is compared to hardware on the new host.
-3. Compiles a list of errors.
-    This list identifies what needs to be reconfigured and determines which pages appear next in the wizard.
-4. Displays the relevant pages, one category at a time.
-    The wizard explains each incompatibility to help you reconfigure the virtual machine so it is compatible with the new host.
-5. Removes the copy of the configuration file.
-    After the wizard does this, the virtual machine is ready to be started.
+Beim Import eines virtuellen Computers führt der Assistent die folgenden Schritte aus:
+1. Er erstellt eine Kopie der Konfigurationsdatei des virtuellen Computers.
+    Dies ist eine Vorsichtsmaßnahme für den Fall, dass der Host beispielsweise aufgrund eines Stromausfalls außerplanmäßig neu gestartet wird.
+2. Er überprüft die Hardware.
+    Die Informationen in der Konfigurationsdatei des virtuellen Computers werden mit der Hardware des neuen Hosts verglichen.
+3. Er erstellt eine Fehlerliste.
+    Diese Liste zeigt auf, wo Konfigurationsbedarf besteht, und bestimmt somit, welche Assistentenseiten als nächstes angezeigt werden.
+4. Zeigt die relevanten Seiten, einer Kategorie zu einem Zeitpunkt.
+    Der Assistent wird erläutert, jede Inkompatibilität, mit denen Sie den virtuellen Computer neu konfigurieren, damit er mit dem neuen Host kompatibel ist.
+5. Er entfernt die Kopie der Konfigurationsdatei.
+    Danach kann der virtuelle Computer gestartet werden.
 
-In addition to the wizard, the Hyper-V module for Windows PowerShell includes cmdlets for importing virtual machines.
-For more information, see [Import-VM](https://technet.microsoft.com/library/hh848495.aspx).
+Statt des Assistenten können Sie auch die Cmdlets des Hyper-V-Moduls für Windows PowerShell zum Importieren virtueller Computer verwenden.
+Weitere Informationen finden Sie unter [Import-VM](https://technet.microsoft.com/library/hh848495.aspx).
 
 
 

@@ -1,16 +1,16 @@
-ms.ContentId: C49DA0E6-2E12-4D51-803A-31B1B5A8F85C
-title: PowerShell Reference
+MS. ContentId: C49DA0E6-2E12-4D51-803A-31B1B5A8F85C
+Titel: PowerShell-Referenz
 
 
-#PowerShell for Containers
+#PowerShell für Container
 
 ##Install-ContainerOSImage
 
 **NAME**      
 Install-ContainerOSImage
 
-**SYNOPSIS**  
-Installs the given WIM as a container OS image for use with Windows Server or Hyper-V Containers.
+**ZUSAMMENFASSUNG**  
+Installiert die angegebene WIM-Datei als Container BS-Image für die Verwendung mit Windows Server oder Hyper-V-Container.
 
 
 **SYNTAX**
@@ -20,10 +20,10 @@ Installs the given WIM as a container OS image for use with Windows Server or Hy
 Install-ContainerOSImage [-WimPath] <String> [-Force] [< CommonParameters >]
 ```
 
-**DESCRIPTION**  
-Installs a base image from a WIM file into the shared central image store for the Windows Server and Hyper-V Containers feature.
+**BESCHREIBUNG**  
+Installiert eine Basis-Image aus einer WIM-Datei in den freigegebenen zentralen Abbildspeicher für das Feature Windows Server und Hyper-V-Container.
 
-**PARAMETERS**
+**PARAMETER**
 ``` PowerShell
     -WimPath <String>
         A path to the WIM file that will be installed.
@@ -49,28 +49,28 @@ Installs a base image from a WIM file into the shared central image store for th
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**      
-None
+**EINGABEN**      
+Keine
 
-**OUTPUTS**  
-None
+**AUSGABEN**  
+Keine
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
--------------------------- EXAMPLE 1 --------------------------
+-------------------------- BEISPIEL 1 --------------------------
 
 ``` PowerShell
 PS C:\>Install-ContainerOSImage c:\baseimage.wim
 ```
 
-##Uninstall-ContainerOSImage
+##Deinstallieren Sie ContainerOSImage
 
 **NAME**  
-Uninstall-ContainerOSImage
+Deinstallieren Sie ContainerOSImage
 
-**SYNOPSIS**  
-Removes a previously installed container OS image
+**ZUSAMMENFASSUNG**  
+Entfernt eine zuvor installierte Container-Betriebssystemabbild
 
 **SYNTAX**
  
@@ -81,7 +81,7 @@ Uninstall-ContainerOSImage [-ImageName] <string> [-Force]  [< CommonParameters >
 Uninstall-ContainerOSImage [-ContainerImage] <Object> [-Force]  [< CommonParameters >]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -119,23 +119,23 @@ Uninstall-ContainerOSImage [-ContainerImage] <Object> [-Force]  [< CommonParamet
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
-None
+**EINGABEN**  
+Keine
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 System.Object
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
-##Add-ContainerNetworkAdapter
+##Hinzufügen ContainerNetworkAdapter
 
 **NAME**  
-Add-ContainerNetworkAdapter
+Hinzufügen ContainerNetworkAdapter
 
-**SYNOPSIS**  
-Add a new network adapter to an existing container
+**ZUSAMMENFASSUNG**  
+Fügen Sie einen neuen Netzwerkadapter zu einem vorhandenen container
 
 **SYNTAX**
 
@@ -148,7 +148,7 @@ Add-ContainerNetworkAdapter [-ContainerName] <string[]> [-CimSession <CimSession
     [-DynamicMacAddress] [-StaticMacAddress <string>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -268,25 +268,25 @@ Add-ContainerNetworkAdapter [-ContainerName] <string[]> [-CimSession <CimSession
 ```
 
 
-**INPUTS**  
+**EINGABEN**  
 System.String\[\]  
 Microsoft.Containers.PowerShell.Objects.Container\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
-##Connect-ContainerNetworkAdapter
+##Verbindung ContainerNetworkAdapter
 
 **NAME**  
-Connect-ContainerNetworkAdapter
+Verbindung ContainerNetworkAdapter
 
-**SYNOPSIS**  
-Connect a container network adapter to a virtual switch
+**ZUSAMMENFASSUNG**  
+Verbinden Sie einen Container-Netzwerkadapter mit einem virtuellen switch
 
 **SYNTAX**
 
@@ -300,7 +300,7 @@ Connect a container network adapter to a virtual switch
     [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -401,24 +401,24 @@ Connect a container network adapter to a virtual switch
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
-##Disconnect-ContainerNetworkAdapter
+##Trennen ContainerNetworkAdapter
 
 **NAME**  
-Disconnect-ContainerNetworkAdapter
+Trennen ContainerNetworkAdapter
 
-**SYNOPSIS**  
-Disconnect a container network adapter from a virtual switch
+**ZUSAMMENFASSUNG**  
+Trennen Sie einen Netzwerkadapter für den Container aus einem virtuellen switch
 
 **SYNTAX**
 
@@ -431,7 +431,7 @@ Disconnect a container network adapter from a virtual switch
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -523,24 +523,24 @@ Disconnect a container network adapter from a virtual switch
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Export-ContainerImage
 
 **NAME**  
 Export-ContainerImage
 
-**SYNOPSIS**  
-Copy container image out of the local store
+**ZUSAMMENFASSUNG**  
+Container-Images aus dem lokalen Speicher kopieren
 
 **SYNTAX**
 
@@ -554,7 +554,7 @@ Copy container image out of the local store
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 ``` PowerShell
     -AsJob
 
@@ -671,24 +671,24 @@ Copy container image out of the local store
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Get-Container
 
 **NAME**  
 Get-Container
 
-**SYNOPSIS**  
-Enumerate containers on the current system
+**ZUSAMMENFASSUNG**  
+Auflisten der Container des aktuellen Systems
 
 **SYNTAX**
 
@@ -701,7 +701,7 @@ Enumerate containers on the current system
     <pscredential[]>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -757,25 +757,25 @@ Enumerate containers on the current system
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 System.String\[\]  
 System.Guid
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Get-ContainerHost
 
 **NAME**  
 Get-ContainerHost
 
-**SYNOPSIS**  
-Get the host object for the container host
+**ZUSAMMENFASSUNG**  
+Rufen Sie das Hostobjekt für den Container-host
 
 **SYNTAX**
 
@@ -786,7 +786,7 @@ Get the host object for the container host
     Get-ContainerHost [-CimSession] <CimSession[]>  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -824,26 +824,26 @@ Get the host object for the container host
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Management.Infrastructure.CimSession\[\]  
 System.String\[\]  
-System.Management.Automation.PSCredential\[]
+System.Management.Automation.PSCredential\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerHost
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Get-ContainerImage
 
 **NAME**  
 Get-ContainerImage
 
-**SYNOPSIS**  
-List container images on the container host
+**ZUSAMMENFASSUNG**  
+Liste Container Bilder auf dem Host des Containers
 
 **SYNTAX**
 
@@ -853,7 +853,7 @@ Get-ContainerImage [[-Name] <string>] [[-Publisher] <string>] [[-Version] <versi
 [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential <pscredential[]>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -927,24 +927,24 @@ Get-ContainerImage [[-Name] <string>] [[-Publisher] <string>] [[-Version] <versi
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
-None
+**EINGABEN**  
+Keine
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Get-ContainerNetworkAdapter
 
 **NAME**  
 Get-ContainerNetworkAdapter
 
-**SYNOPSIS**  
-List network adapters associated with a container
+**ZUSAMMENFASSUNG**  
+Ein Container zugeordneten Liste-Netzwerkadapter
 
 **SYNTAX**
 
@@ -956,7 +956,7 @@ List network adapters associated with a container
     Get-ContainerNetworkAdapter [-Container] <Container[]> [[-Name] <string>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1021,21 +1021,21 @@ List network adapters associated with a container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container\[\]  
 System.String\[\]
 
 
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 
 
@@ -1044,8 +1044,8 @@ None
 **NAME**  
 Import-ContainerImage
 
-**SYNOPSIS**  
-Import a container image that was exported from another computer
+**ZUSAMMENFASSUNG**  
+Importieren Sie ein Container-Abbild, das von einem anderen Computer exportiert wurde
 
 **SYNTAX**
 
@@ -1055,7 +1055,7 @@ Import a container image that was exported from another computer
     [-Credential <pscredential[]>] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1129,26 +1129,26 @@ Import a container image that was exported from another computer
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 System.String
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Move-ContainerImageRepository
 
 **NAME**  
 Move-ContainerImageRepository
 
-**SYNOPSIS**  
-Change the location where container images are stored.
-Must be a location on a local disk.
-Can only be changed when no images are present on the system.
+**ZUSAMMENFASSUNG**  
+Ändern Sie den Speicherort, in dem Container Bilder gespeichert werden.
+Ein Speicherort auf einem lokalen Datenträger muss sein.
+Kann nur geändert werden, wenn keine Bilder auf dem System vorhanden sind.
 
 **SYNTAX**
 
@@ -1158,7 +1158,7 @@ Can only be changed when no images are present on the system.
     <string[]>] [-Credential <pscredential[]>] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1241,24 +1241,24 @@ Can only be changed when no images are present on the system.
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
-None
+**EINGABEN**  
+Keine
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.HyperV.PowerShell.VMHost
 
 
-**ALIASES**
-None
+**ALIASE**
+Keine
 
-##New-Container
+##Neuen Container
 
 **NAME**  
-New-Container
+Neuen Container
 
-**SYNOPSIS**  
-Create a new container
+**ZUSAMMENFASSUNG**  
+Erstellen Sie einen neuen container
 
 **SYNTAX**
 
@@ -1273,7 +1273,7 @@ Create a new container
     <string>] [-Path <string>] [-AsJob] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1410,24 +1410,24 @@ Create a new container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
-##New-ContainerImage
+##Neue ContainerImage
 
 **NAME**  
-New-ContainerImage
+Neue ContainerImage
 
-**SYNOPSIS**  
-Create a new container image from an existing container
+**ZUSAMMENFASSUNG**  
+Erstellen Sie ein neues Container-Image aus einem vorhandenen container
 
 **SYNTAX**
 
@@ -1445,7 +1445,7 @@ Create a new container image from an existing container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1555,24 +1555,24 @@ Create a new container image from an existing container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
-##Remove-Container
+##Entfernen eines Containers
 
 **NAME**  
-Remove-Container
+Entfernen eines Containers
 
-**SYNOPSIS**  
-Remove an existing container from the system
+**ZUSAMMENFASSUNG**  
+Entfernen Sie einen vorhandenen Container aus dem system
 
 **SYNTAX**
 
@@ -1585,7 +1585,7 @@ Remove an existing container from the system
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1686,25 +1686,25 @@ Remove an existing container from the system
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 System.String\[\]  
 Microsoft.Containers.PowerShell.Objects.Container\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Remove-ContainerImage
 
 **NAME**  
 Remove-ContainerImage
 
-**SYNOPSIS**  
-Remove a container image from the container host
+**ZUSAMMENFASSUNG**  
+Ein Container-Abbild vom Container Host entfernen
 
 **SYNTAX**
 
@@ -1717,7 +1717,7 @@ Remove a container image from the container host
     Remove-ContainerImage [-Image] <ContainerImage> [-Force] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1818,23 +1818,23 @@ Remove a container image from the container host
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 System.Object
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Remove-ContainerNetworkAdapter
 
 **NAME**  
 Remove-ContainerNetworkAdapter
 
-**SYNOPSIS**  
-Remove a network adapter from a container
+**ZUSAMMENFASSUNG**  
+Entfernen eines Netzwerkadapters von einem container
 
 **SYNTAX**
 
@@ -1850,7 +1850,7 @@ Remove a network adapter from a container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -1951,26 +1951,26 @@ Remove a network adapter from a container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter\[\]  
 System.String\[\]  
 Microsoft.Containers.PowerShell.Objects.Container\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Set-ContainerNetworkAdapter
 
 **NAME**  
 Set-ContainerNetworkAdapter
 
-**SYNOPSIS**  
-Set the MAC address on a network adapter in a container
+**ZUSAMMENFASSUNG**  
+Legen Sie die MAC-Adresse für einen Netzwerkadapter in einem container
 
 **SYNTAX**
 
@@ -1987,7 +1987,7 @@ Set the MAC address on a network adapter in a container
     <string>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -2106,26 +2106,26 @@ Set the MAC address on a network adapter in a container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 System.String  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Start-Container
 
 **NAME**  
 Start-Container
 
-**SYNOPSIS**  
-Start a container
+**ZUSAMMENFASSUNG**  
+Starten Sie einen container
 
 **SYNTAX**
 
@@ -2137,7 +2137,7 @@ Start a container
     Start-Container [-Container] <Container[]> [-AsJob] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -2229,25 +2229,25 @@ Start a container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container\[\]  
 System.String\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Stop-Container
 
 **NAME**  
 Stop-Container
 
-**SYNOPSIS**  
-Stop a container
+**ZUSAMMENFASSUNG**  
+Beenden eines Containers
 
 **SYNTAX**
 
@@ -2260,7 +2260,7 @@ Stop a container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -2361,25 +2361,25 @@ Stop a container
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container\[\]  
 System.String\[\]
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.Container
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 ##Test-ContainerImage
 
 **NAME**  
 Test-ContainerImage
 
-**SYNOPSIS**  
-Validate a container image on the container host system
+**ZUSAMMENFASSUNG**  
+Überprüfen Sie ein Container-Abbild auf dem Hostsystem container
 
 **SYNTAX**
 
@@ -2391,7 +2391,7 @@ Validate a container image on the container host system
     Test-ContainerImage [-Image] <ContainerImage> [-AsJob] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**
+**PARAMETER**
 
 
 ``` PowerShell
@@ -2492,16 +2492,16 @@ Validate a container image on the container host system
         about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ```
 
-**INPUTS**  
+**EINGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImage
 
 
-**OUTPUTS**  
+**AUSGABEN**  
 Microsoft.Containers.PowerShell.Objects.ContainerImageReport
 
 
-**ALIASES**  
-None
+**ALIASE**  
+Keine
 
 
 

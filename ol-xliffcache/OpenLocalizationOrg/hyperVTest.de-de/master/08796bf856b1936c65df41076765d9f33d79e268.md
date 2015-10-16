@@ -1,51 +1,51 @@
-ms.ContentId: 2b4ba69c-51a0-465c-a464-dca696cda744 
-title: Community Resources
+MS. ContentId: 2b4ba69c-51a0-465c-a464-dca696cda744 
+Titel: Community-Ressourcen
 
-#Community Resources
+#Community-Ressourcen
 
-Check out resources available to the user community.
-There is also a lot to see on the [Docker community](https://www.docker.com/community/participate/) pages.
+Sehen Sie sich die Ressourcen für die Benutzercommunity verfügbar.
+Es gibt auch viele auf der [Docker Community](https://www.docker.com/community/participate/) Seiten.
 
-##Contribute
+##Beitragen
 
-* [Docker for Windows](https://github.com/Microsoft/docker) on GitHub
-* [This documentation site and samples](https://github.com/Microsoft/Virtualization-Documentation) on GitHub
+* [Docker für Windows](https://github.com/Microsoft/docker) auf GitHub
+* [Diese Dokumentationswebsite und Beispiele](https://github.com/Microsoft/Virtualization-Documentation) auf GitHub
 
-##User Forums
+##Benutzerforen
 
-* [Windows Containers forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)
+* [Windows-Container-forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)
     
-* [TechNet forum](https://social.technet.microsoft.com/Forums/windowsserver/en-US/home "TechNet Forums")
-* [Azure forum](http://azure.microsoft.com/en-us/support/forums/)
+* [TechNet-Forum](https://social.technet.microsoft.com/Forums/windowsserver/en-US/home "TechNet-Foren")
+* [Azure-forum](http://azure.microsoft.com/en-us/support/forums/)
 
 
-##Featured content
+##Wichtige Inhalte
 
-* [Announcing Windows Server 2016 Containers Preview](http://weblogs.asp.net/scottgu/announcing-windows-server-2016-containers-preview)
-* [Docker -Introducing the Technical Preview of Docker Enging for Windows Server 2016](http://blog.docker.com/2015/08/tp-docker-engine-windows-server-2016/)
-* [Containers 101 Video](https://channel9.msdn.com/Blogs/containers/Containers-101-with-Microsoft-and-Docker)
-* [Containers: Docker, Windows and Trends](http://azure.microsoft.com/blog/2015/08/17/containers-docker-windows-and-trends/)
+* [Ankündigung von Windows Server-2016 Container in der Vorschau anzeigen](http://weblogs.asp.net/scottgu/announcing-windows-server-2016-containers-preview)
+* [Docker-Einführung in die technische Vorschau der emittierten Docker für WindowsServer 2016](http://blog.docker.com/2015/08/tp-docker-engine-windows-server-2016/)
+* [Container 101-Video](https://channel9.msdn.com/Blogs/containers/Containers-101-with-Microsoft-and-Docker)
+* [Container: Docker, Windows und Trends](http://azure.microsoft.com/blog/2015/08/17/containers-docker-windows-and-trends/)
 
 
 ##Blogs
 
-* [Channel 9 - The Containers Channel](https://channel9.msdn.com/Blogs/containers)
-* [Server & Cloud blog](http://blogs.technet.com/b/server-cloud/)
-* [Azure blog](http://azure.microsoft.com/blog/)
+* [Channel 9 - Container-Kanal](https://channel9.msdn.com/Blogs/containers)
+* [Server- und Cloud-blog](http://blogs.technet.com/b/server-cloud/)
+* [Azure-blog](http://azure.microsoft.com/blog/)
 
 
-##Presentations
+##Präsentationen
 
-* [Build 2015 - Day One Keynote Presentation](http://channel9.msdn.com/Events/Build/2015/KEY01)
-* [Build 2015 - Windows Containers: What, Why and How](http://channel9.msdn.com/events/Build/2015/2-704)
-* [Build 2015 - Thinking in Containers: Building a Scalable, Next-Gen Application with Docker on Azure](http://channel9.msdn.com/events/Build/2015/2-683)
-* [Build 2015 - Deploying Complex Open Source Workloads on Azure](http://channel9.msdn.com/Events/Build/2015/2-732)
+* [2015 - Tag eins dieser Präsentation erstellen](http://channel9.msdn.com/Events/Build/2015/KEY01)
+* [Build 2015 - Windows-Container: Was, warum und wie](http://channel9.msdn.com/events/Build/2015/2-704)
+* [Build 2015 - in Containern denken: Entwickeln einer Anwendung skalierbaren, der nächsten Generation mit Docker auf Azure](http://channel9.msdn.com/events/Build/2015/2-683)
+* [Build 2015 - Bereitstellung von komplexen Open-Source-Arbeitslasten auf Azure](http://channel9.msdn.com/Events/Build/2015/2-732)
 
-##Articles
+##Artikel
 
-* [Virtual Machines and Containers in Azure](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-vms-containers/)
-* [New Windows Server containers and Azure support for Docker](http://azure.microsoft.com/blog/2014/10/15/new-windows-server-containers-and-azure-support-for-docker/)
-* [Microsoft Announces New Container Technologies for the Next Generation Cloud](http://blogs.technet.com/b/server-cloud/archive/2015/04/08/microsoft-announces-new-container-technologies-for-the-next-generation-cloud.aspx)
+* [Virtuelle Maschinen und Container in Azure](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-vms-containers/)
+* [Neue Windows Server-Container und Azure-Support für Docker](http://azure.microsoft.com/blog/2014/10/15/new-windows-server-containers-and-azure-support-for-docker/)
+* [Microsoft kündigt neue Container-Technologien für die nächste Generation Cloud](http://blogs.technet.com/b/server-cloud/archive/2015/04/08/microsoft-announces-new-container-technologies-for-the-next-generation-cloud.aspx)
 
 
 

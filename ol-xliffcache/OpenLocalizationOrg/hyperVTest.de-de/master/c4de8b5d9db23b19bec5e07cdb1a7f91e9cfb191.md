@@ -1,14 +1,14 @@
-ms.ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
-title: Step 8: Experiment with Windows PowerShell
+MS. ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
+Titel: Schritt 8: experimentieren Sie mit Windows PowerShell
 
-#Step 8: Experiment with Windows PowerShell
+#Schritt 8: Experimentieren Sie mit WindowsPowerShell
 
-Now that you have walked through the basics of deploying Hyper-V, creating virtual machines and managing these virtual machines, let’s explore how you can automate many of these activities with PowerShell.
+Nun, da Sie die Grundlagen der Bereitstellung von Hyper-V, virtuelle Computer erstellen und verwalten diese virtuellen Computer durchlaufen haben, betrachten wir wie diesen Aktivitäten mit PowerShell automatisiert werden können.
 
-###Return a list of Hyper-V commands
+###Zurückgeben einer Liste von Hyper-V-Befehle
 
-1.  Click on the Windows start button, type **PowerShell**.
-2.  Run the following command to display a searchable list of PowerShell commands available with the Hyper-V PowerShell Module.
+1.  Klicken Sie auf die Windows-Start-Taste, Typ **PowerShell**.
+2.  Führen Sie den folgenden Befehl aus, um eine durchsuchbare Liste mit PowerShell-Befehle zur Verfügung, mit dem Hyper-V-PowerShell-Modul anzuzeigen.
 
  ```powershell
 get-command –module hyper-v | out-gridview
@@ -45,22 +45,22 @@ get-vm
  ```powershell
  get-vm | where {$_.State –eq ‘Running’}
  ```
-3.  To list all virtual machines in a powered off state, run the following command.
-    This command is a copy of the command from step 2 with the filter changed from ‘Running’ to ‘Off’.
+3.  Listen Sie alle virtuellen Computer in einen funktionsfähigen Status, off, führen Sie den folgenden Befehl.
+    Mit diesem Befehl wird eine Kopie des Befehls aus Schritt 2 mit dem Filter aus 'Running' auf 'Off' geändert.
 
  ```powershell
  get-vm | where {$_.State –eq ‘Off’}
  ```
 
-###Start and shut down virtual machines
+###Starten und Herunterfahren von virtuellen Maschinen
 
-1. To start a particular virtual machine, run the following command with name of the virtual machine:
+1. Um einen bestimmten virtuellen Computer zu starten, führen Sie den folgenden Befehl mit dem Namen des virtuellen Computers:
 
  ```powershell
  Start-vm –Name <virtual machine name>
  ```
 
-2. To start all currently powered off virtual machines, get a list of those machines and pipe the list to the 'start-vm' command:
+2. Um alle momentan ausgeschaltet für virtuelle Computer zu starten, erhalten Sie eine Liste dieser Computer und übergeben Sie die Liste an den Befehl "Start-Vm":
 
   ```powershell
  get-vm | where {$_.State –eq ‘Off’} | start-vm
@@ -106,10 +106,10 @@ The following example shows how to create a new virtual machine in the PowerShel
  New-VM @VM
   ```
 
-##Wrap up and References
+##Wrappen und Verweise
 
-This document has shown some simple steps to explorer the Hyper-V PowerShell module as well as some sample scenarios.
-For more information on the Hyper-V PowerShell module, see the [Hyper-V Cmdlets in Windows PowerShell reference](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).
+Dieses Dokument hat einige einfache Schritte zum Explorer das Hyper-V-PowerShell-Modul sowie einige Beispielszenarios gezeigt.
+Weitere Informationen über die Hyper-V-PowerShell-Modul, finden Sie unter der [Hyper-V-Cmdlets in Windows PowerShell-Referenz](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).
 
 
 

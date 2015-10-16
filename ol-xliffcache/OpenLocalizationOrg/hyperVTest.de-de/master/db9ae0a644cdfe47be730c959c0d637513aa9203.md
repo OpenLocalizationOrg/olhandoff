@@ -1,57 +1,57 @@
-ms.ContentId: c9c3edaf-eca8-4afd-9510-09e78b46d560
-title: Containers Welcome
+MS. ContentId: c9c3edaf-eca8-4afd-9510-09e78b46d560
+Titel: Container Willkommen
 
-#Windows Containers
+#Windows-Container
 
-Windows containers provide operating system level virtualization that allow you to run multiple isolated applications on one container host.
+Windows-Container bieten Ebene Betriebssystemvirtualisierung, die mehrere isolierte Anwendung auf einem Container-Host ausgeführt werden.
 
-The following table list topics that provide more information about Windows containers, a guided quick start so that you can try out Windows containers, and additional resources.
+Folgende Tabelle Liste Themen, die Weitere Informationen zu Windows-Container, eine kurze Führung starten, damit Windows-Container und zusätzliche Ressourcen zu testen.
 
 <table border="1" style="background-color:FFFFCC;border-collapse:collapse;border:1px solid FFCC00;color:000000;width:100%" cellpadding="15" cellspacing="3">
         <tr valign="top">
-        <td><center>![](media/try.png)</center></td>
+        <td><center>! [] (media/try.png)</center></td>
         <td>        
-              <p><strong>Get started with Windows Containers</strong></p>
-              <p>The following resources will walk you through the deployment, creation, and simple management of Windows Containers.</p>
+              <p><strong>Erste Schritte mit Windows-Container</strong></p>
+              <p>Die folgenden Ressourcen führen Sie durch die Bereitstellung, Erstellung und einfache Verwaltung von Windows-Containern.</p>
             <ul>
-                <li class="unordered">[Get started with Windows Server Containers in Windows Azure](./quick_start/azure_setup.md)<br /><br /></li>
-                <li class="unordered">[Get started with Windows Server Containers in a new Hyper-V virtual machine](./quick_start/container_setup.md)<br /><br /></li>
-                <li class="unordered">[Get started with Windows Server Containers on an existing Windows Server TP3 Core installation](./quick_start/inplace_setup.md)<br /><br /></li>
-                <li class="unordered">[Quick Start: Windows Server Containers and PowerShell](./quick_start/manage_powershell.md)<br /><br /></li>
-                <li class="unordered">[Quick Start: Windows Server Containers and Docker](./quick_start/manage_docker.md)<br /><br /></li>      
+                <li class="unordered">[Erste Schritte mit Windows Server-Container in Windows Azure] (. / quick_start/azure_setup.md)<br /><br /></li>
+                <li class="unordered">[Erste Schritte mit Windows Server-Container in einen neuen virtuellen Computer für Hyper-V] (. / quick_start/container_setup.md)<br /><br /></li>
+                <li class="unordered">[Erste Schritte mit Windows Server-Containern in einer vorhandenen Installation von Windows Server TP3 Core] (. / quick_start/inplace_setup.md)<br /><br /></li>
+                <li class="unordered">[Schnellstart: Windows Server-Container und PowerShell] (. / quick_start/manage_powershell.md)<br /><br /></li>
+                <li class="unordered">[Schnellstart: Windows Server-Container und Docker] (. / quick_start/manage_docker.md)<br /><br /></li>      
             </ul>
         </td>
     </tr>
     <tr valign="top">
-        <td><center>![](media/1.png)</center></td>
+        <td><center>! [] (media/1.png)</center></td>
         <td valign="top">       
-                <p><strong>Learn about Windows Containers</strong></p>
-                <p>The following articles provide an introduction and overview of Windows Containers.</p>
+                <p><strong>Erfahren Sie mehr über Windows-Container</strong></p>
+                <p>Die folgenden Artikel bieten eine Einführung und einen Überblick über die Windows-Container.</p>
             <ul>
-                <li class="unordered">[About Windows Containers](./about/about_overview.md)<br /><br /></li>
-                <li class="unordered">[Frequently Asked Questions](./about/faq.md)<br /><br /></li>
-                <li class="unordered">[Work in Progress](./about/work_in_progress.md)<br /><br /></li>
+                <li class="unordered">[Zu Windows-Containern] (. / about/about_overview.md)<br /><br /></li>
+                <li class="unordered">[FAQs] (. / about/faq.md)<br /><br /></li>
+                <li class="unordered">[In Bearbeitung] (. / about/work_in_progress.md)<br /><br /></li>
             </ul>   
         </td>
     </tr>
     <tr valign="top">
-        <td><center>![](media/question.png)</center></td>
+        <td><center>! [] (media/question.png)</center></td>
         <td>        
-              <p><strong>Connect with Community and Support</strong></p>
-              <p>Additional technical support and community resources</p>
+              <p><strong>Verbinden Sie mit der Community und Support</strong></p>
+              <p>Zusätzliche technische Support und Community-Ressourcen</p>
             <ul>
-                <li class="unordered">[Ask Question at the Windows Server Container Forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)<br /><br /></li>
-                <li class="unordered">[Additional Windows Server Container Resources](https://msdn.microsoft.com/virtualization/community/community_overview)<br /><br /></li>
+                <li class="unordered">[Frage an das Container-Forum zu Windows Server] (https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)<br /><br /></li>
+                <li class="unordered">[Ressourcen für zusätzliche Windows-Server-Container] (https://msdn.microsoft.com/virtualization/community/community_overview)<br /><br /></li>
             </ul>
         </td>
     </tr>   
     <tr valign="top">
-        <td><center>![](media/explore.png)</center></td>
+        <td><center>! [] (media/explore.png)</center></td>
         <td>        
-              <p><strong>Explore Samples</strong></p>
-              <p>Explore and reuse container code samples.</p>
+              <p><strong>Untersuchen der Beispiele</strong></p>
+              <p>Untersuchen und Wiederverwenden von Container-Codebeispiele.</p>
             <ul>
-                <li class="unordered">[Container Sample Code](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples)<br /><br /></li>
+                <li class="unordered">[Container Beispielcode] (https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples)<br /><br /></li>
             </ul>
         </td>
     </tr>

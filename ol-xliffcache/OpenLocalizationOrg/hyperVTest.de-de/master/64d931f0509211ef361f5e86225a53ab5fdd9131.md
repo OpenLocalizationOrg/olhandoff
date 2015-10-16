@@ -1,54 +1,54 @@
-ms.ContentId: 178899C9-8EA6-4D82-A0B0-8BE4DDD78DAE
-title: Step 5: Connect to the virtual machine and finish the installation
+MS. ContentId: 178899C9-8EA6-4D82-A0B0-8BE4DDD78DAE
+Titel: Schritt 5: Herstellen einer Verbindung mit dem virtuellen Computer, und schließen Sie die Installation
 
-#Step 5: Connect to the virtual machine and finish the installation
+#Schritt 5: Herstellen einer Verbindung mit dem virtuellen Computer, und schließen Sie die installation
 
-In order to finish building your virtual machine, you need to start the VM and walk through the operating system installation.
+Damit fertig sind, erstellen den virtuellen Computer, müssen Sie den virtuellen Computer starten und Schritt für Schritt durch die Installation des Betriebssystems.
 
-##Connect to the VM
+##Herstellen einer Verbindung mit dem virtuellen Computer
 
-1. In **Hyper-V Manager**, double-click on the virtual machine.
-    This will launch the VMConnect tool.
+1. In **Hyper-V-Manager**, doppelklicken Sie auf dem virtuellen Computer.
+    Hierdurch wird das VMConnect-Tool.
     
-2. In VMConnect, click on the green **Start** button ![](media/start.png).
-    This is like hitting the power button on a physical computer.
+2. VMConnect, klicken Sie auf die grüne **Start** Schaltfläche ![](media/start.png).
+    Dies ist z. B. auf einem physischen Computer den Netzschalter betätigen.
     
 
-3. The VM will boot into setup and you can walk through the installation like you would on a physical computer.
+3. Die VM-Setup startet und Sie durch die Installation führen können, wie auf einem physischen Computer.
 
-> **Note:** Unless you're running a volume licensed version of Windows 10, you do need a seperate license for Windows running inside a virtual machine.
-> The virtual machine's operating system is completely independent of the host operating system.
+> **Hinweis:** wenn Sie eine volumenlizenzierte Version 10 von Windows ausführen, Sie benötigen eine separate Lizenz für Windows auf einem virtuellen Computer ausgeführt wird.
+> Betriebssystem des virtuellen Computers ist unabhängig von Betriebssystem des Hosts.
 
 
-##Other stuff you can do in VMConnect
+##Andere Dinge in VMConnect können Sie tun?
 
-Here are all of the buttons and shortcut keys, mapped to what they do.
+Hier sind alle Schaltflächen und Tastenkombinationen, zugeordnet, was sie tun.
 
-| **To do this…**| Click this...| **Or, do this…**| |
+| **Zu diesem Zweck...**| Klicken Sie hier...| **Alternativ dazu...**| |
 | ----- | ----- | ----- | ----- |
-| Start the virtual machine| ![](media/start.png)| CTRL+S| |
-| Turn off the VM| ![](media/turnoff.png)| | |
-| Shut down a VM| ![](media/shutdown.png)| | |
-| Save| ![](media/save.png)| | |
-| Pause| ![](media/pause.png)| | |
-| Reset| ![](media/reset.png)| | |
-| Mouse release| ![](media/ctrlaltdel.png)| CTRL+ALT+LEFT arrow| |
-| Send CTRL+ALT+DELETE to the virtual machine| | CTRL+ALT+END| |
-| Switch from full-screen mode back to windowed mode| | CTRL+ALT+BREAK| |
-| Use enhanced session mode| ![](media/basic.png)| | |
-| Open the settings for the virtual machine| | CTRL+O| |
-| Create a checkpoint| ![](media/checkpoint.png)| CTRL+N or select **Action** > **Checkpoint**| |
-| Revert to a checkpoint| ![](media/revert.png)| CTRL+E| |
-| Do a screen capture| | CTRL+C| |
-| Return mouse clicks or keyboard input to the physical computer| | Press CTRL+ALT+LEFT arrow and then move the mouse pointer outside of the virtual machine window.This is the **mouse release key combination** and it can be changed in the **Hyper-V settings** in **Hyper-V Manager**.| |
-| Send mouse clicks or keyboard input to the virtual machine| | Click anywhere in the virtual machine window.The mouse pointer may appear as a small dot when you connect to a running virtual machine.| |
-| Change the settings of the virtual machine| | Select **File** > **Settings**.| |
-| Connect to a DVD image (.iso file) or a virtual floppy disk (.vfd file)| | Click **Media** on the menu.Virtual floppy disks are not supported for generation 2 virtual machines.| |
+| Starten des virtuellen Computers| ![](media/start.png)| STRG+S| |
+| Deaktivieren Sie den virtuellen Computer| ![](media/turnoff.png)| | |
+| Herunterfahren eines virtuellen Computers| ![](media/shutdown.png)| | |
+| Speichern| ![](media/save.png)| | |
+| Anhalten| ![](media/pause.png)| | |
+| Zurücksetzen| ![](media/reset.png)| | |
+| Maustaste loslassen| ![](media/ctrlaltdel.png)| STRG + ALT + nach-links| |
+| STRG + ALT + ENTF an den virtuellen Computer zu senden.| | STRG + ALT + ENDE| |
+| Wechseln Sie vom Vollbildmodus in den Fenstermodus| | STRG + ALT + UNTBR| |
+| Verwenden von erweiterten Sitzungsmodus| ![](media/basic.png)| | |
+| Öffnen Sie die Einstellungen für die virtuelle Maschine| | STRG+O| |
+| Erstellen eines Prüfpunkts| ![](media/checkpoint.png)| STRG + N, oder wählen Sie **Aktion** > **Prüfpunkt**| |
+| An einem Prüfpunkt wiederherstellen| ![](media/revert.png)| STRG + E| |
+| Führen Sie eine Bildschirmaufnahme| | STRG + C| |
+| Zurückgeben von Mausklicks oder Tastatureingaben an den physischen computer| | Drücken Sie STRG + ALT + nach-links-Taste, und zeigen Sie auf das Fenster des virtuellen Computers.Dies ist die **mit der Maus die Tastenkombination Version** kann geändert werden, der **Hyper-V-Einstellungen** in **Hyper-V-Manager**.| |
+| Senden von Mausklicks oder Tastatureingaben an den virtuellen Computer| | Klicken Sie auf eine beliebige Stelle im Fenster virtuellen Computers.Der Mauszeiger möglicherweise als kleiner Punkt angezeigt, beim Herstellen einer Verbindung mit eines ausgeführten virtuellen Computers.| |
+| Ändern Sie die Einstellungen des virtuellen Computers| | Wählen Sie **Datei** > **Settings**.| |
+| Herstellen einer Verbindung mit einem DVD-Abbild (ISO-Datei) oder eine virtuelle Diskette (VFD-Datei)| | Klicken Sie auf **Media** im Menü.Virtueller Disketten werden für virtuelle Maschinen der Generation 2 nicht unterstützt.| |
 
 
-##Next Step:
+##Nächster Schritt:
 
-[Step 6: Experiment with checkpoints](walkthrough_checkpoints.md)
+[Schritt 6: Experimentieren Sie mit Prüfpunkten](walkthrough_checkpoints.md)
 
 
 

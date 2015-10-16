@@ -1,56 +1,56 @@
-ms.ContentId: 71a03c62-50fd-48dc-9296-4d285027a96a
-title: Setup Windows Containers in a local VM
+MS. ContentId: 71a03c62-50fd-48dc-9296-4d285027a96a
+Titel: Setup Windows-Container auf einem lokalen virtuellen Computer
 
-#Preparing Windows Server Technical Preview for Windows Server Containers
+#Vorbereiten der Technologievorschau der Windows Server für Windows Server-Container
 
-In order to create and manage Windows Server Containers, the Windows Server 2016 Technical Preview environment must be prepared.
-This guide will walk through configuring Windows Server Containers in a Hyper-V Virtual Machine.
+Zum Erstellen und Verwalten von Windows Server-Container, muss die Technologievorschau der Windows Server 2016 Umgebung vorbereitet werden.
+Dieses Handbuch führt durch die Konfiguration von Windows Server-Container auf einem virtuellen Hyper-V-Computer.
 
-> Other getting started guides:
-* Run Windows Server Containers in [Azure](./azure_setup.md).
-* Run Windows Server Containers in [an existing virtual machine](./inplace_setup.md).
-* Setup Windows Server Containers [on a physical Windows Server Core installation](./inplace_setup.md).
+> Handbücher mit anderen ersten Schritten:
+* Führen Sie im Windows Server-Container [Azure](./azure_setup.md).
+* Führen Sie im Windows Server-Container [einer vorhandenen virtuellen Maschine](./inplace_setup.md).
+* Einrichten von Windows Server-Container [auf einer physischen Windows Server Core-Installation](./inplace_setup.md).
     
-    **PLEASE READ PRIOR TO INSTALLING THE CONTAINER OS IMAGE:**  The license terms of the Microsoft Windows Server Pre-Release software (“License Terms”) apply to your use of the Microsoft Windows Container OS Image supplement (the “supplemental software).
-    By downloading and using the supplemental software, you agree to the License Terms, and you may not use it if you have not accepted the License Terms.
-    Both the Windows Server Pre-Release software and the supplemental software are licensed by Microsoft Corporation.
+    **Bitte lesen Sie vor dem Installieren der CONTAINER BETRIEBSSYSTEMABBILD:**  dem Lizenzvertrag von Microsoft Windows Server-Vorabversion der Software ("Lizenzbedingungen") für die Verwendung des Microsoft Windows-Container-Betriebssystemabbild Zusatzes ("zusätzliche Software) anwenden.
+    Durch Herunterladen und verwenden die Zusatzsoftware, stimmen Sie dem Lizenzvertrag und können Sie nicht verwenden, wenn Sie dem Lizenzvertrag nicht akzeptiert haben.
+    Windows Server-Vorabversion der Software und die Zusatzsoftware werden von der Microsoft Corporation lizenziert.
     
 
 
-    * System running Windows 10 / Windows Server Technical Preview 2 or later.
-    * Hyper-V role enabled ([see instructions](https://msdn.microsoft.com/virtualization/hyperv_on_windows/quick_start/walkthrough_install#UsingPowerShell)).
-    * 20GB available storage for container host image, OS Base Image and setup scripts.
-    * Administrator permissions on the Hyper-V host.
+    * System unter Windows 10 / Windows Server Technical Preview 2 oder höher.
+    * Hyper-V-Rolle aktiviert ([finden Sie unter Hinweise](https://msdn.microsoft.com/virtualization/hyperv_on_windows/quick_start/walkthrough_install#UsingPowerShell)).
+    * 20GB freier Speicherplatz für Container Host Image, Base Betriebssystemabbild und Setup-Skripts.
+    * Administratorberechtigungen auf dem Hyper-V-Host.
 
-> Windows Server Containers do not require Hyper-V however to keep things simple this guide assumes that a Hyper-V environment is being used to run the Windows Server Container host.
+> Windows Server-Container erfordern keine Hyper-V, aber der Einfachheit halber dieses Handbuch setzt voraus, dass eine Hyper-V-Umgebung verwendet wird, um den Container für Windows Server-Host ausgeführt werden.
 
-##Setup a New Container Host on a New Virtual Machine
+##Einen neuen Container-Host auf einen neuen virtuellen Computer einrichten
 
-Windows Server Containers consist of several components such as the Windows Server Container Host and Container OS Base Image.
-We have put together a script that will download and configure these items for you.
-Follow these steps to deploy a new Hyper-V Virtual Machine and configure this system as a Windows Server Container Host.
+Windows Server-Container bestehen aus mehreren Komponenten, z. B. die Windows Server-Container-Host und die Basis-Betriebssystemabbild Container.
+Wir haben ein Skript zusammengestellt, die herunterladen und konfigurieren diese Elemente für Sie.
+Führen Sie diese Schritte, um einen neuen Hyper-V virtuelle Computer bereitstellen und Konfigurieren dieses System als Windows Server-Host-Container.
 
-Start a PowerShell session as Administrator.
-This can be done by right clicking on the PowerShell icon and selecting ‘Run as Administrator’, or by running the following command from any PowerShell session.
+Starten einer PowerShell-Sitzungs als Administrator an.
+Dies kann durch Rechtsklick auf das Symbol "PowerShell" und Auswählen von "Ausführen als Administrator" oder durch Ausführen des folgenden Befehls aus einer PowerShell-Sitzung erfolgen.
 
 ``` powershell
 start-process powershell -Verb runAs
 ```
 
-Use the following command to download the configuration script.
-The script can also be manually downloaded from this location - [Configuration Script](http://aka.ms/newcontainerhost).
+Verwenden Sie den folgenden Befehl, um das Skript herunterzuladen.
+Das Skript kann auch manuell heruntergeladen werden von diesem Speicherort - [-Konfigurationsskript](http://aka.ms/newcontainerhost).
 
 ``` PowerShell
 wget -uri https://aka.ms/newcontainerhost -OutFile New-ContainerHost.ps1
 ```
 
-Run the following command to create and configure the container host where `<containerhost>` will be the virtual machine name and `<password>` will be the password assigned to the Administrator account.
+Führen Sie den folgenden Befehl zum Erstellen und konfigurieren Sie die Container, in dem `< Containerhost >` werden der Name des virtuellen Computers und `< Kennwort >` wird das Kennwort des Administratorkontos zugewiesen werden.
 
 ``` powershell
 .\New-ContainerHost.ps1 –VmName <containerhost> -Password <password>
 ```
 
-When the script begins you will be asked to read and accept licensing terms.
+Zu Beginn des Skripts werden Sie aufgefordert, die gelesen und stimme Ihnen Lizenzierung.
 
 ```
 Before installing and using the Windows Server Technical Preview 3 with Containers virtual machine you must:
@@ -61,54 +61,54 @@ license terms. Please confirm you have accepted and agree to the license terms.
 [N] No  [Y] Yes  [?] Help (default is "N"): Y
 ```
 
-The script will then begin to download and configure the Windows Server Container components.
-This process may take quite some time due to the large download.
-When finished your Virtual Machine will be configured and ready for you to create and manage Windows Server Containers and Windows Server Container Images with both PowerShell and Docker.
+Das Skript beginnt dann herunterladen und konfigurieren die Komponenten der Windows Server-Container.
+Dieser Vorgang kann einige Zeit aufgrund der großen Download dauern.
+Wenn Sie fertig ist, wird der virtuelle Computer konfiguriert und für Sie erstellen und Verwalten von Windows Server-Container und Windows Server-Container-Images mit PowerShell und Docker.
 
 
 
-You may receive the following message during the Window Server Container host deployment process.
+Sie erhalten die folgende Meldung während des Bereitstellungsprozesses für Fenster Servercontainer Host.
 
 ```
 This VM is not connected to the network. To connect it, run the following:
 Get-VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -Switchname <switchname>
 ```
-If you do, check the properties of the virtual machine and connect the virtual machine to a virtual switch. You can also run the following PowerShell command where `<switchname>` is the name of the Hyper-V virtual switch that you would like to connect to the virtual machine.
+Wenn Sie dies tun, überprüfen Sie die Eigenschaften des virtuellen Computers, und verbinden Sie den virtuellen Computer mit einem virtuellen Switch. Sie können auch den folgenden PowerShell-Befehl ausführen, in denen `< Switchname >` ist der Name des virtuellen Hyper-V-Switches, die Sie mit dem virtuellen Computer eine Verbindung herstellen möchten.
 
 ``` powershell 
 Get-VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -Switchname <switchname>
 ```
 
-When the configuration script has completed, start the virtual machine.
-The VM is configured with Windows Server 2016 Core and will look like the following.
+Wenn das Skript abgeschlossen ist, starten Sie den virtuellen Computer.
+Der virtuelle Computer mit Windows Server 2016 Core konfiguriert ist und sieht wie folgt aus.
 
 <center>![](./media/containerhost2.png)</center><br />
 
-Finally log into the virtual machine using the password specified during the configuration process and make sure that the Virtual Machine has a valid IP address.
-With these items completed your system should be ready for Windows Server Containers.
+Schließlich melden Sie sich mit das Kennwort angegeben werden, bei der Konfiguration des virtuellen Computers, und stellen Sie sicher, dass die virtuelle Maschine über eine gültige IP-Adresse verfügt.
+Mit diesen Elementen abgeschlossen sollte Ihr System für die Windows Server-Container bereit.
 
 
-##Video Walkthrough
+##Video zur exemplarischen Vorgehensweise
 
 <iframe src="https://channel9.msdn.com/Blogs/containers/Quick-Start-Configure-Windows-Server-Containers-on-a-Local-System/player" width="800" height="450" allowFullScreen="true" frameBorder="0" scrolling="no"></iframe>
 
 
-##Next Steps - Start Using Containers
+##Nächste Schritte – starten Sie mithilfe von Containern
 
-Now that you have a Windows Server 2016 system running the Windows Server Container feature jump to the following guides to begin working with Windows Server Containers and Windows Server Container images.
-
-
-[Quick Start: Windows Server Containers and Docker](./manage_docker.md)
+Jetzt, eine Windows Server-2016 durch Ausführen der Funktion Servercontainer Windows System zur Arbeit mit Windows Server-Containern und Windows Server-Container Bilder die folgenden Handbücher zu wechseln.
 
 
-[Quick Start: Windows Server Containers and PowerShell](./manage_powershell.md)
+[Schnellstart: Windows Server-Container und Docker](./manage_docker.md)
+
+
+[Schnellstart: Windows Server-Container und PowerShell](./manage_powershell.md)
 
 
 -------------------
 
 
-[Back to Container Home](../containers_welcome.md)  
-[Known Issues for Current Release](../about/work_in_progress.md)
+[Zurück zur Startseite von Container](../containers_welcome.md)  
+[Bekannte Probleme bei der aktuellen Version](../about/work_in_progress.md)
 
 
 

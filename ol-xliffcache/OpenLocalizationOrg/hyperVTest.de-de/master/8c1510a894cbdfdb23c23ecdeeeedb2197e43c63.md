@@ -1,20 +1,20 @@
-ms.ContentId: 98d3e714-c5c9-4f63-81c0-2403513229f9
-title: Containers Quick Start
+MS. ContentId: 98d3e714-c5c9-4f63-81c0-2403513229f9
+Titel: Container-Schnellstart
 
-#Windows Server Containers Quick Start
+#Windows Server-Container-Schnellstart
 
-These guides will first walk you through creating a Windows Server Container environment in Azure or Hyper-V.
-Next you can work through a quick start for creating and managing Window Server Containers using either PowerShell or Docker.
+Diese Handbücher zuerst führt Sie durch Erstellen einer Windows Server-Container-Umgebung in Azure oder Hyper-V.
+Als Nächstes können Sie über den Schnelleinstieg zum Erstellen und Verwalten von Fenster Servercontainer mithilfe von PowerShell oder Docker arbeiten.
 
-[Get started with Windows Server Containers in Windows Azure.](./azure_setup.md)
+[Erste Schritte mit Windows Server-Container in Windows Azure.](./azure_setup.md)
 
-[Get started with Windows Server Containers in a new Hyper-V Virtual Machine.](./container_setup.md)
+[Erste Schritte mit Windows Server-Container in einen neuen Hyper-V virtuelle Computer.](./container_setup.md)
 
-[Get started with Windows Server Containers in an existing Windows Server TP3 Core installation.](./inplace_setup.md)
+[Erste Schritte mit Windows Server-Containern in einer vorhandenen Windows Server TP3 Core-Installation.](./inplace_setup.md)
 
-[Quick Start: Windows Server Containers and PowerShell.](./manage_powershell.md)
+[Schnellstart: Windows Server-Container und PowerShell.](./manage_powershell.md)
 
-[Quick Start: Windows Server Containers and Docker.](./manage_docker.md)
+[Schnellstart: Windows Server-Container und Docker.](./manage_docker.md)
 
 
 
