@@ -1,4 +1,4 @@
-ms。ContentId: 4981828d-1a08-4d8c-a99d-874a926a153f
+ms.ContentId: 4981828d-1a08-4d8c-a99d-874a926a153f
 タイトル: PowerShell Docker 比較する
 
 #PowerShell と Windows Server のコンテナーを管理するための Docker 比較

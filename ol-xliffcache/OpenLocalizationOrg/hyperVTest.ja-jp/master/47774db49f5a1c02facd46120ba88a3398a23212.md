@@ -1,7 +1,7 @@
-テストms.ContentId: 95FE9554-3968-4EED-B65D-E03F06A7598D
-title: Step 3: Create a virtual switchテスト終わり
+ms.ContentId: 95FE9554-3968-4EED-B65D-E03F06A7598D
+タイトル: ステップ 3: バーチャルスウィッチの作成
 
-#テストStep 3: Create a virtual switchテスト終わり
+#ステップ 3: バーチャルスウィッチの作成
 
 テストA virtual switch allows you to create a network connection for your virtual machine.テスト終わり
 テストThey are used just like the network adapter (NIC) on your physical computer.テスト終わり

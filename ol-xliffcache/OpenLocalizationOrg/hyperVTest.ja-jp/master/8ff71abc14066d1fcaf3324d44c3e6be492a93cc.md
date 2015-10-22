@@ -1,4 +1,4 @@
-ms。ContentId: 44b138bb-962f-4474-a0c4-284646a872e2
+ms.ContentId: 44b138bb-962f-4474-a0c4-284646a872e2
 タイトル: の場所で Windows コンテナーのセットアップ
 
 #Windows Server のコンテナーの物理マシンまたは既存のバーチャル マシンを準備します。

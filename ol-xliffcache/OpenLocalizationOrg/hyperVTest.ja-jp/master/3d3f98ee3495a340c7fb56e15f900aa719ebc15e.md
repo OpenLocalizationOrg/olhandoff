@@ -1,4 +1,4 @@
-ms。ContentId: FBBAADE6-F1A1-4B5C-8FD2-BDCA3FCF81CA
+ms.ContentId: FBBAADE6-F1A1-4B5C-8FD2-BDCA3FCF81CA
 タイトル: 手順 6: 使用するとチェックポイント
 
 #チェックポイントを使用して、手順 6: 実験

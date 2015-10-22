@@ -1,4 +1,4 @@
-ms。ContentId: 7561B149-A147-4F71-9840-6AE149B9DED5
+ms.ContentId: 7561B149-A147-4F71-9840-6AE149B9DED5
 タイトル: サポートされている Windows ゲスト オペレーティング システム
 
 

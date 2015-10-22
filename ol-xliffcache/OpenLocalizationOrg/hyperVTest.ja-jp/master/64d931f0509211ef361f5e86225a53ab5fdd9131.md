@@ -1,4 +1,4 @@
-ms。ContentId: 178899C9-8EA6-4D82-A0B0-8BE4DDD78DAE
+ms.ContentId: 178899C9-8EA6-4D82-A0B0-8BE4DDD78DAE
 タイトル: 手順 5: 仮想マシンに接続し、インストールを完了
 
 #手順 5: 仮想マシンに接続し、インストールを完了

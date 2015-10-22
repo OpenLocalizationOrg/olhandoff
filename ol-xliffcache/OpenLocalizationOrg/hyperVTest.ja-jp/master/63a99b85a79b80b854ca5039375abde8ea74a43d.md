@@ -1,14 +1,14 @@
-ms。ContentId: 1ab7bfe1-da35-4ff1-916f-936fedf536a0
+ms.ContentId: 1ab7bfe1-da35-4ff1-916f-936fedf536a0
 タイトル: Azure で Windows コンテナーのセットアップ
 
-#テストPreparing Microsoft Azure for Windows Server Containersテスト終わり
+#Microsoft Azure for Windows Server Containers の準備
 
-テストThis is a test edit!!!テスト終わり
+これはテストエディットです!!!
 作成と Azure での Windows Server のコンテナーを管理する前に、Windows Server のコンテナーの機能が、あらかじめ設定されている Windows Server 2016 に関するテクニカル プレビュー イメージを展開する必要があります。
 このガイドでは、このプロセスを説明します。
 
 > その他のファースト ステップ ガイド。
-* テストRun Windows Server Containers in [a new Hyper-V virtual machine](./container_setup.md).テスト終わり
+* テストだよ～Run Windows Server Containers in [a new Hyper-V virtual machine](./container_setup.md).テスト終わり
 * テストRun Windows Server Containers in [an existing virtual machine](./inplace_setup.md)テスト終わり
 * テストSetup Windows Server Containers [on a physical Windows Server Core installation](./inplace_setup.md)テスト終わり
 

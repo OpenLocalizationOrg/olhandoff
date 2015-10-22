@@ -1,4 +1,4 @@
-ms。ContentId: 248565F7-5EE6-46C6-B29E-8F1D44658563
+ms.ContentId: 248565F7-5EE6-46C6-B29E-8F1D44658563
 タイトル: Walktrough の概要
 
 #チュートリアル: Hyper-v について Windows 10

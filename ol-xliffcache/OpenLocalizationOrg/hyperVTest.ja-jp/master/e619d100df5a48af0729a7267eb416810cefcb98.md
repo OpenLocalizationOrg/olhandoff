@@ -1,4 +1,4 @@
-ms。ContentId: 6C7EB25D-66FB-4B6F-AB4A-79D6BB424637
+ms.ContentId: 6C7EB25D-66FB-4B6F-AB4A-79D6BB424637
 タイトル: して新しい管理サービス
 
 #新しい管理サービスを作成します。

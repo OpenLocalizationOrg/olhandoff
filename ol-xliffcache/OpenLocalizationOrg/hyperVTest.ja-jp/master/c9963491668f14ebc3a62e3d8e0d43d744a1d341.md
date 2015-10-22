@@ -1,4 +1,4 @@
-ms。ContentId: 1C108951-97FF-4BA3-A929-27A4FEF160D2
+ms.ContentId: 1C108951-97FF-4BA3-A929-27A4FEF160D2
 タイトル: このセクションにユーザー ガイド
 
 #このセクションの内容

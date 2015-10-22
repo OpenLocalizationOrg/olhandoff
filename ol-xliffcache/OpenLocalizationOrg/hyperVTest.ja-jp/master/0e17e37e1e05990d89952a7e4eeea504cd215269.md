@@ -1,4 +1,4 @@
-ms。ContentId: A6DD6776-614C-4D28-9B83-CB2EDFD263A3
+ms.ContentId: A6DD6776-614C-4D28-9B83-CB2EDFD263A3
 タイトル: 手順 2: インストール HYPER-V の Windows 10
 
 #手順 2: 10 の Windows での HYPER-V のインストールします。

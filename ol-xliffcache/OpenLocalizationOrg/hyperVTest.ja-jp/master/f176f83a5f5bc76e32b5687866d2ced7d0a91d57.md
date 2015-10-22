@@ -1,4 +1,4 @@
-ms。ContentId: F0D47E70-0BA1-4A06-B2F3-0232C496709D
+ms.ContentId: F0D47E70-0BA1-4A06-B2F3-0232C496709D
 タイトル: よく寄せられる質問
 
 #AppLocker: Frequently Asked Questions (AppLocker: よく寄せられる質問)

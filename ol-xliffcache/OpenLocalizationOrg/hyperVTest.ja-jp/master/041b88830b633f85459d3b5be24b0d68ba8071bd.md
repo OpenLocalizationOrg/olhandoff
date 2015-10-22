@@ -1,4 +1,4 @@
-ms。ContentId: C49DA0E6-2E12-4D51-803A-31B1B5A8F85C
+ms.ContentId: C49DA0E6-2E12-4D51-803A-31B1B5A8F85C
 タイトル: PowerShell リファレンス
 
 

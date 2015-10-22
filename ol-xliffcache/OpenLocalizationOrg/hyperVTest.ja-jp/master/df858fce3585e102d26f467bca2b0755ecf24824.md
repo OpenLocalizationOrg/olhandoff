@@ -1,4 +1,4 @@
-ms。ContentId: 3C63F9A8-30E4-40F4-BC7B-A001C1E90779
+ms.ContentId: 3C63F9A8-30E4-40F4-BC7B-A001C1E90779
 タイトル: 手順 4: .iso ファイルから Windows の仮想マシンを作成します。
 
 #手順 4: .iso ファイルからの Windows の仮想マシンの作成します。

@@ -1,4 +1,4 @@
-ms。ContentId: 8DE9250B-556B-47BC-AD9A-8992B3D3D0F9
+ms.ContentId: 8DE9250B-556B-47BC-AD9A-8992B3D3D0F9
 タイトル: PowerShell スニペット
 
 #PowerShell のスニペット

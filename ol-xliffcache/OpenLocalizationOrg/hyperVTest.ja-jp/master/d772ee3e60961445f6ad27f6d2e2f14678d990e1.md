@@ -1,4 +1,4 @@
-ms。ContentId: D1D4969F-52FD-43A2-982B-B531B0343D2B
+ms.ContentId: D1D4969F-52FD-43A2-982B-B531B0343D2B
 タイトル: のトラブルシューティング
 
 #10 の Windows で HYPER-V のトラブルシューティングを行う

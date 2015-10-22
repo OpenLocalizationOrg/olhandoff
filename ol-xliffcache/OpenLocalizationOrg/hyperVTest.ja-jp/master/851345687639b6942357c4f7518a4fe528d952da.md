@@ -1,4 +1,4 @@
-ms。ContentId: 52DAFFBE-40F5-46D2-96F3-FB8659581594
+ms.ContentId: 52DAFFBE-40F5-46D2-96F3-FB8659581594
 タイトル: 10 の Windows には、HYPER-V の新機能
 
 #10 の Windows で HYPER-V の新機能します。

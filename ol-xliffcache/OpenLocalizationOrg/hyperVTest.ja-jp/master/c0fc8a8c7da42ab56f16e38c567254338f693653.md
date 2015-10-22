@@ -1,4 +1,4 @@
-ms。ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6
+ms.ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6
 タイトル: Docker と Windows Server のコンテナーの管理
 
 #クイック スタート: Windows Server のコンテナーおよび Docker

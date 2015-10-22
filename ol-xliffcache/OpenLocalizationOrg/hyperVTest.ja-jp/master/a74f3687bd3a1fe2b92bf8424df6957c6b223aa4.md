@@ -1,4 +1,4 @@
-ms。ContentId: 7dcd6da0-dd72-422d-8752-5eccc8116e02
+ms.ContentId: 7dcd6da0-dd72-422d-8752-5eccc8116e02
 タイトル: リモートの HYPER-V ホストを管理します。
 
 #Hyper V マネージャーをリモートの HYPER-V ホストを管理します。

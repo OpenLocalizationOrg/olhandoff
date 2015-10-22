@@ -1,4 +1,4 @@
-ms。ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
+ms.ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
 タイトル: 手順 8: Windows PowerShell でのテスト
 
 #手順 8: は、Windows PowerShell を使用したテストします。

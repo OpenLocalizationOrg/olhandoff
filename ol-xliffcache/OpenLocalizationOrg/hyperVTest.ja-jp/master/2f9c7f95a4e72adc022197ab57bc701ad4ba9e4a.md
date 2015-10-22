@@ -1,4 +1,4 @@
-ms。ContentId: d0a07897-5fd2-41a5-856d-dc8b499c6783
+ms.ContentId: d0a07897-5fd2-41a5-856d-dc8b499c6783
 タイトル: PowerShell を使用した Windows Server のコンテナーの管理
 
 #クイック スタート: Windows Server のコンテナーと PowerShell

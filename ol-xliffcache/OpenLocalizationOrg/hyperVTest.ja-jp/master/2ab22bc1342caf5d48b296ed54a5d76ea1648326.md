@@ -1,4 +1,4 @@
-ms。ContentId: 09eacb3a-bcd2-4724-9c73-6d47ec06f385
+ms.ContentId: 09eacb3a-bcd2-4724-9c73-6d47ec06f385
 タイトル:: HYPER-V Windows 10 について
 
 

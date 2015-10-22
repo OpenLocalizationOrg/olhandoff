@@ -1,4 +1,4 @@
-ms。ContentId: 040B1B51-0F25-4295-B317-8CC4DE0A1AFF
+ms.ContentId: 040B1B51-0F25-4295-B317-8CC4DE0A1AFF
 タイトル: エクスポートし、仮想マシンのインポート
 
 

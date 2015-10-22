@@ -1,4 +1,4 @@
-ms。ContentId: 3fdd690d-4259-4066-8781-360bb0554512
+ms.ContentId: 3fdd690d-4259-4066-8781-360bb0554512
 タイトル: Windows コンテナーで実行中のアプリ
 
 #Windows Server のコンテナー内のアプリケーションとの互換性
