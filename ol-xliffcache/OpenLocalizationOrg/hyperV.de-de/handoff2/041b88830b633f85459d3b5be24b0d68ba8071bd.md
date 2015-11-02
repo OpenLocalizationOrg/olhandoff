@@ -2,9 +2,9 @@ ms.ContentId: C49DA0E6-2E12-4D51-803A-31B1B5A8F85C
 title: PowerShell Reference
 
 
-# PowerShell for Containers
+#PowerShell for Containers
 
-## Install-ContainerOSImage
+##Install-ContainerOSImage
 
 **NAME**      
 Install-ContainerOSImage
@@ -13,7 +13,7 @@ Install-ContainerOSImage
 Installs the given WIM as a container OS image for use with Windows Server or Hyper-V Containers.
 
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell  
 Install-ContainerOSImage [-WimPath] <String> [-Force] [< CommonParameters >]
 ```
@@ -62,7 +62,7 @@ None
 PS C:\>Install-ContainerOSImage c:\baseimage.wim
 ```
 
-## Uninstall-ContainerOSImage
+##Uninstall-ContainerOSImage
 
 **NAME**  
 Uninstall-ContainerOSImage
@@ -70,14 +70,14 @@ Uninstall-ContainerOSImage
 **SYNOPSIS**  
 Removes a previously installed container OS image
 
-**SYNTAX**   
+**SYNTAX**
 ```PowerShell
 Uninstall-ContainerOSImage [-ImageName] <string> [-Force]  [< CommonParameters >]
 
 Uninstall-ContainerOSImage [-ContainerImage] <Object> [-Force]  [< CommonParameters >]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -ContainerImage <Object>
 
@@ -123,7 +123,7 @@ System.Object
 **ALIASES**  
 None
 
-## Add-ContainerNetworkAdapter ##
+##Add-ContainerNetworkAdapter
 
 **NAME**  
 Add-ContainerNetworkAdapter
@@ -131,7 +131,7 @@ Add-ContainerNetworkAdapter
 **SYNOPSIS**  
 Add a new network adapter to an existing container
 
-**SYNTAX** 
+**SYNTAX**
 ``` PowerShell  
 Add-ContainerNetworkAdapter [-ContainerName] <string[]> [-CimSession <CimSession[]>] [-ComputerName <string[]>]
     [-Credential <pscredential[]>] [-SwitchName <string>] [-Name <string>] [-DynamicMacAddress] [-StaticMacAddress
@@ -141,7 +141,7 @@ Add-ContainerNetworkAdapter [-ContainerName] <string[]> [-CimSession <CimSession
     [-DynamicMacAddress] [-StaticMacAddress <string>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -271,7 +271,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 **ALIASES**  
 None
 
-## Connect-ContainerNetworkAdapter
+##Connect-ContainerNetworkAdapter
 
 **NAME**  
 Connect-ContainerNetworkAdapter
@@ -279,7 +279,7 @@ Connect-ContainerNetworkAdapter
 **SYNOPSIS**  
 Connect a container network adapter to a virtual switch
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Connect-ContainerNetworkAdapter [-ContainerName] <string[]> [[-Name] <string[]>] [-SwitchName] <string>
     [-Passthru] [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential <pscredential[]>] [-WhatIf]
@@ -289,7 +289,7 @@ Connect a container network adapter to a virtual switch
     [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -399,7 +399,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 **ALIASES**  
 None
 
-## Disconnect-ContainerNetworkAdapter
+##Disconnect-ContainerNetworkAdapter
 
 **NAME**  
 Disconnect-ContainerNetworkAdapter
@@ -407,7 +407,7 @@ Disconnect-ContainerNetworkAdapter
 **SYNOPSIS**  
 Disconnect a container network adapter from a virtual switch
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Disconnect-ContainerNetworkAdapter [-ContainerName] <string[]> [[-Name] <string[]>] [-CimSession <CimSession[]>]
     [-ComputerName <string[]>] [-Credential <pscredential[]>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -416,7 +416,7 @@ Disconnect a container network adapter from a virtual switch
     [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -517,7 +517,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 **ALIASES**  
 None
 
-## Export-ContainerImage
+##Export-ContainerImage
 
 **NAME**  
 Export-ContainerImage
@@ -525,7 +525,7 @@ Export-ContainerImage
 **SYNOPSIS**  
 Copy container image out of the local store
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Export-ContainerImage [[-Name] <string>] [-Path] <string> [[-Version] <version>] [-CimSession <CimSession[]>]
     [-ComputerName <string[]>] [-Credential <pscredential[]>] [-AsJob] [-Passthru] [-WhatIf] [-Confirm]
@@ -663,7 +663,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerImage
 **ALIASES**  
 None
 
-## Get-Container
+##Get-Container
 
 **NAME**  
 Get-Container
@@ -671,7 +671,7 @@ Get-Container
 **SYNOPSIS**  
 Enumerate containers on the current system
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Get-Container [[-Name] <string[]>] [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential
     <pscredential[]>]  [<CommonParameters>]
@@ -680,7 +680,7 @@ Enumerate containers on the current system
     <pscredential[]>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -746,7 +746,7 @@ Microsoft.Containers.PowerShell.Objects.Container
 **ALIASES**  
 None
 
-## Get-ContainerHost
+##Get-ContainerHost
 
 **NAME**  
 Get-ContainerHost
@@ -754,14 +754,14 @@ Get-ContainerHost
 **SYNOPSIS**  
 Get the host object for the container host
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Get-ContainerHost [[-ComputerName] <string[]>] [[-Credential] <pscredential[]>]  [<CommonParameters>]
 
     Get-ContainerHost [-CimSession] <CimSession[]>  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -810,7 +810,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerHost
 **ALIASES**  
 None
 
-## Get-ContainerImage
+##Get-ContainerImage
 
 **NAME**  
 Get-ContainerImage
@@ -818,13 +818,13 @@ Get-ContainerImage
 **SYNOPSIS**  
 List container images on the container host
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
 Get-ContainerImage [[-Name] <string>] [[-Publisher] <string>] [[-Version] <version>] [-ChildOf <ContainerImage>]
 [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential <pscredential[]>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -ChildOf <ContainerImage>
 
@@ -907,7 +907,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerImage
 **ALIASES**  
 None
 
-## Get-ContainerNetworkAdapter
+##Get-ContainerNetworkAdapter
 
 **NAME**  
 Get-ContainerNetworkAdapter
@@ -915,7 +915,7 @@ Get-ContainerNetworkAdapter
 **SYNOPSIS**  
 List network adapters associated with a container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Get-ContainerNetworkAdapter [-ContainerName] <string[]> [[-Name] <string>] [-CimSession <CimSession[]>]
     [-ComputerName <string[]>] [-Credential <pscredential[]>]  [<CommonParameters>]
@@ -923,7 +923,7 @@ List network adapters associated with a container
     Get-ContainerNetworkAdapter [-Container] <Container[]> [[-Name] <string>]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -988,17 +988,17 @@ List network adapters associated with a container
 
 **INPUTS**  
 Microsoft.Containers.PowerShell.Objects.Container\[\]  
-System.String\[\]  
+System.String\[\]
 
 
 **OUTPUTS**  
-Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter  
+Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 
 
 **ALIASES**  
-None  
+None
 
-## Import-ContainerImage
+##Import-ContainerImage
 
 **NAME**  
 Import-ContainerImage
@@ -1006,13 +1006,13 @@ Import-ContainerImage
 **SYNOPSIS**  
 Import a container image that was exported from another computer
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Import-ContainerImage [-Path] <string> [-AsJob] [-CimSession <CimSession[]>] [-ComputerName <string[]>]
     [-Credential <pscredential[]>] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -1095,21 +1095,23 @@ Microsoft.Containers.PowerShell.Objects.ContainerImage
 **ALIASES**  
 None
 
-## Move-ContainerImageRepository
+##Move-ContainerImageRepository
 
 **NAME**  
 Move-ContainerImageRepository
 
 **SYNOPSIS**  
-Change the location where container images are stored.  Must be a location on a local disk.  Can only be changed when no images are present on the system.
+Change the location where container images are stored.
+Must be a location on a local disk.
+Can only be changed when no images are present on the system.
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Move-ContainerImageRepository [-Path] <string> [-AsJob] [-Passthru] [-CimSession <CimSession[]>] [-ComputerName
     <string[]>] [-Credential <pscredential[]>] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -1201,7 +1203,7 @@ Microsoft.HyperV.PowerShell.VMHost
 **ALIASES**
 None
 
-## New-Container
+##New-Container
 
 **NAME**  
 New-Container
@@ -1209,7 +1211,7 @@ New-Container
 **SYNOPSIS**  
 Create a new container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     New-Container [[-Name] <string>] -ContainerImageName <string> [-ContainerImagePublisher <string>]
     [-ContainerImageVersion <version>] [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential
@@ -1220,7 +1222,7 @@ Create a new container
     <string>] [-Path <string>] [-AsJob] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -1366,7 +1368,7 @@ Microsoft.Containers.PowerShell.Objects.Container
 **ALIASES**  
 None
 
-## New-ContainerImage
+##New-ContainerImage
 
 **NAME**  
 New-ContainerImage
@@ -1374,7 +1376,7 @@ New-ContainerImage
 **SYNOPSIS**  
 Create a new container image from an existing container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     New-ContainerImage [-ContainerName] <string> [-Name] <string> [-Publisher] <string> [-Version] <version>
     [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential <pscredential[]>] [-WhatIf] [-Confirm]
@@ -1388,7 +1390,7 @@ Create a new container image from an existing container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -1507,7 +1509,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerImage
 **ALIASES**  
 None
 
-## Remove-Container
+##Remove-Container
 
 **NAME**  
 Remove-Container
@@ -1515,7 +1517,7 @@ Remove-Container
 **SYNOPSIS**  
 Remove an existing container from the system
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Remove-Container [-Name] <string[]> [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential
     <pscredential[]>] [-Force] [-AsJob] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -1524,7 +1526,7 @@ Remove an existing container from the system
     [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -1635,7 +1637,7 @@ Microsoft.Containers.PowerShell.Objects.Container
 **ALIASES**  
 None
 
-## Remove-ContainerImage
+##Remove-ContainerImage
 
 **NAME**  
 Remove-ContainerImage
@@ -1643,7 +1645,7 @@ Remove-ContainerImage
 **SYNOPSIS**  
 Remove a container image from the container host
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Remove-ContainerImage [[-Name] <string>] [[-Publisher] <string>] [[-Version] <version>] [-CimSession
     <CimSession[]>] [-ComputerName <string[]>] [-Credential <pscredential[]>] [-Force] [-WhatIf] [-Confirm]
@@ -1652,7 +1654,7 @@ Remove a container image from the container host
     Remove-ContainerImage [-Image] <ContainerImage> [-Force] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -1761,7 +1763,7 @@ System.Object
 **ALIASES**  
 None
 
-## Remove-ContainerNetworkAdapter
+##Remove-ContainerNetworkAdapter
 
 **NAME**  
 Remove-ContainerNetworkAdapter
@@ -1769,7 +1771,7 @@ Remove-ContainerNetworkAdapter
 **SYNOPSIS**  
 Remove a network adapter from a container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Remove-ContainerNetworkAdapter [-ContainerName] <string[]> [-CimSession <CimSession[]>] [-ComputerName <string[]>]
     [-Credential <pscredential[]>] [-Name <string>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -1781,7 +1783,7 @@ Remove a network adapter from a container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -1893,7 +1895,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 **ALIASES**  
 None
 
-## Set-ContainerNetworkAdapter
+##Set-ContainerNetworkAdapter
 
 **NAME**  
 Set-ContainerNetworkAdapter
@@ -1901,7 +1903,7 @@ Set-ContainerNetworkAdapter
 **SYNOPSIS**  
 Set the MAC address on a network adapter in a container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Set-ContainerNetworkAdapter [-ContainerName] <string> [-CimSession <CimSession[]>] [-ComputerName <string[]>]
     [-Credential <pscredential[]>] [-Name <string>] [-DynamicMacAddress] [-StaticMacAddress <string>] [-Passthru]
@@ -1914,7 +1916,7 @@ Set the MAC address on a network adapter in a container
     <string>] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -CimSession <CimSession[]>
 
@@ -2044,7 +2046,7 @@ Microsoft.Containers.PowerShell.Objects.ContainerNetworkAdapter
 **ALIASES**  
 None
 
-## Start-Container
+##Start-Container
 
 **NAME**  
 Start-Container
@@ -2052,7 +2054,7 @@ Start-Container
 **SYNOPSIS**  
 Start a container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Start-Container [-Name] <string[]> [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential
     <pscredential[]>] [-AsJob] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -2060,7 +2062,7 @@ Start a container
     Start-Container [-Container] <Container[]> [-AsJob] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -2162,7 +2164,7 @@ Microsoft.Containers.PowerShell.Objects.Container
 **ALIASES**  
 None
 
-## Stop-Container
+##Stop-Container
 
 **NAME**  
 Stop-Container
@@ -2170,7 +2172,7 @@ Stop-Container
 **SYNOPSIS**  
 Stop a container
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Stop-Container [-Name] <string[]> [-CimSession <CimSession[]>] [-ComputerName <string[]>] [-Credential
     <pscredential[]>] [-TurnOff] [-AsJob] [-Passthru] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -2179,7 +2181,7 @@ Stop a container
     [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -2290,7 +2292,7 @@ Microsoft.Containers.PowerShell.Objects.Container
 **ALIASES**  
 None
 
-## Test-ContainerImage
+##Test-ContainerImage
 
 **NAME**  
 Test-ContainerImage
@@ -2298,7 +2300,7 @@ Test-ContainerImage
 **SYNOPSIS**  
 Validate a container image on the container host system
 
-**SYNTAX**  
+**SYNTAX**
 ``` PowerShell
     Test-ContainerImage [[-Name] <string>] [[-Publisher] <string>] [[-Version] <version>] [-CimSession <CimSession[]>]
     [-ComputerName <string[]>] [-Credential <pscredential[]>] [-AsJob] [-WhatIf] [-Confirm]  [<CommonParameters>]
@@ -2306,7 +2308,7 @@ Validate a container image on the container host system
     Test-ContainerImage [-Image] <ContainerImage> [-AsJob] [-WhatIf] [-Confirm]  [<CommonParameters>]
 ```
 
-**PARAMETERS**  
+**PARAMETERS**
 ``` PowerShell
     -AsJob
 
@@ -2415,3 +2417,6 @@ Microsoft.Containers.PowerShell.Objects.ContainerImageReport
 
 **ALIASES**  
 None
+
+
+
