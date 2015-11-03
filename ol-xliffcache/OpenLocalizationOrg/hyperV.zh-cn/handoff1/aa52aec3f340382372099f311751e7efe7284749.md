@@ -1,4 +1,4 @@
-# In this section
+#In this section
 
 <table border="1" style="background-color:FFFFCC;border-collapse:collapse;border:1px solid FFCC00;color:000000;width:100%" cellpadding="15" cellspacing="3">
 <tr><td>
@@ -14,6 +14,10 @@
 <tr><td>
 [Troubleshooting](troubleshooting.md) </td><td> Find solutions to some common issues. </td></tr>
 </table>
+
+
+
+
 
 
 
