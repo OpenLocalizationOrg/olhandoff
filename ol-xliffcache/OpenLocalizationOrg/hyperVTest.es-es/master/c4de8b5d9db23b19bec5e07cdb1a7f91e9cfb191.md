@@ -1,92 +1,100 @@
-ms.ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
-title: Step 8: Experiment with Windows PowerShell
+MS. ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
+título: paso 8: experimentar con Windows PowerShell
 
-# Step 8: Experiment with Windows PowerShell
+#Paso 8: Experimentar con Windows PowerShell
 
-Now that you have walked through the basics of deploying Hyper-V, creating virtual machines and managing these virtual machines, let’s explore how you can automate many of these activities with PowerShell.
+Ahora que ha visto los aspectos básicos de la implementación de Hyper-V, creación de máquinas virtuales y administrar estas máquinas virtuales, exploremos cómo automatizar muchas de estas actividades con PowerShell.
 
-### Return a list of Hyper-V commands
+###Devolver una lista de comandos de Hyper-V
 
-1.	Click on the Windows start button, type **PowerShell**.
-2.	Run the following command to display a searchable list of PowerShell commands available with the Hyper-V PowerShell Module.
+1.  Haga clic en el botón de inicio de Windows, tipo **PowerShell**.
+2.  Ejecute el siguiente comando para mostrar una lista de comandos de PowerShell disponibles en el módulo de PowerShell de Hyper-V que se pueden buscar.
 
  ```powershell
 get-command –module hyper-v | out-gridview
-```
-  You get something like this:
+ ```
+Obtener algo parecido a esto:
 
-  ![](media\command_grid.png)
+![](media\command_grid.png)
 
-3. To learn more about a particular PowerShell command use `get-help`. For instance running the following command will return information about the `get-vm` Hyper-V command.
+3. Para obtener más información acerca de un determinado comando de PowerShell, utilice `get-help`.
+   Por ejemplo ejecutando el siguiente comando devolverá información sobre la `get-vm` comando Hyper-V.
 
   ```powershell
 get-help get-vm
-```
- The output shows you how to structure the command, what the required and optional parameters are, and the aliases that you can use.
+  ```
+La salida muestra cómo estructurar el comando, ¿cuáles son los parámetros obligatorios y opcionales y los alias que puede utilizar.
 
- ![](media\get_help.png)
+![](media\get_help.png)
 
 
-### Return a list of virtual machines
+###Devolver una lista de las máquinas virtuales
 
-Use the `get-vm` command to return a list of virtual machines.
+Utilice la `get-vm` comando para devolver una lista de las máquinas virtuales.
 
-1. In PowerShell, run the following command:
- 
+1. En PowerShell, ejecute el siguiente comando:
+
  ```powershell
 get-vm
-```
- This displays something like this:
+ ```
+Esto mostrará algo como esto:
 
- ![](media\get_vm.png)
+![](media\get_vm.png)
 
-2. To return a list of only powered on virtual machines add a filter to the `get-vm` command. A filter can be added by using the where-object command. For more information on filtering see the [Using the Where-Object](https://technet.microsoft.com/en-us/library/ee177028.aspx) documentation.   
+2. Para devolver una lista de sólo las máquinas virtuales con la tecnología en Agregar un filtro a la `get-vm` comando.
+   Puede agregar un filtro mediante el comando where-object.
+   Para obtener más información sobre los filtros, vea el [utilizando el objeto Where](https://technet.microsoft.com/en-us/library/ee177028.aspx) documentación.
 
  ```powershell
  get-vm | where {$_.State –eq ‘Running’}
  ```
-3.  To list all virtual machines in a powered off state, run the following command. This command is a copy of the command from step 2 with the filter changed from ‘Running’ to ‘Off’.
+3.  Para enumerar todas las máquinas virtuales en una estado apagado, ejecute el siguiente comando.
+   Este comando es una copia del comando del paso 2, con el filtro ha cambiado de 'Running' a 'Off'.
 
  ```powershell
  get-vm | where {$_.State –eq ‘Off’}
  ```
 
-### Start and shut down virtual machines
+###Iniciar y apagar las máquinas virtuales
 
-1. To start a particular virtual machine, run the following command with name of the virtual machine:
+1. Para iniciar una máquina virtual determinada, ejecute el siguiente comando con el nombre de la máquina virtual:
 
  ```powershell
  Start-vm –Name <virtual machine name>
  ```
 
-2. To start all currently powered off virtual machines, get a list of those machines and pipe the list to the 'start-vm' command:
+2. Para iniciar el apagado todas las máquinas virtuales, obtener una lista de esas máquinas y canalice la lista para el comando 'start-vm':
 
   ```powershell
  get-vm | where {$_.State –eq ‘Off’} | start-vm
- ```
-3. To shut down all running virtual machines, run this:
- 
+  ```
+3. Para cerrar todas las máquinas virtuales en ejecución, ejecute esto:
+
   ```powershell
  get-vm | where {$_.State –eq ‘Running’} | stop-vm
- ```
+  ```
 
-### Create a VM checkpoint
+###Crear un punto de comprobación de máquina virtual
 
-To create a checkpoint using PowerShell, select the virtual machine using the `get-vm` command and pipe this to the `checkpoint-vm` command. Finally give the checkpoint a name using `-snapshotname`. The complete command will look like the following:
+Para crear un punto de comprobación con PowerShell, seleccione la máquina virtual con el `get-vm` comando y de canalización para la `vm de punto de comprobación` comando.
+Por último proporcionar el punto de control un nombre mediante `- snapshotname`.
+El comando será similar al siguiente:
 
  ```powershell
  get-vm -Name <VM Name> | checkpoint-vm -snapshotname <name for snapshot>
  ```
-For example, here is a checkpoint with the name DEMOCP:
- 
- ![](media\POSH_CP2.png)
+Por ejemplo, este es un punto de control con el nombre DEMOCP:
 
-### Create a new virtual machine
+![](media\POSH_CP2.png)
 
-The following example shows how to create a new virtual machine in the PowerShell Integrated Scripting Environment (ISE). This is a simple example and could be expanded on to include additional PowerShell features and more advanced VM deployments.
+###Crear una nueva máquina virtual
 
-1. To open the PowerShell ISE click on start, type **PowerShell ISE**.
-2. Run the following code to create a virtual machine. See the [New-VM](https://technet.microsoft.com/en-us/library/hh848537.aspx) documentation for detailed information on the New-VM command.
+En el ejemplo siguiente se muestra cómo crear una nueva máquina virtual en el entorno de Scripting integrado en PowerShell (ISE).
+Esto es un ejemplo sencillo y podría ampliarse en para incluir características adicionales de PowerShell y las implementaciones de VM más avanzadas.
+
+1. Para abrir el clic de PowerShell ISE en Inicio, escriba **PowerShell ISE**.
+2. Ejecute el siguiente código para crear una máquina virtual.
+   Consulte la [New-VM](https://technet.microsoft.com/en-us/library/hh848537.aspx) documentación para obtener información detallada sobre el comando New-VM.
 
   ```powershell
  $VMName = "VMNAME"
@@ -105,7 +113,11 @@ The following example shows how to create a new virtual machine in the PowerShel
  New-VM @VM
   ```
 
-## Wrap up and References
+##Resumir y referencias
 
-This document has shown some simple steps to explorer the Hyper-V PowerShell module as well as some sample scenarios. For more information on the Hyper-V PowerShell module, see the [Hyper-V Cmdlets in Windows PowerShell reference](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).  
- 
+Este documento ha demostrado unos pasos sencillos al explorador el módulo de PowerShell de Hyper-V, así como algunos escenarios de ejemplo.
+Para obtener más información sobre el módulo de PowerShell de Hyper-V, vea el [Cmdlets de Hyper-V en Windows PowerShell referencia](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).
+
+
+
+

@@ -1,92 +1,100 @@
-ms.ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
-title: Step 8: Experiment with Windows PowerShell
+ms입니다. ContentId: B9414110-BEFD-423F-9AD8-AFD5EE612CDA
+제목: 8 단계: Windows PowerShell을 사용한 실험
 
-# Step 8: Experiment with Windows PowerShell
+#8 단계: Windows PowerShell을 사용한 실험
 
-Now that you have walked through the basics of deploying Hyper-V, creating virtual machines and managing these virtual machines, let’s explore how you can automate many of these activities with PowerShell.
+Hyper-v를 배포, 가상 컴퓨터 만들기 및 이러한 가상 컴퓨터를 관리 하는 기본으로 살펴보았습니다 했으므로 자동화할 수 있는 방법을 다양 한 PowerShell 사용 하 여 이러한 활동을 살펴보겠습니다.
 
-### Return a list of Hyper-V commands
+###Hyper-v 명령 목록을 반환 합니다.
 
-1.	Click on the Windows start button, type **PowerShell**.
-2.	Run the following command to display a searchable list of PowerShell commands available with the Hyper-V PowerShell Module.
+1.  형식 Windows 시작 단추를 클릭 하십시오. **PowerShell**.
+2.  Hyper-v PowerShell 모듈과 함께 사용할 수 있는 PowerShell 명령의 검색 가능한 목록을 표시 하려면 다음 명령을 실행 합니다.
 
  ```powershell
 get-command –module hyper-v | out-gridview
-```
-  You get something like this:
+ ```
+다음과 같은 결과 얻게:
 
-  ![](media\command_grid.png)
+![](media\command_grid.png)
 
-3. To learn more about a particular PowerShell command use `get-help`. For instance running the following command will return information about the `get-vm` Hyper-V command.
+3. 특정 PowerShell 명령 사용에 대 한 자세한 내용을 보려면 `도움말 얻기`.
+   인스턴스에 대 한 다음 명령을 실행에 대 한 정보를 반환 합니다는 `get vm` Hyper-v 명령 합니다.
 
   ```powershell
 get-help get-vm
-```
- The output shows you how to structure the command, what the required and optional parameters are, and the aliases that you can use.
+  ```
+출력 명령, 필수 및 선택적 매개 변수는 어떤 및 사용할 수 있는 별칭을 구성 하는 방법을 보여줍니다.
 
- ![](media\get_help.png)
+![](media\get_help.png)
 
 
-### Return a list of virtual machines
+###가상 컴퓨터의 목록을 반환 합니다.
 
-Use the `get-vm` command to return a list of virtual machines.
+사용 하는 `get vm` 명령이 가상 컴퓨터의 목록을 반환 합니다.
 
-1. In PowerShell, run the following command:
- 
+1. PowerShell에서 다음 명령을 입력 합니다.
+
  ```powershell
 get-vm
-```
- This displays something like this:
+ ```
+다음과 같이 표시 됩니다.
 
- ![](media\get_vm.png)
+![](media\get_vm.png)
 
-2. To return a list of only powered on virtual machines add a filter to the `get-vm` command. A filter can be added by using the where-object command. For more information on filtering see the [Using the Where-Object](https://technet.microsoft.com/en-us/library/ee177028.aspx) documentation.   
+2. 반환할 전원이 켜진 가상 컴퓨터의 목록이 필터를 추가 하는 `get vm` 명령 합니다.
+   Where 개체 명령을 사용 하 여 필터를 추가할 수 있습니다.
+   필터링에 대 한 자세한 내용은 참조는 [는 Where-object를 사용 하 여](https://technet.microsoft.com/en-us/library/ee177028.aspx) 설명서입니다.
 
  ```powershell
  get-vm | where {$_.State –eq ‘Running’}
  ```
-3.  To list all virtual machines in a powered off state, run the following command. This command is a copy of the command from step 2 with the filter changed from ‘Running’ to ‘Off’.
+3.  꺼져 모든 가상 컴퓨터를 나열 하려면 꺼짐 상태, 다음 명령을 실행 합니다.
+   이 명령은 'Running'에서 'Off'으로 변경 된 필터와 2 단계에서 명령의 복사본입니다.
 
  ```powershell
  get-vm | where {$_.State –eq ‘Off’}
  ```
 
-### Start and shut down virtual machines
+###시작 하 고 가상 컴퓨터 종료
 
-1. To start a particular virtual machine, run the following command with name of the virtual machine:
+1. 특정 가상 컴퓨터를 시작 하려면 가상 컴퓨터의 이름으로 다음 명령을 실행 합니다.
 
  ```powershell
  Start-vm –Name <virtual machine name>
  ```
 
-2. To start all currently powered off virtual machines, get a list of those machines and pipe the list to the 'start-vm' command:
+2. 현재 모든 전원이 가상 컴퓨터가 꺼져를 시작 하려면 해당 컴퓨터의 목록을 가져오고 목록 ' 시작 vm' 명령에 파이프:
 
   ```powershell
  get-vm | where {$_.State –eq ‘Off’} | start-vm
- ```
-3. To shut down all running virtual machines, run this:
- 
+  ```
+3. 실행 중인 모든 가상 컴퓨터를 종료 하려면이 실행 합니다.
+
   ```powershell
  get-vm | where {$_.State –eq ‘Running’} | stop-vm
- ```
+  ```
 
-### Create a VM checkpoint
+###VM 검사점 만들기
 
-To create a checkpoint using PowerShell, select the virtual machine using the `get-vm` command and pipe this to the `checkpoint-vm` command. Finally give the checkpoint a name using `-snapshotname`. The complete command will look like the following:
+PowerShell을 사용 하 여 검사점을 만들려면 사용 하 여 가상 컴퓨터를 선택 된 `get vm` 명령 및이를 사용 하는 파이프는 `검사점 vm` 명령 합니다.
+마지막으로 사용 하 여 이름을 검사점 제공 `-snapshotname`.
+전체 명령은 다음과 같습니다.
 
  ```powershell
  get-vm -Name <VM Name> | checkpoint-vm -snapshotname <name for snapshot>
  ```
-For example, here is a checkpoint with the name DEMOCP:
- 
- ![](media\POSH_CP2.png)
+예를들어 다음은 DEMOCP 이름의 검사점이입니다.
 
-### Create a new virtual machine
+![](media\POSH_CP2.png)
 
-The following example shows how to create a new virtual machine in the PowerShell Integrated Scripting Environment (ISE). This is a simple example and could be expanded on to include additional PowerShell features and more advanced VM deployments.
+###새 가상 컴퓨터 만들기
 
-1. To open the PowerShell ISE click on start, type **PowerShell ISE**.
-2. Run the following code to create a virtual machine. See the [New-VM](https://technet.microsoft.com/en-us/library/hh848537.aspx) documentation for detailed information on the New-VM command.
+다음 예제에서는 새 가상 컴퓨터에는 PowerShell 환경 ISE (통합 스크립팅)를 만드는 방법을 보여줍니다.
+이 간단한 예 이며에 추가 PowerShell 기능 및 고급 VM 배포를 포함 하도록 확장할 수 있습니다.
+
+1. 시작 시에 PowerShell ISE 클릭을 열려면 입력 **PowerShell ISE**.
+2. 가상 컴퓨터를 만들려면 다음 코드를 실행 합니다.
+   참조는 [NEW-VM](https://technet.microsoft.com/en-us/library/hh848537.aspx) NEW-VM 명령에 대 한 자세한 정보에 대 한 설명서입니다.
 
   ```powershell
  $VMName = "VMNAME"
@@ -105,7 +113,11 @@ The following example shows how to create a new virtual machine in the PowerShel
  New-VM @VM
   ```
 
-## Wrap up and References
+##지금까지 및 참조
 
-This document has shown some simple steps to explorer the Hyper-V PowerShell module as well as some sample scenarios. For more information on the Hyper-V PowerShell module, see the [Hyper-V Cmdlets in Windows PowerShell reference](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).  
- 
+이 문서는 일부 샘플 시나리오는 물론 Hyper-v PowerShell 모듈 탐색기에 몇가지 간단한 단계 나타났습니다.
+PowerShell Hyper-v 모듈에 대 한 자세한 내용은 대 한 참조는 [Windows PowerShell 참조의 Hyper-v Cmdlet](https://technet.microsoft.com/%5Clibrary/Hh848559.aspx).
+
+
+
+
