@@ -1,341 +1,414 @@
-.NET Compiler Platform ("Roslyn") Overview
-==========================================
+Übersicht über die .NET Compiler Platform ("Roslyn")
+====================================================
 
-In this document
-----------------
+Inhalt dieses Dokuments
+-----------------------
 
--   [Introduction](#introduction)
--   [Exposing the Compiler APIs](#exposing-the-compiler-apis)
-    -   [Compiler Pipeline Functional
-        Areas](#compiler-pipeline-functional-areas)
-    -   [API Layers](#api-layers)
-        -   [Compiler APIs](#compiler-apis)
-        -   [Workspaces APIs](#workspaces-apis)
--   [Working with Syntax](#working-with-syntax)
-    -   [Syntax Trees](#syntax-trees)
-    -   [Syntax Nodes](#syntax-nodes)
-    -   [Syntax Tokens](#syntax-tokens)
-    -   [Syntax Trivia](#syntax-trivia)
-    -   [Spans](#spans)
-    -   [Kinds](#kinds)
-    -   [Errors](#errors)
--   [Working with Semantics](#working-with-semantics)
-    -   [Compilation](#compilation)
-    -   [Symbols](#symbols)
-    -   [Semantic Model](#semantic-model)
--   [Working with a Workspace](#working-with-a-workspace)
-    -   [Workspace](#workspace)
-    -   [Solutions, Projects and
-        Documents](#solutions-projects-documents)
+-   [Einführung](#introduction)
+-   [Verfügbarmachen der Compiler-APIs](#exposing-the-compiler-apis)
+   -   [Funktionale Compilerpipeline
+Bereiche](#compiler-pipeline-functional-areas)
+   -   [API-Ebenen](#api-layers)
+      -   [Compiler-APIs](#compiler-apis)
+      -   [Arbeitsbereiche-APIs](#workspaces-apis)
+-   [Arbeiten mit der Syntax](#working-with-syntax)
+   -   [Syntaxstrukturen](#syntax-trees)
+   -   [Syntax von Knoten](#syntax-nodes)
+   -   [Syntax von Token](#syntax-tokens)
+   -   [Faszinierende Syntax](#syntax-trivia)
+   -   [Spannen](#spans)
+   -   [Arten](#kinds)
+   -   [Fehler](#errors)
+-   [Arbeiten mit Semantik](#working-with-semantics)
+   -   [Kompilierung](#compilation)
+   -   [Symbole](#symbols)
+   -   [Semantikmodell](#semantic-model)
+-   [Arbeiten mit einem Arbeitsbereich](#working-with-a-workspace)
+   -   [Arbeitsbereich](#workspace)
+   -   [Projektmappen, Projekte und
+Dokumente](#solutions-projects-documents)
 
-Introduction
-------------
+Einführung
+----------
 
-Traditionally, compilers are black boxes -- source code goes in one end,
-magic happens in the middle, and object files or assemblies come out the
-other end. As compilers perform their magic, they build up deep
-understanding of the code they are processing, but that knowledge is
-unavailable to anyone but the compiler implementation wizards. The
-information is promptly forgotten after the translated output is
-produced.
+In der Vergangenheit werden schwarze Felder - Quellcode in einem Ende geht,
+Geheimnis liegt in der Mitte und Objektdateien oder Assemblys stammen die
+andere Ende.
+Compiler ihre Magic ausführen, erstellen sie umfassende
+Verstehen des Codes diese verarbeitet werden, aber dieses Wissen ist.
+für andere Personen als die Compiler-Implementierung-Assistenten nicht verfügbar.
+Die
+Informationen vergessen wird sofort, nachdem die konvertierte Ausgabe ist
+erzeugt wurde.
 
-For decades, this world view has served us well, but it is no longer
-sufficient. Increasingly we rely on integrated development environment
-(IDE) features such as IntelliSense, refactoring, intelligent rename,
-“Find all references,” and “Go to definition” to increase our
-productivity. We rely on code analysis tools to improve our code quality
-and code generators to aid in application construction. As these tools
-get smarter, they need access to more and more of the deep code
-knowledge that only compilers possess. This is the core mission of the
-.NET Compiler Platform (“Roslyn”): opening up the black boxes and
-allowing tools and end users to share in the wealth of information
-compilers have about our code. Instead of being opaque source-code-in
-and object-code-out translators, through the .NET Compiler Platform
-(“Roslyn”), compilers become platforms—APIs that you can use for code
-related tasks in your tools and applications.
+Seit Jahrzehnten dieser Sichtweise hat uns gut bedient, aber es ist nicht mehr
+ausreichend.
+Bauen wir zunehmend auf IDE
+(IDE) von Features wie z. B. IntelliSense, Umgestaltung, intelligente umbenennen
+"Alle Verweise suchen" und "Gehe zu Definition" erhöhen unsere
+die Produktivität.
+Wir benötigen Codeanalysetools können Sie die Qualität des Codes zu verbessern.
+und Code-Generatoren zur Unterstützung bei der Erstellung der Anwendung.
+Wie diese tools
+Intelligenter erhalten, müssen sie auf zu mehr und mehr Tiefe Code zugreifen
+Kenntnisse, die nur für Compiler besitzen.
+Dies ist der Kern-Auftrag, der die
+.NET Compiler Platform ("Roslyn"): Öffnen Sie die schwarzen Felder und
+Tools und Endbenutzer mit der Fülle von Informationen ermöglichen
+Compiler sind über unseren Code.
+Statt deckend Source Code in
+und Objekt-Code-Out-Übersetzer über das .NET Compiler Platform
+("Roslyn")-Compiler Plattformen werden – APIs, mit denen Sie für Code
+Verwandte Aufgaben in Ihre Tools und Programme.
 
-The transition to compilers as platforms dramatically lowers the barrier
-to entry for creating code focused tools and applications. It creates
-many opportunities for innovation in areas such as meta-programming,
-code generation and transformation, interactive use of the C\# and VB
-languages, and embedding of C\# and VB in domain specific languages.
+Der Übergang zu Compiler als Plattformen deutlich gesenkt die Barriere
+Eintrag für das Erstellen von Code gezielten Tools und Programme.
+Es wird erstellt
+neue Chancen für Innovationen in Bereichen wie z. B. Metaprogrammierung
+Generierung von Code und interaktive Transformation verwenden, von der C\- und VB
+Sprachen und Einbetten von C\- und VB in domänenspezifische Sprachen.
 
-The .NET Compiler Platform (“Roslyn”) SDK Preview includes the latest
-drafts of new language object models for code generation, analysis, and
-refactoring. We hope to include drafts of API support for scripting and
-interactive use of C\# and Visual Basic in a future preview. This
-document provides a conceptual overview of the .NET Compiler Platform
-(“Roslyn”). Further details can be found in the walkthroughs and samples
-included in the SDK Preview.
+Die SDK-Vorschau für .NET Compiler Platform ("Roslyn") enthält die neuesten
+Entwürfe von neuen Sprache Objektmodelle für die Generierung von Code, Analyse und
+Umgestaltung.
+Wir hoffen, dass gehören Entwürfe von API-Unterstützung für Skripting und
+Interaktive Verwendung von C\- und Visual Basic in einer zukünftigen Vorschau.
+Dies
+Dokument bietet eine Übersicht der Compiler
+("Roslyn").
+Weitere Details finden Sie in den exemplarischen Vorgehensweisen und Beispiele
+in der Vorschau SDK enthalten.
 
-Exposing the Compiler APIs
---------------------------
+Verfügbarmachen der Compiler-APIs
+---------------------------------
 
-### Compiler Pipeline Functional Areas
+###Funktionsbereiche des Compiler-Pipeline
 
-The .NET Compiler Platform (“Roslyn”) exposes the C\# and Visual Basic
-compiler’s code analysis to you as a consumer by providing an API layer
-that mirrors a traditional compiler pipeline.
+Die .NET Compiler Platform ("Roslyn") verfügbar macht, die C\- und Visual Basic
+Compilers-Codeanalyse für Sie als Consumer durch die Bereitstellung einer API-Schicht
+spiegelt eine traditionelle compilerpipeline.
 
-![image](images/compiler-pipeline.png)
+![Bild](images/compiler-pipeline.png)
 
-Each phase of this pipeline is now a separate component. First the parse
-phase, where source is tokenized and parsed into syntax that follows the
-language grammar. Second the declaration phase, where declarations from
-source and imported metadata are analyzed to form named symbols. Next
-the bind phase, where identifiers in the code are matched to symbols.
-Finally, the emit phase, where all the information built up by the
-compiler is emitted as an assembly.
+Jede Phase der diese Pipeline ist jetzt eine separate Komponente.
+Zuerst die Analyse
+Phase, wobei Quelle zerlegt und in der Syntax, die folgt analysiert die
+Grammatik.
+Zweite Phase der Deklaration, in denen Deklarationen aus
+Quell- und importierte Metadaten werden zum Formular mit dem Namen Symbole analysiert.
+Weiter
+der Bind-Phase, die Bezeichner im Code, in dem Symbole zugeordnet sind.
+Schließlich der Emit-Phase, in dem alle Informationen, durch erstellt die
+Compiler wird als Assembly ausgegeben.
 
-![image](images/compiler-pipeline-api.png)
+![Bild](images/compiler-pipeline-api.png)
 
-Corresponding to each of those phases, an object model is surfaced that
-allows access to the information at that phase. The parsing phase is
-exposed as a syntax tree, the declaration phase as a hierarchical symbol
-table, the binding phase as a model that exposes the result of the
-compiler’s semantic analysis and the emit phase as an API that produces
-IL byte codes.
+Für jede dieser Phasen ein Objektmodell verfügbar gemacht wird,
+ermöglicht den Zugriff auf die Informationen in dieser Phase.
+Die Analysephase ist.
+die Deklaration Phase als hierarchische Symbol als eine Syntaxstruktur verfügbar gemacht
+Tabelle, die Bindung Phase als ein Modell, das das Ergebnis des macht die
+semantische Analysen des Compilers und der Emit-Phase als eine API, die erzeugt
+IL-Byte-Codes.
 
-![image](images/compiler-pipeline-lang-svc.png)
+![Bild](images/compiler-pipeline-lang-svc.png)
 
-Each compiler combines these components together as a single end-to-end
-whole.
+Jeder Compiler kombiniert diese Komponenten zusammen als eine einzige End-to-end
+insgesamt.
 
-To ensure that the public Compiler APIs are sufficient for building
-world-class IDE features, the language services that will be used to
-power the C\# and VB experiences in Visual Studio vNext have been
-rebuilt using them. For instance, the code outlining and formatting
-features use the syntax trees, the Object Browser and navigation
-features use the symbol table, refactorings and Go to Definition use the
-semantic model, and Edit and Continue uses all of these, including the
-Emit API. These experiences may be previewed on Visual Studio 2013
-through the “Roslyn” End-User Preview. This preview is required in order
-to build and test applications build on top of the .NET Compiler
-Platform (“Roslyn”) SDK meant for integration into Visual Studio though
-the .NET Compiler Platform (“Roslyn”) APIs can be used in your own
-applications independently of Visual Studio without requiring the
-End-User Preview.
+Um sicherzustellen, dass die öffentlichen Compiler-APIs zum Erstellen von ausreichen
+Erstklassige IDE-Features, die Language-Dienste, die verwendet werden können
+Schalten Sie die C\- und VB-Funktionen in Visual Studio vNext wurden
+neu erstellt, deren Verwendung.
+Zum Beispiel den Code Gliedern und Formatierung
+Funktionen verwenden, die Syntaxstrukturen, den Objektbrowser und navigation
+Funktionen verwenden die Symboltabelle Refactoringoptionen und Gehe zu Definition verwenden die
+Semantikmodell, und bearbeiten und Fortfahren verwendet diese, einschließlich der
+Reflektionsausgabe-API.
+Dies können in Visual Studio 2013 Vorschau angezeigt werden soll
+durch die Endbenutzer-Vorschau "Roslyn".
+Diese Vorschau ist erforderlich
+zum Erstellen und Testen Anwendungsentwicklung über den Compiler für .NET
+Platform ("Roslyn") SDK für die Integration in Visual Studio jedoch vorgesehen
+die .NET Compiler Platform ("Roslyn") APIs können in Ihren eigenen verwendet werden
+Clientanwendungen unabhängig von Visual Studio ohne die
+Vorschau für Endbenutzer.
 
-### API Layers
+###API-Ebenen
 
-The .NET Compiler Platform (“Roslyn”) consists of two main layers of
-APIs – the Compiler APIs and Workspaces APIs.
+Die .NET Compiler Platform ("Roslyn") besteht aus zwei Hauptschichten der
+APIs – die Compiler-APIs und Arbeitsbereiche-APIs.
 
-![image](images/alex-api-layers.png)
+![Bild](images/alex-api-layers.png)
 
-### Compiler APIs
+###Compiler-APIs
 
-The compiler layer contains the object models that correspond with
-information exposed at each phase of the compiler pipeline, both
-syntactic and semantic. The compiler layer also contains an immutable
-snapshot of a single invocation of a compiler, including assembly
-references, compiler options, and source code files. There are two
-distinct APIs that represent the C\# language and the Visual Basic
-language. These two APIs are similar in shape but tailored for
-high-fidelity to each individual language. This layer has no
-dependencies on Visual Studio components.
+Die Compiler-Ebene enthält die Objektmodelle, die entsprechen
+Informationen zur Verfügung gestellt, in jeder Phase der Pipeline Compiler sowohl
+syntaktische und semantische.
+Die Compiler-Schicht enthält auch eine unveränderliche
+Übersicht über einen einzelnen Aufruf eines Compilers, einschließlich der assembly
+Verweise, Compileroptionen und Quellcodedateien.
+Es gibt zwei
+DISTINCT-APIs, die die C\-Programmiersprache und Visual Basic darstellen
+die Sprache.
+Diese beiden APIs in Form vergleichbar sind, aber speziell für die
+High-Fidelity-von der jeweiligen Sprache.
+Diese Schicht hat keine
+Abhängigkeiten von Visual Studio-Komponenten.
 
-#### Diagnostic APIs
+####Diagnose-APIs
 
-As part of their analysis the compiler may produce a set of diagnostics
-covering everything from syntax, semantic, and definite assignment
-errors to various warnings and informational diagnostics. The Compiler
-API layer exposes diagnostics through an extensible API allowing for
-user-defined analyzers to be plugged into a Compilation and user-defined
-diagnostics, such as those produced by tools like StyleCop or FxCop, to
-be produced alongside compiler-defined diagnostics. Producing
-diagnostics in this way has the benefit of integrating naturally with
-tools such as MSBuild and Visual Studio which depend on diagnostics for
-experiences such as halting a build based on policy and showing live
-squiggles in the editor and suggesting code fixes.
+Als Teil ihrer Analyse kann der Compiler eine Reihe von Diagnosetests erzeugen.
+die alles von Syntax, Semantik und definitive Zuweisung
+Fehler in verschiedenen Warnungen und informationsdiagnosen.
+Der Compiler
+API-Schicht verfügbar macht, Diagnose mit einer erweiterbaren API ermöglicht
+Benutzerdefinierte Analyzer in einer Kompilierung angeschlossen und benutzerdefinierte
+Diagnose, darunter solchen, die durch Tools wie StyleCop oder FxCop, um
+zusammen mit den vom Compiler definierten Diagnose erstellt werden.
+Erzeugen
+Diagnose auf diese Weise hat den Vorteil, natürlich integrieren
+Tools wie MSBuild und Visual Studio die Diagnose für abhängen
+wie Anhalten eines Builds auf Basis der Richtlinie und live anzeigen
+Wellenlinien im Editor und vorschlagen Code behebt.
 
-#### Scripting APIs
+####Skripting APIs
 
-As a part of the compiler layer, the team prototyped hosting/scripting
-APIs for executing code snippets and accumulating a runtime execution
-context. The REPL used these APIs, but neither the REPL nor the
-Scripting APIs are part of the .NET Compiler Platform project currently.
-The team is reviewing these designs before re-introducing these
-components.
+Als Teil der Compiler-Ebene das Team Prototyp hosting/scripting
+APIs für Codeausschnitte ausführen und Sammeln von Animationswerten während einer Ausführung zur Laufzeit
+wird.
+Die Textgröße für Replikation verwendet diese APIs, aber weder die Textgröße für Replikation noch die
+Skripting APIs sind Teil des Projekts .NET Compiler Platform derzeit an.
+Das Team wird diese Entwürfe vor der Einführung dieser erneut überprüfen
+Komponenten.
 
-#### Workspaces APIs
+####Arbeitsbereiche-APIs
 
-The Workspaces layer contains the Workspace API, which is the starting
-point for doing code analysis and refactoring over entire solutions. It
-assists you in organizing all the information about the projects in a
-solution into single object model, offering you direct access to the
-compiler layer object models without needing to parse files, configure
-options or manage project to project dependencies.
+Die Arbeitsbereiche Ebene enthält die Arbeitsbereich-API, die zum Starten
+Zeigen Sie zum Ausführen der Codeanalyse und refactoring über vollständige Lösungen.
+Es
+unterstützt Sie beim Organisieren alle Informationen über die Projekte in einer
+Lösung in einzelnen Objektmodell bietet Ihnen direkten Zugriff auf die
+Konfigurieren von Compiler Ebenenmodellen Objekt ohne Dateien analysieren
+Optionen oder Abhängigkeiten von Projekt zu Projekt verwalten.
 
-In addition, the Workspaces layer surfaces a set of commonly used APIs
-used when implementing code analysis and refactoring tools that function
-within a host environment like the Visual Studio IDE, such as the Find
-All References, Formatting, and Code Generation APIs.
+Darüber hinaus Flächen eine Reihe von häufig verwendeten APIs die Arbeitsbereiche-Ebene
+Beim Implementieren der Codeanalyse und Umgestaltung dieser Funktion Tools verwendet
+innerhalb einer hostumgebung wie der Visual Studio-IDE, z. B. das Suchen
+Alle Verweise, Formatierung und Code Generation-APIs.
 
-This layer has no dependencies on Visual Studio components.
+Diese Schicht hat keine Abhängigkeiten auf Visual Studio-Komponenten.
 
-Working with Syntax
--------------------
+Arbeiten mit der Syntax
+-----------------------
 
-The most fundamental data structure exposed by the Compiler APIs is the
-syntax tree. These trees represent the lexical and syntactic structure
-of source code. They serve two important purposes:
+Ist die grundlegendste Datenstruktur verfügbar gemacht werden, indem die Compiler-APIs der
+Syntaxstruktur.
+Diese Strukturen darstellen, die lexikalische und syntaktische-Struktur
+der Quellcode.
+Sie haben zwei wichtige Funktionen:
 
-1.  To allow tools - such as an IDE, add-ins, code analysis tools, and
-    refactorings - to see and process the syntactic structure of source
-    code in a user’s project.
-2.  To enable tools - such as refactorings and an IDE - to create,
-    modify, and rearrange source code in a natural manner without having
-    use direct text edits. By creating and manipulating trees, tools can
-    easily create and rearrange source code.
+1.  Tools - ermöglichen, wie z. B. eine IDE-add-ins Codeanalysetools, und
+Refactoringoptionen - anzeigen und verarbeiten die syntaktische Struktur
+der Code im Projekt eines Benutzers.
+2.  Aktivieren von Tools wie Refactoringoptionen und einer IDE - Erstellung
+Ändern und Neuanordnen von Quellcode auf natürliche Weise ohne
+Verwenden Sie die direkte Textbearbeitungsvorgänge.
+   Erstellen und Bearbeiten von Strukturen, können tools
+Erstellen und Ändern von Quellcode.
 
-### Syntax Trees
+###Syntaxstrukturen
 
-Syntax trees are the primary structure used for compilation, code
-analysis, binding, refactoring, IDE features, and code generation. No
-part of the source code is understood without it first being identified
-and categorized into one of many well-known structural language
-elements.
+Syntaxstrukturen sind die primäre Struktur verwendet für die Kompilierung von code
+Analyse, binden, Umgestaltung, IDE-Features und Generieren von Code.
+Nein
+ohne ihn zuerst zu identifizierenden ist Teil des Quellcodes angesehen.
+und in einer von vielen bekannten strukturelle Sprache kategorisierte
+Elemente.
 
-Syntax trees have three key attributes. The first attribute is that
-syntax trees hold all the source information in full fidelity. This
-means that the syntax tree contains every piece of information found in
-the source text, every grammatical construct, every lexical token, and
-everything else in between including whitespace, comments, and
-preprocessor directives. For example, each literal mentioned in the
-source is represented exactly as it was typed. The syntax trees also
-represent errors in source code when the program is incomplete or
-malformed, by representing skipped or missing tokens in the syntax tree.
+Syntaxstrukturen müssen drei wichtige Attribute.
+Das erste Attribut ist
+Syntaxstrukturen halten die Quellinformationen Geschäftsnachrichten.
+Dies
+bedeutet, dass die Syntaxstruktur Informationen in jedes Datenelement enthält
+den Quelltext, alle grammatischen Konstrukt, jede Lexikalischer Token und
+alles zwischen Leerzeichen, Kommentare und
+Präprozessordirektiven.
+Beispielsweise jedes Literal gemäß der
+Quelle wird dargestellt, wie er eingegeben wurde.
+Die Syntax auch Strukturen
+Fehler im Quellcode darstellen, wenn das Programm nicht vollständig ist oder
+Ungültige durch, die übersprungene oder fehlende Token in der Syntaxstruktur darstellt.
 
-This enables the second attribute of syntax trees. A syntax tree
-obtained from the parser is completely round-trippable back to the text
-it was parsed from. From any syntax node, it is possible to get the text
-representation of the sub-tree rooted at that node. This means that
-syntax trees can be used as a way to construct and edit source text. By
-creating a tree you have by implication created the equivalent text, and
-by editing a syntax tree, making a new tree out of changes to an
-existing tree, you have effectively edited the text.
+Dadurch wird das zweite Attribut Syntaxstrukturen.
+Syntax-Struktur
+der Parser abgerufenes ist vollständig roundtripfähige wieder auf den text
+Es wurde von analysiert.
+Von einem beliebigen Knoten Syntax ist es möglich, den Text abrufen
+Darstellung der Teilstruktur Stamm an diesem Knoten.
+Dies bedeutet, dass
+Syntaxstrukturen können als eine Möglichkeit zum Erstellen und Bearbeiten von Quelltext verwendet werden.
+Von
+Erstellen einer Struktur spezifischsten erstellt haben den entsprechenden Text ein, und
+Bearbeiten einer Syntaxstruktur, erstellen eine neue Struktur von Änderungen an einer
+vorhandene Struktur Sie effektiv den Text bearbeitet haben.
 
-The third attribute of syntax trees is that they are immutable and
-thread-safe. This means that after a tree is obtained, it is a snapshot
-of the current state of the code, and never changes. This allows
-multiple users to interact with the same syntax tree at the same time in
-different threads without locking or duplication. Because the trees are
-immutable and no modifications can be made directly to a tree, factory
-methods help create and modify syntax trees by creating additional
-snapshots of the tree. The trees are efficient in the way they reuse
-underlying nodes, so the new version can be rebuilt fast and with little
-extra memory.
+Das dritte Syntaxstrukturen-Attribut ist, dass sie unveränderlich sind und
+Thread-sicher.
+Dies bedeutet, dass nach eine Struktur abgerufen wird, eine Momentaufnahme ist
+des aktuellen Status des Codes und nie geändert wird.
+Auf diese Weise können
+mehrere Benutzer gleichzeitig in derselben Syntaxstruktur interagieren
+andere Threads ohne Sperren oder Duplizierung.
+Da die Strukturen sind
+unveränderlich und keine Änderungen wird direkt an eine Struktur Factory
+Erstellen und Ändern von Syntaxstrukturen durch Erstellen weiterer Methoden-Hilfe
+Momentaufnahmen der Struktur.
+Die Strukturen sind effizient, die sie wiederverwenden
+zugrunde liegende Knoten, damit die neue Version schnell und mit wenig neu erstellt werden können
+zusätzlicher Speicher.
 
-A syntax tree is literally a tree data structure, where non-terminal
-structural elements parent other elements. Each syntax tree is made up
-of nodes, tokens, and trivia.
+Syntax-Struktur gibt es buchstäblich einer Baumstruktur, nicht-terminal
+die strukturellen Elemente übergeordnete andere Elemente.
+Jede Syntaxstruktur besteht aus
+der Knoten, Token und faszinierende.
 
-### Syntax Nodes
+###Syntax von Knoten
 
-Syntax nodes are one of the primary elements of syntax trees. These
-nodes represent syntactic constructs such as declarations, statements,
-clauses, and expressions. Each category of syntax nodes is represented
-by a separate class derived from SyntaxNode. The set of node classes is
-not extensible.
+Syntax Knoten gehören die Hauptelemente des Syntaxstrukturen.
+Diese
+Knoten darzustellen Syntaktische Konstrukte wie Deklarationen, Anweisungen,
+Klauseln und Ausdrücken.
+Jede Kategorie Syntax Knoten dargestellt wird.
+durch eine separate Klasse, die von SyntaxNode abgeleitet werden.
+Ist der Knotenklassen
+nicht erweiterbar.
 
-All syntax nodes are non-terminal nodes in the syntax tree, which means
-they always have other nodes and tokens as children. As a child of
-another node, each node has a parent node that can be accessed through
-the Parent property. Because nodes and trees are immutable, the parent
-of a node never changes. The root of the tree has a null parent.
+Alle Syntax Knoten sind nicht-Terminal-Knoten in der Syntaxstruktur, d. h.
+Sie haben immer andere Knoten und Token als untergeordnete Elemente.
+Als untergeordnetes Element
+ein anderer Knoten jeder Knoten verfügt über einen übergeordneten Knoten, der über zugegriffen werden kann
+Die Parent-Eigenschaft.
+Da Knoten und Strukturen unveränderlich sind das übergeordnete Element
+ändert sich nie eines Knotens.
+Der Stamm der Struktur wurde als übergeordnetes Element null.
 
-Each node has a ChildNodes method, which returns a list of child nodes
-in sequential order based on its position in the source text. This list
-does not contain tokens. Each node also has a collection of Descendant
-methods - such as DescendantNodes, DescendantTokens, or DescendantTrivia
-- that represent a list of all the nodes, tokens, or trivia that exist
-in the sub-tree rooted by that node.
+Jeder Knoten verfügt über eine ChildNodes-Methode, die eine Liste der untergeordneten Knoten zurückgibt
+in sequenzieller Reihenfolge basierend auf der Position des Quelltexts.
+Diese Liste
+enthält keine Token.
+Jeder Knoten besitzt außerdem eine Auflistung von Nachfolger
+SQLServer: Zugriffsmethoden – z. B. DescendantNodes, DescendantTokens oder DescendantTrivia
+- eine Liste aller Knoten, Token oder faszinierende, die vorhanden darstellen
+in der Teilstruktur, die von diesem Knoten als Stammknoten.
 
-In addition, each syntax node subclass exposes all the same children
-through strongly typed properties. For example, a BinaryExpressionSyntax
-node class has three additional properties specific to binary operators:
-Left, OperatorToken, and Right. The type of Left and Right is
-ExpressionSyntax, and the type of OperatorToken is SyntaxToken.
+Zusätzlich stellt jede Syntax Knoten Unterklasse dieselben untergeordneten Elemente
+über stark typisierte Eigenschaften.
+Angenommen, ein BinaryExpressionSyntax
+Node-Klasse hat drei zusätzliche Eigenschaften, die speziell für binäre Operatoren:
+Links, OperatorToken und rechts.
+Der Typ des Links und rechts
+ExpressionSyntax und den Typ des OperatorToken ist SyntaxToken.
 
-Some syntax nodes have optional children. For example, an
-IfStatementSyntax has an optional ElseClauseSyntax. If the child is not
-present, the property returns null.
+Einige Knoten Syntax über optionale untergeordnete Elemente verfügen.
+Angenommen, ein
+IfStatementSyntax ist eine optionale ElseClauseSyntax.
+Wenn das untergeordnete Element nicht
+vorhanden, die Eigenschaft gibt Null zurück.
 
-### Syntax Tokens
+###Syntax von Token
 
-Syntax tokens are the terminals of the language grammar, representing
-the smallest syntactic fragments of the code. They are never parents of
-other nodes or tokens. Syntax tokens consist of keywords, identifiers,
-literals, and punctuation.
+Syntax-Token sind die Terminals der Language-Grammatik darstellt
+die kleinste syntaktische Fragmente des Codes.
+Sie werden nie übergeordneten Elementen von
+andere Knoten oder Token.
+Syntax von Token bestehen Schlüsselwörter, Bezeichner,
+Literale und Satzzeichen.
 
-For efficiency purposes, the SyntaxToken type is a CLR value type.
-Therefore, unlike syntax nodes, there is only one structure for all
-kinds of tokens with a mix of properties that have meaning depending on
-the kind of token that is being represented.
+Aus Gründen der Effizienz ist der SyntaxToken-Typ ein CLR-Werttyp.
+Im Gegensatz zu Syntax-Knoten also nur eine Struktur für alle
+Arten von Token mit einer Kombination aus Eigenschaften verfügen, d. h. abhängig
+die Art des Tokens, die dargestellt wird.
 
-For example, an integer literal token represents a numeric value. In
-addition to the raw source text the token spans, the literal token has a
-Value property that tells you the exact decoded integer value. This
-property is typed as Object because it may be one of many primitive
-types.
+Ein Integer-literal-Token stellt beispielsweise einen numerischen Wert.
+In
+Zusätzlich zu der reine Text des Tokens umfasst, hat das Literale-Token ein
+Value-Eigenschaft, die den genauen Aufschluss decodiert Integer-Wert.
+Dies
+-Eigenschaft wird als Objekt typisiert, da es eine der vielen primitiver Typ ist
+Typen.
 
-The ValueText property tells you the same information as the Value
-property; however this property is always typed as String. An identifier
-in C\# source text may include Unicode escape characters, yet the syntax
-of the escape sequence itself is not considered part of the identifier
-name. So although the raw text spanned by the token does include the
-escape sequence, the ValueText property does not. Instead, it includes
-the Unicode characters identified by the escape.
+Die Eigenschaft ValueText weist die gleiche Informationen wie der Wert
+Eigenschaft. Diese Eigenschaft ist jedoch immer als Zeichenfolge angegeben werden.
+Ein Bezeichner
+in C\ # kann Quelltext Unicode-Escape-Zeichen, aber die Syntax enthalten.
+der Escapesequenz wird selbst nicht Teil des Bezeichners betrachtet.
+Der Name.
+Ja, obwohl der unformatierte Text, der von dem Token umfasst beinhalten die
+Escape-Sequenz, die ValueText-Eigenschaft wird nicht verwendet.
+Vielmehr enthält Sie
+die Unicode-Zeichen, die durch das Escapezeichen identifiziert.
 
-### Syntax Trivia
+###Faszinierende Syntax
 
-Syntax trivia represent the parts of the source text that are largely
-insignificant for normal understanding of the code, such as whitespace,
-comments, and preprocessor directives.
+Syntax faszinierende darstellen, die Teile des Quelltexts größtenteils
+bedeutungslose normal zu verstehen und den Code, z. B. Leerzeichen,
+Kommentare und Präprozessordirektiven.
 
-Because trivia are not part of the normal language syntax and can appear
-anywhere between any two tokens, they are not included in the syntax
-tree as a child of a node. Yet, because they are important when
-implementing a feature like refactoring and to maintain full fidelity
-with the source text, they do exist as part of the syntax tree.
+Da faszinierende nicht Teil der normalen Sprachsyntax sind und angezeigt werden können
+überall werden zwischen jedem zwei Token, sie nicht in der Syntax enthalten
+die Struktur als untergeordnetes Element eines Knotens.
+Noch, da sie wichtige wann sind
+implementieren eine Funktion wie die Umgestaltung und Geschäftsnachrichten zu verwalten.
+mit den Quelltext sind sie als Teil der Syntaxstruktur vorhanden.
 
-You can access trivia by inspecting a token’s LeadingTrivia or
-TrailingTrivia collections. When source text is parsed, sequences of
-trivia are associated with tokens. In general, a token owns any trivia
-after it on the same line up to the next token. Any trivia after that
-line is associated with the following token. The first token in the
-source file gets all the initial trivia, and the last sequence of trivia
-in the file is tacked onto the end-of-file token, which otherwise has
-zero width.
+Sie können faszinierende zugreifen, indem Sie ein Token LeadingTrivia überprüfen oder
+TrailingTrivia-Auflistungen.
+Wenn Quelltext analysiert wird, Sequenzen
+Faszinierende werden Token zugeordnet.
+Im Allgemeinen besitzt faszinierende ein token
+nach dem in der gleichen Zeile auf das nächste Token.
+Alle faszinierende danach
+Zeile, die das folgende Token zugeordnet ist.
+Das erste Token in der
+Quelldatei erhält alle anfänglichen Themen- und der letzten Sequenz von faszinierende
+in die Datei wird auf das End-of-File-Token übernommen die andernfalls hat
+0 (null) Breite.
 
-Unlike syntax nodes and tokens, syntax trivia do not have parents. Yet,
-because they are part of the tree and each is associated with a single
-token, you may access the token it is associated with using the Token
-property.
+Im Gegensatz zu Syntax Knoten und Token Syntax faszinierende Eltern keinen.
+Noch
+Da sie Teil der Struktur und jeweils eine einzelne zugeordnet ist
+Token können Sie Zugriff auf das Token, das sie mit dem Token zugeordnet ist
+-Eigenschaft veranschaulicht.
 
-Like syntax tokens, trivia are value types. The single SyntaxTrivia type
-is used to describe all kinds of trivia.
+Wie die Syntax-Tokens sind faszinierende Werttypen.
+Der Typ der einzelnen SyntaxTrivia
+wird verwendet, um alle Arten von faszinierende beschreiben.
 
-### Spans
+###Spannen
 
-Each node, token, or trivia knows its position within the source text
-and the number of characters it consists of. A text position is
-represented as a 32-bit integer, which is a zero-based Unicode character
-index. A TextSpan object is the beginning position and a count of
-characters, both represented as integers. If TextSpan has a zero length,
-it refers to a location between two characters.
+Jeder Knoten, Token oder faszinierende weiß, dessen Position innerhalb des Quelltexts
+und die Anzahl der Zeichen, denen er enthält.
+Ist eine Textposition
+als 32-Bit-Ganzzahl, also eine nullbasierte Unicode-Zeichen dargestellt wird.
+Index.
+Ein Objekt TextSpan ist die Anfangsposition und die Anzahl der
+Zeichen, die sowohl als ganze Zahlen dargestellt werden.
+Wenn TextSpan eine Länge von 0 (null) aufweist,
+er verweist auf eine Position zwischen zwei Zeichen.
 
-Each node has two TextSpan properties: Span and FullSpan.
+Jeder Knoten verfügt über zwei TextSpan Eigenschaften: Spanne und FullSpan.
 
-The Span property is the text span from the start of the first token in
-the node’s sub-tree to the end of the last token. This span does not
-include any leading or trailing trivia.
+Span-Eigenschaft wird vom Beginn des ersten Tokens in den Textabschnitt
+Teilstruktur der Knoten am Ende der letzten Token.
+Dieser Spanne nicht
+alle führenden oder nachgestellten faszinierende einschließen
 
-The FullSpan property is the text span that includes the node’s normal
-span, plus the span of any leading or trailing trivia.
+Die FullSpan-Eigenschaft ist der Textabschnitt, der dem Knoten Normal enthält
+Spanne sowie die Spanne der führenden oder nachgestellten faszinierende.
 
-For example:
+Zum Beispiel:
 
 ``` csharp
       if (x > 3)
@@ -345,209 +418,257 @@ For example:
       }
 ```
 
-The statement node inside the block has a span indicated by the single
-vertical bars (|). It includes the characters +throw new Exception(“Not
-right.”);+. The full span is indicated by the double vertical bars (||).
-It includes the same characters as the span and the characters
-associated with the leading and trailing trivia.
+Der Anweisung Knoten innerhalb des Blocks wurde ein SPAN-Tag angegeben, die von den einzelnen
+senkrechte Striche (|).
+Es enthält die Zeichen + new Exception ("nicht auslösen
+rechts."). +.
+Die vollständige Spanne wird durch die zwei senkrechte Striche (|) angezeigt.
+Es enthält die gleichen Zeichen wie die Spanne und die Zeichen
+die führende und nachfolgende faszinierende zugeordnet ist.
 
-### Kinds
+###Arten
 
-Each node, token, or trivia has a RawKind property, of type
-System.Int32, that identifies the exact syntax element represented. This
-value can be cast to a language-specific enumeration; each language, C\#
-or VB, has a single SyntaxKind enumeration that lists all the possible
-nodes, tokens, and trivia elements in the grammar. This conversion can
-be done automatically by accessing the CSharpSyntaxKind() or
-VisualBasicSyntaxKind() extension methods.
+Jeder Knoten, Token oder faszinierende hat nur eine RawKind-Eigenschaft des Typs
+System. Int32, der identifiziert das genaue Syntax-Element dargestellt.
+Dies
+Wert kann in einer Enumeration sprachspezifische umgewandelt werden. jede Sprache C\ #
+oder VB, verfügt über einen einzigen SyntaxKind-Enumeration, die alle möglichen auflistet
+Knoten, Token und faszinierende Elemente in der Grammatik.
+Diese Konvertierung kann
+durch den Zugriff auf die CSharpSyntaxKind() automatisch ausgeführt werden oder
+Erweiterungsmethoden für VisualBasicSyntaxKind().
 
-The RawKind property allows for easy disambiguation of syntax node types
-that share the same node class. For tokens and trivia, this property is
-the only way to distinguish one type of element from another.
+Einfach zur Klärung der syntaxknotentypen ermöglicht die RawKind-Eigenschaft
+die die gleichen Knotenklasse gemeinsam nutzen.
+Bei Token und faszinierende ist diese Eigenschaft
+die einzige Möglichkeit, einen Typ von Element voneinander zu unterscheiden.
 
-For example, a single BinaryExpressionSyntax class has Left,
-OperatorToken, and Right as children. The Kind property distinguishes
-whether it is an AddExpression, SubtractExpression, or
-MultiplyExpression kind of syntax node.
+Beispielsweise hat eine einzelne BinaryExpressionSyntax Klasse verlassen,
+OperatorToken und rechts als untergeordnete Elemente.
+Kind-Eigenschaft unterscheidet.
+ist ein AddExpression, SubtractExpression, oder
+MultiplyExpression-Art der Syntax-Knoten.
 
-### Errors
+###Fehler
 
-Even when the source text contains syntax errors, a full syntax tree
-that is round-trippable to the source is exposed. When the parser
-encounters code that does not conform to the defined syntax of the
-language, it uses one of two techniques to create a syntax tree.
+Selbst, wenn der Quelltext Syntaxfehler, eine vollständige Syntax-Struktur enthält
+d. h. roundtripfähige an der Quelle verfügbar gemacht.
+Wenn der Parser
+erkennt Code, der nicht die definierten Syntax entspricht der
+Sprache, wird eine der beiden folgenden Verfahren eine Syntaxstruktur erstellen.
 
-First, if the parser expects a particular kind of token, but does not
-find it, it may insert a missing token into the syntax tree in the
-location that the token was expected. A missing token represents the
-actual token that was expected, but it has an empty span, and its
-IsMissing property returns true.
+Erst, wenn der Parser eine bestimmte Art von Token erwartet, nicht aber
+Suchen, kann es ein Token fehlt in der Syntaxstruktur in Einfügen der
+Speicherort, dass das Token wurde erwartet.
+Stellt ein Token fehlt die
+tatsächliche token, wurde erwartet, aber es hat einen leeren Bereich, und die zugehörige
+IsMissing-Eigenschaft gibt true zurück.
 
-Second, the parser may skip tokens until it finds one where it can
-continue parsing. In this case, the skipped tokens that were skipped are
-attached as a trivia node with the kind SkippedTokens.
+Der Parser kann Zweitens Token überspringen, bis er ein solches findet, wo er kann
+Analyse wird fortgesetzt.
+In diesem Fall werden die übersprungenen Token, die übersprungen wurden
+als eine faszinierende Knoten mit der Art SkippedTokens angefügt.
 
-Working with Semantics
-----------------------
+Arbeiten mit Semantik
+---------------------
 
-Syntax trees represent the lexical and syntactic structure of source
-code. Although this information alone is enough to describe all the
-declarations and logic in the source, it is not enough information to
-identify what is being referenced.
+Syntaxstrukturen stellen die lexikalische und syntaktische Struktur der Datenquelle dar.
+Code.
+Obwohl diese Informationen sind ausreichend, um alle beschreiben ist die
+Deklarationen und Logik in der Quelle, ist es nicht genügend Informationen, um
+Ermitteln Sie, was darauf verwiesen wird.
 
-For example, many types, fields, methods, and local variables with the
-same name may be spread throughout the source. Although each of these is
-uniquely different, determining which one an identifier actually refers
-to often requires a deep understanding of the language rules.
+Z. B. viele Typen, Felder, Methoden und lokale Variablen mit der
+in der Quelle kann denselben Namen verteilt werden.
+Obwohl jedes dieser Elemente stellt
+Ein Bezeichner verweist eine Bestimmung eindeutig verschiedene
+Um erfordert häufig ein tiefes Verständnis der Regeln.
 
-There are program elements represented in source code, and programs can
-also refer to previously compiled libraries, packaged in assembly files.
-Although no source code is available for assemblies and therefore no
-syntax nodes or trees, programs can still refer to elements inside them.
+Programmelemente, die im Quellcode dargestellt sind, und können Programme
+Außerdem finden Sie vorher kompilierte Bibliotheken, die in Assemblydateien verpackt.
+Obwohl kein Quellcode für Assemblys und daher nicht verfügbar ist
+Syntax-Knoten oder Strukturen, können Programme weiterhin auf Elemente darin verweisen.
 
-In addition to a syntactic model of the source code, a semantic model
-encapsulates the language rules, giving you an easy way to make these
-distinctions.
+Zusätzlich zu einem syntaktische Modell des Quellcodes, ein Semantikmodell
+Kapselt die Sprachregeln bietet Ihnen eine einfache Möglichkeit, diese erstellen
+Unterschiede.
 
-### Compilation
+###Kompilierung
 
-A compilation is a representation of everything needed to compile a C\#
-or Visual Basic program, which includes all the assembly references,
-compiler options, and source files.
+Eine Kompilierung ist eine Darstellung der alles C\ # kompilieren
+oder Visual Basic-Programm, das die Assemblyverweise enthält,
+Compileroptionen und Quelldateien.
 
-Because all this information is in one place, the elements contained in
-the source code can be described in more detail. The compilation
-represents each declared type, member, or variable as a symbol. The
-compilation contains a variety of methods that help you find and relate
-the symbols that have either been declared in the source code or
-imported as metadata from an assembly.
+Da alle diese Informationen an einem Ort, die Elemente in
+der Quellcode kann noch ausführlicher beschrieben werden.
+Die Kompilierung
+stellt jeden deklarierten Typ, Member oder Variable als Symbol dar.
+Die
+Kompilierung enthält eine Vielzahl von Methoden, mit denen Sie suchen und verknüpfen
+die Symbole, die entweder im Quellcode deklariert wurden oder
+als Metadaten aus einer Assembly importiert.
 
-Similar to syntax trees, compilations are immutable. After you create a
-compilation, it cannot be changed by you or anyone else you might be
-sharing it with. However, you can create a new compilation from an
-existing compilation, specifying a change as you do so. For example, you
-might create a compilation that is the same in every way as an existing
-compilation, except it may include an additional source file or assembly
-reference.
+Ähnlich wie bei Syntaxstrukturen Kompilierungen unveränderlich sind.
+Nach dem Erstellen einer
+Kompilierung durch Sie oder andere Personen Sie möglicherweise nicht geändert werden
+Freigabe mit.
+Sie können jedoch eine neue Kompilierung von erstellen ein
+vorhandene Kompilierung eine Änderung angeben, wie Sie dies tun.
+Angenommen, Sie
+eine Kompilierung erstellen, die in jeder Hinsicht wie ein vorhandener ist
+Kompilierung, es sei denn möglicherweise eine zusätzliche Quelldatei oder die Assembly einschließen.
+Verweis.
 
-### Symbols
+###Symbole
 
-A symbol represents a distinct element declared by the source code or
-imported from an assembly as metadata. Every namespace, type, method,
-property, field, event, parameter, or local variable is represented by a
-symbol.
+Ein Symbol für ein distinct-Element deklariert, indem der Quellcode oder
+aus einer Assembly als Metadaten importiert.
+Jeder Namespace, Typ, Methode
+Eigenschaft, Feld, Ereignis, Parameter oder lokalen Variablen wird dargestellt, indem ein
+Symbol.
 
-A variety of methods and properties on the Compilation type help you
-find symbols. For example, you can find a symbol for a declared type by
-its common metadata name. You can also access the entire symbol table as
-a tree of symbols rooted by the global namespace.
+Eine Reihe von Methoden und Eigenschaften für den Typ der Kompilierung können Sie
+Suchen von Symbolen.
+Beispielsweise können Sie ein Symbol für einen deklarierten Typ von suchen.
+der allgemeine Metadatenname.
+Sie können auch die gesamte Symboltabelle als zugreifen.
+eine Struktur von Symbolen, die als Stamm aufweisen, durch den globalen Namespace.
 
-Symbols also contain additional information that the compiler determined
-from the source or metadata, such as other referenced symbols. Each kind
-of symbol is represented by a separate interface derived from ISymbol,
-each with its own methods and properties detailing the information the
-compiler has gathered. Many of these properties directly reference other
-symbols. For example, the ReturnType property of the IMethodSymbol class
-tells you the actual type symbol that the method declaration referenced.
+Symbole enthalten auch zusätzlichen Informationen, den der Compiler bestimmt.
+von der Quelle oder Metadaten, wie z. B. andere Symbole verwiesen wird.
+Jeder Art
+des Symbols wird durch eine separate Schnittstelle abgeleitet ISymbol dargestellt,
+Jeder mit eigenen Methoden und Eigenschaften, die die Detailinformationen der
+Compiler erfasst hat.
+Viele dieser Eigenschaften verweisen direkt auf andere
+Symbole.
+Zum Beispiel die ReturnType-Eigenschaft der IMethodSymbol-Klasse
+das tatsächliche Typ-Symbol, das die Methodendeklaration verwiesen wird.
 
-Symbols present a common representation of namespaces, types, and
-members, between source code and metadata. For example, a method that
-was declared in source code and a method that was imported from metadata
-are both represented by an IMethodSymbol with the same properties.
+Symbole stellen eine allgemeine Darstellung des Namespaces, Typen und
+Elemente zwischen Quellcode und Metadaten.
+Angenommen, eine Methode, die
+im Quellcode und eine Methode, die Metadaten importiert wurde deklariert wurde
+Beide werden durch eine IMethodSymbol mit denselben Eigenschaften dargestellt.
 
-Symbols are similar in concept to the CLR type system as represented by
-the System.Reflection API, yet they are richer in that they model more
-than just types. Namespaces, local variables, and labels are all
-symbols. In addition, symbols are a representation of language concepts,
-not CLR concepts. There is a lot of overlap, but there are many
-meaningful distinctions as well. For instance, an iterator method in C\#
-or Visual Basic is a single symbol. However, when the iterator method is
-translated to CLR metadata, it is a type and multiple methods.
+Symbole sind dem Konzept der CLR-Typsystem, dargestellt durch
+die System.Reflection-API, aber sie sind umfangreicher, da sie mehr zu modellieren
+als nur Typen.
+Namespaces, lokale Variablen und Bezeichnungen sind alle
+Symbole.
+Symbole sind darüber hinaus eine Darstellung der Sprachkonzepte,
+keine CLR-Konzepten.
+Es gibt viele überschneiden, aber es gibt viele
+auch Unterschiede sinnvoll.
+Z. B. eine Iteratormethode C\-
+oder Visual Basic ist ein einzelnes Symbol.
+Ist jedoch, wenn die Iterator-Methode
+in CLR-Metadaten übersetzt wird, ist es, einen Typ und mehrere Methoden.
 
-### Semantic Model
+###Semantikmodell
 
-A semantic model represents all the semantic information for a single
-source file. You can use it to discover the following:
+Ein Semantikmodell stellt die semantische Informationen für eine einzelne dar.
+die Quelldatei.
+Sie können Sie Folgendes ermitteln:
 
--   The symbols referenced at a specific location in source.
--   The resultant type of any expression.
--   All diagnostics, which are errors and warnings.
--   How variables flow in and out of regions of source.
--   The answers to more speculative questions.
+-   Die Symbole an einer bestimmten Position in der Quelle verwiesen wird.
+-   Der resultierende Typ eines Ausdrucks.
+-   Alle Diagnosen Fehler und Warnungen werden.
+-   Wie Variablen und Bereiche der Quelle fließen.
+-   Antworten auf Fragen mehr spekulative.
 
-Working with a Workspace
-------------------------
+Arbeiten mit einem Arbeitsbereich
+---------------------------------
 
-The Workspaces layer is the starting point for doing code analysis and
-refactoring over entire solutions. Within this layer, the Workspace API
-assists you in organizing all the information about the projects in a
-solution into single object model, offering you direct access to
-compiler layer object models like source text, syntax trees, semantic
-models and compilations without needing to parse files, configure
-options or manage inter-project dependencies.
+Die Ebene der Arbeitsbereiche ist der Ausgangspunkt für die Codeanalyse und
+Refactoring über vollständige Lösungen.
+In dieser Schicht der Workspace-API
+unterstützt Sie beim Organisieren alle Informationen über die Projekte in einer
+die Lösung in einzelnen Objektmodell bietet Ihnen direkten Zugriff auf
+Compiler-Layer-Objektmodelle Quelltext, wie Syntaxstrukturen semantische
+Konfigurieren Sie Modelle und Kompilierungen ohne Dateien analysieren
+Optionen oder projektübergreifende Abhängigkeiten zu verwalten.
 
-Host environments, like an IDE, provide a workspace for you
-corresponding to the open solution. It is also possible to use this
-model outside of an IDE by simply loading a solution file.
+Hostumgebungen, z. B. eine IDE bereitstellen einen Arbeitsbereich für Sie.
+entspricht der geöffneten Projektmappe.
+Es ist auch möglich, diese zu verwenden
+Modell außerhalb einer IDE durch Laden einfach eine Projektmappendatei.
 
-### Workspace
+###Arbeitsbereich
 
-A workspace is an active representation of your solution as a collection
-of projects, each with a collection of documents. A workspace is
-typically tied to a host environment that is constantly changing as a
-user types or manipulates properties.
+Ein Arbeitsbereich ist eine aktive Darstellung der Projektmappe als Auflistung
+Projekte, mit einer Sammlung von Dokumenten.
+Ein Arbeitsbereich ist
+in der Regel auf einem hostumgebung, die als ständig gebunden ein
+Benutzer oder Eigenschaften bearbeitet.
 
-The workspace provides access to the current model of the solution. When
-a change in the host environment occurs, the workspace fires
-corresponding events, and the CurrentSolution property is updated. For
-example, when the user types in a text editor corresponding to one of
-the source documents, the workspace uses an event to signal that the
-overall model of the solution has changed and which document was
-modified. You can then react to those changes by analyzing the new model
-for correctness, highlighting areas of significance, or by making a
-suggestion for a code change.
+Der Arbeitsbereich stellt den Zugriff auf das aktuelle Modell der Projektmappe.
+When
+eine Änderung in der hostumgebung auftritt, das im Arbeitsbereich ausgelöst
+die zugehörigen Ereignisse, und die CurrentSolution-Eigenschaft aktualisiert wird.
+For
+b., wenn der Benutzer in einem Text-Editor, die für eines der Datentypen
+das Quelldokument Arbeitsbereich verwendet ein Ereignis, das signalisiert, dass die
+Gesamtmodell der Projektmappe geändert wurde und welches Dokument wurde
+geändert.
+Sie können dann auf diese Änderungen reagieren durch das neue Modell analysieren
+Markieren Sie auf Richtigkeit, Bereiche von Bedeutung, oder durch eine
+Vorschlag für eine Änderung des Codes.
 
-You can also create stand-alone workspaces that are disconnected from
-the host environment or used in an application that has no host
-environment.
+Sie können auch eigenständige Arbeitsbereiche erstellen, die getrennt werden
+der hostumgebung oder in einer Anwendung, die über kein Host verwendet
+Umgebung.
 
-### Solutions, Projects, Documents
+###Projektmappen, Projekte, Dokumente
 
-Although a workspace may change every time a key is pressed, you can
-work with the model of the solution in isolation.
+Obwohl ein Arbeitsbereich ändern kann, jedes Mal, wenn eine Taste gedrückt wird, können Sie
+Arbeiten Sie mit dem Modell der Lösung isoliert.
 
-A solution is an immutable model of the projects and documents. This
-means that the model can be shared without locking or duplication. After
-you obtain a solution instance from the Workspace’s CurrentSolution
-property, that instance will never change. However, like with syntax
-trees and compilations, you can modify solutions by constructing new
-instances based on existing solutions and specific changes. To get the
-workspace to reflect your changes, you must explicitly apply the changed
-solution back to the workspace.
+Eine Lösung ist eine unveränderliche Modell Projekte und Dokumente.
+Dies
+bedeutet, dass das Modell ohne Sperren oder Duplizierung gemeinsam genutzt werden kann.
+Nachher
+Sie erhalten eine Lösung-Instanz aus dem Arbeitsbereich CurrentSolution
+Diese Instanz wird nie-Eigenschaft geändert werden.
+Wie jedoch mit der syntax
+Strukturen und Kompilierungen können Sie Projektmappen ändern, indem Sie neu erstellen
+Instanzen auf Grundlage vorhandener Lösungen und ändern.
+Abrufen der
+Arbeitsbereich, um die Änderung zu reflektieren muss explizit angewendet werden die geänderten
+die Lösung wieder in den Arbeitsbereich.
 
-A project is a part of the overall immutable solution model. It
-represents all the source code documents, parse and compilation options,
-and both assembly and project-to-project references. From a project, you
-can access the corresponding compilation without needing to determine
-project dependencies or parse any source files.
+Ein Projekt ist ein Teil des Modells insgesamt unveränderliche Lösung.
+Es
+Stellt die Quelle Code Dokumente, Analyse und Kompilierung Optionen,
+sowie Assembly und Verweisen zwischen Projekten.
+Aus einem Projekt Sie
+erreichen die entsprechende Kompilierung ohne bestimmen
+Projekt Abhängigkeiten oder Quelldateien zu analysieren.
 
-A document is also a part of the overall immutable solution model. A
-document represents a single source file from which you can access the
-text of the file, the syntax tree, and the semantic model.
+Ein Dokument ist auch ein Teil des Modells insgesamt unveränderliche Lösung.
+A
+Dokument repräsentiert eine einzelne Quelldatei, aus der Sie Zugriff auf, die
+der Text der Datei, die Syntax-Struktur und das semantische Modell.
 
-The following diagram is a representation of how the Workspace relates
-to the host environment, tools, and how edits are made.
+Im folgende Diagramm ist eine Darstellung der Beziehung des Arbeitsbereichs
+mit dem Host-Umgebung, Tools und wie Änderungen vorgenommen werden.
 
-![image](images/workspace-obj-relations.png)
+![Bild](images/workspace-obj-relations.png)
 
-Summary
--------
+Zusammenfassung
+---------------
 
-The .NET Compiler Platform (“Roslyn”) exposes a set of Compiler APIs and
-Workspaces APIs that provides rich information about your source code
-and that has full fidelity with the C\# and Visual Basic languages. The
-transition to compilers as a platform dramatically lowers the barrier to
-entry for creating code focused tools and applications. It creates many
-opportunities for innovation in areas such as meta-programming, code
-generation and transformation, interactive use of the C\# and VB
-languages, and embedding of C\# and VB in domain specific languages.
+Die .NET Compiler Platform ("Roslyn") stellt eine Reihe von Compiler-APIs und
+Arbeitsbereiche APIs, die umfangreiche Informationen zu Ihren Quellcode
+und die genaue Übereinstimmung mit den C\- und Visual Basic-Sprachen.
+Die
+Übergang zum Compiler an, wie eine Plattform erheblich die Grenze zu reduziert
+Eintrag für das Erstellen von Code konzentrieren, Tools und Programme.
+Viele erstellt
+Chancen für Innovationen in Bereichen wie z. B. Metaprogrammierung Code
+Generierung und interaktive Transformation verwenden, von der C\- und VB
+Sprachen und Einbetten von C\- und VB in domänenspezifische Sprachen.
+
+
+
+
