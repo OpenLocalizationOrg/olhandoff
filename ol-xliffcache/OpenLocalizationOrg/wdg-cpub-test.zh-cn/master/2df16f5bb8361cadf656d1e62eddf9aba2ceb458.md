@@ -12,11 +12,12 @@ If you have specific web sites and apps that you know have compatibility problem
 
 Using Enterprise Mode means that you can continue to use Microsoft Edge as your default browser, while also ensuring that your apps continue working on IE11.
 
-**Note**  
-If you want to use Group Policy to set Internet Explorer as your default browser, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
+**Note**  
+If you want to use Group Policy to set Internet Explorer as your default browser, you can find the info here, [Set the default browser using Group Policy](http://go.microsoft.com/fwlink/?LinkId=620714).
 
 
 ## Fix specific sites
+
 Microsoft Edge doesn't support ActiveX controls, Browser Helper Objects, VBScript, or other legacy technology. If you have websites or web apps that still use this technology and need IE11, you can add them to the Enterprise Mode site list, using the Enterprise Mode Site List Manager.
 
 **To add sites to your list**
@@ -40,6 +41,7 @@ If your site passes validation, it’s added to the global compatibility list. I
 You can save the file locally or to a network share. However, you must make sure you deploy it to the location specified in your Group Policy setting. For more info, see [Turn on Enterprise Mode and use a site list](http://go.microsoft.com/fwlink/?LinkId=618952).
 
 ### Set up Microsoft Edge to use the Enterprise Mode site list
+
 You must turn on the **Use Enterprise Mode Site List** Group Policy setting before Microsoft Edge can use the Enterprise Mode site list. This Group Policy applies to both Microsoft Edge and IE11, letting Microsoft Edge switch to IE11 as needed, based on the Enterprise Mode site list. For more info about IE11 and Enterprise Mode, see [Enterprise Mode for Internet Explorer 11 (IE11)](http://go.microsoft.com/fwlink/p/?linkid=618377).
 
 **To turn on Enterprise Mode using Group Policy**
@@ -61,9 +63,9 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 
     ![Enterprise Mode with site list in the Registry](images/Edge_EmIE_RegistrySiteList.png)
 
-    * **HTTP location:** *“SiteList”=”http://localhost:8080/sites.xml”*
+    * **HTTP location:***“SiteList”=”http://localhost:8080/sites.xml”*
 
-    * **Local network:** *"SiteList"="\\network\shares\sites.xml"*
+    * **Local network:***"SiteList"="\\network\shares\sites.xml"*
 
     * **Local file:** *"SiteList"="file:///c:\\Users\\<user>\\Documents\\testList.xml"*
 
@@ -73,10 +75,11 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 The site shows a message in Microsoft Edge, saying that the page needs IE. At the same time, the page opens in IE11; in a new frame if it's not yet running, or in a new tab if it is.
 
 ## Fix your intranet sites
+
 You can add the **Send all intranet traffic over to Internet Explorer** Group Policy setting for Windows 10 so that all of your intranet sites open in IE11. This means that even if your employees are using Microsoft Edge, they will automatically switch to IE11 while viewing the intranet.
 
-**Note**  
-If you want to use Group Policy to set IE as the default browser for Internet sites, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
+**Note**  
+If you want to use Group Policy to set IE as the default browser for Internet sites, you can find the info here, [Set the default browser using Group Policy](http://go.microsoft.com/fwlink/?LinkId=620714).
 
 **To turn on Sends all intranet traffic over to Internet Explorer using Group Policy**
 
@@ -89,13 +92,18 @@ If you want to use Group Policy to set IE as the default browser for Internet si
 The site shows a message in Microsoft Edge, saying that the page needs IE. At the same time, the page opens in IE11; in a new frame if it's not yet running, or in a new tab if it is.
 
 ## Related topics
+
 * [Blog: How Microsoft Edge and Internet Explorer 11 on Windows 10 work better together in the Enterprise](http://go.microsoft.com/fwlink/?LinkID=624035)
 * [Enterprise Mode Site List Manager download](http://go.microsoft.com/fwlink/?LinkId=394378)
 * [Enterprise Mode for Internet Explorer 11 (IE11)](http://go.microsoft.com/fwlink/p/?linkid=618377)
-* [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714)
- 
+* [Set the default browser using Group Policy](http://go.microsoft.com/fwlink/?LinkId=620714)
 
- 
+
+
+
+
+
+
 
 
 
