@@ -1,0 +1,450 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        84
+      ],
+      "content": "Use MapReduce and PowerShell with Hadoop | Microsoft Azure"
+    },
+    {
+      "pos": [
+        102,
+        186
+      ],
+      "content": "Learn how to use PowerShell to remotely run MapReduce jobs with Hadoop on HDInsight."
+    },
+    {
+      "pos": [
+        503,
+        561
+      ],
+      "content": "Run Hive queries with Hadoop on HDInsight using PowerShell"
+    },
+    {
+      "pos": [
+        653,
+        769
+      ],
+      "content": "This document provides an example of using Azure PowerShell to run a MapReduce job in a Hadoop on HDInsight cluster."
+    },
+    {
+      "pos": [
+        771,
+        773
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        792,
+        805
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        807,
+        874
+      ],
+      "content": "To complete the steps in this article, you will need the following:"
+    },
+    {
+      "pos": [
+        878,
+        961
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>An Azure HDInsight (Hadoop on HDInsight) cluster (Windows-based or Linux-based)<ept id=\"p1\">**</ept>"
+    },
+    {
+      "pos": [
+        965,
+        1086
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>A workstation with Azure PowerShell<ept id=\"p2\">**</ept>. See <bpt id=\"p3\">[</bpt>Install and Configure Azure PowerShell<ept id=\"p3\">](../powershell-install-configure.md)</ept>",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">**</bpt>A workstation with Azure PowerShell<ept id=\"p2\">**</ept>.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p3\">[</bpt>Install and Configure Azure PowerShell<ept id=\"p3\">](../powershell-install-configure.md)</ept>",
+          "pos": [
+            79,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1088,
+        1090
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1113,
+        1155
+      ],
+      "content": "Run a MapReduce job using Azure PowerShell"
+    },
+    {
+      "pos": [
+        1157,
+        1438
+      ],
+      "content": "Azure PowerShell provides <bpt id=\"p4\">*</bpt>cmdlets<ept id=\"p4\">*</ept><ph id=\"ph3\"/> that allow you to remotely run MapReduce jobs on HDInsight. Internally, this is accomplished by using REST calls to <bpt id=\"p5\">[</bpt>WebHCat<ept id=\"p5\">](https://cwiki.apache.org/confluence/display/Hive/WebHCat)</ept><ph id=\"ph4\"/> (formerly called Templeton) running on the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Azure PowerShell provides <bpt id=\"p4\">*</bpt>cmdlets<ept id=\"p4\">*</ept><ph id=\"ph3\"/> that allow you to remotely run MapReduce jobs on HDInsight.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "Internally, this is accomplished by using REST calls to <bpt id=\"p5\">[</bpt>WebHCat<ept id=\"p5\">](https://cwiki.apache.org/confluence/display/Hive/WebHCat)</ept><ph id=\"ph4\"/> (formerly called Templeton) running on the HDInsight cluster.",
+          "pos": [
+            148,
+            385
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1440,
+        1529
+      ],
+      "content": "The following cmdlets are used when running MapReduce jobs in a remote HDInsight cluster."
+    },
+    {
+      "pos": [
+        1533,
+        1616
+      ],
+      "content": "<bpt id=\"p6\">**</bpt>Login-AzureRmAccount<ept id=\"p6\">**</ept>: Authenticates Azure PowerShell to your Azure subscription"
+    },
+    {
+      "pos": [
+        1620,
+        1743
+      ],
+      "content": "<bpt id=\"p7\">**</bpt>New-AzureRmHDInsightMapReduceJobDefinition<ept id=\"p7\">**</ept>: Creates a new <bpt id=\"p8\">*</bpt>job definition<ept id=\"p8\">*</ept><ph id=\"ph5\"/> by using the specified MapReduce information"
+    },
+    {
+      "pos": [
+        1747,
+        1907
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>Start-AzureRmHDInsightJob<ept id=\"p9\">**</ept>: Sends the job definition to HDInsight, starts the job, and returns a <bpt id=\"p10\">*</bpt>job<ept id=\"p10\">*</ept><ph id=\"ph6\"/> object that can be used to check the status of the job"
+    },
+    {
+      "pos": [
+        1911,
+        2055
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>Wait-AzureRmHDInsightJob<ept id=\"p11\">**</ept>: Uses the job object to check the status of the job. It waits until the job completes or the wait time is exceeded.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p11\">**</bpt>Wait-AzureRmHDInsightJob<ept id=\"p11\">**</ept>: Uses the job object to check the status of the job.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "It waits until the job completes or the wait time is exceeded.",
+          "pos": [
+            122,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2059,
+        2132
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>Get-AzureRmHDInsightJobOutput<ept id=\"p12\">**</ept>: Used to retrieve the output of the job"
+    },
+    {
+      "pos": [
+        2134,
+        2230
+      ],
+      "content": "The following steps demonstrate how to use these cmdlets to run a job in your HDInsight cluster."
+    },
+    {
+      "pos": [
+        2235,
+        2374
+      ],
+      "content": "Using an editor, save the following code as <bpt id=\"p13\">**</bpt>mapreducejob.ps1<ept id=\"p13\">**</ept>. You must replace <bpt id=\"p14\">**</bpt>CLUSTERNAME<ept id=\"p14\">**</ept><ph id=\"ph7\"/> with the name of your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Using an editor, save the following code as <bpt id=\"p13\">**</bpt>mapreducejob.ps1<ept id=\"p13\">**</ept>.",
+          "pos": [
+            0,
+            105
+          ]
+        },
+        {
+          "content": "You must replace <bpt id=\"p14\">**</bpt>CLUSTERNAME<ept id=\"p14\">**</ept><ph id=\"ph7\"/> with the name of your HDInsight cluster.",
+          "pos": [
+            106,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5314,
+        5480
+      ],
+      "content": "Open a new <bpt id=\"p15\">**</bpt>Azure PowerShell<ept id=\"p15\">**</ept><ph id=\"ph8\"/> command prompt. Change directories to the location of the <bpt id=\"p16\">**</bpt>mapreducejob.ps1<ept id=\"p16\">**</ept><ph id=\"ph9\"/> file, then use the following command to run the script:",
+      "nodes": [
+        {
+          "content": "Open a new <bpt id=\"p15\">**</bpt>Azure PowerShell<ept id=\"p15\">**</ept><ph id=\"ph8\"/> command prompt.",
+          "pos": [
+            0,
+            101
+          ]
+        },
+        {
+          "content": "Change directories to the location of the <bpt id=\"p16\">**</bpt>mapreducejob.ps1<ept id=\"p16\">**</ept><ph id=\"ph9\"/> file, then use the following command to run the script:",
+          "pos": [
+            102,
+            274
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5518,
+        5709
+      ],
+      "content": "When you run the script, you may be prompted to authenticate to your Azure subscription. You will also be asked to provide the HTTPS/Admin account name and password for the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "When you run the script, you may be prompted to authenticate to your Azure subscription.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "You will also be asked to provide the HTTPS/Admin account name and password for the HDInsight cluster.",
+          "pos": [
+            89,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5714,
+        5789
+      ],
+      "content": "When the job completes, you should receive output similar to the following:"
+    },
+    {
+      "pos": [
+        6166,
+        6224
+      ],
+      "content": "This output indicates that the job completed successfully."
+    },
+    {
+      "pos": [
+        6232,
+        6330
+      ],
+      "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph><ph id=\"ph11\"/> If the <bpt id=\"p17\">**</bpt>ExitCode<ept id=\"p17\">**</ept><ph id=\"ph12\"/> is a value other than 0, see <bpt id=\"p18\">[</bpt>Troubleshooting<ept id=\"p18\">](#troubleshooting)</ept>."
+    },
+    {
+      "pos": [
+        6336,
+        6480
+      ],
+      "content": "This example will also store the downloaded files to the  <bpt id=\"p19\">**</bpt>example/data/WordCountOutput<ept id=\"p19\">**</ept><ph id=\"ph13\"/> folder in the directory that you run the script from."
+    },
+    {
+      "pos": [
+        6484,
+        6495
+      ],
+      "content": "View output"
+    },
+    {
+      "pos": [
+        6497,
+        6703
+      ],
+      "content": "The output of the MapReduce job is stored in files with the name <bpt id=\"p20\">*</bpt>part-r-#####<ept id=\"p20\">*</ept>. Open the <bpt id=\"p21\">**</bpt>example/data/WordCountOutput/part-r-00000<ept id=\"p21\">**</ept><ph id=\"ph14\"/> file in a text editor to see the words and counts produced by the job.",
+      "nodes": [
+        {
+          "content": "The output of the MapReduce job is stored in files with the name <bpt id=\"p20\">*</bpt>part-r-#####<ept id=\"p20\">*</ept>.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "Open the <bpt id=\"p21\">**</bpt>example/data/WordCountOutput/part-r-00000<ept id=\"p21\">**</ept><ph id=\"ph14\"/> file in a text editor to see the words and counts produced by the job.",
+          "pos": [
+            121,
+            301
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6707,
+        6847
+      ],
+      "content": "<ph id=\"ph15\">[AZURE.NOTE]</ph><ph id=\"ph16\"/> The output files of a MapReduce job are immutable. So if you rerun this sample, you need to change the name of the output file.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph15\">[AZURE.NOTE]</ph><ph id=\"ph16\"/> The output files of a MapReduce job are immutable.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "So if you rerun this sample, you need to change the name of the output file.",
+          "pos": [
+            98,
+            174
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6849,
+        6851
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        6879,
+        6894
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        6896,
+        7138
+      ],
+      "content": "If no information is returned when the job completes, an error may have occurred during processing. To view error information for this job, add the following command to the end of the <bpt id=\"p22\">**</bpt>mapreducejob.ps1<ept id=\"p22\">**</ept><ph id=\"ph17\"/> file, save it, and then run it again.",
+      "nodes": [
+        {
+          "content": "If no information is returned when the job completes, an error may have occurred during processing.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "To view error information for this job, add the following command to the end of the <bpt id=\"p22\">**</bpt>mapreducejob.ps1<ept id=\"p22\">**</ept><ph id=\"ph17\"/> file, save it, and then run it again.",
+          "pos": [
+            100,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7620,
+        7761
+      ],
+      "content": "This returns the information that was written to STDERR on the server when you ran the job, and it may help determine why the job is failing."
+    },
+    {
+      "pos": [
+        7763,
+        7765
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        7785,
+        7792
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        7794,
+        7943
+      ],
+      "content": "As you can see, Azure PowerShell provides an easy way to run MapReduce jobs on an HDInsight cluster, monitor the job status, and retrieve the output."
+    },
+    {
+      "pos": [
+        7945,
+        7947
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        7969,
+        7979
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        7981,
+        8039
+      ],
+      "content": "For general information about MapReduce jobs in HDInsight:"
+    },
+    {
+      "pos": [
+        8043,
+        8106
+      ],
+      "content": "<bpt id=\"p23\">[</bpt>Use MapReduce on HDInsight Hadoop<ept id=\"p23\">](hdinsight-use-mapreduce.md)</ept>"
+    },
+    {
+      "pos": [
+        8108,
+        8179
+      ],
+      "content": "For information about other ways you can work with Hadoop on HDInsight:"
+    },
+    {
+      "pos": [
+        8183,
+        8241
+      ],
+      "content": "<bpt id=\"p24\">[</bpt>Use Hive with Hadoop on HDInsight<ept id=\"p24\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        8245,
+        8301
+      ],
+      "content": "<bpt id=\"p25\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p25\">](hdinsight-use-pig.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Use MapReduce and PowerShell with Hadoop | Microsoft Azure\"\n   description=\"Learn how to use PowerShell to remotely run MapReduce jobs with Hadoop on HDInsight.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"02/04/2016\"\n   ms.author=\"larryfr\"/>\n\n#Run Hive queries with Hadoop on HDInsight using PowerShell\n\n[AZURE.INCLUDE [mapreduce-selector](../../includes/hdinsight-selector-use-mapreduce.md)]\n\nThis document provides an example of using Azure PowerShell to run a MapReduce job in a Hadoop on HDInsight cluster.\n\n##<a id=\"prereq\"></a>Prerequisites\n\nTo complete the steps in this article, you will need the following:\n\n- **An Azure HDInsight (Hadoop on HDInsight) cluster (Windows-based or Linux-based)**\n\n- **A workstation with Azure PowerShell**. See [Install and Configure Azure PowerShell](../powershell-install-configure.md)\n\n##<a id=\"powershell\"></a>Run a MapReduce job using Azure PowerShell\n\nAzure PowerShell provides *cmdlets* that allow you to remotely run MapReduce jobs on HDInsight. Internally, this is accomplished by using REST calls to [WebHCat](https://cwiki.apache.org/confluence/display/Hive/WebHCat) (formerly called Templeton) running on the HDInsight cluster.\n\nThe following cmdlets are used when running MapReduce jobs in a remote HDInsight cluster.\n\n* **Login-AzureRmAccount**: Authenticates Azure PowerShell to your Azure subscription\n\n* **New-AzureRmHDInsightMapReduceJobDefinition**: Creates a new *job definition* by using the specified MapReduce information\n\n* **Start-AzureRmHDInsightJob**: Sends the job definition to HDInsight, starts the job, and returns a *job* object that can be used to check the status of the job\n\n* **Wait-AzureRmHDInsightJob**: Uses the job object to check the status of the job. It waits until the job completes or the wait time is exceeded.\n\n* **Get-AzureRmHDInsightJobOutput**: Used to retrieve the output of the job\n\nThe following steps demonstrate how to use these cmdlets to run a job in your HDInsight cluster.\n\n1. Using an editor, save the following code as **mapreducejob.ps1**. You must replace **CLUSTERNAME** with the name of your HDInsight cluster.\n\n        #Specify the values\n        $clusterName = \"CLUSTERNAME\"\n                \n        # Login to your Azure subscription\n        # Is there an active Azure subscription?\n        $sub = Get-AzureRmSubscription -ErrorAction SilentlyContinue\n        if(-not($sub))\n        {\n            Login-AzureRmAccount\n        }\n\n        #Get HTTPS/Admin credentials for submitting the job later\n        $creds = Get-Credential\n        #Get the cluster info so we can get the resource group, storage, etc.\n        $clusterInfo = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n        $resourceGroup = $clusterInfo.ResourceGroup\n        $storageAccountName=$clusterInfo.DefaultStorageAccount.split('.')[0]\n        $container=$clusterInfo.DefaultStorageContainer\n        $storageAccountKey=Get-AzureRmStorageAccountKey `\n            -Name $storageAccountName `\n            -ResourceGroupName $resourceGroup `\n            | %{ $_.Key1 }\n\n        #Create a storage content and upload the file\n        $context = New-AzureStorageContext `\n            -StorageAccountName $storageAccountName `\n            -StorageAccountKey $storageAccountKey\n            \n        #Define the MapReduce job\n        #NOTE: If using an HDInsight 2.0 cluster, use hadoop-examples.jar instead.\n        # -JarFile = the JAR containing the MapReduce application\n        # -ClassName = the class of the application\n        # -Arguments = The input file, and the output directory\n        $wordCountJobDefinition = New-AzureRmHDInsightMapReduceJobDefinition `\n            -JarFile \"wasb:///example/jars/hadoop-mapreduce-examples.jar\" `\n            -ClassName \"wordcount\" `\n            -Arguments `\n                \"wasb:///example/data/gutenberg/davinci.txt\", `\n                \"wasb:///example/data/WordCountOutput\"\n\n        #Submit the job to the cluster\n        Write-Host \"Start the MapReduce job...\" -ForegroundColor Green\n        $wordCountJob = Start-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobDefinition $wordCountJobDefinition `\n            -HttpCredential $creds\n\n        #Wait for the job to complete\n        Write-Host \"Wait for the job to complete...\" -ForegroundColor Green\n        Wait-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobId $wordCountJob.JobId `\n            -HttpCredential $creds\n        # Download the output\n        Get-AzureStorageBlobContent `\n            -Blob 'example/data/WordCountOutput/part-r-00000' `\n            -Container $container `\n            -Destination output.txt `\n            -Context $context\n        # Print the output\n        Get-AzureRmHDInsightJobOutput `\n            -Clustername $clusterName `\n            -JobId $wordCountJob.JobId `\n            -DefaultContainer $container `\n            -DefaultStorageAccountName $storageAccountName `\n            -DefaultStorageAccountKey $storageAccountKey `\n            -HttpCredential $creds\n            \n2. Open a new **Azure PowerShell** command prompt. Change directories to the location of the **mapreducejob.ps1** file, then use the following command to run the script:\n\n        .\\mapreducejob.ps1\n    \n    When you run the script, you may be prompted to authenticate to your Azure subscription. You will also be asked to provide the HTTPS/Admin account name and password for the HDInsight cluster.\n\n3. When the job completes, you should receive output similar to the following:\n\n        Cluster         : CLUSTERNAME\n        ExitCode        : 0\n        Name            : wordcount\n        PercentComplete : map 100% reduce 100%\n        Query           :\n        State           : Completed\n        StatusDirectory : f1ed2028-afe8-402f-a24b-13cc17858097\n        SubmissionTime  : 12/5/2014 8:34:09 PM\n        JobId           : job_1415949758166_0071\n\n    This output indicates that the job completed successfully.\n\n    > [AZURE.NOTE] If the **ExitCode** is a value other than 0, see [Troubleshooting](#troubleshooting).\n\n    This example will also store the downloaded files to the  **example/data/WordCountOutput** folder in the directory that you run the script from.\n\n##View output\n\nThe output of the MapReduce job is stored in files with the name *part-r-#####*. Open the **example/data/WordCountOutput/part-r-00000** file in a text editor to see the words and counts produced by the job.\n\n> [AZURE.NOTE] The output files of a MapReduce job are immutable. So if you rerun this sample, you need to change the name of the output file.\n\n##<a id=\"troubleshooting\"></a>Troubleshooting\n\nIf no information is returned when the job completes, an error may have occurred during processing. To view error information for this job, add the following command to the end of the **mapreducejob.ps1** file, save it, and then run it again.\n\n    # Print the output of the WordCount job.\n    Write-Host \"Display the standard output ...\" -ForegroundColor Green\n    Get-AzureRmHDInsightJobOutput `\n            -Clustername $clusterName `\n            -JobId $wordCountJob.JobId `\n            -DefaultContainer $container `\n            -DefaultStorageAccountName $storageAccountName `\n            -DefaultStorageAccountKey $storageAccountKey `\n            -HttpCredential $creds `\n            -DisplayOutputType StandardError\n\nThis returns the information that was written to STDERR on the server when you ran the job, and it may help determine why the job is failing.\n\n##<a id=\"summary\"></a>Summary\n\nAs you can see, Azure PowerShell provides an easy way to run MapReduce jobs on an HDInsight cluster, monitor the job status, and retrieve the output.\n\n##<a id=\"nextsteps\"></a>Next steps\n\nFor general information about MapReduce jobs in HDInsight:\n\n* [Use MapReduce on HDInsight Hadoop](hdinsight-use-mapreduce.md)\n\nFor information about other ways you can work with Hadoop on HDInsight:\n\n* [Use Hive with Hadoop on HDInsight](hdinsight-use-hive.md)\n\n* [Use Pig with Hadoop on HDInsight](hdinsight-use-pig.md)\n"
+}

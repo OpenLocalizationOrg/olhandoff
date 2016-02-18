@@ -1,0 +1,431 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        87
+      ],
+      "content": "Use Hadoop Pig with PowerShell in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        105,
+        190
+      ],
+      "content": "Learn how to submit Pig jobs to a Hadoop cluster on HDInsight using Azure PowerShell."
+    },
+    {
+      "pos": [
+        507,
+        536
+      ],
+      "content": "Run Pig jobs using PowerShell"
+    },
+    {
+      "pos": [
+        616,
+        872
+      ],
+      "content": "This document provides an example of using Azure PowerShell to submit Pig jobs to a Hadoop on HDInsight cluster. Pig allows you to write MapReduce jobs by using a language (Pig Latin,) that models data transformations, rather than map and reduce functions.",
+      "nodes": [
+        {
+          "content": "This document provides an example of using Azure PowerShell to submit Pig jobs to a Hadoop on HDInsight cluster.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "Pig allows you to write MapReduce jobs by using a language (Pig Latin,) that models data transformations, rather than map and reduce functions.",
+          "pos": [
+            113,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        876,
+        1120
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> This document does not provide a detailed description of what the Pig Latin statements used in the examples do. For information about the Pig Latin used in this example, see <bpt id=\"p1\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p1\">](hdinsight-use-pig.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> This document does not provide a detailed description of what the Pig Latin statements used in the examples do.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "For information about the Pig Latin used in this example, see <bpt id=\"p1\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p1\">](hdinsight-use-pig.md)</ept>.",
+          "pos": [
+            157,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1122,
+        1124
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1143,
+        1156
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1158,
+        1225
+      ],
+      "content": "To complete the steps in this article, you will need the following."
+    },
+    {
+      "pos": [
+        1229,
+        1387
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>An Azure subscription<ept id=\"p2\">**</ept>. See <bpt id=\"p3\">[</bpt>Get Azure free trial<ept id=\"p3\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">**</bpt>An Azure subscription<ept id=\"p2\">**</ept>.",
+          "pos": [
+            0,
+            64
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p3\">[</bpt>Get Azure free trial<ept id=\"p3\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+          "pos": [
+            65,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1390,
+        1558
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>A workstation with Azure PowerShell<ept id=\"p4\">**</ept>. See <bpt id=\"p5\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p5\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p4\">**</bpt>A workstation with Azure PowerShell<ept id=\"p4\">**</ept>.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p5\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p5\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+          "pos": [
+            79,
+            244
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1561,
+        1563
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1586,
+        1615
+      ],
+      "content": "Run Pig jobs using PowerShell"
+    },
+    {
+      "pos": [
+        1617,
+        1892
+      ],
+      "content": "Azure PowerShell provides <bpt id=\"p6\">*</bpt>cmdlets<ept id=\"p6\">*</ept><ph id=\"ph5\"/> that allow you to remotely run Pig jobs on HDInsight. Internally, this is accomplished by using REST calls to <bpt id=\"p7\">[</bpt>WebHCat<ept id=\"p7\">](https://cwiki.apache.org/confluence/display/Hive/WebHCat)</ept><ph id=\"ph6\"/> (formerly called Templeton) running on the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Azure PowerShell provides <bpt id=\"p6\">*</bpt>cmdlets<ept id=\"p6\">*</ept><ph id=\"ph5\"/> that allow you to remotely run Pig jobs on HDInsight.",
+          "pos": [
+            0,
+            141
+          ]
+        },
+        {
+          "content": "Internally, this is accomplished by using REST calls to <bpt id=\"p7\">[</bpt>WebHCat<ept id=\"p7\">](https://cwiki.apache.org/confluence/display/Hive/WebHCat)</ept><ph id=\"ph6\"/> (formerly called Templeton) running on the HDInsight cluster.",
+          "pos": [
+            142,
+            379
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1894,
+        1977
+      ],
+      "content": "The following cmdlets are used when running Pig jobs on a remote HDInsight cluster:"
+    },
+    {
+      "pos": [
+        1981,
+        2064
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>Login-AzureRmAccount<ept id=\"p8\">**</ept>: Authenticates Azure PowerShell to your Azure Subscription"
+    },
+    {
+      "pos": [
+        2068,
+        2184
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>New-AzureRmHDInsightPigJobDefinition<ept id=\"p9\">**</ept>: Creates a new <bpt id=\"p10\">*</bpt>job definition<ept id=\"p10\">*</ept><ph id=\"ph7\"/> by using the specified Pig Latin statements"
+    },
+    {
+      "pos": [
+        2188,
+        2348
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>Start-AzureRmHDInsightJob<ept id=\"p11\">**</ept>: Sends the job definition to HDInsight, starts the job, and returns a <bpt id=\"p12\">*</bpt>job<ept id=\"p12\">*</ept><ph id=\"ph8\"/> object that can be used to check the status of the job"
+    },
+    {
+      "pos": [
+        2352,
+        2511
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>Wait-AzureRmHDInsightJob<ept id=\"p13\">**</ept>: Uses the job object to check the status of the job. It will wait until the job has completed, or the wait time has been exceeded.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p13\">**</bpt>Wait-AzureRmHDInsightJob<ept id=\"p13\">**</ept>: Uses the job object to check the status of the job.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "It will wait until the job has completed, or the wait time has been exceeded.",
+          "pos": [
+            122,
+            199
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2515,
+        2588
+      ],
+      "content": "<bpt id=\"p14\">**</bpt>Get-AzureRmHDInsightJobOutput<ept id=\"p14\">**</ept>: Used to retrieve the output of the job"
+    },
+    {
+      "pos": [
+        2590,
+        2686
+      ],
+      "content": "The following steps demonstrate how to use these cmdlets to run a job on your HDInsight cluster."
+    },
+    {
+      "pos": [
+        2691,
+        2824
+      ],
+      "content": "Using an editor, save the following code as <bpt id=\"p15\">**</bpt>pigjob.ps1<ept id=\"p15\">**</ept>. You must replace <bpt id=\"p16\">**</bpt>CLUSTERNAME<ept id=\"p16\">**</ept><ph id=\"ph9\"/> with the name of your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Using an editor, save the following code as <bpt id=\"p15\">**</bpt>pigjob.ps1<ept id=\"p15\">**</ept>.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "You must replace <bpt id=\"p16\">**</bpt>CLUSTERNAME<ept id=\"p16\">**</ept><ph id=\"ph9\"/> with the name of your HDInsight cluster.",
+          "pos": [
+            100,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6047,
+        6203
+      ],
+      "content": "Open a new Azure PowerShell command prompt. Change directories to the location of the <bpt id=\"p17\">**</bpt>pigjob.ps1<ept id=\"p17\">**</ept><ph id=\"ph10\"/> file, then use the following command to run the script:",
+      "nodes": [
+        {
+          "content": "Open a new Azure PowerShell command prompt.",
+          "pos": [
+            0,
+            43
+          ]
+        },
+        {
+          "content": "Change directories to the location of the <bpt id=\"p17\">**</bpt>pigjob.ps1<ept id=\"p17\">**</ept><ph id=\"ph10\"/> file, then use the following command to run the script:",
+          "pos": [
+            44,
+            211
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6239,
+        6399
+      ],
+      "content": "You will first be prompted to login to your Azure subscription. Then, you will be asked for the HTTPs/Admin account name and password for the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "You will first be prompted to login to your Azure subscription.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "Then, you will be asked for the HTTPs/Admin account name and password for the HDInsight cluster.",
+          "pos": [
+            64,
+            160
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6404,
+        6482
+      ],
+      "content": "When the job completes, it should return information similar to the following:"
+    },
+    {
+      "pos": [
+        6712,
+        6714
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        6742,
+        6757
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        6759,
+        6995
+      ],
+      "content": "If no information is returned when the job completes, an error may have occurred during processing. To view error information for this job, add the following command to the end of the <bpt id=\"p18\">**</bpt>pigjob.ps1<ept id=\"p18\">**</ept><ph id=\"ph11\"/> file, save it, and then run it again.",
+      "nodes": [
+        {
+          "content": "If no information is returned when the job completes, an error may have occurred during processing.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "To view error information for this job, add the following command to the end of the <bpt id=\"p18\">**</bpt>pigjob.ps1<ept id=\"p18\">**</ept><ph id=\"ph11\"/> file, save it, and then run it again.",
+          "pos": [
+            100,
+            291
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7465,
+        7610
+      ],
+      "content": "This will return the information that was written to STDERR on the server when you ran the job, and it may help determine why the job is failing."
+    },
+    {
+      "pos": [
+        7612,
+        7614
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        7634,
+        7641
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        7643,
+        7786
+      ],
+      "content": "As you can see, Azure PowerShell provides an easy way to run Pig jobs on an HDInsight cluster, monitor the job status, and retrieve the output."
+    },
+    {
+      "pos": [
+        7788,
+        7790
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        7812,
+        7822
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        7824,
+        7871
+      ],
+      "content": "For general information about Pig in HDInsight:"
+    },
+    {
+      "pos": [
+        7875,
+        7931
+      ],
+      "content": "<bpt id=\"p19\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p19\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        7933,
+        8004
+      ],
+      "content": "For information about other ways you can work with Hadoop on HDInsight:"
+    },
+    {
+      "pos": [
+        8008,
+        8066
+      ],
+      "content": "<bpt id=\"p20\">[</bpt>Use Hive with Hadoop on HDInsight<ept id=\"p20\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        8070,
+        8138
+      ],
+      "content": "<bpt id=\"p21\">[</bpt>Use MapReduce with Hadoop on HDInsight<ept id=\"p21\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Use Hadoop Pig with PowerShell in HDInsight | Microsoft Azure\"\n   description=\"Learn how to submit Pig jobs to a Hadoop cluster on HDInsight using Azure PowerShell.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"02/04/2016\"\n   ms.author=\"larryfr\"/>\n\n#Run Pig jobs using PowerShell\n\n[AZURE.INCLUDE [pig-selector](../../includes/hdinsight-selector-use-pig.md)]\n\nThis document provides an example of using Azure PowerShell to submit Pig jobs to a Hadoop on HDInsight cluster. Pig allows you to write MapReduce jobs by using a language (Pig Latin,) that models data transformations, rather than map and reduce functions.\n\n> [AZURE.NOTE] This document does not provide a detailed description of what the Pig Latin statements used in the examples do. For information about the Pig Latin used in this example, see [Use Pig with Hadoop on HDInsight](hdinsight-use-pig.md).\n\n##<a id=\"prereq\"></a>Prerequisites\n\nTo complete the steps in this article, you will need the following.\n\n- **An Azure subscription**. See [Get Azure free trial](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/).\n- **A workstation with Azure PowerShell**. See [Install Azure PowerShell 1.0 and greater](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater).\n\n\n##<a id=\"powershell\"></a>Run Pig jobs using PowerShell\n\nAzure PowerShell provides *cmdlets* that allow you to remotely run Pig jobs on HDInsight. Internally, this is accomplished by using REST calls to [WebHCat](https://cwiki.apache.org/confluence/display/Hive/WebHCat) (formerly called Templeton) running on the HDInsight cluster.\n\nThe following cmdlets are used when running Pig jobs on a remote HDInsight cluster:\n\n* **Login-AzureRmAccount**: Authenticates Azure PowerShell to your Azure Subscription\n\n* **New-AzureRmHDInsightPigJobDefinition**: Creates a new *job definition* by using the specified Pig Latin statements\n\n* **Start-AzureRmHDInsightJob**: Sends the job definition to HDInsight, starts the job, and returns a *job* object that can be used to check the status of the job\n\n* **Wait-AzureRmHDInsightJob**: Uses the job object to check the status of the job. It will wait until the job has completed, or the wait time has been exceeded.\n\n* **Get-AzureRmHDInsightJobOutput**: Used to retrieve the output of the job\n\nThe following steps demonstrate how to use these cmdlets to run a job on your HDInsight cluster.\n\n1. Using an editor, save the following code as **pigjob.ps1**. You must replace **CLUSTERNAME** with the name of your HDInsight cluster.\n\n        #Login to your Azure subscription\n        Login-AzureRmAccount\n        #Get credentials for the admin/HTTPs account\n        $creds=Get-Credential\n\n        #Specify the cluster name\n        $clusterName = \"CLUSTERNAME\"\n        \n        #Get the cluster info so we can get the resource group, storage, etc.\n        $clusterInfo = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n        $resourceGroup = $clusterInfo.ResourceGroup\n        $storageAccountName=$clusterInfo.DefaultStorageAccount.split('.')[0]\n        $container=$clusterInfo.DefaultStorageContainer\n        $storageAccountKey=Get-AzureRmStorageAccountKey `\n            -Name $storageAccountName `\n            -ResourceGroupName $resourceGroup `\n            | %{ $_.Key1 }\n\n        #Store the Pig Latin into $QueryString\n        $QueryString =  @\"\n        LOGS = LOAD 'wasb:///example/data/sample.log';\n        LEVELS = foreach LOGS generate REGEX_EXTRACT(`$0, '(TRACE|DEBUG|INFO|WARN|ERROR|FATAL)', 1)  as LOGLEVEL;\n        FILTEREDLEVELS = FILTER LEVELS by LOGLEVEL is not null;\n        GROUPEDLEVELS = GROUP FILTEREDLEVELS by LOGLEVEL;\n        FREQUENCIES = foreach GROUPEDLEVELS generate group as LOGLEVEL, COUNT(FILTEREDLEVELS.LOGLEVEL) as COUNT;\n        RESULT = order FREQUENCIES by COUNT desc;\n        DUMP RESULT;\n        \"@\n\n        #Create a new HDInsight Pig Job definition\n        $pigJobDefinition = New-AzureRmHDInsightPigJobDefinition `\n            -Query $QueryString `\n            -Arguments \"-w\"\n\n        # Start the Pig job on the HDInsight cluster\n        Write-Host \"Start the Pig job ...\" -ForegroundColor Green\n        $pigJob = Start-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobDefinition $pigJobDefinition `\n            -HttpCredential $creds\n\n        # Wait for the Pig job to complete\n        Write-Host \"Wait for the Pig job to complete ...\" -ForegroundColor Green\n        $jobStatus = Wait-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobId $pigJob.JobId `\n            -HttpCredential $creds\n            \n        if($jobStatus.State -eq \"SUCCEEDED\") {\n            # Success!\n            # Display the output of the Pig job.\n            Write-Host \"Display the standard output ...\" -ForegroundColor Green\n            Get-AzureRmHDInsightJobOutput `\n                -ClusterName $clusterName `\n                -JobId $pigJob.JobId `\n                -DefaultContainer $container `\n                -DefaultStorageAccountName $storageAccountName `\n                -DefaultStorageAccountKey $storageAccountKey `\n                -HttpCredential $creds\n        } else {\n            # Something went wrong, display error output\n            # Print the output of the Pig job.\n            Write-Host \"Display the standard output ...\" -ForegroundColor Green\n            Get-AzureRmHDInsightJobOutput `\n                -Clustername $clusterName `\n                -JobId $pigJob.JobId `\n                -DefaultContainer $container `\n                -DefaultStorageAccountName $storageAccountName `\n                -DefaultStorageAccountKey $storageAccountKey `\n                -HttpCredential $creds `\n                -DisplayOutputType StandardError\n        }\n\n2. Open a new Azure PowerShell command prompt. Change directories to the location of the **pigjob.ps1** file, then use the following command to run the script:\n\n        .\\pigjob.ps1\n        \n    You will first be prompted to login to your Azure subscription. Then, you will be asked for the HTTPs/Admin account name and password for the HDInsight cluster.\n\n7. When the job completes, it should return information similar to the following:\n\n        Start the Pig job ...\n        Wait for the Pig job to complete ...\n        Display the standard output ...\n        (TRACE,816)\n        (DEBUG,434)\n        (INFO,96)\n        (WARN,11)\n        (ERROR,6)\n        (FATAL,2)\n\n##<a id=\"troubleshooting\"></a>Troubleshooting\n\nIf no information is returned when the job completes, an error may have occurred during processing. To view error information for this job, add the following command to the end of the **pigjob.ps1** file, save it, and then run it again.\n\n    # Print the output of the Pig job.\n    Write-Host \"Display the standard output ...\" -ForegroundColor Green\n    Get-AzureRmHDInsightJobOutput `\n            -Clustername $clusterName `\n            -JobId $pigJob.JobId `\n            -DefaultContainer $container `\n            -DefaultStorageAccountName $storageAccountName `\n            -DefaultStorageAccountKey $storageAccountKey `\n            -HttpCredential $creds `\n            -DisplayOutputType StandardError\n\nThis will return the information that was written to STDERR on the server when you ran the job, and it may help determine why the job is failing.\n\n##<a id=\"summary\"></a>Summary\n\nAs you can see, Azure PowerShell provides an easy way to run Pig jobs on an HDInsight cluster, monitor the job status, and retrieve the output.\n\n##<a id=\"nextsteps\"></a>Next steps\n\nFor general information about Pig in HDInsight:\n\n* [Use Pig with Hadoop on HDInsight](hdinsight-use-pig.md)\n\nFor information about other ways you can work with Hadoop on HDInsight:\n\n* [Use Hive with Hadoop on HDInsight](hdinsight-use-hive.md)\n\n* [Use MapReduce with Hadoop on HDInsight](hdinsight-use-mapreduce.md)\n"
+}
