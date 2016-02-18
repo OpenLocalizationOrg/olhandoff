@@ -1,0 +1,436 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        97
+      ],
+      "content": "Access Hadoop YARN application logs programmatically | Microsoft Azure"
+    },
+    {
+      "pos": [
+        116,
+        190
+      ],
+      "content": "Access application logs programmatically on a Hadoop cluster in HDInsight."
+    },
+    {
+      "pos": [
+        515,
+        570
+      ],
+      "content": "Access YARN application logs on Windows-based HDInsight"
+    },
+    {
+      "pos": [
+        572,
+        728
+      ],
+      "content": "This topic explains how to access the logs for YARN (Yet Another Resource Negotiator) applications that have finished on a Hadoop cluster in Azure HDInsight"
+    },
+    {
+      "pos": [
+        732,
+        1019
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The information in this document applies only to Windows-based HDInsight clusters. For information on accessing YARN logs on Linux-based HDInsight clusters, see <bpt id=\"p1\">[</bpt>Access YARN application logs on Linux-based Hadoop on HDInsight<ept id=\"p1\">](hdinsight-hadoop-access-yarn-app-logs-linux.md)</ept>",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The information in this document applies only to Windows-based HDInsight clusters.",
+          "pos": [
+            0,
+            127
+          ]
+        },
+        {
+          "content": "For information on accessing YARN logs on Linux-based HDInsight clusters, see <bpt id=\"p1\">[</bpt>Access YARN application logs on Linux-based Hadoop on HDInsight<ept id=\"p1\">](hdinsight-hadoop-access-yarn-app-logs-linux.md)</ept>",
+          "pos": [
+            128,
+            357
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1025,
+        1038
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1042,
+        1167
+      ],
+      "content": "A Windows-based HDInsight cluster.  See <bpt id=\"p2\">[</bpt>Create Windows-based Hadoop clusters in HDInsight<ept id=\"p2\">](hdinsight-provision-clusters.md)</ept>.",
+      "nodes": [
+        {
+          "content": "A Windows-based HDInsight cluster.",
+          "pos": [
+            0,
+            34
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p2\">[</bpt>Create Windows-based Hadoop clusters in HDInsight<ept id=\"p2\">](hdinsight-provision-clusters.md)</ept>.",
+          "pos": [
+            36,
+            163
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1173,
+        1193
+      ],
+      "content": "YARN Timeline Server"
+    },
+    {
+      "pos": [
+        1195,
+        1198
+      ],
+      "content": "The"
+    },
+    {
+      "pos": [
+        1311,
+        1331
+      ],
+      "content": "YARN Timeline Server"
+    },
+    {
+      "pos": [
+        1336,
+        1492
+      ],
+      "content": "provides generic information on completed applications as well as framework-specific application information through two different interfaces. Specifically:",
+      "nodes": [
+        {
+          "content": "provides generic information on completed applications as well as framework-specific application information through two different interfaces.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "Specifically:",
+          "pos": [
+            143,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1496,
+        1625
+      ],
+      "content": "Storage and retrieval of generic application information on HDInsight clusters has been enabled with version 3.1.1.374 or higher."
+    },
+    {
+      "pos": [
+        1628,
+        1757
+      ],
+      "content": "The framework-specific application information component of the Timeline Server is not currently available on HDInsight clusters."
+    },
+    {
+      "pos": [
+        1760,
+        1833
+      ],
+      "content": "Generic information on applications includes the following sorts of data:"
+    },
+    {
+      "pos": [
+        1837,
+        1894
+      ],
+      "content": "The application ID, a unique identifier of an application"
+    },
+    {
+      "pos": [
+        1897,
+        1933
+      ],
+      "content": "The user who started the application"
+    },
+    {
+      "pos": [
+        1936,
+        1992
+      ],
+      "content": "Information on attempts made to complete the application"
+    },
+    {
+      "pos": [
+        1995,
+        2047
+      ],
+      "content": "The containers used by any given application attempt"
+    },
+    {
+      "pos": [
+        2049,
+        2298
+      ],
+      "content": "On your HDInsight clusters, this information will be stored by Azure Resource Manager to a history store in the default container of your default Azure Storage account. This generic data on completed applications can be retrieved through a REST API:",
+      "nodes": [
+        {
+          "content": "On your HDInsight clusters, this information will be stored by Azure Resource Manager to a history store in the default container of your default Azure Storage account.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "This generic data on completed applications can be retrieved through a REST API:",
+          "pos": [
+            169,
+            249
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2392,
+        2418
+      ],
+      "content": "YARN applications and logs"
+    },
+    {
+      "pos": [
+        2420,
+        3082
+      ],
+      "content": "YARN supports multiple programming models (MapReduce being one of them) by decoupling resource management from application scheduling/monitoring. This is done through a global <bpt id=\"p3\">*</bpt>ResourceManager<ept id=\"p3\">*</ept><ph id=\"ph4\"/> (RM), per-worker-node <bpt id=\"p4\">*</bpt>NodeManagers<ept id=\"p4\">*</ept><ph id=\"ph5\"/> (NMs), and per-application <bpt id=\"p5\">*</bpt>ApplicationMasters<ept id=\"p5\">*</ept><ph id=\"ph6\"/> (AMs). The per-application AM negotiates resources (CPU, memory, disk, network) for running your application with the RM. The RM works with NMs to grant these resources, which are granted as <bpt id=\"p6\">*</bpt>containers<ept id=\"p6\">*</ept>. The AM is responsible for tracking the progress of the containers assigned to it by the RM. An application may require many containers depending on the nature of the application.",
+      "nodes": [
+        {
+          "content": "YARN supports multiple programming models (MapReduce being one of them) by decoupling resource management from application scheduling/monitoring.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "This is done through a global <bpt id=\"p3\">*</bpt>ResourceManager<ept id=\"p3\">*</ept><ph id=\"ph4\"/> (RM), per-worker-node <bpt id=\"p4\">*</bpt>NodeManagers<ept id=\"p4\">*</ept><ph id=\"ph5\"/> (NMs), and per-application <bpt id=\"p5\">*</bpt>ApplicationMasters<ept id=\"p5\">*</ept><ph id=\"ph6\"/> (AMs).",
+          "pos": [
+            146,
+            441
+          ]
+        },
+        {
+          "content": "The per-application AM negotiates resources (CPU, memory, disk, network) for running your application with the RM.",
+          "pos": [
+            442,
+            556
+          ]
+        },
+        {
+          "content": "The RM works with NMs to grant these resources, which are granted as <bpt id=\"p6\">*</bpt>containers<ept id=\"p6\">*</ept>.",
+          "pos": [
+            557,
+            677
+          ]
+        },
+        {
+          "content": "The AM is responsible for tracking the progress of the containers assigned to it by the RM.",
+          "pos": [
+            678,
+            769
+          ]
+        },
+        {
+          "content": "An application may require many containers depending on the nature of the application.",
+          "pos": [
+            770,
+            856
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3084,
+        3634
+      ],
+      "content": "Furthermore, each application may consist of multiple <bpt id=\"p7\">*</bpt>application attempts<ept id=\"p7\">*</ept><ph id=\"ph7\"/> in order to finish in the presence of crashes or due to the loss of communication between an AM and an RM. Hence, containers are granted to a specific attempt of an application. In a sense, a container provides the context for basic unit of work performed by a YARN application, and all work that is done within the context of a container is performed on the single worker node on which the container was allocated. See <bpt id=\"p8\">[</bpt>YARN Concepts<ept id=\"p8\">][YARN-concepts]</ept><ph id=\"ph8\"/> for further reference.",
+      "nodes": [
+        {
+          "content": "Furthermore, each application may consist of multiple <bpt id=\"p7\">*</bpt>application attempts<ept id=\"p7\">*</ept><ph id=\"ph7\"/> in order to finish in the presence of crashes or due to the loss of communication between an AM and an RM.",
+          "pos": [
+            0,
+            235
+          ]
+        },
+        {
+          "content": "Hence, containers are granted to a specific attempt of an application.",
+          "pos": [
+            236,
+            306
+          ]
+        },
+        {
+          "content": "In a sense, a container provides the context for basic unit of work performed by a YARN application, and all work that is done within the context of a container is performed on the single worker node on which the container was allocated.",
+          "pos": [
+            307,
+            544
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p8\">[</bpt>YARN Concepts<ept id=\"p8\">][YARN-concepts]</ept><ph id=\"ph8\"/> for further reference.",
+          "pos": [
+            545,
+            654
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3636,
+        4564
+      ],
+      "content": "Application logs (and the associated container logs) are critical in debugging problematic Hadoop applications. YARN provides a nice framework for collecting, aggregating, and storing application logs with the <bpt id=\"p9\">[</bpt>Log Aggregation<ept id=\"p9\">][log-aggregation]</ept><ph id=\"ph9\"/> feature. The Log Aggregation feature makes accessing application logs more deterministic, as it aggregates logs across all containers on a worker node and stores them as one aggregated log file per worker node on the default file system after an application finishes. Your application may use hundreds or thousands of containers, but logs for all containers run on a single worker node will always be aggregated to a single file, resulting in one log file per worker node used by your application. Log Aggregation is enabled by default on HDInsight clusters (version 3.0 and above), and aggregated logs can be found in the default container of your cluster at the following location:",
+      "nodes": [
+        {
+          "content": "Application logs (and the associated container logs) are critical in debugging problematic Hadoop applications.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "YARN provides a nice framework for collecting, aggregating, and storing application logs with the <bpt id=\"p9\">[</bpt>Log Aggregation<ept id=\"p9\">][log-aggregation]</ept><ph id=\"ph9\"/> feature.",
+          "pos": [
+            112,
+            305
+          ]
+        },
+        {
+          "content": "The Log Aggregation feature makes accessing application logs more deterministic, as it aggregates logs across all containers on a worker node and stores them as one aggregated log file per worker node on the default file system after an application finishes.",
+          "pos": [
+            306,
+            564
+          ]
+        },
+        {
+          "content": "Your application may use hundreds or thousands of containers, but logs for all containers run on a single worker node will always be aggregated to a single file, resulting in one log file per worker node used by your application.",
+          "pos": [
+            565,
+            794
+          ]
+        },
+        {
+          "content": "Log Aggregation is enabled by default on HDInsight clusters (version 3.0 and above), and aggregated logs can be found in the default container of your cluster at the following location:",
+          "pos": [
+            795,
+            980
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4616,
+        4784
+      ],
+      "content": "In that location, <bpt id=\"p10\">*</bpt>user<ept id=\"p10\">*</ept><ph id=\"ph10\"/> is the name of the user who started the application, and <bpt id=\"p11\">*</bpt>applicationId<ept id=\"p11\">*</ept><ph id=\"ph11\"/> is the unique identifier of an application as assigned by the YARN RM."
+    },
+    {
+      "pos": [
+        4786,
+        5180
+      ],
+      "content": "The aggregated logs are not directly readable, as they are written in a <bpt id=\"p12\">[</bpt>TFile<ept id=\"p12\">][T-file]</ept>, <bpt id=\"p13\">[</bpt>binary format<ept id=\"p13\">][binary-format]</ept><ph id=\"ph12\"/> indexed by container. YARN provides CLI tools to dump these logs as plain text for applications or containers of interest. You can view these logs as plain text by running one of the following YARN commands directly on the cluster nodes (after connecting to it through RDP):",
+      "nodes": [
+        {
+          "content": "The aggregated logs are not directly readable, as they are written in a <bpt id=\"p12\">[</bpt>TFile<ept id=\"p12\">][T-file]</ept>, <bpt id=\"p13\">[</bpt>binary format<ept id=\"p13\">][binary-format]</ept><ph id=\"ph12\"/> indexed by container.",
+          "pos": [
+            0,
+            236
+          ]
+        },
+        {
+          "content": "YARN provides CLI tools to dump these logs as plain text for applications or containers of interest.",
+          "pos": [
+            237,
+            337
+          ]
+        },
+        {
+          "content": "You can view these logs as plain text by running one of the following YARN commands directly on the cluster nodes (after connecting to it through RDP):",
+          "pos": [
+            338,
+            489
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5429,
+        5452
+      ],
+      "content": "YARN ResourceManager UI"
+    },
+    {
+      "pos": [
+        5454,
+        5567
+      ],
+      "content": "The YARN ResourceManager UI runs on the cluster headnode, and can be accessed through the Azure portal dashboard:"
+    },
+    {
+      "pos": [
+        5573,
+        5626
+      ],
+      "content": "Sign in to <bpt id=\"p14\">[</bpt>Azure portal<ept id=\"p14\">](https://portal.azure.com/)</ept>."
+    },
+    {
+      "pos": [
+        5631,
+        5777
+      ],
+      "content": "On the left menu, click <bpt id=\"p15\">**</bpt>Browse<ept id=\"p15\">**</ept>, click <bpt id=\"p16\">**</bpt>HDInsight Clusters<ept id=\"p16\">**</ept>, click a Windows-based cluster that you want to access the YARN application logs."
+    },
+    {
+      "pos": [
+        5781,
+        5902
+      ],
+      "content": "On the top menu, click <bpt id=\"p17\">**</bpt>Dashboard<ept id=\"p17\">**</ept>. You will see a page opened on a new browser tab called <bpt id=\"p18\">**</bpt>HDInsight Query Console<ept id=\"p18\">**</ept>.",
+      "nodes": [
+        {
+          "content": "On the top menu, click <bpt id=\"p17\">**</bpt>Dashboard<ept id=\"p17\">**</ept>.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "You will see a page opened on a new browser tab called <bpt id=\"p18\">**</bpt>HDInsight Query Console<ept id=\"p18\">**</ept>.",
+          "pos": [
+            78,
+            201
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5906,
+        5958
+      ],
+      "content": "From <bpt id=\"p19\">**</bpt>HDInsight Query Console<ept id=\"p19\">**</ept>, click <bpt id=\"p20\">**</bpt>Yarn UI<ept id=\"p20\">**</ept>."
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Access Hadoop YARN application logs programmatically | Microsoft Azure\"\n    description=\"Access application logs programmatically on a Hadoop cluster in HDInsight.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    tags=\"azure-portal\"\n    authors=\"mumian\" \n    manager=\"paulettm\"\n    editor=\"cgronlun\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"01/29/2016\"\n    ms.author=\"jgao\"/>\n\n# Access YARN application logs on Windows-based HDInsight\n\nThis topic explains how to access the logs for YARN (Yet Another Resource Negotiator) applications that have finished on a Hadoop cluster in Azure HDInsight\n\n> [AZURE.NOTE] The information in this document applies only to Windows-based HDInsight clusters. For information on accessing YARN logs on Linux-based HDInsight clusters, see [Access YARN application logs on Linux-based Hadoop on HDInsight](hdinsight-hadoop-access-yarn-app-logs-linux.md)\n\n### Prerequisites\n\n- A Windows-based HDInsight cluster.  See [Create Windows-based Hadoop clusters in HDInsight](hdinsight-provision-clusters.md).\n\n\n## YARN Timeline Server\n\nThe <a href=\"http://hadoop.apache.org/docs/r2.4.0/hadoop-yarn/hadoop-yarn-site/TimelineServer.html\" target=\"_blank\">YARN Timeline Server</a> provides generic information on completed applications as well as framework-specific application information through two different interfaces. Specifically:\n\n* Storage and retrieval of generic application information on HDInsight clusters has been enabled with version 3.1.1.374 or higher.\n* The framework-specific application information component of the Timeline Server is not currently available on HDInsight clusters.\n\n\nGeneric information on applications includes the following sorts of data:\n\n* The application ID, a unique identifier of an application\n* The user who started the application\n* Information on attempts made to complete the application\n* The containers used by any given application attempt\n\nOn your HDInsight clusters, this information will be stored by Azure Resource Manager to a history store in the default container of your default Azure Storage account. This generic data on completed applications can be retrieved through a REST API:\n\n    GET on https://<cluster-dns-name>.azurehdinsight.net/ws/v1/applicationhistory/apps\n\n\n## YARN applications and logs\n\nYARN supports multiple programming models (MapReduce being one of them) by decoupling resource management from application scheduling/monitoring. This is done through a global *ResourceManager* (RM), per-worker-node *NodeManagers* (NMs), and per-application *ApplicationMasters* (AMs). The per-application AM negotiates resources (CPU, memory, disk, network) for running your application with the RM. The RM works with NMs to grant these resources, which are granted as *containers*. The AM is responsible for tracking the progress of the containers assigned to it by the RM. An application may require many containers depending on the nature of the application.\n\nFurthermore, each application may consist of multiple *application attempts* in order to finish in the presence of crashes or due to the loss of communication between an AM and an RM. Hence, containers are granted to a specific attempt of an application. In a sense, a container provides the context for basic unit of work performed by a YARN application, and all work that is done within the context of a container is performed on the single worker node on which the container was allocated. See [YARN Concepts][YARN-concepts] for further reference.\n\nApplication logs (and the associated container logs) are critical in debugging problematic Hadoop applications. YARN provides a nice framework for collecting, aggregating, and storing application logs with the [Log Aggregation][log-aggregation] feature. The Log Aggregation feature makes accessing application logs more deterministic, as it aggregates logs across all containers on a worker node and stores them as one aggregated log file per worker node on the default file system after an application finishes. Your application may use hundreds or thousands of containers, but logs for all containers run on a single worker node will always be aggregated to a single file, resulting in one log file per worker node used by your application. Log Aggregation is enabled by default on HDInsight clusters (version 3.0 and above), and aggregated logs can be found in the default container of your cluster at the following location:\n\n    wasb:///app-logs/<user>/logs/<applicationId>\n\nIn that location, *user* is the name of the user who started the application, and *applicationId* is the unique identifier of an application as assigned by the YARN RM.\n\nThe aggregated logs are not directly readable, as they are written in a [TFile][T-file], [binary format][binary-format] indexed by container. YARN provides CLI tools to dump these logs as plain text for applications or containers of interest. You can view these logs as plain text by running one of the following YARN commands directly on the cluster nodes (after connecting to it through RDP):\n\n    yarn logs -applicationId <applicationId> -appOwner <user-who-started-the-application>\n    yarn logs -applicationId <applicationId> -appOwner <user-who-started-the-application> -containerId <containerId> -nodeAddress <worker-node-address>\n\n\n## YARN ResourceManager UI\n\nThe YARN ResourceManager UI runs on the cluster headnode, and can be accessed through the Azure portal dashboard: \n\n1. Sign in to [Azure portal](https://portal.azure.com/). \n2. On the left menu, click **Browse**, click **HDInsight Clusters**, click a Windows-based cluster that you want to access the YARN application logs.\n3. On the top menu, click **Dashboard**. You will see a page opened on a new browser tab called **HDInsight Query Console**.\n4. From **HDInsight Query Console**, click **Yarn UI**.\n\n\n\n\n[YARN-timeline-server]:http://hadoop.apache.org/docs/r2.4.0/hadoop-yarn/hadoop-yarn-site/TimelineServer.html\n[log-aggregation]:http://hortonworks.com/blog/simplifying-user-logs-management-and-access-in-yarn/\n[T-file]:https://issues.apache.org/jira/secure/attachment/12396286/TFile%20Specification%2020081217.pdf\n[binary-format]:https://issues.apache.org/jira/browse/HADOOP-3315\n[YARN-concepts]:http://hortonworks.com/blog/apache-hadoop-yarn-concepts-and-applications/\n"
+}

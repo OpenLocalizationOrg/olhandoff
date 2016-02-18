@@ -1,0 +1,1692 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        95
+      ],
+      "content": "Analyze flight delay data with Hadoop in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        114,
+        249
+      ],
+      "content": "Learn how to use one Windows PowerShell script to create an HDInsight cluster, run a Hive job, run a Sqoop job, and delete the cluster."
+    },
+    {
+      "pos": [
+        548,
+        600
+      ],
+      "content": "Analyze flight delay data by using Hive in HDInsight"
+    },
+    {
+      "pos": [
+        602,
+        818
+      ],
+      "content": "Hive provides a means of running Hadoop MapReduce jobs through an SQL-like scripting language called <bpt id=\"p1\">*</bpt><bpt id=\"p2\">[</bpt>HiveQL<ept id=\"p2\">][hadoop-hiveql]</ept><ept id=\"p1\">*</ept>, which can be applied towards summarizing, querying, and analyzing large volumes of data."
+    },
+    {
+      "pos": [
+        822,
+        1066
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document require a Windows-based HDInsight cluster. For steps that work with a Linux-based cluster, see <bpt id=\"p3\">[</bpt>Analyze flight delay data by using Hive in HDInsight (Linux)<ept id=\"p3\">](hdinsight-analyze-flight-delay-data-linux.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document require a Windows-based HDInsight cluster.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "For steps that work with a Linux-based cluster, see <bpt id=\"p3\">[</bpt>Analyze flight delay data by using Hive in HDInsight (Linux)<ept id=\"p3\">](hdinsight-analyze-flight-delay-data-linux.md)</ept>.",
+          "pos": [
+            115,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1068,
+        1243
+      ],
+      "content": "One of the major benefits of Azure HDInsight is the separation of data storage and compute. HDInsight uses Azure Blob storage for data storage. A typical job involves 3 parts:",
+      "nodes": [
+        {
+          "content": "One of the major benefits of Azure HDInsight is the separation of data storage and compute.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "HDInsight uses Azure Blob storage for data storage.",
+          "pos": [
+            92,
+            143
+          ]
+        },
+        {
+          "content": "A typical job involves 3 parts:",
+          "pos": [
+            144,
+            175
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1248,
+        1440
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Store data in Azure Blob storage.<ept id=\"p4\">**</ept><ph id=\"ph4\"/> This can be a continuous process. For example, weather data, sensor data, web logs, and in this case, flight delay data are saved into Azure Blob storage.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p4\">**</bpt>Store data in Azure Blob storage.<ept id=\"p4\">**</ept><ph id=\"ph4\"/> This can be a continuous process.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "For example, weather data, sensor data, web logs, and in this case, flight delay data are saved into Azure Blob storage.",
+          "pos": [
+            124,
+            244
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1444,
+        1785
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>Run jobs.<ept id=\"p5\">**</ept><ph id=\"ph5\"/> When it is time to process the data, you run a Windows PowerShell script (or a client application) to create an HDInsight cluster, run jobs, and delete the cluster. The jobs save output data to Azure Blob storage. The output data is retained even after the cluster is deleted. This way, you pay for only what you have consumed.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p5\">**</bpt>Run jobs.<ept id=\"p5\">**</ept><ph id=\"ph5\"/> When it is time to process the data, you run a Windows PowerShell script (or a client application) to create an HDInsight cluster, run jobs, and delete the cluster.",
+          "pos": [
+            0,
+            230
+          ]
+        },
+        {
+          "content": "The jobs save output data to Azure Blob storage.",
+          "pos": [
+            231,
+            279
+          ]
+        },
+        {
+          "content": "The output data is retained even after the cluster is deleted.",
+          "pos": [
+            280,
+            342
+          ]
+        },
+        {
+          "content": "This way, you pay for only what you have consumed.",
+          "pos": [
+            343,
+            393
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1789,
+        1900
+      ],
+      "content": "<bpt id=\"p6\">**</bpt>Retrieve the output from Azure Blob storage<ept id=\"p6\">**</ept>, or in this tutorial, export the data to an Azure SQL database."
+    },
+    {
+      "pos": [
+        1902,
+        1984
+      ],
+      "content": "The following diagram illustrates the scenario and the structure of this tutorial:"
+    },
+    {
+      "pos": [
+        1986,
+        2037
+      ],
+      "content": "<ph id=\"ph6\">![</ph>HDI.FlightDelays.flow<ph id=\"ph7\">][img-hdi-flightdelays-flow]</ph>"
+    },
+    {
+      "pos": [
+        2039,
+        2190
+      ],
+      "content": "<bpt id=\"p7\">**</bpt>Note<ept id=\"p7\">**</ept>: The numbers in the diagram correspond to the section titles. <bpt id=\"p8\">**</bpt>M<ept id=\"p8\">**</ept><ph id=\"ph8\"/> stands for the main process. <bpt id=\"p9\">**</bpt>A<ept id=\"p9\">**</ept><ph id=\"ph9\"/> stands for the content in the appendix.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p7\">**</bpt>Note<ept id=\"p7\">**</ept>: The numbers in the diagram correspond to the section titles.",
+          "pos": [
+            0,
+            108
+          ]
+        },
+        {
+          "content": "<bpt id=\"p8\">**</bpt>M<ept id=\"p8\">**</ept><ph id=\"ph8\"/> stands for the main process.",
+          "pos": [
+            109,
+            195
+          ]
+        },
+        {
+          "content": "<bpt id=\"p9\">**</bpt>A<ept id=\"p9\">**</ept><ph id=\"ph9\"/> stands for the content in the appendix.",
+          "pos": [
+            196,
+            293
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2192,
+        2301
+      ],
+      "content": "The main portion of the tutorial shows you how to use one Windows PowerShell script to perform the following:"
+    },
+    {
+      "pos": [
+        2305,
+        2333
+      ],
+      "content": "Create an HDInsight cluster."
+    },
+    {
+      "pos": [
+        2336,
+        2472
+      ],
+      "content": "Run a Hive job on the cluster to calculate average delays at airports. The flight delay data is stored in an Azure Blob storage account.",
+      "nodes": [
+        {
+          "content": "Run a Hive job on the cluster to calculate average delays at airports.",
+          "pos": [
+            0,
+            70
+          ]
+        },
+        {
+          "content": "The flight delay data is stored in an Azure Blob storage account.",
+          "pos": [
+            71,
+            136
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2475,
+        2546
+      ],
+      "content": "Run a Sqoop job to export the Hive job output to an Azure SQL database."
+    },
+    {
+      "pos": [
+        2549,
+        2578
+      ],
+      "content": "Delete the HDInsight cluster."
+    },
+    {
+      "pos": [
+        2580,
+        2757
+      ],
+      "content": "In the appendixes, you can find the instructions for uploading flight delay data, creating/uploading a Hive query string, and preparing the Azure SQL database for the Sqoop job."
+    },
+    {
+      "pos": [
+        2761,
+        3013
+      ],
+      "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph><ph id=\"ph11\"/> The steps in this document are specific to Windows-based HDInsight clusters. For steps that will work with a Linux-based cluster, see <bpt id=\"p10\">[</bpt>Analyze flight delay data using Hive in HDInsight (Linux)<ept id=\"p10\">](hdinsight-analyze-flight-delay-data-linux.md)</ept>",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph><ph id=\"ph11\"/> The steps in this document are specific to Windows-based HDInsight clusters.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "For steps that will work with a Linux-based cluster, see <bpt id=\"p10\">[</bpt>Analyze flight delay data using Hive in HDInsight (Linux)<ept id=\"p10\">](hdinsight-analyze-flight-delay-data-linux.md)</ept>",
+          "pos": [
+            124,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3018,
+        3031
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        3033,
+        3093
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        3097,
+        3255
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>An Azure subscription<ept id=\"p11\">**</ept>. See <bpt id=\"p12\">[</bpt>Get Azure free trial<ept id=\"p12\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p11\">**</bpt>An Azure subscription<ept id=\"p11\">**</ept>.",
+          "pos": [
+            0,
+            66
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p12\">[</bpt>Get Azure free trial<ept id=\"p12\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+          "pos": [
+            67,
+            238
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3259,
+        3427
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>A workstation with Azure PowerShell<ept id=\"p13\">**</ept>. See <bpt id=\"p14\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p14\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p13\">**</bpt>A workstation with Azure PowerShell<ept id=\"p13\">**</ept>.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p14\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p14\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+          "pos": [
+            81,
+            248
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3429,
+        3460
+      ],
+      "content": "<bpt id=\"p15\">**</bpt>Files used in this tutorial<ept id=\"p15\">**</ept>"
+    },
+    {
+      "pos": [
+        3462,
+        4137
+      ],
+      "content": "This tutorial uses the on-time performance of airline flight data from \n<bpt id=\"p16\">[</bpt>Research and Innovative Technology Administration, Bureau of Transportation Statistics or RITA<ept id=\"p16\">] [rita-website]</ept>. \n<ph id=\"ph12\"/>A copy of the data has been uploaded to an Azure Blob storage container with the Public Blob access permission. \n<ph id=\"ph13\"/>A part of your PowerShell script copies the data from the public blob container to the default blob container of \n<ph id=\"ph14\"/>your cluster. The HiveQL script is also copied to the same Blob container. \n<ph id=\"ph15\"/>If you want to learn how to get/upload the data to your own Storage account, and how to create/upload the HiveQL script file, see <bpt id=\"p17\">[</bpt>Appendix A<ept id=\"p17\">](#appendix-a)</ept><ph id=\"ph16\"/> and <bpt id=\"p18\">[</bpt>Appendix B<ept id=\"p18\">](#appendix-b)</ept>.",
+      "nodes": [
+        {
+          "content": "This tutorial uses the on-time performance of airline flight data from \n<bpt id=\"p16\">[</bpt>Research and Innovative Technology Administration, Bureau of Transportation Statistics or RITA<ept id=\"p16\">] [rita-website]</ept>.",
+          "pos": [
+            0,
+            224
+          ]
+        },
+        {
+          "content": "<ph id=\"ph12\"/>A copy of the data has been uploaded to an Azure Blob storage container with the Public Blob access permission.",
+          "pos": [
+            226,
+            352
+          ]
+        },
+        {
+          "content": "<ph id=\"ph13\"/>A part of your PowerShell script copies the data from the public blob container to the default blob container of \n<ph id=\"ph14\"/>your cluster.",
+          "pos": [
+            354,
+            511
+          ]
+        },
+        {
+          "content": "The HiveQL script is also copied to the same Blob container.",
+          "pos": [
+            512,
+            572
+          ]
+        },
+        {
+          "content": "<ph id=\"ph15\"/>If you want to learn how to get/upload the data to your own Storage account, and how to create/upload the HiveQL script file, see <bpt id=\"p17\">[</bpt>Appendix A<ept id=\"p17\">](#appendix-a)</ept><ph id=\"ph16\"/> and <bpt id=\"p18\">[</bpt>Appendix B<ept id=\"p18\">](#appendix-b)</ept>.",
+          "pos": [
+            574,
+            870
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4139,
+        4197
+      ],
+      "content": "The following table lists the files used in this tutorial:"
+    },
+    {
+      "pos": [
+        4217,
+        4218
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        4226,
+        4231
+      ],
+      "content": "Files"
+    },
+    {
+      "pos": [
+        4240,
+        4251
+      ],
+      "content": "Description"
+    },
+    {
+      "pos": [
+        4261,
+        4262
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        4270,
+        4343
+      ],
+      "content": "wasb://flightdelay@hditutorialdata.blob.core.windows.net/flightdelays.hql"
+    },
+    {
+      "pos": [
+        4352,
+        4502
+      ],
+      "content": "The HiveQL script file used by the Hive job that you will run. This script has been uploaded to an Azure Blob storage account with the public access. ",
+      "nodes": [
+        {
+          "content": "The HiveQL script file used by the Hive job that you will run.",
+          "pos": [
+            0,
+            62
+          ]
+        },
+        {
+          "content": "This script has been uploaded to an Azure Blob storage account with the public access.",
+          "pos": [
+            63,
+            149
+          ]
+        },
+        {
+          "content": " ",
+          "pos": [
+            149,
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4524,
+        4534
+      ],
+      "content": "Appendix B"
+    },
+    {
+      "pos": [
+        4539,
+        4632
+      ],
+      "content": "has instructions on preparing and uploading this file to your own Azure Blob storage account."
+    },
+    {
+      "pos": [
+        4642,
+        4643
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        4651,
+        4716
+      ],
+      "content": "wasb://flightdelay@hditutorialdata.blob.core.windows.net/2013Data"
+    },
+    {
+      "pos": [
+        4725,
+        4838
+      ],
+      "content": "Input data for the Hive job. The data has been uploaded to an Azure Blob storage account with the public access. ",
+      "nodes": [
+        {
+          "content": "Input data for the Hive job.",
+          "pos": [
+            0,
+            28
+          ]
+        },
+        {
+          "content": "The data has been uploaded to an Azure Blob storage account with the public access.",
+          "pos": [
+            29,
+            112
+          ]
+        },
+        {
+          "content": " ",
+          "pos": [
+            112,
+            113
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4860,
+        4870
+      ],
+      "content": "Appendix A"
+    },
+    {
+      "pos": [
+        4875,
+        4974
+      ],
+      "content": "has instructions on getting the data and uploading the data to your own Azure Blob storage account."
+    },
+    {
+      "pos": [
+        4984,
+        4985
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        4993,
+        5023
+      ],
+      "content": "\\tutorials\\flightdelays\\output"
+    },
+    {
+      "pos": [
+        5032,
+        5124
+      ],
+      "content": "The output path for the Hive job. The default container is used for storing the output data.",
+      "nodes": [
+        {
+          "content": "The output path for the Hive job.",
+          "pos": [
+            0,
+            33
+          ]
+        },
+        {
+          "content": "The default container is used for storing the output data.",
+          "pos": [
+            34,
+            92
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5134,
+        5135
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        5143,
+        5176
+      ],
+      "content": "\\tutorials\\flightdelays\\jobstatus"
+    },
+    {
+      "pos": [
+        5185,
+        5237
+      ],
+      "content": "The Hive job status folder on the default container."
+    },
+    {
+      "pos": [
+        5247,
+        5248
+      ],
+      "content": "\n"
+    },
+    {
+      "pos": [
+        5261,
+        5299
+      ],
+      "content": "Create cluster and run Hive/Sqoop jobs"
+    },
+    {
+      "pos": [
+        5301,
+        5707
+      ],
+      "content": "Hadoop MapReduce is batch processing. The most cost-effective way to run a Hive job is to create a cluster for the job, \n<ph id=\"ph17\"/>and delete the job after the job is completed. The following script covers the whole process. \n<ph id=\"ph18\"/>For more information on creating an HDInsight cluster and running Hive jobs, see <bpt id=\"p19\">[</bpt>Create Hadoop clusters in HDInsight<ept id=\"p19\">][hdinsight-provision]</ept><ph id=\"ph19\"/> and <bpt id=\"p20\">[</bpt>Use Hive with HDInsight<ept id=\"p20\">][hdinsight-use-hive]</ept>.",
+      "nodes": [
+        {
+          "content": "Hadoop MapReduce is batch processing.",
+          "pos": [
+            0,
+            37
+          ]
+        },
+        {
+          "content": "The most cost-effective way to run a Hive job is to create a cluster for the job, \n<ph id=\"ph17\"/>and delete the job after the job is completed.",
+          "pos": [
+            38,
+            182
+          ]
+        },
+        {
+          "content": "The following script covers the whole process.",
+          "pos": [
+            183,
+            229
+          ]
+        },
+        {
+          "content": "<ph id=\"ph18\"/>For more information on creating an HDInsight cluster and running Hive jobs, see <bpt id=\"p19\">[</bpt>Create Hadoop clusters in HDInsight<ept id=\"p19\">][hdinsight-provision]</ept><ph id=\"ph19\"/> and <bpt id=\"p20\">[</bpt>Use Hive with HDInsight<ept id=\"p20\">][hdinsight-use-hive]</ept>.",
+          "pos": [
+            231,
+            531
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5709,
+        5756
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>To run the Hive queries by Azure PowerShell<ept id=\"p21\">**</ept>"
+    },
+    {
+      "pos": [
+        5761,
+        5884
+      ],
+      "content": "Create an Azure SQL database and the table for the Sqoop job output by using the instructions in <bpt id=\"p22\">[</bpt>Appendix C<ept id=\"p22\">](#appendix-c)</ept>."
+    },
+    {
+      "pos": [
+        5888,
+        5946
+      ],
+      "content": "Open Windows PowerShell ISE, and run the following script:"
+    },
+    {
+      "pos": [
+        13337,
+        13427
+      ],
+      "content": "Connect to your SQL database and see average flight delays by city in the AvgDelays table:"
+    },
+    {
+      "pos": [
+        13433,
+        13512
+      ],
+      "content": "<ph id=\"ph20\">![</ph>HDI.FlightDelays.AvgDelays.Dataset<ph id=\"ph21\">][image-hdi-flightdelays-avgdelays-dataset]</ph>"
+    },
+    {
+      "pos": [
+        13520,
+        13853
+      ],
+      "content": "##<ph id=\"ph22\">&lt;a id=\"appendix-a\"&gt;</ph><ph id=\"ph23\">&lt;/a&gt;</ph>Appendix A - Upload flight delay data to Azure Blob storage\nUploading the data file and the HiveQL script files (see <bpt id=\"p23\">[</bpt>Appendix B<ept id=\"p23\">](#appendix-b)</ept>) requires some planning. The idea is to store the data files and the HiveQL file before creating an HDInsight cluster and running the Hive job. You have two options:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph22\">&lt;a id=\"appendix-a\"&gt;</ph><ph id=\"ph23\">&lt;/a&gt;</ph>Appendix A - Upload flight delay data to Azure Blob storage\nUploading the data file and the HiveQL script files (see <bpt id=\"p23\">[</bpt>Appendix B<ept id=\"p23\">](#appendix-b)</ept>) requires some planning.",
+          "pos": [
+            2,
+            282
+          ]
+        },
+        {
+          "content": "The idea is to store the data files and the HiveQL file before creating an HDInsight cluster and running the Hive job.",
+          "pos": [
+            283,
+            401
+          ]
+        },
+        {
+          "content": "You have two options:",
+          "pos": [
+            402,
+            423
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13857,
+        14085
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>Use the same Azure Storage account that will be used by the HDInsight cluster as the default file system.<ept id=\"p24\">**</ept><ph id=\"ph24\"/> Because the HDInsight cluster will have the Storage account access key, you don't need to make any additional changes."
+    },
+    {
+      "pos": [
+        14088,
+        14551
+      ],
+      "content": "<bpt id=\"p25\">**</bpt>Use a different Azure Storage account from the HDInsight cluster default file system.<ept id=\"p25\">**</ept><ph id=\"ph25\"/> If this is the case, you must modify the creation part of the Windows PowerShell script found in <bpt id=\"p26\">[</bpt>Create HDInsight cluster and run Hive/Sqoop jobs<ept id=\"p26\">](#runjob)</ept><ph id=\"ph26\"/> to link the Storage account as an additional Storage account. For instructions, see <bpt id=\"p27\">[</bpt>Create Hadoop clusters in HDInsight<ept id=\"p27\">][hdinsight-provision]</ept>. The HDInsight cluster then knows the access key for the Storage account.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p25\">**</bpt>Use a different Azure Storage account from the HDInsight cluster default file system.<ept id=\"p25\">**</ept><ph id=\"ph25\"/> If this is the case, you must modify the creation part of the Windows PowerShell script found in <bpt id=\"p26\">[</bpt>Create HDInsight cluster and run Hive/Sqoop jobs<ept id=\"p26\">](#runjob)</ept><ph id=\"ph26\"/> to link the Storage account as an additional Storage account.",
+          "pos": [
+            0,
+            418
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p27\">[</bpt>Create Hadoop clusters in HDInsight<ept id=\"p27\">][hdinsight-provision]</ept>.",
+          "pos": [
+            419,
+            540
+          ]
+        },
+        {
+          "content": "The HDInsight cluster then knows the access key for the Storage account.",
+          "pos": [
+            541,
+            613
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14554,
+        14679
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> The Blob storage path for the data file is hard coded in the HiveQL script file. You must update it accordingly.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> The Blob storage path for the data file is hard coded in the HiveQL script file.",
+          "pos": [
+            0,
+            127
+          ]
+        },
+        {
+          "content": "You must update it accordingly.",
+          "pos": [
+            128,
+            159
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14681,
+        14712
+      ],
+      "content": "<bpt id=\"p28\">**</bpt>To download the flight data<ept id=\"p28\">**</ept>"
+    },
+    {
+      "pos": [
+        14717,
+        14830
+      ],
+      "content": "Browse to <bpt id=\"p29\">[</bpt>Research and Innovative Technology Administration, Bureau of Transportation Statistics<ept id=\"p29\">][rita-website]</ept>."
+    },
+    {
+      "pos": [
+        14834,
+        14875
+      ],
+      "content": "On the page, select the following values:"
+    },
+    {
+      "pos": [
+        14881,
+        15425
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph29\">&lt;table border=\"1\"&gt;</ph><ph id=\"ph30\">\n &lt;tr&gt;</ph><ph id=\"ph31\">&lt;th&gt;</ph>Name<ph id=\"ph32\">&lt;/th&gt;</ph><ph id=\"ph33\">&lt;th&gt;</ph>Value<ph id=\"ph34\">&lt;/th&gt;</ph><ph id=\"ph35\">&lt;/tr&gt;</ph><ph id=\"ph36\">\n &lt;tr&gt;</ph><ph id=\"ph37\">&lt;td&gt;</ph>Filter Year<ph id=\"ph38\">&lt;/td&gt;</ph><ph id=\"ph39\">&lt;td&gt;</ph>2013 <ph id=\"ph40\">&lt;/td&gt;</ph><ph id=\"ph41\">&lt;/tr&gt;</ph><ph id=\"ph42\">\n &lt;tr&gt;</ph><ph id=\"ph43\">&lt;td&gt;</ph>Filter Period<ph id=\"ph44\">&lt;/td&gt;</ph><ph id=\"ph45\">&lt;td&gt;</ph>January<ph id=\"ph46\">&lt;/td&gt;</ph><ph id=\"ph47\">&lt;/tr&gt;</ph><ph id=\"ph48\">\n &lt;tr&gt;</ph><ph id=\"ph49\">&lt;td&gt;</ph>Fields<ph id=\"ph50\">&lt;/td&gt;</ph><ph id=\"ph51\">&lt;td&gt;</ph><bpt id=\"p30\">*</bpt>Year<ept id=\"p30\">*</ept>, <bpt id=\"p31\">*</bpt>FlightDate<ept id=\"p31\">*</ept>, <bpt id=\"p32\">*</bpt>UniqueCarrier<ept id=\"p32\">*</ept>, <bpt id=\"p33\">*</bpt>Carrier<ept id=\"p33\">*</ept>, <bpt id=\"p34\">*</bpt>FlightNum<ept id=\"p34\">*</ept>, <bpt id=\"p35\">*</bpt>OriginAirportID<ept id=\"p35\">*</ept>, <bpt id=\"p36\">*</bpt>Origin<ept id=\"p36\">*</ept>, <bpt id=\"p37\">*</bpt>OriginCityName<ept id=\"p37\">*</ept>, <bpt id=\"p38\">*</bpt>OriginState<ept id=\"p38\">*</ept>, <bpt id=\"p39\">*</bpt>DestAirportID<ept id=\"p39\">*</ept>, <bpt id=\"p40\">*</bpt>Dest<ept id=\"p40\">*</ept>, <bpt id=\"p41\">*</bpt>DestCityName<ept id=\"p41\">*</ept>, <bpt id=\"p42\">*</bpt>DestState<ept id=\"p42\">*</ept>, <bpt id=\"p43\">*</bpt>DepDelayMinutes<ept id=\"p43\">*</ept>, <bpt id=\"p44\">*</bpt>ArrDelay<ept id=\"p44\">*</ept>, <bpt id=\"p45\">*</bpt>ArrDelayMinutes<ept id=\"p45\">*</ept>, <bpt id=\"p46\">*</bpt>CarrierDelay<ept id=\"p46\">*</ept>, <bpt id=\"p47\">*</bpt>WeatherDelay<ept id=\"p47\">*</ept>, <bpt id=\"p48\">*</bpt>NASDelay<ept id=\"p48\">*</ept>, <bpt id=\"p49\">*</bpt>SecurityDelay<ept id=\"p49\">*</ept>, <bpt id=\"p50\">*</bpt>LateAircraftDelay<ept id=\"p50\">*</ept><ph id=\"ph52\"/> (clear all other fields)<ph id=\"ph53\">&lt;/td&gt;</ph><ph id=\"ph54\">&lt;/tr&gt;</ph><ph id=\"ph55\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        15430,
+        15449
+      ],
+      "content": "Click <bpt id=\"p51\">**</bpt>Download<ept id=\"p51\">**</ept>."
+    },
+    {
+      "pos": [
+        15453,
+        15579
+      ],
+      "content": "Unzip the file to the <bpt id=\"p52\">**</bpt>C:\\Tutorials\\FlightDelay\\2013Data<ept id=\"p52\">**</ept><ph id=\"ph56\"/> folder. Each file is a CSV file and is approximately 60GB in size.",
+      "nodes": [
+        {
+          "content": "Unzip the file to the <bpt id=\"p52\">**</bpt>C:\\Tutorials\\FlightDelay\\2013Data<ept id=\"p52\">**</ept><ph id=\"ph56\"/> folder.",
+          "pos": [
+            0,
+            122
+          ]
+        },
+        {
+          "content": "Each file is a CSV file and is approximately 60GB in size.",
+          "pos": [
+            123,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15584,
+        15731
+      ],
+      "content": "Rename the file to the name of the month that it contains data for. For example, the file containing the January data would be named <bpt id=\"p53\">*</bpt>January.csv<ept id=\"p53\">*</ept>.",
+      "nodes": [
+        {
+          "content": "Rename the file to the name of the month that it contains data for.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "For example, the file containing the January data would be named <bpt id=\"p53\">*</bpt>January.csv<ept id=\"p53\">*</ept>.",
+          "pos": [
+            68,
+            187
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15735,
+        15866
+      ],
+      "content": "Repeat steps 2 and 5 to download a file for each of the 12 months in 2013. You will need a minimum of one file to run the tutorial.",
+      "nodes": [
+        {
+          "content": "Repeat steps 2 and 5 to download a file for each of the 12 months in 2013.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "You will need a minimum of one file to run the tutorial.",
+          "pos": [
+            75,
+            131
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15870,
+        15927
+      ],
+      "content": "<bpt id=\"p54\">**</bpt>To upload the flight delay data to Azure Blob storage<ept id=\"p54\">**</ept>"
+    },
+    {
+      "pos": [
+        15932,
+        15955
+      ],
+      "content": "Prepare the parameters:"
+    },
+    {
+      "pos": [
+        15961,
+        16262
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph57\">&lt;table border=\"1\"&gt;</ph><ph id=\"ph58\">\n &lt;tr&gt;</ph><ph id=\"ph59\">&lt;th&gt;</ph>Variable Name<ph id=\"ph60\">&lt;/th&gt;</ph><ph id=\"ph61\">&lt;th&gt;</ph>Notes<ph id=\"ph62\">&lt;/th&gt;</ph><ph id=\"ph63\">&lt;/tr&gt;</ph><ph id=\"ph64\">\n &lt;tr&gt;</ph><ph id=\"ph65\">&lt;td&gt;</ph>$storageAccountName<ph id=\"ph66\">&lt;/td&gt;</ph><ph id=\"ph67\">&lt;td&gt;</ph>The Azure Storage account where you want to upload the data to.<ph id=\"ph68\">&lt;/td&gt;</ph><ph id=\"ph69\">&lt;/tr&gt;</ph><ph id=\"ph70\">\n &lt;tr&gt;</ph><ph id=\"ph71\">&lt;td&gt;</ph>$blobContainerName<ph id=\"ph72\">&lt;/td&gt;</ph><ph id=\"ph73\">&lt;td&gt;</ph>The Blob container where you want to upload the data to.<ph id=\"ph74\">&lt;/td&gt;</ph><ph id=\"ph75\">&lt;/tr&gt;</ph><ph id=\"ph76\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        16266,
+        16292
+      ],
+      "content": "Open Azure PowerShell ISE."
+    },
+    {
+      "pos": [
+        16296,
+        16344
+      ],
+      "content": "Paste the following script into the script pane:"
+    },
+    {
+      "pos": [
+        19453,
+        19484
+      ],
+      "content": "Press <bpt id=\"p55\">**</bpt>F5<ept id=\"p55\">**</ept><ph id=\"ph77\"/> to run the script."
+    },
+    {
+      "pos": [
+        19486,
+        19651
+      ],
+      "content": "If you choose to use a different method for uploading the files, please make sure the file path is tutorials/flightdelay/data. The syntax for accessing the files is:",
+      "nodes": [
+        {
+          "content": "If you choose to use a different method for uploading the files, please make sure the file path is tutorials/flightdelay/data.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "The syntax for accessing the files is:",
+          "pos": [
+            127,
+            165
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19751,
+        19901
+      ],
+      "content": "The path tutorials/flightdelay/data is the virtual folder you created when you uploaded the files. Verify that there are 12 files, one for each month.",
+      "nodes": [
+        {
+          "content": "The path tutorials/flightdelay/data is the virtual folder you created when you uploaded the files.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "Verify that there are 12 files, one for each month.",
+          "pos": [
+            99,
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19904,
+        19978
+      ],
+      "content": "<ph id=\"ph78\">[AZURE.NOTE]</ph><ph id=\"ph79\"/> You must update the Hive query to read from the new location."
+    },
+    {
+      "pos": [
+        19982,
+        20182
+      ],
+      "content": "You must either configure the container access permission to be public or bind the Storage account to the HDInsight cluster. Otherwise, the Hive query string will not be able to access the data files.",
+      "nodes": [
+        {
+          "content": "You must either configure the container access permission to be public or bind the Storage account to the HDInsight cluster.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "Otherwise, the Hive query string will not be able to access the data files.",
+          "pos": [
+            125,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20188,
+        20190
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        20213,
+        20259
+      ],
+      "content": "Appendix B - Create and upload a HiveQL script"
+    },
+    {
+      "pos": [
+        20261,
+        20583
+      ],
+      "content": "Using Azure PowerShell, you can run multiple HiveQL statements one at a time, or package the HiveQL statement into a script file. This section shows you how to create a HiveQL script and upload the script to Azure Blob storage by using Azure PowerShell. Hive requires the HiveQL scripts to be stored in Azure Blob storage.",
+      "nodes": [
+        {
+          "content": "Using Azure PowerShell, you can run multiple HiveQL statements one at a time, or package the HiveQL statement into a script file.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "This section shows you how to create a HiveQL script and upload the script to Azure Blob storage by using Azure PowerShell.",
+          "pos": [
+            130,
+            253
+          ]
+        },
+        {
+          "content": "Hive requires the HiveQL scripts to be stored in Azure Blob storage.",
+          "pos": [
+            254,
+            322
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20585,
+        20630
+      ],
+      "content": "The HiveQL script will perform the following:"
+    },
+    {
+      "pos": [
+        20635,
+        20699
+      ],
+      "content": "<bpt id=\"p56\">**</bpt>Drop the delays_raw table<ept id=\"p56\">**</ept>, in case the table already exists."
+    },
+    {
+      "pos": [
+        20703,
+        21260
+      ],
+      "content": "<bpt id=\"p57\">**</bpt>Create the delays_raw external Hive table<ept id=\"p57\">**</ept><ph id=\"ph80\"/> pointing to the Blob storage location with the flight delay files. This query specifies that fields are delimited by \",\" and that lines are terminated by \"\\n\". This poses a problem when field values contain commas because Hive cannot differentiate between a comma that is a field delimiter and a one that is part of a field value (which is the case in field values for ORIGIN\\_CITY\\_NAME and DEST\\_CITY\\_NAME). To address this, the query creates TEMP columns to hold data that is incorrectly split into columns.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p57\">**</bpt>Create the delays_raw external Hive table<ept id=\"p57\">**</ept><ph id=\"ph80\"/> pointing to the Blob storage location with the flight delay files.",
+          "pos": [
+            0,
+            167
+          ]
+        },
+        {
+          "content": "This query specifies that fields are delimited by \",\" and that lines are terminated by \"\\n\".",
+          "pos": [
+            168,
+            260
+          ]
+        },
+        {
+          "content": "This poses a problem when field values contain commas because Hive cannot differentiate between a comma that is a field delimiter and a one that is part of a field value (which is the case in field values for ORIGIN\\_CITY\\_NAME and DEST\\_CITY\\_NAME).",
+          "pos": [
+            261,
+            511
+          ]
+        },
+        {
+          "content": "To address this, the query creates TEMP columns to hold data that is incorrectly split into columns.",
+          "pos": [
+            512,
+            612
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21266,
+        21326
+      ],
+      "content": "<bpt id=\"p58\">**</bpt>Drop the delays table<ept id=\"p58\">**</ept>, in case the table already exists."
+    },
+    {
+      "pos": [
+        21330,
+        21643
+      ],
+      "content": "<bpt id=\"p59\">**</bpt>Create the delays table<ept id=\"p59\">**</ept>. It is helpful to clean up the data before further processing. This query creates a new table, <bpt id=\"p60\">*</bpt>delays<ept id=\"p60\">*</ept>, from the delays_raw table. Note that the TEMP columns (as mentioned previously) are not copied, and that the <bpt id=\"p61\">**</bpt>substring<ept id=\"p61\">**</ept><ph id=\"ph81\"/> function is used to remove quotation marks from the data.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p59\">**</bpt>Create the delays table<ept id=\"p59\">**</ept>.",
+          "pos": [
+            0,
+            68
+          ]
+        },
+        {
+          "content": "It is helpful to clean up the data before further processing.",
+          "pos": [
+            69,
+            130
+          ]
+        },
+        {
+          "content": "This query creates a new table, <bpt id=\"p60\">*</bpt>delays<ept id=\"p60\">*</ept>, from the delays_raw table.",
+          "pos": [
+            131,
+            239
+          ]
+        },
+        {
+          "content": "Note that the TEMP columns (as mentioned previously) are not copied, and that the <bpt id=\"p61\">**</bpt>substring<ept id=\"p61\">**</ept><ph id=\"ph81\"/> function is used to remove quotation marks from the data.",
+          "pos": [
+            240,
+            448
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21647,
+        22010
+      ],
+      "content": "<bpt id=\"p62\">**</bpt>Compute the average weather delay and groups the results by city name.<ept id=\"p62\">**</ept><ph id=\"ph82\"/> It will also output the results to Blob storage. Note that the query will remove apostrophes from the data and will exclude rows where the value for <bpt id=\"p63\">**</bpt>weather_delay<ept id=\"p63\">**</ept><ph id=\"ph83\"/> is null. This is necessary because Sqoop, used later in this tutorial, doesn't handle those values gracefully by default.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p62\">**</bpt>Compute the average weather delay and groups the results by city name.<ept id=\"p62\">**</ept><ph id=\"ph82\"/> It will also output the results to Blob storage.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "Note that the query will remove apostrophes from the data and will exclude rows where the value for <bpt id=\"p63\">**</bpt>weather_delay<ept id=\"p63\">**</ept><ph id=\"ph83\"/> is null.",
+          "pos": [
+            179,
+            360
+          ]
+        },
+        {
+          "content": "This is necessary because Sqoop, used later in this tutorial, doesn't handle those values gracefully by default.",
+          "pos": [
+            361,
+            473
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22012,
+        22156
+      ],
+      "content": "For a full list of the HiveQL commands, see <bpt id=\"p64\">[</bpt>Hive Data Definition Language<ept id=\"p64\">][hadoop-hiveql]</ept>. Each HiveQL command must terminate with a semicolon.",
+      "nodes": [
+        {
+          "content": "For a full list of the HiveQL commands, see <bpt id=\"p64\">[</bpt>Hive Data Definition Language<ept id=\"p64\">][hadoop-hiveql]</ept>.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "Each HiveQL command must terminate with a semicolon.",
+          "pos": [
+            132,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22158,
+        22192
+      ],
+      "content": "<bpt id=\"p65\">**</bpt>To create a HiveQL script file<ept id=\"p65\">**</ept>"
+    },
+    {
+      "pos": [
+        22197,
+        22220
+      ],
+      "content": "Prepare the parameters:"
+    },
+    {
+      "pos": [
+        22226,
+        22545
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph84\">&lt;table border=\"1\"&gt;</ph><ph id=\"ph85\">\n &lt;tr&gt;</ph><ph id=\"ph86\">&lt;th&gt;</ph>Variable Name<ph id=\"ph87\">&lt;/th&gt;</ph><ph id=\"ph88\">&lt;th&gt;</ph>Notes<ph id=\"ph89\">&lt;/th&gt;</ph><ph id=\"ph90\">&lt;/tr&gt;</ph><ph id=\"ph91\">\n &lt;tr&gt;</ph><ph id=\"ph92\">&lt;td&gt;</ph>$storageAccountName<ph id=\"ph93\">&lt;/td&gt;</ph><ph id=\"ph94\">&lt;td&gt;</ph>The Azure Storage account where you want to upload the HiveQL script to.<ph id=\"ph95\">&lt;/td&gt;</ph><ph id=\"ph96\">&lt;/tr&gt;</ph><ph id=\"ph97\">\n &lt;tr&gt;</ph><ph id=\"ph98\">&lt;td&gt;</ph>$blobContainerName<ph id=\"ph99\">&lt;/td&gt;</ph><ph id=\"ph100\">&lt;td&gt;</ph>The Blob container where you want to upload the HiveQL script to.<ph id=\"ph101\">&lt;/td&gt;</ph><ph id=\"ph102\">&lt;/tr&gt;</ph><ph id=\"ph103\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        22549,
+        22575
+      ],
+      "content": "Open Azure PowerShell ISE."
+    },
+    {
+      "pos": [
+        22580,
+        22637
+      ],
+      "content": "Copy and paste the following script into the script pane:"
+    },
+    {
+      "pos": [
+        30538,
+        30580
+      ],
+      "content": "Here are the variables used in the script:"
+    },
+    {
+      "pos": [
+        30588,
+        30790
+      ],
+      "content": "<bpt id=\"p66\">**</bpt>$hqlLocalFileName<ept id=\"p66\">**</ept><ph id=\"ph104\"/> - The script saves the HiveQL script file locally before uploading it to Blob storage. This is the file name. The default value is <ph id=\"ph105\">&lt;u&gt;</ph>C:\\tutorials\\flightdelay\\flightdelays.hql<ph id=\"ph106\">&lt;/u&gt;</ph>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p66\">**</bpt>$hqlLocalFileName<ept id=\"p66\">**</ept><ph id=\"ph104\"/> - The script saves the HiveQL script file locally before uploading it to Blob storage.",
+          "pos": [
+            0,
+            164
+          ]
+        },
+        {
+          "content": "This is the file name.",
+          "pos": [
+            165,
+            187
+          ]
+        },
+        {
+          "content": "The default value is <ph id=\"ph105\">&lt;u&gt;</ph>C:\\tutorials\\flightdelay\\flightdelays.hql<ph id=\"ph106\">&lt;/u&gt;</ph>.",
+          "pos": [
+            188,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30797,
+        31180
+      ],
+      "content": "<bpt id=\"p67\">**</bpt>$hqlBlobName<ept id=\"p67\">**</ept><ph id=\"ph107\"/> - This is the HiveQL script file blob name used in the Azure Blob storage. The default value is tutorials/flightdelay/flightdelays.hql. Because the file will be written directly to Azure Blob storage, there is NOT a \"/\" at the beginning of the blob name. If you want to access the file from Blob storage, you will need to add a \"/\" at the beginning of the file name.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p67\">**</bpt>$hqlBlobName<ept id=\"p67\">**</ept><ph id=\"ph107\"/> - This is the HiveQL script file blob name used in the Azure Blob storage.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "The default value is tutorials/flightdelay/flightdelays.hql.",
+          "pos": [
+            148,
+            208
+          ]
+        },
+        {
+          "content": "Because the file will be written directly to Azure Blob storage, there is NOT a \"/\" at the beginning of the blob name.",
+          "pos": [
+            209,
+            327
+          ]
+        },
+        {
+          "content": "If you want to access the file from Blob storage, you will need to add a \"/\" at the beginning of the file name.",
+          "pos": [
+            328,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        31187,
+        31295
+      ],
+      "leadings": [
+        "",
+        " "
+      ],
+      "content": "<bpt id=\"p68\">**</bpt>$srcDataFolder<ept id=\"p68\">**</ept><ph id=\"ph108\"/> and <bpt id=\"p69\">**</bpt>$dstDataFolder<ept id=\"p69\">**</ept><ph id=\"ph109\"/> - = \"tutorials/flightdelay/data\"\n= \"tutorials/flightdelay/output\""
+    },
+    {
+      "pos": [
+        31304,
+        31461
+      ],
+      "content": "<ph id=\"ph110\">&lt;a id=\"appendix-c\"&gt;</ph><ph id=\"ph111\">&lt;/a&gt;</ph>Appendix C - Prepare an Azure SQL database for the Sqoop job output\n<bpt id=\"p70\">**</bpt>To prepare the SQL database (merge this with the Sqoop script)<ept id=\"p70\">**</ept>"
+    },
+    {
+      "pos": [
+        31466,
+        31489
+      ],
+      "content": "Prepare the parameters:"
+    },
+    {
+      "pos": [
+        31495,
+        32439
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph112\">&lt;table border=\"1\"&gt;</ph><ph id=\"ph113\">\n &lt;tr&gt;</ph><ph id=\"ph114\">&lt;th&gt;</ph>Variable Name<ph id=\"ph115\">&lt;/th&gt;</ph><ph id=\"ph116\">&lt;th&gt;</ph>Notes<ph id=\"ph117\">&lt;/th&gt;</ph><ph id=\"ph118\">&lt;/tr&gt;</ph><ph id=\"ph119\">\n &lt;tr&gt;</ph><ph id=\"ph120\">&lt;td&gt;</ph>$sqlDatabaseServerName<ph id=\"ph121\">&lt;/td&gt;</ph><ph id=\"ph122\">&lt;td&gt;</ph>The name of the Azure SQL database server. Enter nothing to create a new server.<ph id=\"ph123\">&lt;/td&gt;</ph><ph id=\"ph124\">&lt;/tr&gt;</ph><ph id=\"ph125\">\n &lt;tr&gt;</ph><ph id=\"ph126\">&lt;td&gt;</ph>$sqlDatabaseUsername<ph id=\"ph127\">&lt;/td&gt;</ph><ph id=\"ph128\">&lt;td&gt;</ph>The login name for the Azure SQL database server. If $sqlDatabaseServerName is an existing server, the login and login password are used to authenticate with the server. Otherwise they are used to create a new server.<ph id=\"ph129\">&lt;/td&gt;</ph><ph id=\"ph130\">&lt;/tr&gt;</ph><ph id=\"ph131\">\n &lt;tr&gt;</ph><ph id=\"ph132\">&lt;td&gt;</ph>$sqlDatabasePassword<ph id=\"ph133\">&lt;/td&gt;</ph><ph id=\"ph134\">&lt;td&gt;</ph>The login password for the Azure SQL database server.<ph id=\"ph135\">&lt;/td&gt;</ph><ph id=\"ph136\">&lt;/tr&gt;</ph><ph id=\"ph137\">\n &lt;tr&gt;</ph><ph id=\"ph138\">&lt;td&gt;</ph>$sqlDatabaseLocation<ph id=\"ph139\">&lt;/td&gt;</ph><ph id=\"ph140\">&lt;td&gt;</ph>This value is used only when you're creating a new Azure database server.<ph id=\"ph141\">&lt;/td&gt;</ph><ph id=\"ph142\">&lt;/tr&gt;</ph><ph id=\"ph143\">\n &lt;tr&gt;</ph><ph id=\"ph144\">&lt;td&gt;</ph>$sqlDatabaseName<ph id=\"ph145\">&lt;/td&gt;</ph><ph id=\"ph146\">&lt;td&gt;</ph>The SQL database used to create the AvgDelays table for the Sqoop job. Leaving it blank will create a database called HDISqoop. The table name for the Sqoop job output is AvgDelays. <ph id=\"ph147\">&lt;/td&gt;</ph><ph id=\"ph148\">&lt;/tr&gt;</ph><ph id=\"ph149\">\n &lt;/table&gt;</ph>",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph112\">&lt;table border=\"1\"&gt;</ph><ph id=\"ph113\">\n &lt;tr&gt;</ph><ph id=\"ph114\">&lt;th&gt;</ph>Variable Name<ph id=\"ph115\">&lt;/th&gt;</ph><ph id=\"ph116\">&lt;th&gt;</ph>Notes<ph id=\"ph117\">&lt;/th&gt;</ph><ph id=\"ph118\">&lt;/tr&gt;</ph><ph id=\"ph119\">\n &lt;tr&gt;</ph><ph id=\"ph120\">&lt;td&gt;</ph>$sqlDatabaseServerName<ph id=\"ph121\">&lt;/td&gt;</ph><ph id=\"ph122\">&lt;td&gt;</ph>The name of the Azure SQL database server.",
+          "pos": [
+            0,
+            434
+          ]
+        },
+        {
+          "content": "Enter nothing to create a new server.<ph id=\"ph123\">&lt;/td&gt;</ph><ph id=\"ph124\">&lt;/tr&gt;</ph><ph id=\"ph125\">\n &lt;tr&gt;</ph><ph id=\"ph126\">&lt;td&gt;</ph>$sqlDatabaseUsername<ph id=\"ph127\">&lt;/td&gt;</ph><ph id=\"ph128\">&lt;td&gt;</ph>The login name for the Azure SQL database server.",
+          "pos": [
+            435,
+            726
+          ]
+        },
+        {
+          "content": "If $sqlDatabaseServerName is an existing server, the login and login password are used to authenticate with the server.",
+          "pos": [
+            727,
+            846
+          ]
+        },
+        {
+          "content": "Otherwise they are used to create a new server.<ph id=\"ph129\">&lt;/td&gt;</ph><ph id=\"ph130\">&lt;/tr&gt;</ph><ph id=\"ph131\">\n &lt;tr&gt;</ph><ph id=\"ph132\">&lt;td&gt;</ph>$sqlDatabasePassword<ph id=\"ph133\">&lt;/td&gt;</ph><ph id=\"ph134\">&lt;td&gt;</ph>The login password for the Azure SQL database server.<ph id=\"ph135\">&lt;/td&gt;</ph><ph id=\"ph136\">&lt;/tr&gt;</ph><ph id=\"ph137\">\n &lt;tr&gt;</ph><ph id=\"ph138\">&lt;td&gt;</ph>$sqlDatabaseLocation<ph id=\"ph139\">&lt;/td&gt;</ph><ph id=\"ph140\">&lt;td&gt;</ph>This value is used only when you're creating a new Azure database server.<ph id=\"ph141\">&lt;/td&gt;</ph><ph id=\"ph142\">&lt;/tr&gt;</ph><ph id=\"ph143\">\n &lt;tr&gt;</ph><ph id=\"ph144\">&lt;td&gt;</ph>$sqlDatabaseName<ph id=\"ph145\">&lt;/td&gt;</ph><ph id=\"ph146\">&lt;td&gt;</ph>The SQL database used to create the AvgDelays table for the Sqoop job.",
+          "pos": [
+            847,
+            1701
+          ]
+        },
+        {
+          "content": "Leaving it blank will create a database called HDISqoop.",
+          "pos": [
+            1702,
+            1758
+          ]
+        },
+        {
+          "content": "The table name for the Sqoop job output is AvgDelays.",
+          "pos": [
+            1759,
+            1812
+          ]
+        },
+        {
+          "content": "<ph id=\"ph147\">&lt;/td&gt;</ph><ph id=\"ph148\">&lt;/tr&gt;</ph><ph id=\"ph149\">\n &lt;/table&gt;</ph>",
+          "pos": [
+            1813,
+            1911
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        32443,
+        32469
+      ],
+      "content": "Open Azure PowerShell ISE."
+    },
+    {
+      "pos": [
+        32473,
+        32530
+      ],
+      "content": "Copy and paste the following script into the script pane:"
+    },
+    {
+      "pos": [
+        38534,
+        38766
+      ],
+      "content": "<ph id=\"ph150\">[AZURE.NOTE]</ph><ph id=\"ph151\"/> The script uses a representational state transfer (REST) service, http://bot.whatismyipaddress.com, to retrieve your external IP address. The IP address is used for creating a firewall rule for your SQL database server.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph150\">[AZURE.NOTE]</ph><ph id=\"ph151\"/> The script uses a representational state transfer (REST) service, http://bot.whatismyipaddress.com, to retrieve your external IP address.",
+          "pos": [
+            0,
+            186
+          ]
+        },
+        {
+          "content": "The IP address is used for creating a firewall rule for your SQL database server.",
+          "pos": [
+            187,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        38774,
+        38817
+      ],
+      "content": "Here are some variables used in the script:"
+    },
+    {
+      "pos": [
+        38825,
+        39251
+      ],
+      "content": "<bpt id=\"p71\">**</bpt>$ipAddressRestService<ept id=\"p71\">**</ept><ph id=\"ph152\"/> - The default value is http://bot.whatismyipaddress.com. It is a public IP address REST service for getting your external IP address. You can use other services if you want. The external IP address retrieved through the service will be used to create a firewall rule for your Azure SQL database server, so that you can access the database from your workstation (by using a Windows PowerShell script).",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p71\">**</bpt>$ipAddressRestService<ept id=\"p71\">**</ept><ph id=\"ph152\"/> - The default value is http://bot.whatismyipaddress.com.",
+          "pos": [
+            0,
+            138
+          ]
+        },
+        {
+          "content": "It is a public IP address REST service for getting your external IP address.",
+          "pos": [
+            139,
+            215
+          ]
+        },
+        {
+          "content": "You can use other services if you want.",
+          "pos": [
+            216,
+            255
+          ]
+        },
+        {
+          "content": "The external IP address retrieved through the service will be used to create a firewall rule for your Azure SQL database server, so that you can access the database from your workstation (by using a Windows PowerShell script).",
+          "pos": [
+            256,
+            482
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39258,
+        39425
+      ],
+      "content": "<bpt id=\"p72\">**</bpt>$fireWallRuleName<ept id=\"p72\">**</ept><ph id=\"ph153\"/> - This is the name of the firewall rule for the Azure SQL database server. The default name is <ph id=\"ph154\">&lt;u&gt;</ph>FlightDelay<ph id=\"ph155\">&lt;/u&gt;</ph>. You can rename it if you want.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p72\">**</bpt>$fireWallRuleName<ept id=\"p72\">**</ept><ph id=\"ph153\"/> - This is the name of the firewall rule for the Azure SQL database server.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "The default name is <ph id=\"ph154\">&lt;u&gt;</ph>FlightDelay<ph id=\"ph155\">&lt;/u&gt;</ph>.",
+          "pos": [
+            153,
+            244
+          ]
+        },
+        {
+          "content": "You can rename it if you want.",
+          "pos": [
+            245,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39432,
+        39602
+      ],
+      "content": "<bpt id=\"p73\">**</bpt>$sqlDatabaseMaxSizeGB<ept id=\"p73\">**</ept><ph id=\"ph156\"/> - This value is used only when you're creating a new Azure SQL database server. The default value is 10GB. 10GB is sufficient for this tutorial.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p73\">**</bpt>$sqlDatabaseMaxSizeGB<ept id=\"p73\">**</ept><ph id=\"ph156\"/> - This value is used only when you're creating a new Azure SQL database server.",
+          "pos": [
+            0,
+            161
+          ]
+        },
+        {
+          "content": "The default value is 10GB.",
+          "pos": [
+            162,
+            188
+          ]
+        },
+        {
+          "content": "10GB is sufficient for this tutorial.",
+          "pos": [
+            189,
+            226
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39609,
+        39816
+      ],
+      "content": "<bpt id=\"p74\">**</bpt>$sqlDatabaseName<ept id=\"p74\">**</ept><ph id=\"ph157\"/> - This value is used only when you're creating a new Azure SQL database. The default value is HDISqoop. If you rename it, you must update the Sqoop Windows PowerShell script accordingly.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p74\">**</bpt>$sqlDatabaseName<ept id=\"p74\">**</ept><ph id=\"ph157\"/> - This value is used only when you're creating a new Azure SQL database.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "The default value is HDISqoop.",
+          "pos": [
+            150,
+            180
+          ]
+        },
+        {
+          "content": "If you rename it, you must update the Sqoop Windows PowerShell script accordingly.",
+          "pos": [
+            181,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39821,
+        39852
+      ],
+      "content": "Press <bpt id=\"p75\">**</bpt>F5<ept id=\"p75\">**</ept><ph id=\"ph158\"/> to run the script."
+    },
+    {
+      "pos": [
+        39856,
+        39922
+      ],
+      "content": "Validate the script output. Make sure the script ran successfully.",
+      "nodes": [
+        {
+          "content": "Validate the script output.",
+          "pos": [
+            0,
+            27
+          ]
+        },
+        {
+          "content": "Make sure the script ran successfully.",
+          "pos": [
+            28,
+            66
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39924,
+        39926
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        39949,
+        39959
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        39960,
+        40234
+      ],
+      "content": "Now you understand how to upload a file to Azure Blob storage, how to populate a Hive table by using the data from Azure Blob storage, how to run Hive queries, and how to use Sqoop to export data from HDFS to an Azure SQL database. To learn more, see the following articles:",
+      "nodes": [
+        {
+          "content": "Now you understand how to upload a file to Azure Blob storage, how to populate a Hive table by using the data from Azure Blob storage, how to run Hive queries, and how to use Sqoop to export data from HDFS to an Azure SQL database.",
+          "pos": [
+            0,
+            231
+          ]
+        },
+        {
+          "content": "To learn more, see the following articles:",
+          "pos": [
+            232,
+            274
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        40238,
+        40293
+      ],
+      "content": "<bpt id=\"p76\">[</bpt>Getting started with HDInsight<ept id=\"p76\">][hdinsight-get-started]</ept>"
+    },
+    {
+      "pos": [
+        40296,
+        40341
+      ],
+      "content": "<bpt id=\"p77\">[</bpt>Use Hive with HDInsight<ept id=\"p77\">][hdinsight-use-hive]</ept>"
+    },
+    {
+      "pos": [
+        40344,
+        40391
+      ],
+      "content": "<bpt id=\"p78\">[</bpt>Use Oozie with HDInsight<ept id=\"p78\">][hdinsight-use-oozie]</ept>"
+    },
+    {
+      "pos": [
+        40394,
+        40441
+      ],
+      "content": "<bpt id=\"p79\">[</bpt>Use Sqoop with HDInsight<ept id=\"p79\">][hdinsight-use-sqoop]</ept>"
+    },
+    {
+      "pos": [
+        40444,
+        40487
+      ],
+      "content": "<bpt id=\"p80\">[</bpt>Use Pig with HDInsight<ept id=\"p80\">][hdinsight-use-pig]</ept>"
+    },
+    {
+      "pos": [
+        40490,
+        40566
+      ],
+      "content": "<bpt id=\"p81\">[</bpt>Develop Java MapReduce programs for HDInsight<ept id=\"p81\">][hdinsight-develop-mapreduce]</ept>"
+    },
+    {
+      "pos": [
+        40569,
+        40650
+      ],
+      "content": "<bpt id=\"p82\">[</bpt>Develop C# Hadoop streaming programs for HDInsight<ept id=\"p82\">][hdinsight-develop-streaming]</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Analyze flight delay data with Hadoop in HDInsight | Microsoft Azure\"\n    description=\"Learn how to use one Windows PowerShell script to create an HDInsight cluster, run a Hive job, run a Sqoop job, and delete the cluster.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"mumian\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"12/01/2015\"\n    ms.author=\"jgao\"/>\n\n#Analyze flight delay data by using Hive in HDInsight\n\nHive provides a means of running Hadoop MapReduce jobs through an SQL-like scripting language called *[HiveQL][hadoop-hiveql]*, which can be applied towards summarizing, querying, and analyzing large volumes of data.\n\n> [AZURE.NOTE] The steps in this document require a Windows-based HDInsight cluster. For steps that work with a Linux-based cluster, see [Analyze flight delay data by using Hive in HDInsight (Linux)](hdinsight-analyze-flight-delay-data-linux.md).\n\nOne of the major benefits of Azure HDInsight is the separation of data storage and compute. HDInsight uses Azure Blob storage for data storage. A typical job involves 3 parts:\n\n1. **Store data in Azure Blob storage.** This can be a continuous process. For example, weather data, sensor data, web logs, and in this case, flight delay data are saved into Azure Blob storage.\n2. **Run jobs.** When it is time to process the data, you run a Windows PowerShell script (or a client application) to create an HDInsight cluster, run jobs, and delete the cluster. The jobs save output data to Azure Blob storage. The output data is retained even after the cluster is deleted. This way, you pay for only what you have consumed.\n3. **Retrieve the output from Azure Blob storage**, or in this tutorial, export the data to an Azure SQL database.\n\nThe following diagram illustrates the scenario and the structure of this tutorial:\n\n![HDI.FlightDelays.flow][img-hdi-flightdelays-flow]\n\n**Note**: The numbers in the diagram correspond to the section titles. **M** stands for the main process. **A** stands for the content in the appendix.\n\nThe main portion of the tutorial shows you how to use one Windows PowerShell script to perform the following:\n\n- Create an HDInsight cluster.\n- Run a Hive job on the cluster to calculate average delays at airports. The flight delay data is stored in an Azure Blob storage account.\n- Run a Sqoop job to export the Hive job output to an Azure SQL database.\n- Delete the HDInsight cluster.\n\nIn the appendixes, you can find the instructions for uploading flight delay data, creating/uploading a Hive query string, and preparing the Azure SQL database for the Sqoop job.\n\n> [AZURE.NOTE] The steps in this document are specific to Windows-based HDInsight clusters. For steps that will work with a Linux-based cluster, see [Analyze flight delay data using Hive in HDInsight (Linux)](hdinsight-analyze-flight-delay-data-linux.md)\n\n###Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- **An Azure subscription**. See [Get Azure free trial](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/).\n\n- **A workstation with Azure PowerShell**. See [Install Azure PowerShell 1.0 and greater](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater).\n\n**Files used in this tutorial**\n\nThis tutorial uses the on-time performance of airline flight data from \n[Research and Innovative Technology Administration, Bureau of Transportation Statistics or RITA] [rita-website]. \nA copy of the data has been uploaded to an Azure Blob storage container with the Public Blob access permission. \nA part of your PowerShell script copies the data from the public blob container to the default blob container of \nyour cluster. The HiveQL script is also copied to the same Blob container. \nIf you want to learn how to get/upload the data to your own Storage account, and how to create/upload the HiveQL script file, see [Appendix A](#appendix-a) and [Appendix B](#appendix-b).\n\nThe following table lists the files used in this tutorial:\n\n<table border=\"1\">\n<tr><th>Files</th><th>Description</th></tr>\n<tr><td>wasb://flightdelay@hditutorialdata.blob.core.windows.net/flightdelays.hql</td><td>The HiveQL script file used by the Hive job that you will run. This script has been uploaded to an Azure Blob storage account with the public access. <a href=\"#appendix-b\">Appendix B</a> has instructions on preparing and uploading this file to your own Azure Blob storage account.</td></tr>\n<tr><td>wasb://flightdelay@hditutorialdata.blob.core.windows.net/2013Data</td><td>Input data for the Hive job. The data has been uploaded to an Azure Blob storage account with the public access. <a href=\"#appendix-a\">Appendix A</a> has instructions on getting the data and uploading the data to your own Azure Blob storage account.</td></tr>\n<tr><td>\\tutorials\\flightdelays\\output</td><td>The output path for the Hive job. The default container is used for storing the output data.</td></tr>\n<tr><td>\\tutorials\\flightdelays\\jobstatus</td><td>The Hive job status folder on the default container.</td></tr>\n</table>\n\n\n##Create cluster and run Hive/Sqoop jobs\n\nHadoop MapReduce is batch processing. The most cost-effective way to run a Hive job is to create a cluster for the job, \nand delete the job after the job is completed. The following script covers the whole process. \nFor more information on creating an HDInsight cluster and running Hive jobs, see [Create Hadoop clusters in HDInsight][hdinsight-provision] and [Use Hive with HDInsight][hdinsight-use-hive].\n\n**To run the Hive queries by Azure PowerShell**\n\n1. Create an Azure SQL database and the table for the Sqoop job output by using the instructions in [Appendix C](#appendix-c).\n3. Open Windows PowerShell ISE, and run the following script:\n\n        $subscriptionID = \"<Azure Subscription ID>\"\n        $nameToken = \"<Enter an Alias>\" \n        \n        ###########################################\n        # You must configure the follwing variables\n        # for an existing Azure SQL Database\n        ###########################################\n        $existingSqlDatabaseServerName = \"<Azure SQL Database Server>\"\n        $existingSqlDatabaseLogin = \"<Azure SQL Database Server Login>\"\n        $existingSqlDatabasePassword = \"<Azure SQL Database Server login password>\"\n        $existingSqlDatabaseName = \"<Azure SQL Database name>\"\n        \n        $localFolder = \"E:\\Tutorials\\Downloads\\\" # A temp location for copying files. \n        $azcopyPath = \"C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\AzCopy\" # depends on the version, the folder can be different\n        \n        ###########################################\n        # (Optional) configure the following variables\n        ###########################################\n        \n        $namePrefix = $nameToken.ToLower() + (Get-Date -Format \"MMdd\")\n\n        $resourceGroupName = $namePrefix + \"rg\"\n        $location = \"EAST US 2\"\n        \n        $HDInsightClusterName = $namePrefix + \"hdi\"\n        $httpUserName = \"admin\"\n        $httpPassword = \"<Enter the Password>\"\n        \n        $defaultStorageAccountName = $namePrefix + \"store\"\n        $defaultBlobContainerName = $HDInsightClusterName # use the cluster name\n        \n        $existingSqlDatabaseTableName = \"AvgDelays\"\n        $sqlDatabaseConnectionString = \"jdbc:sqlserver://$existingSqlDatabaseServerName.database.windows.net;user=$existingSqlDatabaseLogin@$existingSqlDatabaseServerName;password=$existingSqlDatabaseLogin;database=$existingSqlDatabaseName\"\n        \n        $hqlScriptFile = \"/tutorials/flightdelays/flightdelays.hql\" \n        \n        $jobStatusFolder = \"/tutorials/flightdelays/jobstatus\"\n        \n        ###########################################\n        # Login\n        ###########################################\n        try{\n            $acct = Get-AzureRmSubscription\n        }\n        catch{\n            Login-AzureRmAccount\n        }\n        Select-AzureRmSubscription -SubscriptionID $subscriptionID\n        \n        ###########################################\n        # Create a new HDInsight cluster\n        ###########################################\n        \n        # Create ARM group\n        New-AzureRmResourceGroup -Name $resourceGroupName -Location $location\n        \n        # Create the default storage account\n        New-AzureRmStorageAccount -ResourceGroupName $resourceGroupName -Name $defaultStorageAccountName -Location $location -Type Standard_LRS\n        \n        # Create the default Blob container\n        $defaultStorageAccountKey = Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -Name $defaultStorageAccountName |  %{ $_.Key1 }\n        $defaultStorageAccountContext = New-AzureStorageContext -StorageAccountName $defaultStorageAccountName -StorageAccountKey $defaultStorageAccountKey \n        New-AzureStorageContainer -Name $defaultBlobContainerName -Context $defaultStorageAccountContext \n        \n        # Create the HDInsight cluster\n        $pw = ConvertTo-SecureString -String $httpPassword -AsPlainText -Force\n        $httpCredential = New-Object System.Management.Automation.PSCredential($httpUserName,$pw)\n        \n        New-AzureRmHDInsightCluster `\n            -ResourceGroupName $resourceGroupName `\n            -ClusterName $HDInsightClusterName `\n            -Location $location `\n            -ClusterType Hadoop `\n            -OSType Windows `\n            -ClusterSizeInNodes 2 `\n            -HttpCredential $httpCredential `\n            -DefaultStorageAccountName \"$defaultStorageAccountName.blob.core.windows.net\" `\n            -DefaultStorageAccountKey $defaultStorageAccountKey `\n            -DefaultStorageContainer $existingDefaultBlobContainerName \n        \n        \n        ###########################################\n        # Prepare the HiveQL script and source data\n        ###########################################\n        \n        # Create the temp location  \n        New-Item -Path $localFolder -ItemType Directory -Force \n        \n        # Download the sample file from Azure Blob storage\n        $context = New-AzureStorageContext -StorageAccountName \"hditutorialdata\" -Anonymous\n        $blobs = Get-AzureStorageBlob -Container \"flightdelay\" -Context $context\n        #$blobs | Get-AzureStorageBlobContent -Context $context -Destination $localFolder\n        \n        # Upload data to default container\n        \n        $azcopycmd = \"cmd.exe /C '$azcopyPath\\azcopy.exe' /S /Source:'$localFolder' /Dest:'https://$defaultStorageAccountName.blob.core.windows.net/$defaultBlobContainerName/tutorials/flightdelays' /DestKey:$defaultStorageAccountKey\"\n        \n        Invoke-Expression -Command:$azcopycmd\n        \n        ###########################################\n        # Submit the Hive job\n        ###########################################\n        Use-AzureRmHDInsightCluster -ClusterName $HDInsightClusterName -HttpCredential $httpCredential\n        $response = Invoke-AzureRmHDInsightHiveJob `\n                        -Files $hqlScriptFile `\n                        -DefaultContainer $defaultBlobContainerName `\n                        -DefaultStorageAccountName $defaultStorageAccountName `\n                        -DefaultStorageAccountKey $defaultStorageAccountKey `\n                        -StatusFolder $jobStatusFolder \n        \n        write-Host $response\n        \n        \n        ###########################################\n        # Submit the Sqoop job\n        ###########################################\n        $exportDir = \"wasb://$defaultBlobContainerName@$defaultStorageAccountName.blob.core.windows.net/tutorials/flightdelays/output\"\n        \n        $sqoopDef = New-AzureRmHDInsightSqoopJobDefinition `\n                        -Command \"export --connect $sqlDatabaseConnectionString --table $sqlDatabaseTableName --export-dir $exportDir --fields-terminated-by \\001 \"\n        $sqoopJob = Start-AzureRmHDInsightJob `\n                        -ResourceGroupName $resourceGroupName `\n                        -ClusterName $hdinsightClusterName `\n                        -HttpCredential $httpCredential `\n                        -JobDefinition $sqoopDef #-Debug -Verbose\n        \n        Wait-AzureRmHDInsightJob `\n            -ResourceGroupName $resourceGroupName `\n            -ClusterName $HDInsightClusterName `\n            -HttpCredential $httpCredential `\n            -WaitTimeoutInSeconds 3600 `\n            -Job $sqoopJob.JobId\n        \n        \n        Get-AzureRmHDInsightJobOutput `\n            -ResourceGroupName $resourceGroupName `\n            -ClusterName $hdinsightClusterName `\n            -HttpCredential $httpCredential `\n            -DefaultContainer $existingDefaultBlobContainerName `\n            -DefaultStorageAccountName $defaultStorageAccountName `\n            -DefaultStorageAccountKey $defaultStorageAccountKey `\n            -JobId $sqoopJob.JobId `\n            -DisplayOutputType StandardError\n        \n        ###########################################\n        # Delete the cluster\n        ###########################################\n        Remove-AzureRmHDInsightCluster -ResourceGroupName $resourceGroupName -ClusterName $hdinsightClusterName\n\n6. Connect to your SQL database and see average flight delays by city in the AvgDelays table:\n\n    ![HDI.FlightDelays.AvgDelays.Dataset][image-hdi-flightdelays-avgdelays-dataset]\n\n\n\n---\n##<a id=\"appendix-a\"></a>Appendix A - Upload flight delay data to Azure Blob storage\nUploading the data file and the HiveQL script files (see [Appendix B](#appendix-b)) requires some planning. The idea is to store the data files and the HiveQL file before creating an HDInsight cluster and running the Hive job. You have two options:\n\n- **Use the same Azure Storage account that will be used by the HDInsight cluster as the default file system.** Because the HDInsight cluster will have the Storage account access key, you don't need to make any additional changes.\n- **Use a different Azure Storage account from the HDInsight cluster default file system.** If this is the case, you must modify the creation part of the Windows PowerShell script found in [Create HDInsight cluster and run Hive/Sqoop jobs](#runjob) to link the Storage account as an additional Storage account. For instructions, see [Create Hadoop clusters in HDInsight][hdinsight-provision]. The HDInsight cluster then knows the access key for the Storage account.\n\n>[AZURE.NOTE] The Blob storage path for the data file is hard coded in the HiveQL script file. You must update it accordingly.\n\n**To download the flight data**\n\n1. Browse to [Research and Innovative Technology Administration, Bureau of Transportation Statistics][rita-website].\n2. On the page, select the following values:\n\n    <table border=\"1\">\n    <tr><th>Name</th><th>Value</th></tr>\n    <tr><td>Filter Year</td><td>2013 </td></tr>\n    <tr><td>Filter Period</td><td>January</td></tr>\n    <tr><td>Fields</td><td>*Year*, *FlightDate*, *UniqueCarrier*, *Carrier*, *FlightNum*, *OriginAirportID*, *Origin*, *OriginCityName*, *OriginState*, *DestAirportID*, *Dest*, *DestCityName*, *DestState*, *DepDelayMinutes*, *ArrDelay*, *ArrDelayMinutes*, *CarrierDelay*, *WeatherDelay*, *NASDelay*, *SecurityDelay*, *LateAircraftDelay* (clear all other fields)</td></tr>\n    </table>\n\n3. Click **Download**.\n4. Unzip the file to the **C:\\Tutorials\\FlightDelay\\2013Data** folder. Each file is a CSV file and is approximately 60GB in size.\n5.  Rename the file to the name of the month that it contains data for. For example, the file containing the January data would be named *January.csv*.\n6. Repeat steps 2 and 5 to download a file for each of the 12 months in 2013. You will need a minimum of one file to run the tutorial.  \n\n**To upload the flight delay data to Azure Blob storage**\n\n1. Prepare the parameters:\n\n    <table border=\"1\">\n    <tr><th>Variable Name</th><th>Notes</th></tr>\n    <tr><td>$storageAccountName</td><td>The Azure Storage account where you want to upload the data to.</td></tr>\n    <tr><td>$blobContainerName</td><td>The Blob container where you want to upload the data to.</td></tr>\n    </table>\n2. Open Azure PowerShell ISE.\n3. Paste the following script into the script pane:\n\n        [CmdletBinding()]\n        Param(\n\n            [Parameter(Mandatory=$True,\n                       HelpMessage=\"Enter the Azure storage account name for creating a new HDInsight cluster. If the account doesn't exist, the script will create one.\")]\n            [String]$storageAccountName,\n\n            [Parameter(Mandatory=$True,\n                       HelpMessage=\"Enter the Azure blob container name for creating a new HDInsight cluster. If not specified, the HDInsight cluster name will be used.\")]\n            [String]$blobContainerName\n        )\n\n        #Region - Variables\n        $localFolder = \"C:\\Tutorials\\FlightDelay\\2013Data\"  # The source folder\n        $destFolder = \"tutorials/flightdelay/2013data\"     #The blob name prefix for the files to be uploaded\n        #EndRegion\n        \n        #Region - Connect to Azure subscription\n        Write-Host \"`nConnecting to your Azure subscription ...\" -ForegroundColor Green\n        try{Get-AzureRmContext}\n        catch{Login-AzureRmAccount}\n        #EndRegion\n        \n        #Region - Validate user input\n        Write-Host \"`nValidating the Azure Storage account and the Blob container...\" -ForegroundColor Green\n        # Validate the Storage account\n        if (-not (Get-AzureRmStorageAccount|Where-Object{$_.StorageAccountName -eq $storageAccountName}))\n        {\n            Write-Host \"The storage account, $storageAccountName, doesn't exist.\" -ForegroundColor Red\n            exit\n        }\n        else{\n            $resourceGroupName = (Get-AzureRmStorageAccount|Where-Object{$_.StorageAccountName -eq $storageAccountName}).ResourceGroupName\n        }\n        \n        # Validate the container\n        $storageAccountKey = Get-AzureRmStorageAccountKey -StorageAccountName $storageAccountName -ResourceGroupName $resourceGroupName | %{$_.Key1}\n        $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey\n        \n        if (-not (Get-AzureStorageContainer -Context $storageContext |Where-Object{$_.Name -eq $blobContainerName}))\n        {\n            Write-Host \"The Blob container, $blobContainerName, doesn't exist\" -ForegroundColor Red\n            Exit\n        }\n        #EngRegion\n        \n        #Region - Copy the file from local workstation to Azure Blob storage  \n        if (test-path -Path $localFolder)\n        {\n            foreach ($item in Get-ChildItem -Path $localFolder){\n                $fileName = \"$localFolder\\$item\"\n                $blobName = \"$destFolder/$item\"\n        \n                Write-Host \"Copying $fileName to $blobName\" -ForegroundColor Green\n        \n                Set-AzureStorageBlobContent -File $fileName -Container $blobContainerName -Blob $blobName -Context $storageContext\n            }\n        }\n        else\n        {\n            Write-Host \"The source folder on the workstation doesn't exist\" -ForegroundColor Red\n        }\n        \n        # List the uploaded files on HDInsight\n        Get-AzureStorageBlob -Container $blobContainerName  -Context $storageContext -Prefix $destFolder\n        #EndRegion\n\n\n\n\n4. Press **F5** to run the script.\n\nIf you choose to use a different method for uploading the files, please make sure the file path is tutorials/flightdelay/data. The syntax for accessing the files is:\n\n    wasb://<ContainerName>@<StorageAccountName>.blob.core.windows.net/tutorials/flightdelay/data\n\nThe path tutorials/flightdelay/data is the virtual folder you created when you uploaded the files. Verify that there are 12 files, one for each month.\n\n>[AZURE.NOTE] You must update the Hive query to read from the new location.\n\n> You must either configure the container access permission to be public or bind the Storage account to the HDInsight cluster. Otherwise, the Hive query string will not be able to access the data files.\n\n---\n##<a id=\"appendix-b\"></a>Appendix B - Create and upload a HiveQL script\n\nUsing Azure PowerShell, you can run multiple HiveQL statements one at a time, or package the HiveQL statement into a script file. This section shows you how to create a HiveQL script and upload the script to Azure Blob storage by using Azure PowerShell. Hive requires the HiveQL scripts to be stored in Azure Blob storage.\n\nThe HiveQL script will perform the following:\n\n1. **Drop the delays_raw table**, in case the table already exists.\n2. **Create the delays_raw external Hive table** pointing to the Blob storage location with the flight delay files. This query specifies that fields are delimited by \",\" and that lines are terminated by \"\\n\". This poses a problem when field values contain commas because Hive cannot differentiate between a comma that is a field delimiter and a one that is part of a field value (which is the case in field values for ORIGIN\\_CITY\\_NAME and DEST\\_CITY\\_NAME). To address this, the query creates TEMP columns to hold data that is incorrectly split into columns.  \n3. **Drop the delays table**, in case the table already exists.\n4. **Create the delays table**. It is helpful to clean up the data before further processing. This query creates a new table, *delays*, from the delays_raw table. Note that the TEMP columns (as mentioned previously) are not copied, and that the **substring** function is used to remove quotation marks from the data.\n5. **Compute the average weather delay and groups the results by city name.** It will also output the results to Blob storage. Note that the query will remove apostrophes from the data and will exclude rows where the value for **weather_delay** is null. This is necessary because Sqoop, used later in this tutorial, doesn't handle those values gracefully by default.\n\nFor a full list of the HiveQL commands, see [Hive Data Definition Language][hadoop-hiveql]. Each HiveQL command must terminate with a semicolon.\n\n**To create a HiveQL script file**\n\n1. Prepare the parameters:\n\n    <table border=\"1\">\n    <tr><th>Variable Name</th><th>Notes</th></tr>\n    <tr><td>$storageAccountName</td><td>The Azure Storage account where you want to upload the HiveQL script to.</td></tr>\n    <tr><td>$blobContainerName</td><td>The Blob container where you want to upload the HiveQL script to.</td></tr>\n    </table>\n2. Open Azure PowerShell ISE.\n\n3. Copy and paste the following script into the script pane:\n\n        [CmdletBinding()]\n        Param(\n\n            # Azure Blob storage variables\n            [Parameter(Mandatory=$True,\n                       HelpMessage=\"Enter the Azure storage account name for creating a new HDInsight cluster. If the account doesn't exist, the script will create one.\")]\n            [String]$storageAccountName,\n\n            [Parameter(Mandatory=$True,\n                       HelpMessage=\"Enter the Azure blob container name for creating a new HDInsight cluster. If not specified, the HDInsight cluster name will be used.\")]\n            [String]$blobContainerName\n        )\n\n        #region - Define variables\n        # Treat all errors as terminating\n        $ErrorActionPreference = \"Stop\"\n        \n        # The HiveQL script file is exported as this file before it's uploaded to Blob storage\n        $hqlLocalFileName = \"e:\\tutorials\\flightdelay\\flightdelays.hql\"\n        \n        # The HiveQL script file will be uploaded to Blob storage as this blob name\n        $hqlBlobName = \"tutorials/flightdelay/flightdelays.hql\"\n        \n        # These two constants are used by the HiveQL script file\n        #$srcDataFolder = \"tutorials/flightdelay/data\"\n        $dstDataFolder = \"/tutorials/flightdelay/output\"\n        #endregion\n\n        #Region - Connect to Azure subscription\n        Write-Host \"`nConnecting to your Azure subscription ...\" -ForegroundColor Green\n        try{Get-AzureRmContext}\n        catch{Login-AzureRmAccount}\n        #EndRegion\n        \n        #Region - Validate user input\n        Write-Host \"`nValidating the Azure Storage account and the Blob container...\" -ForegroundColor Green\n        # Validate the Storage account\n        if (-not (Get-AzureRmStorageAccount|Where-Object{$_.StorageAccountName -eq $storageAccountName}))\n        {\n            Write-Host \"The storage account, $storageAccountName, doesn't exist.\" -ForegroundColor Red\n            exit\n        }\n        else{\n            $resourceGroupName = (Get-AzureRmStorageAccount|Where-Object{$_.StorageAccountName -eq $storageAccountName}).ResourceGroupName\n        }\n        \n        # Validate the container\n        $storageAccountKey = Get-AzureRmStorageAccountKey -StorageAccountName $storageAccountName -ResourceGroupName $resourceGroupName | %{$_.Key1}\n        $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey\n        \n        if (-not (Get-AzureStorageContainer -Context $storageContext |Where-Object{$_.Name -eq $blobContainerName}))\n        {\n            Write-Host \"The Blob container, $blobContainerName, doesn't exist\" -ForegroundColor Red\n            Exit\n        }\n        #EngRegion\n        \n        #region - Validate the file and file path\n        \n        # Check if a file with the same file name already exists on the workstation\n        Write-Host \"`nvalidating the folder structure on the workstation for saving the HQL script file ...\"  -ForegroundColor Green\n        if (test-path $hqlLocalFileName){\n        \n            $isDelete = Read-Host 'The file, ' $hqlLocalFileName ', exists.  Do you want to overwirte it? (Y/N)'\n        \n            if ($isDelete.ToLower() -ne \"y\")\n            {\n                Exit\n            }\n        }\n        \n        # Create the folder if it doesn't exist\n        $folder = split-path $hqlLocalFileName\n        if (-not (test-path $folder))\n        {\n            Write-Host \"`nCreating folder, $folder ...\" -ForegroundColor Green\n        \n            new-item $folder -ItemType directory  \n        }\n        #end region\n        \n        #region - Write the Hive script into a local file\n        Write-Host \"`nWriting the Hive script into a file on your workstation ...\" `\n                    -ForegroundColor Green\n        \n        $hqlDropDelaysRaw = \"DROP TABLE delays_raw;\"\n        \n        $hqlCreateDelaysRaw = \"CREATE EXTERNAL TABLE delays_raw (\" +\n                \"YEAR string, \" +\n                \"FL_DATE string, \" +\n                \"UNIQUE_CARRIER string, \" +\n                \"CARRIER string, \" +\n                \"FL_NUM string, \" +\n                \"ORIGIN_AIRPORT_ID string, \" +\n                \"ORIGIN string, \" +\n                \"ORIGIN_CITY_NAME string, \" +\n                \"ORIGIN_CITY_NAME_TEMP string, \" +\n                \"ORIGIN_STATE_ABR string, \" +\n                \"DEST_AIRPORT_ID string, \" +\n                \"DEST string, \" +\n                \"DEST_CITY_NAME string, \" +\n                \"DEST_CITY_NAME_TEMP string, \" +\n                \"DEST_STATE_ABR string, \" +\n                \"DEP_DELAY_NEW float, \" +\n                \"ARR_DELAY_NEW float, \" +\n                \"CARRIER_DELAY float, \" +\n                \"WEATHER_DELAY float, \" +\n                \"NAS_DELAY float, \" +\n                \"SECURITY_DELAY float, \" +\n                \"LATE_AIRCRAFT_DELAY float) \" +\n            \"ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' \" +\n            \"LINES TERMINATED BY '\\n' \" +\n            \"STORED AS TEXTFILE \" +\n            \"LOCATION 'wasb://flightdelay@hditutorialdata.blob.core.windows.net/2013Data';\"\n        \n        $hqlDropDelays = \"DROP TABLE delays;\"\n        \n        $hqlCreateDelays = \"CREATE TABLE delays AS \" +\n            \"SELECT YEAR AS year, \" +\n                \"FL_DATE AS flight_date, \" +\n                \"substring(UNIQUE_CARRIER, 2, length(UNIQUE_CARRIER) -1) AS unique_carrier, \" +\n                \"substring(CARRIER, 2, length(CARRIER) -1) AS carrier, \" +\n                \"substring(FL_NUM, 2, length(FL_NUM) -1) AS flight_num, \" +\n                \"ORIGIN_AIRPORT_ID AS origin_airport_id, \" +\n                \"substring(ORIGIN, 2, length(ORIGIN) -1) AS origin_airport_code, \" +\n                \"substring(ORIGIN_CITY_NAME, 2) AS origin_city_name, \" +\n                \"substring(ORIGIN_STATE_ABR, 2, length(ORIGIN_STATE_ABR) -1)  AS origin_state_abr, \" +\n                \"DEST_AIRPORT_ID AS dest_airport_id, \" +\n                \"substring(DEST, 2, length(DEST) -1) AS dest_airport_code, \" +\n                \"substring(DEST_CITY_NAME,2) AS dest_city_name, \" +\n                \"substring(DEST_STATE_ABR, 2, length(DEST_STATE_ABR) -1) AS dest_state_abr, \" +\n                \"DEP_DELAY_NEW AS dep_delay_new, \" +\n                \"ARR_DELAY_NEW AS arr_delay_new, \" +\n                \"CARRIER_DELAY AS carrier_delay, \" +\n                \"WEATHER_DELAY AS weather_delay, \" +\n                \"NAS_DELAY AS nas_delay, \" +\n                \"SECURITY_DELAY AS security_delay, \" +\n                \"LATE_AIRCRAFT_DELAY AS late_aircraft_delay \" +\n            \"FROM delays_raw;\"\n        \n        $hqlInsertLocal = \"INSERT OVERWRITE DIRECTORY '$dstDataFolder' \" +\n            \"SELECT regexp_replace(origin_city_name, '''', ''), \" +\n                \"avg(weather_delay) \" +\n            \"FROM delays \" +\n            \"WHERE weather_delay IS NOT NULL \" +\n            \"GROUP BY origin_city_name;\"\n        \n        $hqlScript = $hqlDropDelaysRaw + $hqlCreateDelaysRaw + $hqlDropDelays + $hqlCreateDelays + $hqlInsertLocal\n        \n        $hqlScript | Out-File $hqlLocalFileName -Encoding ascii -Force\n        #endregion\n        \n        #region - Upload the Hive script to the default Blob container\n        Write-Host \"`nUploading the Hive script to the default Blob container ...\" -ForegroundColor Green\n        \n        # Create a storage context object\n        $storageAccountKey = Get-AzureRmStorageAccountKey -StorageAccountName $storageAccountName -ResourceGroupName $resourceGroupName | %{$_.Key1}\n        $destContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey\n        \n        # Upload the file from local workstation to Blob storage\n        Set-AzureStorageBlobContent -File $hqlLocalFileName -Container $blobContainerName -Blob $hqlBlobName -Context $destContext\n        #endregion\n        \n        Write-host \"`nEnd of the PowerShell script\" -ForegroundColor Green\n\n    Here are the variables used in the script:\n\n    - **$hqlLocalFileName** - The script saves the HiveQL script file locally before uploading it to Blob storage. This is the file name. The default value is <u>C:\\tutorials\\flightdelay\\flightdelays.hql</u>.\n    - **$hqlBlobName** - This is the HiveQL script file blob name used in the Azure Blob storage. The default value is tutorials/flightdelay/flightdelays.hql. Because the file will be written directly to Azure Blob storage, there is NOT a \"/\" at the beginning of the blob name. If you want to access the file from Blob storage, you will need to add a \"/\" at the beginning of the file name.\n    - **$srcDataFolder** and **$dstDataFolder** - = \"tutorials/flightdelay/data\"\n = \"tutorials/flightdelay/output\"\n\n\n---\n##<a id=\"appendix-c\"></a>Appendix C - Prepare an Azure SQL database for the Sqoop job output\n**To prepare the SQL database (merge this with the Sqoop script)**\n\n1. Prepare the parameters:\n\n    <table border=\"1\">\n    <tr><th>Variable Name</th><th>Notes</th></tr>\n    <tr><td>$sqlDatabaseServerName</td><td>The name of the Azure SQL database server. Enter nothing to create a new server.</td></tr>\n    <tr><td>$sqlDatabaseUsername</td><td>The login name for the Azure SQL database server. If $sqlDatabaseServerName is an existing server, the login and login password are used to authenticate with the server. Otherwise they are used to create a new server.</td></tr>\n    <tr><td>$sqlDatabasePassword</td><td>The login password for the Azure SQL database server.</td></tr>\n    <tr><td>$sqlDatabaseLocation</td><td>This value is used only when you're creating a new Azure database server.</td></tr>\n    <tr><td>$sqlDatabaseName</td><td>The SQL database used to create the AvgDelays table for the Sqoop job. Leaving it blank will create a database called HDISqoop. The table name for the Sqoop job output is AvgDelays. </td></tr>\n    </table>\n2. Open Azure PowerShell ISE.\n3. Copy and paste the following script into the script pane:\n\n        [CmdletBinding()]\n        Param(\n        \n            # Azure Resource group variables\n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the Azure resource group name. It will be created if it doesn't exist.\")]\n            [String]$resourceGroupName,\n        \n            # SQL database server variables\n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the Azure SQL Database Server Name. It will be created if it doesn't exist.\")]\n            [String]$sqlDatabaseServer, \n        \n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the Azure SQL Database admin user.\")]\n            [String]$sqlDatabaseLogin,\n        \n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the Azure SQL Database admin user password.\")]\n            [String]$sqlDatabasePassword,\n        \n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the region to create the Database in.\")]\n            [String]$sqlDatabaseLocation,   #For example, West US.\n        \n            # SQL database variables\n            [Parameter(Mandatory=$True,\n                    HelpMessage=\"Enter the database name. It will be created if it doesn't exist.\")]\n            [String]$sqlDatabaseName # specify the database name if you have one created. Otherwise use \"\" to have the script create one for you.\n        )\n        \n        # Treat all errors as terminating\n        $ErrorActionPreference = \"Stop\"\n        \n        #region - Constants and variables\n        \n        # IP address REST service used for retrieving external IP address and creating firewall rules\n        [String]$ipAddressRestService = \"http://bot.whatismyipaddress.com\"\n        [String]$fireWallRuleName = \"FlightDelay\"\n        \n        # SQL database variables\n        [String]$sqlDatabaseMaxSizeGB = 10\n        \n        #SQL query string for creating AvgDelays table\n        [String]$sqlDatabaseTableName = \"AvgDelays\"\n        [String]$sqlCreateAvgDelaysTable = \" CREATE TABLE [dbo].[$sqlDatabaseTableName](\n                    [origin_city_name] [nvarchar](50) NOT NULL,\n                    [weather_delay] float,\n                CONSTRAINT [PK_$sqlDatabaseTableName] PRIMARY KEY CLUSTERED\n                (\n                    [origin_city_name] ASC\n                )\n                )\"\n        #endregion\n        \n        #Region - Connect to Azure subscription\n        Write-Host \"`nConnecting to your Azure subscription ...\" -ForegroundColor Green\n        try{Get-AzureRmContext}\n        catch{Login-AzureRmAccount}\n        #EndRegion\n        \n        #region - Create and validate Azure resouce group\n        try{\n            Get-AzureRmResourceGroup -Name $resourceGroupName\n        }\n        catch{\n            New-AzureRmResourceGroup -Name $resourceGroupName -Location $sqlDatabaseLocation\n        }\n        \n        #EndRegion\n        \n        #region - Create and validate Azure SQL database server\n        try{\n            Get-AzureRmSqlServer -ServerName $sqlDatabaseServer -ResourceGroupName $resourceGroupName}\n        catch{\n            Write-Host \"`nCreating SQL Database server ...\"  -ForegroundColor Green\n        \n            $sqlDatabasePW = ConvertTo-SecureString -String $sqlDatabasePassword -AsPlainText -Force\n            $credential = New-Object System.Management.Automation.PSCredential($sqlDatabaseLogin,$sqlDatabasePW)\n        \n            $sqlDatabaseServer = (New-AzureRmSqlServer -ResourceGroupName $resourceGroupName -ServerName $sqlDatabaseServer -SqlAdministratorCredentials $credential -Location $sqlDatabaseLocation).ServerName\n            Write-Host \"`tThe new SQL database server name is $sqlDatabaseServer.\" -ForegroundColor Cyan\n        \n            Write-Host \"`nCreating firewall rule, $fireWallRuleName ...\" -ForegroundColor Green\n            $workstationIPAddress = Invoke-RestMethod $ipAddressRestService\n            New-AzureRmSqlServerFirewallRule -ResourceGroupName $resourceGroupName -ServerName $sqlDatabaseServer -FirewallRuleName \"$fireWallRuleName-workstation\" -StartIpAddress $workstationIPAddress -EndIpAddress $workstationIPAddress\n        \n            #To allow other Azure services to access the server add a firewall rule and set both the StartIpAddress and EndIpAddress to 0.0.0.0. Note that this allows Azure traffic from any Azure subscription to access the server.\n            New-AzureRmSqlServerFirewallRule -ResourceGroupName $resourceGroupName -ServerName $sqlDatabaseServer -FirewallRuleName \"$fireWallRuleName-Azureservices\" -StartIpAddress \"0.0.0.0\" -EndIpAddress \"0.0.0.0\"\n        }\n        \n        #endregion\n        \n        #region - Create and validate Azure SQL database\n        \n        try {\n            Get-AzureRmSqlDatabase -ResourceGroupName $resourceGroupName -ServerName $sqlDatabaseServer -DatabaseName $sqlDatabaseName\n        }\n        catch {\n            Write-Host \"`nCreating SQL Database, $sqlDatabaseName ...\"  -ForegroundColor Green\n            New-AzureRMSqlDatabase -ResourceGroupName $resourceGroupName -ServerName $sqlDatabaseServer -DatabaseName $sqlDatabaseName -Edition \"Standard\" -RequestedServiceObjectiveName \"S1\"\n        }\n        \n        #endregion\n        \n        #region -  Execute an SQL command to create the AvgDelays table\n        \n        Write-Host \"`nCreating SQL Database table ...\"  -ForegroundColor Green\n        $conn = New-Object System.Data.SqlClient.SqlConnection\n        $conn.ConnectionString = \"Data Source=$sqlDatabaseServer.database.windows.net;Initial Catalog=$sqlDatabaseName;User ID=$sqlDatabaseLogin;Password=$sqlDatabasePassword;Encrypt=true;Trusted_Connection=false;\"\n        $conn.open()\n        $cmd = New-Object System.Data.SqlClient.SqlCommand\n        $cmd.connection = $conn\n        $cmd.commandtext = $sqlCreateAvgDelaysTable\n        $cmd.executenonquery()\n        \n        $conn.close()\n        \n        Write-host \"`nEnd of the PowerShell script\" -ForegroundColor Green\n\n    >[AZURE.NOTE] The script uses a representational state transfer (REST) service, http://bot.whatismyipaddress.com, to retrieve your external IP address. The IP address is used for creating a firewall rule for your SQL database server.  \n\n    Here are some variables used in the script:\n\n    - **$ipAddressRestService** - The default value is http://bot.whatismyipaddress.com. It is a public IP address REST service for getting your external IP address. You can use other services if you want. The external IP address retrieved through the service will be used to create a firewall rule for your Azure SQL database server, so that you can access the database from your workstation (by using a Windows PowerShell script).\n    - **$fireWallRuleName** - This is the name of the firewall rule for the Azure SQL database server. The default name is <u>FlightDelay</u>. You can rename it if you want.\n    - **$sqlDatabaseMaxSizeGB** - This value is used only when you're creating a new Azure SQL database server. The default value is 10GB. 10GB is sufficient for this tutorial.\n    - **$sqlDatabaseName** - This value is used only when you're creating a new Azure SQL database. The default value is HDISqoop. If you rename it, you must update the Sqoop Windows PowerShell script accordingly.\n\n4. Press **F5** to run the script.\n5. Validate the script output. Make sure the script ran successfully.\n\n##<a id=\"nextsteps\"></a> Next steps\nNow you understand how to upload a file to Azure Blob storage, how to populate a Hive table by using the data from Azure Blob storage, how to run Hive queries, and how to use Sqoop to export data from HDFS to an Azure SQL database. To learn more, see the following articles:\n\n* [Getting started with HDInsight][hdinsight-get-started]\n* [Use Hive with HDInsight][hdinsight-use-hive]\n* [Use Oozie with HDInsight][hdinsight-use-oozie]\n* [Use Sqoop with HDInsight][hdinsight-use-sqoop]\n* [Use Pig with HDInsight][hdinsight-use-pig]\n* [Develop Java MapReduce programs for HDInsight][hdinsight-develop-mapreduce]\n* [Develop C# Hadoop streaming programs for HDInsight][hdinsight-develop-streaming]\n\n\n\n[azure-purchase-options]: http://azure.microsoft.com/pricing/purchase-options/\n[azure-member-offers]: http://azure.microsoft.com/pricing/member-offers/\n[azure-free-trial]: http://azure.microsoft.com/pricing/free-trial/\n\n\n[rita-website]: http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236&DB_Short_Name=On-Time\n[powershell-install-configure]: powershell-install-configure.md\n\n[hdinsight-use-oozie]: hdinsight-use-oozie.md\n[hdinsight-use-hive]: hdinsight-use-hive.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-storage]: hdinsight-hadoop-use-blob-storage.md\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-get-started]: hdinsight-hadoop-linux-tutorial-get-started.md\n[hdinsight-use-sqoop]: hdinsight-use-sqoop.md\n[hdinsight-use-pig]: hdinsight-use-pig.md\n[hdinsight-develop-streaming]: hdinsight-hadoop-develop-deploy-streaming-jobs.md\n[hdinsight-develop-mapreduce]: hdinsight-develop-deploy-java-mapreduce.md\n\n[hadoop-hiveql]: https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL\n[hadoop-shell-commands]: http://hadoop.apache.org/docs/r0.18.3/hdfs_shell.html\n\n[technetwiki-hive-error]: http://social.technet.microsoft.com/wiki/contents/articles/23047.hdinsight-hive-error-unable-to-rename.aspx\n\n[image-hdi-flightdelays-avgdelays-dataset]: ./media/hdinsight-analyze-flight-delay-data/HDI.FlightDelays.AvgDelays.DataSet.png\n[img-hdi-flightdelays-run-hive-job-output]: ./media/hdinsight-analyze-flight-delay-data/HDI.FlightDelays.RunHiveJob.Output.png\n[img-hdi-flightdelays-flow]: ./media/hdinsight-analyze-flight-delay-data/HDI.FlightDelays.Flow.png\n"
+}

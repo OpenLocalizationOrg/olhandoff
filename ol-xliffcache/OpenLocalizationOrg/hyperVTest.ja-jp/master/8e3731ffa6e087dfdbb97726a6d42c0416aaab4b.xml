@@ -1,0 +1,945 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        96
+      ],
+      "content": "Develop C# Hadoop streaming programs for HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        115,
+        221
+      ],
+      "content": "Learn how to develop Hadoop streaming MapReduce programs in C#, and how to deploy them to Azure HDInsight."
+    },
+    {
+      "pos": [
+        547,
+        597
+      ],
+      "content": "Develop C# Hadoop streaming programs for HDInsight"
+    },
+    {
+      "pos": [
+        599,
+        947
+      ],
+      "content": "Hadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java. This tutorial walks you through creating a C# word-count program, which counts the occurrences of a given word in the input data you provide. The following illustration shows how the MapReduce framework does a word count:",
+      "nodes": [
+        {
+          "content": "Hadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "This tutorial walks you through creating a C# word-count program, which counts the occurrences of a given word in the input data you provide.",
+          "pos": [
+            127,
+            268
+          ]
+        },
+        {
+          "content": "The following illustration shows how the MapReduce framework does a word count:",
+          "pos": [
+            269,
+            348
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        949,
+        1000
+      ],
+      "content": "<ph id=\"ph2\">![</ph>HDI.WordCountDiagram<ph id=\"ph3\">][image-hdi-wordcountdiagram]</ph>"
+    },
+    {
+      "pos": [
+        1004,
+        1244
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> The steps in this article apply only to Windows-based Azure HDInsight clusters. For an example of streaming for Linux-based HDInsight, see <bpt id=\"p1\">[</bpt>Develop Python streaming programs for HDInsight<ept id=\"p1\">](hdinsight-hadoop-streaming-python.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> The steps in this article apply only to Windows-based Azure HDInsight clusters.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "For an example of streaming for Linux-based HDInsight, see <bpt id=\"p1\">[</bpt>Develop Python streaming programs for HDInsight<ept id=\"p1\">](hdinsight-hadoop-streaming-python.md)</ept>.",
+          "pos": [
+            125,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1246,
+        1277
+      ],
+      "content": "This tutorial shows you how to:"
+    },
+    {
+      "pos": [
+        1281,
+        1336
+      ],
+      "content": "Develop a Hadoop streaming MapReduce program by using C"
+    },
+    {
+      "pos": [
+        1341,
+        1381
+      ],
+      "content": "Run the MapReduce job on Azure HDInsight"
+    },
+    {
+      "pos": [
+        1384,
+        1425
+      ],
+      "content": "Retrieve the results of the MapReduce job"
+    },
+    {
+      "pos": [
+        1430,
+        1443
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1445,
+        1510
+      ],
+      "content": "Before you begin this tutorial, you must have done the following:"
+    },
+    {
+      "pos": [
+        1514,
+        1634
+      ],
+      "content": "A workstation with <bpt id=\"p2\">[</bpt>Azure PowerShell<ept id=\"p2\">][powershell-install]</ept>, and <bpt id=\"p3\">[</bpt>Microsoft Visual Studio<ept id=\"p3\">](https://www.visualstudio.com/)</ept>."
+    },
+    {
+      "pos": [
+        1637,
+        1805
+      ],
+      "content": "Obtain an Azure subscription. For instructions, see <bpt id=\"p4\">[</bpt>Purchase Options<ept id=\"p4\">][azure-purchase-options]</ept>, <bpt id=\"p5\">[</bpt>Member Offers<ept id=\"p5\">][azure-member-offers]</ept>, or <bpt id=\"p6\">[</bpt>Free Trial<ept id=\"p6\">][azure-free-trial]</ept>.",
+      "nodes": [
+        {
+          "content": "Obtain an Azure subscription.",
+          "pos": [
+            0,
+            29
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p4\">[</bpt>Purchase Options<ept id=\"p4\">][azure-purchase-options]</ept>, <bpt id=\"p5\">[</bpt>Member Offers<ept id=\"p5\">][azure-member-offers]</ept>, or <bpt id=\"p6\">[</bpt>Free Trial<ept id=\"p6\">][azure-free-trial]</ept>.",
+          "pos": [
+            30,
+            282
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1810,
+        1865
+      ],
+      "content": "Develop a word-count Hadoop streaming program in C&amp;#35;"
+    },
+    {
+      "pos": [
+        1867,
+        2254
+      ],
+      "content": "The word-count solution contains two console application projects: mapper and reducer. The mapper application streams each word into the console, and the reducer application counts the number of words that are streamed from a document. Both the mapper and the reducer read characters, line by line, from the standard input stream (stdin) and write to the standard output stream (stdout).",
+      "nodes": [
+        {
+          "content": "The word-count solution contains two console application projects: mapper and reducer.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "The mapper application streams each word into the console, and the reducer application counts the number of words that are streamed from a document.",
+          "pos": [
+            87,
+            235
+          ]
+        },
+        {
+          "content": "Both the mapper and the reducer read characters, line by line, from the standard input stream (stdin) and write to the standard output stream (stdout).",
+          "pos": [
+            236,
+            387
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2256,
+        2288
+      ],
+      "content": "<bpt id=\"p7\">**</bpt>To create the mapper program<ept id=\"p7\">**</ept>"
+    },
+    {
+      "pos": [
+        2293,
+        2375
+      ],
+      "content": "Open Visual Studio and create a C# console application called <bpt id=\"p8\">**</bpt>WordCountMapper<ept id=\"p8\">**</ept>."
+    },
+    {
+      "pos": [
+        2379,
+        2499
+      ],
+      "content": "In Solution Explorer, rename <bpt id=\"p9\">**</bpt>Program.cs<ept id=\"p9\">**</ept><ph id=\"ph6\"/> to <bpt id=\"p10\">**</bpt>WordCountMapper.cs<ept id=\"p10\">**</ept>. Click <bpt id=\"p11\">**</bpt>Yes<ept id=\"p11\">**</ept><ph id=\"ph7\"/> to confirm renaming all references.",
+      "nodes": [
+        {
+          "content": "In Solution Explorer, rename <bpt id=\"p9\">**</bpt>Program.cs<ept id=\"p9\">**</ept><ph id=\"ph6\"/> to <bpt id=\"p10\">**</bpt>WordCountMapper.cs<ept id=\"p10\">**</ept>.",
+          "pos": [
+            0,
+            162
+          ]
+        },
+        {
+          "content": "Click <bpt id=\"p11\">**</bpt>Yes<ept id=\"p11\">**</ept><ph id=\"ph7\"/> to confirm renaming all references.",
+          "pos": [
+            163,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2503,
+        2561
+      ],
+      "content": "Replace the code in WordCountMapper.cs with the following:"
+    },
+    {
+      "pos": [
+        3313,
+        3378
+      ],
+      "content": "Build the solution, and make sure there is no compilation errors."
+    },
+    {
+      "pos": [
+        3380,
+        3413
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>To create the reducer program<ept id=\"p12\">**</ept>"
+    },
+    {
+      "pos": [
+        3418,
+        3530
+      ],
+      "content": "Add another C# console application to the solution called <bpt id=\"p13\">**</bpt>WordCountReducer<ept id=\"p13\">**</ept>\".\nLocation|C:\\Tutorials\\WordCount",
+      "nodes": [
+        {
+          "content": "Add another C# console application to the solution called <bpt id=\"p13\">**</bpt>WordCountReducer<ept id=\"p13\">**</ept>\".",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "Location|C:\\Tutorials\\WordCount",
+          "pos": [
+            121,
+            152
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3534,
+        3655
+      ],
+      "content": "In Solution Explorer, rename <bpt id=\"p14\">**</bpt>Program.cs<ept id=\"p14\">**</ept><ph id=\"ph8\"/> to <bpt id=\"p15\">**</bpt>WordCountReducer.cs<ept id=\"p15\">**</ept>. Click <bpt id=\"p16\">**</bpt>Yes<ept id=\"p16\">**</ept><ph id=\"ph9\"/> to confirm renaming all references.",
+      "nodes": [
+        {
+          "content": "In Solution Explorer, rename <bpt id=\"p14\">**</bpt>Program.cs<ept id=\"p14\">**</ept><ph id=\"ph8\"/> to <bpt id=\"p15\">**</bpt>WordCountReducer.cs<ept id=\"p15\">**</ept>.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "Click <bpt id=\"p16\">**</bpt>Yes<ept id=\"p16\">**</ept><ph id=\"ph9\"/> to confirm renaming all references.",
+          "pos": [
+            166,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3659,
+        3718
+      ],
+      "content": "Replace the code in WordCountReducer.cs with the following:"
+    },
+    {
+      "pos": [
+        4800,
+        4865
+      ],
+      "content": "Build the solution, and make sure there is no compilation errors."
+    },
+    {
+      "pos": [
+        4867,
+        4916
+      ],
+      "content": "You shall get the mapper and reducer executables:"
+    },
+    {
+      "pos": [
+        4920,
+        4968
+      ],
+      "content": "..\\WordCountMapper\\bin\\Debug\\WordCountMapper.exe"
+    },
+    {
+      "pos": [
+        4971,
+        5021
+      ],
+      "content": "..\\WordCountReducer\\bin\\Debug\\WordCountReducer.exe"
+    },
+    {
+      "pos": [
+        5026,
+        5059
+      ],
+      "content": "Upload data to Azure Blob storage"
+    },
+    {
+      "pos": [
+        5060,
+        5412
+      ],
+      "content": "Azure HDInsight uses Azure Blob storage as the default file system. You can configure an HDInsight cluster to use additional Blob storage for the data files. In this section, you will create an Azure Storage account and upload the data files to the Blob storage. The data files are the .txt files in the %hadoop_home%\\share\\doc\\hadoop\\common directory.",
+      "nodes": [
+        {
+          "content": "Azure HDInsight uses Azure Blob storage as the default file system.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "You can configure an HDInsight cluster to use additional Blob storage for the data files.",
+          "pos": [
+            68,
+            157
+          ]
+        },
+        {
+          "content": "In this section, you will create an Azure Storage account and upload the data files to the Blob storage.",
+          "pos": [
+            158,
+            262
+          ]
+        },
+        {
+          "content": "The data files are the .txt files in the %hadoop_home%\\share\\doc\\hadoop\\common directory.",
+          "pos": [
+            263,
+            352
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5415,
+        5462
+      ],
+      "content": "<bpt id=\"p17\">**</bpt>To create a Storage account and a container<ept id=\"p17\">**</ept>"
+    },
+    {
+      "pos": [
+        5467,
+        5489
+      ],
+      "content": "Open Azure PowerShell."
+    },
+    {
+      "pos": [
+        5493,
+        5538
+      ],
+      "content": "Set the variables, and then run the commands:"
+    },
+    {
+      "pos": [
+        5771,
+        5870
+      ],
+      "content": "Run the following commands to create a Storage account and a Blob storage container on the account:"
+    },
+    {
+      "pos": [
+        6428,
+        6503
+      ],
+      "content": "Run the following commands to verify the Storage account and the container:"
+    },
+    {
+      "pos": [
+        6634,
+        6662
+      ],
+      "content": "<bpt id=\"p18\">**</bpt>To upload the data files<ept id=\"p18\">**</ept>"
+    },
+    {
+      "pos": [
+        6667,
+        6752
+      ],
+      "content": "In the Azure PowerShell window, set the values for the local and destination folders:"
+    },
+    {
+      "pos": [
+        6881,
+        7208
+      ],
+      "content": "Notice the local source file folder is <bpt id=\"p19\">**</bpt>C:\\hdp\\hadoop-2.4.0.2.1.3.0-1981\\share\\doc\\hadoop\\common<ept id=\"p19\">**</ept>, and the destination folder is <bpt id=\"p20\">**</bpt>WordCount/Input<ept id=\"p20\">**</ept>. The source location is the location of the .txt files on the HDInsight Emulator. The destination is the folder structure that will be reflected under the Azure Blob container.",
+      "nodes": [
+        {
+          "content": "Notice the local source file folder is <bpt id=\"p19\">**</bpt>C:\\hdp\\hadoop-2.4.0.2.1.3.0-1981\\share\\doc\\hadoop\\common<ept id=\"p19\">**</ept>, and the destination folder is <bpt id=\"p20\">**</bpt>WordCount/Input<ept id=\"p20\">**</ept>.",
+          "pos": [
+            0,
+            231
+          ]
+        },
+        {
+          "content": "The source location is the location of the .txt files on the HDInsight Emulator.",
+          "pos": [
+            232,
+            312
+          ]
+        },
+        {
+          "content": "The destination is the folder structure that will be reflected under the Azure Blob container.",
+          "pos": [
+            313,
+            407
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7213,
+        7298
+      ],
+      "content": "Run the following commands to get a list of the .txt files in the source file folder:"
+    },
+    {
+      "pos": [
+        7454,
+        7498
+      ],
+      "content": "Run the following snippet to copy the files:"
+    },
+    {
+      "pos": [
+        7894,
+        7947
+      ],
+      "content": "Run the following command to list the uploaded files:"
+    },
+    {
+      "pos": [
+        8113,
+        8154
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>To upload the word-count applications<ept id=\"p21\">**</ept>"
+    },
+    {
+      "pos": [
+        8159,
+        8219
+      ],
+      "content": "In the Azure PowerShell window, set the following variables:"
+    },
+    {
+      "pos": [
+        8454,
+        8581
+      ],
+      "content": "Notice the destination folder is <bpt id=\"p22\">**</bpt>WordCount/Apps<ept id=\"p22\">**</ept>, which is the structure that will be reflected in the Azure Blob container."
+    },
+    {
+      "pos": [
+        8586,
+        8638
+      ],
+      "content": "Run the following commands to copy the applications:"
+    },
+    {
+      "pos": [
+        8930,
+        8983
+      ],
+      "content": "Run the following command to list the uploaded files:"
+    },
+    {
+      "pos": [
+        9152,
+        9202
+      ],
+      "content": "You shall see both application files listed there."
+    },
+    {
+      "pos": [
+        9207,
+        9247
+      ],
+      "content": "Run the MapReduce job on Azure HDInsight"
+    },
+    {
+      "pos": [
+        9249,
+        9389
+      ],
+      "content": "This section provides an Azure PowerShell script that performs all the tasks related to running a MapReduce job. The list of tasks includes:",
+      "nodes": [
+        {
+          "content": "This section provides an Azure PowerShell script that performs all the tasks related to running a MapReduce job.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "The list of tasks includes:",
+          "pos": [
+            113,
+            140
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9394,
+        9424
+      ],
+      "content": "Provision an HDInsight cluster"
+    },
+    {
+      "pos": [
+        9433,
+        9520
+      ],
+      "content": "Create a Storage account that will be used as the default HDInsight cluster file system"
+    },
+    {
+      "pos": [
+        9528,
+        9559
+      ],
+      "content": "Create a Blob storage container"
+    },
+    {
+      "pos": [
+        9567,
+        9594
+      ],
+      "content": "Create an HDInsight cluster"
+    },
+    {
+      "pos": [
+        9599,
+        9623
+      ],
+      "content": "Submit the MapReduce job"
+    },
+    {
+      "pos": [
+        9632,
+        9675
+      ],
+      "content": "Create a streaming MapReduce job definition"
+    },
+    {
+      "pos": [
+        9683,
+        9705
+      ],
+      "content": "Submit a MapReduce job"
+    },
+    {
+      "pos": [
+        9713,
+        9739
+      ],
+      "content": "Wait for the job to finish"
+    },
+    {
+      "pos": [
+        9747,
+        9769
+      ],
+      "content": "Display standard error"
+    },
+    {
+      "pos": [
+        9777,
+        9800
+      ],
+      "content": "Display standard output"
+    },
+    {
+      "pos": [
+        9805,
+        9823
+      ],
+      "content": "Delete the cluster"
+    },
+    {
+      "pos": [
+        9832,
+        9860
+      ],
+      "content": "Delete the HDInsight cluster"
+    },
+    {
+      "pos": [
+        9868,
+        9944
+      ],
+      "content": "Delete the Storage account used as the default HDInsight cluster file system"
+    },
+    {
+      "pos": [
+        9947,
+        9985
+      ],
+      "content": "<bpt id=\"p23\">**</bpt>To run the Azure PowerShell script<ept id=\"p23\">**</ept>"
+    },
+    {
+      "pos": [
+        9990,
+        10003
+      ],
+      "content": "Open Notepad."
+    },
+    {
+      "pos": [
+        10007,
+        10041
+      ],
+      "content": "Copy and paste the following code:"
+    },
+    {
+      "pos": [
+        14453,
+        14889
+      ],
+      "content": "Set the first four variables in the script. The <bpt id=\"p24\">**</bpt>$stringPrefix<ept id=\"p24\">**</ept><ph id=\"ph10\"/> variable is used to prefix the specified string to the HDInsight cluster name, the Storage account name, and the Blob storage container name. Because the names for these must be 3 to 24 characters, make sure the string you specify and the names this script uses, together, do not exceed the character limit for the name. You must use all lowercase for <bpt id=\"p25\">**</bpt>$stringPrefix<ept id=\"p25\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Set the first four variables in the script.",
+          "pos": [
+            0,
+            43
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p24\">**</bpt>$stringPrefix<ept id=\"p24\">**</ept><ph id=\"ph10\"/> variable is used to prefix the specified string to the HDInsight cluster name, the Storage account name, and the Blob storage container name.",
+          "pos": [
+            44,
+            262
+          ]
+        },
+        {
+          "content": "Because the names for these must be 3 to 24 characters, make sure the string you specify and the names this script uses, together, do not exceed the character limit for the name.",
+          "pos": [
+            263,
+            441
+          ]
+        },
+        {
+          "content": "You must use all lowercase for <bpt id=\"p25\">**</bpt>$stringPrefix<ept id=\"p25\">**</ept>.",
+          "pos": [
+            442,
+            531
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14895,
+        15230
+      ],
+      "content": "The <bpt id=\"p26\">**</bpt>$storageAccountName_Data<ept id=\"p26\">**</ept><ph id=\"ph11\"/> and <bpt id=\"p27\">**</bpt>$containerName_Data<ept id=\"p27\">**</ept><ph id=\"ph12\"/> variables are the Storage account and container that you already created in the previous steps. So, you must provide the names for those. These are used for storing the data files and the applications. The <bpt id=\"p28\">**</bpt>$location<ept id=\"p28\">**</ept><ph id=\"ph13\"/> variable must match the data storage account location.",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p26\">**</bpt>$storageAccountName_Data<ept id=\"p26\">**</ept><ph id=\"ph11\"/> and <bpt id=\"p27\">**</bpt>$containerName_Data<ept id=\"p27\">**</ept><ph id=\"ph12\"/> variables are the Storage account and container that you already created in the previous steps.",
+          "pos": [
+            0,
+            266
+          ]
+        },
+        {
+          "content": "So, you must provide the names for those.",
+          "pos": [
+            267,
+            308
+          ]
+        },
+        {
+          "content": "These are used for storing the data files and the applications.",
+          "pos": [
+            309,
+            372
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p28\">**</bpt>$location<ept id=\"p28\">**</ept><ph id=\"ph13\"/> variable must match the data storage account location.",
+          "pos": [
+            373,
+            500
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15235,
+        15268
+      ],
+      "content": "Review the rest of the variables."
+    },
+    {
+      "pos": [
+        15272,
+        15293
+      ],
+      "content": "Save the script file."
+    },
+    {
+      "pos": [
+        15297,
+        15319
+      ],
+      "content": "Open Azure PowerShell."
+    },
+    {
+      "pos": [
+        15323,
+        15393
+      ],
+      "content": "Run the following command to set the execution policy to RemoteSigned:"
+    },
+    {
+      "pos": [
+        15465,
+        15844
+      ],
+      "content": "When prompted, enter the user name and password for the HDInsight cluster. Make sure the password is at least 10 characters and contains one uppercase letter, one lowercase letter, a number, and a special character. If you don't want to get prompted for the credentials, see <bpt id=\"p29\">[</bpt>Working with Passwords, Secure Strings and Credentials in Windows PowerShell<ept id=\"p29\">][powershell-PSCredential]</ept>.",
+      "nodes": [
+        {
+          "content": "When prompted, enter the user name and password for the HDInsight cluster.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "Make sure the password is at least 10 characters and contains one uppercase letter, one lowercase letter, a number, and a special character.",
+          "pos": [
+            75,
+            215
+          ]
+        },
+        {
+          "content": "If you don't want to get prompted for the credentials, see <bpt id=\"p29\">[</bpt>Working with Passwords, Secure Strings and Credentials in Windows PowerShell<ept id=\"p29\">][powershell-PSCredential]</ept>.",
+          "pos": [
+            216,
+            419
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15846,
+        15981
+      ],
+      "content": "For an HDInsight .NET SDK sample on submitting Hadoop streaming jobs, see <bpt id=\"p30\">[</bpt>Submit Hadoop jobs programmatically<ept id=\"p30\">][hdinsight-submit-jobs]</ept>."
+    },
+    {
+      "pos": [
+        15984,
+        16293
+      ],
+      "content": "##Retrieve the MapReduce job output\nThis section shows you how to download and display the output. For information on displaying the results in Excel, see <bpt id=\"p31\">[</bpt>Connect Excel to HDInsight with the Microsoft Hive ODBC Driver<ept id=\"p31\">][hdinsight-ODBC]</ept><ph id=\"ph14\"/> and <bpt id=\"p32\">[</bpt>Connect Excel to HDInsight with Power Query<ept id=\"p32\">][hdinsight-power-query]</ept>.",
+      "nodes": [
+        {
+          "content": "Retrieve the MapReduce job output\nThis section shows you how to download and display the output.",
+          "pos": [
+            2,
+            98
+          ]
+        },
+        {
+          "content": "For information on displaying the results in Excel, see <bpt id=\"p31\">[</bpt>Connect Excel to HDInsight with the Microsoft Hive ODBC Driver<ept id=\"p31\">][hdinsight-ODBC]</ept><ph id=\"ph14\"/> and <bpt id=\"p32\">[</bpt>Connect Excel to HDInsight with Power Query<ept id=\"p32\">][hdinsight-power-query]</ept>.",
+          "pos": [
+            99,
+            404
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16296,
+        16322
+      ],
+      "content": "<bpt id=\"p33\">**</bpt>To retrieve the output<ept id=\"p33\">**</ept>"
+    },
+    {
+      "pos": [
+        16327,
+        16360
+      ],
+      "content": "Open the Azure PowerShell window."
+    },
+    {
+      "pos": [
+        16364,
+        16406
+      ],
+      "content": "Set the values, and then run the commands:"
+    },
+    {
+      "pos": [
+        16637,
+        16706
+      ],
+      "content": "Run the following commands to create an Azure Storage context object:"
+    },
+    {
+      "pos": [
+        16980,
+        17042
+      ],
+      "content": "Run the following commands to download and display the output:"
+    },
+    {
+      "pos": [
+        17203,
+        17213
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        17214,
+        17513
+      ],
+      "content": "In this tutorial, you have learned how to develop a Hadoop streaming MapReduce job, how to test the application on the HDInsight Emulator, and how to write an Azure PowerShell script to provision an HDInsight cluster and run a MapReduce job on the cluster. To learn more, see the following articles:",
+      "nodes": [
+        {
+          "content": "In this tutorial, you have learned how to develop a Hadoop streaming MapReduce job, how to test the application on the HDInsight Emulator, and how to write an Azure PowerShell script to provision an HDInsight cluster and run a MapReduce job on the cluster.",
+          "pos": [
+            0,
+            256
+          ]
+        },
+        {
+          "content": "To learn more, see the following articles:",
+          "pos": [
+            257,
+            299
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17517,
+        17599
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Get started with Azure HDInsight<ept id=\"p34\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept>"
+    },
+    {
+      "pos": [
+        17602,
+        17675
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>Get started with the HDInsight Emulator<ept id=\"p35\">][hdinsight-get-started-emulator]</ept>"
+    },
+    {
+      "pos": [
+        17678,
+        17754
+      ],
+      "content": "<bpt id=\"p36\">[</bpt>Develop Java MapReduce programs for HDInsight<ept id=\"p36\">][hdinsight-develop-mapreduce]</ept>"
+    },
+    {
+      "pos": [
+        17757,
+        17815
+      ],
+      "content": "<bpt id=\"p37\">[</bpt>Use Azure Blob storage with HDInsight<ept id=\"p37\">][hdinsight-storage]</ept>"
+    },
+    {
+      "pos": [
+        17818,
+        17891
+      ],
+      "content": "<bpt id=\"p38\">[</bpt>Administer HDInsight using Azure PowerShell<ept id=\"p38\">][hdinsight-admin-powershell]</ept>"
+    },
+    {
+      "pos": [
+        17894,
+        17943
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Upload data to HDInsight<ept id=\"p39\">][hdinsight-upload-data]</ept>"
+    },
+    {
+      "pos": [
+        17946,
+        17991
+      ],
+      "content": "<bpt id=\"p40\">[</bpt>Use Hive with HDInsight<ept id=\"p40\">][hdinsight-use-hive]</ept>"
+    },
+    {
+      "pos": [
+        17994,
+        18037
+      ],
+      "content": "<bpt id=\"p41\">[</bpt>Use Pig with HDInsight<ept id=\"p41\">][hdinsight-use-pig]</ept>"
+    }
+  ],
+  "content": "\n<properties\n    pageTitle=\"Develop C# Hadoop streaming programs for HDInsight | Microsoft Azure\"\n    description=\"Learn how to develop Hadoop streaming MapReduce programs in C#, and how to deploy them to Azure HDInsight.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    tags=\"azure-portal\"\n    authors=\"mumian\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"01/28/2016\"\n    ms.author=\"jgao\"/>\n\n\n\n# Develop C# Hadoop streaming programs for HDInsight\n\nHadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java. This tutorial walks you through creating a C# word-count program, which counts the occurrences of a given word in the input data you provide. The following illustration shows how the MapReduce framework does a word count:\n\n![HDI.WordCountDiagram][image-hdi-wordcountdiagram]\n\n> [AZURE.NOTE] The steps in this article apply only to Windows-based Azure HDInsight clusters. For an example of streaming for Linux-based HDInsight, see [Develop Python streaming programs for HDInsight](hdinsight-hadoop-streaming-python.md).\n\nThis tutorial shows you how to:\n\n- Develop a Hadoop streaming MapReduce program by using C# \n- Run the MapReduce job on Azure HDInsight\n- Retrieve the results of the MapReduce job\n\n###Prerequisites\n\nBefore you begin this tutorial, you must have done the following:\n\n- A workstation with [Azure PowerShell][powershell-install], and [Microsoft Visual Studio](https://www.visualstudio.com/).\n- Obtain an Azure subscription. For instructions, see [Purchase Options][azure-purchase-options], [Member Offers][azure-member-offers], or [Free Trial][azure-free-trial].\n\n\n##Develop a word-count Hadoop streaming program in C&#35;\n\nThe word-count solution contains two console application projects: mapper and reducer. The mapper application streams each word into the console, and the reducer application counts the number of words that are streamed from a document. Both the mapper and the reducer read characters, line by line, from the standard input stream (stdin) and write to the standard output stream (stdout).\n\n**To create the mapper program**\n\n1. Open Visual Studio and create a C# console application called **WordCountMapper**.\n2. In Solution Explorer, rename **Program.cs** to **WordCountMapper.cs**. Click **Yes** to confirm renaming all references.\n3. Replace the code in WordCountMapper.cs with the following:\n\n        using System;\n        using System.IO;\n\n        namespace WordCountMapper\n        {\n            class WordCountMapper\n            {\n                static void Main(string[] args)\n                {\n                    if (args.Length > 0)\n                    {\n                        Console.SetIn(new StreamReader(args[0]));\n                    }\n\n                    string line;\n                    string[] words;\n\n                    while ((line = Console.ReadLine()) != null)\n                    {\n                        words = line.Split(' ');\n\n                        foreach (string word in words)\n                            Console.WriteLine(word.ToLower());\n                    }\n                }\n            }\n        }\n\n4. Build the solution, and make sure there is no compilation errors.\n\n**To create the reducer program**\n\n1. Add another C# console application to the solution called **WordCountReducer**\".\nLocation|C:\\Tutorials\\WordCount\n2. In Solution Explorer, rename **Program.cs** to **WordCountReducer.cs**. Click **Yes** to confirm renaming all references.\n3. Replace the code in WordCountReducer.cs with the following:\n\n        using System;\n        using System.IO;\n\n        namespace WordCountReducer\n        {\n            class WordCountReducer\n            {\n                static void Main(string[] args)\n                {\n                    string word, lastWord = null;\n                    int count = 0;\n\n                    if (args.Length > 0)\n                    {\n                        Console.SetIn(new StreamReader(args[0]));\n                    }\n\n                    while ((word = Console.ReadLine()) != null)\n                    {\n                        if (word != lastWord)\n                        {\n                            if (lastWord != null)\n                                Console.WriteLine(\"{0}[{1}]\", lastWord, count);\n\n                            count = 1;\n                            lastWord = word;\n                        }\n                        else\n                        {\n                            count += 1;\n                        }\n                    }\n                    Console.WriteLine(count);\n                }\n            }\n        }\n\n4. Build the solution, and make sure there is no compilation errors.\n\nYou shall get the mapper and reducer executables:\n\n- ..\\WordCountMapper\\bin\\Debug\\WordCountMapper.exe\n- ..\\WordCountReducer\\bin\\Debug\\WordCountReducer.exe\n\n\n##Upload data to Azure Blob storage\nAzure HDInsight uses Azure Blob storage as the default file system. You can configure an HDInsight cluster to use additional Blob storage for the data files. In this section, you will create an Azure Storage account and upload the data files to the Blob storage. The data files are the .txt files in the %hadoop_home%\\share\\doc\\hadoop\\common directory.\n\n\n**To create a Storage account and a container**\n\n1. Open Azure PowerShell.\n2. Set the variables, and then run the commands:\n\n        $subscriptionName = \"<AzureSubscriptionName>\"\n        $storageAccountName = \"<AzureStorageAccountName>\"  \n        $containerName = \"<ContainerName>\"\n        $location = \"<MicrosoftDataCenter>\"  # For example, \"East US\"\n\n3. Run the following commands to create a Storage account and a Blob storage container on the account:\n\n        # Select an Azure subscription\n        Select-AzureSubscription $subscriptionName\n\n        # Create a Storage account\n        New-AzureStorageAccount -StorageAccountName $storageAccountName -location $location\n\n        # Create a Blob storage container\n        $storageAccountKey = Get-AzureStorageKey $storageAccountName | %{ $_.Primary }\n        $destContext = New-AzureStorageContext –StorageAccountName $storageAccountName –StorageAccountKey $storageAccountKey  \n        New-AzureStorageContainer -Name $containerName -Context $destContext\n\n4. Run the following commands to verify the Storage account and the container:\n\n        Get-AzureStorageAccount -StorageAccountName $storageAccountName\n        Get-AzureStorageContainer -Context $destContext\n\n**To upload the data files**\n\n1. In the Azure PowerShell window, set the values for the local and destination folders:\n\n        $localFolder = \"C:\\hdp\\hadoop-2.4.0.2.1.3.0-1981\\share\\doc\\hadoop\\common\"\n        $destFolder = \"WordCount/Input\"\n\n    Notice the local source file folder is **C:\\hdp\\hadoop-2.4.0.2.1.3.0-1981\\share\\doc\\hadoop\\common**, and the destination folder is **WordCount/Input**. The source location is the location of the .txt files on the HDInsight Emulator. The destination is the folder structure that will be reflected under the Azure Blob container.\n\n3. Run the following commands to get a list of the .txt files in the source file folder:\n\n        # Get a list of the .txt files\n        $filesAll = Get-ChildItem $localFolder\n        $filesTxt = $filesAll | where {$_.Extension -eq \".txt\"}\n\n5. Run the following snippet to copy the files:\n\n        # Copy the files from the local workstation to the Blob container\n        foreach ($file in $filesTxt){\n\n            $fileName = \"$localFolder\\$file\"\n            $blobName = \"$destFolder/$file\"\n\n            write-host \"Copying $fileName to $blobName\"\n\n            Set-AzureStorageBlobContent -File $fileName -Container $containerName -Blob $blobName -Context $destContext\n        }\n\n6. Run the following command to list the uploaded files:\n\n        # List the uploaded files in the Blob storage container\n        Get-AzureStorageBlob -Container $containerName  -Context $destContext -Prefix $destFolder\n\n\n**To upload the word-count applications**\n\n1. In the Azure PowerShell window, set the following variables:\n\n        $mapperFile = \"C:\\Tutorials\\WordCount\\WordCountMapper\\bin\\Debug\\WordCountMapper.exe\"\n        $reducerFile = \"C:\\Tutorials\\WordCount\\WordCountReducer\\bin\\Debug\\WordCountReducer.exe\"\n        $blobFolder = \"WordCount/Apps\"\n\n    Notice the destination folder is **WordCount/Apps**, which is the structure that will be reflected in the Azure Blob container.\n\n2. Run the following commands to copy the applications:\n\n        Set-AzureStorageBlobContent -File $mapperFile -Container $containerName -Blob \"$blobFolder/WordCountMapper.exe\" -Context $destContext\n        Set-AzureStorageBlobContent -File $reducerFile -Container $containerName -Blob \"$blobFolder/WordCountReducer.exe\" -Context $destContext\n\n3. Run the following command to list the uploaded files:\n\n        # List the uploaded files in the Blob storage container\n        Get-AzureStorageBlob -Container $containerName  -Context $destContext -Prefix $blobFolder\n\n    You shall see both application files listed there.\n\n\n##Run the MapReduce job on Azure HDInsight\n\nThis section provides an Azure PowerShell script that performs all the tasks related to running a MapReduce job. The list of tasks includes:\n\n1. Provision an HDInsight cluster\n\n    1. Create a Storage account that will be used as the default HDInsight cluster file system\n    2. Create a Blob storage container\n    3. Create an HDInsight cluster\n\n2. Submit the MapReduce job\n\n    1. Create a streaming MapReduce job definition\n    2. Submit a MapReduce job\n    3. Wait for the job to finish\n    4. Display standard error\n    5. Display standard output\n\n3. Delete the cluster\n\n    1. Delete the HDInsight cluster\n    2. Delete the Storage account used as the default HDInsight cluster file system\n\n\n**To run the Azure PowerShell script**\n\n1. Open Notepad.\n2. Copy and paste the following code:\n\n        # ====== STORAGE ACCOUNT AND HDINSIGHT CLUSTER VARIABLES ======\n        $subscriptionName = \"<AzureSubscriptionName>\"\n        $stringPrefix = \"<StringForPrefix>\"     ### Prefix to cluster, Storage account, and container names\n        $storageAccountName_Data = \"<TheDataStorageAccountName>\"\n        $containerName_Data = \"<TheDataBlobStorageContainerName>\"\n        $location = \"<MicrosoftDataCenter>\"     ### Must match the data storage account location\n        $clusterNodes = 1\n\n        $clusterName = $stringPrefix + \"hdicluster\"\n\n        $storageAccountName_Default = $stringPrefix + \"hdistore\"\n        $containerName_Default =  $stringPrefix + \"hdicluster\"\n\n        # ====== THE STREAMING MAPREDUCE JOB VARIABLES ======\n        $mrMapper = \"WordCountMapper.exe\"\n        $mrReducer = \"WordCountReducer.exe\"\n        $mrMapperFile = \"wasb://$containerName_Data@$storageAccountName_Data.blob.core.windows.net/WordCount/Apps/WordCountMapper.exe\"\n        $mrReducerFile = \"wasb://$containerName_Data@$storageAccountName_Data.blob.core.windows.net/WordCount/Apps/WordCountReducer.exe\"\n        $mrInput = \"wasb://$containerName_Data@$storageAccountName_Data.blob.core.windows.net/WordCount/Input/\"\n        $mrOutput = \"wasb://$containerName_Data@$storageAccountName_Data.blob.core.windows.net/WordCount/Output/\"\n        $mrStatusOutput = \"wasb://$containerName_Data@$storageAccountName_Data.blob.core.windows.net/WordCount/MRStatusOutput/\"\n\n        Select-AzureSubscription $subscriptionName\n\n        #====== CREATE A STORAGE ACCOUNT ======\n        Write-Host \"Create a storage account\" -ForegroundColor Green\n        New-AzureStorageAccount -StorageAccountName $storageAccountName_Default -location $location\n\n        #====== CREATE A BLOB STORAGE CONTAINER ======\n        Write-Host \"Create a Blob storage container\" -ForegroundColor Green\n        $storageAccountKey_Default = Get-AzureStorageKey $storageAccountName_Default | %{ $_.Primary }\n        $destContext = New-AzureStorageContext –StorageAccountName $storageAccountName_Default –StorageAccountKey $storageAccountKey_Default\n\n        New-AzureStorageContainer -Name $containerName_Default -Context $destContext\n\n        #====== CREATE AN HDINSIGHT CLUSTER ======\n        Write-Host \"Create an HDInsight cluster\" -ForegroundColor Green\n        $storageAccountKey_Data = Get-AzureStorageKey $storageAccountName_Data | %{ $_.Primary }\n\n        $config = New-AzureHDInsightClusterConfig -ClusterSizeInNodes $clusterNodes |\n            Set-AzureHDInsightDefaultStorage -StorageAccountName \"$storageAccountName_Default.blob.core.windows.net\" -StorageAccountKey $storageAccountKey_Default -StorageContainerName $containerName_Default |\n            Add-AzureHDInsightStorage -StorageAccountName \"$storageAccountName_Data.blob.core.windows.net\" -StorageAccountKey $storageAccountKey_Data\n\n        Select-AzureSubscription $subscriptionName\n        New-AzureHDInsightCluster -Name $clusterName -Location $location -Config $config\n\n        #====== CREATE A STREAMING MAPREDUCE JOB DEFINITION ======\n        Write-Host \"Create a streaming MapReduce job definition\" -ForegroundColor Green\n\n        $mrJobDef = New-AzureHDInsightStreamingMapReduceJobDefinition -JobName mrWordCountStreamingJob -StatusFolder $mrStatusOutput -Mapper $mrMapper -Reducer $mrReducer -InputPath $mrInput -OutputPath $mrOutput\n        $mrJobDef.Files.Add($mrMapperFile)\n        $mrJobDef.Files.Add($mrReducerFile)\n\n        #====== RUN A STREAMING MAPREDUCE JOB ======\n        Write-Host \"Run a streaming MapReduce job\" -ForegroundColor Green\n        Select-AzureSubscription $subscriptionName\n        $mrJob = Start-AzureHDInsightJob -Cluster $clusterName -JobDefinition $mrJobDef\n        Wait-AzureHDInsightJob -Job $mrJob -WaitTimeoutInSeconds 3600\n\n        Get-AzureHDInsightJobOutput -Cluster $clusterName -JobId $mrJob.JobId -StandardError\n        Get-AzureHDInsightJobOutput -Cluster $clusterName -JobId $mrJob.JobId -StandardOutput\n\n        #====== DELETE THE HDINSIGHT CLUSTER ======\n        Write-Host \"Delete the HDInsight cluster\" -ForegroundColor Green\n        Select-AzureSubscription $subscriptionName\n        Remove-AzureHDInsightCluster -Name $clusterName\n\n        #====== DELETE THE STORAGE ACCOUNT ======\n        Write-Host \"Delete the storage account\" -ForegroundColor Green\n        Remove-AzureStorageAccount -StorageAccountName $storageAccountName_Default\n\n3. Set the first four variables in the script. The **$stringPrefix** variable is used to prefix the specified string to the HDInsight cluster name, the Storage account name, and the Blob storage container name. Because the names for these must be 3 to 24 characters, make sure the string you specify and the names this script uses, together, do not exceed the character limit for the name. You must use all lowercase for **$stringPrefix**.\n\n    The **$storageAccountName_Data** and **$containerName_Data** variables are the Storage account and container that you already created in the previous steps. So, you must provide the names for those. These are used for storing the data files and the applications. The **$location** variable must match the data storage account location.\n\n4. Review the rest of the variables.\n5. Save the script file.\n6. Open Azure PowerShell.\n7. Run the following command to set the execution policy to RemoteSigned:\n\n        PowerShell -File <FileName> -ExecutionPolicy RemoteSigned\n\n8. When prompted, enter the user name and password for the HDInsight cluster. Make sure the password is at least 10 characters and contains one uppercase letter, one lowercase letter, a number, and a special character. If you don't want to get prompted for the credentials, see [Working with Passwords, Secure Strings and Credentials in Windows PowerShell][powershell-PSCredential].\n\nFor an HDInsight .NET SDK sample on submitting Hadoop streaming jobs, see [Submit Hadoop jobs programmatically][hdinsight-submit-jobs].\n\n\n##Retrieve the MapReduce job output\nThis section shows you how to download and display the output. For information on displaying the results in Excel, see [Connect Excel to HDInsight with the Microsoft Hive ODBC Driver][hdinsight-ODBC] and [Connect Excel to HDInsight with Power Query][hdinsight-power-query].\n\n\n**To retrieve the output**\n\n1. Open the Azure PowerShell window.\n2. Set the values, and then run the commands:\n\n        $subscriptionName = \"<AzureSubscriptionName>\"\n        $storageAccountName = \"<TheDataStorageAccountName>\"\n        $containerName = \"<TheDataBlobStorageContainerName>\"\n        $blobName = \"WordCount/Output/part-00000\"\n\n3. Run the following commands to create an Azure Storage context object:\n\n        Select-AzureSubscription $subscriptionName\n        $storageAccountKey = Get-AzureStorageKey $storageAccountName | %{ $_.Primary }\n        $storageContext = New-AzureStorageContext –StorageAccountName $storageAccountName –StorageAccountKey $storageAccountKey  \n\n4. Run the following commands to download and display the output:\n\n        Get-AzureStorageBlobContent -Container $ContainerName -Blob $blobName -Context $storageContext -Force\n        cat \"./$blobName\" | findstr \"there\"\n\n\n\n##Next steps\nIn this tutorial, you have learned how to develop a Hadoop streaming MapReduce job, how to test the application on the HDInsight Emulator, and how to write an Azure PowerShell script to provision an HDInsight cluster and run a MapReduce job on the cluster. To learn more, see the following articles:\n\n- [Get started with Azure HDInsight](hdinsight-hadoop-linux-tutorial-get-started.md)\n- [Get started with the HDInsight Emulator][hdinsight-get-started-emulator]\n- [Develop Java MapReduce programs for HDInsight][hdinsight-develop-mapreduce]\n- [Use Azure Blob storage with HDInsight][hdinsight-storage]\n- [Administer HDInsight using Azure PowerShell][hdinsight-admin-powershell]\n- [Upload data to HDInsight][hdinsight-upload-data]\n- [Use Hive with HDInsight][hdinsight-use-hive]\n- [Use Pig with HDInsight][hdinsight-use-pig]\n\n[azure-purchase-options]: http://azure.microsoft.com/pricing/purchase-options/\n[azure-member-offers]: http://azure.microsoft.com/pricing/member-offers/\n[azure-free-trial]: http://azure.microsoft.com/pricing/free-trial/\n\n[hdinsight-develop-mapreduce]: hdinsight-develop-deploy-java-mapreduce.md\n[hdinsight-submit-jobs]: hdinsight-submit-hadoop-jobs-programmatically.md\n\n[hdinsight-get-started-emulator]: ../hdinsight-get-started-emulator.md\n[hdinsight-emulator-wasb]: ../hdinsight-get-started-emulator.md#blobstorage\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-storage]: ../hdinsight-hadoop-use-blob-storage.md\n[hdinsight-admin-powershell]: hdinsight-administer-use-powershell.md\n\n[hdinsight-use-hive]: hdinsight-use-hive.md\n[hdinsight-use-pig]: hdinsight-use-pig.md\n[hdinsight-ODBC]: hdinsight-connect-excel-hive-ODBC-driver.md\n[hdinsight-power-query]: hdinsight-connect-excel-power-query.md\n\n[powershell-PSCredential]: http://social.technet.microsoft.com/wiki/contents/articles/4546.working-with-passwords-secure-strings-and-credentials-in-windows-powershell.aspx\n[powershell-install]: ../powershell-install-configure.md\n\n[image-hdi-wordcountdiagram]: ./media/hdinsight-hadoop-develop-deploy-streaming-jobs/HDI.WordCountDiagram.gif \"MapReduce wordcount application flow\"\n"
+}
