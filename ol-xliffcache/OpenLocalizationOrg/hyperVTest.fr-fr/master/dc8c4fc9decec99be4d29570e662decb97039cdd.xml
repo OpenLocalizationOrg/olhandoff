@@ -1,0 +1,1421 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        90
+      ],
+      "content": "Tips for using Hadoop on Linux-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        108,
+        241
+      ],
+      "content": "Get implementation tips for using Linux-based HDInsight (Hadoop) clusters on a familiar Linux environment running in the Azure cloud."
+    },
+    {
+      "pos": [
+        558,
+        600
+      ],
+      "content": "Information about using HDInsight on Linux"
+    },
+    {
+      "pos": [
+        602,
+        871
+      ],
+      "content": "Linux-based Azure HDInsight clusters provide Hadoop on a familiar Linux environment, running in the Azure cloud. For most things, it should work exactly as any other Hadoop-on-Linux installation. This document calls out specific differences that you should be aware of.",
+      "nodes": [
+        {
+          "content": "Linux-based Azure HDInsight clusters provide Hadoop on a familiar Linux environment, running in the Azure cloud.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "For most things, it should work exactly as any other Hadoop-on-Linux installation.",
+          "pos": [
+            113,
+            195
+          ]
+        },
+        {
+          "content": "This document calls out specific differences that you should be aware of.",
+          "pos": [
+            196,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        876,
+        888
+      ],
+      "content": "Domain names"
+    },
+    {
+      "pos": [
+        890,
+        1090
+      ],
+      "content": "The fully qualified domain name (FQDN) to use when connecting to the cluster from the internet is <bpt id=\"p1\">**</bpt>&amp;lt;clustername&gt;.azurehdinsight.net<ept id=\"p1\">**</ept><ph id=\"ph2\"/> or (for SSH only) <bpt id=\"p2\">**</bpt>&amp;lt;clustername-ssh&gt;.azurehdinsight.net<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        1092,
+        1417
+      ],
+      "content": "Internally, each node in the cluster has a name that is assigned during cluster configuration. To find the cluster names, you can visit the <bpt id=\"p3\">__</bpt>Hosts<ept id=\"p3\">__</ept><ph id=\"ph3\"/> page on the Ambari Web UI, or use the following to return a list of hosts from the Ambari REST API using <bpt id=\"p4\">[</bpt>cURL<ept id=\"p4\">](http://curl.haxx.se/)</ept><ph id=\"ph4\"/> and <bpt id=\"p5\">[</bpt>jq<ept id=\"p5\">](https://stedolan.github.io/jq/)</ept>:",
+      "nodes": [
+        {
+          "content": "Internally, each node in the cluster has a name that is assigned during cluster configuration.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "To find the cluster names, you can visit the <bpt id=\"p3\">__</bpt>Hosts<ept id=\"p3\">__</ept><ph id=\"ph3\"/> page on the Ambari Web UI, or use the following to return a list of hosts from the Ambari REST API using <bpt id=\"p4\">[</bpt>cURL<ept id=\"p4\">](http://curl.haxx.se/)</ept><ph id=\"ph4\"/> and <bpt id=\"p5\">[</bpt>jq<ept id=\"p5\">](https://stedolan.github.io/jq/)</ept>:",
+          "pos": [
+            95,
+            467
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1557,
+        1829
+      ],
+      "content": "Replace <bpt id=\"p6\">__</bpt>PASSWORD<ept id=\"p6\">__</ept><ph id=\"ph5\"/> with the password of the admin account, and <bpt id=\"p7\">__</bpt>CLUSTERNAME<ept id=\"p7\">__</ept><ph id=\"ph6\"/> with the name of your cluster. This will return a JSON document that contains a list of the hosts in the cluster, then jq pulls out the <ph id=\"ph7\">`host_name`</ph><ph id=\"ph8\"/> element value for each host in the cluster.",
+      "nodes": [
+        {
+          "content": "Replace <bpt id=\"p6\">__</bpt>PASSWORD<ept id=\"p6\">__</ept><ph id=\"ph5\"/> with the password of the admin account, and <bpt id=\"p7\">__</bpt>CLUSTERNAME<ept id=\"p7\">__</ept><ph id=\"ph6\"/> with the name of your cluster.",
+          "pos": [
+            0,
+            215
+          ]
+        },
+        {
+          "content": "This will return a JSON document that contains a list of the hosts in the cluster, then jq pulls out the <ph id=\"ph7\">`host_name`</ph><ph id=\"ph8\"/> element value for each host in the cluster.",
+          "pos": [
+            216,
+            408
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1831,
+        2010
+      ],
+      "content": "If you need to find the name of the node for a specific service, you can query Ambari for that component. For example, to find the hosts for the HDFS name node, use the following.",
+      "nodes": [
+        {
+          "content": "If you need to find the name of the node for a specific service, you can query Ambari for that component.",
+          "pos": [
+            0,
+            105
+          ]
+        },
+        {
+          "content": "For example, to find the hosts for the HDFS name node, use the following.",
+          "pos": [
+            106,
+            179
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2192,
+        2308
+      ],
+      "content": "This returns a JSON document describing the service, and then jq pulls out only the <ph id=\"ph9\">`host_name`</ph><ph id=\"ph10\"/> value for the hosts."
+    },
+    {
+      "pos": [
+        2313,
+        2338
+      ],
+      "content": "Remote access to services"
+    },
+    {
+      "pos": [
+        2342,
+        2404
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>Ambari (web)<ept id=\"p8\">**</ept><ph id=\"ph11\"/> - https://&amp;lt;clustername&gt;.azurehdinsight.net"
+    },
+    {
+      "pos": [
+        2410,
+        2563
+      ],
+      "content": "Authenticate by using the cluster administrator user and password, and then log in to Ambari. This also uses the cluster administrator user and password.",
+      "nodes": [
+        {
+          "content": "Authenticate by using the cluster administrator user and password, and then log in to Ambari.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "This also uses the cluster administrator user and password.",
+          "pos": [
+            94,
+            153
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2569,
+        2661
+      ],
+      "content": "Authentication is plaintext - always use HTTPS to help ensure that the connection is secure."
+    },
+    {
+      "pos": [
+        2669,
+        3005
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.IMPORTANT]</ph><ph id=\"ph13\"/> While Ambari for your cluster is accessible directly over the Internet, some functionality relies on accessing nodes by the internal domain name used by the cluster. Since this is an internal domain name, and not public, you will receive \"server not found\" errors when trying to access some features over the Internet.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph12\">[AZURE.IMPORTANT]</ph><ph id=\"ph13\"/> While Ambari for your cluster is accessible directly over the Internet, some functionality relies on accessing nodes by the internal domain name used by the cluster.",
+          "pos": [
+            0,
+            217
+          ]
+        },
+        {
+          "content": "Since this is an internal domain name, and not public, you will receive \"server not found\" errors when trying to access some features over the Internet.",
+          "pos": [
+            218,
+            370
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3018,
+        3286
+      ],
+      "content": "To use the full functionality of the Ambari web UI, use an SSH tunnel to proxy web traffic to the cluster head node. See <bpt id=\"p9\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p9\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>",
+      "nodes": [
+        {
+          "content": "To use the full functionality of the Ambari web UI, use an SSH tunnel to proxy web traffic to the cluster head node.",
+          "pos": [
+            0,
+            116
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p9\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p9\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>",
+          "pos": [
+            117,
+            306
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3290,
+        3360
+      ],
+      "content": "<bpt id=\"p10\">**</bpt>Ambari (REST)<ept id=\"p10\">**</ept><ph id=\"ph14\"/> - https://&amp;lt;clustername&gt;.azurehdinsight.net/ambari"
+    },
+    {
+      "pos": [
+        3368,
+        3447
+      ],
+      "content": "<ph id=\"ph15\">[AZURE.NOTE]</ph><ph id=\"ph16\"/> Authenticate by using the cluster administrator user and password."
+    },
+    {
+      "pos": [
+        3460,
+        3552
+      ],
+      "content": "Authentication is plaintext - always use HTTPS to help ensure that the connection is secure."
+    },
+    {
+      "pos": [
+        3556,
+        3635
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>WebHCat (Templeton)<ept id=\"p11\">**</ept><ph id=\"ph17\"/> - https://&amp;lt;clustername&gt;.azurehdinsight.net/templeton"
+    },
+    {
+      "pos": [
+        3643,
+        3722
+      ],
+      "content": "<ph id=\"ph18\">[AZURE.NOTE]</ph><ph id=\"ph19\"/> Authenticate by using the cluster administrator user and password."
+    },
+    {
+      "pos": [
+        3735,
+        3827
+      ],
+      "content": "Authentication is plaintext - always use HTTPS to help ensure that the connection is secure."
+    },
+    {
+      "pos": [
+        3831,
+        4131
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>SSH<ept id=\"p12\">**</ept><ph id=\"ph20\"/> - &amp;lt;clustername&gt;-ssh.azurehdinsight.net on port 22 or 23. Port 22 is used to connect to head node 0, while 23 is used to connect to head node 1. For more information on the head nodes, see <bpt id=\"p13\">[</bpt>Availability and reliability of Hadoop clusters in HDInsight<ept id=\"p13\">](hdinsight-high-availability-linux.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p12\">**</bpt>SSH<ept id=\"p12\">**</ept><ph id=\"ph20\"/> - &amp;lt;clustername&gt;-ssh.azurehdinsight.net on port 22 or 23.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "Port 22 is used to connect to head node 0, while 23 is used to connect to head node 1.",
+          "pos": [
+            130,
+            216
+          ]
+        },
+        {
+          "content": "For more information on the head nodes, see <bpt id=\"p13\">[</bpt>Availability and reliability of Hadoop clusters in HDInsight<ept id=\"p13\">](hdinsight-high-availability-linux.md)</ept>.",
+          "pos": [
+            217,
+            402
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4139,
+        4315
+      ],
+      "content": "<ph id=\"ph21\">[AZURE.NOTE]</ph><ph id=\"ph22\"/> You can only access the cluster head nodes through SSH from a client machine. Once connected, you can then access the worker nodes by using SSH from the head node.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph21\">[AZURE.NOTE]</ph><ph id=\"ph22\"/> You can only access the cluster head nodes through SSH from a client machine.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "Once connected, you can then access the worker nodes by using SSH from the head node.",
+          "pos": [
+            125,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4320,
+        4334
+      ],
+      "content": "File locations"
+    },
+    {
+      "pos": [
+        4336,
+        4459
+      ],
+      "content": "Hadoop-related files can be found on the cluster nodes at <ph id=\"ph23\">`/usr/hdp`</ph>. This directory contains the following subdirectories:",
+      "nodes": [
+        {
+          "content": "Hadoop-related files can be found on the cluster nodes at <ph id=\"ph23\">`/usr/hdp`</ph>.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "This directory contains the following subdirectories:",
+          "pos": [
+            89,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4463,
+        4642
+      ],
+      "content": "<bpt id=\"p14\">__</bpt>2.2.4.9-1<ept id=\"p14\">__</ept>: This directory is named for the version of the Hortonworks Data Platform used by HDInsight, so the number on your cluster may be different than the one listed here."
+    },
+    {
+      "pos": [
+        4645,
+        4855
+      ],
+      "content": "<bpt id=\"p15\">__</bpt>current<ept id=\"p15\">__</ept>: This directory contains links to directories under the <bpt id=\"p16\">__</bpt>2.2.4.9-1<ept id=\"p16\">__</ept><ph id=\"ph24\"/> directory, and exists so that you don't have to type a version number (that might change,) every time you want to access a file."
+    },
+    {
+      "pos": [
+        4857,
+        4995
+      ],
+      "content": "Example data and JAR files can be found on Hadoop Distributed File System (HDFS) or Azure Blob storage at '/example' or 'wasb:///example'."
+    },
+    {
+      "pos": [
+        5000,
+        5052
+      ],
+      "content": "HDFS, Azure Blob storage, and storage best practices"
+    },
+    {
+      "pos": [
+        5054,
+        5268
+      ],
+      "content": "In most Hadoop distributions, HDFS is backed by local storage on the machines in the cluster. While this is efficient, it can be costly for a cloud-based solution where you are charged hourly for compute resources.",
+      "nodes": [
+        {
+          "content": "In most Hadoop distributions, HDFS is backed by local storage on the machines in the cluster.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "While this is efficient, it can be costly for a cloud-based solution where you are charged hourly for compute resources.",
+          "pos": [
+            94,
+            214
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5270,
+        5364
+      ],
+      "content": "HDInsight uses Azure Blob storage as the default store, which provides the following benefits:"
+    },
+    {
+      "pos": [
+        5368,
+        5391
+      ],
+      "content": "Cheap long-term storage"
+    },
+    {
+      "pos": [
+        5395,
+        5521
+      ],
+      "content": "Accessibility from external services such as websites, file upload/download utilities, various language SDKs, and web browsers"
+    },
+    {
+      "pos": [
+        5523,
+        5740
+      ],
+      "content": "Since it is the default store for HDInsight, you normally don't have to do anything to use it. For example, the following command will list files in the <bpt id=\"p17\">**</bpt>/example/data<ept id=\"p17\">**</ept><ph id=\"ph25\"/> folder, which is stored on Azure Blob storage:",
+      "nodes": [
+        {
+          "content": "Since it is the default store for HDInsight, you normally don't have to do anything to use it.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "For example, the following command will list files in the <bpt id=\"p17\">**</bpt>/example/data<ept id=\"p17\">**</ept><ph id=\"ph25\"/> folder, which is stored on Azure Blob storage:",
+          "pos": [
+            95,
+            272
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5775,
+        5904
+      ],
+      "content": "Some commands may require you to specify that you are using Blob storage. For these, you can prefix the command with <bpt id=\"p18\">**</bpt>WASB://<ept id=\"p18\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Some commands may require you to specify that you are using Blob storage.",
+          "pos": [
+            0,
+            73
+          ]
+        },
+        {
+          "content": "For these, you can prefix the command with <bpt id=\"p18\">**</bpt>WASB://<ept id=\"p18\">**</ept>.",
+          "pos": [
+            74,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5906,
+        6280
+      ],
+      "content": "HDInsight also allows you to associate multiple Blob storage accounts with a cluster. To access data on a non-default Blob storage account, you can use the format <bpt id=\"p19\">**</bpt>WASB://&amp;lt;container-name&gt;@&amp;lt;account-name&gt;.blob.core.windows.net/<ept id=\"p19\">**</ept>. For example, the following will list the contents of the <bpt id=\"p20\">**</bpt>/example/data<ept id=\"p20\">**</ept><ph id=\"ph26\"/> directory for the specified container and Blob storage account:",
+      "nodes": [
+        {
+          "content": "HDInsight also allows you to associate multiple Blob storage accounts with a cluster.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "To access data on a non-default Blob storage account, you can use the format <bpt id=\"p19\">**</bpt>WASB://&amp;lt;container-name&gt;@&amp;lt;account-name&gt;.blob.core.windows.net/<ept id=\"p19\">**</ept>.",
+          "pos": [
+            86,
+            289
+          ]
+        },
+        {
+          "content": "For example, the following will list the contents of the <bpt id=\"p20\">**</bpt>/example/data<ept id=\"p20\">**</ept><ph id=\"ph26\"/> directory for the specified container and Blob storage account:",
+          "pos": [
+            290,
+            483
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6369,
+        6408
+      ],
+      "content": "What Blob storage is the cluster using?"
+    },
+    {
+      "pos": [
+        6410,
+        6652
+      ],
+      "content": "During cluster creation, you selected to either use an existing Azure Storage account and container, or create a new one. Then, you probably forgot about it. You can find the default storage account and container by using the Ambari REST API.",
+      "nodes": [
+        {
+          "content": "During cluster creation, you selected to either use an existing Azure Storage account and container, or create a new one.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "Then, you probably forgot about it.",
+          "pos": [
+            122,
+            157
+          ]
+        },
+        {
+          "content": "You can find the default storage account and container by using the Ambari REST API.",
+          "pos": [
+            158,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6657,
+        6795
+      ],
+      "content": "Use the following command to retrieve HDFS configuration information using curl, and filter it using <bpt id=\"p21\">[</bpt>jq<ept id=\"p21\">](https://stedolan.github.io/jq/)</ept>:"
+    },
+    {
+      "pos": [
+        7073,
+        7369
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> This will return the first configuration applied to the server (<ph id=\"ph29\">`service_config_version=1`</ph>,) which will contain this information. If you are retrieving a value that has been modified after cluster creation, you may need to list the configuration versions and retrieve the latest one.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> This will return the first configuration applied to the server (<ph id=\"ph29\">`service_config_version=1`</ph>,) which will contain this information.",
+          "pos": [
+            0,
+            195
+          ]
+        },
+        {
+          "content": "If you are retrieving a value that has been modified after cluster creation, you may need to list the configuration versions and retrieve the latest one.",
+          "pos": [
+            196,
+            349
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7375,
+        7525
+      ],
+      "content": "This will return a value similar to the following, where <bpt id=\"p22\">__</bpt>CONTAINER<ept id=\"p22\">__</ept><ph id=\"ph30\"/> is the default container and <bpt id=\"p23\">__</bpt>ACCOUNTNAME<ept id=\"p23\">__</ept><ph id=\"ph31\"/> is the Azure Storage Account name:"
+    },
+    {
+      "pos": [
+        7590,
+        7786
+      ],
+      "content": "Get the resource group for the Storage Account, use the <bpt id=\"p24\">[</bpt>Azure CLI<ept id=\"p24\">](../xplat-cli-install.md)</ept>. In the following command, replace <bpt id=\"p25\">__</bpt>ACCOUNTNAME<ept id=\"p25\">__</ept><ph id=\"ph32\"/> with the Storage Account name retrieved from Ambari:",
+      "nodes": [
+        {
+          "content": "Get the resource group for the Storage Account, use the <bpt id=\"p24\">[</bpt>Azure CLI<ept id=\"p24\">](../xplat-cli-install.md)</ept>.",
+          "pos": [
+            0,
+            133
+          ]
+        },
+        {
+          "content": "In the following command, replace <bpt id=\"p25\">__</bpt>ACCOUNTNAME<ept id=\"p25\">__</ept><ph id=\"ph32\"/> with the Storage Account name retrieved from Ambari:",
+          "pos": [
+            134,
+            291
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7895,
+        7952
+      ],
+      "content": "This will return the resource group name for the account."
+    },
+    {
+      "pos": [
+        7964,
+        8182
+      ],
+      "content": "<ph id=\"ph33\">[AZURE.NOTE]</ph><ph id=\"ph34\"/> If nothing is returned from this command, you may need to change the Azure CLI to Azure Resource Manager mode and run the command again. To switch to Azure Resource Manager mode, use the following command.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph33\">[AZURE.NOTE]</ph><ph id=\"ph34\"/> If nothing is returned from this command, you may need to change the Azure CLI to Azure Resource Manager mode and run the command again.",
+          "pos": [
+            0,
+            183
+          ]
+        },
+        {
+          "content": "To switch to Azure Resource Manager mode, use the following command.",
+          "pos": [
+            184,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8227,
+        8388
+      ],
+      "content": "Get the key for the Storage account. Replace <bpt id=\"p26\">__</bpt>GROUPNAME<ept id=\"p26\">__</ept><ph id=\"ph36\"/> with the Resource Group from the previous step. Replace <bpt id=\"p27\">__</bpt>ACCOUNTNAME<ept id=\"p27\">__</ept><ph id=\"ph37\"/> with the Storage Account name:",
+      "nodes": [
+        {
+          "content": "Get the key for the Storage account.",
+          "pos": [
+            0,
+            36
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p26\">__</bpt>GROUPNAME<ept id=\"p26\">__</ept><ph id=\"ph36\"/> with the Resource Group from the previous step.",
+          "pos": [
+            37,
+            161
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p27\">__</bpt>ACCOUNTNAME<ept id=\"p27\">__</ept><ph id=\"ph37\"/> with the Storage Account name:",
+          "pos": [
+            162,
+            271
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8499,
+        8548
+      ],
+      "content": "This will return the primary key for the account."
+    },
+    {
+      "pos": [
+        8550,
+        8615
+      ],
+      "content": "You can also find the storage information using the Azure Portal:"
+    },
+    {
+      "pos": [
+        8620,
+        8700
+      ],
+      "content": "In the <bpt id=\"p28\">[</bpt>Azure Portal<ept id=\"p28\">](https://portal.azure.com/)</ept>, select your HDInsight cluster."
+    },
+    {
+      "pos": [
+        8705,
+        8762
+      ],
+      "content": "From the <bpt id=\"p29\">__</bpt>Essentials<ept id=\"p29\">__</ept><ph id=\"ph38\"/> section, select <bpt id=\"p30\">__</bpt>All settings<ept id=\"p30\">__</ept>."
+    },
+    {
+      "pos": [
+        8767,
+        8816
+      ],
+      "content": "From <bpt id=\"p31\">__</bpt>Settings<ept id=\"p31\">__</ept>, select <bpt id=\"p32\">__</bpt>Azure Storage Keys<ept id=\"p32\">__</ept>."
+    },
+    {
+      "pos": [
+        8821,
+        8949
+      ],
+      "content": "From <bpt id=\"p33\">__</bpt>Azure Storage Keys<ept id=\"p33\">__</ept>, select one of the storage accounts listed. This will display information about the storage account.",
+      "nodes": [
+        {
+          "content": "From <bpt id=\"p33\">__</bpt>Azure Storage Keys<ept id=\"p33\">__</ept>, select one of the storage accounts listed.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "This will display information about the storage account.",
+          "pos": [
+            112,
+            168
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8954,
+        9023
+      ],
+      "content": "Select the key icon. This will display keys for this storage account.",
+      "nodes": [
+        {
+          "content": "Select the key icon.",
+          "pos": [
+            0,
+            20
+          ]
+        },
+        {
+          "content": "This will display keys for this storage account.",
+          "pos": [
+            21,
+            69
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9029,
+        9058
+      ],
+      "content": "How do I access Blob storage?"
+    },
+    {
+      "pos": [
+        9060,
+        9160
+      ],
+      "content": "Other than through the Hadoop command from the cluster, there are a variety of ways to access blobs:"
+    },
+    {
+      "pos": [
+        9164,
+        9405
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p34\">](../xplat-cli-install.md)</ept>: Command-Line interface commands for working with Azure. After installing, use the <ph id=\"ph39\">`azure storage`</ph><ph id=\"ph40\"/> command for help on using storage, or <ph id=\"ph41\">`azure blob`</ph><ph id=\"ph42\"/> for blob-specific commands.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p34\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p34\">](../xplat-cli-install.md)</ept>: Command-Line interface commands for working with Azure.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "After installing, use the <ph id=\"ph39\">`azure storage`</ph><ph id=\"ph40\"/> command for help on using storage, or <ph id=\"ph41\">`azure blob`</ph><ph id=\"ph42\"/> for blob-specific commands.",
+          "pos": [
+            161,
+            349
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9409,
+        9553
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>blobxfer.py<ept id=\"p35\">](https://github.com/Azure/azure-batch-samples/tree/master/Python/Storage)</ept>: A python script for working with blobs in Azure Storage."
+    },
+    {
+      "pos": [
+        9557,
+        9575
+      ],
+      "content": "A variety of SDKs:"
+    },
+    {
+      "pos": [
+        9583,
+        9634
+      ],
+      "content": "<bpt id=\"p36\">[</bpt>Java<ept id=\"p36\">](https://github.com/Azure/azure-sdk-for-java)</ept>"
+    },
+    {
+      "pos": [
+        9642,
+        9696
+      ],
+      "content": "<bpt id=\"p37\">[</bpt>Node.js<ept id=\"p37\">](https://github.com/Azure/azure-sdk-for-node)</ept>"
+    },
+    {
+      "pos": [
+        9704,
+        9753
+      ],
+      "content": "<bpt id=\"p38\">[</bpt>PHP<ept id=\"p38\">](https://github.com/Azure/azure-sdk-for-php)</ept>"
+    },
+    {
+      "pos": [
+        9761,
+        9816
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Python<ept id=\"p39\">](https://github.com/Azure/azure-sdk-for-python)</ept>"
+    },
+    {
+      "pos": [
+        9824,
+        9875
+      ],
+      "content": "<bpt id=\"p40\">[</bpt>Ruby<ept id=\"p40\">](https://github.com/Azure/azure-sdk-for-ruby)</ept>"
+    },
+    {
+      "pos": [
+        9883,
+        9933
+      ],
+      "content": "<bpt id=\"p41\">[</bpt>.NET<ept id=\"p41\">](https://github.com/Azure/azure-sdk-for-net)</ept>"
+    },
+    {
+      "pos": [
+        9937,
+        10011
+      ],
+      "content": "<bpt id=\"p42\">[</bpt>Storage REST API<ept id=\"p42\">](https://msdn.microsoft.com/library/azure/dd135733.aspx)</ept>"
+    },
+    {
+      "pos": [
+        10013,
+        10015
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        10037,
+        10057
+      ],
+      "content": "Scaling your cluster"
+    },
+    {
+      "pos": [
+        10059,
+        10237
+      ],
+      "content": "The cluster scaling feature allows you to change the number of data nodes used by a cluster that is running in Azure HDInsight without having to delete and re-create the cluster."
+    },
+    {
+      "pos": [
+        10239,
+        10329
+      ],
+      "content": "You can perform scaling operations while other jobs or processes are running on a cluster."
+    },
+    {
+      "pos": [
+        10331,
+        10394
+      ],
+      "content": "The different cluster types are affected by scaling as follows:"
+    },
+    {
+      "pos": [
+        10398,
+        10661
+      ],
+      "content": "<bpt id=\"p43\">__</bpt>Hadoop<ept id=\"p43\">__</ept>: When scaling down the number of nodes in a cluster, some of the services in the cluster are restarted. This can cause jobs running or pending to fail at the completion of the scaling operation. You can resubmit the jobs once the operation is complete.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p43\">__</bpt>Hadoop<ept id=\"p43\">__</ept>: When scaling down the number of nodes in a cluster, some of the services in the cluster are restarted.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "This can cause jobs running or pending to fail at the completion of the scaling operation.",
+          "pos": [
+            155,
+            245
+          ]
+        },
+        {
+          "content": "You can resubmit the jobs once the operation is complete.",
+          "pos": [
+            246,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10665,
+        10845
+      ],
+      "content": "<bpt id=\"p44\">__</bpt>HBase<ept id=\"p44\">__</ept>: Regional servers are automatically balanced within a few minutes after completion of the scaling operation. To manually balance regional servers,use the following steps:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p44\">__</bpt>HBase<ept id=\"p44\">__</ept>: Regional servers are automatically balanced within a few minutes after completion of the scaling operation.",
+          "pos": [
+            0,
+            158
+          ]
+        },
+        {
+          "content": "To manually balance regional servers,use the following steps:",
+          "pos": [
+            159,
+            220
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10854,
+        10983
+      ],
+      "content": "Connect to the HDInsight cluster using SSH. For more information on using SSH with HDInsight, see one of the following documents:",
+      "nodes": [
+        {
+          "content": "Connect to the HDInsight cluster using SSH.",
+          "pos": [
+            0,
+            43
+          ]
+        },
+        {
+          "content": "For more information on using SSH with HDInsight, see one of the following documents:",
+          "pos": [
+            44,
+            129
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10995,
+        11090
+      ],
+      "content": "<bpt id=\"p45\">[</bpt>Use SSH with HDInsight from Linux, Unix, and Mac OS X<ept id=\"p45\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        11102,
+        11182
+      ],
+      "content": "<bpt id=\"p46\">[</bpt>Use SSH with HDInsight from Windows<ept id=\"p46\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        11191,
+        11234
+      ],
+      "content": "Use the following to start the HBase shell:"
+    },
+    {
+      "pos": [
+        11268,
+        11360
+      ],
+      "content": "Once the HBase shell has loaded, use the following to manually balance the regional servers:"
+    },
+    {
+      "pos": [
+        11386,
+        11666
+      ],
+      "content": "<bpt id=\"p47\">__</bpt>Storm<ept id=\"p47\">__</ept>: You should rebalance any running Storm topologies after a scaling operation has been performed. This allows the topology to readjust parallelism settings based on the new number of nodes in the cluster. To rebalance running topologies, use one of the following options:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p47\">__</bpt>Storm<ept id=\"p47\">__</ept>: You should rebalance any running Storm topologies after a scaling operation has been performed.",
+          "pos": [
+            0,
+            146
+          ]
+        },
+        {
+          "content": "This allows the topology to readjust parallelism settings based on the new number of nodes in the cluster.",
+          "pos": [
+            147,
+            253
+          ]
+        },
+        {
+          "content": "To rebalance running topologies, use one of the following options:",
+          "pos": [
+            254,
+            320
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11674,
+        11759
+      ],
+      "content": "<bpt id=\"p48\">__</bpt>SSH<ept id=\"p48\">__</ept>: Connect to the server and use the following command to rebalance a topology:"
+    },
+    {
+      "pos": [
+        11811,
+        12137
+      ],
+      "content": "You can also specify parameters to override the parallelism hints originally provided by the topology. For example, <ph id=\"ph43\">`storm rebalance mytopology -n 5 -e blue-spout=3 -e yellow-bolt=10`</ph><ph id=\"ph44\"/> will reconfigure the topology to 5 worker processes, 3 executors for the blue-spout component, and 10 executors for the yellow-bolt component.",
+      "nodes": [
+        {
+          "content": "You can also specify parameters to override the parallelism hints originally provided by the topology.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph43\">`storm rebalance mytopology -n 5 -e blue-spout=3 -e yellow-bolt=10`</ph><ph id=\"ph44\"/> will reconfigure the topology to 5 worker processes, 3 executors for the blue-spout component, and 10 executors for the yellow-bolt component.",
+          "pos": [
+            103,
+            360
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12145,
+        12226
+      ],
+      "content": "<bpt id=\"p49\">__</bpt>Storm UI<ept id=\"p49\">__</ept>: Use the following steps to rebalance a topology using the Storm UI."
+    },
+    {
+      "pos": [
+        12239,
+        12490
+      ],
+      "content": "Open <bpt id=\"p50\">__</bpt>https://CLUSTERNAME.azurehdinsight.net/stormui<ept id=\"p50\">__</ept><ph id=\"ph45\"/> in your web browser, where CLUSTERNAME is the name of your Storm cluster. If prompted, enter the HDInsight cluster administrator (admin) name and password you specified when creating the cluster.",
+      "nodes": [
+        {
+          "content": "Open <bpt id=\"p50\">__</bpt>https://CLUSTERNAME.azurehdinsight.net/stormui<ept id=\"p50\">__</ept><ph id=\"ph45\"/> in your web browser, where CLUSTERNAME is the name of your Storm cluster.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "If prompted, enter the HDInsight cluster administrator (admin) name and password you specified when creating the cluster.",
+          "pos": [
+            185,
+            306
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12503,
+        12644
+      ],
+      "content": "Select the topology you wish to rebalance, then select the <bpt id=\"p51\">__</bpt>Rebalance<ept id=\"p51\">__</ept><ph id=\"ph46\"/> button. Enter the delay before the rebalance operation is performed.",
+      "nodes": [
+        {
+          "content": "Select the topology you wish to rebalance, then select the <bpt id=\"p51\">__</bpt>Rebalance<ept id=\"p51\">__</ept><ph id=\"ph46\"/> button.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "Enter the delay before the rebalance operation is performed.",
+          "pos": [
+            136,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12646,
+        12710
+      ],
+      "content": "For specific information on scaling your HDInsight cluster, see:"
+    },
+    {
+      "pos": [
+        12714,
+        12827
+      ],
+      "content": "<bpt id=\"p52\">[</bpt>Manage Hadoop clusters in HDInsight by using the Azure Portal<ept id=\"p52\">](hdinsight-administer-use-portal-linux.md#scaling)</ept>"
+    },
+    {
+      "pos": [
+        12831,
+        12944
+      ],
+      "content": "<bpt id=\"p53\">[</bpt>Manage Hadoop clusters in HDinsight by using Azure PowerShell<ept id=\"p53\">](hdinsight-administer-use-command-line.md#scaling)</ept>"
+    },
+    {
+      "pos": [
+        12949,
+        12998
+      ],
+      "content": "How do I install Hue (or other Hadoop component)?"
+    },
+    {
+      "pos": [
+        13000,
+        13367
+      ],
+      "content": "HDInsight is a managed service, which means that nodes in a cluster may be destroyed and reprovisioned automatically by Azure if a problem is detected. Because of this, it is not recommended to manually install things directly on the cluster nodes. Instead, use <bpt id=\"p54\">[</bpt>HDInsight Script Actions<ept id=\"p54\">](hdinsight-hadoop-customize-cluster.md)</ept><ph id=\"ph47\"/> when you need to install the following:",
+      "nodes": [
+        {
+          "content": "HDInsight is a managed service, which means that nodes in a cluster may be destroyed and reprovisioned automatically by Azure if a problem is detected.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "Because of this, it is not recommended to manually install things directly on the cluster nodes.",
+          "pos": [
+            152,
+            248
+          ]
+        },
+        {
+          "content": "Instead, use <bpt id=\"p54\">[</bpt>HDInsight Script Actions<ept id=\"p54\">](hdinsight-hadoop-customize-cluster.md)</ept><ph id=\"ph47\"/> when you need to install the following:",
+          "pos": [
+            249,
+            422
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13371,
+        13414
+      ],
+      "content": "A service or web site such as Spark or Hue."
+    },
+    {
+      "pos": [
+        13417,
+        13614
+      ],
+      "content": "A component that requires configuration changes on multiple nodes in the cluster. For example, a required environment variable, creating of a logging directory, or creation of a configuration file.",
+      "nodes": [
+        {
+          "content": "A component that requires configuration changes on multiple nodes in the cluster.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "For example, a required environment variable, creating of a logging directory, or creation of a configuration file.",
+          "pos": [
+            82,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13616,
+        13838
+      ],
+      "content": "Script Actions are Bash scripts that are ran during cluster provisioning, and can be used to install and configure additional components on the cluster. Example scripts are provided for installing the following components:",
+      "nodes": [
+        {
+          "content": "Script Actions are Bash scripts that are ran during cluster provisioning, and can be used to install and configure additional components on the cluster.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "Example scripts are provided for installing the following components:",
+          "pos": [
+            153,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13842,
+        13878
+      ],
+      "content": "<bpt id=\"p55\">[</bpt>Hue<ept id=\"p55\">](hdinsight-hadoop-hue-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        13881,
+        13931
+      ],
+      "content": "<bpt id=\"p56\">[</bpt>Giraph<ept id=\"p56\">](hdinsight-hadoop-giraph-install-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        13934,
+        13974
+      ],
+      "content": "<bpt id=\"p57\">[</bpt>R<ept id=\"p57\">](hdinsight-hadoop-r-scripts-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        13977,
+        14023
+      ],
+      "content": "<bpt id=\"p58\">[</bpt>Solr<ept id=\"p58\">](hdinsight-hadoop-solr-install-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        14026,
+        14074
+      ],
+      "content": "<bpt id=\"p59\">[</bpt>Spark<ept id=\"p59\">](hdinsight-hadoop-spark-install-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        14076,
+        14220
+      ],
+      "content": "For information on developing your own Script Actions, see <bpt id=\"p60\">[</bpt>Script Action development with HDInsight<ept id=\"p60\">](hdinsight-hadoop-script-actions-linux.md)</ept>."
+    },
+    {
+      "pos": [
+        14225,
+        14234
+      ],
+      "content": "Jar files"
+    },
+    {
+      "pos": [
+        14236,
+        14664
+      ],
+      "content": "Some Hadoop technologies are provided in self-contained jar files that are contain functions used as part of a MapReduce job, or from inside Pig or Hive. While these can be installed using Script Actions, they often don't require any setup and can just be uploaded to the cluster after provisioning and used directly. If you want to makle sure the component survives reimaging of the cluster, you can store the jar file in WASB.",
+      "nodes": [
+        {
+          "content": "Some Hadoop technologies are provided in self-contained jar files that are contain functions used as part of a MapReduce job, or from inside Pig or Hive.",
+          "pos": [
+            0,
+            153
+          ]
+        },
+        {
+          "content": "While these can be installed using Script Actions, they often don't require any setup and can just be uploaded to the cluster after provisioning and used directly.",
+          "pos": [
+            154,
+            317
+          ]
+        },
+        {
+          "content": "If you want to makle sure the component survives reimaging of the cluster, you can store the jar file in WASB.",
+          "pos": [
+            318,
+            428
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14666,
+        14924
+      ],
+      "content": "For example, if you want to use the latest version of <bpt id=\"p61\">[</bpt>DataFu<ept id=\"p61\">](http://datafu.incubator.apache.org/)</ept>, you can download a jar containing the project and upload it to the HDInsight cluster. Then follow the DataFu documentation on how to use it from Pig or Hive.",
+      "nodes": [
+        {
+          "content": "For example, if you want to use the latest version of <bpt id=\"p61\">[</bpt>DataFu<ept id=\"p61\">](http://datafu.incubator.apache.org/)</ept>, you can download a jar containing the project and upload it to the HDInsight cluster.",
+          "pos": [
+            0,
+            226
+          ]
+        },
+        {
+          "content": "Then follow the DataFu documentation on how to use it from Pig or Hive.",
+          "pos": [
+            227,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14928,
+        15147
+      ],
+      "content": "<ph id=\"ph48\">[AZURE.IMPORTANT]</ph><ph id=\"ph49\"/> Some components that are standalone jar files are provided with HDInsight, but are not in the path. If you are looking for a specific component, you can use the follow to search for it on your cluster:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph48\">[AZURE.IMPORTANT]</ph><ph id=\"ph49\"/> Some components that are standalone jar files are provided with HDInsight, but are not in the path.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "If you are looking for a specific component, you can use the follow to search for it on your cluster:",
+          "pos": [
+            152,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15207,
+        15259
+      ],
+      "content": "This will return the path of any matching jar files."
+    },
+    {
+      "pos": [
+        15261,
+        15476
+      ],
+      "content": "If the cluster already provides a version of a component as a standalone jar file, but you want to use a different version, you can upload a new version of the component to the cluster and try using it in your jobs."
+    },
+    {
+      "pos": [
+        15480,
+        15653
+      ],
+      "content": "<ph id=\"ph51\">[AZURE.WARNING]</ph><ph id=\"ph52\"/> Components provided with the HDInsight cluster are fully supported and Microsoft Support will help to isolate and resolve issues related to these components."
+    },
+    {
+      "pos": [
+        15658,
+        16323
+      ],
+      "content": "Custom components receive commercially reasonable support to help you to further troubleshoot the issue. This might result in resolving the issue OR asking you to engage available channels for the open source technologies where deep expertise for that technology is found. For example, there are many community sites that can be used, like: <bpt id=\"p62\">[</bpt>MSDN forum for HDInsight<ept id=\"p62\">](https://social.msdn.microsoft.com/Forums/azure/en-US/home?forum=hdinsight)</ept>, <bpt id=\"p63\">[</bpt>http://stackoverflow.com<ept id=\"p63\">](http://stackoverflow.com)</ept>. Also Apache projects have project sites on <bpt id=\"p64\">[</bpt>http://apache.org<ept id=\"p64\">](http://apache.org)</ept>, for example: <bpt id=\"p65\">[</bpt>Hadoop<ept id=\"p65\">](http://hadoop.apache.org/)</ept>, <bpt id=\"p66\">[</bpt>Spark<ept id=\"p66\">](http://spark.apache.org/)</ept>.",
+      "nodes": [
+        {
+          "content": "Custom components receive commercially reasonable support to help you to further troubleshoot the issue.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "This might result in resolving the issue OR asking you to engage available channels for the open source technologies where deep expertise for that technology is found.",
+          "pos": [
+            105,
+            272
+          ]
+        },
+        {
+          "content": "For example, there are many community sites that can be used, like: <bpt id=\"p62\">[</bpt>MSDN forum for HDInsight<ept id=\"p62\">](https://social.msdn.microsoft.com/Forums/azure/en-US/home?forum=hdinsight)</ept>, <bpt id=\"p63\">[</bpt>http://stackoverflow.com<ept id=\"p63\">](http://stackoverflow.com)</ept>.",
+          "pos": [
+            273,
+            577
+          ]
+        },
+        {
+          "content": "Also Apache projects have project sites on <bpt id=\"p64\">[</bpt>http://apache.org<ept id=\"p64\">](http://apache.org)</ept>, for example: <bpt id=\"p65\">[</bpt>Hadoop<ept id=\"p65\">](http://hadoop.apache.org/)</ept>, <bpt id=\"p66\">[</bpt>Spark<ept id=\"p66\">](http://spark.apache.org/)</ept>.",
+          "pos": [
+            578,
+            865
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16328,
+        16338
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        16342,
+        16390
+      ],
+      "content": "<bpt id=\"p67\">[</bpt>Use Hive with HDInsight<ept id=\"p67\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        16393,
+        16439
+      ],
+      "content": "<bpt id=\"p68\">[</bpt>Use Pig with HDInsight<ept id=\"p68\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        16442,
+        16505
+      ],
+      "content": "<bpt id=\"p69\">[</bpt>Use MapReduce jobs with HDInsight<ept id=\"p69\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Tips for using Hadoop on Linux-based HDInsight | Microsoft Azure\"\n   description=\"Get implementation tips for using Linux-based HDInsight (Hadoop) clusters on a familiar Linux environment running in the Azure cloud.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n   tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"01/12/2016\"\n   ms.author=\"larryfr\"/>\n\n# Information about using HDInsight on Linux\n\nLinux-based Azure HDInsight clusters provide Hadoop on a familiar Linux environment, running in the Azure cloud. For most things, it should work exactly as any other Hadoop-on-Linux installation. This document calls out specific differences that you should be aware of.\n\n## Domain names\n\nThe fully qualified domain name (FQDN) to use when connecting to the cluster from the internet is **&lt;clustername>.azurehdinsight.net** or (for SSH only) **&lt;clustername-ssh>.azurehdinsight.net**.\n\nInternally, each node in the cluster has a name that is assigned during cluster configuration. To find the cluster names, you can visit the __Hosts__ page on the Ambari Web UI, or use the following to return a list of hosts from the Ambari REST API using [cURL](http://curl.haxx.se/) and [jq](https://stedolan.github.io/jq/):\n\n    curl -u admin:PASSWORD -G \"https://CLUSTERNAME.azurehdinsight.net/api/v1/clusters/CLUSTERNAME/hosts\" | jq '.items[].Hosts.host_name'\n\nReplace __PASSWORD__ with the password of the admin account, and __CLUSTERNAME__ with the name of your cluster. This will return a JSON document that contains a list of the hosts in the cluster, then jq pulls out the `host_name` element value for each host in the cluster.\n\nIf you need to find the name of the node for a specific service, you can query Ambari for that component. For example, to find the hosts for the HDFS name node, use the following.\n\n    curl -u admin:PASSWORD -G \"https://CLUSTERNAME.azurehdinsight.net/api/v1/clusters/CLUSTERNAME/services/HDFS/components/NAMENODE\" | jq '.host_components[].HostRoles.host_name'\n\nThis returns a JSON document describing the service, and then jq pulls out only the `host_name` value for the hosts.\n\n## Remote access to services\n\n* **Ambari (web)** - https://&lt;clustername>.azurehdinsight.net\n\n    Authenticate by using the cluster administrator user and password, and then log in to Ambari. This also uses the cluster administrator user and password.\n\n    Authentication is plaintext - always use HTTPS to help ensure that the connection is secure.\n\n    > [AZURE.IMPORTANT] While Ambari for your cluster is accessible directly over the Internet, some functionality relies on accessing nodes by the internal domain name used by the cluster. Since this is an internal domain name, and not public, you will receive \"server not found\" errors when trying to access some features over the Internet.\n    >\n    > To use the full functionality of the Ambari web UI, use an SSH tunnel to proxy web traffic to the cluster head node. See [Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's](hdinsight-linux-ambari-ssh-tunnel.md)\n\n* **Ambari (REST)** - https://&lt;clustername>.azurehdinsight.net/ambari\n\n    > [AZURE.NOTE] Authenticate by using the cluster administrator user and password.\n    >\n    > Authentication is plaintext - always use HTTPS to help ensure that the connection is secure.\n\n* **WebHCat (Templeton)** - https://&lt;clustername>.azurehdinsight.net/templeton\n\n    > [AZURE.NOTE] Authenticate by using the cluster administrator user and password.\n    >\n    > Authentication is plaintext - always use HTTPS to help ensure that the connection is secure.\n\n* **SSH** - &lt;clustername>-ssh.azurehdinsight.net on port 22 or 23. Port 22 is used to connect to head node 0, while 23 is used to connect to head node 1. For more information on the head nodes, see [Availability and reliability of Hadoop clusters in HDInsight](hdinsight-high-availability-linux.md).\n\n    > [AZURE.NOTE] You can only access the cluster head nodes through SSH from a client machine. Once connected, you can then access the worker nodes by using SSH from the head node.\n\n## File locations\n\nHadoop-related files can be found on the cluster nodes at `/usr/hdp`. This directory contains the following subdirectories:\n\n* __2.2.4.9-1__: This directory is named for the version of the Hortonworks Data Platform used by HDInsight, so the number on your cluster may be different than the one listed here.\n* __current__: This directory contains links to directories under the __2.2.4.9-1__ directory, and exists so that you don't have to type a version number (that might change,) every time you want to access a file.\n\nExample data and JAR files can be found on Hadoop Distributed File System (HDFS) or Azure Blob storage at '/example' or 'wasb:///example'.\n\n## HDFS, Azure Blob storage, and storage best practices\n\nIn most Hadoop distributions, HDFS is backed by local storage on the machines in the cluster. While this is efficient, it can be costly for a cloud-based solution where you are charged hourly for compute resources.\n\nHDInsight uses Azure Blob storage as the default store, which provides the following benefits:\n\n* Cheap long-term storage\n\n* Accessibility from external services such as websites, file upload/download utilities, various language SDKs, and web browsers\n\nSince it is the default store for HDInsight, you normally don't have to do anything to use it. For example, the following command will list files in the **/example/data** folder, which is stored on Azure Blob storage:\n\n    hadoop fs -ls /example/data\n\nSome commands may require you to specify that you are using Blob storage. For these, you can prefix the command with **WASB://**.\n\nHDInsight also allows you to associate multiple Blob storage accounts with a cluster. To access data on a non-default Blob storage account, you can use the format **WASB://&lt;container-name>@&lt;account-name>.blob.core.windows.net/**. For example, the following will list the contents of the **/example/data** directory for the specified container and Blob storage account:\n\n    hadoop fs -ls wasb://mycontainer@mystorage.blob.core.windows.net/example/data\n\n### What Blob storage is the cluster using?\n\nDuring cluster creation, you selected to either use an existing Azure Storage account and container, or create a new one. Then, you probably forgot about it. You can find the default storage account and container by using the Ambari REST API.\n\n1. Use the following command to retrieve HDFS configuration information using curl, and filter it using [jq](https://stedolan.github.io/jq/):\n\n        curl -u admin:PASSWORD -G \"https://CLUSTERNAME.azurehdinsight.net/api/v1/clusters/CLUSTERNAME/configurations/service_config_versions?service_name=HDFS&service_config_version=1\" | jq '.items[].configurations[].properties[\"fs.defaultFS\"] | select(. != null)'\n    \n    > [AZURE.NOTE] This will return the first configuration applied to the server (`service_config_version=1`,) which will contain this information. If you are retrieving a value that has been modified after cluster creation, you may need to list the configuration versions and retrieve the latest one.\n\n    This will return a value similar to the following, where __CONTAINER__ is the default container and __ACCOUNTNAME__ is the Azure Storage Account name:\n\n        wasb://CONTAINER@ACCOUNTNAME.blob.core.windows.net\n\n1. Get the resource group for the Storage Account, use the [Azure CLI](../xplat-cli-install.md). In the following command, replace __ACCOUNTNAME__ with the Storage Account name retrieved from Ambari:\n\n        azure storage account list --json | jq '.[] | select(.name==\"ACCOUNTNAME\").resourceGroup'\n    \n    This will return the resource group name for the account.\n    \n    > [AZURE.NOTE] If nothing is returned from this command, you may need to change the Azure CLI to Azure Resource Manager mode and run the command again. To switch to Azure Resource Manager mode, use the following command.\n    >\n    > `azure config mode arm`\n    \n2. Get the key for the Storage account. Replace __GROUPNAME__ with the Resource Group from the previous step. Replace __ACCOUNTNAME__ with the Storage Account name:\n\n        azure storage account keys list -g GROUPNAME ACCOUNTNAME --json | jq '.storageAccountKeys.key1'\n\n    This will return the primary key for the account.\n\nYou can also find the storage information using the Azure Portal:\n\n1. In the [Azure Portal](https://portal.azure.com/), select your HDInsight cluster.\n\n2. From the __Essentials__ section, select __All settings__.\n\n3. From __Settings__, select __Azure Storage Keys__.\n\n4. From __Azure Storage Keys__, select one of the storage accounts listed. This will display information about the storage account.\n\n5. Select the key icon. This will display keys for this storage account.\n\n### How do I access Blob storage?\n\nOther than through the Hadoop command from the cluster, there are a variety of ways to access blobs:\n\n* [Azure CLI for Mac, Linux and Windows](../xplat-cli-install.md): Command-Line interface commands for working with Azure. After installing, use the `azure storage` command for help on using storage, or `azure blob` for blob-specific commands.\n\n* [blobxfer.py](https://github.com/Azure/azure-batch-samples/tree/master/Python/Storage): A python script for working with blobs in Azure Storage.\n\n* A variety of SDKs:\n\n    * [Java](https://github.com/Azure/azure-sdk-for-java)\n\n    * [Node.js](https://github.com/Azure/azure-sdk-for-node)\n\n    * [PHP](https://github.com/Azure/azure-sdk-for-php)\n\n    * [Python](https://github.com/Azure/azure-sdk-for-python)\n\n    * [Ruby](https://github.com/Azure/azure-sdk-for-ruby)\n\n    * [.NET](https://github.com/Azure/azure-sdk-for-net)\n\n* [Storage REST API](https://msdn.microsoft.com/library/azure/dd135733.aspx)\n\n##<a name=\"scaling\"></a>Scaling your cluster\n\nThe cluster scaling feature allows you to change the number of data nodes used by a cluster that is running in Azure HDInsight without having to delete and re-create the cluster.\n\nYou can perform scaling operations while other jobs or processes are running on a cluster.\n\nThe different cluster types are affected by scaling as follows:\n\n* __Hadoop__: When scaling down the number of nodes in a cluster, some of the services in the cluster are restarted. This can cause jobs running or pending to fail at the completion of the scaling operation. You can resubmit the jobs once the operation is complete.\n\n* __HBase__: Regional servers are automatically balanced within a few minutes after completion of the scaling operation. To manually balance regional servers,use the following steps:\n\n    1. Connect to the HDInsight cluster using SSH. For more information on using SSH with HDInsight, see one of the following documents:\n\n        * [Use SSH with HDInsight from Linux, Unix, and Mac OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n        * [Use SSH with HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n    1. Use the following to start the HBase shell:\n\n            hbase shell\n\n    2. Once the HBase shell has loaded, use the following to manually balance the regional servers:\n\n            balancer\n\n* __Storm__: You should rebalance any running Storm topologies after a scaling operation has been performed. This allows the topology to readjust parallelism settings based on the new number of nodes in the cluster. To rebalance running topologies, use one of the following options:\n\n    * __SSH__: Connect to the server and use the following command to rebalance a topology:\n\n            storm rebalance TOPOLOGYNAME\n\n        You can also specify parameters to override the parallelism hints originally provided by the topology. For example, `storm rebalance mytopology -n 5 -e blue-spout=3 -e yellow-bolt=10` will reconfigure the topology to 5 worker processes, 3 executors for the blue-spout component, and 10 executors for the yellow-bolt component.\n\n    * __Storm UI__: Use the following steps to rebalance a topology using the Storm UI.\n\n        1. Open __https://CLUSTERNAME.azurehdinsight.net/stormui__ in your web browser, where CLUSTERNAME is the name of your Storm cluster. If prompted, enter the HDInsight cluster administrator (admin) name and password you specified when creating the cluster.\n\n        3. Select the topology you wish to rebalance, then select the __Rebalance__ button. Enter the delay before the rebalance operation is performed.\n\nFor specific information on scaling your HDInsight cluster, see:\n\n* [Manage Hadoop clusters in HDInsight by using the Azure Portal](hdinsight-administer-use-portal-linux.md#scaling)\n\n* [Manage Hadoop clusters in HDinsight by using Azure PowerShell](hdinsight-administer-use-command-line.md#scaling)\n\n## How do I install Hue (or other Hadoop component)?\n\nHDInsight is a managed service, which means that nodes in a cluster may be destroyed and reprovisioned automatically by Azure if a problem is detected. Because of this, it is not recommended to manually install things directly on the cluster nodes. Instead, use [HDInsight Script Actions](hdinsight-hadoop-customize-cluster.md) when you need to install the following:\n\n* A service or web site such as Spark or Hue.\n* A component that requires configuration changes on multiple nodes in the cluster. For example, a required environment variable, creating of a logging directory, or creation of a configuration file.\n\nScript Actions are Bash scripts that are ran during cluster provisioning, and can be used to install and configure additional components on the cluster. Example scripts are provided for installing the following components:\n\n* [Hue](hdinsight-hadoop-hue-linux.md)\n* [Giraph](hdinsight-hadoop-giraph-install-linux.md)\n* [R](hdinsight-hadoop-r-scripts-linux.md)\n* [Solr](hdinsight-hadoop-solr-install-linux.md)\n* [Spark](hdinsight-hadoop-spark-install-linux.md)\n\nFor information on developing your own Script Actions, see [Script Action development with HDInsight](hdinsight-hadoop-script-actions-linux.md).\n\n###Jar files\n\nSome Hadoop technologies are provided in self-contained jar files that are contain functions used as part of a MapReduce job, or from inside Pig or Hive. While these can be installed using Script Actions, they often don't require any setup and can just be uploaded to the cluster after provisioning and used directly. If you want to makle sure the component survives reimaging of the cluster, you can store the jar file in WASB.\n\nFor example, if you want to use the latest version of [DataFu](http://datafu.incubator.apache.org/), you can download a jar containing the project and upload it to the HDInsight cluster. Then follow the DataFu documentation on how to use it from Pig or Hive.\n\n> [AZURE.IMPORTANT] Some components that are standalone jar files are provided with HDInsight, but are not in the path. If you are looking for a specific component, you can use the follow to search for it on your cluster:\n>\n> ```find / -name *componentname*.jar 2>/dev/null```\n>\n> This will return the path of any matching jar files.\n\nIf the cluster already provides a version of a component as a standalone jar file, but you want to use a different version, you can upload a new version of the component to the cluster and try using it in your jobs.\n\n> [AZURE.WARNING] Components provided with the HDInsight cluster are fully supported and Microsoft Support will help to isolate and resolve issues related to these components.\n>\n> Custom components receive commercially reasonable support to help you to further troubleshoot the issue. This might result in resolving the issue OR asking you to engage available channels for the open source technologies where deep expertise for that technology is found. For example, there are many community sites that can be used, like: [MSDN forum for HDInsight](https://social.msdn.microsoft.com/Forums/azure/en-US/home?forum=hdinsight), [http://stackoverflow.com](http://stackoverflow.com). Also Apache projects have project sites on [http://apache.org](http://apache.org), for example: [Hadoop](http://hadoop.apache.org/), [Spark](http://spark.apache.org/).\n\n## Next steps\n\n* [Use Hive with HDInsight](hdinsight-use-hive.md)\n* [Use Pig with HDInsight](hdinsight-use-pig.md)\n* [Use MapReduce jobs with HDInsight](hdinsight-use-mapreduce.md)\n"
+}

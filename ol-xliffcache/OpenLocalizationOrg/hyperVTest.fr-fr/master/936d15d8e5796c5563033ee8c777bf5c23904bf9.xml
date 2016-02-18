@@ -1,0 +1,1136 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        103
+      ],
+      "content": "Use Script Action to install Solr on Linux-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        122,
+        210
+      ],
+      "content": "Learn how to install Solr on Linux-based HDInsight Hadoop clusters using Script Actions."
+    },
+    {
+      "pos": [
+        540,
+        589
+      ],
+      "content": "Install and use Solr on HDInsight Hadoop clusters"
+    },
+    {
+      "pos": [
+        591,
+        898
+      ],
+      "content": "In this topic, you will learn how to install Solr on Azure HDInsight by using Script Action. Solr is a powerful search platform and provides enterprise-level search capabilities on data managed by Hadoop. Once you have installed Solr on HDInsight cluster, you'll also learn how to search data by using Solr.",
+      "nodes": [
+        {
+          "content": "In this topic, you will learn how to install Solr on Azure HDInsight by using Script Action.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "Solr is a powerful search platform and provides enterprise-level search capabilities on data managed by Hadoop.",
+          "pos": [
+            93,
+            204
+          ]
+        },
+        {
+          "content": "Once you have installed Solr on HDInsight cluster, you'll also learn how to search data by using Solr.",
+          "pos": [
+            205,
+            307
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        902,
+        1142
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document require a Linux-based HDInsight cluster. For information on using Solr with a Windows-based cluster, see <bpt id=\"p1\">[</bpt>Install and use Solr on HDinsight Hadoop clusters (Windows)<ept id=\"p1\">](hdinsight-hadoop-solr-install.md)</ept>",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document require a Linux-based HDInsight cluster.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "For information on using Solr with a Windows-based cluster, see <bpt id=\"p1\">[</bpt>Install and use Solr on HDinsight Hadoop clusters (Windows)<ept id=\"p1\">](hdinsight-hadoop-solr-install.md)</ept>",
+          "pos": [
+            113,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1144,
+        1395
+      ],
+      "content": "The sample script used in this topic creates a Solr cluster with a specific configuration. If you want to configure the Solr cluster with different collections, shards, schemas, replicas, etc., you must modify the script and Solr binaries accordingly.",
+      "nodes": [
+        {
+          "content": "The sample script used in this topic creates a Solr cluster with a specific configuration.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "If you want to configure the Solr cluster with different collections, shards, schemas, replicas, etc., you must modify the script and Solr binaries accordingly.",
+          "pos": [
+            91,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1421,
+        1434
+      ],
+      "content": "What is Solr?"
+    },
+    {
+      "pos": [
+        1436,
+        1805
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Apache Solr<ept id=\"p2\">](http://lucene.apache.org/solr/features.html)</ept><ph id=\"ph4\"/> is an enterprise search platform that enables powerful full-text search on data. While Hadoop enables storing and managing vast amounts of data, Apache Solr provides the search capabilities to quickly retrieve the data. This topic provides instructions on how to customize an HDInsight cluster to install Solr.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">[</bpt>Apache Solr<ept id=\"p2\">](http://lucene.apache.org/solr/features.html)</ept><ph id=\"ph4\"/> is an enterprise search platform that enables powerful full-text search on data.",
+          "pos": [
+            0,
+            191
+          ]
+        },
+        {
+          "content": "While Hadoop enables storing and managing vast amounts of data, Apache Solr provides the search capabilities to quickly retrieve the data.",
+          "pos": [
+            192,
+            330
+          ]
+        },
+        {
+          "content": "This topic provides instructions on how to customize an HDInsight cluster to install Solr.",
+          "pos": [
+            331,
+            421
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1810,
+        1830
+      ],
+      "content": "What the script does"
+    },
+    {
+      "pos": [
+        1832,
+        1897
+      ],
+      "content": "This script makes the following changes to the HDInsight cluster:"
+    },
+    {
+      "pos": [
+        1901,
+        1943
+      ],
+      "content": "Installs Solr into <ph id=\"ph5\">`/usr/hdp/current/solr`</ph>"
+    },
+    {
+      "pos": [
+        1946,
+        2016
+      ],
+      "content": "Creates a new user, <bpt id=\"p3\">__</bpt>solrusr<ept id=\"p3\">__</ept>, which is used to run the Solr service"
+    },
+    {
+      "pos": [
+        2019,
+        2076
+      ],
+      "content": "Sets <bpt id=\"p4\">__</bpt>solruser<ept id=\"p4\">__</ept><ph id=\"ph6\"/> as the owner of <ph id=\"ph7\">`/usr/hdp/current/solr`</ph>"
+    },
+    {
+      "pos": [
+        2079,
+        2262
+      ],
+      "content": "Adds an <bpt id=\"p5\">[</bpt>Upstart<ept id=\"p5\">](http://upstart.ubuntu.com/)</ept><ph id=\"ph8\"/> configuration that will start Solr if a cluster node restarts. Solr is also automatically started on the cluster nodes after installation",
+      "nodes": [
+        {
+          "content": "Adds an <bpt id=\"p5\">[</bpt>Upstart<ept id=\"p5\">](http://upstart.ubuntu.com/)</ept><ph id=\"ph8\"/> configuration that will start Solr if a cluster node restarts.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "Solr is also automatically started on the cluster nodes after installation",
+          "pos": [
+            161,
+            235
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2289,
+        2322
+      ],
+      "content": "Install Solr using Script Actions"
+    },
+    {
+      "pos": [
+        2324,
+        2748
+      ],
+      "content": "A sample script to install Solr on an HDInsight cluster is available from a read-only Azure storage blob at <bpt id=\"p6\">[</bpt>https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh<ept id=\"p6\">](https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh)</ept>. This section provides instructions on how to use the sample script while provisioning the cluster by using the Azure portal.",
+      "nodes": [
+        {
+          "content": "A sample script to install Solr on an HDInsight cluster is available from a read-only Azure storage blob at <bpt id=\"p6\">[</bpt>https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh<ept id=\"p6\">](https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh)</ept>.",
+          "pos": [
+            0,
+            337
+          ]
+        },
+        {
+          "content": "This section provides instructions on how to use the sample script while provisioning the cluster by using the Azure portal.",
+          "pos": [
+            338,
+            462
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2752,
+        3009
+      ],
+      "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> You can also use Azure PowerShell or the HDInsight .NET SDK to create a cluster using this script. For more information on using these methods, see <bpt id=\"p7\">[</bpt>Customize HDInsight clusters with Script Actions<ept id=\"p7\">](hdinsight-hadoop-customize-cluster-linux.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> You can also use Azure PowerShell or the HDInsight .NET SDK to create a cluster using this script.",
+          "pos": [
+            0,
+            144
+          ]
+        },
+        {
+          "content": "For more information on using these methods, see <bpt id=\"p7\">[</bpt>Customize HDInsight clusters with Script Actions<ept id=\"p7\">](hdinsight-hadoop-customize-cluster-linux.md)</ept>.",
+          "pos": [
+            145,
+            328
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3014,
+        3188
+      ],
+      "content": "Start provisioning a cluster by using the steps in <bpt id=\"p8\">[</bpt>Provision Linux-based HDInsight clusters<ept id=\"p8\">](hdinsight-provision-linux-clusters.md#portal)</ept>, but do not complete provisioning."
+    },
+    {
+      "pos": [
+        3193,
+        3295
+      ],
+      "content": "On the <bpt id=\"p9\">**</bpt>Optional Configuration<ept id=\"p9\">**</ept><ph id=\"ph11\"/> blade, select <bpt id=\"p10\">**</bpt>Script Actions<ept id=\"p10\">**</ept>, and provide the information below:"
+    },
+    {
+      "pos": [
+        3303,
+        3357
+      ],
+      "content": "<bpt id=\"p11\">__</bpt>NAME<ept id=\"p11\">__</ept>: Enter a friendly name for the script action."
+    },
+    {
+      "pos": [
+        3364,
+        3473
+      ],
+      "content": "<bpt id=\"p12\">__</bpt>SCRIPT URI<ept id=\"p12\">__</ept>: https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh"
+    },
+    {
+      "pos": [
+        3480,
+        3507
+      ],
+      "content": "<bpt id=\"p13\">__</bpt>HEAD<ept id=\"p13\">__</ept>: Check this option"
+    },
+    {
+      "pos": [
+        3514,
+        3543
+      ],
+      "content": "<bpt id=\"p14\">__</bpt>WORKER<ept id=\"p14\">__</ept>: Check this option"
+    },
+    {
+      "pos": [
+        3550,
+        3615
+      ],
+      "content": "<bpt id=\"p15\">__</bpt>ZOOKEEPER<ept id=\"p15\">__</ept>: Check this option to install on the Zookeeper node"
+    },
+    {
+      "pos": [
+        3622,
+        3660
+      ],
+      "content": "<bpt id=\"p16\">__</bpt>PARAMETERS<ept id=\"p16\">__</ept>: Leave this field blank"
+    },
+    {
+      "pos": [
+        3665,
+        3895
+      ],
+      "content": "At the bottom of the <bpt id=\"p17\">**</bpt>Script Actions<ept id=\"p17\">**</ept>, use the <bpt id=\"p18\">**</bpt>Select<ept id=\"p18\">**</ept><ph id=\"ph12\"/> button to save the configuration. Finally, use the <bpt id=\"p19\">**</bpt>Select<ept id=\"p19\">**</ept><ph id=\"ph13\"/> button at the bottom of the <bpt id=\"p20\">**</bpt>Optional Configuration<ept id=\"p20\">**</ept><ph id=\"ph14\"/> blade to save the optional configuration information.",
+      "nodes": [
+        {
+          "content": "At the bottom of the <bpt id=\"p17\">**</bpt>Script Actions<ept id=\"p17\">**</ept>, use the <bpt id=\"p18\">**</bpt>Select<ept id=\"p18\">**</ept><ph id=\"ph12\"/> button to save the configuration.",
+          "pos": [
+            0,
+            188
+          ]
+        },
+        {
+          "content": "Finally, use the <bpt id=\"p19\">**</bpt>Select<ept id=\"p19\">**</ept><ph id=\"ph13\"/> button at the bottom of the <bpt id=\"p20\">**</bpt>Optional Configuration<ept id=\"p20\">**</ept><ph id=\"ph14\"/> blade to save the optional configuration information.",
+          "pos": [
+            189,
+            435
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3900,
+        4043
+      ],
+      "content": "Continue provisioning the cluster as described in <bpt id=\"p21\">[</bpt>Provision Linux-based HDInsight clusters<ept id=\"p21\">](hdinsight-hadoop-create-linux-clusters-portal.md)</ept>."
+    },
+    {
+      "pos": [
+        4070,
+        4101
+      ],
+      "content": "How do I use Solr in HDInsight?"
+    },
+    {
+      "pos": [
+        4107,
+        4120
+      ],
+      "content": "Indexing data"
+    },
+    {
+      "pos": [
+        4122,
+        4319
+      ],
+      "content": "You must start with indexing Solr with some data files. You can then use Solr to run search queries on the indexed data. Use the following steps to add some example data to Solr, and then query it:",
+      "nodes": [
+        {
+          "content": "You must start with indexing Solr with some data files.",
+          "pos": [
+            0,
+            55
+          ]
+        },
+        {
+          "content": "You can then use Solr to run search queries on the indexed data.",
+          "pos": [
+            56,
+            120
+          ]
+        },
+        {
+          "content": "Use the following steps to add some example data to Solr, and then query it:",
+          "pos": [
+            121,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4324,
+        4367
+      ],
+      "content": "Connect to the HDInsight cluster using SSH:"
+    },
+    {
+      "pos": [
+        4430,
+        4498
+      ],
+      "content": "For more information on using SSH with HDInsight, see the following:"
+    },
+    {
+      "pos": [
+        4506,
+        4618
+      ],
+      "content": "<bpt id=\"p22\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X<ept id=\"p22\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        4626,
+        4728
+      ],
+      "content": "<bpt id=\"p23\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p23\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        4736,
+        4944
+      ],
+      "content": "<ph id=\"ph15\">[AZURE.IMPORTANT]</ph><ph id=\"ph16\"/> Steps later in this document make use of an SSL tunnel to connect to the Solr web UI. In order to use these steps, you must establish an SSL tunnel and then configure your browser to use it.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph15\">[AZURE.IMPORTANT]</ph><ph id=\"ph16\"/> Steps later in this document make use of an SSL tunnel to connect to the Solr web UI.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "In order to use these steps, you must establish an SSL tunnel and then configure your browser to use it.",
+          "pos": [
+            138,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4957,
+        5130
+      ],
+      "content": "For more information, see <bpt id=\"p24\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p24\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>"
+    },
+    {
+      "pos": [
+        5135,
+        5193
+      ],
+      "content": "Use the following commands to have Solr index sample data:"
+    },
+    {
+      "pos": [
+        5301,
+        5348
+      ],
+      "content": "You'll see the following output on the console:"
+    },
+    {
+      "pos": [
+        5552,
+        5699
+      ],
+      "content": "The post.jar utility indexes Solr with two sample documents, <bpt id=\"p25\">**</bpt>solr.xml<ept id=\"p25\">**</ept><ph id=\"ph17\"/> and <bpt id=\"p26\">**</bpt>monitor.xml<ept id=\"p26\">**</ept>. These will be stored in <bpt id=\"p27\">__</bpt>collection1<ept id=\"p27\">__</ept><ph id=\"ph18\"/> within Solr.",
+      "nodes": [
+        {
+          "content": "The post.jar utility indexes Solr with two sample documents, <bpt id=\"p25\">**</bpt>solr.xml<ept id=\"p25\">**</ept><ph id=\"ph17\"/> and <bpt id=\"p26\">**</bpt>monitor.xml<ept id=\"p26\">**</ept>.",
+          "pos": [
+            0,
+            189
+          ]
+        },
+        {
+          "content": "These will be stored in <bpt id=\"p27\">__</bpt>collection1<ept id=\"p27\">__</ept><ph id=\"ph18\"/> within Solr.",
+          "pos": [
+            190,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5704,
+        5760
+      ],
+      "content": "Use the following to query the REST API exposed by Solr:"
+    },
+    {
+      "pos": [
+        5856,
+        6081
+      ],
+      "content": "This issues a query against <bpt id=\"p28\">__</bpt>collection1<ept id=\"p28\">__</ept><ph id=\"ph19\"/> for any documents matching <bpt id=\"p29\">__</bpt>\\*:\\*<ept id=\"p29\">__</ept><ph id=\"ph20\"/> (encoded as \\*%3A\\* in the query string,) and that the response should be returned as JSON. The response should appear similar to the following:",
+      "nodes": [
+        {
+          "content": "This issues a query against <bpt id=\"p28\">__</bpt>collection1<ept id=\"p28\">__</ept><ph id=\"ph19\"/> for any documents matching <bpt id=\"p29\">__</bpt>\\*:\\*<ept id=\"p29\">__</ept><ph id=\"ph20\"/> (encoded as \\*%3A\\* in the query string,) and that the response should be returned as JSON.",
+          "pos": [
+            0,
+            282
+          ]
+        },
+        {
+          "content": "The response should appear similar to the following:",
+          "pos": [
+            283,
+            335
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8266,
+        8290
+      ],
+      "content": "Using the Solr dashboard"
+    },
+    {
+      "pos": [
+        8292,
+        8709
+      ],
+      "content": "The Solr dashboard is a web UI that allows you to work with Solr through your web browser. The Solr dashboard is not exposed directly on the Internet from your HDInsight cluster, but must be accessed using an SSH tunnel. For more information on using an SSH tunnel, see <bpt id=\"p30\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p30\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>",
+      "nodes": [
+        {
+          "content": "The Solr dashboard is a web UI that allows you to work with Solr through your web browser.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "The Solr dashboard is not exposed directly on the Internet from your HDInsight cluster, but must be accessed using an SSH tunnel.",
+          "pos": [
+            91,
+            220
+          ]
+        },
+        {
+          "content": "For more information on using an SSH tunnel, see <bpt id=\"p30\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p30\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>",
+          "pos": [
+            221,
+            457
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8711,
+        8802
+      ],
+      "content": "Once you have established an SSH tunnel, use the following steps to use the Solr dashboard:"
+    },
+    {
+      "pos": [
+        8807,
+        8849
+      ],
+      "content": "Determine the host name for the head node:"
+    },
+    {
+      "pos": [
+        8858,
+        8997
+      ],
+      "content": "In a browser, go to https://CLUSTERNAME.azurehdinsight.net. When prompted, use the Admin username and password to authenticate to the site.",
+      "nodes": [
+        {
+          "content": "In a browser, go to https://CLUSTERNAME.azurehdinsight.net.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "When prompted, use the Admin username and password to authenticate to the site.",
+          "pos": [
+            60,
+            139
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9010,
+        9065
+      ],
+      "content": "From the menu at the top of the page, select <bpt id=\"p31\">__</bpt>Hosts<ept id=\"p31\">__</ept>."
+    },
+    {
+      "pos": [
+        9078,
+        9359
+      ],
+      "content": "Select the entry that begins with <bpt id=\"p32\">__</bpt>hn0<ept id=\"p32\">__</ept>. When the page opens, the host name will be displayed at the top. The format of the host name is <bpt id=\"p33\">__</bpt>hn0-PARTOFCLUSTERNAME.randomcharacters.cx.internal.cloudapp.net<ept id=\"p33\">__</ept>. This is the host name you must use when connecting to the Solr dashboard.",
+      "nodes": [
+        {
+          "content": "Select the entry that begins with <bpt id=\"p32\">__</bpt>hn0<ept id=\"p32\">__</ept>.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "When the page opens, the host name will be displayed at the top.",
+          "pos": [
+            83,
+            147
+          ]
+        },
+        {
+          "content": "The format of the host name is <bpt id=\"p33\">__</bpt>hn0-PARTOFCLUSTERNAME.randomcharacters.cx.internal.cloudapp.net<ept id=\"p33\">__</ept>.",
+          "pos": [
+            148,
+            287
+          ]
+        },
+        {
+          "content": "This is the host name you must use when connecting to the Solr dashboard.",
+          "pos": [
+            288,
+            361
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9368,
+        9498
+      ],
+      "content": "In your browser, connect to <bpt id=\"p34\">__</bpt>http://HOSTNAME:8983/solr/#/<ept id=\"p34\">__</ept>, where <bpt id=\"p35\">__</bpt>HOSTNAME<ept id=\"p35\">__</ept><ph id=\"ph21\"/> is the name you determined in the previous steps."
+    },
+    {
+      "pos": [
+        9505,
+        9649
+      ],
+      "content": "The request should be routed through the SSH tunnel to the head node for your HDInsight cluster. You should see a page similar to the following:",
+      "nodes": [
+        {
+          "content": "The request should be routed through the SSH tunnel to the head node for your HDInsight cluster.",
+          "pos": [
+            0,
+            96
+          ]
+        },
+        {
+          "content": "You should see a page similar to the following:",
+          "pos": [
+            97,
+            144
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9655,
+        9744
+      ],
+      "content": "<ph id=\"ph22\">![</ph>Image of Solr dashboard<ph id=\"ph23\">](./media/hdinsight-hadoop-solr-install-linux/solrdashboard.png)</ph>"
+    },
+    {
+      "pos": [
+        9749,
+        9889
+      ],
+      "content": "From the left pane, use the <bpt id=\"p36\">**</bpt>Core Selector<ept id=\"p36\">**</ept><ph id=\"ph24\"/> drop-down to select <bpt id=\"p37\">**</bpt>collection1<ept id=\"p37\">**</ept>. Several entries should them appear below <bpt id=\"p38\">__</bpt>collection1<ept id=\"p38\">__</ept>.",
+      "nodes": [
+        {
+          "content": "From the left pane, use the <bpt id=\"p36\">**</bpt>Core Selector<ept id=\"p36\">**</ept><ph id=\"ph24\"/> drop-down to select <bpt id=\"p37\">**</bpt>collection1<ept id=\"p37\">**</ept>.",
+          "pos": [
+            0,
+            177
+          ]
+        },
+        {
+          "content": "Several entries should them appear below <bpt id=\"p38\">__</bpt>collection1<ept id=\"p38\">__</ept>.",
+          "pos": [
+            178,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9894,
+        10005
+      ],
+      "content": "From the entries below <bpt id=\"p39\">__</bpt>collection1<ept id=\"p39\">__</ept>, select <bpt id=\"p40\">__</bpt>Query<ept id=\"p40\">__</ept>. Use the following values to populate the search page:",
+      "nodes": [
+        {
+          "content": "From the entries below <bpt id=\"p39\">__</bpt>collection1<ept id=\"p39\">__</ept>, select <bpt id=\"p40\">__</bpt>Query<ept id=\"p40\">__</ept>.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "Use the following values to populate the search page:",
+          "pos": [
+            138,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10013,
+        10211
+      ],
+      "content": "In the <bpt id=\"p41\">**</bpt>q<ept id=\"p41\">**</ept><ph id=\"ph25\"/> text box, enter <bpt id=\"p42\">**</bpt>\\*:<ept id=\"p42\">**</ept>\\*. This will return all the documents that are indexed in Solr. If you want to search for a specific string within the documents, you can enter that string here.",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p41\">**</bpt>q<ept id=\"p41\">**</ept><ph id=\"ph25\"/> text box, enter <bpt id=\"p42\">**</bpt>\\*:<ept id=\"p42\">**</ept>\\*.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "This will return all the documents that are indexed in Solr.",
+          "pos": [
+            135,
+            195
+          ]
+        },
+        {
+          "content": "If you want to search for a specific string within the documents, you can enter that string here.",
+          "pos": [
+            196,
+            293
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10219,
+        10289
+      ],
+      "content": "In the <bpt id=\"p43\">**</bpt>wt<ept id=\"p43\">**</ept><ph id=\"ph26\"/> text box, select the output format. Default is <bpt id=\"p44\">**</bpt>json<ept id=\"p44\">**</ept>.",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p43\">**</bpt>wt<ept id=\"p43\">**</ept><ph id=\"ph26\"/> text box, select the output format.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "Default is <bpt id=\"p44\">**</bpt>json<ept id=\"p44\">**</ept>.",
+          "pos": [
+            105,
+            165
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10295,
+        10373
+      ],
+      "content": "Finally, select the <bpt id=\"p45\">**</bpt>Execute Query<ept id=\"p45\">**</ept><ph id=\"ph27\"/> button at the bottom of the search pate."
+    },
+    {
+      "pos": [
+        10379,
+        10496
+      ],
+      "content": "<ph id=\"ph28\">![</ph>Use Script Action to customize a cluster<ph id=\"ph29\">](./media/hdinsight-hadoop-solr-install-linux/hdi-solr-dashboard-query.png)</ph>"
+    },
+    {
+      "pos": [
+        10502,
+        10601
+      ],
+      "content": "The output returns the two docs that we used for indexing Solr. The output resembles the following:",
+      "nodes": [
+        {
+          "content": "The output returns the two docs that we used for indexing Solr.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "The output resembles the following:",
+          "pos": [
+            64,
+            99
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12786,
+        12812
+      ],
+      "content": "Starting and stopping Solr"
+    },
+    {
+      "pos": [
+        12814,
+        12886
+      ],
+      "content": "If you need to manually stop or start Solar, use the following commands:"
+    },
+    {
+      "pos": [
+        12932,
+        12951
+      ],
+      "content": "Backup indexed data"
+    },
+    {
+      "pos": [
+        12953,
+        13099
+      ],
+      "content": "As a good practice, you should back up the indexed data from the Solr cluster nodes onto Azure Blob storage. Perform the following steps to do so:",
+      "nodes": [
+        {
+          "content": "As a good practice, you should back up the indexed data from the Solr cluster nodes onto Azure Blob storage.",
+          "pos": [
+            0,
+            108
+          ]
+        },
+        {
+          "content": "Perform the following steps to do so:",
+          "pos": [
+            109,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13104,
+        13208
+      ],
+      "content": "Connect to the cluster using SSH, then use the following command to get the host name for the head node:"
+    },
+    {
+      "pos": [
+        13242,
+        13372
+      ],
+      "content": "Use the following to create a snapshot of the indexed data. Replace <bpt id=\"p46\">__</bpt>HOSTNAME<ept id=\"p46\">__</ept><ph id=\"ph30\"/> with the name returned from the previous command:",
+      "nodes": [
+        {
+          "content": "Use the following to create a snapshot of the indexed data.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p46\">__</bpt>HOSTNAME<ept id=\"p46\">__</ept><ph id=\"ph30\"/> with the name returned from the previous command:",
+          "pos": [
+            60,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13445,
+        13481
+      ],
+      "content": "You should see a response like this:"
+    },
+    {
+      "pos": [
+        13743,
+        13982
+      ],
+      "content": "Next, change directories to <bpt id=\"p47\">__</bpt>/usr/hdp/current/solr/example/solr<ept id=\"p47\">__</ept>. There will be a subdirectory here for each collection. Each collection directory contains a <bpt id=\"p48\">__</bpt>data<ept id=\"p48\">__</ept><ph id=\"ph31\"/> directory, which is where the snapshot for that collection is located.",
+      "nodes": [
+        {
+          "content": "Next, change directories to <bpt id=\"p47\">__</bpt>/usr/hdp/current/solr/example/solr<ept id=\"p47\">__</ept>.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "There will be a subdirectory here for each collection.",
+          "pos": [
+            108,
+            162
+          ]
+        },
+        {
+          "content": "Each collection directory contains a <bpt id=\"p48\">__</bpt>data<ept id=\"p48\">__</ept><ph id=\"ph31\"/> directory, which is where the snapshot for that collection is located.",
+          "pos": [
+            163,
+            334
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13988,
+        14246
+      ],
+      "content": "For example, if you used the steps earlier to index the sample documents, the <bpt id=\"p49\">__</bpt>/usr/hdp/current/solr/example/solr/collection1/data<ept id=\"p49\">__</ept><ph id=\"ph32\"/> directory should now contain a directory named <bpt id=\"p50\">__</bpt>snapshot.###########<ept id=\"p50\">__</ept><ph id=\"ph33\"/> where the #'s are the date and time of the snapshot."
+    },
+    {
+      "pos": [
+        14251,
+        14343
+      ],
+      "content": "Create a compressed archive of the snapshot folder using a command similar to the following:"
+    },
+    {
+      "pos": [
+        14425,
+        14574
+      ],
+      "content": "This will create a new archive named <bpt id=\"p51\">__</bpt>snapshot.20150806185338855.tgz<ept id=\"p51\">__</ept>, which contains the contents of the <bpt id=\"p52\">__</bpt>snapshot.20150806185338855<ept id=\"p52\">__</ept><ph id=\"ph34\"/> directory."
+    },
+    {
+      "pos": [
+        14579,
+        14671
+      ],
+      "content": "You can then store the archive to the cluster's primary storage using the following command:"
+    },
+    {
+      "pos": [
+        14677,
+        14746
+      ],
+      "content": "hadoop fs -copyFromLocal snapshot.20150806185338855.tgz /example/data"
+    },
+    {
+      "pos": [
+        14754,
+        14884
+      ],
+      "content": "<ph id=\"ph35\">[AZURE.NOTE]</ph><ph id=\"ph36\"/> You may want to create a dedicated directory for storing Solr snapshots. For example, <ph id=\"ph37\">`hadoop fs -mkdir /solrbackup`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph35\">[AZURE.NOTE]</ph><ph id=\"ph36\"/> You may want to create a dedicated directory for storing Solr snapshots.",
+          "pos": [
+            0,
+            119
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph37\">`hadoop fs -mkdir /solrbackup`</ph>.",
+          "pos": [
+            120,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14886,
+        15089
+      ],
+      "content": "For more information on working with Solr backup and restores, see <bpt id=\"p53\">[</bpt>Making and restoring backups of SolrCores<ept id=\"p53\">](https://cwiki.apache.org/confluence/display/solr/Making+and+Restoring+Backups+of+SolrCores)</ept>."
+    },
+    {
+      "pos": [
+        15095,
+        15103
+      ],
+      "content": "See also"
+    },
+    {
+      "pos": [
+        15107,
+        15326
+      ],
+      "content": "<bpt id=\"p54\">[</bpt>Install and use Hue on HDInsight clusters<ept id=\"p54\">](hdinsight-hadoop-hue-linux.md)</ept>. Hue is a web UI that makes it easy to create, run and save Pig and Hive jobs, as well as browse the default storage for your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p54\">[</bpt>Install and use Hue on HDInsight clusters<ept id=\"p54\">](hdinsight-hadoop-hue-linux.md)</ept>.",
+          "pos": [
+            0,
+            115
+          ]
+        },
+        {
+          "content": "Hue is a web UI that makes it easy to create, run and save Pig and Hive jobs, as well as browse the default storage for your HDInsight cluster.",
+          "pos": [
+            116,
+            259
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15330,
+        15623
+      ],
+      "content": "<bpt id=\"p55\">[</bpt>Install and use Spark on HDInsight clusters<ept id=\"p55\">][hdinsight-install-spark]</ept>. Use cluster customization to install Spark on HDInsight Hadoop clusters. Spark is an open-source parallel processing framework that supports in-memory processing to boost the performance of big-data analytic applications.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p55\">[</bpt>Install and use Spark on HDInsight clusters<ept id=\"p55\">][hdinsight-install-spark]</ept>.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "Use cluster customization to install Spark on HDInsight Hadoop clusters.",
+          "pos": [
+            112,
+            184
+          ]
+        },
+        {
+          "content": "Spark is an open-source parallel processing framework that supports in-memory processing to boost the performance of big-data analytic applications.",
+          "pos": [
+            185,
+            333
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15627,
+        16031
+      ],
+      "content": "<bpt id=\"p56\">[</bpt>Install R on HDInsight clusters<ept id=\"p56\">][hdinsight-install-r]</ept>. Use cluster customization to install R on HDInsight Hadoop clusters. R is an open-source language and environment for statistical computing. It provides hundreds of built-in statistical functions and its own programming language that combines aspects of functional and object-oriented programming. It also provides extensive graphical capabilities.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p56\">[</bpt>Install R on HDInsight clusters<ept id=\"p56\">][hdinsight-install-r]</ept>.",
+          "pos": [
+            0,
+            95
+          ]
+        },
+        {
+          "content": "Use cluster customization to install R on HDInsight Hadoop clusters.",
+          "pos": [
+            96,
+            164
+          ]
+        },
+        {
+          "content": "R is an open-source language and environment for statistical computing.",
+          "pos": [
+            165,
+            236
+          ]
+        },
+        {
+          "content": "It provides hundreds of built-in statistical functions and its own programming language that combines aspects of functional and object-oriented programming.",
+          "pos": [
+            237,
+            393
+          ]
+        },
+        {
+          "content": "It also provides extensive graphical capabilities.",
+          "pos": [
+            394,
+            444
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16035,
+        16291
+      ],
+      "content": "<bpt id=\"p57\">[</bpt>Install Giraph on HDInsight clusters<ept id=\"p57\">](hdinsight-hadoop-giraph-install-linux.md)</ept>. Use cluster customization to install Giraph on HDInsight Hadoop clusters. Giraph allows you to perform graph processing by using Hadoop, and can be used with Azure HDInsight.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p57\">[</bpt>Install Giraph on HDInsight clusters<ept id=\"p57\">](hdinsight-hadoop-giraph-install-linux.md)</ept>.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "Use cluster customization to install Giraph on HDInsight Hadoop clusters.",
+          "pos": [
+            122,
+            195
+          ]
+        },
+        {
+          "content": "Giraph allows you to perform graph processing by using Hadoop, and can be used with Azure HDInsight.",
+          "pos": [
+            196,
+            296
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16295,
+        16506
+      ],
+      "content": "<bpt id=\"p58\">[</bpt>Install Hue on HDInsight clusters<ept id=\"p58\">](hdinsight-hadoop-hue-linux.md)</ept>. Use cluster customization to install Hue on HDInsight Hadoop clusters. Hue is a set of Web applications used to interact with a Hadoop cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p58\">[</bpt>Install Hue on HDInsight clusters<ept id=\"p58\">](hdinsight-hadoop-hue-linux.md)</ept>.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "Use cluster customization to install Hue on HDInsight Hadoop clusters.",
+          "pos": [
+            108,
+            178
+          ]
+        },
+        {
+          "content": "Hue is a set of Web applications used to interact with a Hadoop cluster.",
+          "pos": [
+            179,
+            251
+          ]
+        }
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Use Script Action to install Solr on Linux-based HDInsight | Microsoft Azure\"\n    description=\"Learn how to install Solr on Linux-based HDInsight Hadoop clusters using Script Actions.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"larryfr\"/>\n\n# Install and use Solr on HDInsight Hadoop clusters\n\nIn this topic, you will learn how to install Solr on Azure HDInsight by using Script Action. Solr is a powerful search platform and provides enterprise-level search capabilities on data managed by Hadoop. Once you have installed Solr on HDInsight cluster, you'll also learn how to search data by using Solr.\n\n> [AZURE.NOTE] The steps in this document require a Linux-based HDInsight cluster. For information on using Solr with a Windows-based cluster, see [Install and use Solr on HDinsight Hadoop clusters (Windows)](hdinsight-hadoop-solr-install.md)\n\nThe sample script used in this topic creates a Solr cluster with a specific configuration. If you want to configure the Solr cluster with different collections, shards, schemas, replicas, etc., you must modify the script and Solr binaries accordingly.\n\n## <a name=\"whatis\"></a>What is Solr?\n\n[Apache Solr](http://lucene.apache.org/solr/features.html) is an enterprise search platform that enables powerful full-text search on data. While Hadoop enables storing and managing vast amounts of data, Apache Solr provides the search capabilities to quickly retrieve the data. This topic provides instructions on how to customize an HDInsight cluster to install Solr.\n\n## What the script does\n\nThis script makes the following changes to the HDInsight cluster:\n\n* Installs Solr into `/usr/hdp/current/solr`\n* Creates a new user, __solrusr__, which is used to run the Solr service\n* Sets __solruser__ as the owner of `/usr/hdp/current/solr`\n* Adds an [Upstart](http://upstart.ubuntu.com/) configuration that will start Solr if a cluster node restarts. Solr is also automatically started on the cluster nodes after installation\n\n## <a name=\"install\"></a>Install Solr using Script Actions\n\nA sample script to install Solr on an HDInsight cluster is available from a read-only Azure storage blob at [https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh](https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh). This section provides instructions on how to use the sample script while provisioning the cluster by using the Azure portal.\n\n> [AZURE.NOTE] You can also use Azure PowerShell or the HDInsight .NET SDK to create a cluster using this script. For more information on using these methods, see [Customize HDInsight clusters with Script Actions](hdinsight-hadoop-customize-cluster-linux.md).\n\n1. Start provisioning a cluster by using the steps in [Provision Linux-based HDInsight clusters](hdinsight-provision-linux-clusters.md#portal), but do not complete provisioning.\n\n2. On the **Optional Configuration** blade, select **Script Actions**, and provide the information below:\n\n    * __NAME__: Enter a friendly name for the script action.\n    * __SCRIPT URI__: https://hdiconfigactions.blob.core.windows.net/linuxsolrconfigactionv01/solr-installer-v01.sh\n    * __HEAD__: Check this option\n    * __WORKER__: Check this option\n    * __ZOOKEEPER__: Check this option to install on the Zookeeper node\n    * __PARAMETERS__: Leave this field blank\n\n3. At the bottom of the **Script Actions**, use the **Select** button to save the configuration. Finally, use the **Select** button at the bottom of the **Optional Configuration** blade to save the optional configuration information.\n\n4. Continue provisioning the cluster as described in [Provision Linux-based HDInsight clusters](hdinsight-hadoop-create-linux-clusters-portal.md).\n\n## <a name=\"usesolr\"></a>How do I use Solr in HDInsight?\n\n### Indexing data\n\nYou must start with indexing Solr with some data files. You can then use Solr to run search queries on the indexed data. Use the following steps to add some example data to Solr, and then query it:\n\n1. Connect to the HDInsight cluster using SSH:\n\n        ssh USERNAME@CLUSTERNAME-ssh.azurehdinsight.net\n\n    For more information on using SSH with HDInsight, see the following:\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n    > [AZURE.IMPORTANT] Steps later in this document make use of an SSL tunnel to connect to the Solr web UI. In order to use these steps, you must establish an SSL tunnel and then configure your browser to use it.\n    >\n    > For more information, see [Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's](hdinsight-linux-ambari-ssh-tunnel.md)\n\n2. Use the following commands to have Solr index sample data:\n\n        cd /usr/hdp/current/solr/example/exampledocs\n        java -jar post.jar solr.xml monitor.xml\n\n    You'll see the following output on the console:\n\n        POSTing file solr.xml\n        POSTing file monitor.xml\n        2 files indexed.\n        COMMITting Solr index changes to http://localhost:8983/solr/update..\n        Time spent: 0:00:01.624\n\n    The post.jar utility indexes Solr with two sample documents, **solr.xml** and **monitor.xml**. These will be stored in __collection1__ within Solr.\n\n3. Use the following to query the REST API exposed by Solr:\n\n        curl \"http://localhost:8983/solr/collection1/select?q=*%3A*&wt=json&indent=true\"\n\n    This issues a query against __collection1__ for any documents matching __\\*:\\*__ (encoded as \\*%3A\\* in the query string,) and that the response should be returned as JSON. The response should appear similar to the following:\n\n            \"response\": {\n                \"numFound\": 2,\n                \"start\": 0,\n                \"maxScore\": 1,\n                \"docs\": [\n                  {\n                    \"id\": \"SOLR1000\",\n                    \"name\": \"Solr, the Enterprise Search Server\",\n                    \"manu\": \"Apache Software Foundation\",\n                    \"cat\": [\n                      \"software\",\n                      \"search\"\n                    ],\n                    \"features\": [\n                      \"Advanced Full-Text Search Capabilities using Lucene\",\n                      \"Optimized for High Volume Web Traffic\",\n                      \"Standards Based Open Interfaces - XML and HTTP\",\n                      \"Comprehensive HTML Administration Interfaces\",\n                      \"Scalability - Efficient Replication to other Solr Search Servers\",\n                      \"Flexible and Adaptable with XML configuration and Schema\",\n                      \"Good unicode support: héllo (hello with an accent over the e)\"\n                    ],\n                    \"price\": 0,\n                    \"price_c\": \"0,USD\",\n                    \"popularity\": 10,\n                    \"inStock\": true,\n                    \"incubationdate_dt\": \"2006-01-17T00:00:00Z\",\n                    \"_version_\": 1486960636996878300\n                  },\n                  {\n                    \"id\": \"3007WFP\",\n                    \"name\": \"Dell Widescreen UltraSharp 3007WFP\",\n                    \"manu\": \"Dell, Inc.\",\n                    \"manu_id_s\": \"dell\",\n                    \"cat\": [\n                      \"electronics and computer1\"\n                    ],\n                    \"features\": [\n                      \"30\\\" TFT active matrix LCD, 2560 x 1600, .25mm dot pitch, 700:1 contrast\"\n                    ],\n                    \"includes\": \"USB cable\",\n                    \"weight\": 401.6,\n                    \"price\": 2199,\n                    \"price_c\": \"2199,USD\",\n                    \"popularity\": 6,\n                    \"inStock\": true,\n                    \"store\": \"43.17614,-90.57341\",\n                    \"_version_\": 1486960637584081000\n                  }\n                ]\n              }\n\n### Using the Solr dashboard\n\nThe Solr dashboard is a web UI that allows you to work with Solr through your web browser. The Solr dashboard is not exposed directly on the Internet from your HDInsight cluster, but must be accessed using an SSH tunnel. For more information on using an SSH tunnel, see [Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's](hdinsight-linux-ambari-ssh-tunnel.md)\n\nOnce you have established an SSH tunnel, use the following steps to use the Solr dashboard:\n\n1. Determine the host name for the head node:\n\n    1. In a browser, go to https://CLUSTERNAME.azurehdinsight.net. When prompted, use the Admin username and password to authenticate to the site.\n    \n    2. From the menu at the top of the page, select __Hosts__.\n    \n    3. Select the entry that begins with __hn0__. When the page opens, the host name will be displayed at the top. The format of the host name is __hn0-PARTOFCLUSTERNAME.randomcharacters.cx.internal.cloudapp.net__. This is the host name you must use when connecting to the Solr dashboard.\n    \n1. In your browser, connect to __http://HOSTNAME:8983/solr/#/__, where __HOSTNAME__ is the name you determined in the previous steps. \n\n    The request should be routed through the SSH tunnel to the head node for your HDInsight cluster. You should see a page similar to the following:\n\n    ![Image of Solr dashboard](./media/hdinsight-hadoop-solr-install-linux/solrdashboard.png)\n\n2. From the left pane, use the **Core Selector** drop-down to select **collection1**. Several entries should them appear below __collection1__.\n\n3. From the entries below __collection1__, select __Query__. Use the following values to populate the search page:\n\n    * In the **q** text box, enter **\\*:**\\*. This will return all the documents that are indexed in Solr. If you want to search for a specific string within the documents, you can enter that string here.\n\n    * In the **wt** text box, select the output format. Default is **json**.\n\n    Finally, select the **Execute Query** button at the bottom of the search pate.\n\n    ![Use Script Action to customize a cluster](./media/hdinsight-hadoop-solr-install-linux/hdi-solr-dashboard-query.png)\n\n    The output returns the two docs that we used for indexing Solr. The output resembles the following:\n\n            \"response\": {\n                \"numFound\": 2,\n                \"start\": 0,\n                \"maxScore\": 1,\n                \"docs\": [\n                  {\n                    \"id\": \"SOLR1000\",\n                    \"name\": \"Solr, the Enterprise Search Server\",\n                    \"manu\": \"Apache Software Foundation\",\n                    \"cat\": [\n                      \"software\",\n                      \"search\"\n                    ],\n                    \"features\": [\n                      \"Advanced Full-Text Search Capabilities using Lucene\",\n                      \"Optimized for High Volume Web Traffic\",\n                      \"Standards Based Open Interfaces - XML and HTTP\",\n                      \"Comprehensive HTML Administration Interfaces\",\n                      \"Scalability - Efficient Replication to other Solr Search Servers\",\n                      \"Flexible and Adaptable with XML configuration and Schema\",\n                      \"Good unicode support: héllo (hello with an accent over the e)\"\n                    ],\n                    \"price\": 0,\n                    \"price_c\": \"0,USD\",\n                    \"popularity\": 10,\n                    \"inStock\": true,\n                    \"incubationdate_dt\": \"2006-01-17T00:00:00Z\",\n                    \"_version_\": 1486960636996878300\n                  },\n                  {\n                    \"id\": \"3007WFP\",\n                    \"name\": \"Dell Widescreen UltraSharp 3007WFP\",\n                    \"manu\": \"Dell, Inc.\",\n                    \"manu_id_s\": \"dell\",\n                    \"cat\": [\n                      \"electronics and computer1\"\n                    ],\n                    \"features\": [\n                      \"30\\\" TFT active matrix LCD, 2560 x 1600, .25mm dot pitch, 700:1 contrast\"\n                    ],\n                    \"includes\": \"USB cable\",\n                    \"weight\": 401.6,\n                    \"price\": 2199,\n                    \"price_c\": \"2199,USD\",\n                    \"popularity\": 6,\n                    \"inStock\": true,\n                    \"store\": \"43.17614,-90.57341\",\n                    \"_version_\": 1486960637584081000\n                  }\n                ]\n              }\n\n### Starting and stopping Solr\n\nIf you need to manually stop or start Solar, use the following commands:\n\n    sudo stop solr\n\n    sudo start solr\n\n## Backup indexed data\n\nAs a good practice, you should back up the indexed data from the Solr cluster nodes onto Azure Blob storage. Perform the following steps to do so:\n\n1. Connect to the cluster using SSH, then use the following command to get the host name for the head node:\n\n        hostname -f\n        \n2. Use the following to create a snapshot of the indexed data. Replace __HOSTNAME__ with the name returned from the previous command:\n\n        curl http://HOSTNAME:8983/solr/replication?command=backup\n\n    You should see a response like this:\n\n        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n        <response>\n          <lst name=\"responseHeader\">\n            <int name=\"status\">0</int>\n            <int name=\"QTime\">9</int>\n          </lst>\n          <str name=\"status\">OK</str>\n        </response>\n\n2. Next, change directories to __/usr/hdp/current/solr/example/solr__. There will be a subdirectory here for each collection. Each collection directory contains a __data__ directory, which is where the snapshot for that collection is located.\n\n    For example, if you used the steps earlier to index the sample documents, the __/usr/hdp/current/solr/example/solr/collection1/data__ directory should now contain a directory named __snapshot.###########__ where the #'s are the date and time of the snapshot.\n\n3. Create a compressed archive of the snapshot folder using a command similar to the following:\n\n        tar -zcf snapshot.20150806185338855.tgz snapshot.20150806185338855\n\n    This will create a new archive named __snapshot.20150806185338855.tgz__, which contains the contents of the __snapshot.20150806185338855__ directory.\n\n3. You can then store the archive to the cluster's primary storage using the following command:\n\n    hadoop fs -copyFromLocal snapshot.20150806185338855.tgz /example/data\n\n    > [AZURE.NOTE] You may want to create a dedicated directory for storing Solr snapshots. For example, `hadoop fs -mkdir /solrbackup`.\n\nFor more information on working with Solr backup and restores, see [Making and restoring backups of SolrCores](https://cwiki.apache.org/confluence/display/solr/Making+and+Restoring+Backups+of+SolrCores).\n\n\n## See also\n\n- [Install and use Hue on HDInsight clusters](hdinsight-hadoop-hue-linux.md). Hue is a web UI that makes it easy to create, run and save Pig and Hive jobs, as well as browse the default storage for your HDInsight cluster.\n\n- [Install and use Spark on HDInsight clusters][hdinsight-install-spark]. Use cluster customization to install Spark on HDInsight Hadoop clusters. Spark is an open-source parallel processing framework that supports in-memory processing to boost the performance of big-data analytic applications.\n\n- [Install R on HDInsight clusters][hdinsight-install-r]. Use cluster customization to install R on HDInsight Hadoop clusters. R is an open-source language and environment for statistical computing. It provides hundreds of built-in statistical functions and its own programming language that combines aspects of functional and object-oriented programming. It also provides extensive graphical capabilities.\n\n- [Install Giraph on HDInsight clusters](hdinsight-hadoop-giraph-install-linux.md). Use cluster customization to install Giraph on HDInsight Hadoop clusters. Giraph allows you to perform graph processing by using Hadoop, and can be used with Azure HDInsight.\n\n- [Install Hue on HDInsight clusters](hdinsight-hadoop-hue-linux.md). Use cluster customization to install Hue on HDInsight Hadoop clusters. Hue is a set of Web applications used to interact with a Hadoop cluster.\n\n\n\n[hdinsight-install-r]: hdinsight-hadoop-r-scripts-linux.md\n[hdinsight-install-spark]: hdinsight-hadoop-spark-install-linux.md\n[hdinsight-cluster-customize]: hdinsight-hadoop-customize-cluster-linux.md\n"
+}

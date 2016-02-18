@@ -1,0 +1,855 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        82
+      ],
+      "content": "Use Hadoop Hive with Curl in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        100,
+        162
+      ],
+      "content": "Learn how to remotely submit Pig jobs to HDInsight using Curl."
+    },
+    {
+      "pos": [
+        479,
+        530
+      ],
+      "content": "Run Hive queries with Hadoop in HDInsight with Curl"
+    },
+    {
+      "pos": [
+        612,
+        720
+      ],
+      "content": "In this document, you will learn how to use Curl to run Hive queries on a Hadoop on Azure HDInsight cluster."
+    },
+    {
+      "pos": [
+        722,
+        978
+      ],
+      "content": "Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Hive queries. This works by using the WebHCat REST API (formerly known as Templeton) provided by your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Hive queries.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "This works by using the WebHCat REST API (formerly known as Templeton) provided by your HDInsight cluster.",
+          "pos": [
+            150,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        982,
+        1193
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see <bpt id=\"p1\">[</bpt>What you need to know about Hadoop on Linux-based HDInsight<ept id=\"p1\">](hdinsight-hadoop-linux-information.md)</ept>."
+    },
+    {
+      "pos": [
+        1195,
+        1197
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1216,
+        1229
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1231,
+        1298
+      ],
+      "content": "To complete the steps in this article, you will need the following:"
+    },
+    {
+      "pos": [
+        1302,
+        1356
+      ],
+      "content": "A Hadoop on HDInsight cluster (Linux or Windows-based)"
+    },
+    {
+      "pos": [
+        1360,
+        1388
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Curl<ept id=\"p2\">](http://curl.haxx.se/)</ept>"
+    },
+    {
+      "pos": [
+        1392,
+        1427
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>jq<ept id=\"p3\">](http://stedolan.github.io/jq/)</ept>"
+    },
+    {
+      "pos": [
+        1429,
+        1431
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1448,
+        1478
+      ],
+      "content": "Run Hive queries by using Curl"
+    },
+    {
+      "pos": [
+        1482,
+        1797
+      ],
+      "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the user name and password for the HDInsight cluster administrator. You must also use the cluster name as part of the Uniform Resource Identifier (URI) used to send the requests to the server.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the user name and password for the HDInsight cluster administrator.",
+          "pos": [
+            0,
+            222
+          ]
+        },
+        {
+          "content": "You must also use the cluster name as part of the Uniform Resource Identifier (URI) used to send the requests to the server.",
+          "pos": [
+            223,
+            347
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1802,
+        2022
+      ],
+      "content": "For the commands in this section, replace <bpt id=\"p4\">**</bpt>USERNAME<ept id=\"p4\">**</ept><ph id=\"ph7\"/> with the user to authenticate to the cluster, and replace <bpt id=\"p5\">**</bpt>PASSWORD<ept id=\"p5\">**</ept><ph id=\"ph8\"/> with the password for the user account. Replace <bpt id=\"p6\">**</bpt>CLUSTERNAME<ept id=\"p6\">**</ept><ph id=\"ph9\"/> with the name of your cluster.",
+      "nodes": [
+        {
+          "content": "For the commands in this section, replace <bpt id=\"p4\">**</bpt>USERNAME<ept id=\"p4\">**</ept><ph id=\"ph7\"/> with the user to authenticate to the cluster, and replace <bpt id=\"p5\">**</bpt>PASSWORD<ept id=\"p5\">**</ept><ph id=\"ph8\"/> with the password for the user account.",
+          "pos": [
+            0,
+            269
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p6\">**</bpt>CLUSTERNAME<ept id=\"p6\">**</ept><ph id=\"ph9\"/> with the name of your cluster.",
+          "pos": [
+            270,
+            376
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2027,
+        2267
+      ],
+      "content": "The REST API is secured via <bpt id=\"p7\">[</bpt>basic authentication<ept id=\"p7\">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>. You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.",
+      "nodes": [
+        {
+          "content": "The REST API is secured via <bpt id=\"p7\">[</bpt>basic authentication<ept id=\"p7\">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.",
+          "pos": [
+            148,
+            278
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2272,
+        2376
+      ],
+      "content": "From a command line, use the following command to verify that you can connect to your HDInsight cluster:"
+    },
+    {
+      "pos": [
+        2479,
+        2534
+      ],
+      "content": "You should receive a response similar to the following:"
+    },
+    {
+      "pos": [
+        2580,
+        2631
+      ],
+      "content": "The parameters used in this command are as follows:"
+    },
+    {
+      "pos": [
+        2639,
+        2708
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>-u<ept id=\"p8\">**</ept><ph id=\"ph10\"/> - The user name and password used to authenticate the request."
+    },
+    {
+      "pos": [
+        2715,
+        2761
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>-G<ept id=\"p9\">**</ept><ph id=\"ph11\"/> - Indicates that this is a GET request."
+    },
+    {
+      "pos": [
+        2767,
+        3082
+      ],
+      "content": "The beginning of the URL, <bpt id=\"p10\">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id=\"p10\">**</ept>, will be the same for all requests. The path, <bpt id=\"p11\">**</bpt>/status<ept id=\"p11\">**</ept>, indicates that the request is to return a status of WebHCat (also known as Templeton) for the server. You can also request the version of Hive by using the following command:",
+      "nodes": [
+        {
+          "content": "The beginning of the URL, <bpt id=\"p10\">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id=\"p10\">**</ept>, will be the same for all requests.",
+          "pos": [
+            0,
+            157
+          ]
+        },
+        {
+          "content": "The path, <bpt id=\"p11\">**</bpt>/status<ept id=\"p11\">**</ept>, indicates that the request is to return a status of WebHCat (also known as Templeton) for the server.",
+          "pos": [
+            158,
+            322
+          ]
+        },
+        {
+          "content": "You can also request the version of Hive by using the following command:",
+          "pos": [
+            323,
+            395
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3191,
+        3246
+      ],
+      "content": "This should return a response similar to the following:"
+    },
+    {
+      "pos": [
+        3310,
+        3370
+      ],
+      "content": "Use the following to create a new table named <bpt id=\"p12\">**</bpt>log4jLogs<ept id=\"p12\">**</ept>:"
+    },
+    {
+      "pos": [
+        3882,
+        3933
+      ],
+      "content": "The parameters used in this command are as follows:"
+    },
+    {
+      "pos": [
+        3941,
+        4077
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>-d<ept id=\"p13\">**</ept><ph id=\"ph12\"/> - Since <ph id=\"ph13\">`-G`</ph><ph id=\"ph14\"/> is not used, the request defaults to the POST method. <ph id=\"ph15\">`-d`</ph><ph id=\"ph16\"/> specifies the data values that are sent with the request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p13\">**</bpt>-d<ept id=\"p13\">**</ept><ph id=\"ph12\"/> - Since <ph id=\"ph13\">`-G`</ph><ph id=\"ph14\"/> is not used, the request defaults to the POST method.",
+          "pos": [
+            0,
+            162
+          ]
+        },
+        {
+          "content": "<ph id=\"ph15\">`-d`</ph><ph id=\"ph16\"/> specifies the data values that are sent with the request.",
+          "pos": [
+            163,
+            259
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4089,
+        4142
+      ],
+      "content": "<bpt id=\"p14\">**</bpt>user.name<ept id=\"p14\">**</ept><ph id=\"ph17\"/> - The user that is running the command."
+    },
+    {
+      "pos": [
+        4154,
+        4201
+      ],
+      "content": "<bpt id=\"p15\">**</bpt>execute<ept id=\"p15\">**</ept><ph id=\"ph18\"/> - The HiveQL statements to execute."
+    },
+    {
+      "pos": [
+        4213,
+        4291
+      ],
+      "content": "<bpt id=\"p16\">**</bpt>statusdir<ept id=\"p16\">**</ept><ph id=\"ph19\"/> - The directory that the status for this job will be written to."
+    },
+    {
+      "pos": [
+        4297,
+        4344
+      ],
+      "content": "These statements perform the following actions:"
+    },
+    {
+      "pos": [
+        4352,
+        4434
+      ],
+      "content": "<bpt id=\"p17\">**</bpt>DROP TABLE<ept id=\"p17\">**</ept><ph id=\"ph20\"/> - Deletes the table and the data file, if the table already exists."
+    },
+    {
+      "pos": [
+        4442,
+        4609
+      ],
+      "content": "<bpt id=\"p18\">**</bpt>CREATE EXTERNAL TABLE<ept id=\"p18\">**</ept><ph id=\"ph21\"/> - Creates a new 'external' table in Hive. External tables store only the table definition in Hive. The data is left in the original location.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p18\">**</bpt>CREATE EXTERNAL TABLE<ept id=\"p18\">**</ept><ph id=\"ph21\"/> - Creates a new 'external' table in Hive.",
+          "pos": [
+            0,
+            122
+          ]
+        },
+        {
+          "content": "External tables store only the table definition in Hive.",
+          "pos": [
+            123,
+            179
+          ]
+        },
+        {
+          "content": "The data is left in the original location.",
+          "pos": [
+            180,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4621,
+        4867
+      ],
+      "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> External tables should be used when you expect the underlying data to be updated by an external source, such as an automated data upload process, or by another MapReduce operation, but always want Hive queries to use the latest data."
+    },
+    {
+      "pos": [
+        4888,
+        4971
+      ],
+      "content": "Dropping an external table does <bpt id=\"p19\">**</bpt>not<ept id=\"p19\">**</ept><ph id=\"ph24\"/> delete the data, only the table definition."
+    },
+    {
+      "pos": [
+        4979,
+        5096
+      ],
+      "content": "<bpt id=\"p20\">**</bpt>ROW FORMAT<ept id=\"p20\">**</ept><ph id=\"ph25\"/> - Tells Hive how the data is formatted. In this case, the fields in each log are separated by a space.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p20\">**</bpt>ROW FORMAT<ept id=\"p20\">**</ept><ph id=\"ph25\"/> - Tells Hive how the data is formatted.",
+          "pos": [
+            0,
+            109
+          ]
+        },
+        {
+          "content": "In this case, the fields in each log are separated by a space.",
+          "pos": [
+            110,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5104,
+        5234
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>STORED AS TEXTFILE LOCATION<ept id=\"p21\">**</ept><ph id=\"ph26\"/> - Tells Hive where the data is stored (the example/data directory), and that it is stored as text."
+    },
+    {
+      "pos": [
+        5242,
+        5419
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>SELECT<ept id=\"p22\">**</ept><ph id=\"ph27\"/> - Selects a count of all rows where column <bpt id=\"p23\">**</bpt>t4<ept id=\"p23\">**</ept><ph id=\"ph28\"/> contains the value <bpt id=\"p24\">**</bpt>[ERROR]<ept id=\"p24\">**</ept>. This should return a value of <bpt id=\"p25\">**</bpt>3<ept id=\"p25\">**</ept><ph id=\"ph29\"/> as there are three rows that contain this value.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p22\">**</bpt>SELECT<ept id=\"p22\">**</ept><ph id=\"ph27\"/> - Selects a count of all rows where column <bpt id=\"p23\">**</bpt>t4<ept id=\"p23\">**</ept><ph id=\"ph28\"/> contains the value <bpt id=\"p24\">**</bpt>[ERROR]<ept id=\"p24\">**</ept>.",
+          "pos": [
+            0,
+            242
+          ]
+        },
+        {
+          "content": "This should return a value of <bpt id=\"p25\">**</bpt>3<ept id=\"p25\">**</ept><ph id=\"ph29\"/> as there are three rows that contain this value.",
+          "pos": [
+            243,
+            382
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5427,
+        5633
+      ],
+      "content": "<ph id=\"ph30\">[AZURE.NOTE]</ph><ph id=\"ph31\"/> Notice that the spaces between HiveQL statements are replaced by the <ph id=\"ph32\">`+`</ph><ph id=\"ph33\"/> character when used with Curl. Quoted values that contain a space, such as the delimiter, should not be replaced by <ph id=\"ph34\">`+`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph30\">[AZURE.NOTE]</ph><ph id=\"ph31\"/> Notice that the spaces between HiveQL statements are replaced by the <ph id=\"ph32\">`+`</ph><ph id=\"ph33\"/> character when used with Curl.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "Quoted values that contain a space, such as the delimiter, should not be replaced by <ph id=\"ph34\">`+`</ph>.",
+          "pos": [
+            185,
+            293
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5641,
+        5916
+      ],
+      "content": "<bpt id=\"p26\">**</bpt>INPUT__FILE__NAME LIKE '%25.log'<ept id=\"p26\">**</ept><ph id=\"ph35\"/> - This limits the search to only use files ending in .log. If this is not present, Hive will attempt to search all files in this directory and its subdirectories, including files that do not match the column schema defined for this table.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p26\">**</bpt>INPUT__FILE__NAME LIKE '%25.log'<ept id=\"p26\">**</ept><ph id=\"ph35\"/> - This limits the search to only use files ending in .log.",
+          "pos": [
+            0,
+            150
+          ]
+        },
+        {
+          "content": "If this is not present, Hive will attempt to search all files in this directory and its subdirectories, including files that do not match the column schema defined for this table.",
+          "pos": [
+            151,
+            330
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5924,
+        6101
+      ],
+      "content": "<ph id=\"ph36\">[AZURE.NOTE]</ph><ph id=\"ph37\"/> Note that %25 is the URL encoded form of %, so the actual condition is <ph id=\"ph38\">`like '%.log'`</ph>. The % has to be URL encoded, as it is treated as a special character in URLs.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph36\">[AZURE.NOTE]</ph><ph id=\"ph37\"/> Note that %25 is the URL encoded form of %, so the actual condition is <ph id=\"ph38\">`like '%.log'`</ph>.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "The % has to be URL encoded, as it is treated as a special character in URLs.",
+          "pos": [
+            153,
+            230
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6107,
+        6191
+      ],
+      "content": "This command should return a job ID that can be used to check the status of the job."
+    },
+    {
+      "pos": [
+        6237,
+        6481
+      ],
+      "content": "To check the status of the job, use the following command. Replace <bpt id=\"p27\">**</bpt>JOBID<ept id=\"p27\">**</ept><ph id=\"ph39\"/> with the value returned in the previous step. For example, if the return value was <ph id=\"ph40\">`{\"id\":\"job_1415651640909_0026\"}`</ph>, then <bpt id=\"p28\">**</bpt>JOBID<ept id=\"p28\">**</ept><ph id=\"ph41\"/> would be <ph id=\"ph42\">`job_1415651640909_0026`</ph>.",
+      "nodes": [
+        {
+          "content": "To check the status of the job, use the following command.",
+          "pos": [
+            0,
+            58
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p27\">**</bpt>JOBID<ept id=\"p27\">**</ept><ph id=\"ph39\"/> with the value returned in the previous step.",
+          "pos": [
+            59,
+            177
+          ]
+        },
+        {
+          "content": "For example, if the return value was <ph id=\"ph40\">`{\"id\":\"job_1415651640909_0026\"}`</ph>, then <bpt id=\"p28\">**</bpt>JOBID<ept id=\"p28\">**</ept><ph id=\"ph41\"/> would be <ph id=\"ph42\">`job_1415651640909_0026`</ph>.",
+          "pos": [
+            178,
+            392
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6629,
+        6686
+      ],
+      "content": "If the job has finished, the state will be <bpt id=\"p29\">**</bpt>SUCCEEDED<ept id=\"p29\">**</ept>."
+    },
+    {
+      "pos": [
+        6694,
+        6854
+      ],
+      "content": "<ph id=\"ph43\">[AZURE.NOTE]</ph><ph id=\"ph44\"/> This Curl request returns a JavaScript Object Notation (JSON) document with information about the job; jq is used to retrieve only the state value."
+    },
+    {
+      "pos": [
+        6859,
+        7250
+      ],
+      "content": "Once the state of the job has changed to <bpt id=\"p30\">**</bpt>SUCCEEDED<ept id=\"p30\">**</ept>, you can retrieve the results of the job from Azure Blob storage. The <ph id=\"ph45\">`statusdir`</ph><ph id=\"ph46\"/> parameter passed with the query contains the location of the output file; in this case, <bpt id=\"p31\">**</bpt>wasb:///example/curl<ept id=\"p31\">**</ept>. This address stores the output of the job in the <bpt id=\"p32\">**</bpt>example/curl<ept id=\"p32\">**</ept><ph id=\"ph47\"/> directory on the default storage container used by your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Once the state of the job has changed to <bpt id=\"p30\">**</bpt>SUCCEEDED<ept id=\"p30\">**</ept>, you can retrieve the results of the job from Azure Blob storage.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "The <ph id=\"ph45\">`statusdir`</ph><ph id=\"ph46\"/> parameter passed with the query contains the location of the output file; in this case, <bpt id=\"p31\">**</bpt>wasb:///example/curl<ept id=\"p31\">**</ept>.",
+          "pos": [
+            161,
+            364
+          ]
+        },
+        {
+          "content": "This address stores the output of the job in the <bpt id=\"p32\">**</bpt>example/curl<ept id=\"p32\">**</ept><ph id=\"ph47\"/> directory on the default storage container used by your HDInsight cluster.",
+          "pos": [
+            365,
+            560
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7256,
+        7446
+      ],
+      "content": "You can list and download these files by using the <bpt id=\"p33\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p33\">](../xplat-cli-install.md)</ept>. For example, to list files in <bpt id=\"p34\">**</bpt>example/curl<ept id=\"p34\">**</ept>, use the following command:",
+      "nodes": [
+        {
+          "content": "You can list and download these files by using the <bpt id=\"p33\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p33\">](../xplat-cli-install.md)</ept>.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "For example, to list files in <bpt id=\"p34\">**</bpt>example/curl<ept id=\"p34\">**</ept>, use the following command:",
+          "pos": [
+            156,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7515,
+        7553
+      ],
+      "content": "To download a file, use the following:"
+    },
+    {
+      "pos": [
+        7646,
+        7944
+      ],
+      "content": "<ph id=\"ph48\">[AZURE.NOTE]</ph><ph id=\"ph49\"/> You must either specify the storage account name that contains the blob by using the <ph id=\"ph50\">`-a`</ph><ph id=\"ph51\"/> and <ph id=\"ph52\">`-k`</ph><ph id=\"ph53\"/> parameters, or set the <bpt id=\"p35\">**</bpt>AZURE\\_STORAGE\\_ACCOUNT<ept id=\"p35\">**</ept><ph id=\"ph54\"/> and <bpt id=\"p36\">**</bpt>AZURE\\_STORAGE\\_ACCESS\\_KEY<ept id=\"p36\">**</ept><ph id=\"ph55\"/> environment variables. See &lt;a href=\"hdinsight-upload-data.md\" target=\"_blank\" for more information.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph48\">[AZURE.NOTE]</ph><ph id=\"ph49\"/> You must either specify the storage account name that contains the blob by using the <ph id=\"ph50\">`-a`</ph><ph id=\"ph51\"/> and <ph id=\"ph52\">`-k`</ph><ph id=\"ph53\"/> parameters, or set the <bpt id=\"p35\">**</bpt>AZURE\\_STORAGE\\_ACCOUNT<ept id=\"p35\">**</ept><ph id=\"ph54\"/> and <bpt id=\"p36\">**</bpt>AZURE\\_STORAGE\\_ACCESS\\_KEY<ept id=\"p36\">**</ept><ph id=\"ph55\"/> environment variables. Se",
+          "pos": [
+            0,
+            436
+          ]
+        },
+        {
+          "content": "e &lt;a href=\"hdinsight-upload-data.md\" target=\"_blank\" for more information.",
+          "pos": [
+            436,
+            513
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7949,
+        8031
+      ],
+      "content": "Use the following statements to create a new 'internal' table named <bpt id=\"p37\">**</bpt>errorLogs<ept id=\"p37\">**</ept>:"
+    },
+    {
+      "pos": [
+        8481,
+        8528
+      ],
+      "content": "These statements perform the following actions:"
+    },
+    {
+      "pos": [
+        8536,
+        8764
+      ],
+      "content": "<bpt id=\"p38\">**</bpt>CREATE TABLE IF NOT EXISTS<ept id=\"p38\">**</ept><ph id=\"ph56\"/> - Creates a table, if it does not already exist. Since the <bpt id=\"p39\">**</bpt>EXTERNAL<ept id=\"p39\">**</ept><ph id=\"ph57\"/> keyword is not used, this is an internal table, which is stored in the Hive data warehouse and is managed completely by Hive.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p38\">**</bpt>CREATE TABLE IF NOT EXISTS<ept id=\"p38\">**</ept><ph id=\"ph56\"/> - Creates a table, if it does not already exist.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "Since the <bpt id=\"p39\">**</bpt>EXTERNAL<ept id=\"p39\">**</ept><ph id=\"ph57\"/> keyword is not used, this is an internal table, which is stored in the Hive data warehouse and is managed completely by Hive.",
+          "pos": [
+            135,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8776,
+        8880
+      ],
+      "content": "<ph id=\"ph58\">[AZURE.NOTE]</ph><ph id=\"ph59\"/> Unlike external tables, dropping an internal table will delete the underlying data as well."
+    },
+    {
+      "pos": [
+        8888,
+        9034
+      ],
+      "content": "<bpt id=\"p40\">**</bpt>STORED AS ORC<ept id=\"p40\">**</ept><ph id=\"ph60\"/> - Stores the data in Optimized Row Columnar (ORC) format. This is a highly optimized and efficient format for storing Hive data.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p40\">**</bpt>STORED AS ORC<ept id=\"p40\">**</ept><ph id=\"ph60\"/> - Stores the data in Optimized Row Columnar (ORC) format.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "This is a highly optimized and efficient format for storing Hive data.",
+          "pos": [
+            131,
+            201
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9041,
+        9194
+      ],
+      "content": "<bpt id=\"p41\">**</bpt>INSERT OVERWRITE ... SELECT<ept id=\"p41\">**</ept><ph id=\"ph61\"/> - Selects rows from the <bpt id=\"p42\">**</bpt>log4jLogs<ept id=\"p42\">**</ept><ph id=\"ph62\"/> table that contain <bpt id=\"p43\">**</bpt>[ERROR]<ept id=\"p43\">**</ept>, then inserts the data into the <bpt id=\"p44\">**</bpt>errorLogs<ept id=\"p44\">**</ept><ph id=\"ph63\"/> table."
+    },
+    {
+      "pos": [
+        9201,
+        9264
+      ],
+      "content": "<bpt id=\"p45\">**</bpt>SELECT<ept id=\"p45\">**</ept><ph id=\"ph64\"/> - Selects all rows from the new <bpt id=\"p46\">**</bpt>errorLogs<ept id=\"p46\">**</ept><ph id=\"ph65\"/> table."
+    },
+    {
+      "pos": [
+        9269,
+        9519
+      ],
+      "content": "Use the job ID returned to check the status of the job. Once it has succeeded, use Azure CLI for Mac, Linux and Windows as described previously to download and view the results. The output should contain three lines, all of which contain <bpt id=\"p47\">**</bpt>[ERROR]<ept id=\"p47\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Use the job ID returned to check the status of the job.",
+          "pos": [
+            0,
+            55
+          ]
+        },
+        {
+          "content": "Once it has succeeded, use Azure CLI for Mac, Linux and Windows as described previously to download and view the results.",
+          "pos": [
+            56,
+            177
+          ]
+        },
+        {
+          "content": "The output should contain three lines, all of which contain <bpt id=\"p47\">**</bpt>[ERROR]<ept id=\"p47\">**</ept>.",
+          "pos": [
+            178,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9522,
+        9524
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        9544,
+        9551
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        9553,
+        9695
+      ],
+      "content": "As demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Hive jobs on your HDInsight cluster."
+    },
+    {
+      "pos": [
+        9697,
+        9769
+      ],
+      "content": "For more information on the REST interface used in this article, see the"
+    },
+    {
+      "pos": [
+        9863,
+        9880
+      ],
+      "content": "WebHCat Reference"
+    },
+    {
+      "pos": [
+        9884,
+        9885
+      ],
+      "content": "."
+    },
+    {
+      "pos": [
+        9887,
+        9889
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        9911,
+        9921
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        9923,
+        9970
+      ],
+      "content": "For general information on Hive with HDInsight:"
+    },
+    {
+      "pos": [
+        9974,
+        10032
+      ],
+      "content": "<bpt id=\"p48\">[</bpt>Use Hive with Hadoop on HDInsight<ept id=\"p48\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        10034,
+        10102
+      ],
+      "content": "For information on other ways you can work with Hadoop on HDInsight:"
+    },
+    {
+      "pos": [
+        10106,
+        10162
+      ],
+      "content": "<bpt id=\"p49\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p49\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        10166,
+        10234
+      ],
+      "content": "<bpt id=\"p50\">[</bpt>Use MapReduce with Hadoop on HDInsight<ept id=\"p50\">](hdinsight-use-mapreduce.md)</ept>"
+    },
+    {
+      "pos": [
+        10236,
+        10322
+      ],
+      "content": "If you are using Tez with Hive, see the following documents for debugging information:"
+    },
+    {
+      "pos": [
+        10326,
+        10396
+      ],
+      "content": "<bpt id=\"p51\">[</bpt>Use the Tez UI on Windows-based HDInsight<ept id=\"p51\">](hdinsight-debug-tez-ui.md)</ept>"
+    },
+    {
+      "pos": [
+        10400,
+        10486
+      ],
+      "content": "<bpt id=\"p52\">[</bpt>Use the Ambari Tez view on Linux-based HDInsight<ept id=\"p52\">](hdinsight-debug-ambari-tez-view.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Use Hadoop Hive with Curl in HDInsight | Microsoft Azure\"\n   description=\"Learn how to remotely submit Pig jobs to HDInsight using Curl.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"02/16/2016\"\n   ms.author=\"larryfr\"/>\n\n#Run Hive queries with Hadoop in HDInsight with Curl\n\n[AZURE.INCLUDE [hive-selector](../../includes/hdinsight-selector-use-hive.md)]\n\nIn this document, you will learn how to use Curl to run Hive queries on a Hadoop on Azure HDInsight cluster.\n\nCurl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Hive queries. This works by using the WebHCat REST API (formerly known as Templeton) provided by your HDInsight cluster.\n\n> [AZURE.NOTE] If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see [What you need to know about Hadoop on Linux-based HDInsight](hdinsight-hadoop-linux-information.md).\n\n##<a id=\"prereq\"></a>Prerequisites\n\nTo complete the steps in this article, you will need the following:\n\n* A Hadoop on HDInsight cluster (Linux or Windows-based)\n\n* [Curl](http://curl.haxx.se/)\n\n* [jq](http://stedolan.github.io/jq/)\n\n##<a id=\"curl\"></a>Run Hive queries by using Curl\n\n> [AZURE.NOTE] When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the user name and password for the HDInsight cluster administrator. You must also use the cluster name as part of the Uniform Resource Identifier (URI) used to send the requests to the server.\n>\n> For the commands in this section, replace **USERNAME** with the user to authenticate to the cluster, and replace **PASSWORD** with the password for the user account. Replace **CLUSTERNAME** with the name of your cluster.\n>\n> The REST API is secured via [basic authentication](http://en.wikipedia.org/wiki/Basic_access_authentication). You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.\n\n1. From a command line, use the following command to verify that you can connect to your HDInsight cluster:\n\n        curl -u USERNAME:PASSWORD -G https://CLUSTERNAME.azurehdinsight.net/templeton/v1/status\n\n    You should receive a response similar to the following:\n\n        {\"status\":\"ok\",\"version\":\"v1\"}\n\n    The parameters used in this command are as follows:\n\n    * **-u** - The user name and password used to authenticate the request.\n    * **-G** - Indicates that this is a GET request.\n\n    The beginning of the URL, **https://CLUSTERNAME.azurehdinsight.net/templeton/v1**, will be the same for all requests. The path, **/status**, indicates that the request is to return a status of WebHCat (also known as Templeton) for the server. You can also request the version of Hive by using the following command:\n\n        curl -u USERNAME:PASSWORD -G https://CLUSTERNAME.azurehdinsight.net/templeton/v1/version/hive\n\n    This should return a response similar to the following:\n\n        {\"module\":\"hive\",\"version\":\"0.13.0.2.1.6.0-2103\"}\n\n2. Use the following to create a new table named **log4jLogs**:\n\n        curl -u USERNAME:PASSWORD -d user.name=USERNAME -d execute=\"DROP+TABLE+log4jLogs;CREATE+EXTERNAL+TABLE+log4jLogs(t1+string,t2+string,t3+string,t4+string,t5+string,t6+string,t7+string)+ROW+FORMAT+DELIMITED+FIELDS+TERMINATED+BY+' '+STORED+AS+TEXTFILE+LOCATION+'wasb:///example/data/';SELECT+t4+AS+sev,COUNT(*)+AS+count+FROM+log4jLogs+WHERE+t4+=+'[ERROR]'+AND+INPUT__FILE__NAME+LIKE+'%25.log'+GROUP+BY+t4;\" -d statusdir=\"wasb:///example/curl\" https://CLUSTERNAME.azurehdinsight.net/templeton/v1/hive\n\n    The parameters used in this command are as follows:\n\n    * **-d** - Since `-G` is not used, the request defaults to the POST method. `-d` specifies the data values that are sent with the request.\n\n        * **user.name** - The user that is running the command.\n\n        * **execute** - The HiveQL statements to execute.\n\n        * **statusdir** - The directory that the status for this job will be written to.\n\n    These statements perform the following actions:\n\n    * **DROP TABLE** - Deletes the table and the data file, if the table already exists.\n\n    * **CREATE EXTERNAL TABLE** - Creates a new 'external' table in Hive. External tables store only the table definition in Hive. The data is left in the original location.\n\n        > [AZURE.NOTE] External tables should be used when you expect the underlying data to be updated by an external source, such as an automated data upload process, or by another MapReduce operation, but always want Hive queries to use the latest data.\n        >\n        > Dropping an external table does **not** delete the data, only the table definition.\n\n    * **ROW FORMAT** - Tells Hive how the data is formatted. In this case, the fields in each log are separated by a space.\n\n    * **STORED AS TEXTFILE LOCATION** - Tells Hive where the data is stored (the example/data directory), and that it is stored as text.\n\n    * **SELECT** - Selects a count of all rows where column **t4** contains the value **[ERROR]**. This should return a value of **3** as there are three rows that contain this value.\n\n    > [AZURE.NOTE] Notice that the spaces between HiveQL statements are replaced by the `+` character when used with Curl. Quoted values that contain a space, such as the delimiter, should not be replaced by `+`.\n\n    * **INPUT__FILE__NAME LIKE '%25.log'** - This limits the search to only use files ending in .log. If this is not present, Hive will attempt to search all files in this directory and its subdirectories, including files that do not match the column schema defined for this table.\n\n    > [AZURE.NOTE] Note that %25 is the URL encoded form of %, so the actual condition is `like '%.log'`. The % has to be URL encoded, as it is treated as a special character in URLs.\n\n    This command should return a job ID that can be used to check the status of the job.\n\n        {\"id\":\"job_1415651640909_0026\"}\n\n3. To check the status of the job, use the following command. Replace **JOBID** with the value returned in the previous step. For example, if the return value was `{\"id\":\"job_1415651640909_0026\"}`, then **JOBID** would be `job_1415651640909_0026`.\n\n        curl -G -u USERNAME:PASSWORD -d user.name=USERNAME https://CLUSTERNAME.azurehdinsight.net/templeton/v1/jobs/JOBID | jq .status.state\n\n    If the job has finished, the state will be **SUCCEEDED**.\n\n    > [AZURE.NOTE] This Curl request returns a JavaScript Object Notation (JSON) document with information about the job; jq is used to retrieve only the state value.\n\n4. Once the state of the job has changed to **SUCCEEDED**, you can retrieve the results of the job from Azure Blob storage. The `statusdir` parameter passed with the query contains the location of the output file; in this case, **wasb:///example/curl**. This address stores the output of the job in the **example/curl** directory on the default storage container used by your HDInsight cluster.\n\n    You can list and download these files by using the [Azure CLI for Mac, Linux and Windows](../xplat-cli-install.md). For example, to list files in **example/curl**, use the following command:\n\n        azure storage blob list <container-name> example/curl\n\n    To download a file, use the following:\n\n        azure storage blob download <container-name> <blob-name> <destination-file>\n\n    > [AZURE.NOTE] You must either specify the storage account name that contains the blob by using the `-a` and `-k` parameters, or set the **AZURE\\_STORAGE\\_ACCOUNT** and **AZURE\\_STORAGE\\_ACCESS\\_KEY** environment variables. See <a href=\"hdinsight-upload-data.md\" target=\"_blank\" for more information.\n\n6. Use the following statements to create a new 'internal' table named **errorLogs**:\n\n        curl -u USERNAME:PASSWORD -d user.name=USERNAME -d execute=\"CREATE+TABLE+IF+NOT+EXISTS+errorLogs(t1+string,t2+string,t3+string,t4+string,t5+string,t6+string,t7+string)+STORED+AS+ORC;INSERT+OVERWRITE+TABLE+errorLogs+SELECT+t1,t2,t3,t4,t5,t6,t7+FROM+log4jLogs+WHERE+t4+=+'[ERROR]'+AND+INPUT__FILE__NAME+LIKE+'%25.log';SELECT+*+from+errorLogs;\" -d statusdir=\"wasb:///example/curl\" https://CLUSTERNAME.azurehdinsight.net/templeton/v1/hive\n\n    These statements perform the following actions:\n\n    * **CREATE TABLE IF NOT EXISTS** - Creates a table, if it does not already exist. Since the **EXTERNAL** keyword is not used, this is an internal table, which is stored in the Hive data warehouse and is managed completely by Hive.\n\n        > [AZURE.NOTE] Unlike external tables, dropping an internal table will delete the underlying data as well.\n\n    * **STORED AS ORC** - Stores the data in Optimized Row Columnar (ORC) format. This is a highly optimized and efficient format for storing Hive data.\n    * **INSERT OVERWRITE ... SELECT** - Selects rows from the **log4jLogs** table that contain **[ERROR]**, then inserts the data into the **errorLogs** table.\n    * **SELECT** - Selects all rows from the new **errorLogs** table.\n\n7. Use the job ID returned to check the status of the job. Once it has succeeded, use Azure CLI for Mac, Linux and Windows as described previously to download and view the results. The output should contain three lines, all of which contain **[ERROR]**.\n\n\n##<a id=\"summary\"></a>Summary\n\nAs demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Hive jobs on your HDInsight cluster.\n\nFor more information on the REST interface used in this article, see the <a href=\"https://cwiki.apache.org/confluence/display/Hive/WebHCat+Reference\" target=\"_blank\">WebHCat Reference</a>.\n\n##<a id=\"nextsteps\"></a>Next steps\n\nFor general information on Hive with HDInsight:\n\n* [Use Hive with Hadoop on HDInsight](hdinsight-use-hive.md)\n\nFor information on other ways you can work with Hadoop on HDInsight:\n\n* [Use Pig with Hadoop on HDInsight](hdinsight-use-pig.md)\n\n* [Use MapReduce with Hadoop on HDInsight](hdinsight-use-mapreduce.md)\n\nIf you are using Tez with Hive, see the following documents for debugging information:\n\n* [Use the Tez UI on Windows-based HDInsight](hdinsight-debug-tez-ui.md)\n\n* [Use the Ambari Tez view on Linux-based HDInsight](hdinsight-debug-ambari-tez-view.md)\n\n[hdinsight-sdk-documentation]: http://msdnstage.redmond.corp.microsoft.com/library/dn479185.aspx\n\n[azure-purchase-options]: http://azure.microsoft.com/pricing/purchase-options/\n[azure-member-offers]: http://azure.microsoft.com/pricing/member-offers/\n[azure-free-trial]: http://azure.microsoft.com/pricing/free-trial/\n\n[apache-tez]: http://tez.apache.org\n[apache-hive]: http://hive.apache.org/\n[apache-log4j]: http://en.wikipedia.org/wiki/Log4j\n[hive-on-tez-wiki]: https://cwiki.apache.org/confluence/display/Hive/Hive+on+Tez\n[import-to-excel]: http://azure.microsoft.com/documentation/articles/hdinsight-connect-excel-power-query/\n\n\n[hdinsight-use-oozie]: hdinsight-use-oozie.md\n[hdinsight-analyze-flight-data]: hdinsight-analyze-flight-delay-data.md\n\n\n\n\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-submit-jobs]: hdinsight-submit-hadoop-jobs-programmatically.md\n[hdinsight-upload-data]: hdinsight-upload-data.md\n\n[powershell-here-strings]: http://technet.microsoft.com/library/ee692792.aspx\n\n\n"
+}

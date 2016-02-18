@@ -1,0 +1,641 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        102
+      ],
+      "content": "Develop Java MapReduce programs for Linux-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        121,
+        207
+      ],
+      "content": "Learn how to develop Java MapReduce programs and deploy them to Linux-based HDInsight."
+    },
+    {
+      "pos": [
+        539,
+        594
+      ],
+      "content": "Develop Java MapReduce programs for Hadoop on HDInsight"
+    },
+    {
+      "pos": [
+        682,
+        1023
+      ],
+      "content": "This documents walks you through using Apache Maven to create a MapReduce application, then deploy and run it on a Linux-based Hadoop on HDInsight cluster. For information on using a Windows-based Hadoop on HDInsight cluster, see <bpt id=\"p1\">[</bpt>Develop Java MapReduce programs for Hadoop on HDInsight (Windows)<ept id=\"p1\">](hdinsight-develop-deploy-java-mapreduce.md)</ept>",
+      "nodes": [
+        {
+          "content": "This documents walks you through using Apache Maven to create a MapReduce application, then deploy and run it on a Linux-based Hadoop on HDInsight cluster.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "For information on using a Windows-based Hadoop on HDInsight cluster, see <bpt id=\"p1\">[</bpt>Develop Java MapReduce programs for Hadoop on HDInsight (Windows)<ept id=\"p1\">](hdinsight-develop-deploy-java-mapreduce.md)</ept>",
+          "pos": [
+            156,
+            379
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1025,
+        1027
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1055,
+        1068
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1070,
+        1130
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        1134,
+        1249
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Java JDK<ept id=\"p2\">](http://www.oracle.com/technetwork/java/javase/downloads/)</ept><ph id=\"ph3\"/> 7 or later (or an equivalent, such as OpenJDK)"
+    },
+    {
+      "pos": [
+        1253,
+        1293
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Apache Maven<ept id=\"p3\">](http://maven.apache.org/)</ept>"
+    },
+    {
+      "pos": [
+        1297,
+        1322
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>An Azure subscription<ept id=\"p4\">**</ept>"
+    },
+    {
+      "pos": [
+        1326,
+        1425
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>Azure CLI<ept id=\"p5\">**</ept>: For more information, see <bpt id=\"p6\">[</bpt>Install and configure Azure CLI<ept id=\"p6\">](../xplat-cli-install.md)</ept>"
+    },
+    {
+      "pos": [
+        1429,
+        1460
+      ],
+      "content": "Configure environment variables"
+    },
+    {
+      "pos": [
+        1462,
+        1643
+      ],
+      "content": "The following environment variables may be set when you install Java and the JDK. However, you should check that they exist and that they contain the correct values for your system.",
+      "nodes": [
+        {
+          "content": "The following environment variables may be set when you install Java and the JDK.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "However, you should check that they exist and that they contain the correct values for your system.",
+          "pos": [
+            82,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1647,
+        1939
+      ],
+      "content": "<bpt id=\"p7\">**</bpt>JAVA_HOME<ept id=\"p7\">**</ept><ph id=\"ph4\"/> - should point to the directory where the Java runtime environment (JRE) is installed. For example, in a OS X, Unix or Linux system, it should have a value similar to <ph id=\"ph5\">`/usr/lib/jvm/java-7-oracle`</ph>. In Windows, it would have a value similar to <ph id=\"ph6\">`c:\\Program Files (x86)\\Java\\jre1.7`</ph>",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p7\">**</bpt>JAVA_HOME<ept id=\"p7\">**</ept><ph id=\"ph4\"/> - should point to the directory where the Java runtime environment (JRE) is installed.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "For example, in a OS X, Unix or Linux system, it should have a value similar to <ph id=\"ph5\">`/usr/lib/jvm/java-7-oracle`</ph>.",
+          "pos": [
+            153,
+            280
+          ]
+        },
+        {
+          "content": "In Windows, it would have a value similar to <ph id=\"ph6\">`c:\\Program Files (x86)\\Java\\jre1.7`</ph>",
+          "pos": [
+            281,
+            380
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1943,
+        1989
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>PATH<ept id=\"p8\">**</ept><ph id=\"ph7\"/> - should contain the following paths:"
+    },
+    {
+      "pos": [
+        1997,
+        2035
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>JAVA_HOME<ept id=\"p9\">**</ept><ph id=\"ph8\"/> (or the equivalent path)"
+    },
+    {
+      "pos": [
+        2043,
+        2085
+      ],
+      "content": "<bpt id=\"p10\">**</bpt>JAVA_HOME\\bin<ept id=\"p10\">**</ept><ph id=\"ph9\"/> (or the equivalent path)"
+    },
+    {
+      "pos": [
+        2093,
+        2131
+      ],
+      "content": "The directory where Maven is installed"
+    },
+    {
+      "pos": [
+        2135,
+        2161
+      ],
+      "content": "Create a new Maven project"
+    },
+    {
+      "pos": [
+        2166,
+        2306
+      ],
+      "content": "From a terminal session, or command line in your development environment, change directories to the location you want to store this project."
+    },
+    {
+      "pos": [
+        2311,
+        2411
+      ],
+      "content": "Use the <bpt id=\"p11\">__</bpt>mvn<ept id=\"p11\">__</ept><ph id=\"ph10\"/> command, which is installed with Maven, to generate the scaffolding for the project."
+    },
+    {
+      "pos": [
+        2586,
+        2786
+      ],
+      "content": "This will create a new directory in the current directory, with the name specified by the <bpt id=\"p12\">__</bpt>artifactID<ept id=\"p12\">__</ept><ph id=\"ph11\"/> parameter (<bpt id=\"p13\">**</bpt>wordcountjava<ept id=\"p13\">**</ept><ph id=\"ph12\"/> in this example.) This directory will contain the following items:"
+    },
+    {
+      "pos": [
+        2794,
+        2993
+      ],
+      "content": "<bpt id=\"p14\">__</bpt>pom.xml<ept id=\"p14\">__</ept><ph id=\"ph13\"/> - The <bpt id=\"p15\">[</bpt>Project Object Model (POM)<ept id=\"p15\">](http://maven.apache.org/guides/introduction/introduction-to-the-pom.html)</ept><ph id=\"ph14\"/> that contains information and configuration details used to build the project."
+    },
+    {
+      "pos": [
+        3001,
+        3133
+      ],
+      "content": "<bpt id=\"p16\">__</bpt>src<ept id=\"p16\">__</ept><ph id=\"ph15\"/> - The directory that contains the <bpt id=\"p17\">__</bpt>main/java/org/apache/hadoop/examples<ept id=\"p17\">__</ept><ph id=\"ph16\"/> directory, where you will author the application."
+    },
+    {
+      "pos": [
+        3138,
+        3252
+      ],
+      "content": "Delete the <bpt id=\"p18\">__</bpt>src/test/java/org/apache/hadoop/examples/apptest.java<ept id=\"p18\">__</ept><ph id=\"ph17\"/> file, as it will not be used in this example."
+    },
+    {
+      "pos": [
+        3256,
+        3272
+      ],
+      "content": "Add dependencies"
+    },
+    {
+      "pos": [
+        3277,
+        3361
+      ],
+      "content": "Edit the <bpt id=\"p19\">__</bpt>pom.xml<ept id=\"p19\">__</ept><ph id=\"ph18\"/> file and add the following inside the <ph id=\"ph19\">`&lt;dependencies&gt;`</ph><ph id=\"ph20\"/> section:"
+    },
+    {
+      "pos": [
+        4021,
+        4401
+      ],
+      "content": "This tells Maven that the project requires the libraries (listed within &amp;lt;artifactId\\&gt;) with a specific version (listed within &amp;lt;version\\&gt;). At compile time, this will be downloaded from the default Maven repository. You can use the <bpt id=\"p20\">[</bpt>Maven repository search<ept id=\"p20\">](http://search.maven.org/#artifactdetails%7Corg.apache.hadoop%7Chadoop-mapreduce-examples%7C2.5.1%7Cjar)</ept><ph id=\"ph21\"/> to view more.",
+      "nodes": [
+        {
+          "content": "This tells Maven that the project requires the libraries (listed within &amp;lt;artifactId\\&gt;) with a specific version (listed within &amp;lt;version\\&gt;).",
+          "pos": [
+            0,
+            158
+          ]
+        },
+        {
+          "content": "At compile time, this will be downloaded from the default Maven repository.",
+          "pos": [
+            159,
+            234
+          ]
+        },
+        {
+          "content": "You can use the <bpt id=\"p20\">[</bpt>Maven repository search<ept id=\"p20\">](http://search.maven.org/#artifactdetails%7Corg.apache.hadoop%7Chadoop-mapreduce-examples%7C2.5.1%7Cjar)</ept><ph id=\"ph21\"/> to view more.",
+          "pos": [
+            235,
+            449
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4407,
+        4580
+      ],
+      "content": "The <ph id=\"ph22\">`&lt;scope&gt;provided&lt;/scope&gt;`</ph><ph id=\"ph23\"/> tells Maven that these dependencies should not be packaged with the application, as they will be provided by the HDInsight cluster at run-time."
+    },
+    {
+      "pos": [
+        4585,
+        4751
+      ],
+      "content": "Add the following to the <bpt id=\"p21\">__</bpt>pom.xml<ept id=\"p21\">__</ept><ph id=\"ph24\"/> file. This must be inside the <ph id=\"ph25\">`&lt;project&gt;...&lt;/project&gt;`</ph><ph id=\"ph26\"/> tags in the file; for example, between <ph id=\"ph27\">`&lt;/dependencies&gt;`</ph><ph id=\"ph28\"/> and <ph id=\"ph29\">`&lt;/project&gt;`</ph>.",
+      "nodes": [
+        {
+          "content": "Add the following to the <bpt id=\"p21\">__</bpt>pom.xml<ept id=\"p21\">__</ept><ph id=\"ph24\"/> file.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "This must be inside the <ph id=\"ph25\">`&lt;project&gt;...&lt;/project&gt;`</ph><ph id=\"ph26\"/> tags in the file; for example, between <ph id=\"ph27\">`&lt;/dependencies&gt;`</ph><ph id=\"ph28\"/> and <ph id=\"ph29\">`&lt;/project&gt;`</ph>.",
+          "pos": [
+            98,
+            332
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5853,
+        6186
+      ],
+      "content": "The first plugin configures the <bpt id=\"p22\">[</bpt>Maven Shade Plugin<ept id=\"p22\">](http://maven.apache.org/plugins/maven-shade-plugin/)</ept>, which is used to build an uberjar (sometimes called a fatjar), which contains dependencies required by the application. It also prevents duplication of licenses within the jar package, which can cause problems on some systems.",
+      "nodes": [
+        {
+          "content": "The first plugin configures the <bpt id=\"p22\">[</bpt>Maven Shade Plugin<ept id=\"p22\">](http://maven.apache.org/plugins/maven-shade-plugin/)</ept>, which is used to build an uberjar (sometimes called a fatjar), which contains dependencies required by the application.",
+          "pos": [
+            0,
+            266
+          ]
+        },
+        {
+          "content": "It also prevents duplication of licenses within the jar package, which can cause problems on some systems.",
+          "pos": [
+            267,
+            373
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6192,
+        6356
+      ],
+      "content": "The second plugin configures the Maven compiler, which is used to set the version of Java required by this application to the version used on the HDInsight cluster."
+    },
+    {
+      "pos": [
+        6361,
+        6387
+      ],
+      "content": "Save the <bpt id=\"p23\">__</bpt>pom.xml<ept id=\"p23\">__</ept><ph id=\"ph30\"/> file."
+    },
+    {
+      "pos": [
+        6391,
+        6423
+      ],
+      "content": "Create the MapReduce application"
+    },
+    {
+      "pos": [
+        6428,
+        6563
+      ],
+      "content": "Go to the <bpt id=\"p24\">__</bpt>wordcountjava/src/main/java/org/apache/hadoop/examples<ept id=\"p24\">__</ept><ph id=\"ph31\"/> directory and rename the <bpt id=\"p25\">__</bpt>App.java<ept id=\"p25\">__</ept><ph id=\"ph32\"/>  file to <bpt id=\"p26\">__</bpt>WordCount.java<ept id=\"p26\">__</ept>."
+    },
+    {
+      "pos": [
+        6568,
+        6662
+      ],
+      "content": "Open the <bpt id=\"p27\">__</bpt>WordCount.java<ept id=\"p27\">__</ept><ph id=\"ph33\"/> file in a text editor and replace the contents with the following:"
+    },
+    {
+      "pos": [
+        9528,
+        9682
+      ],
+      "content": "Notice the package name is <bpt id=\"p28\">**</bpt>org.apache.hadoop.examples<ept id=\"p28\">**</ept><ph id=\"ph34\"/> and the class name is <bpt id=\"p29\">**</bpt>WordCount<ept id=\"p29\">**</ept>. You will use these names when you submit the MapReduce job.",
+      "nodes": [
+        {
+          "content": "Notice the package name is <bpt id=\"p28\">**</bpt>org.apache.hadoop.examples<ept id=\"p28\">**</ept><ph id=\"ph34\"/> and the class name is <bpt id=\"p29\">**</bpt>WordCount<ept id=\"p29\">**</ept>.",
+          "pos": [
+            0,
+            189
+          ]
+        },
+        {
+          "content": "You will use these names when you submit the MapReduce job.",
+          "pos": [
+            190,
+            249
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9687,
+        9701
+      ],
+      "content": "Save the file."
+    },
+    {
+      "pos": [
+        9705,
+        9726
+      ],
+      "content": "Build the application"
+    },
+    {
+      "pos": [
+        9731,
+        9803
+      ],
+      "content": "Change to the <bpt id=\"p30\">__</bpt>wordcountjava<ept id=\"p30\">__</ept><ph id=\"ph35\"/> directory, if you are not already there."
+    },
+    {
+      "pos": [
+        9808,
+        9881
+      ],
+      "content": "Use the following command to build a JAR file containing the application:"
+    },
+    {
+      "pos": [
+        9914,
+        10067
+      ],
+      "content": "This will clean any previous build artifacts, download any dependencies that have not already been installed, and then build and package the application."
+    },
+    {
+      "pos": [
+        10072,
+        10199
+      ],
+      "content": "Once the command finishes, the <bpt id=\"p31\">__</bpt>wordcountjava/target<ept id=\"p31\">__</ept><ph id=\"ph36\"/> directory will contain a file named <bpt id=\"p32\">__</bpt>wordcountjava-1.0-SNAPSHOT.jar<ept id=\"p32\">__</ept>."
+    },
+    {
+      "pos": [
+        10207,
+        10377
+      ],
+      "content": "<ph id=\"ph37\">[AZURE.NOTE]</ph><ph id=\"ph38\"/> The <bpt id=\"p33\">__</bpt>wordcountjava-1.0-SNAPSHOT.jar<ept id=\"p33\">__</ept><ph id=\"ph39\"/> file is an uberjar, which contains not only the WordCount job, but also dependencies that the job requires at runtime."
+    },
+    {
+      "pos": [
+        10380,
+        10382
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        10401,
+        10415
+      ],
+      "content": "Upload the jar"
+    },
+    {
+      "pos": [
+        10417,
+        10492
+      ],
+      "content": "Use the following command to upload the jar file to the HDInsight headnode:"
+    },
+    {
+      "pos": [
+        10703,
+        10764
+      ],
+      "content": "This copies the files from the local system to the head node."
+    },
+    {
+      "pos": [
+        10768,
+        11086
+      ],
+      "content": "<ph id=\"ph40\">[AZURE.NOTE]</ph><ph id=\"ph41\"/> If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the <ph id=\"ph42\">`-i`</ph><ph id=\"ph43\"/> parameter and the path to the private key. For example, <ph id=\"ph44\">`scp -i /path/to/private/key wordcountjava-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph40\">[AZURE.NOTE]</ph><ph id=\"ph41\"/> If you used a password to secure your SSH account, you will be prompted for the password.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "If you used an SSH key, you may have to use the <ph id=\"ph42\">`-i`</ph><ph id=\"ph43\"/> parameter and the path to the private key.",
+          "pos": [
+            137,
+            266
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph44\">`scp -i /path/to/private/key wordcountjava-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:`</ph>.",
+          "pos": [
+            267,
+            405
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11088,
+        11090
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        11108,
+        11129
+      ],
+      "content": "Run the MapReduce job"
+    },
+    {
+      "pos": [
+        11134,
+        11204
+      ],
+      "content": "Connect to HDInsight using SSH as described in the following articles:"
+    },
+    {
+      "pos": [
+        11212,
+        11324
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X<ept id=\"p34\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        11332,
+        11434
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p35\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        11439,
+        11520
+      ],
+      "content": "From the SSH session, use the following command to run the MapReduce application:"
+    },
+    {
+      "pos": [
+        11676,
+        11915
+      ],
+      "content": "This will use the WordCount MapReduce application to count the words in the davinci.txt file, and store the results to <bpt id=\"p36\">__</bpt>wasb:///example/data/wordcountout<ept id=\"p36\">__</ept>. Both the input file and output are stored to the default storage for the cluster.",
+      "nodes": [
+        {
+          "content": "This will use the WordCount MapReduce application to count the words in the davinci.txt file, and store the results to <bpt id=\"p36\">__</bpt>wasb:///example/data/wordcountout<ept id=\"p36\">__</ept>.",
+          "pos": [
+            0,
+            197
+          ]
+        },
+        {
+          "content": "Both the input file and output are stored to the default storage for the cluster.",
+          "pos": [
+            198,
+            279
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11920,
+        11982
+      ],
+      "content": "Once the job completes, use the following to view the results:"
+    },
+    {
+      "pos": [
+        12047,
+        12131
+      ],
+      "content": "You should receive a list of words and counts, with values similar to the following:"
+    },
+    {
+      "pos": [
+        12188,
+        12190
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        12212,
+        12222
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        12224,
+        12362
+      ],
+      "content": "In this document, you have learned how to develop a Java MapReduce job. See the following documents for other ways to work with HDInsight.",
+      "nodes": [
+        {
+          "content": "In this document, you have learned how to develop a Java MapReduce job.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "See the following documents for other ways to work with HDInsight.",
+          "pos": [
+            72,
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12366,
+        12411
+      ],
+      "content": "<bpt id=\"p37\">[</bpt>Use Hive with HDInsight<ept id=\"p37\">][hdinsight-use-hive]</ept>"
+    },
+    {
+      "pos": [
+        12414,
+        12457
+      ],
+      "content": "<bpt id=\"p38\">[</bpt>Use Pig with HDInsight<ept id=\"p38\">][hdinsight-use-pig]</ept>"
+    },
+    {
+      "pos": [
+        12460,
+        12518
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Use MapReduce with HDInsight<ept id=\"p39\">](hdinsight-use-mapreduce.md)</ept>"
+    },
+    {
+      "pos": [
+        12520,
+        12622
+      ],
+      "content": "For more information, see also the <bpt id=\"p40\">[</bpt>Java Developer Center<ept id=\"p40\">](https://azure.microsoft.com/develop/java/)</ept>."
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Develop Java MapReduce programs for Linux-based HDInsight | Microsoft Azure\"\n    description=\"Learn how to develop Java MapReduce programs and deploy them to Linux-based HDInsight.\"\n    services=\"hdinsight\"\n    editor=\"cgronlun\"\n    manager=\"paulettm\"\n    authors=\"Blackmist\"\n    documentationCenter=\"\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"Java\"\n    ms.topic=\"article\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"larryfr\"/>\n\n# Develop Java MapReduce programs for Hadoop on HDInsight\n\n[AZURE.INCLUDE [pig-selector](../../includes/hdinsight-maven-mapreduce-selector.md)]\n\nThis documents walks you through using Apache Maven to create a MapReduce application, then deploy and run it on a Linux-based Hadoop on HDInsight cluster. For information on using a Windows-based Hadoop on HDInsight cluster, see [Develop Java MapReduce programs for Hadoop on HDInsight (Windows)](hdinsight-develop-deploy-java-mapreduce.md)\n\n##<a name=\"prerequisites\"></a>Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- [Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/) 7 or later (or an equivalent, such as OpenJDK)\n\n- [Apache Maven](http://maven.apache.org/)\n\n- **An Azure subscription**\n\n- **Azure CLI**: For more information, see [Install and configure Azure CLI](../xplat-cli-install.md)\n\n##Configure environment variables\n\nThe following environment variables may be set when you install Java and the JDK. However, you should check that they exist and that they contain the correct values for your system.\n\n* **JAVA_HOME** - should point to the directory where the Java runtime environment (JRE) is installed. For example, in a OS X, Unix or Linux system, it should have a value similar to `/usr/lib/jvm/java-7-oracle`. In Windows, it would have a value similar to `c:\\Program Files (x86)\\Java\\jre1.7`\n\n* **PATH** - should contain the following paths:\n\n    * **JAVA_HOME** (or the equivalent path)\n\n    * **JAVA_HOME\\bin** (or the equivalent path)\n\n    * The directory where Maven is installed\n\n##Create a new Maven project\n\n1. From a terminal session, or command line in your development environment, change directories to the location you want to store this project.\n\n3. Use the __mvn__ command, which is installed with Maven, to generate the scaffolding for the project.\n\n        mvn archetype:generate -DgroupId=org.apache.hadoop.examples -DartifactId=wordcountjava -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false\n\n    This will create a new directory in the current directory, with the name specified by the __artifactID__ parameter (**wordcountjava** in this example.) This directory will contain the following items:\n\n    * __pom.xml__ - The [Project Object Model (POM)](http://maven.apache.org/guides/introduction/introduction-to-the-pom.html) that contains information and configuration details used to build the project.\n\n    * __src__ - The directory that contains the __main/java/org/apache/hadoop/examples__ directory, where you will author the application.\n\n3. Delete the __src/test/java/org/apache/hadoop/examples/apptest.java__ file, as it will not be used in this example.\n\n##Add dependencies\n\n1. Edit the __pom.xml__ file and add the following inside the `<dependencies>` section:\n\n        <dependency>\n          <groupId>org.apache.hadoop</groupId>\n          <artifactId>hadoop-mapreduce-examples</artifactId>\n          <version>2.5.1</version>\n          <scope>provided</scope>\n        </dependency>\n        <dependency>\n          <groupId>org.apache.hadoop</groupId>\n          <artifactId>hadoop-mapreduce-client-common</artifactId>\n          <version>2.5.1</version>\n          <scope>provided</scope>\n        </dependency>\n        <dependency>\n          <groupId>org.apache.hadoop</groupId>\n          <artifactId>hadoop-common</artifactId>\n          <version>2.5.1</version>\n          <scope>provided</scope>\n        </dependency>\n\n    This tells Maven that the project requires the libraries (listed within &lt;artifactId\\>) with a specific version (listed within &lt;version\\>). At compile time, this will be downloaded from the default Maven repository. You can use the [Maven repository search](http://search.maven.org/#artifactdetails%7Corg.apache.hadoop%7Chadoop-mapreduce-examples%7C2.5.1%7Cjar) to view more.\n\n    The `<scope>provided</scope>` tells Maven that these dependencies should not be packaged with the application, as they will be provided by the HDInsight cluster at run-time.\n\n2. Add the following to the __pom.xml__ file. This must be inside the `<project>...</project>` tags in the file; for example, between `</dependencies>` and `</project>`.\n\n        <build>\n          <plugins>\n            <plugin>\n              <groupId>org.apache.maven.plugins</groupId>\n              <artifactId>maven-shade-plugin</artifactId>\n              <version>2.3</version>\n              <configuration>\n                <transformers>\n                  <transformer implementation=\"org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer\">\n                  </transformer>\n                </transformers>\n              </configuration>\n              <executions>\n                <execution>\n                  <phase>package</phase>\n                    <goals>\n                      <goal>shade</goal>\n                    </goals>\n                </execution>\n              </executions>\n            </plugin>\n            <plugin>\n              <groupId>org.apache.maven.plugins</groupId>\n              <artifactId>maven-compiler-plugin</artifactId>\n              <configuration>\n               <source>1.7</source>\n               <target>1.7</target>\n              </configuration>\n            </plugin>\n          </plugins>\n        </build>\n\n    The first plugin configures the [Maven Shade Plugin](http://maven.apache.org/plugins/maven-shade-plugin/), which is used to build an uberjar (sometimes called a fatjar), which contains dependencies required by the application. It also prevents duplication of licenses within the jar package, which can cause problems on some systems.\n\n    The second plugin configures the Maven compiler, which is used to set the version of Java required by this application to the version used on the HDInsight cluster.\n\n3. Save the __pom.xml__ file.\n\n##Create the MapReduce application\n\n1. Go to the __wordcountjava/src/main/java/org/apache/hadoop/examples__ directory and rename the __App.java__  file to __WordCount.java__.\n\n2. Open the __WordCount.java__ file in a text editor and replace the contents with the following:\n\n        package org.apache.hadoop.examples;\n\n        import java.io.IOException;\n        import java.util.StringTokenizer;\n        import org.apache.hadoop.conf.Configuration;\n        import org.apache.hadoop.fs.Path;\n        import org.apache.hadoop.io.IntWritable;\n        import org.apache.hadoop.io.Text;\n        import org.apache.hadoop.mapreduce.Job;\n        import org.apache.hadoop.mapreduce.Mapper;\n        import org.apache.hadoop.mapreduce.Reducer;\n        import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;\n        import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;\n        import org.apache.hadoop.util.GenericOptionsParser;\n\n        public class WordCount {\n\n          public static class TokenizerMapper\n               extends Mapper<Object, Text, Text, IntWritable>{\n\n            private final static IntWritable one = new IntWritable(1);\n            private Text word = new Text();\n\n            public void map(Object key, Text value, Context context\n                            ) throws IOException, InterruptedException {\n              StringTokenizer itr = new StringTokenizer(value.toString());\n              while (itr.hasMoreTokens()) {\n                word.set(itr.nextToken());\n                context.write(word, one);\n              }\n            }\n          }\n\n          public static class IntSumReducer\n               extends Reducer<Text,IntWritable,Text,IntWritable> {\n            private IntWritable result = new IntWritable();\n\n            public void reduce(Text key, Iterable<IntWritable> values,\n                               Context context\n                               ) throws IOException, InterruptedException {\n              int sum = 0;\n              for (IntWritable val : values) {\n                sum += val.get();\n              }\n              result.set(sum);\n              context.write(key, result);\n            }\n          }\n\n          public static void main(String[] args) throws Exception {\n            Configuration conf = new Configuration();\n            String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();\n            if (otherArgs.length != 2) {\n              System.err.println(\"Usage: wordcount <in> <out>\");\n              System.exit(2);\n            }\n            Job job = new Job(conf, \"word count\");\n            job.setJarByClass(WordCount.class);\n            job.setMapperClass(TokenizerMapper.class);\n            job.setCombinerClass(IntSumReducer.class);\n            job.setReducerClass(IntSumReducer.class);\n            job.setOutputKeyClass(Text.class);\n            job.setOutputValueClass(IntWritable.class);\n            FileInputFormat.addInputPath(job, new Path(otherArgs[0]));\n            FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));\n            System.exit(job.waitForCompletion(true) ? 0 : 1);\n          }\n        }\n\n    Notice the package name is **org.apache.hadoop.examples** and the class name is **WordCount**. You will use these names when you submit the MapReduce job.\n\n3. Save the file.\n\n##Build the application\n\n1. Change to the __wordcountjava__ directory, if you are not already there.\n\n2. Use the following command to build a JAR file containing the application:\n\n        mvn clean package\n\n    This will clean any previous build artifacts, download any dependencies that have not already been installed, and then build and package the application.\n\n3. Once the command finishes, the __wordcountjava/target__ directory will contain a file named __wordcountjava-1.0-SNAPSHOT.jar__.\n\n    > [AZURE.NOTE] The __wordcountjava-1.0-SNAPSHOT.jar__ file is an uberjar, which contains not only the WordCount job, but also dependencies that the job requires at runtime.\n\n\n##<a id=\"upload\"></a>Upload the jar\n\nUse the following command to upload the jar file to the HDInsight headnode:\n\n    scp wordcountjava-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:\n\n    Replace __USERNAME__ with your SSH user name for the cluster. Replace __CLUSTERNAME__ with the HDInsight cluster name.\n\nThis copies the files from the local system to the head node.\n\n> [AZURE.NOTE] If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the `-i` parameter and the path to the private key. For example, `scp -i /path/to/private/key wordcountjava-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:`.\n\n##<a name=\"run\"></a>Run the MapReduce job\n\n1. Connect to HDInsight using SSH as described in the following articles:\n\n    - [Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n    - [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n2. From the SSH session, use the following command to run the MapReduce application:\n\n        yarn jar wordcountjava.jar org.apache.hadoop.examples.WordCount wasb:///example/data/gutenberg/davinci.txt wasb:///example/data/wordcountout\n\n    This will use the WordCount MapReduce application to count the words in the davinci.txt file, and store the results to __wasb:///example/data/wordcountout__. Both the input file and output are stored to the default storage for the cluster.\n\n3. Once the job completes, use the following to view the results:\n\n        hdfs dfs -cat wasb:///example/data/wordcountout/*\n\n    You should receive a list of words and counts, with values similar to the following:\n\n        zeal    1\n        zelus   1\n        zenith  2\n\n##<a id=\"nextsteps\"></a>Next steps\n\nIn this document, you have learned how to develop a Java MapReduce job. See the following documents for other ways to work with HDInsight.\n\n- [Use Hive with HDInsight][hdinsight-use-hive]\n- [Use Pig with HDInsight][hdinsight-use-pig]\n- [Use MapReduce with HDInsight](hdinsight-use-mapreduce.md)\n\nFor more information, see also the [Java Developer Center](https://azure.microsoft.com/develop/java/).\n\n[azure-purchase-options]: http://azure.microsoft.com/pricing/purchase-options/\n[azure-member-offers]: http://azure.microsoft.com/pricing/member-offers/\n[azure-free-trial]: http://azure.microsoft.com/pricing/free-trial/\n\n[hdinsight-use-sqoop]: hdinsight-use-sqoop.md\n[hdinsight-ODBC]: hdinsight-connect-excel-hive-ODBC-driver.md\n[hdinsight-power-query]: hdinsight-connect-excel-power-query.md\n\n[hdinsight-develop-streaming]: hdinsight-hadoop-develop-deploy-streaming-jobs.md\n\n\n\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-admin-powershell]: hdinsight-administer-use-powershell.md\n[hdinsight-use-hive]: hdinsight-use-hive.md\n[hdinsight-use-pig]: hdinsight-use-pig.md\n[hdinsight-power-query]: hdinsight-connect-excel-power-query.md\n\n[powershell-PSCredential]: http://social.technet.microsoft.com/wiki/contents/articles/4546.working-with-passwords-secure-strings-and-credentials-in-windows-powershell.aspx\n\n"
+}

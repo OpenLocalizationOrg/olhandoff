@@ -1,0 +1,508 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="fr-fr">
+    <body>
+      <group id="main" extype="content">
+        <trans-unit id="101" translate="yes" xml:space="preserve">
+          <source>Correlate events over time with Storm and HBase on HDInsight</source>
+          <target state="new">Correlate events over time with Storm and HBase on HDInsight</target>
+        </trans-unit>
+        <trans-unit id="102" translate="yes" xml:space="preserve">
+          <source>Learn how to correlate events that arrive at different times by using Storm and HBase on HDInsight.</source>
+          <target state="new">Learn how to correlate events that arrive at different times by using Storm and HBase on HDInsight.</target>
+        </trans-unit>
+        <trans-unit id="103" translate="yes" xml:space="preserve">
+          <source>Correlate events over time with Storm and HBase on HDInsight</source>
+          <target state="new">Correlate events over time with Storm and HBase on HDInsight</target>
+        </trans-unit>
+        <trans-unit id="104" translate="yes" xml:space="preserve">
+          <source>By using a persistent data store with Apache Storm, you can correlate data entries that arrive at different times.</source>
+          <target state="new">By using a persistent data store with Apache Storm, you can correlate data entries that arrive at different times.</target>
+        </trans-unit>
+        <trans-unit id="105" translate="yes" xml:space="preserve">
+          <source>For example, linking login and logout events for a user session to calculate how long the session lasted.</source>
+          <target state="new">For example, linking login and logout events for a user session to calculate how long the session lasted.</target>
+        </trans-unit>
+        <trans-unit id="106" translate="yes" xml:space="preserve">
+          <source>In this document, you will learn how to create a basic C# Storm topology that tracks login and logout events for user sessions, and calculates the duration of the session.</source>
+          <target state="new">In this document, you will learn how to create a basic C# Storm topology that tracks login and logout events for user sessions, and calculates the duration of the session.</target>
+        </trans-unit>
+        <trans-unit id="107" translate="yes" xml:space="preserve">
+          <source>The topology uses HBase as a persistent data store.</source>
+          <target state="new">The topology uses HBase as a persistent data store.</target>
+        </trans-unit>
+        <trans-unit id="108" translate="yes" xml:space="preserve">
+          <source>HBase also allows you to perform batch queries on the historical data to produce additional insights, such as how many user sessions were started or ended during a specific time period.</source>
+          <target state="new">HBase also allows you to perform batch queries on the historical data to produce additional insights, such as how many user sessions were started or ended during a specific time period.</target>
+        </trans-unit>
+        <trans-unit id="109" translate="yes" xml:space="preserve">
+          <source>Prerequisites</source>
+          <target state="new">Prerequisites</target>
+        </trans-unit>
+        <trans-unit id="110" translate="yes" xml:space="preserve">
+          <source>HDInsight tools for Visual Studio: See <bpt id="p1">[</bpt>Get started using the HDInsight tools for Visual Studio<ept id="p1">](../HDInsight/hdinsight-hadoop-visual-studio-tools-get-started.md)</ept><ph id="ph3" /> for installation information.</source>
+          <target state="new">HDInsight tools for Visual Studio: See <bpt id="p1">[</bpt>Get started using the HDInsight tools for Visual Studio<ept id="p1">](../HDInsight/hdinsight-hadoop-visual-studio-tools-get-started.md)</ept><ph id="ph3" /> for installation information.</target>
+        </trans-unit>
+        <trans-unit id="111" translate="yes" xml:space="preserve">
+          <source>Apache Storm on HDInsight cluster</source>
+          <target state="new">Apache Storm on HDInsight cluster</target>
+        </trans-unit>
+        <trans-unit id="112" translate="yes" xml:space="preserve">
+          <source>Apache HBase on HDInsight cluster</source>
+          <target state="new">Apache HBase on HDInsight cluster</target>
+        </trans-unit>
+        <trans-unit id="113" translate="yes" xml:space="preserve">
+          <source>Architecture</source>
+          <target state="new">Architecture</target>
+        </trans-unit>
+        <trans-unit id="114" translate="yes" xml:space="preserve">
+          <source><ph id="ph4">![</ph>Diagram of the data flow through the topology<ph id="ph5">](./media/hdinsight-storm-correlation-topology/correlationtopology.png)</ph></source>
+          <target state="new"><ph id="ph4">![</ph>Diagram of the data flow through the topology<ph id="ph5">](./media/hdinsight-storm-correlation-topology/correlationtopology.png)</ph></target>
+        </trans-unit>
+        <trans-unit id="115" translate="yes" xml:space="preserve">
+          <source>Correlating events requires a common identifier for the event source.</source>
+          <target state="new">Correlating events requires a common identifier for the event source.</target>
+        </trans-unit>
+        <trans-unit id="116" translate="yes" xml:space="preserve">
+          <source>For example, a user ID, session ID, or other piece of data that is a) unique and b) included in all data sent to Storm.</source>
+          <target state="new">For example, a user ID, session ID, or other piece of data that is a) unique and b) included in all data sent to Storm.</target>
+        </trans-unit>
+        <trans-unit id="117" translate="yes" xml:space="preserve">
+          <source>This example uses a GUID value to represent a session ID.</source>
+          <target state="new">This example uses a GUID value to represent a session ID.</target>
+        </trans-unit>
+        <trans-unit id="118" translate="yes" xml:space="preserve">
+          <source>This example consists of two HDInsight clusters:</source>
+          <target state="new">This example consists of two HDInsight clusters:</target>
+        </trans-unit>
+        <trans-unit id="119" translate="yes" xml:space="preserve">
+          <source>HBase: persistent data store for historical data</source>
+          <target state="new">HBase: persistent data store for historical data</target>
+        </trans-unit>
+        <trans-unit id="120" translate="yes" xml:space="preserve">
+          <source>Storm: used to ingest incoming data</source>
+          <target state="new">Storm: used to ingest incoming data</target>
+        </trans-unit>
+        <trans-unit id="121" translate="yes" xml:space="preserve">
+          <source>The data is randomly generated by the Storm topology, and consists of the following items:</source>
+          <target state="new">The data is randomly generated by the Storm topology, and consists of the following items:</target>
+        </trans-unit>
+        <trans-unit id="122" translate="yes" xml:space="preserve">
+          <source>Session ID: a GUID that uniquely identifies each session</source>
+          <target state="new">Session ID: a GUID that uniquely identifies each session</target>
+        </trans-unit>
+        <trans-unit id="123" translate="yes" xml:space="preserve">
+          <source>Event: a START or END event.</source>
+          <target state="new">Event: a START or END event.</target>
+        </trans-unit>
+        <trans-unit id="124" translate="yes" xml:space="preserve">
+          <source>For this example, START always occurs before END</source>
+          <target state="new">For this example, START always occurs before END</target>
+        </trans-unit>
+        <trans-unit id="125" translate="yes" xml:space="preserve">
+          <source>Time: the time of the event.</source>
+          <target state="new">Time: the time of the event.</target>
+        </trans-unit>
+        <trans-unit id="126" translate="yes" xml:space="preserve">
+          <source>This data is processed and stored in HBase.</source>
+          <target state="new">This data is processed and stored in HBase.</target>
+        </trans-unit>
+        <trans-unit id="127" translate="yes" xml:space="preserve">
+          <source>Storm topology</source>
+          <target state="new">Storm topology</target>
+        </trans-unit>
+        <trans-unit id="128" translate="yes" xml:space="preserve">
+          <source>When a session starts, a <bpt id="p2">**</bpt>START<ept id="p2">**</ept><ph id="ph6" /> event is received by the topology and logged to HBase.</source>
+          <target state="new">When a session starts, a <bpt id="p2">**</bpt>START<ept id="p2">**</ept><ph id="ph6" /> event is received by the topology and logged to HBase.</target>
+        </trans-unit>
+        <trans-unit id="129" translate="yes" xml:space="preserve">
+          <source>When an <bpt id="p3">**</bpt>END<ept id="p3">**</ept><ph id="ph7" /> event is received, the topology retrieves the <bpt id="p4">**</bpt>START<ept id="p4">**</ept><ph id="ph8" /> event and calculates the time between the two events.</source>
+          <target state="new">When an <bpt id="p3">**</bpt>END<ept id="p3">**</ept><ph id="ph7" /> event is received, the topology retrieves the <bpt id="p4">**</bpt>START<ept id="p4">**</ept><ph id="ph8" /> event and calculates the time between the two events.</target>
+        </trans-unit>
+        <trans-unit id="130" translate="yes" xml:space="preserve">
+          <source>This <bpt id="p5">**</bpt>Duration<ept id="p5">**</ept><ph id="ph9" /> value is then stored in HBase along with the <bpt id="p6">**</bpt>END<ept id="p6">**</ept><ph id="ph10" /> event information.</source>
+          <target state="new">This <bpt id="p5">**</bpt>Duration<ept id="p5">**</ept><ph id="ph9" /> value is then stored in HBase along with the <bpt id="p6">**</bpt>END<ept id="p6">**</ept><ph id="ph10" /> event information.</target>
+        </trans-unit>
+        <trans-unit id="131" translate="yes" xml:space="preserve">
+          <source><ph id="ph11">[AZURE.IMPORTANT]</ph><ph id="ph12" /> While this topology demonstrates the basic pattern, a production solution would need to take design for the following scenarios:</source>
+          <target state="new"><ph id="ph11">[AZURE.IMPORTANT]</ph><ph id="ph12" /> While this topology demonstrates the basic pattern, a production solution would need to take design for the following scenarios:</target>
+        </trans-unit>
+        <trans-unit id="132" translate="yes" xml:space="preserve">
+          <source>Events arriving out of order</source>
+          <target state="new">Events arriving out of order</target>
+        </trans-unit>
+        <trans-unit id="133" translate="yes" xml:space="preserve">
+          <source>Duplicate events</source>
+          <target state="new">Duplicate events</target>
+        </trans-unit>
+        <trans-unit id="134" translate="yes" xml:space="preserve">
+          <source>Dropped events</source>
+          <target state="new">Dropped events</target>
+        </trans-unit>
+        <trans-unit id="135" translate="yes" xml:space="preserve">
+          <source>The sample topology is composed of the following components:</source>
+          <target state="new">The sample topology is composed of the following components:</target>
+        </trans-unit>
+        <trans-unit id="136" translate="yes" xml:space="preserve">
+          <source>Session.cs: simulates a user session by creating a random session ID, start time, and how long the session will last</source>
+          <target state="new">Session.cs: simulates a user session by creating a random session ID, start time, and how long the session will last</target>
+        </trans-unit>
+        <trans-unit id="137" translate="yes" xml:space="preserve">
+          <source>Spout.cs: creates 100 sessions, emits a START event, waits the random timeout for each session and then emits an END event.</source>
+          <target state="new">Spout.cs: creates 100 sessions, emits a START event, waits the random timeout for each session and then emits an END event.</target>
+        </trans-unit>
+        <trans-unit id="138" translate="yes" xml:space="preserve">
+          <source>Then recycles ended sessions to generate new ones.</source>
+          <target state="new">Then recycles ended sessions to generate new ones.</target>
+        </trans-unit>
+        <trans-unit id="139" translate="yes" xml:space="preserve">
+          <source>HBaseLookupBolt.cs: uses the session ID to look up session information from HBase.</source>
+          <target state="new">HBaseLookupBolt.cs: uses the session ID to look up session information from HBase.</target>
+        </trans-unit>
+        <trans-unit id="140" translate="yes" xml:space="preserve">
+          <source>When an END event is processed, it finds the corresponding START event and calculates the duration of the session.</source>
+          <target state="new">When an END event is processed, it finds the corresponding START event and calculates the duration of the session.</target>
+        </trans-unit>
+        <trans-unit id="141" translate="yes" xml:space="preserve">
+          <source>HBaseBolt.cs: Stores information into HBase.</source>
+          <target state="new">HBaseBolt.cs: Stores information into HBase.</target>
+        </trans-unit>
+        <trans-unit id="142" translate="yes" xml:space="preserve">
+          <source>TypeHelper.cs: Helps with type conversion when reading from/writing to HBase.</source>
+          <target state="new">TypeHelper.cs: Helps with type conversion when reading from/writing to HBase.</target>
+        </trans-unit>
+        <trans-unit id="143" translate="yes" xml:space="preserve">
+          <source>HBase schema</source>
+          <target state="new">HBase schema</target>
+        </trans-unit>
+        <trans-unit id="144" translate="yes" xml:space="preserve">
+          <source>In HBase, the data is stored in a table with the following schema/settings:</source>
+          <target state="new">In HBase, the data is stored in a table with the following schema/settings:</target>
+        </trans-unit>
+        <trans-unit id="145" translate="yes" xml:space="preserve">
+          <source>Row key: the session ID is used as the key for rows in this table</source>
+          <target state="new">Row key: the session ID is used as the key for rows in this table</target>
+        </trans-unit>
+        <trans-unit id="146" translate="yes" xml:space="preserve">
+          <source>Column family: the family name is 'cf'.</source>
+          <target state="new">Column family: the family name is 'cf'.</target>
+        </trans-unit>
+        <trans-unit id="147" translate="yes" xml:space="preserve">
+          <source>Columns stored in this family are:</source>
+          <target state="new">Columns stored in this family are:</target>
+        </trans-unit>
+        <trans-unit id="148" translate="yes" xml:space="preserve">
+          <source>event: START or END</source>
+          <target state="new">event: START or END</target>
+        </trans-unit>
+        <trans-unit id="149" translate="yes" xml:space="preserve">
+          <source>time: the time in milliseconds that the event occured</source>
+          <target state="new">time: the time in milliseconds that the event occured</target>
+        </trans-unit>
+        <trans-unit id="150" translate="yes" xml:space="preserve">
+          <source>duration: the length between START and END event</source>
+          <target state="new">duration: the length between START and END event</target>
+        </trans-unit>
+        <trans-unit id="151" translate="yes" xml:space="preserve">
+          <source>VERSIONS: the 'cf' family is set to retain 5 versions of each row</source>
+          <target state="new">VERSIONS: the 'cf' family is set to retain 5 versions of each row</target>
+        </trans-unit>
+        <trans-unit id="152" translate="yes" xml:space="preserve">
+          <source><ph id="ph13">[AZURE.NOTE]</ph><ph id="ph14" /> Versions are a log of previous values stored for a specific row key.</source>
+          <target state="new"><ph id="ph13">[AZURE.NOTE]</ph><ph id="ph14" /> Versions are a log of previous values stored for a specific row key.</target>
+        </trans-unit>
+        <trans-unit id="153" translate="yes" xml:space="preserve">
+          <source>By default, HBase only returns the value for the most recent version of a row.</source>
+          <target state="new">By default, HBase only returns the value for the most recent version of a row.</target>
+        </trans-unit>
+        <trans-unit id="154" translate="yes" xml:space="preserve">
+          <source>In this case, the same row is used for all events (START, END.) each version of a row is identified by the timestamp value.</source>
+          <target state="new">In this case, the same row is used for all events (START, END.) each version of a row is identified by the timestamp value.</target>
+        </trans-unit>
+        <trans-unit id="155" translate="yes" xml:space="preserve">
+          <source>This provides a historical view of events logged for a specific ID.</source>
+          <target state="new">This provides a historical view of events logged for a specific ID.</target>
+        </trans-unit>
+        <trans-unit id="156" translate="yes" xml:space="preserve">
+          <source>Download the project</source>
+          <target state="new">Download the project</target>
+        </trans-unit>
+        <trans-unit id="157" translate="yes" xml:space="preserve">
+          <source>The sample project can be downloaded from <bpt id="p7">[</bpt>https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation<ept id="p7">](https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation)</ept>.</source>
+          <target state="new">The sample project can be downloaded from <bpt id="p7">[</bpt>https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation<ept id="p7">](https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation)</ept>.</target>
+        </trans-unit>
+        <trans-unit id="158" translate="yes" xml:space="preserve">
+          <source>This download contains the following C# projects:</source>
+          <target state="new">This download contains the following C# projects:</target>
+        </trans-unit>
+        <trans-unit id="159" translate="yes" xml:space="preserve">
+          <source>CorrelationTopology: C# Storm topology that randomly emits start and end events for user sessions.</source>
+          <target state="new">CorrelationTopology: C# Storm topology that randomly emits start and end events for user sessions.</target>
+        </trans-unit>
+        <trans-unit id="160" translate="yes" xml:space="preserve">
+          <source>Each session lasts between 1 and 5 minutes.</source>
+          <target state="new">Each session lasts between 1 and 5 minutes.</target>
+        </trans-unit>
+        <trans-unit id="161" translate="yes" xml:space="preserve">
+          <source>SessionInfo: C# console application that creates the HBase table, and provides example queries to return information about stored session data.</source>
+          <target state="new">SessionInfo: C# console application that creates the HBase table, and provides example queries to return information about stored session data.</target>
+        </trans-unit>
+        <trans-unit id="162" translate="yes" xml:space="preserve">
+          <source>Create the table</source>
+          <target state="new">Create the table</target>
+        </trans-unit>
+        <trans-unit id="163" translate="yes" xml:space="preserve">
+          <source>Open the <bpt id="p8">**</bpt>SessionInfo<ept id="p8">**</ept><ph id="ph15" /> project in Visual Studio.</source>
+          <target state="new">Open the <bpt id="p8">**</bpt>SessionInfo<ept id="p8">**</ept><ph id="ph15" /> project in Visual Studio.</target>
+        </trans-unit>
+        <trans-unit id="164" translate="yes" xml:space="preserve">
+          <source>In <bpt id="p9">**</bpt>Solution Explorer<ept id="p9">**</ept>, right-click the <bpt id="p10">**</bpt>SessionInfo<ept id="p10">**</ept><ph id="ph16" /> project and select <bpt id="p11">**</bpt>Properties<ept id="p11">**</ept>.</source>
+          <target state="new">In <bpt id="p9">**</bpt>Solution Explorer<ept id="p9">**</ept>, right-click the <bpt id="p10">**</bpt>SessionInfo<ept id="p10">**</ept><ph id="ph16" /> project and select <bpt id="p11">**</bpt>Properties<ept id="p11">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="165" translate="yes" xml:space="preserve">
+          <source><ph id="ph17">![</ph>Screenshot of menu with properties selected<ph id="ph18">](./media/hdinsight-storm-correlation-topology/selectproperties.png)</ph></source>
+          <target state="new"><ph id="ph17">![</ph>Screenshot of menu with properties selected<ph id="ph18">](./media/hdinsight-storm-correlation-topology/selectproperties.png)</ph></target>
+        </trans-unit>
+        <trans-unit id="166" translate="yes" xml:space="preserve">
+          <source>Select <bpt id="p12">**</bpt>Settings<ept id="p12">**</ept>, then set the following values:</source>
+          <target state="new">Select <bpt id="p12">**</bpt>Settings<ept id="p12">**</ept>, then set the following values:</target>
+        </trans-unit>
+        <trans-unit id="167" translate="yes" xml:space="preserve">
+          <source>HBaseClusterURL: the URL to your HBase cluster.</source>
+          <target state="new">HBaseClusterURL: the URL to your HBase cluster.</target>
+        </trans-unit>
+        <trans-unit id="168" translate="yes" xml:space="preserve">
+          <source>For example, https://myhbasecluster.azurehdinsight.net</source>
+          <target state="new">For example, https://myhbasecluster.azurehdinsight.net</target>
+        </trans-unit>
+        <trans-unit id="169" translate="yes" xml:space="preserve">
+          <source>HBaseClusterUserName: the admin/HTTP user account for your cluster</source>
+          <target state="new">HBaseClusterUserName: the admin/HTTP user account for your cluster</target>
+        </trans-unit>
+        <trans-unit id="170" translate="yes" xml:space="preserve">
+          <source>HBaseClusterPassword: the password for the admin/HTTP user account</source>
+          <target state="new">HBaseClusterPassword: the password for the admin/HTTP user account</target>
+        </trans-unit>
+        <trans-unit id="171" translate="yes" xml:space="preserve">
+          <source>HBaseTableName: the name of the table to use with this example</source>
+          <target state="new">HBaseTableName: the name of the table to use with this example</target>
+        </trans-unit>
+        <trans-unit id="172" translate="yes" xml:space="preserve">
+          <source>HBaseTableColumnFamily: The column family name</source>
+          <target state="new">HBaseTableColumnFamily: The column family name</target>
+        </trans-unit>
+        <trans-unit id="173" translate="yes" xml:space="preserve">
+          <source><ph id="ph19">![</ph>Image of settings dialog<ph id="ph20">](./media/hdinsight-storm-correlation-topology/settings.png)</ph></source>
+          <target state="new"><ph id="ph19">![</ph>Image of settings dialog<ph id="ph20">](./media/hdinsight-storm-correlation-topology/settings.png)</ph></target>
+        </trans-unit>
+        <trans-unit id="174" translate="yes" xml:space="preserve">
+          <source>Run the solution.</source>
+          <target state="new">Run the solution.</target>
+        </trans-unit>
+        <trans-unit id="175" translate="yes" xml:space="preserve">
+          <source>When prompted, select the 'c' key to create the table on your HBase cluster.</source>
+          <target state="new">When prompted, select the 'c' key to create the table on your HBase cluster.</target>
+        </trans-unit>
+        <trans-unit id="176" translate="yes" xml:space="preserve">
+          <source>Build and deploy the Storm topology</source>
+          <target state="new">Build and deploy the Storm topology</target>
+        </trans-unit>
+        <trans-unit id="177" translate="yes" xml:space="preserve">
+          <source>Open the <bpt id="p13">**</bpt>CorrelationTopology<ept id="p13">**</ept><ph id="ph21" /> solution in Visual Studio.</source>
+          <target state="new">Open the <bpt id="p13">**</bpt>CorrelationTopology<ept id="p13">**</ept><ph id="ph21" /> solution in Visual Studio.</target>
+        </trans-unit>
+        <trans-unit id="178" translate="yes" xml:space="preserve">
+          <source>In <bpt id="p14">**</bpt>Solution Explorer<ept id="p14">**</ept>, right click the <bpt id="p15">**</bpt>CorrelationTopology<ept id="p15">**</ept><ph id="ph22" /> project and select properties.</source>
+          <target state="new">In <bpt id="p14">**</bpt>Solution Explorer<ept id="p14">**</ept>, right click the <bpt id="p15">**</bpt>CorrelationTopology<ept id="p15">**</ept><ph id="ph22" /> project and select properties.</target>
+        </trans-unit>
+        <trans-unit id="179" translate="yes" xml:space="preserve">
+          <source>In the properties window, select <bpt id="p16">**</bpt>Settings<ept id="p16">**</ept><ph id="ph23" /> and provide the following information.</source>
+          <target state="new">In the properties window, select <bpt id="p16">**</bpt>Settings<ept id="p16">**</ept><ph id="ph23" /> and provide the following information.</target>
+        </trans-unit>
+        <trans-unit id="180" translate="yes" xml:space="preserve">
+          <source>The first 5 should be the same values used by the <bpt id="p17">**</bpt>SessionInfo<ept id="p17">**</ept><ph id="ph24" /> project:</source>
+          <target state="new">The first 5 should be the same values used by the <bpt id="p17">**</bpt>SessionInfo<ept id="p17">**</ept><ph id="ph24" /> project:</target>
+        </trans-unit>
+        <trans-unit id="181" translate="yes" xml:space="preserve">
+          <source>HBaseClusterURL: the URL to your HBase cluster.</source>
+          <target state="new">HBaseClusterURL: the URL to your HBase cluster.</target>
+        </trans-unit>
+        <trans-unit id="182" translate="yes" xml:space="preserve">
+          <source>For example, https://myhbasecluster.azurehdinsight.net</source>
+          <target state="new">For example, https://myhbasecluster.azurehdinsight.net</target>
+        </trans-unit>
+        <trans-unit id="183" translate="yes" xml:space="preserve">
+          <source>HBaseClusterUserName: the admin/HTTP user account for your cluster</source>
+          <target state="new">HBaseClusterUserName: the admin/HTTP user account for your cluster</target>
+        </trans-unit>
+        <trans-unit id="184" translate="yes" xml:space="preserve">
+          <source>HBaseClusterPassword: the password for the admin/HTTP user account</source>
+          <target state="new">HBaseClusterPassword: the password for the admin/HTTP user account</target>
+        </trans-unit>
+        <trans-unit id="185" translate="yes" xml:space="preserve">
+          <source>HBaseTableName: the name of the table to use with this example.</source>
+          <target state="new">HBaseTableName: the name of the table to use with this example.</target>
+        </trans-unit>
+        <trans-unit id="186" translate="yes" xml:space="preserve">
+          <source>This should contain the same table name as that used in the SessionInfo project</source>
+          <target state="new">This should contain the same table name as that used in the SessionInfo project</target>
+        </trans-unit>
+        <trans-unit id="187" translate="yes" xml:space="preserve">
+          <source>HBaseTableColumnFamily: The column family name.</source>
+          <target state="new">HBaseTableColumnFamily: The column family name.</target>
+        </trans-unit>
+        <trans-unit id="188" translate="yes" xml:space="preserve">
+          <source>This should contain the same column family name as that used in the SessionInfo project</source>
+          <target state="new">This should contain the same column family name as that used in the SessionInfo project</target>
+        </trans-unit>
+        <trans-unit id="189" translate="yes" xml:space="preserve">
+          <source><ph id="ph25">[AZURE.IMPORTANT]</ph><ph id="ph26" /> Do not change the HBaseTableColumnNames, as the defaults are the names used by <bpt id="p18">**</bpt>SessionInfo<ept id="p18">**</ept><ph id="ph27" /> to retrieve data.</source>
+          <target state="new"><ph id="ph25">[AZURE.IMPORTANT]</ph><ph id="ph26" /> Do not change the HBaseTableColumnNames, as the defaults are the names used by <bpt id="p18">**</bpt>SessionInfo<ept id="p18">**</ept><ph id="ph27" /> to retrieve data.</target>
+        </trans-unit>
+        <trans-unit id="190" translate="yes" xml:space="preserve">
+          <source>Save the properties, then build the project.</source>
+          <target state="new">Save the properties, then build the project.</target>
+        </trans-unit>
+        <trans-unit id="191" translate="yes" xml:space="preserve">
+          <source>In <bpt id="p19">**</bpt>Solution Explorer<ept id="p19">**</ept>, right click the project and select <bpt id="p20">**</bpt>Submit to Storm on HDInsight<ept id="p20">**</ept>.</source>
+          <target state="new">In <bpt id="p19">**</bpt>Solution Explorer<ept id="p19">**</ept>, right click the project and select <bpt id="p20">**</bpt>Submit to Storm on HDInsight<ept id="p20">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="192" translate="yes" xml:space="preserve">
+          <source>If prompted, enter the credentials for your Azure subscription.</source>
+          <target state="new">If prompted, enter the credentials for your Azure subscription.</target>
+        </trans-unit>
+        <trans-unit id="193" translate="yes" xml:space="preserve">
+          <source><ph id="ph28">![</ph>Image of the submit to storm menu item<ph id="ph29">](./media/hdinsight-storm-correlation-topology/submittostorm.png)</ph></source>
+          <target state="new"><ph id="ph28">![</ph>Image of the submit to storm menu item<ph id="ph29">](./media/hdinsight-storm-correlation-topology/submittostorm.png)</ph></target>
+        </trans-unit>
+        <trans-unit id="194" translate="yes" xml:space="preserve">
+          <source>In the <bpt id="p21">**</bpt>Submit Topology<ept id="p21">**</ept><ph id="ph30" /> dialog, select the Storm cluster that will run this topology.</source>
+          <target state="new">In the <bpt id="p21">**</bpt>Submit Topology<ept id="p21">**</ept><ph id="ph30" /> dialog, select the Storm cluster that will run this topology.</target>
+        </trans-unit>
+        <trans-unit id="195" translate="yes" xml:space="preserve">
+          <source><ph id="ph31">[AZURE.NOTE]</ph><ph id="ph32" /> The first time you submit a topology, it may take a few seconds to retrieve the name of your HDInsight clusters.</source>
+          <target state="new"><ph id="ph31">[AZURE.NOTE]</ph><ph id="ph32" /> The first time you submit a topology, it may take a few seconds to retrieve the name of your HDInsight clusters.</target>
+        </trans-unit>
+        <trans-unit id="196" translate="yes" xml:space="preserve">
+          <source>Once the topology has been uploaded and submitted to the cluster, the <bpt id="p22">**</bpt>Storm Topology View<ept id="p22">**</ept><ph id="ph33" /> will open and display the running topology.</source>
+          <target state="new">Once the topology has been uploaded and submitted to the cluster, the <bpt id="p22">**</bpt>Storm Topology View<ept id="p22">**</ept><ph id="ph33" /> will open and display the running topology.</target>
+        </trans-unit>
+        <trans-unit id="197" translate="yes" xml:space="preserve">
+          <source>Select the <bpt id="p23">**</bpt>CorrelationTopology<ept id="p23">**</ept><ph id="ph34" /> and use the refresh button at the top right of the page to refresh the topology information.</source>
+          <target state="new">Select the <bpt id="p23">**</bpt>CorrelationTopology<ept id="p23">**</ept><ph id="ph34" /> and use the refresh button at the top right of the page to refresh the topology information.</target>
+        </trans-unit>
+        <trans-unit id="198" translate="yes" xml:space="preserve">
+          <source><ph id="ph35">![</ph>Image of the topology view<ph id="ph36">](./media/hdinsight-storm-correlation-topology/topologyview.png)</ph></source>
+          <target state="new"><ph id="ph35">![</ph>Image of the topology view<ph id="ph36">](./media/hdinsight-storm-correlation-topology/topologyview.png)</ph></target>
+        </trans-unit>
+        <trans-unit id="199" translate="yes" xml:space="preserve">
+          <source>When the topology begins generating data, the value in the <bpt id="p24">**</bpt>Emitted<ept id="p24">**</ept><ph id="ph37" /> column will increment.</source>
+          <target state="new">When the topology begins generating data, the value in the <bpt id="p24">**</bpt>Emitted<ept id="p24">**</ept><ph id="ph37" /> column will increment.</target>
+        </trans-unit>
+        <trans-unit id="200" translate="yes" xml:space="preserve">
+          <source><ph id="ph38">[AZURE.NOTE]</ph><ph id="ph39" /> If the <bpt id="p25">**</bpt>Storm Topology View<ept id="p25">**</ept><ph id="ph40" /> does not open automatically, use the following steps to open it:</source>
+          <target state="new"><ph id="ph38">[AZURE.NOTE]</ph><ph id="ph39" /> If the <bpt id="p25">**</bpt>Storm Topology View<ept id="p25">**</ept><ph id="ph40" /> does not open automatically, use the following steps to open it:</target>
+        </trans-unit>
+        <trans-unit id="201" translate="yes" xml:space="preserve">
+          <source>In <bpt id="p26">**</bpt>Solution Explorer<ept id="p26">**</ept>, expand <bpt id="p27">**</bpt>Azure<ept id="p27">**</ept>, and then expand <bpt id="p28">**</bpt>HDInsight<ept id="p28">**</ept>.</source>
+          <target state="new">In <bpt id="p26">**</bpt>Solution Explorer<ept id="p26">**</ept>, expand <bpt id="p27">**</bpt>Azure<ept id="p27">**</ept>, and then expand <bpt id="p28">**</bpt>HDInsight<ept id="p28">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="202" translate="yes" xml:space="preserve">
+          <source>Right click the Storm cluster that the topology is running on, and then select <bpt id="p29">**</bpt>View Storm Topologies<ept id="p29">**</ept></source>
+          <target state="new">Right click the Storm cluster that the topology is running on, and then select <bpt id="p29">**</bpt>View Storm Topologies<ept id="p29">**</ept></target>
+        </trans-unit>
+        <trans-unit id="203" translate="yes" xml:space="preserve">
+          <source>Query the data</source>
+          <target state="new">Query the data</target>
+        </trans-unit>
+        <trans-unit id="204" translate="yes" xml:space="preserve">
+          <source>Once data has been emitted, use the following steps to query the data.</source>
+          <target state="new">Once data has been emitted, use the following steps to query the data.</target>
+        </trans-unit>
+        <trans-unit id="205" translate="yes" xml:space="preserve">
+          <source>Return to the <bpt id="p30">**</bpt>SessionInfo<ept id="p30">**</ept><ph id="ph41" /> project.</source>
+          <target state="new">Return to the <bpt id="p30">**</bpt>SessionInfo<ept id="p30">**</ept><ph id="ph41" /> project.</target>
+        </trans-unit>
+        <trans-unit id="206" translate="yes" xml:space="preserve">
+          <source>If not running, start a new instance of it.</source>
+          <target state="new">If not running, start a new instance of it.</target>
+        </trans-unit>
+        <trans-unit id="207" translate="yes" xml:space="preserve">
+          <source>When prompted, select <bpt id="p31">**</bpt>s<ept id="p31">**</ept><ph id="ph42" /> to search for START event.</source>
+          <target state="new">When prompted, select <bpt id="p31">**</bpt>s<ept id="p31">**</ept><ph id="ph42" /> to search for START event.</target>
+        </trans-unit>
+        <trans-unit id="208" translate="yes" xml:space="preserve">
+          <source>You will be prompted to enter a start and end time to define a time range - only events between these two times will be returned.</source>
+          <target state="new">You will be prompted to enter a start and end time to define a time range - only events between these two times will be returned.</target>
+        </trans-unit>
+        <trans-unit id="209" translate="yes" xml:space="preserve">
+          <source>Use the following format when entering the start and end times: HH:MM and 'am' or 'pm'.</source>
+          <target state="new">Use the following format when entering the start and end times: HH:MM and 'am' or 'pm'.</target>
+        </trans-unit>
+        <trans-unit id="210" translate="yes" xml:space="preserve">
+          <source>For example, 11:20pm.</source>
+          <target state="new">For example, 11:20pm.</target>
+        </trans-unit>
+        <trans-unit id="211" translate="yes" xml:space="preserve">
+          <source>Since the topology has just started, use a start time from before it was deployed, and an end time of now.</source>
+          <target state="new">Since the topology has just started, use a start time from before it was deployed, and an end time of now.</target>
+        </trans-unit>
+        <trans-unit id="212" translate="yes" xml:space="preserve">
+          <source>This should capture most of the START events that were generated when it started.</source>
+          <target state="new">This should capture most of the START events that were generated when it started.</target>
+        </trans-unit>
+        <trans-unit id="213" translate="yes" xml:space="preserve">
+          <source>When the query runs, you should see a list of entries similar to the following:</source>
+          <target state="new">When the query runs, you should see a list of entries similar to the following:</target>
+        </trans-unit>
+        <trans-unit id="214" translate="yes" xml:space="preserve">
+          <source>Searching for END events works the same as START events.</source>
+          <target state="new">Searching for END events works the same as START events.</target>
+        </trans-unit>
+        <trans-unit id="215" translate="yes" xml:space="preserve">
+          <source>However, END events are generated randomly between 1 and 5 minutes after the START event.</source>
+          <target state="new">However, END events are generated randomly between 1 and 5 minutes after the START event.</target>
+        </trans-unit>
+        <trans-unit id="216" translate="yes" xml:space="preserve">
+          <source>So you may have to try a few time ranges in order to find the END events.</source>
+          <target state="new">So you may have to try a few time ranges in order to find the END events.</target>
+        </trans-unit>
+        <trans-unit id="217" translate="yes" xml:space="preserve">
+          <source>END events will also contain the duration of the session - the difference between the START event time and END event time.</source>
+          <target state="new">END events will also contain the duration of the session - the difference between the START event time and END event time.</target>
+        </trans-unit>
+        <trans-unit id="218" translate="yes" xml:space="preserve">
+          <source>Here is an example of data for END events:</source>
+          <target state="new">Here is an example of data for END events:</target>
+        </trans-unit>
+        <trans-unit id="219" translate="yes" xml:space="preserve">
+          <source><ph id="ph43">[AZURE.NOTE]</ph><ph id="ph44" /> While the time values you enter are in local time, the time returned from the query will be UTC.</source>
+          <target state="new"><ph id="ph43">[AZURE.NOTE]</ph><ph id="ph44" /> While the time values you enter are in local time, the time returned from the query will be UTC.</target>
+        </trans-unit>
+        <trans-unit id="220" translate="yes" xml:space="preserve">
+          <source>Stop the topology</source>
+          <target state="new">Stop the topology</target>
+        </trans-unit>
+        <trans-unit id="221" translate="yes" xml:space="preserve">
+          <source>When you are ready to stop the topology, return to the <bpt id="p32">**</bpt>CorrelationTopology<ept id="p32">**</ept><ph id="ph45" /> project in Visual Studio.</source>
+          <target state="new">When you are ready to stop the topology, return to the <bpt id="p32">**</bpt>CorrelationTopology<ept id="p32">**</ept><ph id="ph45" /> project in Visual Studio.</target>
+        </trans-unit>
+        <trans-unit id="222" translate="yes" xml:space="preserve">
+          <source>In the <bpt id="p33">**</bpt>Storm Topology View<ept id="p33">**</ept>, select the topology and then use the <bpt id="p34">**</bpt>Kill<ept id="p34">**</ept><ph id="ph46" /> button at the top of the topology view.</source>
+          <target state="new">In the <bpt id="p33">**</bpt>Storm Topology View<ept id="p33">**</ept>, select the topology and then use the <bpt id="p34">**</bpt>Kill<ept id="p34">**</ept><ph id="ph46" /> button at the top of the topology view.</target>
+        </trans-unit>
+        <trans-unit id="223" translate="yes" xml:space="preserve">
+          <source>Next steps</source>
+          <target state="new">Next steps</target>
+        </trans-unit>
+        <trans-unit id="224" translate="yes" xml:space="preserve">
+          <source>For more Storm examples, see <bpt id="p35">[</bpt>Example topologies for Storm on HDInsight<ept id="p35">](hdinsight-storm-example-topology.md)</ept>.</source>
+          <target state="new">For more Storm examples, see <bpt id="p35">[</bpt>Example topologies for Storm on HDInsight<ept id="p35">](hdinsight-storm-example-topology.md)</ept>.</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+  <header xmlns="">
+    <xliffext:olfilehash xmlns:xliffext="urn:microsoft:content:schema:xliffextensions">54606dfaec74ad8d2f2c87f82d21d9a7fd338017</xliffext:olfilehash>
+  </header>
+</xliff>

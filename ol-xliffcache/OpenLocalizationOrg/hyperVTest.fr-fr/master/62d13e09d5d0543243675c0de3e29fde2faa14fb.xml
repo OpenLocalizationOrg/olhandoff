@@ -1,0 +1,2195 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        96
+      ],
+      "content": "Use Hadoop Oozie workflows in Linux-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        115,
+        221
+      ],
+      "content": "Use Hadoop Oozie in Linux-based HDInsight. Learn how to define an Oozie workflow, and submit an Oozie job.",
+      "nodes": [
+        {
+          "content": "Use Hadoop Oozie in Linux-based HDInsight.",
+          "pos": [
+            0,
+            42
+          ]
+        },
+        {
+          "content": "Learn how to define an Oozie workflow, and submit an Oozie job.",
+          "pos": [
+            43,
+            106
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        552,
+        637
+      ],
+      "content": "Use Oozie with Hadoop to define and run a workflow on Linux-based HDInsight (Preview)"
+    },
+    {
+      "pos": [
+        717,
+        855
+      ],
+      "content": "Learn how to use Apache Oozie to define a workflow that uses Hive and Sqoop, and then run the workflow on a Linux-based HDInsight cluster."
+    },
+    {
+      "pos": [
+        857,
+        1166
+      ],
+      "content": "Apache Oozie is a workflow/coordination system that manages Hadoop jobs. It is integrated with the Hadoop stack, and it supports Hadoop jobs for Apache MapReduce, Apache Pig, Apache Hive, and Apache Sqoop. It can also be used to schedule jobs that are specific to a system, like Java programs or shell scripts",
+      "nodes": [
+        {
+          "content": "Apache Oozie is a workflow/coordination system that manages Hadoop jobs.",
+          "pos": [
+            0,
+            72
+          ]
+        },
+        {
+          "content": "It is integrated with the Hadoop stack, and it supports Hadoop jobs for Apache MapReduce, Apache Pig, Apache Hive, and Apache Sqoop.",
+          "pos": [
+            73,
+            205
+          ]
+        },
+        {
+          "content": "It can also be used to schedule jobs that are specific to a system, like Java programs or shell scripts",
+          "pos": [
+            206,
+            309
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1170,
+        1369
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> Another option for defining workflows with HDInsight is Azure Data Factory. To learn more about Azure Data Factory, see <bpt id=\"p1\">[</bpt>Use Pig and Hive with Data Factory<ept id=\"p1\">][azure-data-factory-pig-hive]</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> Another option for defining workflows with HDInsight is Azure Data Factory.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "To learn more about Azure Data Factory, see <bpt id=\"p1\">[</bpt>Use Pig and Hive with Data Factory<ept id=\"p1\">][azure-data-factory-pig-hive]</ept>.",
+          "pos": [
+            121,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1373,
+        1386
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1388,
+        1448
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        1452,
+        1555
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>An Azure subscription<ept id=\"p2\">**</ept>: See <bpt id=\"p3\">[</bpt>Get Azure free trial<ept id=\"p3\">](https://azure.microsoft.com/pricing/free-trial/)</ept>."
+    },
+    {
+      "pos": [
+        1559,
+        1640
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Azure CLI<ept id=\"p4\">**</ept>: See <bpt id=\"p5\">[</bpt>Install and Configure the Azure CLI<ept id=\"p5\">](../xplat-cli-install.md)</ept>"
+    },
+    {
+      "pos": [
+        1644,
+        1759
+      ],
+      "content": "<bpt id=\"p6\">**</bpt>An HDInsight cluster<ept id=\"p6\">**</ept>: See <bpt id=\"p7\">[</bpt>Get Started with HDInsight on Linux<ept id=\"p7\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept>"
+    },
+    {
+      "pos": [
+        1763,
+        1843
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>An Azure SQL database<ept id=\"p8\">**</ept>: This will be created using the steps in this document"
+    },
+    {
+      "pos": [
+        1847,
+        1863
+      ],
+      "content": "Example workflow"
+    },
+    {
+      "pos": [
+        1865,
+        2058
+      ],
+      "content": "The workflow you will implement by following the instructions in this document contains two actions. Actions are definitions for tasks, such as running Hive, Sqoop, MapReduce, or other process:",
+      "nodes": [
+        {
+          "content": "The workflow you will implement by following the instructions in this document contains two actions.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "Actions are definitions for tasks, such as running Hive, Sqoop, MapReduce, or other process:",
+          "pos": [
+            101,
+            193
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2060,
+        2101
+      ],
+      "content": "<ph id=\"ph5\">![</ph>Workflow diagram<ph id=\"ph6\">][img-workflow-diagram]</ph>"
+    },
+    {
+      "pos": [
+        2106,
+        2331
+      ],
+      "content": "A Hive action runs a HiveQL script to extract records from the <bpt id=\"p9\">**</bpt>hivesampletable<ept id=\"p9\">**</ept><ph id=\"ph7\"/> included with HDInsight. Each row of data describes a visit from a specific mobile device. The record format appears similar to the following:",
+      "nodes": [
+        {
+          "content": "A Hive action runs a HiveQL script to extract records from the <bpt id=\"p9\">**</bpt>hivesampletable<ept id=\"p9\">**</ept><ph id=\"ph7\"/> included with HDInsight.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "Each row of data describes a visit from a specific mobile device.",
+          "pos": [
+            160,
+            225
+          ]
+        },
+        {
+          "content": "The record format appears similar to the following:",
+          "pos": [
+            226,
+            277
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2720,
+        2871
+      ],
+      "content": "The Hive script used in this document counts the total visits for each platform (such as Android or iPhone,) and stores the counts to a new Hive table."
+    },
+    {
+      "pos": [
+        2877,
+        2960
+      ],
+      "content": "For more information about Hive, see <bpt id=\"p10\">[</bpt>Use Hive with HDInsight<ept id=\"p10\">][hdinsight-use-hive]</ept>."
+    },
+    {
+      "pos": [
+        2966,
+        3154
+      ],
+      "content": "A Sqoop action exports the contents of the new Hive table to a table in an Azure SQL database. For more information about Sqoop, see <bpt id=\"p11\">[</bpt>Use Hadoop Sqoop with HDInsight<ept id=\"p11\">][hdinsight-use-sqoop]</ept>.",
+      "nodes": [
+        {
+          "content": "A Sqoop action exports the contents of the new Hive table to a table in an Azure SQL database.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "For more information about Sqoop, see <bpt id=\"p11\">[</bpt>Use Hadoop Sqoop with HDInsight<ept id=\"p11\">][hdinsight-use-sqoop]</ept>.",
+          "pos": [
+            95,
+            228
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3158,
+        3314
+      ],
+      "content": "<ph id=\"ph8\">[AZURE.NOTE]</ph><ph id=\"ph9\"/> For supported Oozie versions on HDInsight clusters, see <bpt id=\"p12\">[</bpt>What's new in the Hadoop cluster versions provided by HDInsight?<ept id=\"p12\">][hdinsight-versions]</ept>."
+    },
+    {
+      "pos": [
+        3318,
+        3346
+      ],
+      "content": "Create the working directory"
+    },
+    {
+      "pos": [
+        3348,
+        3611
+      ],
+      "content": "Oozie expects resources required for a job to be stored in the same directory. This example uses <bpt id=\"p13\">**</bpt>wasb:///tutorials/useoozie<ept id=\"p13\">**</ept>. Use the following command to create this directory, and the data directory that will hold the new Hive table created by this workflow:",
+      "nodes": [
+        {
+          "content": "Oozie expects resources required for a job to be stored in the same directory.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "This example uses <bpt id=\"p13\">**</bpt>wasb:///tutorials/useoozie<ept id=\"p13\">**</ept>.",
+          "pos": [
+            79,
+            168
+          ]
+        },
+        {
+          "content": "Use the following command to create this directory, and the data directory that will hold the new Hive table created by this workflow:",
+          "pos": [
+            169,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3665,
+        3863
+      ],
+      "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph><ph id=\"ph11\"/> The <ph id=\"ph12\">`-p`</ph><ph id=\"ph13\"/> parameter caused all directories in the path to be created if they do not already exist. The <bpt id=\"p14\">**</bpt>data<ept id=\"p14\">**</ept><ph id=\"ph14\"/> directory will be used to hold data used by the <bpt id=\"p15\">**</bpt>useooziewf.hql<ept id=\"p15\">**</ept><ph id=\"ph15\"/> script.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph><ph id=\"ph11\"/> The <ph id=\"ph12\">`-p`</ph><ph id=\"ph13\"/> parameter caused all directories in the path to be created if they do not already exist.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p14\">**</bpt>data<ept id=\"p14\">**</ept><ph id=\"ph14\"/> directory will be used to hold data used by the <bpt id=\"p15\">**</bpt>useooziewf.hql<ept id=\"p15\">**</ept><ph id=\"ph15\"/> script.",
+          "pos": [
+            179,
+            376
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3865,
+        4032
+      ],
+      "content": "Also run the following command, which ensures that Oozie can impersonate your user account when running Hive and Sqoop jobs. Replace <bpt id=\"p16\">**</bpt>USERNAME<ept id=\"p16\">**</ept><ph id=\"ph16\"/> with your login name:",
+      "nodes": [
+        {
+          "content": "Also run the following command, which ensures that Oozie can impersonate your user account when running Hive and Sqoop jobs.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p16\">**</bpt>USERNAME<ept id=\"p16\">**</ept><ph id=\"ph16\"/> with your login name:",
+          "pos": [
+            125,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4067,
+        4158
+      ],
+      "content": "If you receive an error that the user is already a member of users, you can just ignore it."
+    },
+    {
+      "pos": [
+        4162,
+        4183
+      ],
+      "content": "Add a database driver"
+    },
+    {
+      "pos": [
+        4185,
+        4383
+      ],
+      "content": "Since this workflow uses Sqoop to export data to SQL Database, you must provide a copy of the JDBC driver used to talk to SQL Database. Use the following command to copy it to the working directory:",
+      "nodes": [
+        {
+          "content": "Since this workflow uses Sqoop to export data to SQL Database, you must provide a copy of the JDBC driver used to talk to SQL Database.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "Use the following command to copy it to the working directory:",
+          "pos": [
+            136,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4493,
+        4618
+      ],
+      "content": "If your workflow used other resources, such as a jar containing a MapReduce application, you would need to add these as well."
+    },
+    {
+      "pos": [
+        4622,
+        4643
+      ],
+      "content": "Define the Hive query"
+    },
+    {
+      "pos": [
+        4645,
+        4780
+      ],
+      "content": "Use the following steps to create a HiveQL script that defines a query, which will be used in an Oozie workflow later in this document."
+    },
+    {
+      "pos": [
+        4785,
+        4841
+      ],
+      "content": "Use SSH to connect to the Linux-based HDInsight cluster:"
+    },
+    {
+      "pos": [
+        4849,
+        4997
+      ],
+      "content": "<bpt id=\"p17\">**</bpt>Linux, Unix or OS X clients<ept id=\"p17\">**</ept>: See <bpt id=\"p18\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, OS X or Unix<ept id=\"p18\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        5005,
+        5132
+      ],
+      "content": "<bpt id=\"p19\">**</bpt>Windows clients<ept id=\"p19\">**</ept>: See <bpt id=\"p20\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p20\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        5137,
+        5184
+      ],
+      "content": "Use the following command to create a new file:"
+    },
+    {
+      "pos": [
+        5218,
+        5292
+      ],
+      "content": "Once the nano editor opens, use the following as the contents of the file:"
+    },
+    {
+      "pos": [
+        5659,
+        5702
+      ],
+      "content": "There are two variables used in the script:"
+    },
+    {
+      "pos": [
+        5710,
+        5780
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>${hiveTableName}<ept id=\"p21\">**</ept>: will contain the name of the table to be created"
+    },
+    {
+      "pos": [
+        5787,
+        5873
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>${hiveDataFolder}<ept id=\"p22\">**</ept>: will contain the location to store the data files for the table"
+    },
+    {
+      "pos": [
+        5879,
+        5994
+      ],
+      "content": "The workflow definition file (workflow.xml in this tutorial) passes these values to this HiveQL script at run time."
+    },
+    {
+      "pos": [
+        5999,
+        6137
+      ],
+      "content": "Press Ctrl-X to exit the editor. When prompted, select <bpt id=\"p23\">**</bpt>Y<ept id=\"p23\">**</ept><ph id=\"ph17\"/> to save the file, then use <bpt id=\"p24\">**</bpt>Enter<ept id=\"p24\">**</ept><ph id=\"ph18\"/> to use the <bpt id=\"p25\">**</bpt>useooziewf.hql<ept id=\"p25\">**</ept><ph id=\"ph19\"/> file name.",
+      "nodes": [
+        {
+          "content": "Press Ctrl-X to exit the editor.",
+          "pos": [
+            0,
+            32
+          ]
+        },
+        {
+          "content": "When prompted, select <bpt id=\"p23\">**</bpt>Y<ept id=\"p23\">**</ept><ph id=\"ph17\"/> to save the file, then use <bpt id=\"p24\">**</bpt>Enter<ept id=\"p24\">**</ept><ph id=\"ph18\"/> to use the <bpt id=\"p25\">**</bpt>useooziewf.hql<ept id=\"p25\">**</ept><ph id=\"ph19\"/> file name.",
+          "pos": [
+            33,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6142,
+        6245
+      ],
+      "content": "Use the following commands to copy <bpt id=\"p26\">**</bpt>useooziewf.hql<ept id=\"p26\">**</ept><ph id=\"ph20\"/> to <bpt id=\"p27\">**</bpt>wasb:///tutorials/useoozie/useooziewf.hql<ept id=\"p27\">**</ept>:"
+    },
+    {
+      "pos": [
+        6335,
+        6622
+      ],
+      "content": "These commands store the <bpt id=\"p28\">**</bpt>useooziewf.hql<ept id=\"p28\">**</ept><ph id=\"ph21\"/> file on the Azure Storage account associated with this cluster, which will preserve the file even if the cluster is deleted. This allows you to save money by deleting clusters when they aren't in use, while maintaining your jobs and workflows.",
+      "nodes": [
+        {
+          "content": "These commands store the <bpt id=\"p28\">**</bpt>useooziewf.hql<ept id=\"p28\">**</ept><ph id=\"ph21\"/> file on the Azure Storage account associated with this cluster, which will preserve the file even if the cluster is deleted.",
+          "pos": [
+            0,
+            223
+          ]
+        },
+        {
+          "content": "This allows you to save money by deleting clusters when they aren't in use, while maintaining your jobs and workflows.",
+          "pos": [
+            224,
+            342
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6626,
+        6645
+      ],
+      "content": "Define the workflow"
+    },
+    {
+      "pos": [
+        6647,
+        6779
+      ],
+      "content": "Oozie workflows definitions are written in hPDL (a XML Process Definition Language). Use the following steps to define the workflow:",
+      "nodes": [
+        {
+          "content": "Oozie workflows definitions are written in hPDL (a XML Process Definition Language).",
+          "pos": [
+            0,
+            84
+          ]
+        },
+        {
+          "content": "Use the following steps to define the workflow:",
+          "pos": [
+            85,
+            132
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6784,
+        6842
+      ],
+      "content": "Use the following statement to create and edit a new file:"
+    },
+    {
+      "pos": [
+        6874,
+        6943
+      ],
+      "content": "Once the nano editor opens, enter the following as the file contents:"
+    },
+    {
+      "pos": [
+        8931,
+        8977
+      ],
+      "content": "There are two actions defined in the workflow:"
+    },
+    {
+      "pos": [
+        8985,
+        9073
+      ],
+      "content": "<bpt id=\"p29\">**</bpt>RunHiveScript<ept id=\"p29\">**</ept>: This is the start action, and runs the <bpt id=\"p30\">**</bpt>useooziewf.hql<ept id=\"p30\">**</ept><ph id=\"ph22\"/> Hive script"
+    },
+    {
+      "pos": [
+        9081,
+        9246
+      ],
+      "content": "<bpt id=\"p31\">**</bpt>RunSqoopExport<ept id=\"p31\">**</ept>: This exports the data created from the Hive script to SQL Database using Sqoop. This will only run if the <bpt id=\"p32\">**</bpt>RunHiveScript<ept id=\"p32\">**</ept><ph id=\"ph23\"/> action is successful.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p31\">**</bpt>RunSqoopExport<ept id=\"p31\">**</ept>: This exports the data created from the Hive script to SQL Database using Sqoop.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "This will only run if the <bpt id=\"p32\">**</bpt>RunHiveScript<ept id=\"p32\">**</ept><ph id=\"ph23\"/> action is successful.",
+          "pos": [
+            140,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9258,
+        9508
+      ],
+      "content": "<ph id=\"ph24\">[AZURE.NOTE]</ph><ph id=\"ph25\"/> For more information about Oozie workflow and using workflow actions, see <bpt id=\"p33\">[</bpt>Apache Oozie 4.0 documentation<ept id=\"p33\">][apache-oozie-400]</ept><ph id=\"ph26\"/> (for HDInsight version 3.0) or <bpt id=\"p34\">[</bpt>Apache Oozie 3.3.2 documentation<ept id=\"p34\">][apache-oozie-332]</ept><ph id=\"ph27\"/> (for HDInsight version 2.1)."
+    },
+    {
+      "pos": [
+        9514,
+        9668
+      ],
+      "content": "Note that the workflow has several entries, such as <ph id=\"ph28\">`${jobTracker}`</ph>, that will be replaced by values you use in the job definition later in this document."
+    },
+    {
+      "pos": [
+        9674,
+        9833
+      ],
+      "content": "Also note the <ph id=\"ph29\">`&lt;archive&gt;sqljdbc4.jar&lt;/arcive&gt;`</ph><ph id=\"ph30\"/> entry in the Sqoop section. This instructs Oozie to make this archive available for Sqoop when this action runs.",
+      "nodes": [
+        {
+          "content": "Also note the <ph id=\"ph29\">`&lt;archive&gt;sqljdbc4.jar&lt;/arcive&gt;`</ph><ph id=\"ph30\"/> entry in the Sqoop section.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "This instructs Oozie to make this archive available for Sqoop when this action runs.",
+          "pos": [
+            121,
+            205
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9838,
+        9892
+      ],
+      "content": "Use Ctrl-X, then <bpt id=\"p35\">**</bpt>Y<ept id=\"p35\">**</ept><ph id=\"ph31\"/> and <bpt id=\"p36\">**</bpt>Enter<ept id=\"p36\">**</ept><ph id=\"ph32\"/> to save the file."
+    },
+    {
+      "pos": [
+        9897,
+        10004
+      ],
+      "content": "Use the following command to copy the <bpt id=\"p37\">**</bpt>workflow.xml<ept id=\"p37\">**</ept><ph id=\"ph33\"/> file to <bpt id=\"p38\">**</bpt>wasb:///tutorials/useoozie/workflow.xml<ept id=\"p38\">**</ept>:"
+    },
+    {
+      "pos": [
+        10095,
+        10114
+      ],
+      "content": "Create the database"
+    },
+    {
+      "pos": [
+        10116,
+        10196
+      ],
+      "content": "The following steps create the Azure SQL Database that data will be exported to."
+    },
+    {
+      "pos": [
+        10200,
+        10462
+      ],
+      "content": "<ph id=\"ph34\">[AZURE.IMPORTANT]</ph><ph id=\"ph35\"/> Before performing these steps you must <bpt id=\"p39\">[</bpt>install and configure the Azure CLI<ept id=\"p39\">](../xplat-cli-install.md)</ept>. Installing the CLI and following the steps to create a database can be performed either from the HDInsight cluster or your local workstation.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph34\">[AZURE.IMPORTANT]</ph><ph id=\"ph35\"/> Before performing these steps you must <bpt id=\"p39\">[</bpt>install and configure the Azure CLI<ept id=\"p39\">](../xplat-cli-install.md)</ept>.",
+          "pos": [
+            0,
+            194
+          ]
+        },
+        {
+          "content": "Installing the CLI and following the steps to create a database can be performed either from the HDInsight cluster or your local workstation.",
+          "pos": [
+            195,
+            336
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10467,
+        10535
+      ],
+      "content": "Use the following command to create a new Azure SQL Database server:"
+    },
+    {
+      "pos": [
+        10612,
+        10676
+      ],
+      "content": "For exmaple, <ph id=\"ph36\">`azure sql server create admin password \"West US\"`</ph>."
+    },
+    {
+      "pos": [
+        10682,
+        10763
+      ],
+      "content": "When the command completes, you will receive a response similar to the following:"
+    },
+    {
+      "pos": [
+        10941,
+        11275
+      ],
+      "content": "<ph id=\"ph37\">[AZURE.IMPORTANT]</ph><ph id=\"ph38\"/> Note the server name returned by this command (<bpt id=\"p40\">**</bpt>i1qwc540ts<ept id=\"p40\">**</ept><ph id=\"ph39\"/> in the example above.) This is the short name of the SQL Database server that was created. The fully qualified domain name (FQDN) is <bpt id=\"p41\">**</bpt>&amp;lt;shortname&amp;gt;.database.windows.net<ept id=\"p41\">**</ept>. For the example above, the FQDN would be <bpt id=\"p42\">**</bpt>i1qwc540ts.database.windows.net<ept id=\"p42\">**</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph37\">[AZURE.IMPORTANT]</ph><ph id=\"ph38\"/> Note the server name returned by this command (<bpt id=\"p40\">**</bpt>i1qwc540ts<ept id=\"p40\">**</ept><ph id=\"ph39\"/> in the example above.) This is the short name of the SQL Database server that was created.",
+          "pos": [
+            0,
+            259
+          ]
+        },
+        {
+          "content": "The fully qualified domain name (FQDN) is <bpt id=\"p41\">**</bpt>&amp;lt;shortname&amp;gt;.database.windows.net<ept id=\"p41\">**</ept>.",
+          "pos": [
+            260,
+            393
+          ]
+        },
+        {
+          "content": "For the example above, the FQDN would be <bpt id=\"p42\">**</bpt>i1qwc540ts.database.windows.net<ept id=\"p42\">**</ept>.",
+          "pos": [
+            394,
+            511
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11280,
+        11374
+      ],
+      "content": "Use the following command to create a database named <bpt id=\"p43\">**</bpt>oozietest<ept id=\"p43\">**</ept><ph id=\"ph40\"/> on the SQL Database server:"
+    },
+    {
+      "pos": [
+        11471,
+        11522
+      ],
+      "content": "This will return an \"OK\" message when it completes."
+    },
+    {
+      "pos": [
+        11530,
+        11708
+      ],
+      "content": "<ph id=\"ph41\">[AZURE.NOTE]</ph><ph id=\"ph42\"/> If you receive an error indicating that you do not have access, you may need to add the system's IP address to the SQL Database firewall using the following command:"
+    },
+    {
+      "pos": [
+        11817,
+        11833
+      ],
+      "content": "Create the table"
+    },
+    {
+      "pos": [
+        11837,
+        12002
+      ],
+      "content": "<ph id=\"ph44\">[AZURE.NOTE]</ph><ph id=\"ph45\"/> There are many ways to connect to SQL Database to create a table. The following steps use <bpt id=\"p44\">[</bpt>FreeTDS<ept id=\"p44\">](http://www.freetds.org/)</ept><ph id=\"ph46\"/> from the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph44\">[AZURE.NOTE]</ph><ph id=\"ph45\"/> There are many ways to connect to SQL Database to create a table.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "The following steps use <bpt id=\"p44\">[</bpt>FreeTDS<ept id=\"p44\">](http://www.freetds.org/)</ept><ph id=\"ph46\"/> from the HDInsight cluster.",
+          "pos": [
+            113,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12007,
+        12077
+      ],
+      "content": "Use the following command to install FreeTDS on the HDInsight cluster:"
+    },
+    {
+      "pos": [
+        12149,
+        12269
+      ],
+      "content": "Once FreeTDS has been installed, use the following command to connect to the SQL Database server you created previously:"
+    },
+    {
+      "pos": [
+        12393,
+        12442
+      ],
+      "content": "You will receive output similar to the following:"
+    },
+    {
+      "pos": [
+        12611,
+        12657
+      ],
+      "content": "At the <ph id=\"ph47\">`1&gt;`</ph><ph id=\"ph48\"/> prompt, enter the following lines:"
+    },
+    {
+      "pos": [
+        12882,
+        13044
+      ],
+      "content": "When the <ph id=\"ph49\">`GO`</ph><ph id=\"ph50\"/> statement is entered, the previous statements will be evaluated. This will create a new table named <bpt id=\"p45\">**</bpt>mobiledata<ept id=\"p45\">**</ept><ph id=\"ph51\"/> that will be written to by Sqoop.",
+      "nodes": [
+        {
+          "content": "When the <ph id=\"ph49\">`GO`</ph><ph id=\"ph50\"/> statement is entered, the previous statements will be evaluated.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "This will create a new table named <bpt id=\"p45\">**</bpt>mobiledata<ept id=\"p45\">**</ept><ph id=\"ph51\"/> that will be written to by Sqoop.",
+          "pos": [
+            113,
+            251
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13050,
+        13110
+      ],
+      "content": "Use the following to verify that the table has been created:"
+    },
+    {
+      "pos": [
+        13176,
+        13223
+      ],
+      "content": "You should see output similar to the following:"
+    },
+    {
+      "pos": [
+        13355,
+        13412
+      ],
+      "content": "Enter <ph id=\"ph52\">`exit`</ph><ph id=\"ph53\"/> at the <ph id=\"ph54\">`1&gt;`</ph><ph id=\"ph55\"/> prompt to exit the tsql utility."
+    },
+    {
+      "pos": [
+        13416,
+        13441
+      ],
+      "content": "Create the job definition"
+    },
+    {
+      "pos": [
+        13443,
+        13662
+      ],
+      "content": "The job definition describes where to find the workflow.xml, as well as other files used by the workflow (such as useooziewf.hql.) It also defines the values for properties used within the workflow and associated files."
+    },
+    {
+      "pos": [
+        13667,
+        13798
+      ],
+      "content": "Use the following command to get the full WASB address to default storage. This will be used in the configuration file in a moment:",
+      "nodes": [
+        {
+          "content": "Use the following command to get the full WASB address to default storage.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "This will be used in the configuration file in a moment:",
+          "pos": [
+            75,
+            131
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13885,
+        13941
+      ],
+      "content": "This should return information similar to the following:"
+    },
+    {
+      "pos": [
+        14063,
+        14178
+      ],
+      "content": "Save the <bpt id=\"p46\">**</bpt>wasb://mycontainer@mystorageaccount.blob.core.windows.net<ept id=\"p46\">**</ept><ph id=\"ph56\"/> value, as it will be used in the next steps."
+    },
+    {
+      "pos": [
+        14183,
+        14364
+      ],
+      "content": "Use the following command to get FQDN of the cluster headnode. This will be used for the JobTracker address for the cluster. This will be used in the configuration file in a moment:",
+      "nodes": [
+        {
+          "content": "Use the following command to get FQDN of the cluster headnode.",
+          "pos": [
+            0,
+            62
+          ]
+        },
+        {
+          "content": "This will be used for the JobTracker address for the cluster.",
+          "pos": [
+            63,
+            124
+          ]
+        },
+        {
+          "content": "This will be used in the configuration file in a moment:",
+          "pos": [
+            125,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14391,
+        14445
+      ],
+      "content": "This will return information similar to the following:"
+    },
+    {
+      "pos": [
+        14518,
+        14681
+      ],
+      "content": "The port used for the JobTracker is 8050, so the full address to use for the JobTracker will be <bpt id=\"p47\">**</bpt>hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net:8050<ept id=\"p47\">**</ept>."
+    },
+    {
+      "pos": [
+        14686,
+        14753
+      ],
+      "content": "Use the following to create the Oozie job definition configuration:"
+    },
+    {
+      "pos": [
+        14780,
+        14854
+      ],
+      "content": "Once the nano editor opens, use the following as the contents of the file:"
+    },
+    {
+      "pos": [
+        16676,
+        16799
+      ],
+      "content": "Replace all instances of <bpt id=\"p48\">**</bpt>wasb://mycontainer@mystorageaccount.blob.core.windows.net<ept id=\"p48\">**</ept><ph id=\"ph57\"/> with the value you received earlier."
+    },
+    {
+      "pos": [
+        16807,
+        17018
+      ],
+      "content": "<ph id=\"ph58\">[AZURE.WARNING]</ph><ph id=\"ph59\"/> You must use the full WASB path, with the container and storage account as part of the path. Using the short format (wasb:///) will cause the RunHiveScript action to fail when the job is started.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph58\">[AZURE.WARNING]</ph><ph id=\"ph59\"/> You must use the full WASB path, with the container and storage account as part of the path.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "Using the short format (wasb:///) will cause the RunHiveScript action to fail when the job is started.",
+          "pos": [
+            143,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17026,
+        17121
+      ],
+      "content": "Replace <bpt id=\"p49\">**</bpt>JOBTRACKERADDRESS<ept id=\"p49\">**</ept><ph id=\"ph60\"/> with the JobTracker/ResourceManager address you received earlier."
+    },
+    {
+      "pos": [
+        17129,
+        17197
+      ],
+      "content": "Replace <bpt id=\"p50\">**</bpt>YourName<ept id=\"p50\">**</ept><ph id=\"ph61\"/> with your login name for the HDInsight cluster."
+    },
+    {
+      "pos": [
+        17205,
+        17316
+      ],
+      "content": "Replace <bpt id=\"p51\">**</bpt>serverName<ept id=\"p51\">**</ept>, <bpt id=\"p52\">**</bpt>adminLogin<ept id=\"p52\">**</ept>, and <bpt id=\"p53\">**</bpt>adminPassword<ept id=\"p53\">**</ept><ph id=\"ph62\"/> with the information for your Azure SQL Database."
+    },
+    {
+      "pos": [
+        17322,
+        17458
+      ],
+      "content": "Most of the information in this file is used to populate the values used in the workflow.xml or ooziewf.hql files (such as ${nameNode}.)"
+    },
+    {
+      "pos": [
+        17466,
+        17608
+      ],
+      "content": "<ph id=\"ph63\">[AZURE.NOTE]</ph><ph id=\"ph64\"/> The <bpt id=\"p54\">**</bpt>oozie.wf.application.path<ept id=\"p54\">**</ept><ph id=\"ph65\"/> entry defines where to find the workflow.xml file, which contains the workflow ran by this job."
+    },
+    {
+      "pos": [
+        17613,
+        17667
+      ],
+      "content": "Use Ctrl-X, then <bpt id=\"p55\">**</bpt>Y<ept id=\"p55\">**</ept><ph id=\"ph66\"/> and <bpt id=\"p56\">**</bpt>Enter<ept id=\"p56\">**</ept><ph id=\"ph67\"/> to save the file."
+    },
+    {
+      "pos": [
+        17671,
+        17696
+      ],
+      "content": "Submit and manage the job"
+    },
+    {
+      "pos": [
+        17698,
+        17918
+      ],
+      "content": "The following steps use the Oozie command to submit and manage Oozie workflows on the cluster. The Oozie command is a friendly interface over the <bpt id=\"p57\">[</bpt>Oozie REST API<ept id=\"p57\">](https://oozie.apache.org/docs/4.1.0/WebServicesAPI.html)</ept>.",
+      "nodes": [
+        {
+          "content": "The following steps use the Oozie command to submit and manage Oozie workflows on the cluster.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "The Oozie command is a friendly interface over the <bpt id=\"p57\">[</bpt>Oozie REST API<ept id=\"p57\">](https://oozie.apache.org/docs/4.1.0/WebServicesAPI.html)</ept>.",
+          "pos": [
+            95,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17922,
+        18157
+      ],
+      "content": "<ph id=\"ph68\">[AZURE.IMPORTANT]</ph><ph id=\"ph69\"/> When using the Oozie command, you must use the FQDN for the HDInsight headnode. This FQDN is only accessible from the cluster, or if the cluster is on an Azure Virtual Network, from other machines on the same network.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph68\">[AZURE.IMPORTANT]</ph><ph id=\"ph69\"/> When using the Oozie command, you must use the FQDN for the HDInsight headnode.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "This FQDN is only accessible from the cluster, or if the cluster is on an Azure Virtual Network, from other machines on the same network.",
+          "pos": [
+            132,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18162,
+        18219
+      ],
+      "content": "Use the following to obtain the URL to the Oozie service:"
+    },
+    {
+      "pos": [
+        18310,
+        18360
+      ],
+      "content": "This will return a value similar to the following:"
+    },
+    {
+      "pos": [
+        18503,
+        18637
+      ],
+      "content": "The <bpt id=\"p58\">**</bpt>http://hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net:11000/oozie<ept id=\"p58\">**</ept><ph id=\"ph70\"/> portion is the URL to use with the Oozie command."
+    },
+    {
+      "pos": [
+        18642,
+        18754
+      ],
+      "content": "Use the following to create an environment variable for the URL, so you don't have to type it for every command:"
+    },
+    {
+      "pos": [
+        18815,
+        18865
+      ],
+      "content": "Replace the URL with the one you received earlier."
+    },
+    {
+      "pos": [
+        18870,
+        18906
+      ],
+      "content": "Use the following to submit the job:"
+    },
+    {
+      "pos": [
+        18955,
+        19048
+      ],
+      "content": "This loads the job information from <bpt id=\"p59\">**</bpt>job.xml<ept id=\"p59\">**</ept><ph id=\"ph71\"/> and submits it to Oozie, but does not run it."
+    },
+    {
+      "pos": [
+        19054,
+        19207
+      ],
+      "content": "Once the command completes, it should return the ID of the job. For example, <ph id=\"ph72\">`0000005-150622124850154-oozie-oozi-W`</ph>. This will be used to manage the job.",
+      "nodes": [
+        {
+          "content": "Once the command completes, it should return the ID of the job.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph72\">`0000005-150622124850154-oozie-oozi-W`</ph>.",
+          "pos": [
+            64,
+            135
+          ]
+        },
+        {
+          "content": "This will be used to manage the job.",
+          "pos": [
+            136,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19212,
+        19318
+      ],
+      "content": "View the status of the job using the following command. Enter the job ID returned by the previous command:",
+      "nodes": [
+        {
+          "content": "View the status of the job using the following command.",
+          "pos": [
+            0,
+            55
+          ]
+        },
+        {
+          "content": "Enter the job ID returned by the previous command:",
+          "pos": [
+            56,
+            106
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19357,
+        19411
+      ],
+      "content": "This will return information similar to the following."
+    },
+    {
+      "pos": [
+        20122,
+        20223
+      ],
+      "content": "This job has a status of <ph id=\"ph73\">`PREP`</ph>, which indicates that it was submitted, but has not been started yet."
+    },
+    {
+      "pos": [
+        20228,
+        20263
+      ],
+      "content": "Use the following to start the job:"
+    },
+    {
+      "pos": [
+        20301,
+        20440
+      ],
+      "content": "If you check the status after this command, it will be in a running state, and information will be returned for the actions within the job."
+    },
+    {
+      "pos": [
+        20445,
+        20597
+      ],
+      "content": "Once the task completes successfully, you can verify that the data was generated and exported to the SQL Database table by using the following commands:"
+    },
+    {
+      "pos": [
+        20721,
+        20761
+      ],
+      "content": "At the <ph id=\"ph74\">`1&gt;`</ph><ph id=\"ph75\"/> prompt, enter the following:"
+    },
+    {
+      "pos": [
+        20812,
+        20868
+      ],
+      "content": "You should receive information similar to the following:"
+    },
+    {
+      "pos": [
+        21083,
+        21217
+      ],
+      "content": "For more information on the Oozie command, see <bpt id=\"p60\">[</bpt>Oozie Command Line Tool<ept id=\"p60\">](https://oozie.apache.org/docs/4.1.0/DG_CommandLineTool.html)</ept>."
+    },
+    {
+      "pos": [
+        21221,
+        21235
+      ],
+      "content": "Oozie REST API"
+    },
+    {
+      "pos": [
+        21237,
+        21392
+      ],
+      "content": "The Oozie REST API allow you to build your own tools that work with Oozie. The following are HDInsight specific information about using the Oozie REST API:",
+      "nodes": [
+        {
+          "content": "The Oozie REST API allow you to build your own tools that work with Oozie.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "The following are HDInsight specific information about using the Oozie REST API:",
+          "pos": [
+            75,
+            155
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21396,
+        21508
+      ],
+      "content": "<bpt id=\"p61\">**</bpt>URI<ept id=\"p61\">**</ept>: The REST API can be accessed from outside the cluster at <ph id=\"ph76\">`https://CLUSTERNAME.azurehdinsight.net/oozie`</ph>"
+    },
+    {
+      "pos": [
+        21512,
+        21631
+      ],
+      "content": "<bpt id=\"p62\">**</bpt>Authentication<ept id=\"p62\">**</ept>: You must authenticate to the API using the cluster HTTP account (admin,) and password. For example:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p62\">**</bpt>Authentication<ept id=\"p62\">**</ept>: You must authenticate to the API using the cluster HTTP account (admin,) and password.",
+          "pos": [
+            0,
+            146
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            147,
+            159
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21719,
+        21855
+      ],
+      "content": "For more information on using the Oozie REST API, see <bpt id=\"p63\">[</bpt>Oozie Web Services API<ept id=\"p63\">](https://oozie.apache.org/docs/4.1.0/WebServicesAPI.html)</ept>."
+    },
+    {
+      "pos": [
+        21859,
+        21871
+      ],
+      "content": "Oozie Web UI"
+    },
+    {
+      "pos": [
+        21873,
+        22139
+      ],
+      "content": "The Oozie Web UI provides a web-based view into the status of Oozie jobs on the cluster. It allows you to view job status, the job definition, configuration, a graph of the actions in the job, and logs for the job. You can also view details for actions within a job.",
+      "nodes": [
+        {
+          "content": "The Oozie Web UI provides a web-based view into the status of Oozie jobs on the cluster.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "It allows you to view job status, the job definition, configuration, a graph of the actions in the job, and logs for the job.",
+          "pos": [
+            89,
+            214
+          ]
+        },
+        {
+          "content": "You can also view details for actions within a job.",
+          "pos": [
+            215,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22141,
+        22193
+      ],
+      "content": "To access the Oozie Web UI, use the following steps:"
+    },
+    {
+      "pos": [
+        22198,
+        22432
+      ],
+      "content": "Create an SSH tunnel to the HDInsight cluster. For information on how to do this, see <bpt id=\"p64\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p64\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Create an SSH tunnel to the HDInsight cluster.",
+          "pos": [
+            0,
+            46
+          ]
+        },
+        {
+          "content": "For information on how to do this, see <bpt id=\"p64\">[</bpt>Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's<ept id=\"p64\">](hdinsight-linux-ambari-ssh-tunnel.md)</ept>.",
+          "pos": [
+            47,
+            274
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22437,
+        22664
+      ],
+      "content": "Once a tunnel has been created, open the Ambari web UI in your web browser. The URI for the Ambari site is <bpt id=\"p65\">**</bpt>https://CLUSTERNAME.azurehdinsight.net<ept id=\"p65\">**</ept>. Replace <bpt id=\"p66\">**</bpt>CLUSTERNAME<ept id=\"p66\">**</ept><ph id=\"ph77\"/> with the name of your Linux-based HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Once a tunnel has been created, open the Ambari web UI in your web browser.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "The URI for the Ambari site is <bpt id=\"p65\">**</bpt>https://CLUSTERNAME.azurehdinsight.net<ept id=\"p65\">**</ept>.",
+          "pos": [
+            76,
+            190
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p66\">**</bpt>CLUSTERNAME<ept id=\"p66\">**</ept><ph id=\"ph77\"/> with the name of your Linux-based HDInsight cluster.",
+          "pos": [
+            191,
+            322
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22669,
+        22770
+      ],
+      "content": "From the left side of the page, select <bpt id=\"p67\">**</bpt>Oozie<ept id=\"p67\">**</ept>, then <bpt id=\"p68\">**</bpt>Quick Links<ept id=\"p68\">**</ept>, and finally <bpt id=\"p69\">**</bpt>Oozie Web UI<ept id=\"p69\">**</ept>."
+    },
+    {
+      "pos": [
+        22776,
+        22856
+      ],
+      "content": "<ph id=\"ph78\">![</ph>image of the menus<ph id=\"ph79\">](./media/hdinsight-use-oozie-linux-mac/ooziewebuisteps.png)</ph>"
+    },
+    {
+      "pos": [
+        22861,
+        22970
+      ],
+      "content": "The Oozie Web UI defaults to displaying running Workflow Jobs. To see all workflow jobs, select <bpt id=\"p70\">**</bpt>All Jobs<ept id=\"p70\">**</ept>.",
+      "nodes": [
+        {
+          "content": "The Oozie Web UI defaults to displaying running Workflow Jobs.",
+          "pos": [
+            0,
+            62
+          ]
+        },
+        {
+          "content": "To see all workflow jobs, select <bpt id=\"p70\">**</bpt>All Jobs<ept id=\"p70\">**</ept>.",
+          "pos": [
+            63,
+            149
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22976,
+        23050
+      ],
+      "content": "<ph id=\"ph80\">![</ph>All jobs displayed<ph id=\"ph81\">](./media/hdinsight-use-oozie-linux-mac/ooziejobs.png)</ph>"
+    },
+    {
+      "pos": [
+        23055,
+        23107
+      ],
+      "content": "Select a job to view more information about the job."
+    },
+    {
+      "pos": [
+        23113,
+        23175
+      ],
+      "content": "<ph id=\"ph82\">![</ph>Job info<ph id=\"ph83\">](./media/hdinsight-use-oozie-linux-mac/jobinfo.png)</ph>"
+    },
+    {
+      "pos": [
+        23180,
+        23435
+      ],
+      "content": "From the Job Info tab, you can see basic job information, as well as the individual actions within the job. Using the tabs at the top you can view the Job Definition, Job Configuration, access the Job Log or view a Directed Acyclic Graph (DAG) of the job.",
+      "nodes": [
+        {
+          "content": "From the Job Info tab, you can see basic job information, as well as the individual actions within the job.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "Using the tabs at the top you can view the Job Definition, Job Configuration, access the Job Log or view a Directed Acyclic Graph (DAG) of the job.",
+          "pos": [
+            108,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23443,
+        23570
+      ],
+      "content": "<bpt id=\"p71\">**</bpt>Job Log<ept id=\"p71\">**</ept>: Select the <bpt id=\"p72\">**</bpt>GetLogs<ept id=\"p72\">**</ept><ph id=\"ph84\"/> button to get all logs for the job, or use the <bpt id=\"p73\">**</bpt>Enter Search Filter<ept id=\"p73\">**</ept><ph id=\"ph85\"/> field to filter logs"
+    },
+    {
+      "pos": [
+        23580,
+        23640
+      ],
+      "content": "<ph id=\"ph86\">![</ph>Job log<ph id=\"ph87\">](./media/hdinsight-use-oozie-linux-mac/joblog.png)</ph>"
+    },
+    {
+      "pos": [
+        23648,
+        23736
+      ],
+      "content": "<bpt id=\"p74\">**</bpt>JobDAG<ept id=\"p74\">**</ept>: The DAG is a graphical overview of the data paths taken through the workflow"
+    },
+    {
+      "pos": [
+        23746,
+        23806
+      ],
+      "content": "<ph id=\"ph88\">![</ph>Job DAG<ph id=\"ph89\">](./media/hdinsight-use-oozie-linux-mac/jobdag.png)</ph>"
+    },
+    {
+      "pos": [
+        23811,
+        23957
+      ],
+      "content": "Selecting one of the actions from the <bpt id=\"p75\">**</bpt>Job Info<ept id=\"p75\">**</ept><ph id=\"ph90\"/> tab will bring up information for the action. For example, select the <bpt id=\"p76\">**</bpt>RunHiveScript<ept id=\"p76\">**</ept><ph id=\"ph91\"/> action.",
+      "nodes": [
+        {
+          "content": "Selecting one of the actions from the <bpt id=\"p75\">**</bpt>Job Info<ept id=\"p75\">**</ept><ph id=\"ph90\"/> tab will bring up information for the action.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "For example, select the <bpt id=\"p76\">**</bpt>RunHiveScript<ept id=\"p76\">**</ept><ph id=\"ph91\"/> action.",
+          "pos": [
+            152,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23963,
+        24027
+      ],
+      "content": "<ph id=\"ph92\">![</ph>Action info<ph id=\"ph93\">](./media/hdinsight-use-oozie-linux-mac/action.png)</ph>"
+    },
+    {
+      "pos": [
+        24032,
+        24170
+      ],
+      "content": "You can see details for the action, including a link to the <bpt id=\"p77\">**</bpt>Console URL<ept id=\"p77\">**</ept>, which can be used to view JobTracker information for the job."
+    },
+    {
+      "pos": [
+        24174,
+        24189
+      ],
+      "content": "Scheduling jobs"
+    },
+    {
+      "pos": [
+        24191,
+        24325
+      ],
+      "content": "The coordinator allows you to specify a start, end, and occurrance frequency for jobs so that they can be scheduled for certain times."
+    },
+    {
+      "pos": [
+        24327,
+        24390
+      ],
+      "content": "To define a schedule for the workflow, use the following steps:"
+    },
+    {
+      "pos": [
+        24395,
+        24460
+      ],
+      "content": "Use the following to create a new file named <bpt id=\"p78\">**</bpt>coordinator.xml<ept id=\"p78\">**</ept>:"
+    },
+    {
+      "pos": [
+        24496,
+        24542
+      ],
+      "content": "Use the following as the contents of the file:"
+    },
+    {
+      "pos": [
+        24891,
+        25003
+      ],
+      "content": "Note that this uses <ph id=\"ph94\">`${...}`</ph><ph id=\"ph95\"/> variables that will be replaced by values in the job definition. The variables are:",
+      "nodes": [
+        {
+          "content": "Note that this uses <ph id=\"ph94\">`${...}`</ph><ph id=\"ph95\"/> variables that will be replaced by values in the job definition.",
+          "pos": [
+            0,
+            127
+          ]
+        },
+        {
+          "content": "The variables are:",
+          "pos": [
+            128,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25011,
+        25075
+      ],
+      "content": "<bpt id=\"p79\">**</bpt>${coordFrequency}<ept id=\"p79\">**</ept>: Time between running instances of the job"
+    },
+    {
+      "pos": [
+        25082,
+        25119
+      ],
+      "content": "<bpt id=\"p80\">**</bpt>${coordStart}<ept id=\"p80\">**</ept>: The job start time"
+    },
+    {
+      "pos": [
+        25126,
+        25159
+      ],
+      "content": "<bpt id=\"p81\">**</bpt>${coordEnd}<ept id=\"p81\">**</ept>: The job end time"
+    },
+    {
+      "pos": [
+        25166,
+        25359
+      ],
+      "content": "<bpt id=\"p82\">**</bpt>${coordTimezone}<ept id=\"p82\">**</ept>: Coordinator jobs are in a fixed time zone with no daylight savings time (typically represented by using UTC). This time zone is referred as the \"Oozie processing timezone\"",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p82\">**</bpt>${coordTimezone}<ept id=\"p82\">**</ept>: Coordinator jobs are in a fixed time zone with no daylight savings time (typically represented by using UTC).",
+          "pos": [
+            0,
+            171
+          ]
+        },
+        {
+          "content": "This time zone is referred as the \"Oozie processing timezone\"",
+          "pos": [
+            172,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25366,
+        25409
+      ],
+      "content": "<bpt id=\"p83\">**</bpt>${wfPath}<ept id=\"p83\">**</ept>: The path to the workflow.xml"
+    },
+    {
+      "pos": [
+        25414,
+        25468
+      ],
+      "content": "Use Ctrl-X, then <bpt id=\"p84\">**</bpt>Y<ept id=\"p84\">**</ept><ph id=\"ph96\"/> and <bpt id=\"p85\">**</bpt>Enter<ept id=\"p85\">**</ept><ph id=\"ph97\"/> to save the file."
+    },
+    {
+      "pos": [
+        25473,
+        25540
+      ],
+      "content": "Use the following to copy it to the working directory for this job:"
+    },
+    {
+      "pos": [
+        25631,
+        25680
+      ],
+      "content": "Use the following to modify the <bpt id=\"p86\">**</bpt>job.xml<ept id=\"p86\">**</ept><ph id=\"ph98\"/> file:"
+    },
+    {
+      "pos": [
+        25708,
+        25735
+      ],
+      "content": "Make the following changes:"
+    },
+    {
+      "pos": [
+        25743,
+        25916
+      ],
+      "content": "Change <ph id=\"ph99\">`&lt;name&gt;oozie.wf.application.path&lt;/name&gt;`</ph><ph id=\"ph100\"/> to <ph id=\"ph101\">`&lt;name&gt;oozie.coord.application.path&lt;/name&gt;`</ph>. This instructs Oozie to run the coordinator file instead of the workflow file",
+      "nodes": [
+        {
+          "content": "Change <ph id=\"ph99\">`&lt;name&gt;oozie.wf.application.path&lt;/name&gt;`</ph><ph id=\"ph100\"/> to <ph id=\"ph101\">`&lt;name&gt;oozie.coord.application.path&lt;/name&gt;`</ph>.",
+          "pos": [
+            0,
+            174
+          ]
+        },
+        {
+          "content": "This instructs Oozie to run the coordinator file instead of the workflow file",
+          "pos": [
+            175,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25924,
+        26046
+      ],
+      "content": "Add the following, which will be sets a variable used in the coordinator.xml to point to the location of the workflow.xml:"
+    },
+    {
+      "pos": [
+        26250,
+        26372
+      ],
+      "content": "Replace the values for <bpt id=\"p87\">**</bpt>mycontainer<ept id=\"p87\">**</ept><ph id=\"ph102\"/> and <bpt id=\"p88\">**</bpt>mystorageaccount<ept id=\"p88\">**</ept><ph id=\"ph103\"/> with the values used in other entries in the job.xml file."
+    },
+    {
+      "pos": [
+        26380,
+        26478
+      ],
+      "content": "Add the following, which define the start, end, and frequency to use for the coordinator.xml file:"
+    },
+    {
+      "pos": [
+        26998,
+        27242
+      ],
+      "content": "These set the start time to 12:00PM on June 25th, 2015, the end time to June 27th, 2015, and the interval for running this job to daily (the frequency is in minutes, so 24 hours x 60 minutes = 1440 minutes.) Finally, the timezone is set to UTC."
+    },
+    {
+      "pos": [
+        27247,
+        27301
+      ],
+      "content": "Use Ctrl-X, then <bpt id=\"p89\">**</bpt>Y<ept id=\"p89\">**</ept><ph id=\"ph104\"/> and <bpt id=\"p90\">**</bpt>Enter<ept id=\"p90\">**</ept><ph id=\"ph105\"/> to save the file."
+    },
+    {
+      "pos": [
+        27306,
+        27348
+      ],
+      "content": "To run the job, use the following command:"
+    },
+    {
+      "pos": [
+        27394,
+        27429
+      ],
+      "content": "This will submit and start the job."
+    },
+    {
+      "pos": [
+        27434,
+        27553
+      ],
+      "content": "If you visit the Oozie Web UI and select the <bpt id=\"p91\">**</bpt>Coordinator Jobs<ept id=\"p91\">**</ept><ph id=\"ph106\"/> tab, you should information similar to the following:"
+    },
+    {
+      "pos": [
+        27559,
+        27640
+      ],
+      "content": "<ph id=\"ph107\">![</ph>coordinator jobs tab<ph id=\"ph108\">](./media/hdinsight-use-oozie-linux-mac/coordinatorjob.png)</ph>"
+    },
+    {
+      "pos": [
+        27646,
+        27722
+      ],
+      "content": "Note the <bpt id=\"p92\">**</bpt>Next Materialization<ept id=\"p92\">**</ept><ph id=\"ph109\"/> entry; this is when the job will run next."
+    },
+    {
+      "pos": [
+        27727,
+        27838
+      ],
+      "content": "Similar to the earlier workflow job, selecting the job entry in the web UI will display information on the job:"
+    },
+    {
+      "pos": [
+        27844,
+        27929
+      ],
+      "content": "<ph id=\"ph110\">![</ph>Coordinator job info<ph id=\"ph111\">](./media/hdinsight-use-oozie-linux-mac/coordinatorjobinfo.png)</ph>"
+    },
+    {
+      "pos": [
+        27935,
+        28179
+      ],
+      "content": "Note that this only shows successful runs of the job, not individual actions within the scheduled workflow. To see that, select one of the <bpt id=\"p93\">**</bpt>Action<ept id=\"p93\">**</ept><ph id=\"ph112\"/> entries. This will display information similar to that retrieved for the earlier workflow job.",
+      "nodes": [
+        {
+          "content": "Note that this only shows successful runs of the job, not individual actions within the scheduled workflow.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "To see that, select one of the <bpt id=\"p93\">**</bpt>Action<ept id=\"p93\">**</ept><ph id=\"ph112\"/> entries.",
+          "pos": [
+            108,
+            214
+          ]
+        },
+        {
+          "content": "This will display information similar to that retrieved for the earlier workflow job.",
+          "pos": [
+            215,
+            300
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28185,
+        28263
+      ],
+      "content": "<ph id=\"ph113\">![</ph>Action info<ph id=\"ph114\">](./media/hdinsight-use-oozie-linux-mac/coordinatoractionjob.png)</ph>"
+    },
+    {
+      "pos": [
+        28267,
+        28282
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        28284,
+        28541
+      ],
+      "content": "When troubleshooting problems with Oozie jobs, the Oozie UI is very helpful as it allows you to easily view both Oozie logs, as well as links to JobTracker logs for MapReduce tasks such as Hive queries. In general, the pattern for troubleshooting should be:",
+      "nodes": [
+        {
+          "content": "When troubleshooting problems with Oozie jobs, the Oozie UI is very helpful as it allows you to easily view both Oozie logs, as well as links to JobTracker logs for MapReduce tasks such as Hive queries.",
+          "pos": [
+            0,
+            202
+          ]
+        },
+        {
+          "content": "In general, the pattern for troubleshooting should be:",
+          "pos": [
+            203,
+            257
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28546,
+        28575
+      ],
+      "content": "View the job in Oozie Web UI."
+    },
+    {
+      "pos": [
+        28580,
+        28732
+      ],
+      "content": "If there is an error or failure for a specific action, select the action to see if the <bpt id=\"p94\">**</bpt>Error Message<ept id=\"p94\">**</ept><ph id=\"ph115\"/> field provides more information on the failure."
+    },
+    {
+      "pos": [
+        28737,
+        28842
+      ],
+      "content": "If available, use the URL from the action to view more details (such as JobTracker logs,) for the action."
+    },
+    {
+      "pos": [
+        28844,
+        28921
+      ],
+      "content": "The following are specific errors you may encounter, and how to resolve them."
+    },
+    {
+      "pos": [
+        28926,
+        28958
+      ],
+      "content": "JA009: Cannot initialize cluster"
+    },
+    {
+      "pos": [
+        28960,
+        29156
+      ],
+      "content": "<bpt id=\"p95\">**</bpt>Symptoms<ept id=\"p95\">**</ept>: The job status will change to <bpt id=\"p96\">**</bpt>SUSPENDED<ept id=\"p96\">**</ept>. Details for the job will show the RunHiveScript status as <bpt id=\"p97\">**</bpt>START_MANUAL<ept id=\"p97\">**</ept>. Selecting the action will reveal the following error message:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p95\">**</bpt>Symptoms<ept id=\"p95\">**</ept>: The job status will change to <bpt id=\"p96\">**</bpt>SUSPENDED<ept id=\"p96\">**</ept>.",
+          "pos": [
+            0,
+            138
+          ]
+        },
+        {
+          "content": "Details for the job will show the RunHiveScript status as <bpt id=\"p97\">**</bpt>START_MANUAL<ept id=\"p97\">**</ept>.",
+          "pos": [
+            139,
+            254
+          ]
+        },
+        {
+          "content": "Selecting the action will reveal the following error message:",
+          "pos": [
+            255,
+            316
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29237,
+        29454
+      ],
+      "content": "<bpt id=\"p98\">**</bpt>Cause<ept id=\"p98\">**</ept>: The WASB addresses used in the <bpt id=\"p99\">**</bpt>job.xml<ept id=\"p99\">**</ept><ph id=\"ph116\"/> file do not contain the storage container or storage account name. The WASB address format must be <ph id=\"ph117\">`wasb://containername@storageaccountname.blob.core.windows.net`</ph>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p98\">**</bpt>Cause<ept id=\"p98\">**</ept>: The WASB addresses used in the <bpt id=\"p99\">**</bpt>job.xml<ept id=\"p99\">**</ept><ph id=\"ph116\"/> file do not contain the storage container or storage account name.",
+          "pos": [
+            0,
+            216
+          ]
+        },
+        {
+          "content": "The WASB address format must be <ph id=\"ph117\">`wasb://containername@storageaccountname.blob.core.windows.net`</ph>.",
+          "pos": [
+            217,
+            333
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29456,
+        29514
+      ],
+      "content": "<bpt id=\"p100\">**</bpt>Resolution<ept id=\"p100\">**</ept>: Change the WASB addresses used by the job."
+    },
+    {
+      "pos": [
+        29519,
+        29571
+      ],
+      "content": "JA002: Oozie is not allowed to impersonate &amp;lt;USER&gt;"
+    },
+    {
+      "pos": [
+        29573,
+        29769
+      ],
+      "content": "<bpt id=\"p101\">**</bpt>Symptoms<ept id=\"p101\">**</ept>: The job status will change to <bpt id=\"p102\">**</bpt>SUSPENDED<ept id=\"p102\">**</ept>. Details for the job will show the RunHiveScript status as <bpt id=\"p103\">**</bpt>START_MANUAL<ept id=\"p103\">**</ept>. Selecting the action will reveal the following error message:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p101\">**</bpt>Symptoms<ept id=\"p101\">**</ept>: The job status will change to <bpt id=\"p102\">**</bpt>SUSPENDED<ept id=\"p102\">**</ept>.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "Details for the job will show the RunHiveScript status as <bpt id=\"p103\">**</bpt>START_MANUAL<ept id=\"p103\">**</ept>.",
+          "pos": [
+            143,
+            260
+          ]
+        },
+        {
+          "content": "Selecting the action will reveal the following error message:",
+          "pos": [
+            261,
+            322
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29832,
+        29932
+      ],
+      "content": "<bpt id=\"p104\">**</bpt>Cause<ept id=\"p104\">**</ept>: Current permission settings do not allow Oozie to impersonate the specified user account."
+    },
+    {
+      "pos": [
+        29934,
+        30201
+      ],
+      "content": "<bpt id=\"p105\">**</bpt>Resolution<ept id=\"p105\">**</ept>: Oozie is allowed to impersonate users in the <bpt id=\"p106\">**</bpt>users<ept id=\"p106\">**</ept><ph id=\"ph118\"/> group. Use the <ph id=\"ph119\">`groups USERNAME`</ph><ph id=\"ph120\"/> to see the groups that the user account is a member of. If the user is not a member of the <bpt id=\"p107\">**</bpt>users<ept id=\"p107\">**</ept><ph id=\"ph121\"/> group, use the following command to add the user to the group:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p105\">**</bpt>Resolution<ept id=\"p105\">**</ept>: Oozie is allowed to impersonate users in the <bpt id=\"p106\">**</bpt>users<ept id=\"p106\">**</ept><ph id=\"ph118\"/> group.",
+          "pos": [
+            0,
+            177
+          ]
+        },
+        {
+          "content": "Use the <ph id=\"ph119\">`groups USERNAME`</ph><ph id=\"ph120\"/> to see the groups that the user account is a member of.",
+          "pos": [
+            178,
+            295
+          ]
+        },
+        {
+          "content": "If the user is not a member of the <bpt id=\"p107\">**</bpt>users<ept id=\"p107\">**</ept><ph id=\"ph121\"/> group, use the following command to add the user to the group:",
+          "pos": [
+            296,
+            461
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30238,
+        30349
+      ],
+      "content": "<ph id=\"ph122\">[AZURE.NOTE]</ph><ph id=\"ph123\"/> It may take several minutes before HDInsight recognizes that the user has been added to the group."
+    },
+    {
+      "pos": [
+        30354,
+        30376
+      ],
+      "content": "Launcher ERROR (Sqoop)"
+    },
+    {
+      "pos": [
+        30378,
+        30566
+      ],
+      "content": "<bpt id=\"p108\">**</bpt>Symptoms<ept id=\"p108\">**</ept>: The job status will changed to <bpt id=\"p109\">**</bpt>KILLED<ept id=\"p109\">**</ept>. Details for the job will show the RunSqoopExport status as <bpt id=\"p110\">**</bpt>ERROR<ept id=\"p110\">**</ept>. Selecting the action will reveal the following error message:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p108\">**</bpt>Symptoms<ept id=\"p108\">**</ept>: The job status will changed to <bpt id=\"p109\">**</bpt>KILLED<ept id=\"p109\">**</ept>.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "Details for the job will show the RunSqoopExport status as <bpt id=\"p110\">**</bpt>ERROR<ept id=\"p110\">**</ept>.",
+          "pos": [
+            141,
+            252
+          ]
+        },
+        {
+          "content": "Selecting the action will reveal the following error message:",
+          "pos": [
+            253,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30666,
+        30753
+      ],
+      "content": "<bpt id=\"p111\">**</bpt>Cause<ept id=\"p111\">**</ept>: Sqoop is unable to load the database driver required to access the database."
+    },
+    {
+      "pos": [
+        30755,
+        30913
+      ],
+      "content": "<bpt id=\"p112\">**</bpt>Resolution<ept id=\"p112\">**</ept>: When using Sqoop from an Oozie job, you must include the database driver with the other resources (such as the workflow.xml,) used by the job."
+    },
+    {
+      "pos": [
+        30915,
+        31040
+      ],
+      "content": "You must also reference the archive containing the database driver from the <ph id=\"ph124\">`&lt;sqoop&gt;...&lt;/sqoop&gt;`</ph><ph id=\"ph125\"/> section of the workflow.xml."
+    },
+    {
+      "pos": [
+        31042,
+        31119
+      ],
+      "content": "For example, for the job in this document, you would use the following steps:"
+    },
+    {
+      "pos": [
+        31124,
+        31188
+      ],
+      "content": "Copy the sqljdbc4.jar file to the /tutorials/useoozie directory:"
+    },
+    {
+      "pos": [
+        31306,
+        31382
+      ],
+      "content": "Modify the workflow.xml to add the following on a new line above <ph id=\"ph126\">`&lt;/sqoop&gt;`</ph>:"
+    },
+    {
+      "pos": [
+        31427,
+        31437
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        31438,
+        31600
+      ],
+      "content": "In this tutorial, you learned how to define an Oozie workflow and how to run an Oozie job. To learn more about working with HDInsight, see the following articles:",
+      "nodes": [
+        {
+          "content": "In this tutorial, you learned how to define an Oozie workflow and how to run an Oozie job.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "To learn more about working with HDInsight, see the following articles:",
+          "pos": [
+            91,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        31604,
+        31687
+      ],
+      "content": "<bpt id=\"p113\">[</bpt>Use time-based Oozie Coordinator with HDInsight<ept id=\"p113\">][hdinsight-oozie-coordinator-time]</ept>"
+    },
+    {
+      "pos": [
+        31690,
+        31755
+      ],
+      "content": "<bpt id=\"p114\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p114\">][hdinsight-upload-data]</ept>"
+    },
+    {
+      "pos": [
+        31758,
+        31815
+      ],
+      "content": "<bpt id=\"p115\">[</bpt>Use Sqoop with Hadoop in HDInsight<ept id=\"p115\">][hdinsight-use-sqoop]</ept>"
+    },
+    {
+      "pos": [
+        31818,
+        31873
+      ],
+      "content": "<bpt id=\"p116\">[</bpt>Use Hive with Hadoop on HDInsight<ept id=\"p116\">][hdinsight-use-hive]</ept>"
+    },
+    {
+      "pos": [
+        31876,
+        31929
+      ],
+      "content": "<bpt id=\"p117\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p117\">][hdinsight-use-pig]</ept>"
+    },
+    {
+      "pos": [
+        31932,
+        32008
+      ],
+      "content": "<bpt id=\"p118\">[</bpt>Develop Java MapReduce programs for HDInsight<ept id=\"p118\">][hdinsight-develop-mapreduce]</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Use Hadoop Oozie workflows in Linux-based HDInsight | Microsoft Azure\"\n    description=\"Use Hadoop Oozie in Linux-based HDInsight. Learn how to define an Oozie workflow, and submit an Oozie job.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"01/28/2016\"\n    ms.author=\"larryfr\"/>\n\n\n# Use Oozie with Hadoop to define and run a workflow on Linux-based HDInsight (Preview)\n\n[AZURE.INCLUDE [oozie-selector](../../includes/hdinsight-oozie-selector.md)]\n\nLearn how to use Apache Oozie to define a workflow that uses Hive and Sqoop, and then run the workflow on a Linux-based HDInsight cluster.\n\nApache Oozie is a workflow/coordination system that manages Hadoop jobs. It is integrated with the Hadoop stack, and it supports Hadoop jobs for Apache MapReduce, Apache Pig, Apache Hive, and Apache Sqoop. It can also be used to schedule jobs that are specific to a system, like Java programs or shell scripts\n\n> [AZURE.NOTE] Another option for defining workflows with HDInsight is Azure Data Factory. To learn more about Azure Data Factory, see [Use Pig and Hive with Data Factory][azure-data-factory-pig-hive].\n\n##Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- **An Azure subscription**: See [Get Azure free trial](https://azure.microsoft.com/pricing/free-trial/).\n\n- **Azure CLI**: See [Install and Configure the Azure CLI](../xplat-cli-install.md)\n\n- **An HDInsight cluster**: See [Get Started with HDInsight on Linux](hdinsight-hadoop-linux-tutorial-get-started.md)\n\n- **An Azure SQL database**: This will be created using the steps in this document\n\n##Example workflow\n\nThe workflow you will implement by following the instructions in this document contains two actions. Actions are definitions for tasks, such as running Hive, Sqoop, MapReduce, or other process:\n\n![Workflow diagram][img-workflow-diagram]\n\n1. A Hive action runs a HiveQL script to extract records from the **hivesampletable** included with HDInsight. Each row of data describes a visit from a specific mobile device. The record format appears similar to the following:\n\n        8       18:54:20        en-US   Android Samsung SCH-i500        California     United States    13.9204007      0       0\n        23      19:19:44        en-US   Android HTC     Incredible      Pennsylvania   United States    NULL    0       0\n        23      19:19:46        en-US   Android HTC     Incredible      Pennsylvania   United States    1.4757422       0       1\n\n    The Hive script used in this document counts the total visits for each platform (such as Android or iPhone,) and stores the counts to a new Hive table.\n\n    For more information about Hive, see [Use Hive with HDInsight][hdinsight-use-hive].\n\n2.  A Sqoop action exports the contents of the new Hive table to a table in an Azure SQL database. For more information about Sqoop, see [Use Hadoop Sqoop with HDInsight][hdinsight-use-sqoop].\n\n> [AZURE.NOTE] For supported Oozie versions on HDInsight clusters, see [What's new in the Hadoop cluster versions provided by HDInsight?][hdinsight-versions].\n\n##Create the working directory\n\nOozie expects resources required for a job to be stored in the same directory. This example uses **wasb:///tutorials/useoozie**. Use the following command to create this directory, and the data directory that will hold the new Hive table created by this workflow:\n\n    hadoop fs -mkdir -p /tutorials/useoozie/data\n\n> [AZURE.NOTE] The `-p` parameter caused all directories in the path to be created if they do not already exist. The **data** directory will be used to hold data used by the **useooziewf.hql** script.\n\nAlso run the following command, which ensures that Oozie can impersonate your user account when running Hive and Sqoop jobs. Replace **USERNAME** with your login name:\n\n    sudo adduser USERNAME users\n\nIf you receive an error that the user is already a member of users, you can just ignore it.\n\n##Add a database driver\n\nSince this workflow uses Sqoop to export data to SQL Database, you must provide a copy of the JDBC driver used to talk to SQL Database. Use the following command to copy it to the working directory:\n\n    hadoop fs -copyFromLocal /usr/share/java/sqljdbc_4.1/enu/sqljdbc4.jar /tutorials/useoozie/sqljdbc4.jar\n\nIf your workflow used other resources, such as a jar containing a MapReduce application, you would need to add these as well.\n\n##Define the Hive query\n\nUse the following steps to create a HiveQL script that defines a query, which will be used in an Oozie workflow later in this document.\n\n1. Use SSH to connect to the Linux-based HDInsight cluster:\n\n    * **Linux, Unix or OS X clients**: See [Use SSH with Linux-based Hadoop on HDInsight from Linux, OS X or Unix](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n    * **Windows clients**: See [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n2. Use the following command to create a new file:\n\n        nano useooziewf.hql\n\n1. Once the nano editor opens, use the following as the contents of the file:\n\n        DROP TABLE ${hiveTableName};\n        CREATE EXTERNAL TABLE ${hiveTableName}(deviceplatform string, count string) ROW FORMAT DELIMITED\n        FIELDS TERMINATED BY '\\t' STORED AS TEXTFILE LOCATION '${hiveDataFolder}';\n        INSERT OVERWRITE TABLE ${hiveTableName} SELECT deviceplatform, COUNT(*) as count FROM hivesampletable GROUP BY deviceplatform;\n\n    There are two variables used in the script:\n\n    - **${hiveTableName}**: will contain the name of the table to be created\n    - **${hiveDataFolder}**: will contain the location to store the data files for the table\n\n    The workflow definition file (workflow.xml in this tutorial) passes these values to this HiveQL script at run time.\n\n2. Press Ctrl-X to exit the editor. When prompted, select **Y** to save the file, then use **Enter** to use the **useooziewf.hql** file name.\n\n3. Use the following commands to copy **useooziewf.hql** to **wasb:///tutorials/useoozie/useooziewf.hql**:\n\n        hadoop fs -copyFromLocal useooziewf.hql /tutorials/useoozie/useooziewf.hql\n\n    These commands store the **useooziewf.hql** file on the Azure Storage account associated with this cluster, which will preserve the file even if the cluster is deleted. This allows you to save money by deleting clusters when they aren't in use, while maintaining your jobs and workflows.\n\n##Define the workflow\n\nOozie workflows definitions are written in hPDL (a XML Process Definition Language). Use the following steps to define the workflow:\n\n1. Use the following statement to create and edit a new file:\n\n        nano workflow.xml\n\n1. Once the nano editor opens, enter the following as the file contents:\n\n        <workflow-app name=\"useooziewf\" xmlns=\"uri:oozie:workflow:0.2\">\n          <start to = \"RunHiveScript\"/>\n          <action name=\"RunHiveScript\">\n            <hive xmlns=\"uri:oozie:hive-action:0.2\">\n              <job-tracker>${jobTracker}</job-tracker>\n              <name-node>${nameNode}</name-node>\n              <configuration>\n                <property>\n                  <name>mapred.job.queue.name</name>\n                  <value>${queueName}</value>\n                </property>\n              </configuration>\n              <script>${hiveScript}</script>\n              <param>hiveTableName=${hiveTableName}</param>\n              <param>hiveDataFolder=${hiveDataFolder}</param>\n            </hive>\n            <ok to=\"RunSqoopExport\"/>\n            <error to=\"fail\"/>\n          </action>\n          <action name=\"RunSqoopExport\">\n            <sqoop xmlns=\"uri:oozie:sqoop-action:0.2\">\n              <job-tracker>${jobTracker}</job-tracker>\n              <name-node>${nameNode}</name-node>\n              <configuration>\n                <property>\n                  <name>mapred.compress.map.output</name>\n                  <value>true</value>\n                </property>\n              </configuration>\n              <arg>export</arg>\n              <arg>--connect</arg>\n              <arg>${sqlDatabaseConnectionString}</arg>\n              <arg>--table</arg>\n              <arg>${sqlDatabaseTableName}</arg>\n              <arg>--export-dir</arg>\n              <arg>${hiveDataFolder}</arg>\n              <arg>-m</arg>\n              <arg>1</arg>\n              <arg>--input-fields-terminated-by</arg>\n              <arg>\"\\t\"</arg>\n              <archive>sqljdbc4.jar</archive>\n              </sqoop>\n            <ok to=\"end\"/>\n            <error to=\"fail\"/>\n          </action>\n          <kill name=\"fail\">\n            <message>Job failed, error message[${wf:errorMessage(wf:lastErrorNode())}] </message>\n          </kill>\n          <end name=\"end\"/>\n        </workflow-app>\n\n    There are two actions defined in the workflow:\n\n    - **RunHiveScript**: This is the start action, and runs the **useooziewf.hql** Hive script\n\n    - **RunSqoopExport**: This exports the data created from the Hive script to SQL Database using Sqoop. This will only run if the **RunHiveScript** action is successful.\n\n        > [AZURE.NOTE] For more information about Oozie workflow and using workflow actions, see [Apache Oozie 4.0 documentation][apache-oozie-400] (for HDInsight version 3.0) or [Apache Oozie 3.3.2 documentation][apache-oozie-332] (for HDInsight version 2.1).\n\n    Note that the workflow has several entries, such as `${jobTracker}`, that will be replaced by values you use in the job definition later in this document.\n\n    Also note the `<archive>sqljdbc4.jar</arcive>` entry in the Sqoop section. This instructs Oozie to make this archive available for Sqoop when this action runs.\n\n2. Use Ctrl-X, then **Y** and **Enter** to save the file.\n\n3. Use the following command to copy the **workflow.xml** file to **wasb:///tutorials/useoozie/workflow.xml**:\n\n        hadoop fs -copyFromLocal workflow.xml wasb:///tutorials/useoozie/workflow.xml\n\n##Create the database\n\nThe following steps create the Azure SQL Database that data will be exported to.\n\n> [AZURE.IMPORTANT] Before performing these steps you must [install and configure the Azure CLI](../xplat-cli-install.md). Installing the CLI and following the steps to create a database can be performed either from the HDInsight cluster or your local workstation.\n\n1. Use the following command to create a new Azure SQL Database server:\n\n        azure sql server create <adminLogin> <adminPassword> <region>\n\n    For exmaple, `azure sql server create admin password \"West US\"`.\n\n    When the command completes, you will receive a response similar to the following:\n\n        info:    Executing command sql server create\n        + Creating SQL Server\n        data:    Server Name i1qwc540ts\n        info:    sql server create command OK\n\n    > [AZURE.IMPORTANT] Note the server name returned by this command (**i1qwc540ts** in the example above.) This is the short name of the SQL Database server that was created. The fully qualified domain name (FQDN) is **&lt;shortname&gt;.database.windows.net**. For the example above, the FQDN would be **i1qwc540ts.database.windows.net**.\n\n2. Use the following command to create a database named **oozietest** on the SQL Database server:\n\n        azure sql db create [options] <serverName> oozietest <adminLogin> <adminPassword>\n\n    This will return an \"OK\" message when it completes.\n\n    > [AZURE.NOTE] If you receive an error indicating that you do not have access, you may need to add the system's IP address to the SQL Database firewall using the following command:\n    >\n    > `sql firewallrule create [options] <serverName> <ruleName> <startIPAddress> <endIPAddress>`\n\n###Create the table\n\n> [AZURE.NOTE] There are many ways to connect to SQL Database to create a table. The following steps use [FreeTDS](http://www.freetds.org/) from the HDInsight cluster.\n\n3. Use the following command to install FreeTDS on the HDInsight cluster:\n\n        sudo apt-get --assume-yes install freetds-dev freetds-bin\n\n4. Once FreeTDS has been installed, use the following command to connect to the SQL Database server you created previously:\n\n        TDSVER=8.0 tsql -H <serverName>.database.windows.net -U <adminLogin> -P <adminPassword> -p 1433 -D oozietest\n\n    You will receive output similar to the following:\n\n        locale is \"en_US.UTF-8\"\n        locale charset is \"UTF-8\"\n        using default charset \"UTF-8\"\n        Default database being set to oozietest\n        1>\n\n5. At the `1>` prompt, enter the following lines:\n\n        CREATE TABLE [dbo].[mobiledata](\n        [deviceplatform] [nvarchar](50),\n        [count] [bigint])\n        GO\n        CREATE CLUSTERED INDEX mobiledata_clustered_index on mobiledata(deviceplatform)\n        GO\n\n    When the `GO` statement is entered, the previous statements will be evaluated. This will create a new table named **mobiledata** that will be written to by Sqoop.\n\n    Use the following to verify that the table has been created:\n\n        SELECT * FROM information_schema.tables\n        GO\n\n    You should see output similar to the following:\n\n        TABLE_CATALOG   TABLE_SCHEMA    TABLE_NAME      TABLE_TYPE\n        oozietest       dbo     mobiledata      BASE TABLE\n\n8. Enter `exit` at the `1>` prompt to exit the tsql utility.\n\n##Create the job definition\n\nThe job definition describes where to find the workflow.xml, as well as other files used by the workflow (such as useooziewf.hql.) It also defines the values for properties used within the workflow and associated files.\n\n1. Use the following command to get the full WASB address to default storage. This will be used in the configuration file in a moment:\n\n        sed -n '/<name>fs.default/,/<\\/value>/p' /etc/hadoop/conf/core-site.xml\n\n    This should return information similar to the following:\n\n        <name>fs.defaultFS</name>\n        <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net</value>\n\n    Save the **wasb://mycontainer@mystorageaccount.blob.core.windows.net** value, as it will be used in the next steps.\n\n2. Use the following command to get FQDN of the cluster headnode. This will be used for the JobTracker address for the cluster. This will be used in the configuration file in a moment:\n\n        hostname -f\n\n    This will return information similar to the following:\n\n        hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net\n\n    The port used for the JobTracker is 8050, so the full address to use for the JobTracker will be **hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net:8050**.\n\n1. Use the following to create the Oozie job definition configuration:\n\n        nano job.xml\n\n2. Once the nano editor opens, use the following as the contents of the file:\n\n        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n        <configuration>\n\n          <property>\n            <name>nameNode</name>\n            <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net</value>\n          </property>\n\n          <property>\n            <name>jobTracker</name>\n            <value>JOBTRACKERADDRESS</value>\n          </property>\n\n          <property>\n            <name>queueName</name>\n            <value>default</value>\n          </property>\n\n          <property>\n            <name>oozie.use.system.libpath</name>\n            <value>true</value>\n          </property>\n\n          <property>\n            <name>hiveScript</name>\n            <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net/tutorials/useoozie/useooziewf.hql</value>\n          </property>\n\n          <property>\n            <name>hiveTableName</name>\n            <value>mobilecount</value>\n          </property>\n\n          <property>\n            <name>hiveDataFolder</name>\n            <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net/tutorials/useoozie/data</value>\n          </property>\n\n          <property>\n            <name>sqlDatabaseConnectionString</name>\n            <value>\"jdbc:sqlserver://serverName.database.windows.net;user=adminLogin;password=adminPassword;database=oozietest\"</value>\n          </property>\n\n          <property>\n            <name>sqlDatabaseTableName</name>\n            <value>mobiledata</value>\n          </property>\n\n          <property>\n            <name>user.name</name>\n            <value>YourName</value>\n          </property>\n\n          <property>\n            <name>oozie.wf.application.path</name>\n            <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net/tutorials/useoozie</value>\n          </property>\n        </configuration>\n\n    * Replace all instances of **wasb://mycontainer@mystorageaccount.blob.core.windows.net** with the value you received earlier.\n\n    > [AZURE.WARNING] You must use the full WASB path, with the container and storage account as part of the path. Using the short format (wasb:///) will cause the RunHiveScript action to fail when the job is started.\n\n    * Replace **JOBTRACKERADDRESS** with the JobTracker/ResourceManager address you received earlier.\n\n    * Replace **YourName** with your login name for the HDInsight cluster.\n\n    * Replace **serverName**, **adminLogin**, and **adminPassword** with the information for your Azure SQL Database.\n\n    Most of the information in this file is used to populate the values used in the workflow.xml or ooziewf.hql files (such as ${nameNode}.)\n\n    > [AZURE.NOTE] The **oozie.wf.application.path** entry defines where to find the workflow.xml file, which contains the workflow ran by this job.\n\n2. Use Ctrl-X, then **Y** and **Enter** to save the file.\n\n##Submit and manage the job\n\nThe following steps use the Oozie command to submit and manage Oozie workflows on the cluster. The Oozie command is a friendly interface over the [Oozie REST API](https://oozie.apache.org/docs/4.1.0/WebServicesAPI.html).\n\n> [AZURE.IMPORTANT] When using the Oozie command, you must use the FQDN for the HDInsight headnode. This FQDN is only accessible from the cluster, or if the cluster is on an Azure Virtual Network, from other machines on the same network.\n\n1. Use the following to obtain the URL to the Oozie service:\n\n        sed -n '/<name>oozie.base.url/,/<\\/value>/p' /etc/oozie/conf/oozie-site.xml\n\n    This will return a value similar to the following:\n\n        <name>oozie.base.url</name>\n        <value>http://hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net:11000/oozie</value>\n\n    The **http://hn0-CLUSTERNAME.randomcharacters.cx.internal.cloudapp.net:11000/oozie** portion is the URL to use with the Oozie command.\n\n2. Use the following to create an environment variable for the URL, so you don't have to type it for every command:\n\n        export OOZIE_URL=http://HOSTNAMEt:11000/oozie\n\n    Replace the URL with the one you received earlier.\n\n3. Use the following to submit the job:\n\n        oozie job -config job.xml -submit\n\n    This loads the job information from **job.xml** and submits it to Oozie, but does not run it.\n\n    Once the command completes, it should return the ID of the job. For example, `0000005-150622124850154-oozie-oozi-W`. This will be used to manage the job.\n\n4. View the status of the job using the following command. Enter the job ID returned by the previous command:\n\n        oozie job -info <JOBID>\n\n    This will return information similar to the following.\n\n        Job ID : 0000005-150622124850154-oozie-oozi-W\n        ------------------------------------------------------------------------------------------------------------------------------------\n        Workflow Name : useooziewf\n        App Path      : wasb:///tutorials/useoozie\n        Status        : PREP\n        Run           : 0\n        User          : USERNAME\n        Group         : -\n        Created       : 2015-06-22 15:06 GMT\n        Started       : -\n        Last Modified : 2015-06-22 15:06 GMT\n        Ended         : -\n        CoordAction ID: -\n        ------------------------------------------------------------------------------------------------------------------------------------\n\n    This job has a status of `PREP`, which indicates that it was submitted, but has not been started yet.\n\n4. Use the following to start the job:\n\n        oozie job -start JOBID\n\n    If you check the status after this command, it will be in a running state, and information will be returned for the actions within the job.\n\n5. Once the task completes successfully, you can verify that the data was generated and exported to the SQL Database table by using the following commands:\n\n        TDSVER=8.0 tsql -H <serverName>.database.windows.net -U <adminLogin> -P <adminPassword> -p 1433 -D oozietest\n\n    At the `1>` prompt, enter the following:\n\n        SELECT * FROM mobiledata\n        GO\n\n    You should receive information similar to the following:\n\n        deviceplatform  count\n        Android 31591\n        iPhone OS       22731\n        proprietary development 3\n        RIM OS  3464\n        Unknown 213\n        Windows Phone   1791\n        (6 rows affected)\n\nFor more information on the Oozie command, see [Oozie Command Line Tool](https://oozie.apache.org/docs/4.1.0/DG_CommandLineTool.html).\n\n##Oozie REST API\n\nThe Oozie REST API allow you to build your own tools that work with Oozie. The following are HDInsight specific information about using the Oozie REST API:\n\n* **URI**: The REST API can be accessed from outside the cluster at `https://CLUSTERNAME.azurehdinsight.net/oozie`\n\n* **Authentication**: You must authenticate to the API using the cluster HTTP account (admin,) and password. For example:\n\n        curl -u admin:PASSWORD https://CLUSTERNAME.azurehdinsight.net/oozie/versions\n\nFor more information on using the Oozie REST API, see [Oozie Web Services API](https://oozie.apache.org/docs/4.1.0/WebServicesAPI.html).\n\n##Oozie Web UI\n\nThe Oozie Web UI provides a web-based view into the status of Oozie jobs on the cluster. It allows you to view job status, the job definition, configuration, a graph of the actions in the job, and logs for the job. You can also view details for actions within a job.\n\nTo access the Oozie Web UI, use the following steps:\n\n1. Create an SSH tunnel to the HDInsight cluster. For information on how to do this, see [Use SSH Tunneling to access Ambari web UI, ResourceManager, JobHistory, NameNode, Oozie, and other web UI's](hdinsight-linux-ambari-ssh-tunnel.md).\n\n2. Once a tunnel has been created, open the Ambari web UI in your web browser. The URI for the Ambari site is **https://CLUSTERNAME.azurehdinsight.net**. Replace **CLUSTERNAME** with the name of your Linux-based HDInsight cluster.\n\n3. From the left side of the page, select **Oozie**, then **Quick Links**, and finally **Oozie Web UI**.\n\n    ![image of the menus](./media/hdinsight-use-oozie-linux-mac/ooziewebuisteps.png)\n\n4. The Oozie Web UI defaults to displaying running Workflow Jobs. To see all workflow jobs, select **All Jobs**.\n\n    ![All jobs displayed](./media/hdinsight-use-oozie-linux-mac/ooziejobs.png)\n\n5. Select a job to view more information about the job.\n\n    ![Job info](./media/hdinsight-use-oozie-linux-mac/jobinfo.png)\n\n6. From the Job Info tab, you can see basic job information, as well as the individual actions within the job. Using the tabs at the top you can view the Job Definition, Job Configuration, access the Job Log or view a Directed Acyclic Graph (DAG) of the job.\n\n    * **Job Log**: Select the **GetLogs** button to get all logs for the job, or use the **Enter Search Filter** field to filter logs\n\n        ![Job log](./media/hdinsight-use-oozie-linux-mac/joblog.png)\n\n    * **JobDAG**: The DAG is a graphical overview of the data paths taken through the workflow\n\n        ![Job DAG](./media/hdinsight-use-oozie-linux-mac/jobdag.png)\n\n7. Selecting one of the actions from the **Job Info** tab will bring up information for the action. For example, select the **RunHiveScript** action.\n\n    ![Action info](./media/hdinsight-use-oozie-linux-mac/action.png)\n\n8. You can see details for the action, including a link to the **Console URL**, which can be used to view JobTracker information for the job.\n\n##Scheduling jobs\n\nThe coordinator allows you to specify a start, end, and occurrance frequency for jobs so that they can be scheduled for certain times.\n\nTo define a schedule for the workflow, use the following steps:\n\n1. Use the following to create a new file named **coordinator.xml**:\n\n        nano coordinator.xml\n\n    Use the following as the contents of the file:\n\n        <coordinator-app name=\"my_coord_app\" frequency=\"${coordFrequency}\" start=\"${coordStart}\" end=\"${coordEnd}\" timezone=\"${coordTimezone}\" xmlns=\"uri:oozie:coordinator:0.4\">\n          <action>\n            <workflow>\n              <app-path>${workflowPath}</app-path>\n            </workflow>\n          </action>\n        </coordinator-app>\n\n    Note that this uses `${...}` variables that will be replaced by values in the job definition. The variables are:\n\n    * **${coordFrequency}**: Time between running instances of the job\n    * **${coordStart}**: The job start time\n    * **${coordEnd}**: The job end time\n    * **${coordTimezone}**: Coordinator jobs are in a fixed time zone with no daylight savings time (typically represented by using UTC). This time zone is referred as the \"Oozie processing timezone\"\n    * **${wfPath}**: The path to the workflow.xml\n\n2. Use Ctrl-X, then **Y** and **Enter** to save the file.\n\n3. Use the following to copy it to the working directory for this job:\n\n        hadoop fs -copyFromLocal coordinator.xml /tutorials/useoozie/coordinator.xml\n\n4. Use the following to modify the **job.xml** file:\n\n        nano job.xml\n\n    Make the following changes:\n\n    * Change `<name>oozie.wf.application.path</name>` to `<name>oozie.coord.application.path</name>`. This instructs Oozie to run the coordinator file instead of the workflow file\n\n    * Add the following, which will be sets a variable used in the coordinator.xml to point to the location of the workflow.xml:\n\n            <property>\n              <name>workflowPath</name>\n              <value>wasb://mycontainer@mystorageaccount.blob.core.windows.net/tutorials/useoozie</value>\n            </property>\n\n        Replace the values for **mycontainer** and **mystorageaccount** with the values used in other entries in the job.xml file.\n\n    * Add the following, which define the start, end, and frequency to use for the coordinator.xml file:\n\n            <property>\n              <name>coordStart</name>\n              <value>2015-06-25T12:00Z</value>\n            </property>\n\n            <property>\n              <name>coordEnd</name>\n              <value>2015-06-27T12:00Z</value>\n            </property>\n\n            <property>\n              <name>coordFrequency</name>\n              <value>1440</value>\n            </property>\n\n            <property>\n              <name>coordTimezone</name>\n              <value>UTC</value>\n            </property>\n\n        These set the start time to 12:00PM on June 25th, 2015, the end time to June 27th, 2015, and the interval for running this job to daily (the frequency is in minutes, so 24 hours x 60 minutes = 1440 minutes.) Finally, the timezone is set to UTC.\n\n5. Use Ctrl-X, then **Y** and **Enter** to save the file.\n\n6. To run the job, use the following command:\n\n        oozie job -config job.xml -run\n\n    This will submit and start the job.\n\n7. If you visit the Oozie Web UI and select the **Coordinator Jobs** tab, you should information similar to the following:\n\n    ![coordinator jobs tab](./media/hdinsight-use-oozie-linux-mac/coordinatorjob.png)\n\n    Note the **Next Materialization** entry; this is when the job will run next.\n\n8. Similar to the earlier workflow job, selecting the job entry in the web UI will display information on the job:\n\n    ![Coordinator job info](./media/hdinsight-use-oozie-linux-mac/coordinatorjobinfo.png)\n\n    Note that this only shows successful runs of the job, not individual actions within the scheduled workflow. To see that, select one of the **Action** entries. This will display information similar to that retrieved for the earlier workflow job.\n\n    ![Action info](./media/hdinsight-use-oozie-linux-mac/coordinatoractionjob.png)\n\n##Troubleshooting\n\nWhen troubleshooting problems with Oozie jobs, the Oozie UI is very helpful as it allows you to easily view both Oozie logs, as well as links to JobTracker logs for MapReduce tasks such as Hive queries. In general, the pattern for troubleshooting should be:\n\n1. View the job in Oozie Web UI.\n\n2. If there is an error or failure for a specific action, select the action to see if the **Error Message** field provides more information on the failure.\n\n3. If available, use the URL from the action to view more details (such as JobTracker logs,) for the action.\n\nThe following are specific errors you may encounter, and how to resolve them.\n\n###JA009: Cannot initialize cluster\n\n**Symptoms**: The job status will change to **SUSPENDED**. Details for the job will show the RunHiveScript status as **START_MANUAL**. Selecting the action will reveal the following error message:\n\n    JA009: Cannot initialize Cluster. Please check your configuration for map\n\n**Cause**: The WASB addresses used in the **job.xml** file do not contain the storage container or storage account name. The WASB address format must be `wasb://containername@storageaccountname.blob.core.windows.net`.\n\n**Resolution**: Change the WASB addresses used by the job.\n\n###JA002: Oozie is not allowed to impersonate &lt;USER>\n\n**Symptoms**: The job status will change to **SUSPENDED**. Details for the job will show the RunHiveScript status as **START_MANUAL**. Selecting the action will reveal the following error message:\n\n    JA002: User: oozie is not allowed to impersonate <USER>\n\n**Cause**: Current permission settings do not allow Oozie to impersonate the specified user account.\n\n**Resolution**: Oozie is allowed to impersonate users in the **users** group. Use the `groups USERNAME` to see the groups that the user account is a member of. If the user is not a member of the **users** group, use the following command to add the user to the group:\n\n    sudo adduser USERNAME users\n\n> [AZURE.NOTE] It may take several minutes before HDInsight recognizes that the user has been added to the group.\n\n###Launcher ERROR (Sqoop)\n\n**Symptoms**: The job status will changed to **KILLED**. Details for the job will show the RunSqoopExport status as **ERROR**. Selecting the action will reveal the following error message:\n\n    Launcher ERROR, reason: Main class [org.apache.oozie.action.hadoop.SqoopMain], exit code [1]\n\n**Cause**: Sqoop is unable to load the database driver required to access the database.\n\n**Resolution**: When using Sqoop from an Oozie job, you must include the database driver with the other resources (such as the workflow.xml,) used by the job.\n\nYou must also reference the archive containing the database driver from the `<sqoop>...</sqoop>` section of the workflow.xml.\n\nFor example, for the job in this document, you would use the following steps:\n\n1. Copy the sqljdbc4.jar file to the /tutorials/useoozie directory:\n\n         hadoop fs -copyFromLocal /usr/share/java/sqljdbc_4.1/enu/sqljdbc4.jar /tutorials/useoozie/sqljdbc4.jar\n\n2. Modify the workflow.xml to add the following on a new line above `</sqoop>`:\n\n        <archive>sqljdbc4.jar</archive>\n\n##Next steps\nIn this tutorial, you learned how to define an Oozie workflow and how to run an Oozie job. To learn more about working with HDInsight, see the following articles:\n\n- [Use time-based Oozie Coordinator with HDInsight][hdinsight-oozie-coordinator-time]\n- [Upload data for Hadoop jobs in HDInsight][hdinsight-upload-data]\n- [Use Sqoop with Hadoop in HDInsight][hdinsight-use-sqoop]\n- [Use Hive with Hadoop on HDInsight][hdinsight-use-hive]\n- [Use Pig with Hadoop on HDInsight][hdinsight-use-pig]\n- [Develop Java MapReduce programs for HDInsight][hdinsight-develop-mapreduce]\n\n\n[hdinsight-cmdlets-download]: http://go.microsoft.com/fwlink/?LinkID=325563\n\n\n\n[azure-data-factory-pig-hive]: data-factory-pig-hive-activities.md\n[hdinsight-oozie-coordinator-time]: hdinsight-use-oozie-coordinator-time.md\n[hdinsight-versions]:  hdinsight-component-versioning.md\n[hdinsight-storage]: hdinsight-use-blob-storage.md\n[hdinsight-get-started]: hdinsight-get-started.md\n\n\n[hdinsight-use-sqoop]: hdinsight-use-sqoop-mac-linux.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-use-mapreduce]: hdinsight-use-mapreduce.md\n[hdinsight-use-hive]: hdinsight-use-hive.md\n[hdinsight-use-pig]: hdinsight-use-pig.md\n[hdinsight-storage]: hdinsight-use-blob-storage.md\n[hdinsight-get-started-emulator]: hdinsight-get-started-emulator.md\n\n[hdinsight-develop-streaming-jobs]: hdinsight-hadoop-develop-deploy-streaming-jobs.md\n[hdinsight-develop-mapreduce]: hdinsight-develop-deploy-java-mapreduce.md\n\n[sqldatabase-create-configue]: sql-database-create-configure.md\n[sqldatabase-get-started]: sql-database-get-started.md\n\n[azure-create-storageaccount]: storage-create-storage-account.md\n\n[apache-hadoop]: http://hadoop.apache.org/\n[apache-oozie-400]: http://oozie.apache.org/docs/4.0.0/\n[apache-oozie-332]: http://oozie.apache.org/docs/3.3.2/\n\n[powershell-download]: http://azure.microsoft.com/downloads/\n[powershell-about-profiles]: http://go.microsoft.com/fwlink/?LinkID=113729\n[powershell-install-configure]: powershell-install-configure.md\n[powershell-start]: http://technet.microsoft.com/library/hh847889.aspx\n[powershell-script]: https://technet.microsoft.com/en-us/library/ee176961.aspx\n\n[cindygross-hive-tables]: http://blogs.msdn.com/b/cindygross/archive/2013/02/06/hdinsight-hive-internal-and-external-tables-intro.aspx\n\n[img-workflow-diagram]: ./media/hdinsight-use-oozie/HDI.UseOozie.Workflow.Diagram.png\n[img-preparation-output]: ./media/hdinsight-use-oozie/HDI.UseOozie.Preparation.Output1.png\n[img-runworkflow-output]: ./media/hdinsight-use-oozie/HDI.UseOozie.RunWF.Output.png\n\n[technetwiki-hive-error]: http://social.technet.microsoft.com/wiki/contents/articles/23047.hdinsight-hive-error-unable-to-rename.aspx"
+}

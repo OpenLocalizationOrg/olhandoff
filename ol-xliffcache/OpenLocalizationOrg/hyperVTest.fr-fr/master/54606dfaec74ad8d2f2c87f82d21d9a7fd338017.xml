@@ -1,0 +1,1089 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        24,
+        84
+      ],
+      "content": "Correlate events over time with Storm and HBase on HDInsight"
+    },
+    {
+      "pos": [
+        100,
+        199
+      ],
+      "content": "Learn how to correlate events that arrive at different times by using Storm and HBase on HDInsight."
+    },
+    {
+      "pos": [
+        494,
+        554
+      ],
+      "content": "Correlate events over time with Storm and HBase on HDInsight"
+    },
+    {
+      "pos": [
+        556,
+        776
+      ],
+      "content": "By using a persistent data store with Apache Storm, you can correlate data entries that arrive at different times. For example, linking login and logout events for a user session to calculate how long the session lasted.",
+      "nodes": [
+        {
+          "content": "By using a persistent data store with Apache Storm, you can correlate data entries that arrive at different times.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "For example, linking login and logout events for a user session to calculate how long the session lasted.",
+          "pos": [
+            115,
+            220
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        778,
+        1187
+      ],
+      "content": "In this document, you will learn how to create a basic C# Storm topology that tracks login and logout events for user sessions, and calculates the duration of the session. The topology uses HBase as a persistent data store. HBase also allows you to perform batch queries on the historical data to produce additional insights, such as how many user sessions were started or ended during a specific time period.",
+      "nodes": [
+        {
+          "content": "In this document, you will learn how to create a basic C# Storm topology that tracks login and logout events for user sessions, and calculates the duration of the session.",
+          "pos": [
+            0,
+            171
+          ]
+        },
+        {
+          "content": "The topology uses HBase as a persistent data store.",
+          "pos": [
+            172,
+            223
+          ]
+        },
+        {
+          "content": "HBase also allows you to perform batch queries on the historical data to produce additional insights, such as how many user sessions were started or ended during a specific time period.",
+          "pos": [
+            224,
+            409
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1266,
+        1279
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1285,
+        1477
+      ],
+      "content": "HDInsight tools for Visual Studio: See <bpt id=\"p1\">[</bpt>Get started using the HDInsight tools for Visual Studio<ept id=\"p1\">](../HDInsight/hdinsight-hadoop-visual-studio-tools-get-started.md)</ept><ph id=\"ph3\"/> for installation information."
+    },
+    {
+      "pos": [
+        1483,
+        1516
+      ],
+      "content": "Apache Storm on HDInsight cluster"
+    },
+    {
+      "pos": [
+        1522,
+        1555
+      ],
+      "content": "Apache HBase on HDInsight cluster"
+    },
+    {
+      "pos": [
+        1560,
+        1572
+      ],
+      "content": "Architecture"
+    },
+    {
+      "pos": [
+        1574,
+        1692
+      ],
+      "content": "<ph id=\"ph4\">![</ph>Diagram of the data flow through the topology<ph id=\"ph5\">](./media/hdinsight-storm-correlation-topology/correlationtopology.png)</ph>"
+    },
+    {
+      "pos": [
+        1694,
+        1941
+      ],
+      "content": "Correlating events requires a common identifier for the event source. For example, a user ID, session ID, or other piece of data that is a) unique and b) included in all data sent to Storm. This example uses a GUID value to represent a session ID.",
+      "nodes": [
+        {
+          "content": "Correlating events requires a common identifier for the event source.",
+          "pos": [
+            0,
+            69
+          ]
+        },
+        {
+          "content": "For example, a user ID, session ID, or other piece of data that is a) unique and b) included in all data sent to Storm.",
+          "pos": [
+            70,
+            189
+          ]
+        },
+        {
+          "content": "This example uses a GUID value to represent a session ID.",
+          "pos": [
+            190,
+            247
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1943,
+        1991
+      ],
+      "content": "This example consists of two HDInsight clusters:"
+    },
+    {
+      "pos": [
+        1997,
+        2045
+      ],
+      "content": "HBase: persistent data store for historical data"
+    },
+    {
+      "pos": [
+        2051,
+        2086
+      ],
+      "content": "Storm: used to ingest incoming data"
+    },
+    {
+      "pos": [
+        2088,
+        2178
+      ],
+      "content": "The data is randomly generated by the Storm topology, and consists of the following items:"
+    },
+    {
+      "pos": [
+        2184,
+        2240
+      ],
+      "content": "Session ID: a GUID that uniquely identifies each session"
+    },
+    {
+      "pos": [
+        2246,
+        2323
+      ],
+      "content": "Event: a START or END event. For this example, START always occurs before END",
+      "nodes": [
+        {
+          "content": "Event: a START or END event.",
+          "pos": [
+            0,
+            28
+          ]
+        },
+        {
+          "content": "For this example, START always occurs before END",
+          "pos": [
+            29,
+            77
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2329,
+        2357
+      ],
+      "content": "Time: the time of the event."
+    },
+    {
+      "pos": [
+        2359,
+        2402
+      ],
+      "content": "This data is processed and stored in HBase."
+    },
+    {
+      "pos": [
+        2408,
+        2422
+      ],
+      "content": "Storm topology"
+    },
+    {
+      "pos": [
+        2424,
+        2729
+      ],
+      "content": "When a session starts, a <bpt id=\"p2\">**</bpt>START<ept id=\"p2\">**</ept><ph id=\"ph6\"/> event is received by the topology and logged to HBase. When an <bpt id=\"p3\">**</bpt>END<ept id=\"p3\">**</ept><ph id=\"ph7\"/> event is received, the topology retrieves the <bpt id=\"p4\">**</bpt>START<ept id=\"p4\">**</ept><ph id=\"ph8\"/> event and calculates the time between the two events. This <bpt id=\"p5\">**</bpt>Duration<ept id=\"p5\">**</ept><ph id=\"ph9\"/> value is then stored in HBase along with the <bpt id=\"p6\">**</bpt>END<ept id=\"p6\">**</ept><ph id=\"ph10\"/> event information.",
+      "nodes": [
+        {
+          "content": "When a session starts, a <bpt id=\"p2\">**</bpt>START<ept id=\"p2\">**</ept><ph id=\"ph6\"/> event is received by the topology and logged to HBase.",
+          "pos": [
+            0,
+            141
+          ]
+        },
+        {
+          "content": "When an <bpt id=\"p3\">**</bpt>END<ept id=\"p3\">**</ept><ph id=\"ph7\"/> event is received, the topology retrieves the <bpt id=\"p4\">**</bpt>START<ept id=\"p4\">**</ept><ph id=\"ph8\"/> event and calculates the time between the two events.",
+          "pos": [
+            142,
+            371
+          ]
+        },
+        {
+          "content": "This <bpt id=\"p5\">**</bpt>Duration<ept id=\"p5\">**</ept><ph id=\"ph9\"/> value is then stored in HBase along with the <bpt id=\"p6\">**</bpt>END<ept id=\"p6\">**</ept><ph id=\"ph10\"/> event information.",
+          "pos": [
+            372,
+            566
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2733,
+        2879
+      ],
+      "content": "<ph id=\"ph11\">[AZURE.IMPORTANT]</ph><ph id=\"ph12\"/> While this topology demonstrates the basic pattern, a production solution would need to take design for the following scenarios:"
+    },
+    {
+      "pos": [
+        2886,
+        2914
+      ],
+      "content": "Events arriving out of order"
+    },
+    {
+      "pos": [
+        2919,
+        2935
+      ],
+      "content": "Duplicate events"
+    },
+    {
+      "pos": [
+        2940,
+        2954
+      ],
+      "content": "Dropped events"
+    },
+    {
+      "pos": [
+        2956,
+        3016
+      ],
+      "content": "The sample topology is composed of the following components:"
+    },
+    {
+      "pos": [
+        3022,
+        3138
+      ],
+      "content": "Session.cs: simulates a user session by creating a random session ID, start time, and how long the session will last"
+    },
+    {
+      "pos": [
+        3144,
+        3318
+      ],
+      "content": "Spout.cs: creates 100 sessions, emits a START event, waits the random timeout for each session and then emits an END event. Then recycles ended sessions to generate new ones.",
+      "nodes": [
+        {
+          "content": "Spout.cs: creates 100 sessions, emits a START event, waits the random timeout for each session and then emits an END event.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "Then recycles ended sessions to generate new ones.",
+          "pos": [
+            124,
+            174
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3324,
+        3521
+      ],
+      "content": "HBaseLookupBolt.cs: uses the session ID to look up session information from HBase. When an END event is processed, it finds the corresponding START event and calculates the duration of the session.",
+      "nodes": [
+        {
+          "content": "HBaseLookupBolt.cs: uses the session ID to look up session information from HBase.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "When an END event is processed, it finds the corresponding START event and calculates the duration of the session.",
+          "pos": [
+            83,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3527,
+        3571
+      ],
+      "content": "HBaseBolt.cs: Stores information into HBase."
+    },
+    {
+      "pos": [
+        3577,
+        3654
+      ],
+      "content": "TypeHelper.cs: Helps with type conversion when reading from/writing to HBase."
+    },
+    {
+      "pos": [
+        3660,
+        3672
+      ],
+      "content": "HBase schema"
+    },
+    {
+      "pos": [
+        3674,
+        3749
+      ],
+      "content": "In HBase, the data is stored in a table with the following schema/settings:"
+    },
+    {
+      "pos": [
+        3755,
+        3820
+      ],
+      "content": "Row key: the session ID is used as the key for rows in this table"
+    },
+    {
+      "pos": [
+        3826,
+        3900
+      ],
+      "content": "Column family: the family name is 'cf'. Columns stored in this family are:",
+      "nodes": [
+        {
+          "content": "Column family: the family name is 'cf'.",
+          "pos": [
+            0,
+            39
+          ]
+        },
+        {
+          "content": "Columns stored in this family are:",
+          "pos": [
+            40,
+            74
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3910,
+        3929
+      ],
+      "content": "event: START or END"
+    },
+    {
+      "pos": [
+        3939,
+        3992
+      ],
+      "content": "time: the time in milliseconds that the event occured"
+    },
+    {
+      "pos": [
+        4002,
+        4050
+      ],
+      "content": "duration: the length between START and END event"
+    },
+    {
+      "pos": [
+        4056,
+        4121
+      ],
+      "content": "VERSIONS: the 'cf' family is set to retain 5 versions of each row"
+    },
+    {
+      "pos": [
+        4129,
+        4481
+      ],
+      "content": "<ph id=\"ph13\">[AZURE.NOTE]</ph><ph id=\"ph14\"/> Versions are a log of previous values stored for a specific row key. By default, HBase only returns the value for the most recent version of a row. In this case, the same row is used for all events (START, END.) each version of a row is identified by the timestamp value. This provides a historical view of events logged for a specific ID.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph13\">[AZURE.NOTE]</ph><ph id=\"ph14\"/> Versions are a log of previous values stored for a specific row key.",
+          "pos": [
+            0,
+            115
+          ]
+        },
+        {
+          "content": "By default, HBase only returns the value for the most recent version of a row.",
+          "pos": [
+            116,
+            194
+          ]
+        },
+        {
+          "content": "In this case, the same row is used for all events (START, END.) each version of a row is identified by the timestamp value.",
+          "pos": [
+            195,
+            318
+          ]
+        },
+        {
+          "content": "This provides a historical view of events logged for a specific ID.",
+          "pos": [
+            319,
+            386
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4486,
+        4506
+      ],
+      "content": "Download the project"
+    },
+    {
+      "pos": [
+        4508,
+        4701
+      ],
+      "content": "The sample project can be downloaded from <bpt id=\"p7\">[</bpt>https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation<ept id=\"p7\">](https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation)</ept>."
+    },
+    {
+      "pos": [
+        4703,
+        4752
+      ],
+      "content": "This download contains the following C# projects:"
+    },
+    {
+      "pos": [
+        4758,
+        4900
+      ],
+      "content": "CorrelationTopology: C# Storm topology that randomly emits start and end events for user sessions. Each session lasts between 1 and 5 minutes.",
+      "nodes": [
+        {
+          "content": "CorrelationTopology: C# Storm topology that randomly emits start and end events for user sessions.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "Each session lasts between 1 and 5 minutes.",
+          "pos": [
+            99,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4906,
+        5049
+      ],
+      "content": "SessionInfo: C# console application that creates the HBase table, and provides example queries to return information about stored session data."
+    },
+    {
+      "pos": [
+        5054,
+        5070
+      ],
+      "content": "Create the table"
+    },
+    {
+      "pos": [
+        5075,
+        5125
+      ],
+      "content": "Open the <bpt id=\"p8\">**</bpt>SessionInfo<ept id=\"p8\">**</ept><ph id=\"ph15\"/> project in Visual Studio."
+    },
+    {
+      "pos": [
+        5130,
+        5222
+      ],
+      "content": "In <bpt id=\"p9\">**</bpt>Solution Explorer<ept id=\"p9\">**</ept>, right-click the <bpt id=\"p10\">**</bpt>SessionInfo<ept id=\"p10\">**</ept><ph id=\"ph16\"/> project and select <bpt id=\"p11\">**</bpt>Properties<ept id=\"p11\">**</ept>."
+    },
+    {
+      "pos": [
+        5228,
+        5341
+      ],
+      "content": "<ph id=\"ph17\">![</ph>Screenshot of menu with properties selected<ph id=\"ph18\">](./media/hdinsight-storm-correlation-topology/selectproperties.png)</ph>"
+    },
+    {
+      "pos": [
+        5346,
+        5397
+      ],
+      "content": "Select <bpt id=\"p12\">**</bpt>Settings<ept id=\"p12\">**</ept>, then set the following values:"
+    },
+    {
+      "pos": [
+        5407,
+        5509
+      ],
+      "content": "HBaseClusterURL: the URL to your HBase cluster. For example, https://myhbasecluster.azurehdinsight.net",
+      "nodes": [
+        {
+          "content": "HBaseClusterURL: the URL to your HBase cluster.",
+          "pos": [
+            0,
+            47
+          ]
+        },
+        {
+          "content": "For example, https://myhbasecluster.azurehdinsight.net",
+          "pos": [
+            48,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5519,
+        5585
+      ],
+      "content": "HBaseClusterUserName: the admin/HTTP user account for your cluster"
+    },
+    {
+      "pos": [
+        5595,
+        5661
+      ],
+      "content": "HBaseClusterPassword: the password for the admin/HTTP user account"
+    },
+    {
+      "pos": [
+        5671,
+        5733
+      ],
+      "content": "HBaseTableName: the name of the table to use with this example"
+    },
+    {
+      "pos": [
+        5743,
+        5789
+      ],
+      "content": "HBaseTableColumnFamily: The column family name"
+    },
+    {
+      "pos": [
+        5795,
+        5881
+      ],
+      "content": "<ph id=\"ph19\">![</ph>Image of settings dialog<ph id=\"ph20\">](./media/hdinsight-storm-correlation-topology/settings.png)</ph>"
+    },
+    {
+      "pos": [
+        5886,
+        5980
+      ],
+      "content": "Run the solution. When prompted, select the 'c' key to create the table on your HBase cluster.",
+      "nodes": [
+        {
+          "content": "Run the solution.",
+          "pos": [
+            0,
+            17
+          ]
+        },
+        {
+          "content": "When prompted, select the 'c' key to create the table on your HBase cluster.",
+          "pos": [
+            18,
+            94
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5985,
+        6020
+      ],
+      "content": "Build and deploy the Storm topology"
+    },
+    {
+      "pos": [
+        6026,
+        6085
+      ],
+      "content": "Open the <bpt id=\"p13\">**</bpt>CorrelationTopology<ept id=\"p13\">**</ept><ph id=\"ph21\"/> solution in Visual Studio."
+    },
+    {
+      "pos": [
+        6091,
+        6187
+      ],
+      "content": "In <bpt id=\"p14\">**</bpt>Solution Explorer<ept id=\"p14\">**</ept>, right click the <bpt id=\"p15\">**</bpt>CorrelationTopology<ept id=\"p15\">**</ept><ph id=\"ph22\"/> project and select properties."
+    },
+    {
+      "pos": [
+        6193,
+        6352
+      ],
+      "content": "In the properties window, select <bpt id=\"p16\">**</bpt>Settings<ept id=\"p16\">**</ept><ph id=\"ph23\"/> and provide the following information. The first 5 should be the same values used by the <bpt id=\"p17\">**</bpt>SessionInfo<ept id=\"p17\">**</ept><ph id=\"ph24\"/> project:",
+      "nodes": [
+        {
+          "content": "In the properties window, select <bpt id=\"p16\">**</bpt>Settings<ept id=\"p16\">**</ept><ph id=\"ph23\"/> and provide the following information.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "The first 5 should be the same values used by the <bpt id=\"p17\">**</bpt>SessionInfo<ept id=\"p17\">**</ept><ph id=\"ph24\"/> project:",
+          "pos": [
+            140,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6362,
+        6464
+      ],
+      "content": "HBaseClusterURL: the URL to your HBase cluster. For example, https://myhbasecluster.azurehdinsight.net",
+      "nodes": [
+        {
+          "content": "HBaseClusterURL: the URL to your HBase cluster.",
+          "pos": [
+            0,
+            47
+          ]
+        },
+        {
+          "content": "For example, https://myhbasecluster.azurehdinsight.net",
+          "pos": [
+            48,
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6474,
+        6540
+      ],
+      "content": "HBaseClusterUserName: the admin/HTTP user account for your cluster"
+    },
+    {
+      "pos": [
+        6550,
+        6616
+      ],
+      "content": "HBaseClusterPassword: the password for the admin/HTTP user account"
+    },
+    {
+      "pos": [
+        6626,
+        6769
+      ],
+      "content": "HBaseTableName: the name of the table to use with this example. This should contain the same table name as that used in the SessionInfo project",
+      "nodes": [
+        {
+          "content": "HBaseTableName: the name of the table to use with this example.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "This should contain the same table name as that used in the SessionInfo project",
+          "pos": [
+            64,
+            143
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6779,
+        6914
+      ],
+      "content": "HBaseTableColumnFamily: The column family name. This should contain the same column family name as that used in the SessionInfo project",
+      "nodes": [
+        {
+          "content": "HBaseTableColumnFamily: The column family name.",
+          "pos": [
+            0,
+            47
+          ]
+        },
+        {
+          "content": "This should contain the same column family name as that used in the SessionInfo project",
+          "pos": [
+            48,
+            135
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6922,
+        7052
+      ],
+      "content": "<ph id=\"ph25\">[AZURE.IMPORTANT]</ph><ph id=\"ph26\"/> Do not change the HBaseTableColumnNames, as the defaults are the names used by <bpt id=\"p18\">**</bpt>SessionInfo<ept id=\"p18\">**</ept><ph id=\"ph27\"/> to retrieve data."
+    },
+    {
+      "pos": [
+        7058,
+        7102
+      ],
+      "content": "Save the properties, then build the project."
+    },
+    {
+      "pos": [
+        7108,
+        7266
+      ],
+      "content": "In <bpt id=\"p19\">**</bpt>Solution Explorer<ept id=\"p19\">**</ept>, right click the project and select <bpt id=\"p20\">**</bpt>Submit to Storm on HDInsight<ept id=\"p20\">**</ept>. If prompted, enter the credentials for your Azure subscription.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p19\">**</bpt>Solution Explorer<ept id=\"p19\">**</ept>, right click the project and select <bpt id=\"p20\">**</bpt>Submit to Storm on HDInsight<ept id=\"p20\">**</ept>.",
+          "pos": [
+            0,
+            174
+          ]
+        },
+        {
+          "content": "If prompted, enter the credentials for your Azure subscription.",
+          "pos": [
+            175,
+            238
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7272,
+        7377
+      ],
+      "content": "<ph id=\"ph28\">![</ph>Image of the submit to storm menu item<ph id=\"ph29\">](./media/hdinsight-storm-correlation-topology/submittostorm.png)</ph>"
+    },
+    {
+      "pos": [
+        7383,
+        7471
+      ],
+      "content": "In the <bpt id=\"p21\">**</bpt>Submit Topology<ept id=\"p21\">**</ept><ph id=\"ph30\"/> dialog, select the Storm cluster that will run this topology."
+    },
+    {
+      "pos": [
+        7479,
+        7604
+      ],
+      "content": "<ph id=\"ph31\">[AZURE.NOTE]</ph><ph id=\"ph32\"/> The first time you submit a topology, it may take a few seconds to retrieve the name of your HDInsight clusters."
+    },
+    {
+      "pos": [
+        7610,
+        7875
+      ],
+      "content": "Once the topology has been uploaded and submitted to the cluster, the <bpt id=\"p22\">**</bpt>Storm Topology View<ept id=\"p22\">**</ept><ph id=\"ph33\"/> will open and display the running topology. Select the <bpt id=\"p23\">**</bpt>CorrelationTopology<ept id=\"p23\">**</ept><ph id=\"ph34\"/> and use the refresh button at the top right of the page to refresh the topology information.",
+      "nodes": [
+        {
+          "content": "Once the topology has been uploaded and submitted to the cluster, the <bpt id=\"p22\">**</bpt>Storm Topology View<ept id=\"p22\">**</ept><ph id=\"ph33\"/> will open and display the running topology.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "Select the <bpt id=\"p23\">**</bpt>CorrelationTopology<ept id=\"p23\">**</ept><ph id=\"ph34\"/> and use the refresh button at the top right of the page to refresh the topology information.",
+          "pos": [
+            193,
+            375
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7881,
+        7973
+      ],
+      "content": "<ph id=\"ph35\">![</ph>Image of the topology view<ph id=\"ph36\">](./media/hdinsight-storm-correlation-topology/topologyview.png)</ph>"
+    },
+    {
+      "pos": [
+        7979,
+        8072
+      ],
+      "content": "When the topology begins generating data, the value in the <bpt id=\"p24\">**</bpt>Emitted<ept id=\"p24\">**</ept><ph id=\"ph37\"/> column will increment."
+    },
+    {
+      "pos": [
+        8080,
+        8188
+      ],
+      "content": "<ph id=\"ph38\">[AZURE.NOTE]</ph><ph id=\"ph39\"/> If the <bpt id=\"p25\">**</bpt>Storm Topology View<ept id=\"p25\">**</ept><ph id=\"ph40\"/> does not open automatically, use the following steps to open it:"
+    },
+    {
+      "pos": [
+        8204,
+        8278
+      ],
+      "content": "In <bpt id=\"p26\">**</bpt>Solution Explorer<ept id=\"p26\">**</ept>, expand <bpt id=\"p27\">**</bpt>Azure<ept id=\"p27\">**</ept>, and then expand <bpt id=\"p28\">**</bpt>HDInsight<ept id=\"p28\">**</ept>."
+    },
+    {
+      "pos": [
+        8294,
+        8398
+      ],
+      "content": "Right click the Storm cluster that the topology is running on, and then select <bpt id=\"p29\">**</bpt>View Storm Topologies<ept id=\"p29\">**</ept>"
+    },
+    {
+      "pos": [
+        8403,
+        8417
+      ],
+      "content": "Query the data"
+    },
+    {
+      "pos": [
+        8419,
+        8489
+      ],
+      "content": "Once data has been emitted, use the following steps to query the data."
+    },
+    {
+      "pos": [
+        8494,
+        8576
+      ],
+      "content": "Return to the <bpt id=\"p30\">**</bpt>SessionInfo<ept id=\"p30\">**</ept><ph id=\"ph41\"/> project. If not running, start a new instance of it.",
+      "nodes": [
+        {
+          "content": "Return to the <bpt id=\"p30\">**</bpt>SessionInfo<ept id=\"p30\">**</ept><ph id=\"ph41\"/> project.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "If not running, start a new instance of it.",
+          "pos": [
+            94,
+            137
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8581,
+        8765
+      ],
+      "content": "When prompted, select <bpt id=\"p31\">**</bpt>s<ept id=\"p31\">**</ept><ph id=\"ph42\"/> to search for START event. You will be prompted to enter a start and end time to define a time range - only events between these two times will be returned.",
+      "nodes": [
+        {
+          "content": "When prompted, select <bpt id=\"p31\">**</bpt>s<ept id=\"p31\">**</ept><ph id=\"ph42\"/> to search for START event.",
+          "pos": [
+            0,
+            109
+          ]
+        },
+        {
+          "content": "You will be prompted to enter a start and end time to define a time range - only events between these two times will be returned.",
+          "pos": [
+            110,
+            239
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8771,
+        8880
+      ],
+      "content": "Use the following format when entering the start and end times: HH:MM and 'am' or 'pm'. For example, 11:20pm.",
+      "nodes": [
+        {
+          "content": "Use the following format when entering the start and end times: HH:MM and 'am' or 'pm'.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "For example, 11:20pm.",
+          "pos": [
+            88,
+            109
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8886,
+        9154
+      ],
+      "content": "Since the topology has just started, use a start time from before it was deployed, and an end time of now. This should capture most of the START events that were generated when it started. When the query runs, you should see a list of entries similar to the following:",
+      "nodes": [
+        {
+          "content": "Since the topology has just started, use a start time from before it was deployed, and an end time of now.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "This should capture most of the START events that were generated when it started.",
+          "pos": [
+            107,
+            188
+          ]
+        },
+        {
+          "content": "When the query runs, you should see a list of entries similar to the following:",
+          "pos": [
+            189,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9268,
+        9654
+      ],
+      "content": "Searching for END events works the same as START events. However, END events are generated randomly between 1 and 5 minutes after the START event. So you may have to try a few time ranges in order to find the END events. END events will also contain the duration of the session - the difference between the START event time and END event time. Here is an example of data for END events:",
+      "nodes": [
+        {
+          "content": "Searching for END events works the same as START events.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "However, END events are generated randomly between 1 and 5 minutes after the START event.",
+          "pos": [
+            57,
+            146
+          ]
+        },
+        {
+          "content": "So you may have to try a few time ranges in order to find the END events.",
+          "pos": [
+            147,
+            220
+          ]
+        },
+        {
+          "content": "END events will also contain the duration of the session - the difference between the START event time and END event time.",
+          "pos": [
+            221,
+            343
+          ]
+        },
+        {
+          "content": "Here is an example of data for END events:",
+          "pos": [
+            344,
+            386
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9759,
+        9868
+      ],
+      "content": "<ph id=\"ph43\">[AZURE.NOTE]</ph><ph id=\"ph44\"/> While the time values you enter are in local time, the time returned from the query will be UTC."
+    },
+    {
+      "pos": [
+        9872,
+        9889
+      ],
+      "content": "Stop the topology"
+    },
+    {
+      "pos": [
+        9891,
+        10113
+      ],
+      "content": "When you are ready to stop the topology, return to the <bpt id=\"p32\">**</bpt>CorrelationTopology<ept id=\"p32\">**</ept><ph id=\"ph45\"/> project in Visual Studio. In the <bpt id=\"p33\">**</bpt>Storm Topology View<ept id=\"p33\">**</ept>, select the topology and then use the <bpt id=\"p34\">**</bpt>Kill<ept id=\"p34\">**</ept><ph id=\"ph46\"/> button at the top of the topology view.",
+      "nodes": [
+        {
+          "content": "When you are ready to stop the topology, return to the <bpt id=\"p32\">**</bpt>CorrelationTopology<ept id=\"p32\">**</ept><ph id=\"ph45\"/> project in Visual Studio.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "In the <bpt id=\"p33\">**</bpt>Storm Topology View<ept id=\"p33\">**</ept>, select the topology and then use the <bpt id=\"p34\">**</bpt>Kill<ept id=\"p34\">**</ept><ph id=\"ph46\"/> button at the top of the topology view.",
+          "pos": [
+            160,
+            372
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10117,
+        10127
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        10129,
+        10239
+      ],
+      "content": "For more Storm examples, see <bpt id=\"p35\">[</bpt>Example topologies for Storm on HDInsight<ept id=\"p35\">](hdinsight-storm-example-topology.md)</ept>."
+    }
+  ],
+  "content": "<properties\n pageTitle=\"Correlate events over time with Storm and HBase on HDInsight\"\n description=\"Learn how to correlate events that arrive at different times by using Storm and HBase on HDInsight.\"\n services=\"hdinsight\"\n documentationCenter=\"\"\n authors=\"Blackmist\"\n manager=\"paulettm\"\n editor=\"cgronlun\"\n tags=\"azure-portal\"/>\n\n<tags\n ms.service=\"hdinsight\"\n ms.devlang=\"dotnet\"\n ms.topic=\"article\"\n ms.tgt_pltfrm=\"na\"\n ms.workload=\"big-data\"\n ms.date=\"02/01/2016\"\n ms.author=\"larryfr\"/>\n\n# Correlate events over time with Storm and HBase on HDInsight\n\nBy using a persistent data store with Apache Storm, you can correlate data entries that arrive at different times. For example, linking login and logout events for a user session to calculate how long the session lasted.\n\nIn this document, you will learn how to create a basic C# Storm topology that tracks login and logout events for user sessions, and calculates the duration of the session. The topology uses HBase as a persistent data store. HBase also allows you to perform batch queries on the historical data to produce additional insights, such as how many user sessions were started or ended during a specific time period.\n\n[AZURE.INCLUDE [windows-only](../../includes/hdinsight-windows-only.md)]\n\n## Prerequisites\n\n-   HDInsight tools for Visual Studio: See [Get started using the HDInsight tools for Visual Studio](../HDInsight/hdinsight-hadoop-visual-studio-tools-get-started.md) for installation information.\n\n-   Apache Storm on HDInsight cluster\n\n-   Apache HBase on HDInsight cluster\n\n## Architecture\n\n![Diagram of the data flow through the topology](./media/hdinsight-storm-correlation-topology/correlationtopology.png)\n\nCorrelating events requires a common identifier for the event source. For example, a user ID, session ID, or other piece of data that is a) unique and b) included in all data sent to Storm. This example uses a GUID value to represent a session ID.\n\nThis example consists of two HDInsight clusters:\n\n-   HBase: persistent data store for historical data\n\n-   Storm: used to ingest incoming data\n\nThe data is randomly generated by the Storm topology, and consists of the following items:\n\n-   Session ID: a GUID that uniquely identifies each session\n\n-   Event: a START or END event. For this example, START always occurs before END\n\n-   Time: the time of the event.\n\nThis data is processed and stored in HBase.\n\n### Storm topology\n\nWhen a session starts, a **START** event is received by the topology and logged to HBase. When an **END** event is received, the topology retrieves the **START** event and calculates the time between the two events. This **Duration** value is then stored in HBase along with the **END** event information.\n\n> [AZURE.IMPORTANT] While this topology demonstrates the basic pattern, a production solution would need to take design for the following scenarios:\n>\n> - Events arriving out of order\n> - Duplicate events\n> - Dropped events\n\nThe sample topology is composed of the following components:\n\n-   Session.cs: simulates a user session by creating a random session ID, start time, and how long the session will last\n\n-   Spout.cs: creates 100 sessions, emits a START event, waits the random timeout for each session and then emits an END event. Then recycles ended sessions to generate new ones.\n\n-   HBaseLookupBolt.cs: uses the session ID to look up session information from HBase. When an END event is processed, it finds the corresponding START event and calculates the duration of the session.\n\n-   HBaseBolt.cs: Stores information into HBase.\n\n-   TypeHelper.cs: Helps with type conversion when reading from/writing to HBase.\n\n### HBase schema\n\nIn HBase, the data is stored in a table with the following schema/settings:\n\n-   Row key: the session ID is used as the key for rows in this table\n\n-   Column family: the family name is 'cf'. Columns stored in this family are:\n\n    -   event: START or END\n\n    -   time: the time in milliseconds that the event occured\n\n    -   duration: the length between START and END event\n\n-   VERSIONS: the 'cf' family is set to retain 5 versions of each row\n\n    > [AZURE.NOTE] Versions are a log of previous values stored for a specific row key. By default, HBase only returns the value for the most recent version of a row. In this case, the same row is used for all events (START, END.) each version of a row is identified by the timestamp value. This provides a historical view of events logged for a specific ID.\n\n## Download the project\n\nThe sample project can be downloaded from [https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation](https://github.com/Azure-Samples/hdinsight-storm-dotnet-event-correlation).\n\nThis download contains the following C# projects:\n\n-   CorrelationTopology: C# Storm topology that randomly emits start and end events for user sessions. Each session lasts between 1 and 5 minutes.\n\n-   SessionInfo: C# console application that creates the HBase table, and provides example queries to return information about stored session data.\n\n## Create the table\n\n1. Open the **SessionInfo** project in Visual Studio.\n\n2. In **Solution Explorer**, right-click the **SessionInfo** project and select **Properties**.\n\n    ![Screenshot of menu with properties selected](./media/hdinsight-storm-correlation-topology/selectproperties.png)\n\n3. Select **Settings**, then set the following values:\n\n    -   HBaseClusterURL: the URL to your HBase cluster. For example, https://myhbasecluster.azurehdinsight.net\n\n    -   HBaseClusterUserName: the admin/HTTP user account for your cluster\n\n    -   HBaseClusterPassword: the password for the admin/HTTP user account\n\n    -   HBaseTableName: the name of the table to use with this example\n\n    -   HBaseTableColumnFamily: The column family name\n\n    ![Image of settings dialog](./media/hdinsight-storm-correlation-topology/settings.png)\n\n5. Run the solution. When prompted, select the 'c' key to create the table on your HBase cluster.\n\n## Build and deploy the Storm topology\n\n1.  Open the **CorrelationTopology** solution in Visual Studio.\n\n2.  In **Solution Explorer**, right click the **CorrelationTopology** project and select properties.\n\n3.  In the properties window, select **Settings** and provide the following information. The first 5 should be the same values used by the **SessionInfo** project:\n\n    -   HBaseClusterURL: the URL to your HBase cluster. For example, https://myhbasecluster.azurehdinsight.net\n\n    -   HBaseClusterUserName: the admin/HTTP user account for your cluster\n\n    -   HBaseClusterPassword: the password for the admin/HTTP user account\n\n    -   HBaseTableName: the name of the table to use with this example. This should contain the same table name as that used in the SessionInfo project\n\n    -   HBaseTableColumnFamily: The column family name. This should contain the same column family name as that used in the SessionInfo project\n\n    > [AZURE.IMPORTANT] Do not change the HBaseTableColumnNames, as the defaults are the names used by **SessionInfo** to retrieve data.\n\n4.  Save the properties, then build the project.\n\n5.  In **Solution Explorer**, right click the project and select **Submit to Storm on HDInsight**. If prompted, enter the credentials for your Azure subscription.\n\n    ![Image of the submit to storm menu item](./media/hdinsight-storm-correlation-topology/submittostorm.png)\n\n6.  In the **Submit Topology** dialog, select the Storm cluster that will run this topology.\n\n    > [AZURE.NOTE] The first time you submit a topology, it may take a few seconds to retrieve the name of your HDInsight clusters.\n\n7.  Once the topology has been uploaded and submitted to the cluster, the **Storm Topology View** will open and display the running topology. Select the **CorrelationTopology** and use the refresh button at the top right of the page to refresh the topology information.\n\n    ![Image of the topology view](./media/hdinsight-storm-correlation-topology/topologyview.png)\n\n    When the topology begins generating data, the value in the **Emitted** column will increment.\n\n    > [AZURE.NOTE] If the **Storm Topology View** does not open automatically, use the following steps to open it:\n    >\n    > 1. In **Solution Explorer**, expand **Azure**, and then expand **HDInsight**.\n    >\n    > 2. Right click the Storm cluster that the topology is running on, and then select **View Storm Topologies**\n\n## Query the data\n\nOnce data has been emitted, use the following steps to query the data.\n\n1. Return to the **SessionInfo** project. If not running, start a new instance of it.\n\n2. When prompted, select **s** to search for START event. You will be prompted to enter a start and end time to define a time range - only events between these two times will be returned.\n\n    Use the following format when entering the start and end times: HH:MM and 'am' or 'pm'. For example, 11:20pm.\n\n    Since the topology has just started, use a start time from before it was deployed, and an end time of now. This should capture most of the START events that were generated when it started. When the query runs, you should see a list of entries similar to the following:\n\n        Session e6992b3e-79be-4991-afcf-5cb47dd1c81c started at 6/5/2015 6:10:15 PM. Timestamp = 1433527820737\n\nSearching for END events works the same as START events. However, END events are generated randomly between 1 and 5 minutes after the START event. So you may have to try a few time ranges in order to find the END events. END events will also contain the duration of the session - the difference between the START event time and END event time. Here is an example of data for END events:\n\n    Session fc9fa8e6-6892-4073-93b3-a587040d892e lasted 2 minutes, and ended at 6/5/2015 6:12:15 PM\n\n> [AZURE.NOTE] While the time values you enter are in local time, the time returned from the query will be UTC.\n\n##Stop the topology\n\nWhen you are ready to stop the topology, return to the **CorrelationTopology** project in Visual Studio. In the **Storm Topology View**, select the topology and then use the **Kill** button at the top of the topology view.\n\n##Next steps\n\nFor more Storm examples, see [Example topologies for Storm on HDInsight](hdinsight-storm-example-topology.md).\n "
+}
