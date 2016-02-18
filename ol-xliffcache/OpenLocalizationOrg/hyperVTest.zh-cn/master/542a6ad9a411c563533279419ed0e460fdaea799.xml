@@ -1,0 +1,1841 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        98
+      ],
+      "content": "Use Python components in a Storm topology on HDinsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        116,
+        300
+      ],
+      "content": "Learn how you can use Python components from with Apache Storm on Azure HDInsight. You will learn how to use Python components from both a Java based, and Clojure based Storm topology.",
+      "nodes": [
+        {
+          "content": "Learn how you can use Python components from with Apache Storm on Azure HDInsight.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "You will learn how to use Python components from both a Java based, and Clojure based Storm topology.",
+          "pos": [
+            83,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        597,
+        654
+      ],
+      "content": "Develop Apache Storm topologies using Python on HDInsight"
+    },
+    {
+      "pos": [
+        656,
+        901
+      ],
+      "content": "Apache Storm supports multiple languages, even allowing you to combine components from several languages in one topology. In this document, you will learn how to use Python components in your Java and Clojure-based Storm topologies on HDInsight.",
+      "nodes": [
+        {
+          "content": "Apache Storm supports multiple languages, even allowing you to combine components from several languages in one topology.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "In this document, you will learn how to use Python components in your Java and Clojure-based Storm topologies on HDInsight.",
+          "pos": [
+            122,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        905,
+        918
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        922,
+        942
+      ],
+      "content": "Python 2.7 or higher"
+    },
+    {
+      "pos": [
+        946,
+        968
+      ],
+      "content": "Java JDK 1.7 or higher"
+    },
+    {
+      "pos": [
+        972,
+        1006
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Leiningen<ept id=\"p1\">](http://leiningen.org/)</ept>"
+    },
+    {
+      "pos": [
+        1010,
+        1038
+      ],
+      "content": "Storm multi-language support"
+    },
+    {
+      "pos": [
+        1040,
+        1659
+      ],
+      "content": "Storm was designed to work with components written using any programming language, however this requires that the components understand how to work with the <bpt id=\"p2\">[</bpt>Thrift definition for Storm<ept id=\"p2\">](https://github.com/apache/storm/blob/master/storm-core/src/storm.thrift)</ept>. For Python, a module is provided as part of the Apache Storm project that allows you to easily interface with Storm. You can find this module at <bpt id=\"p3\">[</bpt>https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py<ept id=\"p3\">](https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py)</ept>.",
+      "nodes": [
+        {
+          "content": "Storm was designed to work with components written using any programming language, however this requires that the components understand how to work with the <bpt id=\"p2\">[</bpt>Thrift definition for Storm<ept id=\"p2\">](https://github.com/apache/storm/blob/master/storm-core/src/storm.thrift)</ept>.",
+          "pos": [
+            0,
+            298
+          ]
+        },
+        {
+          "content": "For Python, a module is provided as part of the Apache Storm project that allows you to easily interface with Storm.",
+          "pos": [
+            299,
+            415
+          ]
+        },
+        {
+          "content": "You can find this module at <bpt id=\"p3\">[</bpt>https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py<ept id=\"p3\">](https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py)</ept>.",
+          "pos": [
+            416,
+            695
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1661,
+        2095
+      ],
+      "content": "Since Apache Storm is a Java process that runs on the Java Virtual Machine (JVM,) components written in other languages are executed as subprocesses. The Storm bits running in the JVM communicates with these subprocesses using JSON messages sent over stdin/stdout. More details on communication between components can be found in the <bpt id=\"p4\">[</bpt>Multi-lang Protocol<ept id=\"p4\">](https://storm.apache.org/documentation/Multilang-protocol.html)</ept><ph id=\"ph2\"/> documentation.",
+      "nodes": [
+        {
+          "content": "Since Apache Storm is a Java process that runs on the Java Virtual Machine (JVM,) components written in other languages are executed as subprocesses.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "The Storm bits running in the JVM communicates with these subprocesses using JSON messages sent over stdin/stdout.",
+          "pos": [
+            150,
+            264
+          ]
+        },
+        {
+          "content": "More details on communication between components can be found in the <bpt id=\"p4\">[</bpt>Multi-lang Protocol<ept id=\"p4\">](https://storm.apache.org/documentation/Multilang-protocol.html)</ept><ph id=\"ph2\"/> documentation.",
+          "pos": [
+            265,
+            486
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2100,
+        2116
+      ],
+      "content": "The Storm module"
+    },
+    {
+      "pos": [
+        2118,
+        2317
+      ],
+      "content": "The storm module (https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py,) provides the bits needed to create Python components that work with Storm."
+    },
+    {
+      "pos": [
+        2319,
+        2493
+      ],
+      "content": "This provides things like <ph id=\"ph3\">`storm.emit`</ph><ph id=\"ph4\"/> to emit tuples, and <ph id=\"ph5\">`storm.logInfo`</ph><ph id=\"ph6\"/> to write to the logs. I would encourage you to read over this file and understand what it provides.",
+      "nodes": [
+        {
+          "content": "This provides things like <ph id=\"ph3\">`storm.emit`</ph><ph id=\"ph4\"/> to emit tuples, and <ph id=\"ph5\">`storm.logInfo`</ph><ph id=\"ph6\"/> to write to the logs.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "I would encourage you to read over this file and understand what it provides.",
+          "pos": [
+            161,
+            238
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2497,
+        2507
+      ],
+      "content": "Challenges"
+    },
+    {
+      "pos": [
+        2509,
+        2868
+      ],
+      "content": "Using the <bpt id=\"p5\">__</bpt>storm.py<ept id=\"p5\">__</ept><ph id=\"ph7\"/> module, you can create Python spouts that consume data, and bolts that process data, however the overall Storm topology definition that wires up communication between components is still written using Java or Clojure. Additionally, if you use Java, you must also create Java components that act as an interface to the Python components.",
+      "nodes": [
+        {
+          "content": "Using the <bpt id=\"p5\">__</bpt>storm.py<ept id=\"p5\">__</ept><ph id=\"ph7\"/> module, you can create Python spouts that consume data, and bolts that process data, however the overall Storm topology definition that wires up communication between components is still written using Java or Clojure.",
+          "pos": [
+            0,
+            292
+          ]
+        },
+        {
+          "content": "Additionally, if you use Java, you must also create Java components that act as an interface to the Python components.",
+          "pos": [
+            293,
+            411
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2870,
+        3280
+      ],
+      "content": "Also, since Storm clusters run in a distributed fashion, you must ensure that any modules required by your Python components are available on all worker nodes in the cluster. Storm doesn't provide any easy way to accomplish this for multi-lang resources - you either have to include all dependencies as part of the jar file for the topology, or manually install dependencies on each worker node in the cluster.",
+      "nodes": [
+        {
+          "content": "Also, since Storm clusters run in a distributed fashion, you must ensure that any modules required by your Python components are available on all worker nodes in the cluster.",
+          "pos": [
+            0,
+            174
+          ]
+        },
+        {
+          "content": "Storm doesn't provide any easy way to accomplish this for multi-lang resources - you either have to include all dependencies as part of the jar file for the topology, or manually install dependencies on each worker node in the cluster.",
+          "pos": [
+            175,
+            410
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3282,
+        3761
+      ],
+      "content": "There are some projects that attempt to overcome these shortcomings, such as <bpt id=\"p6\">[</bpt>Pyleus<ept id=\"p6\">](https://github.com/Yelp/pyleus)</ept><ph id=\"ph8\"/> and <bpt id=\"p7\">[</bpt>Streamparse<ept id=\"p7\">](https://github.com/Parsely/streamparse)</ept>. While both of these can be ran on Linux-based HDInsight clusters, they are not the primary focus of this document as they require customizations during cluster setup and are not fully tested on HDInsight clusters. Notes on using these frameworks with HDInsight are included at the end of this document.",
+      "nodes": [
+        {
+          "content": "There are some projects that attempt to overcome these shortcomings, such as <bpt id=\"p6\">[</bpt>Pyleus<ept id=\"p6\">](https://github.com/Yelp/pyleus)</ept><ph id=\"ph8\"/> and <bpt id=\"p7\">[</bpt>Streamparse<ept id=\"p7\">](https://github.com/Parsely/streamparse)</ept>.",
+          "pos": [
+            0,
+            266
+          ]
+        },
+        {
+          "content": "While both of these can be ran on Linux-based HDInsight clusters, they are not the primary focus of this document as they require customizations during cluster setup and are not fully tested on HDInsight clusters.",
+          "pos": [
+            267,
+            480
+          ]
+        },
+        {
+          "content": "Notes on using these frameworks with HDInsight are included at the end of this document.",
+          "pos": [
+            481,
+            569
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3766,
+        3802
+      ],
+      "content": "Java vs. Clojure topology definition"
+    },
+    {
+      "pos": [
+        3804,
+        4130
+      ],
+      "content": "Of the two methods of defining a topology, Clojure is by far the easiest/cleanest as you can directly referenc python components in the topology definition. For Java-based topology definitions, you must also define Java components that handle things like declaring the fields in the tuples returned from the Python components.",
+      "nodes": [
+        {
+          "content": "Of the two methods of defining a topology, Clojure is by far the easiest/cleanest as you can directly referenc python components in the topology definition.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "For Java-based topology definitions, you must also define Java components that handle things like declaring the fields in the tuples returned from the Python components.",
+          "pos": [
+            157,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4132,
+        4205
+      ],
+      "content": "Both methods are described in this document, along with example projects."
+    },
+    {
+      "pos": [
+        4209,
+        4247
+      ],
+      "content": "Python components with a Java topology"
+    },
+    {
+      "pos": [
+        4251,
+        4707
+      ],
+      "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> This example is available at <bpt id=\"p8\">[</bpt>https://github.com/Azure-Samples/hdinsight-python-storm-wordcount<ept id=\"p8\">](https://github.com/Azure-Samples/hdinsight-python-storm-wordcount)</ept><ph id=\"ph11\"/> in the <bpt id=\"p9\">__</bpt>JavaTopology<ept id=\"p9\">__</ept><ph id=\"ph12\"/> directory. This is a Maven based project. If you are unfamiliar with Maven, see <bpt id=\"p10\">[</bpt>Develop Java-based topologies with Apache Storm on HDInsight<ept id=\"p10\">](hdinsight-storm-develop-java-topology.md)</ept><ph id=\"ph13\"/> for more information on creating a Maven project for a Storm topology.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> This example is available at <bpt id=\"p8\">[</bpt>https://github.com/Azure-Samples/hdinsight-python-storm-wordcount<ept id=\"p8\">](https://github.com/Azure-Samples/hdinsight-python-storm-wordcount)</ept><ph id=\"ph11\"/> in the <bpt id=\"p9\">__</bpt>JavaTopology<ept id=\"p9\">__</ept><ph id=\"ph12\"/> directory.",
+          "pos": [
+            0,
+            350
+          ]
+        },
+        {
+          "content": "This is a Maven based project.",
+          "pos": [
+            351,
+            381
+          ]
+        },
+        {
+          "content": "If you are unfamiliar with Maven, see <bpt id=\"p10\">[</bpt>Develop Java-based topologies with Apache Storm on HDInsight<ept id=\"p10\">](hdinsight-storm-develop-java-topology.md)</ept><ph id=\"ph13\"/> for more information on creating a Maven project for a Storm topology.",
+          "pos": [
+            382,
+            650
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4709,
+        4917
+      ],
+      "content": "A Java-based topology that uses Python (or other JVM language components,) initially appears to use Java components; but if you look in each of the Java spouts/bolts, you'll see code similar to the following:"
+    },
+    {
+      "pos": [
+        4992,
+        5220
+      ],
+      "content": "This is where Java invokes Python and runs the script that contains the actual bolt logic. The Java spouts/bolts (for this example,) simply declare the fields in the tuple that will be emitted by the underlying Python component.",
+      "nodes": [
+        {
+          "content": "This is where Java invokes Python and runs the script that contains the actual bolt logic.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "The Java spouts/bolts (for this example,) simply declare the fields in the tuple that will be emitted by the underlying Python component.",
+          "pos": [
+            91,
+            228
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5222,
+        5374
+      ],
+      "content": "The actual Python files are stored in the <ph id=\"ph14\">`/multilang/resources`</ph><ph id=\"ph15\"/> directory in this example. The <ph id=\"ph16\">`/multilang`</ph><ph id=\"ph17\"/> directory is referenced in the <bpt id=\"p11\">__</bpt>pom.xml<ept id=\"p11\">__</ept>:",
+      "nodes": [
+        {
+          "content": "The actual Python files are stored in the <ph id=\"ph14\">`/multilang/resources`</ph><ph id=\"ph15\"/> directory in this example.",
+          "pos": [
+            0,
+            125
+          ]
+        },
+        {
+          "content": "The <ph id=\"ph16\">`/multilang`</ph><ph id=\"ph17\"/> directory is referenced in the <bpt id=\"p11\">__</bpt>pom.xml<ept id=\"p11\">__</ept>:",
+          "pos": [
+            126,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5376,
+        5531
+      ],
+      "content": "<ph id=\"ph18\">&lt;resources&gt;</ph><ph id=\"ph19\">\n    &lt;resource&gt;</ph><ph id=\"ph20\">\n        &lt;!-- Where the Python bits are kept --&gt;</ph><ph id=\"ph21\">\n        &lt;directory&gt;</ph>${basedir}/multilang<ph id=\"ph22\">&lt;/directory&gt;</ph><ph id=\"ph23\">\n    &lt;/resource&gt;</ph><ph id=\"ph24\">\n&lt;/resources&gt;</ph>"
+    },
+    {
+      "pos": [
+        5533,
+        5636
+      ],
+      "content": "This includes all the files in the <ph id=\"ph25\">`/multilang`</ph><ph id=\"ph26\"/> folder in the jar that will be built from this project."
+    },
+    {
+      "pos": [
+        5640,
+        6109
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.IMPORTANT]</ph><ph id=\"ph28\"/> Note that this only specifies the <ph id=\"ph29\">`/multilang`</ph><ph id=\"ph30\"/> directory and not <ph id=\"ph31\">`/multilang/resources`</ph>. Storm expects non-JVM resources in a <ph id=\"ph32\">`resources`</ph><ph id=\"ph33\"/> directory, so it is looked for internally already. Placing components in this folder allows you to just reference by name in the Java code. For example, <ph id=\"ph34\">`super(\"python\", \"countbolt.py\");`</ph>. Another way to think of it is that Storm sees the <ph id=\"ph35\">`resources`</ph><ph id=\"ph36\"/> directory as the root (/) when accessing multi-lang resources.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph27\">[AZURE.IMPORTANT]</ph><ph id=\"ph28\"/> Note that this only specifies the <ph id=\"ph29\">`/multilang`</ph><ph id=\"ph30\"/> directory and not <ph id=\"ph31\">`/multilang/resources`</ph>.",
+          "pos": [
+            0,
+            193
+          ]
+        },
+        {
+          "content": "Storm expects non-JVM resources in a <ph id=\"ph32\">`resources`</ph><ph id=\"ph33\"/> directory, so it is looked for internally already.",
+          "pos": [
+            194,
+            327
+          ]
+        },
+        {
+          "content": "Placing components in this folder allows you to just reference by name in the Java code.",
+          "pos": [
+            328,
+            416
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph34\">`super(\"python\", \"countbolt.py\");`</ph>.",
+          "pos": [
+            417,
+            484
+          ]
+        },
+        {
+          "content": "Another way to think of it is that Storm sees the <ph id=\"ph35\">`resources`</ph><ph id=\"ph36\"/> directory as the root (/) when accessing multi-lang resources.",
+          "pos": [
+            485,
+            643
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6114,
+        6214
+      ],
+      "content": "For this example project, the <ph id=\"ph37\">`storm.py`</ph><ph id=\"ph38\"/> module is included in the <ph id=\"ph39\">`/multilang/resources`</ph><ph id=\"ph40\"/> directory."
+    },
+    {
+      "pos": [
+        6219,
+        6244
+      ],
+      "content": "Build and run the project"
+    },
+    {
+      "pos": [
+        6246,
+        6343
+      ],
+      "content": "To run this project locally, just use the following Maven command to build and run in local mode:"
+    },
+    {
+      "pos": [
+        6421,
+        6452
+      ],
+      "content": "Use ctrl+c to kill the process."
+    },
+    {
+      "pos": [
+        6454,
+        6546
+      ],
+      "content": "To deploy the project to an HDInsight cluster running Apache Storm, use the following steps:"
+    },
+    {
+      "pos": [
+        6551,
+        6569
+      ],
+      "content": "Build an uber jar:"
+    },
+    {
+      "pos": [
+        6596,
+        6702
+      ],
+      "content": "This will create a file named <bpt id=\"p12\">__</bpt>WordCount--1.0-SNAPSHOT.jar<ept id=\"p12\">__</ept><ph id=\"ph41\"/> in the <ph id=\"ph42\">`/target`</ph><ph id=\"ph43\"/> directory for this project."
+    },
+    {
+      "pos": [
+        6707,
+        6784
+      ],
+      "content": "Upload the jar file to the Hadoop cluster using one of the following methods:"
+    },
+    {
+      "pos": [
+        6792,
+        7068
+      ],
+      "content": "For <bpt id=\"p13\">__</bpt>Linux-based<ept id=\"p13\">__</ept><ph id=\"ph44\"/> HDInsight clusters: Use <ph id=\"ph45\">`scp WordCount-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:WordCount-1.0-SNAPSHOT.jar`</ph><ph id=\"ph46\"/> to copy the jar file to the cluster, replacing USERNAME with your SSH user name and CLUSTERNAME with the HDInsight cluster name."
+    },
+    {
+      "pos": [
+        7078,
+        7258
+      ],
+      "content": "Once the file has finished uploading, connect to the cluster using SSH and start the topology using <ph id=\"ph47\">`storm jar WordCount-1.0-SNAPSHOT.jar com.microsoft.example.WordCount wordcount`</ph>"
+    },
+    {
+      "pos": [
+        7266,
+        7515
+      ],
+      "content": "For <bpt id=\"p14\">__</bpt>Windows-based<ept id=\"p14\">__</ept><ph id=\"ph48\"/> HDInsight clusters: Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser. Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.",
+      "nodes": [
+        {
+          "content": "For <bpt id=\"p14\">__</bpt>Windows-based<ept id=\"p14\">__</ept><ph id=\"ph48\"/> HDInsight clusters: Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser.",
+          "pos": [
+            0,
+            196
+          ]
+        },
+        {
+          "content": "Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.",
+          "pos": [
+            197,
+            304
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7525,
+        7571
+      ],
+      "content": "Using the form, perform the following actions:"
+    },
+    {
+      "pos": [
+        7583,
+        7667
+      ],
+      "content": "<bpt id=\"p15\">__</bpt>Jar File<ept id=\"p15\">__</ept>: Select <bpt id=\"p16\">__</bpt>Browse<ept id=\"p16\">__</ept>, then select the <bpt id=\"p17\">__</bpt>WordCount-1.0-SNAPSHOT.jar<ept id=\"p17\">__</ept><ph id=\"ph49\"/> file"
+    },
+    {
+      "pos": [
+        7678,
+        7733
+      ],
+      "content": "<bpt id=\"p18\">__</bpt>Class Name<ept id=\"p18\">__</ept>: Enter <ph id=\"ph50\">`com.microsoft.example.WordCount`</ph>"
+    },
+    {
+      "pos": [
+        7744,
+        7836
+      ],
+      "content": "<bpt id=\"p19\">__</bpt>Additional Paramters<ept id=\"p19\">__</ept>: Enter a friendly name such as <ph id=\"ph51\">`wordcount`</ph><ph id=\"ph52\"/> to identify the topology"
+    },
+    {
+      "pos": [
+        7846,
+        7895
+      ],
+      "content": "Finally, select <bpt id=\"p20\">__</bpt>Submit<ept id=\"p20\">__</ept><ph id=\"ph53\"/> to start the topology."
+    },
+    {
+      "pos": [
+        7899,
+        8194
+      ],
+      "content": "<ph id=\"ph54\">[AZURE.NOTE]</ph><ph id=\"ph55\"/> Once started, a Storm topology runs until stopped (killed.) To stop the topology, use either the <ph id=\"ph56\">`storm kill TOPOLOGYNAME`</ph><ph id=\"ph57\"/> command from the command-line (SSH session to a Linux cluster for example,) or by using the Storm UI, select the topology, and then select the <bpt id=\"p21\">__</bpt>Kill<ept id=\"p21\">__</ept><ph id=\"ph58\"/> button."
+    },
+    {
+      "pos": [
+        8198,
+        8239
+      ],
+      "content": "Python components with a Clojure topology"
+    },
+    {
+      "pos": [
+        8243,
+        8457
+      ],
+      "content": "<ph id=\"ph59\">[AZURE.NOTE]</ph><ph id=\"ph60\"/> This example is available at <bpt id=\"p22\">[</bpt>https://github.com/Azure-Samples/hdinsight-python-storm-wordcount<ept id=\"p22\">](https://github.com/Azure-Samples/hdinsight-python-storm-wordcount)</ept><ph id=\"ph61\"/> in the <bpt id=\"p23\">__</bpt>ClojureTopology<ept id=\"p23\">__</ept><ph id=\"ph62\"/> directory."
+    },
+    {
+      "pos": [
+        8459,
+        8728
+      ],
+      "content": "This topology was created by using <bpt id=\"p24\">[</bpt>Leiningen<ept id=\"p24\">](http://leiningen.org)</ept><ph id=\"ph63\"/> to <bpt id=\"p25\">[</bpt>create a new Clojure project<ept id=\"p25\">](https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md#creating-a-project)</ept>. After that, the following modifications to the scaffolded project were made:",
+      "nodes": [
+        {
+          "content": "This topology was created by using <bpt id=\"p24\">[</bpt>Leiningen<ept id=\"p24\">](http://leiningen.org)</ept><ph id=\"ph63\"/> to <bpt id=\"p25\">[</bpt>create a new Clojure project<ept id=\"p25\">](https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md#creating-a-project)</ept>.",
+          "pos": [
+            0,
+            287
+          ]
+        },
+        {
+          "content": "After that, the following modifications to the scaffolded project were made:",
+          "pos": [
+            288,
+            364
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8732,
+        8867
+      ],
+      "content": "<bpt id=\"p26\">__</bpt>project.clj<ept id=\"p26\">__</ept>: Added dependencies for Storm, and exclusions for items that may cause a problem when deployed to the HDInsight server."
+    },
+    {
+      "pos": [
+        8870,
+        9282
+      ],
+      "content": "<bpt id=\"p27\">__</bpt>resources/resources<ept id=\"p27\">__</ept>: Leiningen creates a default <ph id=\"ph64\">`resources`</ph><ph id=\"ph65\"/> directory, however the files stored here appear to get added to the root of the jar file created from this project, and Storm expects files in a sub-directory named <ph id=\"ph66\">`resources`</ph>. So a sub-directory was added and the Python files are stored in <ph id=\"ph67\">`resources/resources`</ph>. At run-time, this will be treated as the root (/) for accessing Python components.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p27\">__</bpt>resources/resources<ept id=\"p27\">__</ept>: Leiningen creates a default <ph id=\"ph64\">`resources`</ph><ph id=\"ph65\"/> directory, however the files stored here appear to get added to the root of the jar file created from this project, and Storm expects files in a sub-directory named <ph id=\"ph66\">`resources`</ph>.",
+          "pos": [
+            0,
+            335
+          ]
+        },
+        {
+          "content": "So a sub-directory was added and the Python files are stored in <ph id=\"ph67\">`resources/resources`</ph>.",
+          "pos": [
+            336,
+            441
+          ]
+        },
+        {
+          "content": "At run-time, this will be treated as the root (/) for accessing Python components.",
+          "pos": [
+            442,
+            524
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9285,
+        9547
+      ],
+      "content": "<bpt id=\"p28\">__</bpt>src/wordcount/core.clj<ept id=\"p28\">__</ept>: This file contains the topology definition, and is referenced from the <bpt id=\"p29\">__</bpt>project.clj<ept id=\"p29\">__</ept><ph id=\"ph68\"/> file. For more information on using Clojure to define a Storm topology, see <bpt id=\"p30\">[</bpt>Clojure DSL<ept id=\"p30\">](https://storm.apache.org/documentation/Clojure-DSL.html)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p28\">__</bpt>src/wordcount/core.clj<ept id=\"p28\">__</ept>: This file contains the topology definition, and is referenced from the <bpt id=\"p29\">__</bpt>project.clj<ept id=\"p29\">__</ept><ph id=\"ph68\"/> file.",
+          "pos": [
+            0,
+            215
+          ]
+        },
+        {
+          "content": "For more information on using Clojure to define a Storm topology, see <bpt id=\"p30\">[</bpt>Clojure DSL<ept id=\"p30\">](https://storm.apache.org/documentation/Clojure-DSL.html)</ept>.",
+          "pos": [
+            216,
+            397
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9552,
+        9577
+      ],
+      "content": "Build and run the project"
+    },
+    {
+      "pos": [
+        9579,
+        9647
+      ],
+      "content": "<bpt id=\"p31\">__</bpt>To build and run the project locally<ept id=\"p31\">__</ept>, use the following command:"
+    },
+    {
+      "pos": [
+        9673,
+        9710
+      ],
+      "content": "To stop the topology, use <bpt id=\"p32\">__</bpt>Ctrl+C<ept id=\"p32\">__</ept>."
+    },
+    {
+      "pos": [
+        9712,
+        9785
+      ],
+      "content": "<bpt id=\"p33\">__</bpt>To build an uberjar and deploy to HDInsight<ept id=\"p33\">__</ept>, use the following steps:"
+    },
+    {
+      "pos": [
+        9790,
+        9858
+      ],
+      "content": "Create an uberjar containing the topology and required dependencies:"
+    },
+    {
+      "pos": [
+        9886,
+        9991
+      ],
+      "content": "This will create a new file named <ph id=\"ph69\">`wordcount-1.0-SNAPSHOT.jar`</ph><ph id=\"ph70\"/> in the <ph id=\"ph71\">`target\\uberjar+uberjar`</ph><ph id=\"ph72\"/> directory."
+    },
+    {
+      "pos": [
+        10000,
+        10088
+      ],
+      "content": "Use one of the following methods to deploy and run the topology to an HDInsight cluster:"
+    },
+    {
+      "pos": [
+        10096,
+        10121
+      ],
+      "content": "<bpt id=\"p34\">__</bpt>Linux-based HDInsight<ept id=\"p34\">__</ept>"
+    },
+    {
+      "pos": [
+        10138,
+        10212
+      ],
+      "content": "Copy the file to the HDInsight cluster head node using <ph id=\"ph73\">`scp`</ph>. For example:",
+      "nodes": [
+        {
+          "content": "Copy the file to the HDInsight cluster head node using <ph id=\"ph73\">`scp`</ph>.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            81,
+            93
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10369,
+        10470
+      ],
+      "content": "Replace USERNAME with an SSH user for your cluster, and CLUSTERNAME with your HDInsight cluster name."
+    },
+    {
+      "pos": [
+        10495,
+        10665
+      ],
+      "content": "Once the file has been copied to the cluster, use SSH to connect to the cluster and submit the job. For information on using SSH with HDInsight, see one of the following:",
+      "nodes": [
+        {
+          "content": "Once the file has been copied to the cluster, use SSH to connect to the cluster and submit the job.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "For information on using SSH with HDInsight, see one of the following:",
+          "pos": [
+            100,
+            170
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10689,
+        10791
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>Use SSH with Linux-based HDInsight from Linux, Unix, or OS X<ept id=\"p35\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        10806,
+        10898
+      ],
+      "content": "<bpt id=\"p36\">[</bpt>Use SSH with Linux-based HDInsight from Windows<ept id=\"p36\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        10923,
+        10979
+      ],
+      "content": "Once connected, use the following to start the topology:"
+    },
+    {
+      "pos": [
+        11078,
+        11105
+      ],
+      "content": "<bpt id=\"p37\">__</bpt>Windows-based HDInsight<ept id=\"p37\">__</ept>"
+    },
+    {
+      "pos": [
+        11122,
+        11329
+      ],
+      "content": "Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser. Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.",
+      "nodes": [
+        {
+          "content": "Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.",
+          "pos": [
+            100,
+            207
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11342,
+        11388
+      ],
+      "content": "Using the form, perform the following actions:"
+    },
+    {
+      "pos": [
+        11404,
+        11488
+      ],
+      "content": "<bpt id=\"p38\">__</bpt>Jar File<ept id=\"p38\">__</ept>: Select <bpt id=\"p39\">__</bpt>Browse<ept id=\"p39\">__</ept>, then select the <bpt id=\"p40\">__</bpt>wordcount-1.0-SNAPSHOT.jar<ept id=\"p40\">__</ept><ph id=\"ph74\"/> file"
+    },
+    {
+      "pos": [
+        11503,
+        11541
+      ],
+      "content": "<bpt id=\"p41\">__</bpt>Class Name<ept id=\"p41\">__</ept>: Enter <ph id=\"ph75\">`wordcount.core`</ph>"
+    },
+    {
+      "pos": [
+        11556,
+        11648
+      ],
+      "content": "<bpt id=\"p42\">__</bpt>Additional Paramters<ept id=\"p42\">__</ept>: Enter a friendly name such as <ph id=\"ph76\">`wordcount`</ph><ph id=\"ph77\"/> to identify the topology"
+    },
+    {
+      "pos": [
+        11662,
+        11711
+      ],
+      "content": "Finally, select <bpt id=\"p43\">__</bpt>Submit<ept id=\"p43\">__</ept><ph id=\"ph78\"/> to start the topology."
+    },
+    {
+      "pos": [
+        11715,
+        11998
+      ],
+      "content": "<ph id=\"ph79\">[AZURE.NOTE]</ph><ph id=\"ph80\"/> Once started, a Storm topology runs until stopped (killed.) To stop the topology, use either the <ph id=\"ph81\">`storm kill TOPOLOGYNAME`</ph><ph id=\"ph82\"/> command from the command-line (SSH session to a Linux cluster,) or by using the Storm UI, select the topology, and then select the <bpt id=\"p44\">__</bpt>Kill<ept id=\"p44\">__</ept><ph id=\"ph83\"/> button."
+    },
+    {
+      "pos": [
+        12002,
+        12018
+      ],
+      "content": "Pyleus framework"
+    },
+    {
+      "pos": [
+        12020,
+        12160
+      ],
+      "content": "<bpt id=\"p45\">[</bpt>Pyleus<ept id=\"p45\">](https://github.com/Yelp/pyleus)</ept><ph id=\"ph84\"/> is a framework that attempts to make it easier to use Python with Storm by providing the following:"
+    },
+    {
+      "pos": [
+        12164,
+        12302
+      ],
+      "content": "<bpt id=\"p46\">__</bpt>YAML-based topology definitions<ept id=\"p46\">__</ept>: This provides an easier way to define the topology, that doesn't require knowledge of Java or Clojure"
+    },
+    {
+      "pos": [
+        12305,
+        12460
+      ],
+      "content": "<bpt id=\"p47\">__</bpt>MessagePack-based serializer<ept id=\"p47\">__</ept>: MessagePack is used as the default serialization, instead of JSON. This can result in faster messaging between components",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p47\">__</bpt>MessagePack-based serializer<ept id=\"p47\">__</ept>: MessagePack is used as the default serialization, instead of JSON.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "This can result in faster messaging between components",
+          "pos": [
+            141,
+            195
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12463,
+        12638
+      ],
+      "content": "<bpt id=\"p48\">__</bpt>Dependency management<ept id=\"p48\">__</ept>: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes. This requires Virtualenv to be installed on the worker nodes",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p48\">__</bpt>Dependency management<ept id=\"p48\">__</ept>: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "This requires Virtualenv to be installed on the worker nodes",
+          "pos": [
+            155,
+            215
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12642,
+        12939
+      ],
+      "content": "<ph id=\"ph85\">[AZURE.IMPORTANT]</ph><ph id=\"ph86\"/> Pyleus requires Storm on your development environment. Using the base Apache Storm 0.9.3 distribution seems to result in jars that are incompatible with the version of Storm provided with HDInsight. So the following steps use the HDInsight cluster as the development environment.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph85\">[AZURE.IMPORTANT]</ph><ph id=\"ph86\"/> Pyleus requires Storm on your development environment.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "Using the base Apache Storm 0.9.3 distribution seems to result in jars that are incompatible with the version of Storm provided with HDInsight.",
+          "pos": [
+            107,
+            250
+          ]
+        },
+        {
+          "content": "So the following steps use the HDInsight cluster as the development environment.",
+          "pos": [
+            251,
+            331
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12941,
+        13053
+      ],
+      "content": "You can successfuly build the example Pyleus topologies, using the HDInsight head node as the build environment:"
+    },
+    {
+      "pos": [
+        13058,
+        13342
+      ],
+      "content": "When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes. When creating a new Linux-based HDInsight cluster, use the following Script Action settings with <bpt id=\"p49\">[</bpt>Cluster customization<ept id=\"p49\">](hdinsight-hadoop-customize-cluster.md)</ept>:",
+      "nodes": [
+        {
+          "content": "When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "When creating a new Linux-based HDInsight cluster, use the following Script Action settings with <bpt id=\"p49\">[</bpt>Cluster customization<ept id=\"p49\">](hdinsight-hadoop-customize-cluster.md)</ept>:",
+          "pos": [
+            124,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13350,
+        13393
+      ],
+      "content": "<bpt id=\"p50\">__</bpt>Name<ept id=\"p50\">__</ept>: Just provide a friendly name here"
+    },
+    {
+      "pos": [
+        13400,
+        13576
+      ],
+      "content": "__ Script URI__: Use <ph id=\"ph87\">`https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh`</ph><ph id=\"ph88\"/> as the value. This script will install Python Virtualenv on the nodes.",
+      "nodes": [
+        {
+          "content": "__ Script URI__: Use <ph id=\"ph87\">`https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh`</ph><ph id=\"ph88\"/> as the value.",
+          "pos": [
+            0,
+            153
+          ]
+        },
+        {
+          "content": "This script will install Python Virtualenv on the nodes.",
+          "pos": [
+            154,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13592,
+        13708
+      ],
+      "content": "<ph id=\"ph89\">[AZURE.NOTE]</ph><ph id=\"ph90\"/> It will also create some directories that are used by the Streamparse framework later in this document."
+    },
+    {
+      "pos": [
+        13724,
+        13810
+      ],
+      "content": "<bpt id=\"p51\">__</bpt>Nimbus<ept id=\"p51\">__</ept>: Check this entry so that the script is applied to the Nimbus (head) nodes."
+    },
+    {
+      "pos": [
+        13817,
+        13911
+      ],
+      "content": "<bpt id=\"p52\">__</bpt>Supervisor<ept id=\"p52\">__</ept>: Check ths entry so that the script is applied to the supervisor (worker) nodes"
+    },
+    {
+      "pos": [
+        13921,
+        13947
+      ],
+      "content": "Leave other entries blank."
+    },
+    {
+      "pos": [
+        13952,
+        14005
+      ],
+      "content": "Once the cluster has been created, connect using SSH:"
+    },
+    {
+      "pos": [
+        14013,
+        14115
+      ],
+      "content": "<bpt id=\"p53\">[</bpt>Use SSH with Linux-based HDInsight from Linux, Unix, or OS X<ept id=\"p53\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        14122,
+        14214
+      ],
+      "content": "<bpt id=\"p54\">[</bpt>Use SSH with Linux-based HDInsight from Windows<ept id=\"p54\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        14219,
+        14314
+      ],
+      "content": "From the SSH connect, use the following to create a new virtual environment and install Pyleus:"
+    },
+    {
+      "pos": [
+        14405,
+        14478
+      ],
+      "content": "Next, download the Pyleus git repository and build the WordCount example:"
+    },
+    {
+      "pos": [
+        14644,
+        14743
+      ],
+      "content": "Once the build completes, you will have a new file named <ph id=\"ph91\">`word_count.jar`</ph><ph id=\"ph92\"/> in the current directory."
+    },
+    {
+      "pos": [
+        14752,
+        14823
+      ],
+      "content": "To submit the topology to the Storm cluster, use the following command:"
+    },
+    {
+      "pos": [
+        14884,
+        14984
+      ],
+      "content": "The <ph id=\"ph93\">`-n`</ph><ph id=\"ph94\"/> parameter specifies the Nimbus host. Since we are on the head node, we can use <ph id=\"ph95\">`localhost`</ph>.",
+      "nodes": [
+        {
+          "content": "The <ph id=\"ph93\">`-n`</ph><ph id=\"ph94\"/> parameter specifies the Nimbus host.",
+          "pos": [
+            0,
+            79
+          ]
+        },
+        {
+          "content": "Since we are on the head node, we can use <ph id=\"ph95\">`localhost`</ph>.",
+          "pos": [
+            80,
+            153
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14994,
+        15154
+      ],
+      "content": "You can also use the <ph id=\"ph96\">`pyleus`</ph><ph id=\"ph97\"/> command to perform other Storm actions. Use the following to list the running topologies, and then kill the <ph id=\"ph98\">`word_count`</ph><ph id=\"ph99\"/> topology:",
+      "nodes": [
+        {
+          "content": "You can also use the <ph id=\"ph96\">`pyleus`</ph><ph id=\"ph97\"/> command to perform other Storm actions.",
+          "pos": [
+            0,
+            103
+          ]
+        },
+        {
+          "content": "Use the following to list the running topologies, and then kill the <ph id=\"ph98\">`word_count`</ph><ph id=\"ph99\"/> topology:",
+          "pos": [
+            104,
+            228
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15240,
+        15261
+      ],
+      "content": "Streamparse framework"
+    },
+    {
+      "pos": [
+        15263,
+        15416
+      ],
+      "content": "<bpt id=\"p55\">[</bpt>Streamparse<ept id=\"p55\">](https://github.com/Parsely/streamparse)</ept><ph id=\"ph100\"/> is a framework that attempts to make it easier to use Python with Storm by providing the following:"
+    },
+    {
+      "pos": [
+        15420,
+        15536
+      ],
+      "content": "<bpt id=\"p56\">__</bpt>Scaffolding<ept id=\"p56\">__</ept>: This allows you to easily create the scaffolding for a project, then modify files to add your logic"
+    },
+    {
+      "pos": [
+        15539,
+        15652
+      ],
+      "content": "<bpt id=\"p57\">__</bpt>Clojure DSL functions<ept id=\"p57\">__</ept>: These reduce the verbosity of using Python components in a Clojure topology definition"
+    },
+    {
+      "pos": [
+        15655,
+        15830
+      ],
+      "content": "<bpt id=\"p58\">__</bpt>Dependency management<ept id=\"p58\">__</ept>: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes. This requires Virtualenv to be installed on the worker nodes",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p58\">__</bpt>Dependency management<ept id=\"p58\">__</ept>: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "This requires Virtualenv to be installed on the worker nodes",
+          "pos": [
+            155,
+            215
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15833,
+        16090
+      ],
+      "content": "<bpt id=\"p59\">__</bpt>Remote deployment<ept id=\"p59\">__</ept>: Streamparse can use SSH automation to deploy components to worker nodes, and will can create an SSH tunnel to communicate with Nimbus. So you can easily deploy from your development environment to Linux-based cluster such as HDInsight",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p59\">__</bpt>Remote deployment<ept id=\"p59\">__</ept>: Streamparse can use SSH automation to deploy components to worker nodes, and will can create an SSH tunnel to communicate with Nimbus.",
+          "pos": [
+            0,
+            197
+          ]
+        },
+        {
+          "content": "So you can easily deploy from your development environment to Linux-based cluster such as HDInsight",
+          "pos": [
+            198,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16094,
+        16357
+      ],
+      "content": "<ph id=\"ph101\">[AZURE.IMPORTANT]</ph><ph id=\"ph102\"/> Streamparse relies on components that expect <bpt id=\"p60\">[</bpt>Unix signals<ept id=\"p60\">](https://en.wikipedia.org/wiki/Unix_signal)</ept>, which are not available on Windows. Your development environment must be Linux, Unix, or OS X, and the HDInsight cluster must be Linux-based.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph101\">[AZURE.IMPORTANT]</ph><ph id=\"ph102\"/> Streamparse relies on components that expect <bpt id=\"p60\">[</bpt>Unix signals<ept id=\"p60\">](https://en.wikipedia.org/wiki/Unix_signal)</ept>, which are not available on Windows.",
+          "pos": [
+            0,
+            233
+          ]
+        },
+        {
+          "content": "Your development environment must be Linux, Unix, or OS X, and the HDInsight cluster must be Linux-based.",
+          "pos": [
+            234,
+            339
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16362,
+        16646
+      ],
+      "content": "When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes. When creating a new Linux-based HDInsight cluster, use the following Script Action settings with <bpt id=\"p61\">[</bpt>Cluster customization<ept id=\"p61\">](hdinsight-hadoop-customize-cluster.md)</ept>:",
+      "nodes": [
+        {
+          "content": "When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "When creating a new Linux-based HDInsight cluster, use the following Script Action settings with <bpt id=\"p61\">[</bpt>Cluster customization<ept id=\"p61\">](hdinsight-hadoop-customize-cluster.md)</ept>:",
+          "pos": [
+            124,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16654,
+        16697
+      ],
+      "content": "<bpt id=\"p62\">__</bpt>Name<ept id=\"p62\">__</ept>: Just provide a friendly name here"
+    },
+    {
+      "pos": [
+        16704,
+        16930
+      ],
+      "content": "__ Script URI__: Use <ph id=\"ph103\">`https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh`</ph><ph id=\"ph104\"/> as the value. This script will install Python Virtualenv on the nodes, as well as create directories used by Streamparse",
+      "nodes": [
+        {
+          "content": "__ Script URI__: Use <ph id=\"ph103\">`https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh`</ph><ph id=\"ph104\"/> as the value.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "This script will install Python Virtualenv on the nodes, as well as create directories used by Streamparse",
+          "pos": [
+            156,
+            262
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16937,
+        17023
+      ],
+      "content": "<bpt id=\"p63\">__</bpt>Nimbus<ept id=\"p63\">__</ept>: Check this entry so that the script is applied to the Nimbus (head) nodes."
+    },
+    {
+      "pos": [
+        17030,
+        17124
+      ],
+      "content": "<bpt id=\"p64\">__</bpt>Supervisor<ept id=\"p64\">__</ept>: Check ths entry so that the script is applied to the supervisor (worker) nodes"
+    },
+    {
+      "pos": [
+        17134,
+        17160
+      ],
+      "content": "Leave other entries blank."
+    },
+    {
+      "pos": [
+        17172,
+        17319
+      ],
+      "content": "<ph id=\"ph105\">[AZURE.WARNING]</ph><ph id=\"ph106\"/> You must also use a <bpt id=\"p65\">__</bpt>public key<ept id=\"p65\">__</ept><ph id=\"ph107\"/> to secure the SSH user for your HDInsight cluster in order to remotely deploy using Streamparse."
+    },
+    {
+      "pos": [
+        17332,
+        17425
+      ],
+      "content": "For more information on using keys with SSH on HDInsight, see one of the following documents:"
+    },
+    {
+      "pos": [
+        17440,
+        17542
+      ],
+      "content": "<bpt id=\"p66\">[</bpt>Use SSH with Linux-based HDInsight from Linux, Unix, or OS X<ept id=\"p66\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        17551,
+        17643
+      ],
+      "content": "<bpt id=\"p67\">[</bpt>Use SSH with Linux-based HDInsight from Windows<ept id=\"p67\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        17648,
+        17763
+      ],
+      "content": "While the cluster is provisioning, install Streamparse on your development environment using the following command:"
+    },
+    {
+      "pos": [
+        17809,
+        17896
+      ],
+      "content": "Once Streamparse has installed, use the following command to create an example project:"
+    },
+    {
+      "pos": [
+        17947,
+        18050
+      ],
+      "content": "This will create a new directory named <ph id=\"ph108\">`wordcount`</ph>, and populate it with an example Word Count project."
+    },
+    {
+      "pos": [
+        18055,
+        18142
+      ],
+      "content": "Change directories into the <ph id=\"ph109\">`wordcount`</ph><ph id=\"ph110\"/> directory and start the topology in local mode:"
+    },
+    {
+      "pos": [
+        18189,
+        18221
+      ],
+      "content": "Use Ctrl+C to stop the topology."
+    },
+    {
+      "pos": [
+        18226,
+        18245
+      ],
+      "content": "Deploy the topology"
+    },
+    {
+      "pos": [
+        18247,
+        18367
+      ],
+      "content": "Once your Linux-based HDInsight cluster has been created, use the following steps to deploy the topology to the cluster:"
+    },
+    {
+      "pos": [
+        18372,
+        18476
+      ],
+      "content": "Use the following command to find the fully qualified domain names of the worker nodes for your cluster:"
+    },
+    {
+      "pos": [
+        18625,
+        18796
+      ],
+      "content": "This will retrieve the hosts information for the cluster, pipe it to grep, and return on the entries for the worker nodes. You should see results similar to the following:",
+      "nodes": [
+        {
+          "content": "This will retrieve the hosts information for the cluster, pipe it to grep, and return on the entries for the worker nodes.",
+          "pos": [
+            0,
+            122
+          ]
+        },
+        {
+          "content": "You should see results similar to the following:",
+          "pos": [
+            123,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18899,
+        19025
+      ],
+      "content": "Save the <ph id=\"ph111\">`\"workernode0.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\"`</ph><ph id=\"ph112\"/> information, as it will be used in the next step."
+    },
+    {
+      "pos": [
+        19030,
+        19123
+      ],
+      "content": "Open the <bpt id=\"p68\">__</bpt>config.json<ept id=\"p68\">__</ept><ph id=\"ph113\"/> file in the <ph id=\"ph114\">`wordcount`</ph><ph id=\"ph115\"/> directory, and change the following entries:"
+    },
+    {
+      "pos": [
+        19131,
+        19301
+      ],
+      "content": "<bpt id=\"p69\">__</bpt>user<ept id=\"p69\">__</ept>: Set this to the SSH user account name that you configured for the HDInsight cluster. This will be used to authenticate to the cluster when deploying the project",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p69\">__</bpt>user<ept id=\"p69\">__</ept>: Set this to the SSH user account name that you configured for the HDInsight cluster.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "This will be used to authenticate to the cluster when deploying the project",
+          "pos": [
+            135,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19308,
+        19512
+      ],
+      "content": "<bpt id=\"p70\">__</bpt>nimbus<ept id=\"p70\">__</ept>: Set this to <ph id=\"ph116\">`CLUSTERNAME-ssh.azurehdinsight.net`</ph>. Replace CLUSTERNAME with the name of your cluster. This is used when communicating with the Nimbus node, which is the head node of the cluster",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p70\">__</bpt>nimbus<ept id=\"p70\">__</ept>: Set this to <ph id=\"ph116\">`CLUSTERNAME-ssh.azurehdinsight.net`</ph>.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "Replace CLUSTERNAME with the name of your cluster.",
+          "pos": [
+            122,
+            172
+          ]
+        },
+        {
+          "content": "This is used when communicating with the Nimbus node, which is the head node of the cluster",
+          "pos": [
+            173,
+            264
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19519,
+        19643
+      ],
+      "content": "<bpt id=\"p71\">__</bpt>workers<ept id=\"p71\">__</ept>: Populate the workers entry with the host names for the worker nodes that you retrieved using curl. For example:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p71\">__</bpt>workers<ept id=\"p71\">__</ept>: Populate the workers entry with the host names for the worker nodes that you retrieved using curl.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            152,
+            164
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19661,
+        19673
+      ],
+      "content": "\"workers\": ["
+    },
+    {
+      "pos": [
+        19678,
+        19744
+      ],
+      "content": "\"workernode0.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\","
+    },
+    {
+      "pos": [
+        19749,
+        19814
+      ],
+      "content": "\"workernode1.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\""
+    },
+    {
+      "pos": [
+        19819,
+        19820
+      ],
+      "content": "]"
+    },
+    {
+      "pos": [
+        19829,
+        19832
+      ],
+      "content": "```"
+    },
+    {
+      "pos": [
+        20058,
+        20335
+      ],
+      "content": "Since Streamparse deploying on HDInsight needs to forward your authentication through the head node to the workers, <ph id=\"ph117\">`ssh-agent`</ph><ph id=\"ph118\"/> must be started on your workstation. For most operating systems, it is started automatically. Use the following command to verify that it is running:",
+      "nodes": [
+        {
+          "content": "Since Streamparse deploying on HDInsight needs to forward your authentication through the head node to the workers, <ph id=\"ph117\">`ssh-agent`</ph><ph id=\"ph118\"/> must be started on your workstation.",
+          "pos": [
+            0,
+            200
+          ]
+        },
+        {
+          "content": "For most operating systems, it is started automatically.",
+          "pos": [
+            201,
+            257
+          ]
+        },
+        {
+          "content": "Use the following command to verify that it is running:",
+          "pos": [
+            258,
+            313
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20376,
+        20455
+      ],
+      "content": "This will return a response similar to the following if <ph id=\"ph119\">`ssh-agent`</ph><ph id=\"ph120\"/> is running:"
+    },
+    {
+      "pos": [
+        20513,
+        20755
+      ],
+      "content": "<ph id=\"ph121\">[AZURE.NOTE]</ph><ph id=\"ph122\"/> The complete path may be different depending on your operating system. For example, on OS X the path may be similar to <ph id=\"ph123\">`/private/tmp/com.apple.launchd.vq2rfuxaso/Listeners`</ph>. But it should return some path if the agent is running.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph121\">[AZURE.NOTE]</ph><ph id=\"ph122\"/> The complete path may be different depending on your operating system.",
+          "pos": [
+            0,
+            119
+          ]
+        },
+        {
+          "content": "For example, on OS X the path may be similar to <ph id=\"ph123\">`/private/tmp/com.apple.launchd.vq2rfuxaso/Listeners`</ph>.",
+          "pos": [
+            120,
+            242
+          ]
+        },
+        {
+          "content": "But it should return some path if the agent is running.",
+          "pos": [
+            243,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20765,
+        20836
+      ],
+      "content": "If nothing is returned, use the <ph id=\"ph124\">`ssh-agent`</ph><ph id=\"ph125\"/> command to start the agent."
+    },
+    {
+      "pos": [
+        20845,
+        21011
+      ],
+      "content": "Verify that the agent knows about the key you use to authenticate to the HDInsight server. Use the following command to list the keys that are available to the agent:",
+      "nodes": [
+        {
+          "content": "Verify that the agent knows about the key you use to authenticate to the HDInsight server.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "Use the following command to list the keys that are available to the agent:",
+          "pos": [
+            91,
+            166
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21041,
+        21240
+      ],
+      "content": "This will return the private keys that have been added to the agent. You can compare the results to the content of the private key you generated when creating an SSH key to authenticate to HDInsight.",
+      "nodes": [
+        {
+          "content": "This will return the private keys that have been added to the agent.",
+          "pos": [
+            0,
+            68
+          ]
+        },
+        {
+          "content": "You can compare the results to the content of the private key you generated when creating an SSH key to authenticate to HDInsight.",
+          "pos": [
+            69,
+            199
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21250,
+        21396
+      ],
+      "content": "If no information is returned, or the returned information does not match your private key, use the following to add the private key to the agent:"
+    },
+    {
+      "pos": [
+        21445,
+        21482
+      ],
+      "content": "For example, <ph id=\"ph126\">`ssh-add ~/.ssh/id_rsa`</ph>."
+    },
+    {
+      "pos": [
+        21487,
+        21701
+      ],
+      "content": "You must also configure SSH so that it knows forwarding should be used for your HDInsight cluster. Add the following to <ph id=\"ph127\">`~/.ssh/config`</ph>. If this file does not exist, create it and use the following as the contents:",
+      "nodes": [
+        {
+          "content": "You must also configure SSH so that it knows forwarding should be used for your HDInsight cluster.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "Add the following to <ph id=\"ph127\">`~/.ssh/config`</ph>.",
+          "pos": [
+            99,
+            156
+          ]
+        },
+        {
+          "content": "If this file does not exist, create it and use the following as the contents:",
+          "pos": [
+            157,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21890,
+        21950
+      ],
+      "content": "Replace CLUSTERNAME with the name of your HDInsight cluster."
+    },
+    {
+      "pos": [
+        21960,
+        22445
+      ],
+      "content": "This configures the SSH agent on your workstation to enable the forwarding of your SSH credentials through any *.azurehdinsight.net system that you connect to. In this case, the head node of your cluster. Next, it configures the command used to proxy SSH traffic from the headnode to the individual worker nodes (internal.cloudapp.net.) This allows Streamparse to connect to the head node, then from there to each of the worker nodes, using the key authentication for your SSH account.",
+      "nodes": [
+        {
+          "content": "This configures the SSH agent on your workstation to enable the forwarding of your SSH credentials through any *.azurehdinsight.net system that you connect to.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "In this case, the head node of your cluster.",
+          "pos": [
+            160,
+            204
+          ]
+        },
+        {
+          "content": "Next, it configures the command used to proxy SSH traffic from the headnode to the individual worker nodes (internal.cloudapp.net.) This allows Streamparse to connect to the head node, then from there to each of the worker nodes, using the key authentication for your SSH account.",
+          "pos": [
+            205,
+            485
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22454,
+        22578
+      ],
+      "content": "Finally, use the following command to submit the topology from your local development environment, to the HDInsight cluster:"
+    },
+    {
+      "pos": [
+        22611,
+        22728
+      ],
+      "content": "This will connect to the HDInsight cluster, deploy the topology and any Python dependencies, then start the topology."
+    },
+    {
+      "pos": [
+        22732,
+        22742
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        22744,
+        22898
+      ],
+      "content": "In this document, you learned how to use Python components from a Storm topology. See the following documents for other ways to use Python with HDInsight:",
+      "nodes": [
+        {
+          "content": "In this document, you learned how to use Python components from a Storm topology.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "See the following documents for other ways to use Python with HDInsight:",
+          "pos": [
+            82,
+            154
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22902,
+        22988
+      ],
+      "content": "<bpt id=\"p72\">[</bpt>How to use Python for streaming MapReduce jobs<ept id=\"p72\">](hdinsight-hadoop-streaming-python.md)</ept>"
+    },
+    {
+      "pos": [
+        22991,
+        23076
+      ],
+      "content": "<bpt id=\"p73\">[</bpt>How to use Python User Defined Functions (UDF) in Pig and Hive<ept id=\"p73\">](hdinsight-python.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Use Python components in a Storm topology on HDinsight | Microsoft Azure\"\n   description=\"Learn how you can use Python components from with Apache Storm on Azure HDInsight. You will learn how to use Python components from both a Java based, and Clojure based Storm topology.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"python\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"02/01/2016\"\n   ms.author=\"larryfr\"/>\n\n#Develop Apache Storm topologies using Python on HDInsight\n\nApache Storm supports multiple languages, even allowing you to combine components from several languages in one topology. In this document, you will learn how to use Python components in your Java and Clojure-based Storm topologies on HDInsight.\n\n##Prerequisites\n\n* Python 2.7 or higher\n\n* Java JDK 1.7 or higher\n\n* [Leiningen](http://leiningen.org/)\n\n##Storm multi-language support\n\nStorm was designed to work with components written using any programming language, however this requires that the components understand how to work with the [Thrift definition for Storm](https://github.com/apache/storm/blob/master/storm-core/src/storm.thrift). For Python, a module is provided as part of the Apache Storm project that allows you to easily interface with Storm. You can find this module at [https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py](https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py).\n\nSince Apache Storm is a Java process that runs on the Java Virtual Machine (JVM,) components written in other languages are executed as subprocesses. The Storm bits running in the JVM communicates with these subprocesses using JSON messages sent over stdin/stdout. More details on communication between components can be found in the [Multi-lang Protocol](https://storm.apache.org/documentation/Multilang-protocol.html) documentation.\n\n###The Storm module\n\nThe storm module (https://github.com/apache/storm/blob/master/storm-multilang/python/src/main/resources/resources/storm.py,) provides the bits needed to create Python components that work with Storm.\n\nThis provides things like `storm.emit` to emit tuples, and `storm.logInfo` to write to the logs. I would encourage you to read over this file and understand what it provides.\n\n##Challenges\n\nUsing the __storm.py__ module, you can create Python spouts that consume data, and bolts that process data, however the overall Storm topology definition that wires up communication between components is still written using Java or Clojure. Additionally, if you use Java, you must also create Java components that act as an interface to the Python components.\n\nAlso, since Storm clusters run in a distributed fashion, you must ensure that any modules required by your Python components are available on all worker nodes in the cluster. Storm doesn't provide any easy way to accomplish this for multi-lang resources - you either have to include all dependencies as part of the jar file for the topology, or manually install dependencies on each worker node in the cluster.\n\nThere are some projects that attempt to overcome these shortcomings, such as [Pyleus](https://github.com/Yelp/pyleus) and [Streamparse](https://github.com/Parsely/streamparse). While both of these can be ran on Linux-based HDInsight clusters, they are not the primary focus of this document as they require customizations during cluster setup and are not fully tested on HDInsight clusters. Notes on using these frameworks with HDInsight are included at the end of this document.\n\n###Java vs. Clojure topology definition\n\nOf the two methods of defining a topology, Clojure is by far the easiest/cleanest as you can directly referenc python components in the topology definition. For Java-based topology definitions, you must also define Java components that handle things like declaring the fields in the tuples returned from the Python components.\n\nBoth methods are described in this document, along with example projects.\n\n##Python components with a Java topology\n\n> [AZURE.NOTE] This example is available at [https://github.com/Azure-Samples/hdinsight-python-storm-wordcount](https://github.com/Azure-Samples/hdinsight-python-storm-wordcount) in the __JavaTopology__ directory. This is a Maven based project. If you are unfamiliar with Maven, see [Develop Java-based topologies with Apache Storm on HDInsight](hdinsight-storm-develop-java-topology.md) for more information on creating a Maven project for a Storm topology.\n\nA Java-based topology that uses Python (or other JVM language components,) initially appears to use Java components; but if you look in each of the Java spouts/bolts, you'll see code similar to the following:\n\n    public SplitBolt() {\n        super(\"python\", \"countbolt.py\");\n    }\n\nThis is where Java invokes Python and runs the script that contains the actual bolt logic. The Java spouts/bolts (for this example,) simply declare the fields in the tuple that will be emitted by the underlying Python component.\n\nThe actual Python files are stored in the `/multilang/resources` directory in this example. The `/multilang` directory is referenced in the __pom.xml__:\n\n<resources>\n    <resource>\n        <!-- Where the Python bits are kept -->\n        <directory>${basedir}/multilang</directory>\n    </resource>\n</resources>\n\nThis includes all the files in the `/multilang` folder in the jar that will be built from this project.\n\n> [AZURE.IMPORTANT] Note that this only specifies the `/multilang` directory and not `/multilang/resources`. Storm expects non-JVM resources in a `resources` directory, so it is looked for internally already. Placing components in this folder allows you to just reference by name in the Java code. For example, `super(\"python\", \"countbolt.py\");`. Another way to think of it is that Storm sees the `resources` directory as the root (/) when accessing multi-lang resources.\n>\n> For this example project, the `storm.py` module is included in the `/multilang/resources` directory.\n\n###Build and run the project\n\nTo run this project locally, just use the following Maven command to build and run in local mode:\n\n    mvn compile exec:java -Dstorm.topology=com.microsoft.example.WordCount\n\nUse ctrl+c to kill the process.\n\nTo deploy the project to an HDInsight cluster running Apache Storm, use the following steps:\n\n1. Build an uber jar:\n\n        mvn package\n\n    This will create a file named __WordCount--1.0-SNAPSHOT.jar__ in the `/target` directory for this project.\n\n2. Upload the jar file to the Hadoop cluster using one of the following methods:\n\n    * For __Linux-based__ HDInsight clusters: Use `scp WordCount-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:WordCount-1.0-SNAPSHOT.jar` to copy the jar file to the cluster, replacing USERNAME with your SSH user name and CLUSTERNAME with the HDInsight cluster name.\n\n        Once the file has finished uploading, connect to the cluster using SSH and start the topology using `storm jar WordCount-1.0-SNAPSHOT.jar com.microsoft.example.WordCount wordcount`\n\n    * For __Windows-based__ HDInsight clusters: Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser. Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.\n\n        Using the form, perform the following actions:\n\n        * __Jar File__: Select __Browse__, then select the __WordCount-1.0-SNAPSHOT.jar__ file\n        * __Class Name__: Enter `com.microsoft.example.WordCount`\n        * __Additional Paramters__: Enter a friendly name such as `wordcount` to identify the topology\n\n        Finally, select __Submit__ to start the topology.\n\n> [AZURE.NOTE] Once started, a Storm topology runs until stopped (killed.) To stop the topology, use either the `storm kill TOPOLOGYNAME` command from the command-line (SSH session to a Linux cluster for example,) or by using the Storm UI, select the topology, and then select the __Kill__ button.\n\n##Python components with a Clojure topology\n\n> [AZURE.NOTE] This example is available at [https://github.com/Azure-Samples/hdinsight-python-storm-wordcount](https://github.com/Azure-Samples/hdinsight-python-storm-wordcount) in the __ClojureTopology__ directory.\n\nThis topology was created by using [Leiningen](http://leiningen.org) to [create a new Clojure project](https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md#creating-a-project). After that, the following modifications to the scaffolded project were made:\n\n* __project.clj__: Added dependencies for Storm, and exclusions for items that may cause a problem when deployed to the HDInsight server.\n* __resources/resources__: Leiningen creates a default `resources` directory, however the files stored here appear to get added to the root of the jar file created from this project, and Storm expects files in a sub-directory named `resources`. So a sub-directory was added and the Python files are stored in `resources/resources`. At run-time, this will be treated as the root (/) for accessing Python components.\n* __src/wordcount/core.clj__: This file contains the topology definition, and is referenced from the __project.clj__ file. For more information on using Clojure to define a Storm topology, see [Clojure DSL](https://storm.apache.org/documentation/Clojure-DSL.html).\n\n###Build and run the project\n\n__To build and run the project locally__, use the following command:\n\n    lein do clean, run\n\nTo stop the topology, use __Ctrl+C__.\n\n__To build an uberjar and deploy to HDInsight__, use the following steps:\n\n1. Create an uberjar containing the topology and required dependencies:\n\n        lein uberjar\n\n    This will create a new file named `wordcount-1.0-SNAPSHOT.jar` in the `target\\uberjar+uberjar` directory.\n    \n2. Use one of the following methods to deploy and run the topology to an HDInsight cluster:\n\n    * __Linux-based HDInsight__\n    \n        1. Copy the file to the HDInsight cluster head node using `scp`. For example:\n        \n                scp wordcount-1.0-SNAPSHOT.jar USERNAME@CLUSTERNAME-ssh.azurehdinsight.net:wordcount-1.0-SNAPSHOT.jar\n                \n            Replace USERNAME with an SSH user for your cluster, and CLUSTERNAME with your HDInsight cluster name.\n            \n        2. Once the file has been copied to the cluster, use SSH to connect to the cluster and submit the job. For information on using SSH with HDInsight, see one of the following:\n        \n            * [Use SSH with Linux-based HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n            * [Use SSH with Linux-based HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n            \n        3. Once connected, use the following to start the topology:\n        \n                storm jar wordcount-1.0-SNAPSHOT.jar wordcount.core wordcount\n    \n    * __Windows-based HDInsight__\n    \n        1. Connect to the Storm Dashboard by going to HTTPS://CLUSTERNAME.azurehdinsight.net/ in your browser. Replace CLUSTERNAME with your HDInsight cluster name and provide the admin name and password when prompted.\n\n        2. Using the form, perform the following actions:\n\n            * __Jar File__: Select __Browse__, then select the __wordcount-1.0-SNAPSHOT.jar__ file\n            * __Class Name__: Enter `wordcount.core`\n            * __Additional Paramters__: Enter a friendly name such as `wordcount` to identify the topology\n\n            Finally, select __Submit__ to start the topology.\n\n> [AZURE.NOTE] Once started, a Storm topology runs until stopped (killed.) To stop the topology, use either the `storm kill TOPOLOGYNAME` command from the command-line (SSH session to a Linux cluster,) or by using the Storm UI, select the topology, and then select the __Kill__ button.\n\n##Pyleus framework\n\n[Pyleus](https://github.com/Yelp/pyleus) is a framework that attempts to make it easier to use Python with Storm by providing the following:\n\n* __YAML-based topology definitions__: This provides an easier way to define the topology, that doesn't require knowledge of Java or Clojure\n* __MessagePack-based serializer__: MessagePack is used as the default serialization, instead of JSON. This can result in faster messaging between components\n* __Dependency management__: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes. This requires Virtualenv to be installed on the worker nodes\n\n> [AZURE.IMPORTANT] Pyleus requires Storm on your development environment. Using the base Apache Storm 0.9.3 distribution seems to result in jars that are incompatible with the version of Storm provided with HDInsight. So the following steps use the HDInsight cluster as the development environment.\n\nYou can successfuly build the example Pyleus topologies, using the HDInsight head node as the build environment:\n\n1. When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes. When creating a new Linux-based HDInsight cluster, use the following Script Action settings with [Cluster customization](hdinsight-hadoop-customize-cluster.md):\n\n    * __Name__: Just provide a friendly name here\n    * __ Script URI__: Use `https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh` as the value. This script will install Python Virtualenv on the nodes.\n    \n        > [AZURE.NOTE] It will also create some directories that are used by the Streamparse framework later in this document.\n        \n    * __Nimbus__: Check this entry so that the script is applied to the Nimbus (head) nodes.\n    * __Supervisor__: Check ths entry so that the script is applied to the supervisor (worker) nodes\n    \n    Leave other entries blank.\n\n1. Once the cluster has been created, connect using SSH:\n\n    * [Use SSH with Linux-based HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n    * [Use SSH with Linux-based HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n2. From the SSH connect, use the following to create a new virtual environment and install Pyleus:\n\n        virtualenv pyleus_venv\n        source pyleus_venv\n        pip install pyleus\n\n3. Next, download the Pyleus git repository and build the WordCount example:\n\n        sudo apt-get install git\n        git clone https://github.com/Yelp/pyleus.git\n        pyleus build pyleus/examples/word_count/pyleus_topology.yaml\n    \n    Once the build completes, you will have a new file named `word_count.jar` in the current directory.\n    \n4. To submit the topology to the Storm cluster, use the following command:\n\n        pyleus submit -n localhost word_count.jar\n    \n    The `-n` parameter specifies the Nimbus host. Since we are on the head node, we can use `localhost`.\n    \n    You can also use the `pyleus` command to perform other Storm actions. Use the following to list the running topologies, and then kill the `word_count` topology:\n    \n        pyleus list -n localhost\n        pyleus kill -n localhost word_count\n\n##Streamparse framework\n\n[Streamparse](https://github.com/Parsely/streamparse) is a framework that attempts to make it easier to use Python with Storm by providing the following:\n\n* __Scaffolding__: This allows you to easily create the scaffolding for a project, then modify files to add your logic\n* __Clojure DSL functions__: These reduce the verbosity of using Python components in a Clojure topology definition\n* __Dependency management__: Virtualenv is used to ensure that Python dependencies are deployed to all worker nodes. This requires Virtualenv to be installed on the worker nodes\n* __Remote deployment__: Streamparse can use SSH automation to deploy components to worker nodes, and will can create an SSH tunnel to communicate with Nimbus. So you can easily deploy from your development environment to Linux-based cluster such as HDInsight\n\n> [AZURE.IMPORTANT] Streamparse relies on components that expect [Unix signals](https://en.wikipedia.org/wiki/Unix_signal), which are not available on Windows. Your development environment must be Linux, Unix, or OS X, and the HDInsight cluster must be Linux-based.\n\n1. When provisioning a new Storm on HDInsight cluster, you must ensure that Python Virtualenv is present on the cluster nodes. When creating a new Linux-based HDInsight cluster, use the following Script Action settings with [Cluster customization](hdinsight-hadoop-customize-cluster.md):\n\n    * __Name__: Just provide a friendly name here\n    * __ Script URI__: Use `https://hditutorialdata.blob.core.windows.net/customizecluster/pythonvirtualenv.sh` as the value. This script will install Python Virtualenv on the nodes, as well as create directories used by Streamparse\n    * __Nimbus__: Check this entry so that the script is applied to the Nimbus (head) nodes.\n    * __Supervisor__: Check ths entry so that the script is applied to the supervisor (worker) nodes\n    \n    Leave other entries blank.\n    \n    > [AZURE.WARNING] You must also use a __public key__ to secure the SSH user for your HDInsight cluster in order to remotely deploy using Streamparse.\n    >\n    > For more information on using keys with SSH on HDInsight, see one of the following documents:\n    >\n    > * [Use SSH with Linux-based HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n    > * [Use SSH with Linux-based HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n2. While the cluster is provisioning, install Streamparse on your development environment using the following command:\n\n        pip install streamparse\n        \n3. Once Streamparse has installed, use the following command to create an example project:\n\n        sparse quickstart wordcount\n        \n    This will create a new directory named `wordcount`, and populate it with an example Word Count project.\n\n4. Change directories into the `wordcount` directory and start the topology in local mode:\n\n        cd wordcount\n        sparse run\n\n    Use Ctrl+C to stop the topology.\n\n###Deploy the topology\n\nOnce your Linux-based HDInsight cluster has been created, use the following steps to deploy the topology to the cluster:\n\n1. Use the following command to find the fully qualified domain names of the worker nodes for your cluster:\n\n        curl -u admin:PASSWORD -G https://CLUSTERNAME.azurehdinsight.net/api/v1/clusters/CLUSTERNAME/hosts | grep '\"host_name\" : \"worker'\n    \n    This will retrieve the hosts information for the cluster, pipe it to grep, and return on the entries for the worker nodes. You should see results similar to the following:\n    \n        \"host_name\" : \"workernode0.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\"\n    \n    Save the `\"workernode0.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\"` information, as it will be used in the next step.\n\n2. Open the __config.json__ file in the `wordcount` directory, and change the following entries:\n\n    * __user__: Set this to the SSH user account name that you configured for the HDInsight cluster. This will be used to authenticate to the cluster when deploying the project\n    * __nimbus__: Set this to `CLUSTERNAME-ssh.azurehdinsight.net`. Replace CLUSTERNAME with the name of your cluster. This is used when communicating with the Nimbus node, which is the head node of the cluster\n    * __workers__: Populate the workers entry with the host names for the worker nodes that you retrieved using curl. For example:\n    \n        ```\n\"workers\": [\n    \"workernode0.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\",\n    \"workernode1.1kft5e4nx2tevg5b2pdwxqx1fb.jx.internal.cloudapp.net\"\n    ]\n        ```\n    \n    * __virtualenv\\_root__: Set this to \"/virtualenv\"\n    \n    This configures the project for your HDInsight cluster, including the `/virtualenv` directory that was created during provisioning by the script action.\n\n4. Since Streamparse deploying on HDInsight needs to forward your authentication through the head node to the workers, `ssh-agent` must be started on your workstation. For most operating systems, it is started automatically. Use the following command to verify that it is running:\n\n        echo \"$SSH_AUTH_SOCK\"\n    \n    This will return a response similar to the following if `ssh-agent` is running:\n    \n        /tmp/ssh-rfSUL1ldCldQ/agent.1792\n    \n    > [AZURE.NOTE] The complete path may be different depending on your operating system. For example, on OS X the path may be similar to `/private/tmp/com.apple.launchd.vq2rfuxaso/Listeners`. But it should return some path if the agent is running.\n    \n    If nothing is returned, use the `ssh-agent` command to start the agent.\n    \n5. Verify that the agent knows about the key you use to authenticate to the HDInsight server. Use the following command to list the keys that are available to the agent:\n\n        ssh-add -L\n    \n    This will return the private keys that have been added to the agent. You can compare the results to the content of the private key you generated when creating an SSH key to authenticate to HDInsight.\n    \n    If no information is returned, or the returned information does not match your private key, use the following to add the private key to the agent:\n    \n        ssh-add /path/to/key/file\n    \n    For example, `ssh-add ~/.ssh/id_rsa`.\n\n4. You must also configure SSH so that it knows forwarding should be used for your HDInsight cluster. Add the following to `~/.ssh/config`. If this file does not exist, create it and use the following as the contents:\n\n        Host *.azurehdinsight.net\n          ForwardAgent yes\n        \n        Host *.internal.cloudapp.net\n          ProxyCommand ssh CLUSTERNAME-ssh.azurehdinsight.net nc %h %p\n    \n    Replace CLUSTERNAME with the name of your HDInsight cluster.\n    \n    This configures the SSH agent on your workstation to enable the forwarding of your SSH credentials through any *.azurehdinsight.net system that you connect to. In this case, the head node of your cluster. Next, it configures the command used to proxy SSH traffic from the headnode to the individual worker nodes (internal.cloudapp.net.) This allows Streamparse to connect to the head node, then from there to each of the worker nodes, using the key authentication for your SSH account.\n    \n5. Finally, use the following command to submit the topology from your local development environment, to the HDInsight cluster:\n\n        sparse submit\n    \n    This will connect to the HDInsight cluster, deploy the topology and any Python dependencies, then start the topology.\n\n##Next steps\n\nIn this document, you learned how to use Python components from a Storm topology. See the following documents for other ways to use Python with HDInsight:\n\n* [How to use Python for streaming MapReduce jobs](hdinsight-hadoop-streaming-python.md)\n* [How to use Python User Defined Functions (UDF) in Pig and Hive](hdinsight-python.md)"
+}

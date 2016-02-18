@@ -1,0 +1,748 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        102
+      ],
+      "content": "Monitor Hadoop clusters in HDInsight using the Ambari API | Microsoft Azure"
+    },
+    {
+      "pos": [
+        121,
+        272
+      ],
+      "content": "Use the Apache Ambari APIs for provisioning, managing, and monitoring Hadoop clusters. Intuitive operator tools and APIs hide the complexity of Hadoop.",
+      "nodes": [
+        {
+          "content": "Use the Apache Ambari APIs for provisioning, managing, and monitoring Hadoop clusters.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "Intuitive operator tools and APIs hide the complexity of Hadoop.",
+          "pos": [
+            87,
+            151
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        596,
+        653
+      ],
+      "content": "Monitor Hadoop clusters in HDInsight using the Ambari API"
+    },
+    {
+      "pos": [
+        655,
+        737
+      ],
+      "content": "Learn how to monitor HDInsight clusters versions 3.1 and 2.1 by using Ambari APIs."
+    },
+    {
+      "pos": [
+        741,
+        998
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The information in this article is primarily for Windows-based HDInsight clusters, which provide a read-only version of the Ambari REST API. For Linux-based clusters, see <bpt id=\"p1\">[</bpt>Manage Hadoop clusters using Ambari<ept id=\"p1\">](hdinsight-hadoop-manage-ambari.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The information in this article is primarily for Windows-based HDInsight clusters, which provide a read-only version of the Ambari REST API.",
+          "pos": [
+            0,
+            185
+          ]
+        },
+        {
+          "content": "For Linux-based clusters, see <bpt id=\"p1\">[</bpt>Manage Hadoop clusters using Ambari<ept id=\"p1\">](hdinsight-hadoop-manage-ambari.md)</ept>.",
+          "pos": [
+            186,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1003,
+        1018
+      ],
+      "content": "What is Ambari?"
+    },
+    {
+      "pos": [
+        1020,
+        1364
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Apache Ambari<ept id=\"p2\">][ambari-home]</ept><ph id=\"ph4\"/> is used for provisioning, managing, and monitoring Apache Hadoop clusters. It includes an intuitive collection of operator tools and a robust set of APIs that hide the complexity of Hadoop, simplifying the operation of clusters. For more information about the APIs, see <bpt id=\"p3\">[</bpt>Ambari API Reference<ept id=\"p3\">][ambari-api-reference]</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">[</bpt>Apache Ambari<ept id=\"p2\">][ambari-home]</ept><ph id=\"ph4\"/> is used for provisioning, managing, and monitoring Apache Hadoop clusters.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "It includes an intuitive collection of operator tools and a robust set of APIs that hide the complexity of Hadoop, simplifying the operation of clusters.",
+          "pos": [
+            156,
+            309
+          ]
+        },
+        {
+          "content": "For more information about the APIs, see <bpt id=\"p3\">[</bpt>Ambari API Reference<ept id=\"p3\">][ambari-api-reference]</ept>.",
+          "pos": [
+            310,
+            434
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1367,
+        1742
+      ],
+      "content": "HDInsight currently supports only the Ambari monitoring feature. Ambari API 1.0 is supported by HDInsight version 3.0 and 2.1 clusters. This article covers accessing Ambari APIs on HDInsight version 3.1 and 2.1 clusters. The key difference between the two is that some of the components have changed with the introduction of new capabilities (such as the Job History Server).",
+      "nodes": [
+        {
+          "content": "HDInsight currently supports only the Ambari monitoring feature.",
+          "pos": [
+            0,
+            64
+          ]
+        },
+        {
+          "content": "Ambari API 1.0 is supported by HDInsight version 3.0 and 2.1 clusters.",
+          "pos": [
+            65,
+            135
+          ]
+        },
+        {
+          "content": "This article covers accessing Ambari APIs on HDInsight version 3.1 and 2.1 clusters.",
+          "pos": [
+            136,
+            220
+          ]
+        },
+        {
+          "content": "The key difference between the two is that some of the components have changed with the introduction of new capabilities (such as the Job History Server).",
+          "pos": [
+            221,
+            375
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1745,
+        1762
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Prerequisites<ept id=\"p4\">**</ept>"
+    },
+    {
+      "pos": [
+        1764,
+        1824
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        1828,
+        1996
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>A workstation with Azure PowerShell<ept id=\"p5\">**</ept>. See <bpt id=\"p6\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p6\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p5\">**</bpt>A workstation with Azure PowerShell<ept id=\"p5\">**</ept>.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p6\">[</bpt>Install Azure PowerShell 1.0 and greater<ept id=\"p6\">](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater)</ept>.",
+          "pos": [
+            79,
+            244
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2001,
+        2090
+      ],
+      "content": "(Optional) <bpt id=\"p7\">[</bpt>cURL<ept id=\"p7\">][curl]</ept>. To install it, see <bpt id=\"p8\">[</bpt>cURL Releases and Downloads<ept id=\"p8\">][curl-download]</ept>.",
+      "nodes": [
+        {
+          "content": "(Optional) <bpt id=\"p7\">[</bpt>cURL<ept id=\"p7\">][curl]</ept>.",
+          "pos": [
+            0,
+            62
+          ]
+        },
+        {
+          "content": "To install it, see <bpt id=\"p8\">[</bpt>cURL Releases and Downloads<ept id=\"p8\">][curl-download]</ept>.",
+          "pos": [
+            63,
+            165
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2097,
+        2231
+      ],
+      "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> When use the cURL command in Windows, use double-quotation marks instead of single-quotation marks for the option values."
+    },
+    {
+      "pos": [
+        2235,
+        2485
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>An Azure HDInsight cluster<ept id=\"p9\">**</ept>. For instructions about cluster provisioning, see <bpt id=\"p10\">[</bpt>Get started using HDInsight<ept id=\"p10\">][hdinsight-get-started]</ept><ph id=\"ph7\"/> or <bpt id=\"p11\">[</bpt>Provision HDInsight clusters<ept id=\"p11\">][hdinsight-provision]</ept>. You will need the following data to go through the tutorial:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p9\">**</bpt>An Azure HDInsight cluster<ept id=\"p9\">**</ept>.",
+          "pos": [
+            0,
+            69
+          ]
+        },
+        {
+          "content": "For instructions about cluster provisioning, see <bpt id=\"p10\">[</bpt>Get started using HDInsight<ept id=\"p10\">][hdinsight-get-started]</ept><ph id=\"ph7\"/> or <bpt id=\"p11\">[</bpt>Provision HDInsight clusters<ept id=\"p11\">][hdinsight-provision]</ept>.",
+          "pos": [
+            70,
+            321
+          ]
+        },
+        {
+          "content": "You will need the following data to go through the tutorial:",
+          "pos": [
+            322,
+            382
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2491,
+        2507
+      ],
+      "content": "Cluster property"
+    },
+    {
+      "pos": [
+        2508,
+        2538
+      ],
+      "content": "Azure PowerShell variable name"
+    },
+    {
+      "pos": [
+        2539,
+        2544
+      ],
+      "content": "Value"
+    },
+    {
+      "pos": [
+        2545,
+        2556
+      ],
+      "content": "Description"
+    },
+    {
+      "pos": [
+        2581,
+        2603
+      ],
+      "content": "HDInsight cluster name"
+    },
+    {
+      "pos": [
+        2604,
+        2616
+      ],
+      "content": "$clusterName"
+    },
+    {
+      "pos": [
+        2618,
+        2653
+      ],
+      "content": "The name of your HDInsight cluster."
+    },
+    {
+      "pos": [
+        2658,
+        2674
+      ],
+      "content": "Cluster username"
+    },
+    {
+      "pos": [
+        2675,
+        2691
+      ],
+      "content": "$clusterUsername"
+    },
+    {
+      "pos": [
+        2693,
+        2737
+      ],
+      "content": "Cluster user name specified at provisioning."
+    },
+    {
+      "pos": [
+        2742,
+        2758
+      ],
+      "content": "Cluster password"
+    },
+    {
+      "pos": [
+        2759,
+        2775
+      ],
+      "content": "$clusterPassword"
+    },
+    {
+      "pos": [
+        2777,
+        2799
+      ],
+      "content": "Cluster user password."
+    },
+    {
+      "pos": [
+        2806,
+        2905
+      ],
+      "content": "<ph id=\"ph8\">[AZURE.NOTE]</ph><ph id=\"ph9\"/> Fill-in the values in the table. This will be helpful for going through this tutorial.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph8\">[AZURE.NOTE]</ph><ph id=\"ph9\"/> Fill-in the values in the table.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "This will be helpful for going through this tutorial.",
+          "pos": [
+            78,
+            131
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2910,
+        2920
+      ],
+      "content": "Jump start"
+    },
+    {
+      "pos": [
+        2922,
+        2989
+      ],
+      "content": "There are several ways to use Ambari to monitor HDInsight clusters."
+    },
+    {
+      "pos": [
+        2991,
+        3015
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>Use Azure PowerShell<ept id=\"p12\">**</ept>"
+    },
+    {
+      "pos": [
+        3017,
+        3233
+      ],
+      "content": "The following is an Azure PowerShell script to get the MapReduce job tracker information <bpt id=\"p13\">*</bpt>in an HDInsight 3.1 cluster.<ept id=\"p13\">*</ept><ph id=\"ph10\"/>  The key difference is that we pull these details from the YARN service (rather than MapReduce)."
+    },
+    {
+      "pos": [
+        3908,
+        4032
+      ],
+      "content": "The following is an Azure PowerShell script for getting the MapReduce job tracker information <bpt id=\"p14\">*</bpt>in an HDInsight 2.1 cluster<ept id=\"p14\">*</ept>:"
+    },
+    {
+      "pos": [
+        4707,
+        4721
+      ],
+      "content": "The output is:"
+    },
+    {
+      "pos": [
+        4723,
+        4766
+      ],
+      "content": "<ph id=\"ph11\">![</ph>Jobtracker Output<ph id=\"ph12\">][img-jobtracker-output]</ph>"
+    },
+    {
+      "pos": [
+        4768,
+        4780
+      ],
+      "content": "<bpt id=\"p15\">**</bpt>Use cURL<ept id=\"p15\">**</ept>"
+    },
+    {
+      "pos": [
+        4782,
+        4855
+      ],
+      "content": "The following is an example of getting cluster information by using cURL:"
+    },
+    {
+      "pos": [
+        4996,
+        5010
+      ],
+      "content": "The output is:"
+    },
+    {
+      "pos": [
+        6180,
+        6210
+      ],
+      "content": "<bpt id=\"p16\">**</bpt>For the 10/8/2014 release<ept id=\"p16\">**</ept>:"
+    },
+    {
+      "pos": [
+        6212,
+        6934
+      ],
+      "content": "When using the Ambari endpoint, \"https://{clusterDns}.azurehdinsight.net/ambari/api/v1/clusters/{clusterDns}.azurehdinsight.net/services/{servicename}/components/{componentname}\", the <bpt id=\"p17\">*</bpt>host_name<ept id=\"p17\">*</ept><ph id=\"ph13\"/> field returns the fully qualified domain name (FQDN) of the node instead of the host name. Before the 10/8/2014 release, this example returned simply \"<bpt id=\"p18\">**</bpt>headnode0<ept id=\"p18\">**</ept>\". After the 10/8/2014 release, you get the FQDN \"<bpt id=\"p19\">**</bpt>headnode0.{ClusterDNS}.azurehdinsight.net<ept id=\"p19\">**</ept>\", as shown in the previous example. This change was required to facilitate scenarios where multiple cluster types (such as HBase and Hadoop) can be deployed in one virtual network (VNET). This happens, for example, when using HBase as a back-end platform for Hadoop.",
+      "nodes": [
+        {
+          "content": "When using the Ambari endpoint, \"https://{clusterDns}.azurehdinsight.net/ambari/api/v1/clusters/{clusterDns}.azurehdinsight.net/services/{servicename}/components/{componentname}\", the <bpt id=\"p17\">*</bpt>host_name<ept id=\"p17\">*</ept><ph id=\"ph13\"/> field returns the fully qualified domain name (FQDN) of the node instead of the host name.",
+          "pos": [
+            0,
+            341
+          ]
+        },
+        {
+          "content": "Before the 10/8/2014 release, this example returned simply \"<bpt id=\"p18\">**</bpt>headnode0<ept id=\"p18\">**</ept>\".",
+          "pos": [
+            342,
+            457
+          ]
+        },
+        {
+          "content": "After the 10/8/2014 release, you get the FQDN \"<bpt id=\"p19\">**</bpt>headnode0.{ClusterDNS}.azurehdinsight.net<ept id=\"p19\">**</ept>\", as shown in the previous example.",
+          "pos": [
+            458,
+            626
+          ]
+        },
+        {
+          "content": "This change was required to facilitate scenarios where multiple cluster types (such as HBase and Hadoop) can be deployed in one virtual network (VNET).",
+          "pos": [
+            627,
+            778
+          ]
+        },
+        {
+          "content": "This happens, for example, when using HBase as a back-end platform for Hadoop.",
+          "pos": [
+            779,
+            857
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6939,
+        6961
+      ],
+      "content": "Ambari monitoring APIs"
+    },
+    {
+      "pos": [
+        6963,
+        7127
+      ],
+      "content": "The following table lists some of the most common Ambari monitoring API calls. For more information about the API, see <bpt id=\"p20\">[</bpt>Ambari API Reference<ept id=\"p20\">][ambari-api-reference]</ept>.",
+      "nodes": [
+        {
+          "content": "The following table lists some of the most common Ambari monitoring API calls.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "For more information about the API, see <bpt id=\"p20\">[</bpt>Ambari API Reference<ept id=\"p20\">][ambari-api-reference]</ept>.",
+          "pos": [
+            79,
+            204
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7129,
+        7145
+      ],
+      "content": "Monitor API call"
+    },
+    {
+      "pos": [
+        7146,
+        7149
+      ],
+      "content": "URI"
+    },
+    {
+      "pos": [
+        7150,
+        7161
+      ],
+      "content": "Description"
+    },
+    {
+      "pos": [
+        7174,
+        7186
+      ],
+      "content": "Get clusters"
+    },
+    {
+      "pos": [
+        7207,
+        7224
+      ],
+      "content": "Get cluster info."
+    },
+    {
+      "pos": [
+        7277,
+        7302
+      ],
+      "content": "clusters, services, hosts"
+    },
+    {
+      "pos": [
+        7303,
+        7315
+      ],
+      "content": "Get services"
+    },
+    {
+      "pos": [
+        7377,
+        7410
+      ],
+      "content": "Services include: hdfs, mapreduce"
+    },
+    {
+      "pos": [
+        7411,
+        7429
+      ],
+      "content": "Get services info."
+    },
+    {
+      "pos": [
+        7506,
+        7528
+      ],
+      "content": "Get service components"
+    },
+    {
+      "pos": [
+        7615,
+        7639
+      ],
+      "content": "HDFS: namenode, datanode"
+    },
+    {
+      "pos": [
+        7644,
+        7678
+      ],
+      "content": "MapReduce: jobtracker; tasktracker"
+    },
+    {
+      "pos": [
+        7679,
+        7698
+      ],
+      "content": "Get component info."
+    },
+    {
+      "pos": [
+        7801,
+        7847
+      ],
+      "content": "ServiceComponentInfo, host-components, metrics"
+    },
+    {
+      "pos": [
+        7848,
+        7857
+      ],
+      "content": "Get hosts"
+    },
+    {
+      "pos": [
+        7916,
+        7938
+      ],
+      "content": "headnode0, workernode0"
+    },
+    {
+      "pos": [
+        7939,
+        7953
+      ],
+      "content": "Get host info."
+    },
+    {
+      "pos": [
+        8024,
+        8043
+      ],
+      "content": "Get host components"
+    },
+    {
+      "pos": [
+        8129,
+        8154
+      ],
+      "content": "namenode, resourcemanager"
+    },
+    {
+      "pos": [
+        8155,
+        8179
+      ],
+      "content": "Get host component info."
+    },
+    {
+      "pos": [
+        8281,
+        8316
+      ],
+      "content": "HostRoles, component, host, metrics"
+    },
+    {
+      "pos": [
+        8317,
+        8335
+      ],
+      "content": "Get configurations"
+    },
+    {
+      "pos": [
+        8403,
+        8461
+      ],
+      "content": "Config types: core-site, hdfs-site, mapred-site, hive-site"
+    },
+    {
+      "pos": [
+        8462,
+        8485
+      ],
+      "content": "Get configuration info."
+    },
+    {
+      "pos": [
+        8589,
+        8647
+      ],
+      "content": "Config types: core-site, hdfs-site, mapred-site, hive-site"
+    },
+    {
+      "pos": [
+        8652,
+        8662
+      ],
+      "content": "Next Steps"
+    },
+    {
+      "pos": [
+        8664,
+        8744
+      ],
+      "content": "Now you have learned how to use Ambari monitoring API calls. To learn more, see:",
+      "nodes": [
+        {
+          "content": "Now you have learned how to use Ambari monitoring API calls.",
+          "pos": [
+            0,
+            60
+          ]
+        },
+        {
+          "content": "To learn more, see:",
+          "pos": [
+            61,
+            80
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8748,
+        8822
+      ],
+      "content": "<bpt id=\"p21\">[</bpt>Manage HDInsight clusters using the Azure Portal<ept id=\"p21\">][hdinsight-admin-portal]</ept>"
+    },
+    {
+      "pos": [
+        8825,
+        8903
+      ],
+      "content": "<bpt id=\"p22\">[</bpt>Manage HDInsight clusters using Azure PowerShell<ept id=\"p22\">][hdinsight-admin-powershell]</ept>"
+    },
+    {
+      "pos": [
+        8906,
+        8983
+      ],
+      "content": "<bpt id=\"p23\">[</bpt>Manage HDInsight clusters using command-line interface<ept id=\"p23\">][hdinsight-admin-cli]</ept>"
+    },
+    {
+      "pos": [
+        8986,
+        9036
+      ],
+      "content": "<bpt id=\"p24\">[</bpt>HDInsight documentation<ept id=\"p24\">][hdinsight-documentation]</ept>"
+    },
+    {
+      "pos": [
+        9039,
+        9090
+      ],
+      "content": "<bpt id=\"p25\">[</bpt>Get started with HDInsight<ept id=\"p25\">][hdinsight-get-started]</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Monitor Hadoop clusters in HDInsight using the Ambari API | Microsoft Azure\"\n    description=\"Use the Apache Ambari APIs for provisioning, managing, and monitoring Hadoop clusters. Intuitive operator tools and APIs hide the complexity of Hadoop.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    tags=\"azure-portal\"\n    authors=\"mumian\"\n    editor=\"cgronlun\"\n    manager=\"paulettm\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/17/2016\"\n    ms.author=\"jgao\"/>\n\n# Monitor Hadoop clusters in HDInsight using the Ambari API\n\nLearn how to monitor HDInsight clusters versions 3.1 and 2.1 by using Ambari APIs.\n\n> [AZURE.NOTE] The information in this article is primarily for Windows-based HDInsight clusters, which provide a read-only version of the Ambari REST API. For Linux-based clusters, see [Manage Hadoop clusters using Ambari](hdinsight-hadoop-manage-ambari.md).\n\n## What is Ambari?\n\n[Apache Ambari][ambari-home] is used for provisioning, managing, and monitoring Apache Hadoop clusters. It includes an intuitive collection of operator tools and a robust set of APIs that hide the complexity of Hadoop, simplifying the operation of clusters. For more information about the APIs, see [Ambari API Reference][ambari-api-reference].\n\n\nHDInsight currently supports only the Ambari monitoring feature. Ambari API 1.0 is supported by HDInsight version 3.0 and 2.1 clusters. This article covers accessing Ambari APIs on HDInsight version 3.1 and 2.1 clusters. The key difference between the two is that some of the components have changed with the introduction of new capabilities (such as the Job History Server).\n\n\n**Prerequisites**\n\nBefore you begin this tutorial, you must have the following:\n\n- **A workstation with Azure PowerShell**. See [Install Azure PowerShell 1.0 and greater](hdinsight-administer-use-powershell.md#install-azure-powershell-10-and-greater).\n\n\n- (Optional) [cURL][curl]. To install it, see [cURL Releases and Downloads][curl-download].\n\n    >[AZURE.NOTE] When use the cURL command in Windows, use double-quotation marks instead of single-quotation marks for the option values.\n\n- **An Azure HDInsight cluster**. For instructions about cluster provisioning, see [Get started using HDInsight][hdinsight-get-started] or [Provision HDInsight clusters][hdinsight-provision]. You will need the following data to go through the tutorial:\n\n    Cluster property|Azure PowerShell variable name|Value|Description\n    ---|---|---|---\n    HDInsight cluster name|$clusterName||The name of your HDInsight cluster.\n    Cluster username|$clusterUsername||Cluster user name specified at provisioning.\n    Cluster password|$clusterPassword||Cluster user password.\n\n    >[AZURE.NOTE] Fill-in the values in the table. This will be helpful for going through this tutorial.\n\n## Jump start\n\nThere are several ways to use Ambari to monitor HDInsight clusters.\n\n**Use Azure PowerShell**\n\nThe following is an Azure PowerShell script to get the MapReduce job tracker information *in an HDInsight 3.1 cluster.*  The key difference is that we pull these details from the YARN service (rather than MapReduce).\n\n    $clusterName = \"<HDInsightClusterName>\"\n    $clusterUsername = \"<HDInsightClusterUsername>\"\n    $clusterPassword = \"<HDInsightClusterPassword>\"\n\n    $ambariUri = \"https://$clusterName.azurehdinsight.net:443/ambari\"\n    $uriJobTracker = \"$ambariUri/api/v1/clusters/$clusterName.azurehdinsight.net/services/yarn/components/resourcemanager\"\n\n    $passwd = ConvertTo-SecureString $clusterPassword -AsPlainText -Force\n    $creds = New-Object System.Management.Automation.PSCredential ($clusterUsername, $passwd)\n\n    $response = Invoke-RestMethod -Method Get -Uri $uriJobTracker -Credential $creds -OutVariable $OozieServerStatus\n\n    $response.metrics.'yarn.queueMetrics'\n\nThe following is an Azure PowerShell script for getting the MapReduce job tracker information *in an HDInsight 2.1 cluster*:\n\n    $clusterName = \"<HDInsightClusterName>\"\n    $clusterUsername = \"<HDInsightClusterUsername>\"\n    $clusterPassword = \"<HDInsightClusterPassword>\"\n\n    $ambariUri = \"https://$clusterName.azurehdinsight.net:443/ambari\"\n    $uriJobTracker = \"$ambariUri/api/v1/clusters/$clusterName.azurehdinsight.net/services/mapreduce/components/jobtracker\"\n\n    $passwd = ConvertTo-SecureString $clusterPassword -AsPlainText -Force\n    $creds = New-Object System.Management.Automation.PSCredential ($clusterUsername, $passwd)\n\n    $response = Invoke-RestMethod -Method Get -Uri $uriJobTracker -Credential $creds -OutVariable $OozieServerStatus\n\n    $response.metrics.'mapred.JobTracker'\n\nThe output is:\n\n![Jobtracker Output][img-jobtracker-output]\n\n**Use cURL**\n\nThe following is an example of getting cluster information by using cURL:\n\n    curl -u <username>:<password> -k https://<ClusterName>.azurehdinsight.net:443/ambari/api/v1/clusters/<ClusterName>.azurehdinsight.net\n\nThe output is:\n\n    {\"href\":\"https://hdi0211v2.azurehdinsight.net/ambari/api/v1/clusters/hdi0211v2.azurehdinsight.net/\",\n     \"Clusters\":{\"cluster_name\":\"hdi0211v2.azurehdinsight.net\",\"version\":\"2.1.3.0.432823\"},\n     \"services\"[\n       {\"href\":\"https://hdi0211v2.azurehdinsight.net/ambari/api/v1/clusters/hdi0211v2.azurehdinsight.net/services/hdfs\",\n        \"ServiceInfo\":{\"cluster_name\":\"hdi0211v2.azurehdinsight.net\",\"service_name\":\"hdfs\"}},\n       {\"href\":\"https://hdi0211v2.azurehdinsight.net/ambari/api/v1/clusters/hdi0211v2.azurehdinsight.net/services/mapreduce\",\n        \"ServiceInfo\":{\"cluster_name\":\"hdi0211v2.azurehdinsight.net\",\"service_name\":\"mapreduce\"}}],\n     \"hosts\":[\n       {\"href\":\"https://hdi0211v2.azurehdinsight.net/ambari/api/v1/clusters/hdi0211v2.azurehdinsight.net/hosts/headnode0\",\n        \"Hosts\":{\"cluster_name\":\"hdi0211v2.azurehdinsight.net\",\n                 \"host_name\":\"headnode0\"}},\n       {\"href\":\"https://hdi0211v2.azurehdinsight.net/ambari/api/v1/clusters/hdi0211v2.azurehdinsight.net/hosts/workernode0\",\n        \"Hosts\":{\"cluster_name\":\"hdi0211v2.azurehdinsight.net\",\n                 \"host_name\":\"headnode0.{ClusterDNS}.azurehdinsight.net\"}}]}\n\n**For the 10/8/2014 release**:\n\nWhen using the Ambari endpoint, \"https://{clusterDns}.azurehdinsight.net/ambari/api/v1/clusters/{clusterDns}.azurehdinsight.net/services/{servicename}/components/{componentname}\", the *host_name* field returns the fully qualified domain name (FQDN) of the node instead of the host name. Before the 10/8/2014 release, this example returned simply \"**headnode0**\". After the 10/8/2014 release, you get the FQDN \"**headnode0.{ClusterDNS}.azurehdinsight.net**\", as shown in the previous example. This change was required to facilitate scenarios where multiple cluster types (such as HBase and Hadoop) can be deployed in one virtual network (VNET). This happens, for example, when using HBase as a back-end platform for Hadoop.\n\n## Ambari monitoring APIs\n\nThe following table lists some of the most common Ambari monitoring API calls. For more information about the API, see [Ambari API Reference][ambari-api-reference].\n\nMonitor API call|URI|Description\n---|---|---\nGet clusters|`/api/v1/clusters`|\nGet cluster info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net`|clusters, services, hosts\nGet services|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/services`|Services include: hdfs, mapreduce\nGet services info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/services/<ServiceName>`|\nGet service components|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/services/<ServiceName>/components`|HDFS: namenode, datanode<br/>MapReduce: jobtracker; tasktracker\nGet component info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/services/<ServiceName>/components/<ComponentName>`|ServiceComponentInfo, host-components, metrics\nGet hosts|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/hosts`|headnode0, workernode0\nGet host info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/hosts/<HostName>`|\nGet host components|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/hosts/<HostName>/host_components`|namenode, resourcemanager\nGet host component info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/hosts/<HostName>/host_components/<ComponentName>`|HostRoles, component, host, metrics\nGet configurations|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/configurations`|Config types: core-site, hdfs-site, mapred-site, hive-site\nGet configuration info.|`/api/v1/clusters/<ClusterName>.azurehdinsight.net/configurations?type=<ConfigType>&tag=<VersionName>`|Config types: core-site, hdfs-site, mapred-site, hive-site\n\n\n##Next Steps\n\nNow you have learned how to use Ambari monitoring API calls. To learn more, see:\n\n- [Manage HDInsight clusters using the Azure Portal][hdinsight-admin-portal]\n- [Manage HDInsight clusters using Azure PowerShell][hdinsight-admin-powershell]\n- [Manage HDInsight clusters using command-line interface][hdinsight-admin-cli]\n- [HDInsight documentation][hdinsight-documentation]\n- [Get started with HDInsight][hdinsight-get-started]\n\n\n\n[ambari-home]: http://ambari.apache.org/\n[ambari-api-reference]: https://github.com/apache/ambari/blob/trunk/ambari-server/docs/api/v1/index.md\n\n[curl]: http://curl.haxx.se\n[curl-download]: http://curl.haxx.se/download.html\n\n[microsoft-hadoop-SDK]: http://hadoopsdk.codeplex.com/wikipage?title=Ambari%20Monitoring%20Client\n\n[powershell-install]: powershell-install-configure.md\n[powershell-script]: http://technet.microsoft.com/library/ee176949.aspx\n\n[hdinsight-admin-powershell]: hdinsight-administer-use-powershell.md\n[hdinsight-admin-portal]: hdinsight-administer-use-management-portal.md\n[hdinsight-admin-cli]: hdinsight-administer-use-command-line.md\n[hdinsight-documentation]: /documentation/services/hdinsight/\n[hdinsight-get-started]: hdinsight-hadoop-linux-tutorial-get-started.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n\n[img-jobtracker-output]: ./media/hdinsight-monitor-use-ambari-api/hdi.ambari.monitor.jobtracker.output.png\n"
+}
