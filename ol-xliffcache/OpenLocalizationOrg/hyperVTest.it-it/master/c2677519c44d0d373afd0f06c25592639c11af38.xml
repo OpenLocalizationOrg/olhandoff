@@ -1,0 +1,1338 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        85
+      ],
+      "content": "Upload data for Hadoop jobs in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        104,
+        266
+      ],
+      "content": "Learn how to upload and access data for Hadoop jobs in HDInsight using the Azure CLI, Azure Storage Explorer, Azure PowerShell, the Hadoop command line, or Sqoop."
+    },
+    {
+      "pos": [
+        599,
+        639
+      ],
+      "content": "Upload data for Hadoop jobs in HDInsight"
+    },
+    {
+      "pos": [
+        641,
+        1185
+      ],
+      "content": "Azure HDInsight provides a full-featured Hadoop distributed file system (HDFS) over Azure Blob storage. It is designed as an HDFS extension to provide a seamless experience to customers. It enables the full set of components in the Hadoop ecosystem to operate directly on the data it manages. Azure Blob storage and HDFS are distinct file systems that are optimized for storage of data and computations on that data. For information about the benefits of using Azure Blob storage, see <bpt id=\"p1\">[</bpt>Use Azure Blob storage with HDInsight<ept id=\"p1\">][hdinsight-storage]</ept>.",
+      "nodes": [
+        {
+          "content": "Azure HDInsight provides a full-featured Hadoop distributed file system (HDFS) over Azure Blob storage.",
+          "pos": [
+            0,
+            103
+          ]
+        },
+        {
+          "content": "It is designed as an HDFS extension to provide a seamless experience to customers.",
+          "pos": [
+            104,
+            186
+          ]
+        },
+        {
+          "content": "It enables the full set of components in the Hadoop ecosystem to operate directly on the data it manages.",
+          "pos": [
+            187,
+            292
+          ]
+        },
+        {
+          "content": "Azure Blob storage and HDFS are distinct file systems that are optimized for storage of data and computations on that data.",
+          "pos": [
+            293,
+            416
+          ]
+        },
+        {
+          "content": "For information about the benefits of using Azure Blob storage, see <bpt id=\"p1\">[</bpt>Use Azure Blob storage with HDInsight<ept id=\"p1\">][hdinsight-storage]</ept>.",
+          "pos": [
+            417,
+            582
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1187,
+        1204
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>Prerequisites<ept id=\"p2\">**</ept>"
+    },
+    {
+      "pos": [
+        1206,
+        1254
+      ],
+      "content": "Note the following requirement before you begin:"
+    },
+    {
+      "pos": [
+        1258,
+        1421
+      ],
+      "content": "An Azure HDInsight cluster. For instructions, see <bpt id=\"p3\">[</bpt>Get started with Azure HDInsight<ept id=\"p3\">][hdinsight-get-started]</ept><ph id=\"ph2\"/> or <bpt id=\"p4\">[</bpt>Provision HDInsight clusters<ept id=\"p4\">][hdinsight-provision]</ept>.",
+      "nodes": [
+        {
+          "content": "An Azure HDInsight cluster.",
+          "pos": [
+            0,
+            27
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p3\">[</bpt>Get started with Azure HDInsight<ept id=\"p3\">][hdinsight-get-started]</ept><ph id=\"ph2\"/> or <bpt id=\"p4\">[</bpt>Provision HDInsight clusters<ept id=\"p4\">][hdinsight-provision]</ept>.",
+          "pos": [
+            28,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1425,
+        1442
+      ],
+      "content": "Why blob storage?"
+    },
+    {
+      "pos": [
+        1444,
+        1976
+      ],
+      "content": "Azure HDInsight clusters are typically deployed to run MapReduce jobs, and the clusters are dropped after these jobs complete. Keeping the data in the HDFS clusters after computations are complete would be an expensive way to store this data. Azure Blob storage is a highly available, highly scalable, high capacity, low cost, and shareable storage option for data that is to be processed using HDInsight. Storing data in a blob enables the HDInsight clusters that are used for computation to be safely released without losing data.",
+      "nodes": [
+        {
+          "content": "Azure HDInsight clusters are typically deployed to run MapReduce jobs, and the clusters are dropped after these jobs complete.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "Keeping the data in the HDFS clusters after computations are complete would be an expensive way to store this data.",
+          "pos": [
+            127,
+            242
+          ]
+        },
+        {
+          "content": "Azure Blob storage is a highly available, highly scalable, high capacity, low cost, and shareable storage option for data that is to be processed using HDInsight.",
+          "pos": [
+            243,
+            405
+          ]
+        },
+        {
+          "content": "Storing data in a blob enables the HDInsight clusters that are used for computation to be safely released without losing data.",
+          "pos": [
+            406,
+            532
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1981,
+        1992
+      ],
+      "content": "Directories"
+    },
+    {
+      "pos": [
+        1994,
+        2276
+      ],
+      "content": "Azure Blob storage containers store data as key/value pairs, and there is no directory hierarchy. However the \"/\" character can be used within the key name to make it appear as if a file is stored within a directory structure. HDInsight sees these as if they are actual directories.",
+      "nodes": [
+        {
+          "content": "Azure Blob storage containers store data as key/value pairs, and there is no directory hierarchy.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "However the \"/\" character can be used within the key name to make it appear as if a file is stored within a directory structure.",
+          "pos": [
+            98,
+            226
+          ]
+        },
+        {
+          "content": "HDInsight sees these as if they are actual directories.",
+          "pos": [
+            227,
+            282
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2278,
+        2464
+      ],
+      "content": "For example, a blob's key may be <bpt id=\"p5\">*</bpt>input/log1.txt<ept id=\"p5\">*</ept>. No actual \"input\" directory exists, but due to the presence of the \"/\" character in the key name, it has the appearance of a file path.",
+      "nodes": [
+        {
+          "content": "For example, a blob's key may be <bpt id=\"p5\">*</bpt>input/log1.txt<ept id=\"p5\">*</ept>.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "No actual \"input\" directory exists, but due to the presence of the \"/\" character in the key name, it has the appearance of a file path.",
+          "pos": [
+            89,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2466,
+        2580
+      ],
+      "content": "Because of this, if you use Azure Explorer tools you may notice some 0 byte files. These files serve two purposes:",
+      "nodes": [
+        {
+          "content": "Because of this, if you use Azure Explorer tools you may notice some 0 byte files.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "These files serve two purposes:",
+          "pos": [
+            83,
+            114
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2584,
+        2876
+      ],
+      "content": "If there are empty folders, they mark of the existence of the folder. Azure Blob storage is clever enough to know that if a blob called foo/bar exists, there is a folder called <bpt id=\"p6\">**</bpt>foo<ept id=\"p6\">**</ept>. But the only way to signify an empty folder called <bpt id=\"p7\">**</bpt>foo<ept id=\"p7\">**</ept><ph id=\"ph3\"/> is by having this special 0 byte file in place.",
+      "nodes": [
+        {
+          "content": "If there are empty folders, they mark of the existence of the folder.",
+          "pos": [
+            0,
+            69
+          ]
+        },
+        {
+          "content": "Azure Blob storage is clever enough to know that if a blob called foo/bar exists, there is a folder called <bpt id=\"p6\">**</bpt>foo<ept id=\"p6\">**</ept>.",
+          "pos": [
+            70,
+            223
+          ]
+        },
+        {
+          "content": "But the only way to signify an empty folder called <bpt id=\"p7\">**</bpt>foo<ept id=\"p7\">**</ept><ph id=\"ph3\"/> is by having this special 0 byte file in place.",
+          "pos": [
+            224,
+            382
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2880,
+        3000
+      ],
+      "content": "They hold special metadata that is needed by the Hadoop file system, notably the permissions and owners for the folders."
+    },
+    {
+      "pos": [
+        3004,
+        3026
+      ],
+      "content": "Command-line utilities"
+    },
+    {
+      "pos": [
+        3028,
+        3103
+      ],
+      "content": "Microsoft provides the following utilities to work with Azure Blob storage:"
+    },
+    {
+      "pos": [
+        3107,
+        3111
+      ],
+      "content": "Tool"
+    },
+    {
+      "pos": [
+        3114,
+        3119
+      ],
+      "content": "Linux"
+    },
+    {
+      "pos": [
+        3122,
+        3126
+      ],
+      "content": "OS X"
+    },
+    {
+      "pos": [
+        3129,
+        3136
+      ],
+      "content": "Windows"
+    },
+    {
+      "pos": [
+        3175,
+        3215
+      ],
+      "content": "<bpt id=\"p8\">[</bpt>Azure Command-Line Interface<ept id=\"p8\">][azurecli]</ept>"
+    },
+    {
+      "pos": [
+        3218,
+        3219
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3222,
+        3223
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3226,
+        3227
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3232,
+        3268
+      ],
+      "content": "<bpt id=\"p9\">[</bpt>Azure PowerShell<ept id=\"p9\">][azure-powershell]</ept>"
+    },
+    {
+      "pos": [
+        3275,
+        3276
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3281,
+        3303
+      ],
+      "content": "<bpt id=\"p10\">[</bpt>AzCopy<ept id=\"p10\">][azure-azcopy]</ept>"
+    },
+    {
+      "pos": [
+        3310,
+        3311
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3316,
+        3346
+      ],
+      "content": "<bpt id=\"p11\">[</bpt>Hadoop command<ept id=\"p11\">](#commandline)</ept>"
+    },
+    {
+      "pos": [
+        3349,
+        3350
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3353,
+        3354
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3357,
+        3358
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        3364,
+        3605
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> While the Azure CLI, Azure PowerShell, and AzCopy can all be used from outside Azure, the Hadoop command is only available on the HDInsight cluster and only allows loading data from the local file system into Azure Blob storage."
+    },
+    {
+      "pos": [
+        3607,
+        3610
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        3631,
+        3640
+      ],
+      "content": "Azure CLI"
+    },
+    {
+      "pos": [
+        3642,
+        3784
+      ],
+      "content": "The Azure CLI is a cross-platform tool that allows you to manage Azure services. Use the following steps to upload data to Azure Blob storage:",
+      "nodes": [
+        {
+          "content": "The Azure CLI is a cross-platform tool that allows you to manage Azure services.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "Use the following steps to upload data to Azure Blob storage:",
+          "pos": [
+            81,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3789,
+        3879
+      ],
+      "content": "<bpt id=\"p12\">[</bpt>Install and configure the Azure CLI for Mac, Linux and Windows<ept id=\"p12\">](../xplat-cli-install.md)</ept>."
+    },
+    {
+      "pos": [
+        3884,
+        3994
+      ],
+      "content": "Open a command prompt, bash, or other shell, and use the following to authenticate to your Azure subscription."
+    },
+    {
+      "pos": [
+        4021,
+        4091
+      ],
+      "content": "When prompted, enter the user name and password for your subscription."
+    },
+    {
+      "pos": [
+        4096,
+        4175
+      ],
+      "content": "Enter the following command to list the storage accounts for your subscription:"
+    },
+    {
+      "pos": [
+        4216,
+        4357
+      ],
+      "content": "Select the storage account that contains the blob you want to work with, then use the following command to retrieve the key for this account:"
+    },
+    {
+      "pos": [
+        4427,
+        4555
+      ],
+      "content": "This should return <bpt id=\"p13\">**</bpt>Primary<ept id=\"p13\">**</ept><ph id=\"ph6\"/> and <bpt id=\"p14\">**</bpt>Secondary<ept id=\"p14\">**</ept><ph id=\"ph7\"/> keys. Copy the <bpt id=\"p15\">**</bpt>Primary<ept id=\"p15\">**</ept><ph id=\"ph8\"/> key value because it will be used in the next steps.",
+      "nodes": [
+        {
+          "content": "This should return <bpt id=\"p13\">**</bpt>Primary<ept id=\"p13\">**</ept><ph id=\"ph6\"/> and <bpt id=\"p14\">**</bpt>Secondary<ept id=\"p14\">**</ept><ph id=\"ph7\"/> keys.",
+          "pos": [
+            0,
+            162
+          ]
+        },
+        {
+          "content": "Copy the <bpt id=\"p15\">**</bpt>Primary<ept id=\"p15\">**</ept><ph id=\"ph8\"/> key value because it will be used in the next steps.",
+          "pos": [
+            163,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4560,
+        4651
+      ],
+      "content": "Use the following command to retrieve a list of blob containers within the storage account:"
+    },
+    {
+      "pos": [
+        4737,
+        4805
+      ],
+      "content": "Use the following commands to upload and download files to the blob:"
+    },
+    {
+      "pos": [
+        4813,
+        4830
+      ],
+      "content": "To upload a file:"
+    },
+    {
+      "pos": [
+        4963,
+        4982
+      ],
+      "content": "To download a file:"
+    },
+    {
+      "pos": [
+        5118,
+        5300
+      ],
+      "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> If you will always be working with the same storage account, you can set the following environment variables instead of specifying the account and key for every command:"
+    },
+    {
+      "pos": [
+        5307,
+        5360
+      ],
+      "content": "<bpt id=\"p16\">**</bpt>AZURE\\_STORAGE\\_ACCOUNT<ept id=\"p16\">**</ept>: The storage account name"
+    },
+    {
+      "pos": [
+        5367,
+        5423
+      ],
+      "content": "<bpt id=\"p17\">**</bpt>AZURE\\_STORAGE\\_ACCESS\\_KEY<ept id=\"p17\">**</ept>: The storage account key"
+    },
+    {
+      "pos": [
+        5425,
+        5428
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        5451,
+        5467
+      ],
+      "content": "Azure PowerShell"
+    },
+    {
+      "pos": [
+        5469,
+        5769
+      ],
+      "content": "Azure PowerShell is a scripting environment that you can use to control and automate the deployment and management of your workloads in Azure. For information about configuring your workstation to run Azure PowerShell, see <bpt id=\"p18\">[</bpt>Install and configure Azure PowerShell<ept id=\"p18\">](../powershell-install-configure.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Azure PowerShell is a scripting environment that you can use to control and automate the deployment and management of your workloads in Azure.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "For information about configuring your workstation to run Azure PowerShell, see <bpt id=\"p18\">[</bpt>Install and configure Azure PowerShell<ept id=\"p18\">](../powershell-install-configure.md)</ept>.",
+          "pos": [
+            143,
+            340
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5771,
+        5819
+      ],
+      "content": "<bpt id=\"p19\">**</bpt>To upload a local file to Azure Blob storage<ept id=\"p19\">**</ept>"
+    },
+    {
+      "pos": [
+        5824,
+        5952
+      ],
+      "content": "Open the Azure PowerShell console as instructed in <bpt id=\"p20\">[</bpt>Install and configure Azure PowerShell<ept id=\"p20\">](../powershell-install-configure.md)</ept>."
+    },
+    {
+      "pos": [
+        5956,
+        6023
+      ],
+      "content": "Set the values of the first five variables in the following script:"
+    },
+    {
+      "pos": [
+        6967,
+        7045
+      ],
+      "content": "Paste the script into the Azure PowerShell console to run it to copy the file."
+    },
+    {
+      "pos": [
+        7047,
+        7178
+      ],
+      "content": "For example PowerShell scripts created to work with HDInsight, see <bpt id=\"p21\">[</bpt>HDInsight tools<ept id=\"p21\">](https://github.com/blackmist/hdinsight-tools)</ept>."
+    },
+    {
+      "pos": [
+        7180,
+        7183
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        7202,
+        7208
+      ],
+      "content": "AzCopy"
+    },
+    {
+      "pos": [
+        7210,
+        7471
+      ],
+      "content": "AzCopy is a command-line tool that is designed to simplify the task of transferring data into and out of an Azure Storage account. You can use it as a standalone tool or incorporate this tool in an existing application. <bpt id=\"p22\">[</bpt>Download AzCopy<ept id=\"p22\">][azure-azcopy-download]</ept>.",
+      "nodes": [
+        {
+          "content": "AzCopy is a command-line tool that is designed to simplify the task of transferring data into and out of an Azure Storage account.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "You can use it as a standalone tool or incorporate this tool in an existing application.",
+          "pos": [
+            131,
+            219
+          ]
+        },
+        {
+          "content": "<bpt id=\"p22\">[</bpt>Download AzCopy<ept id=\"p22\">][azure-azcopy-download]</ept>.",
+          "pos": [
+            220,
+            301
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7473,
+        7494
+      ],
+      "content": "The AzCopy syntax is:"
+    },
+    {
+      "pos": [
+        7572,
+        7667
+      ],
+      "content": "For more information, see <bpt id=\"p23\">[</bpt>AzCopy - Uploading/Downloading files for Azure Blobs<ept id=\"p23\">][azure-azcopy]</ept>."
+    },
+    {
+      "pos": [
+        7670,
+        7673
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        7697,
+        7716
+      ],
+      "content": "Hadoop command line"
+    },
+    {
+      "pos": [
+        7718,
+        7850
+      ],
+      "content": "The Hadoop command line is only useful for storing data into blob storage when the data is already present on the cluster head node."
+    },
+    {
+      "pos": [
+        7852,
+        7962
+      ],
+      "content": "In order to use the Hadoop command, you must first connect to the headnode using one of the following methods:"
+    },
+    {
+      "pos": [
+        7966,
+        8115
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>Windows-based HDInsight<ept id=\"p24\">**</ept>: <bpt id=\"p25\">[</bpt>Connect using Remote Desktop<ept id=\"p25\">](hdinsight-administer-use-management-portal.md#connect-to-hdinsight-clusters-by-using-rdp)</ept>"
+    },
+    {
+      "pos": [
+        8119,
+        8363
+      ],
+      "content": "<bpt id=\"p26\">**</bpt>Linux-based HDInsight<ept id=\"p26\">**</ept>: Connect using SSH (<bpt id=\"p27\">[</bpt>the SSH command<ept id=\"p27\">](hdinsight-hadoop-linux-use-ssh-unix.md#connect-to-a-linux-based-hdinsight-cluster)</ept><ph id=\"ph11\"/> or <bpt id=\"p28\">[</bpt>PuTTY<ept id=\"p28\">](hdinsight-hadoop-linux-use-ssh-windows.md#connect-to-a-linux-based-hdinsight-cluster)</ept>)"
+    },
+    {
+      "pos": [
+        8365,
+        8442
+      ],
+      "content": "Once connected, you can use the following syntax to upload a file to storage."
+    },
+    {
+      "pos": [
+        8505,
+        8576
+      ],
+      "content": "For example, <ph id=\"ph12\">`hadoop fs -copyFromLocal data.txt /example/data/data.txt`</ph>"
+    },
+    {
+      "pos": [
+        8578,
+        8737
+      ],
+      "content": "Because the default file system for HDInsight is in Azure Blob storage, /example/data.txt is actually in Azure Blob storage. You can also refer to the file as:",
+      "nodes": [
+        {
+          "content": "Because the default file system for HDInsight is in Azure Blob storage, /example/data.txt is actually in Azure Blob storage.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "You can also refer to the file as:",
+          "pos": [
+            125,
+            159
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8774,
+        8776
+      ],
+      "content": "or"
+    },
+    {
+      "pos": [
+        8875,
+        9123
+      ],
+      "content": "For a list of other Hadoop commands that work with files, see <bpt id=\"p29\">[</bpt>http://hadoop.apache.org/docs/r2.7.0/hadoop-project-dist/hadoop-common/FileSystemShell.html<ept id=\"p29\">](http://hadoop.apache.org/docs/r2.7.0/hadoop-project-dist/hadoop-common/FileSystemShell.html)</ept>"
+    },
+    {
+      "pos": [
+        9127,
+        9144
+      ],
+      "content": "Graphical clients"
+    },
+    {
+      "pos": [
+        9146,
+        9304
+      ],
+      "content": "There are also several applications that provide a graphical interface for working with Azure Storage. The following is a list of a few of these applications:",
+      "nodes": [
+        {
+          "content": "There are also several applications that provide a graphical interface for working with Azure Storage.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "The following is a list of a few of these applications:",
+          "pos": [
+            103,
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9308,
+        9314
+      ],
+      "content": "Client"
+    },
+    {
+      "pos": [
+        9317,
+        9322
+      ],
+      "content": "Linux"
+    },
+    {
+      "pos": [
+        9325,
+        9329
+      ],
+      "content": "OS X"
+    },
+    {
+      "pos": [
+        9332,
+        9339
+      ],
+      "content": "Windows"
+    },
+    {
+      "pos": [
+        9380,
+        9433
+      ],
+      "content": "<bpt id=\"p30\">[</bpt>Azure Storage Explorer<ept id=\"p30\">](http://storageexplorer.com/)</ept>"
+    },
+    {
+      "pos": [
+        9436,
+        9437
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9440,
+        9441
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9444,
+        9445
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9450,
+        9529
+      ],
+      "content": "<bpt id=\"p31\">[</bpt>Cloud Storage Studio 2<ept id=\"p31\">](http://www.cerebrata.com/Products/CloudStorageStudio/)</ept>"
+    },
+    {
+      "pos": [
+        9536,
+        9537
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9542,
+        9601
+      ],
+      "content": "<bpt id=\"p32\">[</bpt>CloudXplorer<ept id=\"p32\">](http://clumsyleaf.com/products/cloudxplorer)</ept>"
+    },
+    {
+      "pos": [
+        9608,
+        9609
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9614,
+        9695
+      ],
+      "content": "<bpt id=\"p33\">[</bpt>Azure Explorer<ept id=\"p33\">](http://www.cloudberrylab.com/free-microsoft-azure-explorer.aspx)</ept>"
+    },
+    {
+      "pos": [
+        9702,
+        9703
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9708,
+        9734
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Zudio<ept id=\"p34\">](https://zudio.co/)</ept>"
+    },
+    {
+      "pos": [
+        9737,
+        9738
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9741,
+        9742
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9745,
+        9746
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9751,
+        9785
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>Cyberduck<ept id=\"p35\">](https://cyberduck.io/)</ept>"
+    },
+    {
+      "pos": [
+        9791,
+        9792
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9795,
+        9796
+      ],
+      "content": "✔"
+    },
+    {
+      "pos": [
+        9800,
+        9803
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        9831,
+        9853
+      ],
+      "content": "Azure Storage Explorer"
+    },
+    {
+      "pos": [
+        9855,
+        10115
+      ],
+      "content": "<bpt id=\"p36\">*</bpt>Azure Storage Explorer<ept id=\"p36\">*</ept><ph id=\"ph13\"/> is a useful tool for inspecting and altering the data in blobs. It is a free, open source tool that can be downloaded from <bpt id=\"p37\">[</bpt>http://storageexplorer.com/<ept id=\"p37\">](http://storageexplorer.com/)</ept>. The source code is available from this link as well.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p36\">*</bpt>Azure Storage Explorer<ept id=\"p36\">*</ept><ph id=\"ph13\"/> is a useful tool for inspecting and altering the data in blobs.",
+          "pos": [
+            0,
+            143
+          ]
+        },
+        {
+          "content": "It is a free, open source tool that can be downloaded from <bpt id=\"p37\">[</bpt>http://storageexplorer.com/<ept id=\"p37\">](http://storageexplorer.com/)</ept>.",
+          "pos": [
+            144,
+            302
+          ]
+        },
+        {
+          "content": "The source code is available from this link as well.",
+          "pos": [
+            303,
+            355
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10117,
+        10403
+      ],
+      "content": "Before using the tool, you must know your Azure storage account name and account key. For instructions about getting this information, see the \"How to: View, copy and regenerate storage access keys\" section of <bpt id=\"p38\">[</bpt>Create, manage, or delete a storage account<ept id=\"p38\">][azure-create-storage-account]</ept>.",
+      "nodes": [
+        {
+          "content": "Before using the tool, you must know your Azure storage account name and account key.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "For instructions about getting this information, see the \"How to: View, copy and regenerate storage access keys\" section of <bpt id=\"p38\">[</bpt>Create, manage, or delete a storage account<ept id=\"p38\">][azure-create-storage-account]</ept>.",
+          "pos": [
+            86,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10410,
+        10675
+      ],
+      "content": "Run Azure Storage Explorer. If this is the first time you have ran the Storage Explorer, you will be prompted for the _<bpt id=\"p39\">__</bpt>Storage account name<ept id=\"p39\">__</ept><ph id=\"ph14\"/> and <bpt id=\"p40\">__</bpt>Storage account key<ept id=\"p40\">__</ept>. If you have ran it before, use the <bpt id=\"p41\">__</bpt>Add<ept id=\"p41\">__</ept><ph id=\"ph15\"/> button to add a new storage account name and key.",
+      "nodes": [
+        {
+          "content": "Run Azure Storage Explorer.",
+          "pos": [
+            0,
+            27
+          ]
+        },
+        {
+          "content": "If this is the first time you have ran the Storage Explorer, you will be prompted for the _<bpt id=\"p39\">__</bpt>Storage account name<ept id=\"p39\">__</ept><ph id=\"ph14\"/> and <bpt id=\"p40\">__</bpt>Storage account key<ept id=\"p40\">__</ept>.",
+          "pos": [
+            28,
+            267
+          ]
+        },
+        {
+          "content": "If you have ran it before, use the <bpt id=\"p41\">__</bpt>Add<ept id=\"p41\">__</ept><ph id=\"ph15\"/> button to add a new storage account name and key.",
+          "pos": [
+            268,
+            415
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10681,
+        10791
+      ],
+      "content": "Enter the name and key for the storage account used by your HDinsight cluster and then select <bpt id=\"p42\">__</bpt>SAVE &amp; OPEN<ept id=\"p42\">__</ept>."
+    },
+    {
+      "pos": [
+        10797,
+        10854
+      ],
+      "content": "<ph id=\"ph16\">![</ph>HDI.AzureStorageExplorer<ph id=\"ph17\">][image-azure-storage-explorer]</ph>"
+    },
+    {
+      "pos": [
+        10859,
+        11128
+      ],
+      "content": "In the list of containers to the left of the interface, click the name of the container that is associated with your HDInsight cluster. By default, this is the name of the HDInsight cluster, but may be different if you entered a specific name when creating the cluster.",
+      "nodes": [
+        {
+          "content": "In the list of containers to the left of the interface, click the name of the container that is associated with your HDInsight cluster.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "By default, this is the name of the HDInsight cluster, but may be different if you entered a specific name when creating the cluster.",
+          "pos": [
+            136,
+            269
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11133,
+        11175
+      ],
+      "content": "From the tool bar, select the upload icon."
+    },
+    {
+      "pos": [
+        11181,
+        11264
+      ],
+      "content": "<ph id=\"ph18\">![</ph>Tool bar with upload icon highlighted<ph id=\"ph19\">](./media/hdinsight-upload-data/toolbar.png)</ph>"
+    },
+    {
+      "pos": [
+        11269,
+        11532
+      ],
+      "content": "Specify a file to upload, and then click <bpt id=\"p43\">**</bpt>Open<ept id=\"p43\">**</ept>. When prompted, select <bpt id=\"p44\">__</bpt>Upload<ept id=\"p44\">__</ept><ph id=\"ph20\"/> to upload the file to the root of the storage container. If you want to upload the file to a specific path, enter the path in the <bpt id=\"p45\">__</bpt>Destination<ept id=\"p45\">__</ept><ph id=\"ph21\"/> field and then select <bpt id=\"p46\">__</bpt>Upload<ept id=\"p46\">__</ept>.",
+      "nodes": [
+        {
+          "content": "Specify a file to upload, and then click <bpt id=\"p43\">**</bpt>Open<ept id=\"p43\">**</ept>.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "When prompted, select <bpt id=\"p44\">__</bpt>Upload<ept id=\"p44\">__</ept><ph id=\"ph20\"/> to upload the file to the root of the storage container.",
+          "pos": [
+            91,
+            235
+          ]
+        },
+        {
+          "content": "If you want to upload the file to a specific path, enter the path in the <bpt id=\"p45\">__</bpt>Destination<ept id=\"p45\">__</ept><ph id=\"ph21\"/> field and then select <bpt id=\"p46\">__</bpt>Upload<ept id=\"p46\">__</ept>.",
+          "pos": [
+            236,
+            453
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11538,
+        11605
+      ],
+      "content": "<ph id=\"ph22\">![</ph>File upload dialog<ph id=\"ph23\">](./media/hdinsight-upload-data/fileupload.png)</ph>"
+    },
+    {
+      "pos": [
+        11615,
+        11703
+      ],
+      "content": "Once the file has finished uploading, you can use it from jobs on the HDInsight cluster."
+    },
+    {
+      "pos": [
+        11707,
+        11746
+      ],
+      "content": "Mount Azure Blob Storage as Local Drive"
+    },
+    {
+      "pos": [
+        11748,
+        11898
+      ],
+      "content": "See <bpt id=\"p47\">[</bpt>Mount Azure Blob Storage as Local Drive<ept id=\"p47\">](http://blogs.msdn.com/b/bigdatasupport/archive/2014/01/09/mount-azure-blob-storage-as-local-drive.aspx)</ept>."
+    },
+    {
+      "pos": [
+        11902,
+        11910
+      ],
+      "content": "Services"
+    },
+    {
+      "pos": [
+        11915,
+        11933
+      ],
+      "content": "Azure Data Factory"
+    },
+    {
+      "pos": [
+        11935,
+        12132
+      ],
+      "content": "The Azure Data Factory service is a fully managed service for composing data storage, data processing, and data movement services into streamlined, scalable, and reliable data production pipelines."
+    },
+    {
+      "pos": [
+        12134,
+        12289
+      ],
+      "content": "Azure Data Factory can be used to move data into Azure Blob storage, or to create data pipelines that directly use HDInsight features such as Hive and Pig."
+    },
+    {
+      "pos": [
+        12291,
+        12422
+      ],
+      "content": "For more information, see the <bpt id=\"p48\">[</bpt>Azure Data Factory documentation<ept id=\"p48\">](https://azure.microsoft.com/documentation/services/data-factory/)</ept>."
+    },
+    {
+      "pos": [
+        12424,
+        12427
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        12445,
+        12457
+      ],
+      "content": "Apache Sqoop"
+    },
+    {
+      "pos": [
+        12459,
+        12808
+      ],
+      "content": "Sqoop is a tool designed to transfer data between Hadoop and relational databases. You can use it to import data from a relational database management system (RDBMS), such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS.",
+      "nodes": [
+        {
+          "content": "Sqoop is a tool designed to transfer data between Hadoop and relational databases.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "You can use it to import data from a relational database management system (RDBMS), such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS.",
+          "pos": [
+            83,
+            349
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12810,
+        12884
+      ],
+      "content": "For more information, see <bpt id=\"p49\">[</bpt>Use Sqoop with HDInsight<ept id=\"p49\">][hdinsight-use-sqoop]</ept>."
+    },
+    {
+      "pos": [
+        12888,
+        12904
+      ],
+      "content": "Development SDKs"
+    },
+    {
+      "pos": [
+        12906,
+        13006
+      ],
+      "content": "Azure Blob storage can also be accessed using an Azure SDK from the following programming languages:"
+    },
+    {
+      "pos": [
+        13010,
+        13014
+      ],
+      "content": ".NET"
+    },
+    {
+      "pos": [
+        13017,
+        13021
+      ],
+      "content": "Java"
+    },
+    {
+      "pos": [
+        13024,
+        13031
+      ],
+      "content": "Node.js"
+    },
+    {
+      "pos": [
+        13034,
+        13037
+      ],
+      "content": "PHP"
+    },
+    {
+      "pos": [
+        13040,
+        13046
+      ],
+      "content": "Python"
+    },
+    {
+      "pos": [
+        13049,
+        13053
+      ],
+      "content": "Ruby"
+    },
+    {
+      "pos": [
+        13055,
+        13167
+      ],
+      "content": "For more information on installing the Azure SDKs, see <bpt id=\"p50\">[</bpt>Azure downloads<ept id=\"p50\">](https://azure.microsoft.com/downloads/)</ept>"
+    },
+    {
+      "pos": [
+        13173,
+        13183
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        13184,
+        13301
+      ],
+      "content": "Now that you understand how to get data into HDInsight, read the following articles to learn how to perform analysis:"
+    },
+    {
+      "pos": [
+        13305,
+        13362
+      ],
+      "content": "<bpt id=\"p51\">[</bpt>Get started with Azure HDInsight<ept id=\"p51\">][hdinsight-get-started]</ept>"
+    },
+    {
+      "pos": [
+        13365,
+        13425
+      ],
+      "content": "<bpt id=\"p52\">[</bpt>Submit Hadoop jobs programmatically<ept id=\"p52\">][hdinsight-submit-jobs]</ept>"
+    },
+    {
+      "pos": [
+        13428,
+        13473
+      ],
+      "content": "<bpt id=\"p53\">[</bpt>Use Hive with HDInsight<ept id=\"p53\">][hdinsight-use-hive]</ept>"
+    },
+    {
+      "pos": [
+        13476,
+        13519
+      ],
+      "content": "<bpt id=\"p54\">[</bpt>Use Pig with HDInsight<ept id=\"p54\">][hdinsight-use-pig]</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Upload data for Hadoop jobs in HDInsight | Microsoft Azure\"\n    description=\"Learn how to upload and access data for Hadoop jobs in HDInsight using the Azure CLI, Azure Storage Explorer, Azure PowerShell, the Hadoop command line, or Sqoop.\"\n    services=\"hdinsight,storage\"\n    documentationCenter=\"\"\n    tags=\"azure-portal\"\n    authors=\"mumian\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"12/29/2015\"\n    ms.author=\"jgao\"/>\n\n\n\n#Upload data for Hadoop jobs in HDInsight\n\nAzure HDInsight provides a full-featured Hadoop distributed file system (HDFS) over Azure Blob storage. It is designed as an HDFS extension to provide a seamless experience to customers. It enables the full set of components in the Hadoop ecosystem to operate directly on the data it manages. Azure Blob storage and HDFS are distinct file systems that are optimized for storage of data and computations on that data. For information about the benefits of using Azure Blob storage, see [Use Azure Blob storage with HDInsight][hdinsight-storage].\n\n**Prerequisites**\n\nNote the following requirement before you begin:\n\n* An Azure HDInsight cluster. For instructions, see [Get started with Azure HDInsight][hdinsight-get-started] or [Provision HDInsight clusters][hdinsight-provision].\n\n##Why blob storage?\n\nAzure HDInsight clusters are typically deployed to run MapReduce jobs, and the clusters are dropped after these jobs complete. Keeping the data in the HDFS clusters after computations are complete would be an expensive way to store this data. Azure Blob storage is a highly available, highly scalable, high capacity, low cost, and shareable storage option for data that is to be processed using HDInsight. Storing data in a blob enables the HDInsight clusters that are used for computation to be safely released without losing data.\n\n###Directories\n\nAzure Blob storage containers store data as key/value pairs, and there is no directory hierarchy. However the \"/\" character can be used within the key name to make it appear as if a file is stored within a directory structure. HDInsight sees these as if they are actual directories.\n\nFor example, a blob's key may be *input/log1.txt*. No actual \"input\" directory exists, but due to the presence of the \"/\" character in the key name, it has the appearance of a file path.\n\nBecause of this, if you use Azure Explorer tools you may notice some 0 byte files. These files serve two purposes:\n\n- If there are empty folders, they mark of the existence of the folder. Azure Blob storage is clever enough to know that if a blob called foo/bar exists, there is a folder called **foo**. But the only way to signify an empty folder called **foo** is by having this special 0 byte file in place.\n\n- They hold special metadata that is needed by the Hadoop file system, notably the permissions and owners for the folders.\n\n##Command-line utilities\n\nMicrosoft provides the following utilities to work with Azure Blob storage:\n\n| Tool | Linux | OS X | Windows |\n| ---- |:-----:|:----:|:-------:|\n| [Azure Command-Line Interface][azurecli] | ✔ | ✔ | ✔ |\n| [Azure PowerShell][azure-powershell] | | | ✔ |\n| [AzCopy][azure-azcopy] | | | ✔ |\n| [Hadoop command](#commandline) | ✔ | ✔ | ✔ |\n\n> [AZURE.NOTE] While the Azure CLI, Azure PowerShell, and AzCopy can all be used from outside Azure, the Hadoop command is only available on the HDInsight cluster and only allows loading data from the local file system into Azure Blob storage.\n\n###<a id=\"xplatcli\"></a>Azure CLI\n\nThe Azure CLI is a cross-platform tool that allows you to manage Azure services. Use the following steps to upload data to Azure Blob storage:\n\n1. [Install and configure the Azure CLI for Mac, Linux and Windows](../xplat-cli-install.md).\n\n2. Open a command prompt, bash, or other shell, and use the following to authenticate to your Azure subscription.\n\n        azure login\n\n    When prompted, enter the user name and password for your subscription.\n\n3. Enter the following command to list the storage accounts for your subscription:\n\n        azure storage account list\n\n4. Select the storage account that contains the blob you want to work with, then use the following command to retrieve the key for this account:\n\n        azure storage account keys list <storage-account-name>\n\n    This should return **Primary** and **Secondary** keys. Copy the **Primary** key value because it will be used in the next steps.\n\n5. Use the following command to retrieve a list of blob containers within the storage account:\n\n        azure storage container list -a <storage-account-name> -k <primary-key>\n\n6. Use the following commands to upload and download files to the blob:\n\n    * To upload a file:\n\n            azure storage blob upload -a <storage-account-name> -k <primary-key> <source-file> <container-name> <blob-name>\n\n    * To download a file:\n\n            azure storage blob download -a <storage-account-name> -k <primary-key> <container-name> <blob-name> <destination-file>\n\n> [AZURE.NOTE] If you will always be working with the same storage account, you can set the following environment variables instead of specifying the account and key for every command:\n>\n> * **AZURE\\_STORAGE\\_ACCOUNT**: The storage account name\n>\n> * **AZURE\\_STORAGE\\_ACCESS\\_KEY**: The storage account key\n\n###<a id=\"powershell\"></a>Azure PowerShell\n\nAzure PowerShell is a scripting environment that you can use to control and automate the deployment and management of your workloads in Azure. For information about configuring your workstation to run Azure PowerShell, see [Install and configure Azure PowerShell](../powershell-install-configure.md).\n\n**To upload a local file to Azure Blob storage**\n\n1. Open the Azure PowerShell console as instructed in [Install and configure Azure PowerShell](../powershell-install-configure.md).\n2. Set the values of the first five variables in the following script:\n\n        $subscriptionName = \"<AzureSubscriptionName>\"\n        $resourceGroupName = \"<AzureResourceGroupName>\"\n        $storageAccountName = \"<StorageAccountName>\"\n        $containerName = \"<ContainerName>\"\n\n        $fileName =\"<LocalFileName>\"\n        $blobName = \"<BlobName>\"\n\n        Switch-AzureMode -Name AzureResourceManager\n\n        Add-AzureAccount\n        Select-AzureSubscription $subscriptionName\n\n        # Get the storage account key\n        $storageAccountKey = Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName | %{ $_.Key1 }\n        # Create the storage context object\n        $destContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageaccountkey\n\n        # Copy the file from local workstation to the Blob container\n        Set-AzureStorageBlobContent -File $fileName -Container $containerName -Blob $blobName -context $destContext\n\n3. Paste the script into the Azure PowerShell console to run it to copy the file.\n\nFor example PowerShell scripts created to work with HDInsight, see [HDInsight tools](https://github.com/blackmist/hdinsight-tools).\n\n###<a id=\"azcopy\"></a>AzCopy\n\nAzCopy is a command-line tool that is designed to simplify the task of transferring data into and out of an Azure Storage account. You can use it as a standalone tool or incorporate this tool in an existing application. [Download AzCopy][azure-azcopy-download].\n\nThe AzCopy syntax is:\n\n    AzCopy <Source> <Destination> [filePattern [filePattern...]] [Options]\n\nFor more information, see [AzCopy - Uploading/Downloading files for Azure Blobs][azure-azcopy].\n\n\n###<a id=\"commandline\"></a>Hadoop command line\n\nThe Hadoop command line is only useful for storing data into blob storage when the data is already present on the cluster head node.\n\nIn order to use the Hadoop command, you must first connect to the headnode using one of the following methods:\n\n* **Windows-based HDInsight**: [Connect using Remote Desktop](hdinsight-administer-use-management-portal.md#connect-to-hdinsight-clusters-by-using-rdp)\n\n* **Linux-based HDInsight**: Connect using SSH ([the SSH command](hdinsight-hadoop-linux-use-ssh-unix.md#connect-to-a-linux-based-hdinsight-cluster) or [PuTTY](hdinsight-hadoop-linux-use-ssh-windows.md#connect-to-a-linux-based-hdinsight-cluster))\n\nOnce connected, you can use the following syntax to upload a file to storage.\n\n    hadoop -copyFromLocal <localFilePath> <storageFilePath>\n\nFor example, `hadoop fs -copyFromLocal data.txt /example/data/data.txt`\n\nBecause the default file system for HDInsight is in Azure Blob storage, /example/data.txt is actually in Azure Blob storage. You can also refer to the file as:\n\n    wasb:///example/data/data.txt\n\nor\n\n    wasbs://<ContainerName>@<StorageAccountName>.blob.core.windows.net/example/data/davinci.txt\n\nFor a list of other Hadoop commands that work with files, see [http://hadoop.apache.org/docs/r2.7.0/hadoop-project-dist/hadoop-common/FileSystemShell.html](http://hadoop.apache.org/docs/r2.7.0/hadoop-project-dist/hadoop-common/FileSystemShell.html)\n\n##Graphical clients\n\nThere are also several applications that provide a graphical interface for working with Azure Storage. The following is a list of a few of these applications:\n\n| Client | Linux | OS X | Windows |\n| ------ |:-----:|:----:|:-------:|\n| [Azure Storage Explorer](http://storageexplorer.com/) | ✔ | ✔ | ✔ |\n| [Cloud Storage Studio 2](http://www.cerebrata.com/Products/CloudStorageStudio/) | | | ✔ |\n| [CloudXplorer](http://clumsyleaf.com/products/cloudxplorer) | | | ✔ |\n| [Azure Explorer](http://www.cloudberrylab.com/free-microsoft-azure-explorer.aspx) | | | ✔ |\n| [Zudio](https://zudio.co/) | ✔ | ✔ | ✔ |\n| [Cyberduck](https://cyberduck.io/) |  | ✔ | ✔ |\n\n###<a id=\"storageexplorer\"></a>Azure Storage Explorer\n\n*Azure Storage Explorer* is a useful tool for inspecting and altering the data in blobs. It is a free, open source tool that can be downloaded from [http://storageexplorer.com/](http://storageexplorer.com/). The source code is available from this link as well.\n\nBefore using the tool, you must know your Azure storage account name and account key. For instructions about getting this information, see the \"How to: View, copy and regenerate storage access keys\" section of [Create, manage, or delete a storage account][azure-create-storage-account].  \n\n1. Run Azure Storage Explorer. If this is the first time you have ran the Storage Explorer, you will be prompted for the ___Storage account name__ and __Storage account key__. If you have ran it before, use the __Add__ button to add a new storage account name and key.\n\n    Enter the name and key for the storage account used by your HDinsight cluster and then select __SAVE & OPEN__.\n\n    ![HDI.AzureStorageExplorer][image-azure-storage-explorer]\n\n5. In the list of containers to the left of the interface, click the name of the container that is associated with your HDInsight cluster. By default, this is the name of the HDInsight cluster, but may be different if you entered a specific name when creating the cluster.\n\n6. From the tool bar, select the upload icon.\n\n    ![Tool bar with upload icon highlighted](./media/hdinsight-upload-data/toolbar.png)\n\n7. Specify a file to upload, and then click **Open**. When prompted, select __Upload__ to upload the file to the root of the storage container. If you want to upload the file to a specific path, enter the path in the __Destination__ field and then select __Upload__.\n\n    ![File upload dialog](./media/hdinsight-upload-data/fileupload.png)\n    \n    Once the file has finished uploading, you can use it from jobs on the HDInsight cluster.\n\n##Mount Azure Blob Storage as Local Drive\n\nSee [Mount Azure Blob Storage as Local Drive](http://blogs.msdn.com/b/bigdatasupport/archive/2014/01/09/mount-azure-blob-storage-as-local-drive.aspx).\n\n##Services\n\n###Azure Data Factory\n\nThe Azure Data Factory service is a fully managed service for composing data storage, data processing, and data movement services into streamlined, scalable, and reliable data production pipelines.\n\nAzure Data Factory can be used to move data into Azure Blob storage, or to create data pipelines that directly use HDInsight features such as Hive and Pig.\n\nFor more information, see the [Azure Data Factory documentation](https://azure.microsoft.com/documentation/services/data-factory/).\n\n###<a id=\"sqoop\"></a>Apache Sqoop\n\nSqoop is a tool designed to transfer data between Hadoop and relational databases. You can use it to import data from a relational database management system (RDBMS), such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS.\n\nFor more information, see [Use Sqoop with HDInsight][hdinsight-use-sqoop].\n\n##Development SDKs\n\nAzure Blob storage can also be accessed using an Azure SDK from the following programming languages:\n\n* .NET\n* Java\n* Node.js\n* PHP\n* Python\n* Ruby\n\nFor more information on installing the Azure SDKs, see [Azure downloads](https://azure.microsoft.com/downloads/)\n\n\n## Next steps\nNow that you understand how to get data into HDInsight, read the following articles to learn how to perform analysis:\n\n* [Get started with Azure HDInsight][hdinsight-get-started]\n* [Submit Hadoop jobs programmatically][hdinsight-submit-jobs]\n* [Use Hive with HDInsight][hdinsight-use-hive]\n* [Use Pig with HDInsight][hdinsight-use-pig]\n\n\n\n\n[azure-management-portal]: https://porta.azure.com\n[azure-powershell]: http://msdn.microsoft.com/library/windowsazure/jj152841.aspx\n\n[azure-storage-client-library]: /develop/net/how-to-guides/blob-storage/\n[azure-create-storage-account]: ../storage-create-storage-account.md\n[azure-azcopy-download]: ../storage-use-azcopy.md\n[azure-azcopy]: ../storage-use-azcopy.md\n\n[hdinsight-use-sqoop]: hdinsight-use-sqoop.md\n\n[hdinsight-storage]: ../hdinsight-hadoop-use-blob-storage.md\n[hdinsight-submit-jobs]: hdinsight-submit-hadoop-jobs-programmatically.md\n[hdinsight-get-started]: hdinsight-hadoop-linux-tutorial-get-started.md\n\n[hdinsight-use-hive]: hdinsight-use-hive.md\n[hdinsight-use-pig]: hdinsight-use-pig.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n\n[sqldatabase-create-configure]: ../sql-database-create-configure.md\n\n[apache-sqoop-guide]: http://sqoop.apache.org/docs/1.4.4/SqoopUserGuide.html\n\n[Powershell-install-configure]: ../powershell-install-configure.md\n\n[azurecli]: ../xplat-cli-install.md\n\n\n[image-azure-storage-explorer]: ./media/hdinsight-upload-data/HDI.AzureStorageExplorer.png\n[image-ase-addaccount]: ./media/hdinsight-upload-data/HDI.ASEAddAccount.png\n[image-ase-blob]: ./media/hdinsight-upload-data/HDI.ASEBlob.png\n"
+}

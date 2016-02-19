@@ -1,0 +1,814 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        140
+      ],
+      "content": "Create Hadoop, HBase, or Storm clusters on Linux in HDInsight using cURL and the Azure REST API | Microsoft Azure"
+    },
+    {
+      "pos": [
+        159,
+        384
+      ],
+      "content": "Learn how to create Linux-based HDInsight clusters using cURL, Azure Resource Manager templates, and the Azure REST API. You can specify the cluster type (Hadoop, HBase, or Storm,) or use scripts to install custom components.",
+      "nodes": [
+        {
+          "content": "Learn how to create Linux-based HDInsight clusters using cURL, Azure Resource Manager templates, and the Azure REST API.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "You can specify the cluster type (Hadoop, HBase, or Storm,) or use scripts to install custom components.",
+          "pos": [
+            121,
+            225
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        713,
+        787
+      ],
+      "content": "Create Linux-based clusters in HDInsight using cURL and the Azure REST API"
+    },
+    {
+      "pos": [
+        876,
+        1292
+      ],
+      "content": "The Azure REST API allows you to perform management operations on services hosted in the Azure platform, including the creation of new resources such as Linux-based HDInsight clusters. In this document, you will learn how to create Azure Resource Manager templates to configure an HDInsight cluster and associated storage, then use cURL to deploy the template to the Azure REST API to create a new HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "The Azure REST API allows you to perform management operations on services hosted in the Azure platform, including the creation of new resources such as Linux-based HDInsight clusters.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "In this document, you will learn how to create Azure Resource Manager templates to configure an HDInsight cluster and associated storage, then use cURL to deploy the template to the Azure REST API to create a new HDInsight cluster.",
+          "pos": [
+            185,
+            416
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1296,
+        1594
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.IMPORTANT]</ph><ph id=\"ph4\"/> The steps in this document use the default number of worker nodes (4) for an HDInsight cluster. If you plan on more than 32 worker nodes, either at cluster creation or by scaling the cluster after creation, then you must select a head node size with at least 8 cores and 14GB ram.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.IMPORTANT]</ph><ph id=\"ph4\"/> The steps in this document use the default number of worker nodes (4) for an HDInsight cluster.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "If you plan on more than 32 worker nodes, either at cluster creation or by scaling the cluster after creation, then you must select a head node size with at least 8 cores and 14GB ram.",
+          "pos": [
+            146,
+            330
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1599,
+        1736
+      ],
+      "content": "For more information on node sizes and associated costs, see <bpt id=\"p1\">[</bpt>HDInsight pricing<ept id=\"p1\">](https://azure.microsoft.com/pricing/details/hdinsight/)</ept>."
+    },
+    {
+      "pos": [
+        1741,
+        1754
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1758,
+        1916
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>An Azure subscription<ept id=\"p2\">**</ept>. See <bpt id=\"p3\">[</bpt>Get Azure free trial<ept id=\"p3\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">**</bpt>An Azure subscription<ept id=\"p2\">**</ept>.",
+          "pos": [
+            0,
+            64
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p3\">[</bpt>Get Azure free trial<ept id=\"p3\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+          "pos": [
+            65,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1920,
+        2076
+      ],
+      "content": "<bpt id=\"p4\">__</bpt>Azure CLI<ept id=\"p4\">__</ept>. The Azure CLI is used to create a service principal, which is then used to generate authentication tokens for requests to the Azure REST API.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p4\">__</bpt>Azure CLI<ept id=\"p4\">__</ept>.",
+          "pos": [
+            0,
+            52
+          ]
+        },
+        {
+          "content": "The Azure CLI is used to create a service principal, which is then used to generate authentication tokens for requests to the Azure REST API.",
+          "pos": [
+            53,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2082,
+        2174
+      ],
+      "content": "For information on installing the CLI, see <bpt id=\"p5\">[</bpt>Install the Azure CLI<ept id=\"p5\">](../xplat-cli-install.md)</ept>."
+    },
+    {
+      "pos": [
+        2178,
+        2325
+      ],
+      "content": "<bpt id=\"p6\">__</bpt>cURL<ept id=\"p6\">__</ept>. This utility is available through your package management system, or can be downloaded from <bpt id=\"p7\">[</bpt>http://curl.haxx.se/<ept id=\"p7\">](http://curl.haxx.se/)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p6\">__</bpt>cURL<ept id=\"p6\">__</ept>.",
+          "pos": [
+            0,
+            47
+          ]
+        },
+        {
+          "content": "This utility is available through your package management system, or can be downloaded from <bpt id=\"p7\">[</bpt>http://curl.haxx.se/<ept id=\"p7\">](http://curl.haxx.se/)</ept>.",
+          "pos": [
+            48,
+            223
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2333,
+        2679
+      ],
+      "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> If you are using PowerShell to run the commands in this document, you must first remove the <ph id=\"ph7\">`curl`</ph><ph id=\"ph8\"/> alias that it creates by default. This alias uses Invoke-WebRequest, a PowerShell cmdlet, instead of cURL when you use the <ph id=\"ph9\">`curl`</ph><ph id=\"ph10\"/> command from a PowerShell prompt, and will return errors for many of the commands used in this document.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> If you are using PowerShell to run the commands in this document, you must first remove the <ph id=\"ph7\">`curl`</ph><ph id=\"ph8\"/> alias that it creates by default.",
+          "pos": [
+            0,
+            209
+          ]
+        },
+        {
+          "content": "This alias uses Invoke-WebRequest, a PowerShell cmdlet, instead of cURL when you use the <ph id=\"ph9\">`curl`</ph><ph id=\"ph10\"/> command from a PowerShell prompt, and will return errors for many of the commands used in this document.",
+          "pos": [
+            210,
+            443
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2693,
+        2760
+      ],
+      "content": "To remove this alias, use the following from the PowerShell prompt:"
+    },
+    {
+      "pos": [
+        2773,
+        2799
+      ],
+      "content": "```Remove-item alias:curl`"
+    },
+    {
+      "pos": [
+        2812,
+        2930
+      ],
+      "content": "Once the alias has been removed, you should be able to use the version of cURL that you have installed on your system."
+    },
+    {
+      "pos": [
+        2934,
+        2951
+      ],
+      "content": "Create a template"
+    },
+    {
+      "pos": [
+        2953,
+        3303
+      ],
+      "content": "Azure Resource Management templates are JSON documents that describe a <bpt id=\"p8\">__</bpt>resource group<ept id=\"p8\">__</ept><ph id=\"ph11\"/> and all resources in it (such as HDInsight.) This template based approach allows you to define all the resources that you need for HDInsight in one template, and to manage changes to the group as a whole through <bpt id=\"p9\">__</bpt>deployments<ept id=\"p9\">__</ept><ph id=\"ph12\"/> that apply changes to the group."
+    },
+    {
+      "pos": [
+        3305,
+        3619
+      ],
+      "content": "Templates are usually provided in two parts; the template itself, and a parameters file that you populate with values specific to your configuration. For exmaple, the cluster name, admin name and password. When directly using the REST API, you must combine these into one file. The format of this JSON document is:",
+      "nodes": [
+        {
+          "content": "Templates are usually provided in two parts; the template itself, and a parameters file that you populate with values specific to your configuration.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "For exmaple, the cluster name, admin name and password.",
+          "pos": [
+            150,
+            205
+          ]
+        },
+        {
+          "content": "When directly using the REST API, you must combine these into one file.",
+          "pos": [
+            206,
+            277
+          ]
+        },
+        {
+          "content": "The format of this JSON document is:",
+          "pos": [
+            278,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3903,
+        4258
+      ],
+      "content": "For example, the following is a merger of the template and parameters files from <bpt id=\"p10\">[</bpt>https://github.com/Azure/azure-quickstart-templates/tree/master/hdinsight-linux-ssh-password<ept id=\"p10\">](https://github.com/Azure/azure-quickstart-templates/tree/master/hdinsight-linux-ssh-password)</ept>, which creates a Linux-based cluster using a password to secure the SSH user account."
+    },
+    {
+      "pos": [
+        12955,
+        13160
+      ],
+      "content": "This example will be used in the steps in this document. You must replace the placeholder <bpt id=\"p11\">_</bpt>values<ept id=\"p11\">_</ept><ph id=\"ph13\"/> in the <bpt id=\"p12\">__</bpt>Parameters<ept id=\"p12\">__</ept><ph id=\"ph14\"/> section at the end of the document with the values you wish to use for your cluster.",
+      "nodes": [
+        {
+          "content": "This example will be used in the steps in this document.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "You must replace the placeholder <bpt id=\"p11\">_</bpt>values<ept id=\"p11\">_</ept><ph id=\"ph13\"/> in the <bpt id=\"p12\">__</bpt>Parameters<ept id=\"p12\">__</ept><ph id=\"ph14\"/> section at the end of the document with the values you wish to use for your cluster.",
+          "pos": [
+            57,
+            315
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13164,
+        13196
+      ],
+      "content": "Login to your Azure subscription"
+    },
+    {
+      "pos": [
+        13198,
+        13399
+      ],
+      "content": "Follow the steps documented in <bpt id=\"p13\">[</bpt>Connect to an Azure subscription from the Azure Command-Line Interface (Azure CLI)<ept id=\"p13\">](../xplat-cli-connect.md)</ept><ph id=\"ph15\"/> and connect to your subscription using the <bpt id=\"p14\">__</bpt>login<ept id=\"p14\">__</ept><ph id=\"ph16\"/> method."
+    },
+    {
+      "pos": [
+        13403,
+        13429
+      ],
+      "content": "Create a service principal"
+    },
+    {
+      "pos": [
+        13433,
+        13540
+      ],
+      "content": "<ph id=\"ph17\">[AZURE.IMPORTANT]</ph><ph id=\"ph18\"/> When following the steps in the article linked below, you must make the following change:"
+    },
+    {
+      "pos": [
+        13548,
+        13781
+      ],
+      "content": "When the steps say to use a value of <bpt id=\"p15\">__</bpt>reader<ept id=\"p15\">__</ept>, you must instead use <bpt id=\"p16\">__</bpt>owner<ept id=\"p16\">__</ept>. This will create a service principal that can make changes to services on your subscription, which is required for the creation of an HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "When the steps say to use a value of <bpt id=\"p15\">__</bpt>reader<ept id=\"p15\">__</ept>, you must instead use <bpt id=\"p16\">__</bpt>owner<ept id=\"p16\">__</ept>.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "This will create a service principal that can make changes to services on your subscription, which is required for the creation of an HDInsight cluster.",
+          "pos": [
+            161,
+            313
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13786,
+        13852
+      ],
+      "content": "You must also save the following information used in this process:"
+    },
+    {
+      "pos": [
+        13860,
+        13918
+      ],
+      "content": "Subscription ID - received when using <ph id=\"ph19\">`azure account list`</ph>"
+    },
+    {
+      "pos": [
+        13923,
+        13975
+      ],
+      "content": "Tenant ID - received when using <ph id=\"ph20\">`azure account list`</ph>"
+    },
+    {
+      "pos": [
+        13980,
+        14041
+      ],
+      "content": "Application ID - returned when creating the service principal"
+    },
+    {
+      "pos": [
+        14046,
+        14123
+      ],
+      "content": "Password for the service principal - used when creating the service principal"
+    },
+    {
+      "pos": [
+        14125,
+        14559
+      ],
+      "content": "Follow the steps in the <bpt id=\"p17\">_</bpt>Authenticate service principal with a password - Azure CLI<ept id=\"p17\">_</ept><ph id=\"ph21\"/> section of the <bpt id=\"p18\">[</bpt>Authenticating a service principal with Azure Resource Manager<ept id=\"p18\">](https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal/#authenticate-service-principal-with-password---azure-cli)</ept><ph id=\"ph22\"/> document. This will create a new service principal that can be used to authenticate the cluster creation request.",
+      "nodes": [
+        {
+          "content": "Follow the steps in the <bpt id=\"p17\">_</bpt>Authenticate service principal with a password - Azure CLI<ept id=\"p17\">_</ept><ph id=\"ph21\"/> section of the <bpt id=\"p18\">[</bpt>Authenticating a service principal with Azure Resource Manager<ept id=\"p18\">](https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal/#authenticate-service-principal-with-password---azure-cli)</ept><ph id=\"ph22\"/> document.",
+          "pos": [
+            0,
+            440
+          ]
+        },
+        {
+          "content": "This will create a new service principal that can be used to authenticate the cluster creation request.",
+          "pos": [
+            441,
+            544
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14563,
+        14590
+      ],
+      "content": "Get an authentication token"
+    },
+    {
+      "pos": [
+        14592,
+        14760
+      ],
+      "content": "Use the following to get a new token from Azure. Replace <bpt id=\"p19\">__</bpt>TENANTID<ept id=\"p19\">__</ept>, <bpt id=\"p20\">__</bpt>APPLICATIONID<ept id=\"p20\">__</ept>, and <bpt id=\"p21\">__</bpt>PASSWORD<ept id=\"p21\">__</ept><ph id=\"ph23\"/> with the information save while creating a service principal:",
+      "nodes": [
+        {
+          "content": "Use the following to get a new token from Azure.",
+          "pos": [
+            0,
+            48
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p19\">__</bpt>TENANTID<ept id=\"p19\">__</ept>, <bpt id=\"p20\">__</bpt>APPLICATIONID<ept id=\"p20\">__</ept>, and <bpt id=\"p21\">__</bpt>PASSWORD<ept id=\"p21\">__</ept><ph id=\"ph23\"/> with the information save while creating a service principal:",
+          "pos": [
+            49,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15232,
+        15353
+      ],
+      "content": "If this request is successful, you will receive a 200 series response and the response body will contain a JSON document."
+    },
+    {
+      "pos": [
+        15357,
+        15599
+      ],
+      "content": "<ph id=\"ph24\">[AZURE.IMPORTANT]</ph><ph id=\"ph25\"/> The JSON document returned by this request will contain an element named <bpt id=\"p22\">__</bpt>access_token<ept id=\"p22\">__</ept>; the value of this element is the access token you must use to authentication the requests used in the next sections of this document."
+    },
+    {
+      "pos": [
+        15603,
+        15626
+      ],
+      "content": "Create a resource group"
+    },
+    {
+      "pos": [
+        15628,
+        15776
+      ],
+      "content": "Use the following to create a new resource group. You must create the group first before you can create the resources such as the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Use the following to create a new resource group.",
+          "pos": [
+            0,
+            49
+          ]
+        },
+        {
+          "content": "You must create the group first before you can create the resources such as the HDInsight cluster.",
+          "pos": [
+            50,
+            148
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15781,
+        15879
+      ],
+      "content": "Replace <bpt id=\"p23\">__</bpt>SUBSCRIPTIONID<ept id=\"p23\">__</ept><ph id=\"ph26\"/> with the subscription ID received while creating the service principal."
+    },
+    {
+      "pos": [
+        15882,
+        15958
+      ],
+      "content": "Replace <bpt id=\"p24\">__</bpt>ACCESSTOKEN<ept id=\"p24\">__</ept><ph id=\"ph27\"/> with the access token received in the previous step."
+    },
+    {
+      "pos": [
+        15961,
+        16103
+      ],
+      "content": "Replace <bpt id=\"p25\">__</bpt>DATACENTERLOCATION<ept id=\"p25\">__</ept><ph id=\"ph28\"/> with the data center you wish to create the resource group, and resources, in. For example, 'South Central US'.",
+      "nodes": [
+        {
+          "content": "Replace <bpt id=\"p25\">__</bpt>DATACENTERLOCATION<ept id=\"p25\">__</ept><ph id=\"ph28\"/> with the data center you wish to create the resource group, and resources, in.",
+          "pos": [
+            0,
+            164
+          ]
+        },
+        {
+          "content": "For example, 'South Central US'.",
+          "pos": [
+            165,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16107,
+        16174
+      ],
+      "content": "Replace <bpt id=\"p26\">__</bpt>GROUPNAME<ept id=\"p26\">__</ept><ph id=\"ph29\"/> with the name you wish to use for this group:"
+    },
+    {
+      "pos": [
+        16180,
+        16457
+      ],
+      "leadings": [
+        "",
+        "  ",
+        "  ",
+        "  ",
+        "  ",
+        "  "
+      ],
+      "content": "curl -X \"PUT\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME?api-version=2015-01-01\" \\\n<ph id=\"ph30\"/><ph id=\"ph31\"/>      -H \"Authorization: Bearer ACCESSTOKEN\" \\\n<ph id=\"ph32\"/><ph id=\"ph33\"/>      -H \"Content-Type: application/json\" \\\n<ph id=\"ph34\"/><ph id=\"ph35\"/>      -d $'{\n  <ph id=\"ph36\"/>\"location\": \"DATACENTERLOCATION\"\n  <ph id=\"ph37\"/>}’"
+    },
+    {
+      "pos": [
+        16459,
+        16692
+      ],
+      "content": "If this request is successful, you will receive a 200 series response and the response body will contain a JSON document containing information about the group. The <ph id=\"ph38\">`\"provisioningState\"`</ph><ph id=\"ph39\"/> element will contain a value of <ph id=\"ph40\">`\"Succeeded\"`</ph>.",
+      "nodes": [
+        {
+          "content": "If this request is successful, you will receive a 200 series response and the response body will contain a JSON document containing information about the group.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "The <ph id=\"ph38\">`\"provisioningState\"`</ph><ph id=\"ph39\"/> element will contain a value of <ph id=\"ph40\">`\"Succeeded\"`</ph>.",
+          "pos": [
+            161,
+            286
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16696,
+        16715
+      ],
+      "content": "Create a deployment"
+    },
+    {
+      "pos": [
+        16717,
+        16826
+      ],
+      "content": "Use the following to deploy the cluster configuration (template and parameter values,) to the resource group."
+    },
+    {
+      "pos": [
+        16830,
+        16909
+      ],
+      "content": "Replace <bpt id=\"p27\">__</bpt>SUBSCRIPTIONID<ept id=\"p27\">__</ept><ph id=\"ph41\"/> and <bpt id=\"p28\">__</bpt>ACCESSTOKEN<ept id=\"p28\">__</ept><ph id=\"ph42\"/> with the values used previously."
+    },
+    {
+      "pos": [
+        16913,
+        17000
+      ],
+      "content": "Replace <bpt id=\"p29\">__</bpt>GROUPNAME<ept id=\"p29\">__</ept><ph id=\"ph43\"/> with the resource group name you created in the previous section."
+    },
+    {
+      "pos": [
+        17003,
+        17080
+      ],
+      "content": "Replace <bpt id=\"p30\">__</bpt>DEPLOYMENTNAME<ept id=\"p30\">__</ept><ph id=\"ph44\"/> with the name you wish to use for this deployment."
+    },
+    {
+      "pos": [
+        17086,
+        17416
+      ],
+      "leadings": [
+        "",
+        "  ",
+        "  ",
+        "  "
+      ],
+      "content": "curl -X \"PUT\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME/providers/microsoft.resources/deployments/DEPLOYMENTNAME?api-version=2015-01-01\" \\\n<ph id=\"ph45\"/><ph id=\"ph46\"/>  -H \"Authorization: Bearer ACCESSTOKEN\" \\\n<ph id=\"ph47\"/><ph id=\"ph48\"/>  -H \"Content-Type: application/json\" \\\n<ph id=\"ph49\"/><ph id=\"ph50\"/>  -d \"{set your body string to the template and parameters}\""
+    },
+    {
+      "pos": [
+        17420,
+        17590
+      ],
+      "content": "<ph id=\"ph51\">[AZURE.NOTE]</ph><ph id=\"ph52\"/> If you have saved the JSON document containing the template and parameters to a file, you can use the following instead of `-d \"{ template and parameters}\"':"
+    },
+    {
+      "pos": [
+        17638,
+        17813
+      ],
+      "content": "If this request is successful, you will receive a 200 series response and the response body will contain a JSON document containing information about the deployment operation."
+    },
+    {
+      "pos": [
+        17817,
+        17995
+      ],
+      "content": "<ph id=\"ph54\">[AZURE.IMPORTANT]</ph><ph id=\"ph55\"/> Note that the deployment has been submitted, but has not completed at this time. It can take several minutes, usually around 15, for the deployment to complete.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph54\">[AZURE.IMPORTANT]</ph><ph id=\"ph55\"/> Note that the deployment has been submitted, but has not completed at this time.",
+          "pos": [
+            0,
+            132
+          ]
+        },
+        {
+          "content": "It can take several minutes, usually around 15, for the deployment to complete.",
+          "pos": [
+            133,
+            212
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17999,
+        18031
+      ],
+      "content": "Check the status of a deployment"
+    },
+    {
+      "pos": [
+        18033,
+        18090
+      ],
+      "content": "To check the status of the deployment, use the following:"
+    },
+    {
+      "pos": [
+        18094,
+        18173
+      ],
+      "content": "Replace <bpt id=\"p31\">__</bpt>SUBSCRIPTIONID<ept id=\"p31\">__</ept><ph id=\"ph56\"/> and <bpt id=\"p32\">__</bpt>ACCESSTOKEN<ept id=\"p32\">__</ept><ph id=\"ph57\"/> with the values used previously."
+    },
+    {
+      "pos": [
+        18177,
+        18264
+      ],
+      "content": "Replace <bpt id=\"p33\">__</bpt>GROUPNAME<ept id=\"p33\">__</ept><ph id=\"ph58\"/> with the resource group name you created in the previous section."
+    },
+    {
+      "pos": [
+        18270,
+        18535
+      ],
+      "leadings": [
+        "",
+        "  ",
+        "  "
+      ],
+      "content": "curl -X \"GET\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME/providers/microsoft.resources/deployments/DEPLOYMENTNAME?api-version=2015-01-01\" \\\n<ph id=\"ph59\"/><ph id=\"ph60\"/>  -H \"Authorization: Bearer ACCESSTOKEN\" \\\n<ph id=\"ph61\"/><ph id=\"ph62\"/>  -H \"Content-Type: application/json\""
+    },
+    {
+      "pos": [
+        18537,
+        18861
+      ],
+      "content": "This will return information a JSON document containing information about the deployment operation. The <ph id=\"ph63\">`\"provisioningState\"`</ph><ph id=\"ph64\"/> element will contain the status of the deployment; if this contains a value of <ph id=\"ph65\">`\"Succeeded\"`</ph>, then the deployment has completed successfully. At this point, your cluster should be available for use.",
+      "nodes": [
+        {
+          "content": "This will return information a JSON document containing information about the deployment operation.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "The <ph id=\"ph63\">`\"provisioningState\"`</ph><ph id=\"ph64\"/> element will contain the status of the deployment; if this contains a value of <ph id=\"ph65\">`\"Succeeded\"`</ph>, then the deployment has completed successfully.",
+          "pos": [
+            100,
+            320
+          ]
+        },
+        {
+          "content": "At this point, your cluster should be available for use.",
+          "pos": [
+            321,
+            377
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18865,
+        18875
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        18877,
+        18995
+      ],
+      "content": "Now that you have successfully created an HDInsight cluster, use the following to learn how to work with your cluster."
+    },
+    {
+      "pos": [
+        19001,
+        19016
+      ],
+      "content": "Hadoop clusters"
+    },
+    {
+      "pos": [
+        19020,
+        19068
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Use Hive with HDInsight<ept id=\"p34\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        19071,
+        19117
+      ],
+      "content": "<bpt id=\"p35\">[</bpt>Use Pig with HDInsight<ept id=\"p35\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        19120,
+        19178
+      ],
+      "content": "<bpt id=\"p36\">[</bpt>Use MapReduce with HDInsight<ept id=\"p36\">](hdinsight-use-mapreduce.md)</ept>"
+    },
+    {
+      "pos": [
+        19183,
+        19197
+      ],
+      "content": "HBase clusters"
+    },
+    {
+      "pos": [
+        19201,
+        19285
+      ],
+      "content": "<bpt id=\"p37\">[</bpt>Get started with HBase on HDInsight<ept id=\"p37\">](hdinsight-hbase-tutorial-get-started-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        19288,
+        19381
+      ],
+      "content": "<bpt id=\"p38\">[</bpt>Develop Java applications for HBase on HDInsight<ept id=\"p38\">](hdinsight-hbase-build-java-maven-linux.md)</ept>"
+    },
+    {
+      "pos": [
+        19386,
+        19400
+      ],
+      "content": "Storm clusters"
+    },
+    {
+      "pos": [
+        19404,
+        19494
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Develop Java topologies for Storm on HDInsight<ept id=\"p39\">](hdinsight-storm-develop-java-topology.md)</ept>"
+    },
+    {
+      "pos": [
+        19497,
+        19586
+      ],
+      "content": "<bpt id=\"p40\">[</bpt>Use Python components in Storm on HDInsight<ept id=\"p40\">](hdinsight-storm-develop-python-topology.md)</ept>"
+    },
+    {
+      "pos": [
+        19589,
+        19694
+      ],
+      "content": "<bpt id=\"p41\">[</bpt>Deploy and monitor topologies with Storm on HDInsight<ept id=\"p41\">](hdinsight-storm-deploy-monitor-topology-linux.md)</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Create Hadoop, HBase, or Storm clusters on Linux in HDInsight using cURL and the Azure REST API | Microsoft Azure\"\n    description=\"Learn how to create Linux-based HDInsight clusters using cURL, Azure Resource Manager templates, and the Azure REST API. You can specify the cluster type (Hadoop, HBase, or Storm,) or use scripts to install custom components.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.tgt_pltfrm=\"na\"\n    ms.workload=\"big-data\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"larryfr\"/>\n\n#Create Linux-based clusters in HDInsight using cURL and the Azure REST API\n\n[AZURE.INCLUDE [selector](../../includes/hdinsight-create-linux-cluster-selector.md)]\n\nThe Azure REST API allows you to perform management operations on services hosted in the Azure platform, including the creation of new resources such as Linux-based HDInsight clusters. In this document, you will learn how to create Azure Resource Manager templates to configure an HDInsight cluster and associated storage, then use cURL to deploy the template to the Azure REST API to create a new HDInsight cluster.\n\n> [AZURE.IMPORTANT] The steps in this document use the default number of worker nodes (4) for an HDInsight cluster. If you plan on more than 32 worker nodes, either at cluster creation or by scaling the cluster after creation, then you must select a head node size with at least 8 cores and 14GB ram.\n>\n> For more information on node sizes and associated costs, see [HDInsight pricing](https://azure.microsoft.com/pricing/details/hdinsight/).\n\n###Prerequisites\n\n- **An Azure subscription**. See [Get Azure free trial](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/).\n\n- __Azure CLI__. The Azure CLI is used to create a service principal, which is then used to generate authentication tokens for requests to the Azure REST API.\n\n    For information on installing the CLI, see [Install the Azure CLI](../xplat-cli-install.md).\n\n- __cURL__. This utility is available through your package management system, or can be downloaded from [http://curl.haxx.se/](http://curl.haxx.se/).\n\n    > [AZURE.NOTE] If you are using PowerShell to run the commands in this document, you must first remove the `curl` alias that it creates by default. This alias uses Invoke-WebRequest, a PowerShell cmdlet, instead of cURL when you use the `curl` command from a PowerShell prompt, and will return errors for many of the commands used in this document.\n    > \n    > To remove this alias, use the following from the PowerShell prompt:\n    >\n    > ```Remove-item alias:curl`\n    >\n    > Once the alias has been removed, you should be able to use the version of cURL that you have installed on your system.\n\n##Create a template\n\nAzure Resource Management templates are JSON documents that describe a __resource group__ and all resources in it (such as HDInsight.) This template based approach allows you to define all the resources that you need for HDInsight in one template, and to manage changes to the group as a whole through __deployments__ that apply changes to the group.\n\nTemplates are usually provided in two parts; the template itself, and a parameters file that you populate with values specific to your configuration. For exmaple, the cluster name, admin name and password. When directly using the REST API, you must combine these into one file. The format of this JSON document is:\n\n    {\n        \"properties\": {\n            \"template\": {\n                contents of template file\n            },\n            \"mode\": \"deploymentmode\",\n            \"Parameters\": {\n                contents of the parameters element from parameters file\n            }\n        }\n    }\n\nFor example, the following is a merger of the template and parameters files from [https://github.com/Azure/azure-quickstart-templates/tree/master/hdinsight-linux-ssh-password](https://github.com/Azure/azure-quickstart-templates/tree/master/hdinsight-linux-ssh-password), which creates a Linux-based cluster using a password to secure the SSH user account.\n\n    {\n        \"properties\": {\n            \"template\": {\n                \"$schema\": \"https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#\",\n                \"contentVersion\": \"1.0.0.0\",\n                \"parameters\": {\n                    \"location\": {\n                        \"type\": \"string\",\n                        \"allowedValues\": [\"Central US\",\n                        \"East Asia\",\n                        \"East US\",\n                        \"Japan East\",\n                        \"Japan West\",\n                        \"North Europe\",\n                        \"South Central US\",\n                        \"Southeast Asia\",\n                        \"West Europe\",\n                        \"West US\"],\n                        \"metadata\": {\n                            \"description\": \"The location where all azure resources will be deployed.\"\n                        }\n                    },\n                    \"clusterType\": {\n                        \"type\": \"string\",\n                        \"allowedValues\": [\"hadoop\",\n                        \"hbase\",\n                        \"storm\",\n                        \"spark\"],\n                        \"metadata\": {\n                            \"description\": \"The type of the HDInsight cluster to create.\"\n                        }\n                    },\n                    \"clusterName\": {\n                        \"type\": \"string\",\n                        \"metadata\": {\n                            \"description\": \"The name of the HDInsight cluster to create.\"\n                        }\n                    },\n                    \"clusterLoginUserName\": {\n                        \"type\": \"string\",\n                        \"metadata\": {\n                            \"description\": \"These credentials can be used to submit jobs to the cluster and to log into cluster dashboards.\"\n                        }\n                    },\n                    \"clusterLoginPassword\": {\n                        \"type\": \"securestring\",\n                        \"metadata\": {\n                            \"description\": \"The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter.\"\n                        }\n                    },\n                    \"sshUserName\": {\n                        \"type\": \"string\",\n                        \"metadata\": {\n                            \"description\": \"These credentials can be used to remotely access the cluster.\"\n                        }\n                    },\n                    \"sshPassword\": {\n                        \"type\": \"securestring\",\n                        \"metadata\": {\n                            \"description\": \"The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter.\"\n                        }\n                    },\n                    \"clusterStorageAccountName\": {\n                        \"type\": \"string\",\n                        \"metadata\": {\n                            \"description\": \"The name of the storage account to be created and be used as the cluster's storage.\"\n                        }\n                    },\n                    \"clusterWorkerNodeCount\": {\n                        \"type\": \"int\",\n                        \"defaultValue\": 4,\n                        \"metadata\": {\n                            \"description\": \"The number of nodes in the HDInsight cluster.\"\n                        }\n                    }\n                },\n                \"variables\": {\n                    \"defaultApiVersion\": \"2015-05-01-preview\",\n                    \"clusterApiVersion\": \"2015-03-01-preview\"\n                },\n                \"resources\": [{\n                    \"name\": \"[parameters('clusterStorageAccountName')]\",\n                    \"type\": \"Microsoft.Storage/storageAccounts\",\n                    \"location\": \"[parameters('location')]\",\n                    \"apiVersion\": \"[variables('defaultApiVersion')]\",\n                    \"dependsOn\": [],\n                    \"tags\": {\n                        \n                    },\n                    \"properties\": {\n                        \"accountType\": \"Standard_LRS\"\n                    }\n                },\n                {\n                    \"name\": \"[parameters('clusterName')]\",\n                    \"type\": \"Microsoft.HDInsight/clusters\",\n                    \"location\": \"[parameters('location')]\",\n                    \"apiVersion\": \"[variables('clusterApiVersion')]\",\n                    \"dependsOn\": [\"[concat('Microsoft.Storage/storageAccounts/',parameters('clusterStorageAccountName'))]\"],\n                    \"tags\": {\n                        \n                    },\n                    \"properties\": {\n                        \"clusterVersion\": \"3.2\",\n                        \"osType\": \"Linux\",\n                        \"clusterDefinition\": {\n                            \"kind\": \"[parameters('clusterType')]\",\n                            \"configurations\": {\n                                \"gateway\": {\n                                    \"restAuthCredential.isEnabled\": true,\n                                    \"restAuthCredential.username\": \"[parameters('clusterLoginUserName')]\",\n                                    \"restAuthCredential.password\": \"[parameters('clusterLoginPassword')]\"\n                                }\n                            }\n                        },\n                        \"storageProfile\": {\n                            \"storageaccounts\": [{\n                                \"name\": \"[concat(parameters('clusterStorageAccountName'),'.blob.core.windows.net')]\",\n                                \"isDefault\": true,\n                                \"container\": \"[parameters('clusterName')]\",\n                                \"key\": \"[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('clusterStorageAccountName')), variables('defaultApiVersion')).key1]\"\n                            }]\n                        },\n                        \"computeProfile\": {\n                            \"roles\": [{\n                                \"name\": \"headnode\",\n                                \"targetInstanceCount\": \"2\",\n                                \"hardwareProfile\": {\n                                    \"vmSize\": \"Standard_D3\"\n                                },\n                                \"osProfile\": {\n                                    \"linuxOperatingSystemProfile\": {\n                                        \"username\": \"[parameters('sshUserName')]\",\n                                        \"password\": \"[parameters('sshPassword')]\"\n                                    }\n                                }\n                            },\n                            {\n                                \"name\": \"workernode\",\n                                \"targetInstanceCount\": \"[parameters('clusterWorkerNodeCount')]\",\n                                \"hardwareProfile\": {\n                                    \"vmSize\": \"Standard_D3\"\n                                },\n                                \"osProfile\": {\n                                    \"linuxOperatingSystemProfile\": {\n                                        \"username\": \"[parameters('sshUserName')]\",\n                                        \"password\": \"[parameters('sshPassword')]\"\n                                    }\n                                }\n                            }]\n                        }\n                    }\n                }],\n                \"outputs\": {\n                    \"cluster\": {\n                        \"type\": \"object\",\n                        \"value\": \"[reference(resourceId('Microsoft.HDInsight/clusters',parameters('clusterName')))]\"\n                    }\n                }\n            },\n            \"mode\": \"incremental\",\n            \"Parameters\": {\n                \"location\": {\n                    \"value\": \"North Europe\"\n                },\n                \"clusterName\": {\n                    \"value\": \"newclustername\"\n                },\n                \"clusterType\": {\n                    \"value\": \"hadoop\"\n                },\n                \"clusterStorageAccountName\": {\n                    \"value\": \"newstoragename\"\n                },\n                \"clusterLoginUserName\": {\n                    \"value\": \"admin\"\n                },\n                \"clusterLoginPassword\": {\n                    \"value\": \"changeme\"\n                },\n                \"sshUserName\": {\n                    \"value\": \"sshuser\"\n                },\n                \"sshPassword\": {\n                    \"value\": \"changeme\"\n                }\n            }\n        }\n    }\n\nThis example will be used in the steps in this document. You must replace the placeholder _values_ in the __Parameters__ section at the end of the document with the values you wish to use for your cluster.\n\n##Login to your Azure subscription\n\nFollow the steps documented in [Connect to an Azure subscription from the Azure Command-Line Interface (Azure CLI)](../xplat-cli-connect.md) and connect to your subscription using the __login__ method.\n\n##Create a service principal\n\n> [AZURE.IMPORTANT] When following the steps in the article linked below, you must make the following change:\n> \n> * When the steps say to use a value of __reader__, you must instead use __owner__. This will create a service principal that can make changes to services on your subscription, which is required for the creation of an HDInsight cluster.\n>\n> You must also save the following information used in this process:\n> \n> * Subscription ID - received when using `azure account list`\n> * Tenant ID - received when using `azure account list`\n> * Application ID - returned when creating the service principal\n> * Password for the service principal - used when creating the service principal\n\nFollow the steps in the _Authenticate service principal with a password - Azure CLI_ section of the [Authenticating a service principal with Azure Resource Manager](https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal/#authenticate-service-principal-with-password---azure-cli) document. This will create a new service principal that can be used to authenticate the cluster creation request.\n\n##Get an authentication token\n\nUse the following to get a new token from Azure. Replace __TENANTID__, __APPLICATIONID__, and __PASSWORD__ with the information save while creating a service principal:\n\n    curl -X \"POST\" \"https://login.microsoftonline.com/TENANTID/oauth2/token\" \\\n    -H \"Cookie: flight-uxoptin=true; stsservicecookie=ests; x-ms-gateway-slice=productionb; stsservicecookie=ests\" \\\n    -H \"Content-Type: application/x-www-form-urlencoded\" \\\n    --data-urlencode \"client_id=APPLICATIONID\" \\\n    --data-urlencode \"grant_type=client_credentials\" \\\n    --data-urlencode \"client_secret=PASSWORD\" \\\n    --data-urlencode \"resource=https://management.azure.com/\"\n\nIf this request is successful, you will receive a 200 series response and the response body will contain a JSON document.\n\n> [AZURE.IMPORTANT] The JSON document returned by this request will contain an element named __access_token__; the value of this element is the access token you must use to authentication the requests used in the next sections of this document.\n\n##Create a resource group\n\nUse the following to create a new resource group. You must create the group first before you can create the resources such as the HDInsight cluster. \n\n* Replace __SUBSCRIPTIONID__ with the subscription ID received while creating the service principal.\n* Replace __ACCESSTOKEN__ with the access token received in the previous step.\n* Replace __DATACENTERLOCATION__ with the data center you wish to create the resource group, and resources, in. For example, 'South Central US'. \n* Replace __GROUPNAME__ with the name you wish to use for this group:\n\n    curl -X \"PUT\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME?api-version=2015-01-01\" \\\n        -H \"Authorization: Bearer ACCESSTOKEN\" \\\n        -H \"Content-Type: application/json\" \\\n        -d $'{\n    \"location\": \"DATACENTERLOCATION\"\n    }’\n\nIf this request is successful, you will receive a 200 series response and the response body will contain a JSON document containing information about the group. The `\"provisioningState\"` element will contain a value of `\"Succeeded\"`.\n\n##Create a deployment\n\nUse the following to deploy the cluster configuration (template and parameter values,) to the resource group.\n\n* Replace __SUBSCRIPTIONID__ and __ACCESSTOKEN__ with the values used previously. \n* Replace __GROUPNAME__ with the resource group name you created in the previous section.\n* Replace __DEPLOYMENTNAME__ with the name you wish to use for this deployment.\n\n    curl -X \"PUT\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME/providers/microsoft.resources/deployments/DEPLOYMENTNAME?api-version=2015-01-01\" \\\n    -H \"Authorization: Bearer ACCESSTOKEN\" \\\n    -H \"Content-Type: application/json\" \\\n    -d \"{set your body string to the template and parameters}\"\n\n> [AZURE.NOTE] If you have saved the JSON document containing the template and parameters to a file, you can use the following instead of `-d \"{ template and parameters}\"':\n>\n> ```--data-binary \"@/path/to/file.json\"```\n\nIf this request is successful, you will receive a 200 series response and the response body will contain a JSON document containing information about the deployment operation.\n\n> [AZURE.IMPORTANT] Note that the deployment has been submitted, but has not completed at this time. It can take several minutes, usually around 15, for the deployment to complete.\n\n##Check the status of a deployment\n\nTo check the status of the deployment, use the following:\n\n* Replace __SUBSCRIPTIONID__ and __ACCESSTOKEN__ with the values used previously. \n* Replace __GROUPNAME__ with the resource group name you created in the previous section.\n\n    curl -X \"GET\" \"https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourcegroups/GROUPNAME/providers/microsoft.resources/deployments/DEPLOYMENTNAME?api-version=2015-01-01\" \\\n    -H \"Authorization: Bearer ACCESSTOKEN\" \\\n    -H \"Content-Type: application/json\"\n\nThis will return information a JSON document containing information about the deployment operation. The `\"provisioningState\"` element will contain the status of the deployment; if this contains a value of `\"Succeeded\"`, then the deployment has completed successfully. At this point, your cluster should be available for use.\n\n##Next steps\n\nNow that you have successfully created an HDInsight cluster, use the following to learn how to work with your cluster. \n\n###Hadoop clusters\n\n* [Use Hive with HDInsight](hdinsight-use-hive.md)\n* [Use Pig with HDInsight](hdinsight-use-pig.md)\n* [Use MapReduce with HDInsight](hdinsight-use-mapreduce.md)\n\n###HBase clusters\n\n* [Get started with HBase on HDInsight](hdinsight-hbase-tutorial-get-started-linux.md)\n* [Develop Java applications for HBase on HDInsight](hdinsight-hbase-build-java-maven-linux.md)\n\n###Storm clusters\n\n* [Develop Java topologies for Storm on HDInsight](hdinsight-storm-develop-java-topology.md)\n* [Use Python components in Storm on HDInsight](hdinsight-storm-develop-python-topology.md)\n* [Deploy and monitor topologies with Storm on HDInsight](hdinsight-storm-deploy-monitor-topology-linux.md)\n"
+}

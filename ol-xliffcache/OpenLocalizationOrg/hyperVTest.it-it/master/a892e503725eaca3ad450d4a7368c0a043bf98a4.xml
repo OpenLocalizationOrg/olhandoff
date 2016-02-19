@@ -1,0 +1,1158 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        96
+      ],
+      "content": "Configure HBase replication between two datacenters | Microsoft Azure"
+    },
+    {
+      "pos": [
+        115,
+        229
+      ],
+      "content": "Learn how to configure HBase replication across two data centers, and about the use cases for cluster replication."
+    },
+    {
+      "pos": [
+        539,
+        583
+      ],
+      "content": "Configure HBase geo-replication in HDInsight"
+    },
+    {
+      "pos": [
+        587,
+        603
+      ],
+      "content": "[AZURE.SELECTOR]"
+    },
+    {
+      "pos": [
+        606,
+        689
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Configure VPN connectivity<ept id=\"p1\">](../hdinsight-hbase-geo-replication-configure-VNETs.md)</ept>"
+    },
+    {
+      "pos": [
+        692,
+        757
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Configure DNS<ept id=\"p2\">](hdinsight-hbase-geo-replication-configure-DNS.md)</ept>"
+    },
+    {
+      "pos": [
+        760,
+        825
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Configure HBase replication<ept id=\"p3\">](hdinsight-hbase-geo-replication.md)</ept>"
+    },
+    {
+      "pos": [
+        829,
+        942
+      ],
+      "content": "Learn how to configure HBase replication across two data centers. Some use cases for cluster replication include:",
+      "nodes": [
+        {
+          "content": "Learn how to configure HBase replication across two data centers.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "Some use cases for cluster replication include:",
+          "pos": [
+            66,
+            113
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        946,
+        974
+      ],
+      "content": "Backup and disaster recovery"
+    },
+    {
+      "pos": [
+        977,
+        993
+      ],
+      "content": "Data aggregation"
+    },
+    {
+      "pos": [
+        996,
+        1024
+      ],
+      "content": "Geographic data distribution"
+    },
+    {
+      "pos": [
+        1027,
+        1085
+      ],
+      "content": "Online data ingestion combined with offline data analytics"
+    },
+    {
+      "pos": [
+        1087,
+        1820
+      ],
+      "content": "Cluster replication uses a source-push methodology. An HBase cluster can be a source, a destination, or can fulfill both roles at once. Replication is asynchronous, and the goal of replication is eventual consistency. When the source receives an edit to a column family with replication enabled, that edit is propagated to all destination clusters. When data is replicated from one cluster to another, the source cluster and all clusters which have already consumed the data are tracked to prevent replication loops. For more information, \n<ph id=\"ph2\"/>In this tutorial, you will configure a source-destination replication.  For other cluster topologies, see <bpt id=\"p4\">[</bpt>Apache HBase Reference Guide<ept id=\"p4\">](http://hbase.apache.org/book.html#_cluster_replication)</ept>.",
+      "nodes": [
+        {
+          "content": "Cluster replication uses a source-push methodology.",
+          "pos": [
+            0,
+            51
+          ]
+        },
+        {
+          "content": "An HBase cluster can be a source, a destination, or can fulfill both roles at once.",
+          "pos": [
+            52,
+            135
+          ]
+        },
+        {
+          "content": "Replication is asynchronous, and the goal of replication is eventual consistency.",
+          "pos": [
+            136,
+            217
+          ]
+        },
+        {
+          "content": "When the source receives an edit to a column family with replication enabled, that edit is propagated to all destination clusters.",
+          "pos": [
+            218,
+            348
+          ]
+        },
+        {
+          "content": "When data is replicated from one cluster to another, the source cluster and all clusters which have already consumed the data are tracked to prevent replication loops.",
+          "pos": [
+            349,
+            516
+          ]
+        },
+        {
+          "content": "For more information, \n<ph id=\"ph2\"/>In this tutorial, you will configure a source-destination replication.",
+          "pos": [
+            517,
+            624
+          ]
+        },
+        {
+          "content": "For other cluster topologies, see <bpt id=\"p4\">[</bpt>Apache HBase Reference Guide<ept id=\"p4\">](http://hbase.apache.org/book.html#_cluster_replication)</ept>.",
+          "pos": [
+            626,
+            785
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1822,
+        1859
+      ],
+      "content": "This is the third part of the series:"
+    },
+    {
+      "pos": [
+        1863,
+        1956
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>Configure a VPN connectivity between two virtual networks<ept id=\"p5\">][hdinsight-hbase-replication-vnet]</ept>"
+    },
+    {
+      "pos": [
+        1959,
+        2032
+      ],
+      "content": "<bpt id=\"p6\">[</bpt>Configure DNS for the virtual networks<ept id=\"p6\">][hdinsight-hbase-replication-dns]</ept>"
+    },
+    {
+      "pos": [
+        2035,
+        2082
+      ],
+      "content": "Configure HBase geo replication (this tutorial)"
+    },
+    {
+      "pos": [
+        2084,
+        2363
+      ],
+      "content": "The following diagram illustrates the two virtual networks and the network connectivity you created in <bpt id=\"p7\">[</bpt>Configure a VPN connectivity between two virtual networks<ept id=\"p7\">][hdinsight-hbase-geo-replication-vnet]</ept><ph id=\"ph3\"/> and <bpt id=\"p8\">[</bpt>Configure DNS for the virtual networks<ept id=\"p8\">][hdinsight-hbase-replication-dns]</ept>:"
+    },
+    {
+      "pos": [
+        2366,
+        2438
+      ],
+      "content": "<ph id=\"ph4\">![</ph>HDInsight HBase replication virtual network diagram<ph id=\"ph5\">][img-vnet-diagram]</ph>"
+    },
+    {
+      "pos": [
+        2469,
+        2482
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        2484,
+        2544
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        2548,
+        2706
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>An Azure subscription<ept id=\"p9\">**</ept>. See <bpt id=\"p10\">[</bpt>Get Azure free trial<ept id=\"p10\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p9\">**</bpt>An Azure subscription<ept id=\"p9\">**</ept>.",
+          "pos": [
+            0,
+            64
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p10\">[</bpt>Get Azure free trial<ept id=\"p10\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+          "pos": [
+            65,
+            236
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2710,
+        3042
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>A workstation with Azure PowerShell<ept id=\"p11\">**</ept>. See <bpt id=\"p12\">[</bpt>Install and use Azure PowerShell<ept id=\"p12\">](https://azure.microsoft.com/documentation/videos/install-and-use-azure-powershell/)</ept>. To execute PowerShell scripts, you must run Azure PowerShell as administrator and set the execution policy to <bpt id=\"p13\">*</bpt>RemoteSigned<ept id=\"p13\">*</ept>. See Using the Set-ExecutionPolicy cmdlet.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p11\">**</bpt>A workstation with Azure PowerShell<ept id=\"p11\">**</ept>.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p12\">[</bpt>Install and use Azure PowerShell<ept id=\"p12\">](https://azure.microsoft.com/documentation/videos/install-and-use-azure-powershell/)</ept>.",
+          "pos": [
+            81,
+            244
+          ]
+        },
+        {
+          "content": "To execute PowerShell scripts, you must run Azure PowerShell as administrator and set the execution policy to <bpt id=\"p13\">*</bpt>RemoteSigned<ept id=\"p13\">*</ept>.",
+          "pos": [
+            245,
+            410
+          ]
+        },
+        {
+          "content": "See Using the Set-ExecutionPolicy cmdlet.",
+          "pos": [
+            411,
+            452
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3046,
+        3333
+      ],
+      "content": "<bpt id=\"p14\">**</bpt>Two Azure virtual network with VPN connectivity and with DNS configured<ept id=\"p14\">**</ept>.  For instructions, see <bpt id=\"p15\">[</bpt>Configure a VPN connection between two Azure virtual networks<ept id=\"p15\">][hdinsight-hbase-replication-vnet]</ept>, and <bpt id=\"p16\">[</bpt>Configure DNS between two Azure virtual networks<ept id=\"p16\">][hdinsight-hbase-replication-dns]</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p14\">**</bpt>Two Azure virtual network with VPN connectivity and with DNS configured<ept id=\"p14\">**</ept>.",
+          "pos": [
+            0,
+            116
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p15\">[</bpt>Configure a VPN connection between two Azure virtual networks<ept id=\"p15\">][hdinsight-hbase-replication-vnet]</ept>, and <bpt id=\"p16\">[</bpt>Configure DNS between two Azure virtual networks<ept id=\"p16\">][hdinsight-hbase-replication-dns]</ept>.",
+          "pos": [
+            118,
+            407
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3653,
+        3690
+      ],
+      "content": "Provision HBase clusters in HDInsight"
+    },
+    {
+      "pos": [
+        3692,
+        4134
+      ],
+      "content": "In <bpt id=\"p17\">[</bpt>Configure a VPN connection between two Azure virtual networks<ept id=\"p17\">][hdinsight-hbase-replication-vnet]</ept>, you have created a virtual network in an Europe data center, and a virtual network in a U.S. data center. The two virtual network are connected via VPN. In this session, you will provision an HBase cluster in each of the virtual networks. Later in this tutorial, you will make one of the HBase clusters to replicate the other HBase cluster.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p17\">[</bpt>Configure a VPN connection between two Azure virtual networks<ept id=\"p17\">][hdinsight-hbase-replication-vnet]</ept>, you have created a virtual network in an Europe data center, and a virtual network in a U.S.",
+          "pos": [
+            0,
+            234
+          ]
+        },
+        {
+          "content": "data center.",
+          "pos": [
+            235,
+            247
+          ]
+        },
+        {
+          "content": "The two virtual network are connected via VPN.",
+          "pos": [
+            248,
+            294
+          ]
+        },
+        {
+          "content": "In this session, you will provision an HBase cluster in each of the virtual networks.",
+          "pos": [
+            295,
+            380
+          ]
+        },
+        {
+          "content": "Later in this tutorial, you will make one of the HBase clusters to replicate the other HBase cluster.",
+          "pos": [
+            381,
+            482
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4136,
+        4618
+      ],
+      "content": "The Azure Classic Portal doesn't support provisioning HDInsight clusters with custom configuration options. For example, set <bpt id=\"p18\">*</bpt>hbase.replication<ept id=\"p18\">*</ept><ph id=\"ph6\"/> to <bpt id=\"p19\">*</bpt>true<ept id=\"p19\">*</ept>. If you set the value in the configuration file after a cluster is provisioned, you will lose the setting after the cluster is being reimaged. For more information see <bpt id=\"p20\">[</bpt>Provision Hadoop clusters in HDInsight<ept id=\"p20\">][hdinsight-provision]</ept>. One of the options to provision HDInsight cluster with custom options is using Azure PowerShell.",
+      "nodes": [
+        {
+          "content": "The Azure Classic Portal doesn't support provisioning HDInsight clusters with custom configuration options.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "For example, set <bpt id=\"p18\">*</bpt>hbase.replication<ept id=\"p18\">*</ept><ph id=\"ph6\"/> to <bpt id=\"p19\">*</bpt>true<ept id=\"p19\">*</ept>.",
+          "pos": [
+            108,
+            249
+          ]
+        },
+        {
+          "content": "If you set the value in the configuration file after a cluster is provisioned, you will lose the setting after the cluster is being reimaged.",
+          "pos": [
+            250,
+            391
+          ]
+        },
+        {
+          "content": "For more information see <bpt id=\"p20\">[</bpt>Provision Hadoop clusters in HDInsight<ept id=\"p20\">][hdinsight-provision]</ept>.",
+          "pos": [
+            392,
+            519
+          ]
+        },
+        {
+          "content": "One of the options to provision HDInsight cluster with custom options is using Azure PowerShell.",
+          "pos": [
+            520,
+            616
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4621,
+        4673
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>To provision an HBase Cluster in Contoso-VNet-EU<ept id=\"p21\">**</ept>"
+    },
+    {
+      "pos": [
+        4679,
+        4730
+      ],
+      "content": "From your workstation, open Windows PowerShell ISE."
+    },
+    {
+      "pos": [
+        4734,
+        4808
+      ],
+      "content": "Set the variables at the beginning of the script, and then run the script."
+    },
+    {
+      "pos": [
+        8133,
+        8185
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>To provision an HBase Cluster in Contoso-VNet-US<ept id=\"p22\">**</ept>"
+    },
+    {
+      "pos": [
+        8190,
+        8236
+      ],
+      "content": "Use the same script with the following values:"
+    },
+    {
+      "pos": [
+        8480,
+        8590
+      ],
+      "content": "Because you have already connected to your Azure account, you don't need to run the following comlets anymore:"
+    },
+    {
+      "pos": [
+        8681,
+        8716
+      ],
+      "content": "Configure DNS conditional forwarder"
+    },
+    {
+      "pos": [
+        8718,
+        8964
+      ],
+      "content": "In <bpt id=\"p23\">[</bpt>Configure DNS for the virtual networks<ept id=\"p23\">][hdinsight-hbase-replication-dns]</ept>, you have configured DNS servers for the two networks. The HBase clusters have different domain suffixes. So you need to configure additional DNS conditional forwarders.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p23\">[</bpt>Configure DNS for the virtual networks<ept id=\"p23\">][hdinsight-hbase-replication-dns]</ept>, you have configured DNS servers for the two networks.",
+          "pos": [
+            0,
+            171
+          ]
+        },
+        {
+          "content": "The HBase clusters have different domain suffixes.",
+          "pos": [
+            172,
+            222
+          ]
+        },
+        {
+          "content": "So you need to configure additional DNS conditional forwarders.",
+          "pos": [
+            223,
+            286
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8966,
+        9065
+      ],
+      "content": "To configure conditional forwarder, you need to know the domain suffixes of the two HBase clusters."
+    },
+    {
+      "pos": [
+        9068,
+        9125
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>To find the domain suffixes of the two HBase clusters<ept id=\"p24\">**</ept>"
+    },
+    {
+      "pos": [
+        9130,
+        9322
+      ],
+      "content": "RDP into <bpt id=\"p25\">**</bpt>Contoso-HBase-EU<ept id=\"p25\">**</ept>.  For instructions, see <bpt id=\"p26\">[</bpt>Manage Hadoop clusters in HDInsight by using the Azure Classic Portal<ept id=\"p26\">][hdinsight-manage-portal]</ept>. It is actually headnode0 of the cluster.",
+      "nodes": [
+        {
+          "content": "RDP into <bpt id=\"p25\">**</bpt>Contoso-HBase-EU<ept id=\"p25\">**</ept>.",
+          "pos": [
+            0,
+            70
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p26\">[</bpt>Manage Hadoop clusters in HDInsight by using the Azure Classic Portal<ept id=\"p26\">][hdinsight-manage-portal]</ept>.",
+          "pos": [
+            72,
+            231
+          ]
+        },
+        {
+          "content": "It is actually headnode0 of the cluster.",
+          "pos": [
+            232,
+            272
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9326,
+        9381
+      ],
+      "content": "Open a Windows PowerShell console, or a command prompt."
+    },
+    {
+      "pos": [
+        9385,
+        9453
+      ],
+      "content": "Run <bpt id=\"p27\">**</bpt>ipconfig<ept id=\"p27\">**</ept>, and write down <bpt id=\"p28\">**</bpt>Connection-specific DNS suffix<ept id=\"p28\">**</ept>."
+    },
+    {
+      "pos": [
+        9457,
+        9548
+      ],
+      "content": "Please don't close the RDP session.  You will need it later to test domain name resolution.",
+      "nodes": [
+        {
+          "content": "Please don't close the RDP session.",
+          "pos": [
+            0,
+            35
+          ]
+        },
+        {
+          "content": "You will need it later to test domain name resolution.",
+          "pos": [
+            37,
+            91
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9552,
+        9649
+      ],
+      "content": "Repeat the same steps to find out the <bpt id=\"p29\">**</bpt>Connection-specific DNS suffix<ept id=\"p29\">**</ept><ph id=\"ph7\"/> of <bpt id=\"p30\">**</bpt>Contoso-HBase-US<ept id=\"p30\">**</ept>."
+    },
+    {
+      "pos": [
+        9652,
+        9683
+      ],
+      "content": "<bpt id=\"p31\">**</bpt>To configure DNS forwarders<ept id=\"p31\">**</ept>"
+    },
+    {
+      "pos": [
+        9690,
+        9718
+      ],
+      "content": "RDP into <bpt id=\"p32\">**</bpt>Contoso-DNS-EU<ept id=\"p32\">**</ept>."
+    },
+    {
+      "pos": [
+        9724,
+        9764
+      ],
+      "content": "Click the Windows key on the lower left."
+    },
+    {
+      "pos": [
+        9769,
+        9800
+      ],
+      "content": "Click <bpt id=\"p33\">**</bpt>Administrative Tools<ept id=\"p33\">**</ept>."
+    },
+    {
+      "pos": [
+        9805,
+        9819
+      ],
+      "content": "Click <bpt id=\"p34\">**</bpt>DNS<ept id=\"p34\">**</ept>."
+    },
+    {
+      "pos": [
+        9824,
+        9877
+      ],
+      "content": "In the left pane, expand <bpt id=\"p35\">**</bpt>DSN<ept id=\"p35\">**</ept>, <bpt id=\"p36\">**</bpt>Contoso-DNS-EU<ept id=\"p36\">**</ept>."
+    },
+    {
+      "pos": [
+        9882,
+        9967
+      ],
+      "content": "Right-click <bpt id=\"p37\">**</bpt>Conditional Forwarders<ept id=\"p37\">**</ept>, and then click <bpt id=\"p38\">**</bpt>New Conditional Forwarder<ept id=\"p38\">**</ept>."
+    },
+    {
+      "pos": [
+        9973,
+        10005
+      ],
+      "content": "Enter the following information:"
+    },
+    {
+      "pos": [
+        10012,
+        10129
+      ],
+      "content": "<bpt id=\"p39\">**</bpt>DNS Domain<ept id=\"p39\">**</ept>: enter the DNS suffix of the Contoso-HBase-US. For example: Contoso-HBase-US.f5.internal.cloudapp.net.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p39\">**</bpt>DNS Domain<ept id=\"p39\">**</ept>: enter the DNS suffix of the Contoso-HBase-US.",
+          "pos": [
+            0,
+            101
+          ]
+        },
+        {
+          "content": "For example: Contoso-HBase-US.f5.internal.cloudapp.net.",
+          "pos": [
+            102,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10136,
+        10304
+      ],
+      "content": "<bpt id=\"p40\">**</bpt>IP addresses of the master servers<ept id=\"p40\">**</ept>: enter 10.2.0.4, which is the Contoso-DNS-US’s IP address. Please verify the IP. Your DNS server can have a different IP address.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p40\">**</bpt>IP addresses of the master servers<ept id=\"p40\">**</ept>: enter 10.2.0.4, which is the Contoso-DNS-US’s IP address.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "Please verify the IP.",
+          "pos": [
+            138,
+            159
+          ]
+        },
+        {
+          "content": "Your DNS server can have a different IP address.",
+          "pos": [
+            160,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10309,
+        10434
+      ],
+      "content": "Press <bpt id=\"p41\">**</bpt>ENTER<ept id=\"p41\">**</ept>, and then click <bpt id=\"p42\">**</bpt>OK<ept id=\"p42\">**</ept>.  Now you will be able to resolve the Contoso-DNS-US’s IP address from Contoso-DNS-EU.",
+      "nodes": [
+        {
+          "content": "Press <bpt id=\"p41\">**</bpt>ENTER<ept id=\"p41\">**</ept>, and then click <bpt id=\"p42\">**</bpt>OK<ept id=\"p42\">**</ept>.",
+          "pos": [
+            0,
+            119
+          ]
+        },
+        {
+          "content": "Now you will be able to resolve the Contoso-DNS-US’s IP address from Contoso-DNS-EU.",
+          "pos": [
+            121,
+            205
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10439,
+        10574
+      ],
+      "content": "Repeat the steps to add a DNS conditional forwarder to the DNS service on the Contoso-DNS-US virtual machine with the following values:"
+    },
+    {
+      "pos": [
+        10581,
+        10642
+      ],
+      "content": "<bpt id=\"p43\">**</bpt>DNS Domain<ept id=\"p43\">**</ept>: enter the DNS suffix of the Contoso-HBase-EU."
+    },
+    {
+      "pos": [
+        10650,
+        10747
+      ],
+      "content": "<bpt id=\"p44\">**</bpt>IP addresses of the master servers<ept id=\"p44\">**</ept>: enter 10.2.0.4, which is the Contoso-DNS-EU’s IP address."
+    },
+    {
+      "pos": [
+        10749,
+        10783
+      ],
+      "content": "<bpt id=\"p45\">**</bpt>To test domain name resolution<ept id=\"p45\">**</ept>"
+    },
+    {
+      "pos": [
+        10788,
+        10830
+      ],
+      "content": "Switch to the Contoso-HBase-EU RDP window."
+    },
+    {
+      "pos": [
+        10834,
+        10856
+      ],
+      "content": "Open a command prompt."
+    },
+    {
+      "pos": [
+        10860,
+        10881
+      ],
+      "content": "Run the ping command:"
+    },
+    {
+      "pos": [
+        10944,
+        11012
+      ],
+      "content": "The ICM protocol is turned on the worker nodes of the HBase clusters"
+    },
+    {
+      "pos": [
+        11017,
+        11091
+      ],
+      "content": "Don't close the RDP session. You will still need it later in the tutorial.",
+      "nodes": [
+        {
+          "content": "Don't close the RDP session.",
+          "pos": [
+            0,
+            28
+          ]
+        },
+        {
+          "content": "You will still need it later in the tutorial.",
+          "pos": [
+            29,
+            74
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11095,
+        11189
+      ],
+      "content": "Repeat the same steps to ping the headnode0 of the Contoso-HBase-EU from the Contoso-HBase-US."
+    },
+    {
+      "pos": [
+        11192,
+        11265
+      ],
+      "content": "<ph id=\"ph8\">[AZURE.IMPORTANT]</ph><ph id=\"ph9\"/> DNS must work before you can proceed to the next steps."
+    },
+    {
+      "pos": [
+        11270,
+        11309
+      ],
+      "content": "Enable replication between HBase tables"
+    },
+    {
+      "pos": [
+        11311,
+        11481
+      ],
+      "content": "Now, you can create a sample HBase table, enable replication, and then test it with some data. The sample table you will use has two column families: Personal and Office.",
+      "nodes": [
+        {
+          "content": "Now, you can create a sample HBase table, enable replication, and then test it with some data.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "The sample table you will use has two column families: Personal and Office.",
+          "pos": [
+            95,
+            170
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11484,
+        11618
+      ],
+      "content": "In this tutorial, you will make the Europe HBase cluster as the source cluster, and the U.S. HBase cluster as the destination cluster.",
+      "nodes": [
+        {
+          "content": "In this tutorial, you will make the Europe HBase cluster as the source cluster, and the U.S.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "HBase cluster as the destination cluster.",
+          "pos": [
+            93,
+            134
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11620,
+        11925
+      ],
+      "content": "Create HBase tables with the same names and column families on both the source and destination clusters, so that the destination cluster knows where to store data it will receive. For more information on using the HBase shell, see <bpt id=\"p46\">[</bpt>Get started with Apache HBase in HDInsight<ept id=\"p46\">][hdinsight-hbase-get-started]</ept>.",
+      "nodes": [
+        {
+          "content": "Create HBase tables with the same names and column families on both the source and destination clusters, so that the destination cluster knows where to store data it will receive.",
+          "pos": [
+            0,
+            179
+          ]
+        },
+        {
+          "content": "For more information on using the HBase shell, see <bpt id=\"p46\">[</bpt>Get started with Apache HBase in HDInsight<ept id=\"p46\">][hdinsight-hbase-get-started]</ept>.",
+          "pos": [
+            180,
+            345
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11927,
+        11975
+      ],
+      "content": "<bpt id=\"p47\">**</bpt>To create an HBase table on Contoso-HBase-EU<ept id=\"p47\">**</ept>"
+    },
+    {
+      "pos": [
+        11980,
+        12026
+      ],
+      "content": "Switch to the <bpt id=\"p48\">**</bpt>Contoso-HBase-EU<ept id=\"p48\">**</ept><ph id=\"ph10\"/> RDP window."
+    },
+    {
+      "pos": [
+        12030,
+        12078
+      ],
+      "content": "From the desktop, click <bpt id=\"p49\">**</bpt>Hadoop Command Line<ept id=\"p49\">**</ept>."
+    },
+    {
+      "pos": [
+        12082,
+        12128
+      ],
+      "content": "Change the folder to the HBase home directory:"
+    },
+    {
+      "pos": [
+        12161,
+        12182
+      ],
+      "content": "Open the HBase shell:"
+    },
+    {
+      "pos": [
+        12207,
+        12229
+      ],
+      "content": "Create an HBase table:"
+    },
+    {
+      "pos": [
+        12282,
+        12400
+      ],
+      "content": "Don't close either the RDP session nor the Hadoop Command Line window. You will still need them later in the tutorial.",
+      "nodes": [
+        {
+          "content": "Don't close either the RDP session nor the Hadoop Command Line window.",
+          "pos": [
+            0,
+            70
+          ]
+        },
+        {
+          "content": "You will still need them later in the tutorial.",
+          "pos": [
+            71,
+            118
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12406,
+        12454
+      ],
+      "content": "<bpt id=\"p50\">**</bpt>To create an HBase table on Contoso-HBase-US<ept id=\"p50\">**</ept>"
+    },
+    {
+      "pos": [
+        12458,
+        12525
+      ],
+      "content": "Repeat the same steps to create the same table on Contoso-HBase-US."
+    },
+    {
+      "pos": [
+        12528,
+        12577
+      ],
+      "content": "<bpt id=\"p51\">**</bpt>To add Contoso-HBase-US as a replication peer<ept id=\"p51\">**</ept>"
+    },
+    {
+      "pos": [
+        12582,
+        12627
+      ],
+      "content": "Switch to the <bpt id=\"p52\">**</bpt>Contso-HBase_EU<ept id=\"p52\">**</ept><ph id=\"ph11\"/> RDP window."
+    },
+    {
+      "pos": [
+        12631,
+        12730
+      ],
+      "content": "From the HBase shell window, add the destination cluster (Contoso-HBase-US) as a peer, for example:"
+    },
+    {
+      "pos": [
+        12932,
+        13139
+      ],
+      "content": "In the sample, the domain suffix is <bpt id=\"p53\">*</bpt>contoso-hbase-us.d4.internal.cloudapp.net<ept id=\"p53\">*</ept>. You need to update it to match your domain suffix of the US HBase cluster. Make sure there is no spaces between the hostnames.",
+      "nodes": [
+        {
+          "content": "In the sample, the domain suffix is <bpt id=\"p53\">*</bpt>contoso-hbase-us.d4.internal.cloudapp.net<ept id=\"p53\">*</ept>.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "You need to update it to match your domain suffix of the US HBase cluster.",
+          "pos": [
+            121,
+            195
+          ]
+        },
+        {
+          "content": "Make sure there is no spaces between the hostnames.",
+          "pos": [
+            196,
+            247
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13141,
+        13215
+      ],
+      "content": "<bpt id=\"p54\">**</bpt>To configure each column family to be replicated on the source cluster<ept id=\"p54\">**</ept>"
+    },
+    {
+      "pos": [
+        13220,
+        13335
+      ],
+      "content": "From the HBase shell window of the <bpt id=\"p55\">**</bpt>Contso-HBase-EU<ept id=\"p55\">**</ept><ph id=\"ph12\"/> RDP session,  configure each column family to be replicated:"
+    },
+    {
+      "pos": [
+        13535,
+        13577
+      ],
+      "content": "<bpt id=\"p56\">**</bpt>To bulk upload data to the HBase table<ept id=\"p56\">**</ept>"
+    },
+    {
+      "pos": [
+        13579,
+        13672
+      ],
+      "content": "A sample data file has been uploaded to a public Azure Blob container with the following URL:"
+    },
+    {
+      "pos": [
+        13755,
+        13779
+      ],
+      "content": "The content of the file:"
+    },
+    {
+      "pos": [
+        14426,
+        14515
+      ],
+      "content": "You can upload the same data file into your HBase cluster and import the data from there."
+    },
+    {
+      "pos": [
+        14520,
+        14566
+      ],
+      "content": "Switch to the <bpt id=\"p57\">**</bpt>Contoso-HBase-EU<ept id=\"p57\">**</ept><ph id=\"ph13\"/> RDP window."
+    },
+    {
+      "pos": [
+        14570,
+        14618
+      ],
+      "content": "From the desktop, click <bpt id=\"p58\">**</bpt>Hadoop Command Line<ept id=\"p58\">**</ept>."
+    },
+    {
+      "pos": [
+        14622,
+        14668
+      ],
+      "content": "Change the folder to the HBase home directory:"
+    },
+    {
+      "pos": [
+        14702,
+        14718
+      ],
+      "content": "upload the data:"
+    },
+    {
+      "pos": [
+        15076,
+        15120
+      ],
+      "content": "Verify that data replication is taking place"
+    },
+    {
+      "pos": [
+        15122,
+        15252
+      ],
+      "content": "You can verify that replication is taking place by scanning the tables from both clusters with the following HBase shell commands:"
+    },
+    {
+      "pos": [
+        15283,
+        15293
+      ],
+      "content": "Next Steps"
+    },
+    {
+      "pos": [
+        15295,
+        15434
+      ],
+      "content": "In this tutorial, you have learned how to configure HBase replication across two datacenters. To learn more about HDInsight and HBase, see:",
+      "nodes": [
+        {
+          "content": "In this tutorial, you have learned how to configure HBase replication across two datacenters.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "To learn more about HDInsight and HBase, see:",
+          "pos": [
+            94,
+            139
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15438,
+        15511
+      ],
+      "content": "<bpt id=\"p59\">[</bpt>HDInsight service page<ept id=\"p59\">](https://azure.microsoft.com/services/hdinsight/)</ept>"
+    },
+    {
+      "pos": [
+        15514,
+        15602
+      ],
+      "content": "<bpt id=\"p60\">[</bpt>HDInsight documentation<ept id=\"p60\">](https://azure.microsoft.com/documentation/services/hdinsight/)</ept>"
+    },
+    {
+      "pos": [
+        15605,
+        15678
+      ],
+      "content": "<bpt id=\"p61\">[</bpt>Get started with Apache HBase in HDInsight<ept id=\"p61\">][hdinsight-hbase-get-started]</ept>"
+    },
+    {
+      "pos": [
+        15681,
+        15733
+      ],
+      "content": "<bpt id=\"p62\">[</bpt>HDInsight HBase overview<ept id=\"p62\">][hdinsight-hbase-overview]</ept>"
+    },
+    {
+      "pos": [
+        15736,
+        15819
+      ],
+      "content": "<bpt id=\"p63\">[</bpt>Provision HBase clusters on Azure Virtual Network<ept id=\"p63\">][hdinsight-hbase-provision-vnet]</ept>"
+    },
+    {
+      "pos": [
+        15822,
+        15905
+      ],
+      "content": "<bpt id=\"p64\">[</bpt>Analyze real-time Twitter sentiment with HBase<ept id=\"p64\">][hdinsight-hbase-twitter-sentiment]</ept>"
+    },
+    {
+      "pos": [
+        15908,
+        15997
+      ],
+      "content": "<bpt id=\"p65\">[</bpt>Analyzing sensor data with Storm and HBase in HDInsight (Hadoop)<ept id=\"p65\">][hdinsight-sensor-data]</ept>"
+    }
+  ],
+  "content": "<properties \n   pageTitle=\"Configure HBase replication between two datacenters | Microsoft Azure\" \n   description=\"Learn how to configure HBase replication across two data centers, and about the use cases for cluster replication.\" \n   services=\"hdinsight,virtual-network\" \n   documentationCenter=\"\" \n   authors=\"mumian\" \n   manager=\"paulettm\" \n   editor=\"cgronlun\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\" \n   ms.date=\"12/02/2015\"\n   ms.author=\"jgao\"/>\n\n# Configure HBase geo-replication in HDInsight\n\n> [AZURE.SELECTOR]\n- [Configure VPN connectivity](../hdinsight-hbase-geo-replication-configure-VNETs.md)\n- [Configure DNS](hdinsight-hbase-geo-replication-configure-DNS.md)\n- [Configure HBase replication](hdinsight-hbase-geo-replication.md) \n \nLearn how to configure HBase replication across two data centers. Some use cases for cluster replication include:\n\n- Backup and disaster recovery\n- Data aggregation\n- Geographic data distribution\n- Online data ingestion combined with offline data analytics\n\nCluster replication uses a source-push methodology. An HBase cluster can be a source, a destination, or can fulfill both roles at once. Replication is asynchronous, and the goal of replication is eventual consistency. When the source receives an edit to a column family with replication enabled, that edit is propagated to all destination clusters. When data is replicated from one cluster to another, the source cluster and all clusters which have already consumed the data are tracked to prevent replication loops. For more information, \nIn this tutorial, you will configure a source-destination replication.  For other cluster topologies, see [Apache HBase Reference Guide](http://hbase.apache.org/book.html#_cluster_replication).\n\nThis is the third part of the series:\n\n- [Configure a VPN connectivity between two virtual networks][hdinsight-hbase-replication-vnet]\n- [Configure DNS for the virtual networks][hdinsight-hbase-replication-dns]\n- Configure HBase geo replication (this tutorial)\n\nThe following diagram illustrates the two virtual networks and the network connectivity you created in [Configure a VPN connectivity between two virtual networks][hdinsight-hbase-geo-replication-vnet] and [Configure DNS for the virtual networks][hdinsight-hbase-replication-dns]: \n\n![HDInsight HBase replication virtual network diagram][img-vnet-diagram]\n\n## <a id=\"prerequisites\"></a>Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- **An Azure subscription**. See [Get Azure free trial](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/).\n\n- **A workstation with Azure PowerShell**. See [Install and use Azure PowerShell](https://azure.microsoft.com/documentation/videos/install-and-use-azure-powershell/). To execute PowerShell scripts, you must run Azure PowerShell as administrator and set the execution policy to *RemoteSigned*. See Using the Set-ExecutionPolicy cmdlet.\n\n- **Two Azure virtual network with VPN connectivity and with DNS configured**.  For instructions, see [Configure a VPN connection between two Azure virtual networks][hdinsight-hbase-replication-vnet], and [Configure DNS between two Azure virtual networks][hdinsight-hbase-replication-dns].\n\n\n    Before running PowerShell scripts, make sure you are connected to your Azure subscription using the following cmdlet:\n\n        Add-AzureAccount\n\n    If you have multiple Azure subscriptions, use the following cmdlet to set the current subscription:\n\n        Select-AzureSubscription <AzureSubscriptionName>\n\n\n\n## Provision HBase clusters in HDInsight\n\nIn [Configure a VPN connection between two Azure virtual networks][hdinsight-hbase-replication-vnet], you have created a virtual network in an Europe data center, and a virtual network in a U.S. data center. The two virtual network are connected via VPN. In this session, you will provision an HBase cluster in each of the virtual networks. Later in this tutorial, you will make one of the HBase clusters to replicate the other HBase cluster.\n\nThe Azure Classic Portal doesn't support provisioning HDInsight clusters with custom configuration options. For example, set *hbase.replication* to *true*. If you set the value in the configuration file after a cluster is provisioned, you will lose the setting after the cluster is being reimaged. For more information see [Provision Hadoop clusters in HDInsight][hdinsight-provision]. One of the options to provision HDInsight cluster with custom options is using Azure PowerShell.\n\n\n**To provision an HBase Cluster in Contoso-VNet-EU** \n\n1. From your workstation, open Windows PowerShell ISE.\n2. Set the variables at the beginning of the script, and then run the script.\n\n        # create hbase cluster with replication enabled\n        \n        $azureSubscriptionName = \"[AzureSubscriptionName]\"\n        \n        $hbaseClusterName = \"Contoso-HBase-EU\" # This is the HBase cluster name to be used.\n        $hbaseClusterSize = 1   # You must provision a cluster that contains at least 3 nodes for high availability of the HBase services.\n        $hadoopUserLogin = \"[HadoopUserName]\"\n        $hadoopUserpw = \"[HadoopUserPassword]\"\n        \n        $vNetName = \"Contoso-VNet-EU\"  # This name must match your Europe virtual network name.\n        $subNetName = 'Subnet-1' # This name must match your Europe virtual network subnet name.  The default name is \"Subnet-1\".\n        \n        $storageAccountName = 'ContosoStoreEU'  # The script will create this storage account for you.  The storage account name doesn't support hyphens. \n        $storageAccountName = $storageAccountName.ToLower() #Storage account name must be in lower case.\n        $blobContainerName = $hbaseClusterName.ToLower()  #Use the cluster name as the default container name.\n        \n        #connect to your Azure subscription\n        Add-AzureAccount \n        Select-AzureSubscription $azureSubscriptionName\n        \n        # Create a storage account used by the HBase cluster\n        $location = Get-AzureVNetSite -VNetName $vNetName | %{$_.Location} # use the virtual network location\n        New-AzureStorageAccount -StorageAccountName $storageAccountName -Location $location\n        \n        # Create a blob container used by the HBase cluster\n        $storageAccountKey = Get-AzureStorageKey -StorageAccountName $storageAccountName | %{$_.Primary}\n        $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey\n        New-AzureStorageContainer -Name $blobContainerName -Context $storageContext\n        \n        # Create provision configuration object\n        $hbaseConfigValues = new-object 'Microsoft.WindowsAzure.Management.HDInsight.Cmdlet.DataObjects.AzureHDInsightHBaseConfiguration'\n            \n        $hbaseConfigValues.Configuration = @{ \"hbase.replication\"=\"true\" } #this modifies the hbase-site.xml file\n        \n        # retrieve vnet id based on vnetname\n        $vNetID = Get-AzureVNetSite -VNetName $vNetName | %{$_.id}\n        \n        $config = New-AzureHDInsightClusterConfig `\n                        -ClusterSizeInNodes $hbaseClusterSize `\n                        -ClusterType HBase `\n                        -VirtualNetworkId $vNetID `\n                        -SubnetName $subNetName `\n                    | Set-AzureHDInsightDefaultStorage `\n                        -StorageAccountName $storageAccountName `\n                        -StorageAccountKey $storageAccountKey `\n                        -StorageContainerName $blobContainerName `\n                    | Add-AzureHDInsightConfigValues `\n                        -HBase $hbaseConfigValues\n        \n        # provision HDInsight cluster\n        $hadoopUserPassword = ConvertTo-SecureString -String $hadoopUserpw -AsPlainText -Force     \n        $credential = New-Object System.Management.Automation.PSCredential($hadoopUserLogin,$hadoopUserPassword)\n        \n        $config | New-AzureHDInsightCluster -Name $hbaseClusterName -Location $location -Credential $credential\n\n\n\n**To provision an HBase Cluster in Contoso-VNet-US** \n\n- Use the same script with the following values:\n\n        $hbaseClusterName = \"Contoso-HBase-US\" # This is the HBase cluster name to be used.\n        $vNetName = \"Contoso-VNet-US\"  # This name must match your Europe virtual network name.\n        $storageAccountName = 'ContosoStoreUS'  \n\n    Because you have already connected to your Azure account, you don't need to run the following comlets anymore:\n\n        Add-AzureAccount \n        Select-AzureSubscription $azureSubscriptionName\n\n\n\n\n## Configure DNS conditional forwarder\n\nIn [Configure DNS for the virtual networks][hdinsight-hbase-replication-dns], you have configured DNS servers for the two networks. The HBase clusters have different domain suffixes. So you need to configure additional DNS conditional forwarders.\n\nTo configure conditional forwarder, you need to know the domain suffixes of the two HBase clusters. \n\n**To find the domain suffixes of the two HBase clusters**\n\n1. RDP into **Contoso-HBase-EU**.  For instructions, see [Manage Hadoop clusters in HDInsight by using the Azure Classic Portal][hdinsight-manage-portal]. It is actually headnode0 of the cluster.\n2. Open a Windows PowerShell console, or a command prompt.\n3. Run **ipconfig**, and write down **Connection-specific DNS suffix**.\n4. Please don't close the RDP session.  You will need it later to test domain name resolution.\n5. Repeat the same steps to find out the **Connection-specific DNS suffix** of **Contoso-HBase-US**.\n\n\n**To configure DNS forwarders**\n \n1.  RDP into **Contoso-DNS-EU**. \n2.  Click the Windows key on the lower left.\n2.  Click **Administrative Tools**.\n3.  Click **DNS**.\n4.  In the left pane, expand **DSN**, **Contoso-DNS-EU**.\n5.  Right-click **Conditional Forwarders**, and then click **New Conditional Forwarder**. \n5.  Enter the following information:\n    - **DNS Domain**: enter the DNS suffix of the Contoso-HBase-US. For example: Contoso-HBase-US.f5.internal.cloudapp.net.\n    - **IP addresses of the master servers**: enter 10.2.0.4, which is the Contoso-DNS-US’s IP address. Please verify the IP. Your DNS server can have a different IP address.\n6.  Press **ENTER**, and then click **OK**.  Now you will be able to resolve the Contoso-DNS-US’s IP address from Contoso-DNS-EU.\n7.  Repeat the steps to add a DNS conditional forwarder to the DNS service on the Contoso-DNS-US virtual machine with the following values:\n    - **DNS Domain**: enter the DNS suffix of the Contoso-HBase-EU. \n    - **IP addresses of the master servers**: enter 10.2.0.4, which is the Contoso-DNS-EU’s IP address.\n\n**To test domain name resolution**\n\n1. Switch to the Contoso-HBase-EU RDP window.\n2. Open a command prompt.\n3. Run the ping command:\n\n        ping headnode0.[DNS suffix of Contoso-HBase-US]\n\n    The ICM protocol is turned on the worker nodes of the HBase clusters\n\n4. Don't close the RDP session. You will still need it later in the tutorial.\n5. Repeat the same steps to ping the headnode0 of the Contoso-HBase-EU from the Contoso-HBase-US.\n\n>[AZURE.IMPORTANT] DNS must work before you can proceed to the next steps.\n\n## Enable replication between HBase tables\n\nNow, you can create a sample HBase table, enable replication, and then test it with some data. The sample table you will use has two column families: Personal and Office. \n\nIn this tutorial, you will make the Europe HBase cluster as the source cluster, and the U.S. HBase cluster as the destination cluster.\n\nCreate HBase tables with the same names and column families on both the source and destination clusters, so that the destination cluster knows where to store data it will receive. For more information on using the HBase shell, see [Get started with Apache HBase in HDInsight][hdinsight-hbase-get-started].\n\n**To create an HBase table on Contoso-HBase-EU**\n\n1. Switch to the **Contoso-HBase-EU** RDP window.\n2. From the desktop, click **Hadoop Command Line**.\n2. Change the folder to the HBase home directory:\n\n        cd %HBASE_HOME%\\bin\n3. Open the HBase shell:\n\n        hbase shell\n4. Create an HBase table:\n\n        create 'Contacts', 'Personal', 'Office'\n5. Don't close either the RDP session nor the Hadoop Command Line window. You will still need them later in the tutorial.\n    \n**To create an HBase table on Contoso-HBase-US**\n\n- Repeat the same steps to create the same table on Contoso-HBase-US.\n\n\n**To add Contoso-HBase-US as a replication peer**\n\n1. Switch to the **Contso-HBase_EU** RDP window.\n2. From the HBase shell window, add the destination cluster (Contoso-HBase-US) as a peer, for example:\n\n        add_peer '1', 'zookeeper0.contoso-hbase-us.d4.internal.cloudapp.net,zookeeper1.contoso-hbase-us.d4.internal.cloudapp.net,zookeeper2.contoso-hbase-us.d4.internal.cloudapp.net:2181:/hbase'\n\n    In the sample, the domain suffix is *contoso-hbase-us.d4.internal.cloudapp.net*. You need to update it to match your domain suffix of the US HBase cluster. Make sure there is no spaces between the hostnames.\n\n**To configure each column family to be replicated on the source cluster**\n\n1. From the HBase shell window of the **Contso-HBase-EU** RDP session,  configure each column family to be replicated:\n\n        disable 'Contacts'\n        alter 'Contacts', {NAME => 'Personal', REPLICATION_SCOPE => '1'}\n        alter 'Contacts', {NAME => 'Office', REPLICATION_SCOPE => '1'}\n        enable 'Contacts'\n\n**To bulk upload data to the HBase table**\n\nA sample data file has been uploaded to a public Azure Blob container with the following URL:\n\n        wasb://hbasecontacts@hditutorialdata.blob.core.windows.net/contacts.txt\n\nThe content of the file:\n\n        8396    Calvin Raji 230-555-0191    5415 San Gabriel Dr.\n        16600   Karen Wu    646-555-0113    9265 La Paz\n        4324    Karl Xie    508-555-0163    4912 La Vuelta\n        16891   Jonathan Jackson    674-555-0110    40 Ellis St.\n        3273    Miguel Miller   397-555-0155    6696 Anchor Drive\n        3588    Osarumwense Agbonile    592-555-0152    1873 Lion Circle\n        10272   Julia Lee   870-555-0110    3148 Rose Street\n        4868    Jose Hayes  599-555-0171    793 Crawford Street\n        4761    Caleb Alexander 670-555-0141    4775 Kentucky Dr.\n        16443   Terry Chander   998-555-0171    771 Northridge Drive\n\nYou can upload the same data file into your HBase cluster and import the data from there.\n\n1. Switch to the **Contoso-HBase-EU** RDP window.\n2. From the desktop, click **Hadoop Command Line**.\n3. Change the folder to the HBase home directory:\n\n        cd %HBASE_HOME%\\bin\n\n4. upload the data:\n\n        hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.columns=\"HBASE_ROW_KEY,Personal:Name, Personal:HomePhone, Office:Address\" -Dimporttsv.bulk.output=/tmpOutput Contacts wasb://hbasecontacts@hditutorialdata.blob.core.windows.net/contacts.txt\n\n        hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /tmpOutput Contacts\n\n\n## Verify that data replication is taking place\n\nYou can verify that replication is taking place by scanning the tables from both clusters with the following HBase shell commands:\n\n        Scan 'Contacts'\n\n\n## Next Steps\n\nIn this tutorial, you have learned how to configure HBase replication across two datacenters. To learn more about HDInsight and HBase, see:\n\n- [HDInsight service page](https://azure.microsoft.com/services/hdinsight/)\n- [HDInsight documentation](https://azure.microsoft.com/documentation/services/hdinsight/)\n- [Get started with Apache HBase in HDInsight][hdinsight-hbase-get-started]\n- [HDInsight HBase overview][hdinsight-hbase-overview]\n- [Provision HBase clusters on Azure Virtual Network][hdinsight-hbase-provision-vnet]\n- [Analyze real-time Twitter sentiment with HBase][hdinsight-hbase-twitter-sentiment]\n- [Analyzing sensor data with Storm and HBase in HDInsight (Hadoop)][hdinsight-sensor-data]\n\n[hdinsight-hbase-geo-replication-vnet]: hdinsight-hbase-geo-replication-configure-VNets.md\n[hdinsight-hbase-geo-replication-dns]: ../hdinsight-hbase-geo-replication-configure-VNet.md\n\n\n[img-vnet-diagram]: ./media/hdinsight-hbase-geo-replication/HDInsight.HBase.Replication.Network.diagram.png\n\n[powershell-install]: powershell-install-configure.md\n[hdinsight-hbase-get-started]: hdinsight-hbase-tutorial-get-started.md\n[hdinsight-manage-portal]: hdinsight-administer-use-management-portal.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-hbase-replication-vnet]: hdinsight-hbase-geo-replication-configure-VNets.md\n[hdinsight-hbase-replication-dns]: hdinsight-hbase-geo-replication-configure-DNS.md\n[hdinsight-hbase-twitter-sentiment]: hdinsight-hbase-analyze-twitter-sentiment.md\n[hdinsight-sensor-data]: hdinsight-storm-sensor-data-analysis.md\n[hdinsight-hbase-overview]: hdinsight-hbase-overview.md\n[hdinsight-hbase-provision-vnet]: hdinsight-hbase-provision-vnet.md\n"
+}
