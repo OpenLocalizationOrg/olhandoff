@@ -1,0 +1,707 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        73
+      ],
+      "content": "Process Data from SQL Azure | Microsoft Azure"
+    },
+    {
+      "pos": [
+        93,
+        120
+      ],
+      "content": "Process Data from SQL Azure"
+    },
+    {
+      "pos": [
+        452,
+        453
+      ],
+      "content": "#"
+    },
+    {
+      "pos": [
+        475,
+        526
+      ],
+      "content": "Process Data in SQL Server Virtual Machine on Azure"
+    },
+    {
+      "pos": [
+        528,
+        728
+      ],
+      "content": "This document covers how to explore data and generate features for data stored in a SQL Server VM on Azure. This can be done by data wrangling using SQL or by using a programming language like Python.",
+      "nodes": [
+        {
+          "content": "This document covers how to explore data and generate features for data stored in a SQL Server VM on Azure.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "This can be done by data wrangling using SQL or by using a programming language like Python.",
+          "pos": [
+            108,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        733,
+        933
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The sample SQL statements in this document assume that data is in SQL Server. If it isn't, please refer to the cloud data science process map to learn how to move your data to SQL Server.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The sample SQL statements in this document assume that data is in SQL Server.",
+          "pos": [
+            0,
+            122
+          ]
+        },
+        {
+          "content": "If it isn't, please refer to the cloud data science process map to learn how to move your data to SQL Server.",
+          "pos": [
+            123,
+            232
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        935,
+        937
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        955,
+        964
+      ],
+      "content": "Using SQL"
+    },
+    {
+      "pos": [
+        966,
+        1039
+      ],
+      "content": "We describe the following data wrangling tasks in this section using SQL:"
+    },
+    {
+      "pos": [
+        1044,
+        1084
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Data Exploration<ept id=\"p1\">](#sql-dataexploration)</ept>"
+    },
+    {
+      "pos": [
+        1088,
+        1125
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Feature Generation<ept id=\"p2\">](#sql-featuregen)</ept>"
+    },
+    {
+      "pos": [
+        1127,
+        1130
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        1164,
+        1180
+      ],
+      "content": "Data Exploration"
+    },
+    {
+      "pos": [
+        1181,
+        1269
+      ],
+      "content": "Here are a few sample SQL scripts that can be used to explore data stores in SQL Server."
+    },
+    {
+      "pos": [
+        1274,
+        1678
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> For a practical example, you can use the <bpt id=\"p3\">[</bpt>NYC Taxi dataset<ept id=\"p3\">](http://www.andresmh.com/nyctaxitrips/)</ept><ph id=\"ph6\"/> and refer to the IPNB titled <bpt id=\"p4\">[</bpt>NYC Data wrangling using IPython Notebook and SQL Server<ept id=\"p4\">](https://github.com/Azure/Azure-MachineLearning-DataScience/blob/master/Misc/DataScienceProcess/iPythonNotebooks/machine-Learning-data-science-process-sql-walkthrough.ipynb)</ept><ph id=\"ph7\"/> for an end-to-end walk-through."
+    },
+    {
+      "pos": [
+        1683,
+        1720
+      ],
+      "content": "Get the count of observations per day"
+    },
+    {
+      "pos": [
+        1855,
+        1893
+      ],
+      "content": "Get the levels in a categorical column"
+    },
+    {
+      "pos": [
+        1956,
+        2022
+      ],
+      "content": "Get the number of levels in combination of two categorical columns"
+    },
+    {
+      "pos": [
+        2123,
+        2165
+      ],
+      "content": "Get the distribution for numerical columns"
+    },
+    {
+      "pos": [
+        2246,
+        2249
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        2278,
+        2296
+      ],
+      "content": "Feature Generation"
+    },
+    {
+      "pos": [
+        2298,
+        2365
+      ],
+      "content": "In this section, we describe ways of generating features using SQL:"
+    },
+    {
+      "pos": [
+        2372,
+        2423
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>Count based Feature Generation<ept id=\"p5\">](#sql-countfeature)</ept>"
+    },
+    {
+      "pos": [
+        2427,
+        2476
+      ],
+      "content": "<bpt id=\"p6\">[</bpt>Binning Feature Generation<ept id=\"p6\">](#sql-binningfeature)</ept>"
+    },
+    {
+      "pos": [
+        2480,
+        2548
+      ],
+      "content": "<bpt id=\"p7\">[</bpt>Rolling out the features from a single column<ept id=\"p7\">](#sql-featurerollout)</ept>"
+    },
+    {
+      "pos": [
+        2553,
+        2773
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.NOTE]</ph><ph id=\"ph13\"/> Once you generate additional features, you can either add them as columns to the existing table or create a new table with the additional features and primary key, that can be joined with the original table."
+    },
+    {
+      "pos": [
+        2776,
+        2779
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        2810,
+        2840
+      ],
+      "content": "Count based Feature Generation"
+    },
+    {
+      "pos": [
+        2842,
+        3121
+      ],
+      "content": "This document demonstrates two ways of generating count features. The first method uses conditional sum and the second method uses the 'where` clause. These can then be joined with the original table (using primary key columns) to have count features alongside the original data.",
+      "nodes": [
+        {
+          "content": "This document demonstrates two ways of generating count features.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "The first method uses conditional sum and the second method uses the 'where` clause.",
+          "pos": [
+            66,
+            150
+          ]
+        },
+        {
+          "content": "These can then be joined with the original table (using primary key columns) to have count features alongside the original data.",
+          "pos": [
+            151,
+            279
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3449,
+        3452
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        3485,
+        3511
+      ],
+      "content": "Binning Feature Generation"
+    },
+    {
+      "pos": [
+        3513,
+        3656
+      ],
+      "content": "The following example shows how to generate binned features by binning (using 5 bins) a numerical column that can be used as a feature instead:"
+    },
+    {
+      "pos": [
+        3757,
+        3760
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        3793,
+        3838
+      ],
+      "content": "Rolling out the features from a single column"
+    },
+    {
+      "pos": [
+        3840,
+        4073
+      ],
+      "content": "In this section, we demonstrate how to roll-out a single column in a table to generate additional features. The example assumes that there is a latitude or longitude column in the table from which you are trying to generate features.",
+      "nodes": [
+        {
+          "content": "In this section, we demonstrate how to roll-out a single column in a table to generate additional features.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "The example assumes that there is a latitude or longitude column in the table from which you are trying to generate features.",
+          "pos": [
+            108,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4075,
+        4333
+      ],
+      "content": "Here is a brief primer on latitude/longitude location data (resourced from stackoverflow <ph id=\"ph14\">`http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude`</ph>). This is useful to understand before featurizing the location field:",
+      "nodes": [
+        {
+          "content": "Here is a brief primer on latitude/longitude location data (resourced from stackoverflow <ph id=\"ph14\">`http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude`</ph>).",
+          "pos": [
+            0,
+            209
+          ]
+        },
+        {
+          "content": "This is useful to understand before featurizing the location field:",
+          "pos": [
+            210,
+            277
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4337,
+        4412
+      ],
+      "content": "The sign tells us whether we are north or south, east or west on the globe."
+    },
+    {
+      "pos": [
+        4415,
+        4485
+      ],
+      "content": "A nonzero hundreds digit tells us we're using longitude, not latitude!"
+    },
+    {
+      "pos": [
+        4488,
+        4618
+      ],
+      "content": "The tens digit gives a position to about 1,000 kilometers. It gives us useful information about what continent or ocean we are on.",
+      "nodes": [
+        {
+          "content": "The tens digit gives a position to about 1,000 kilometers.",
+          "pos": [
+            0,
+            58
+          ]
+        },
+        {
+          "content": "It gives us useful information about what continent or ocean we are on.",
+          "pos": [
+            59,
+            130
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4621,
+        4794
+      ],
+      "content": "The units digit (one decimal degree) gives a position up to 111 kilometers (60 nautical miles, about 69 miles). It can tell us roughly what large state or country we are in.",
+      "nodes": [
+        {
+          "content": "The units digit (one decimal degree) gives a position up to 111 kilometers (60 nautical miles, about 69 miles).",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "It can tell us roughly what large state or country we are in.",
+          "pos": [
+            112,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4797,
+        4925
+      ],
+      "content": "The first decimal place is worth up to 11.1 km: it can distinguish the position of one large city from a neighboring large city."
+    },
+    {
+      "pos": [
+        4928,
+        5018
+      ],
+      "content": "The second decimal place is worth up to 1.1 km: it can separate one village from the next."
+    },
+    {
+      "pos": [
+        5021,
+        5134
+      ],
+      "content": "The third decimal place is worth up to 110 m: it can identify a large agricultural field or institutional campus."
+    },
+    {
+      "pos": [
+        5137,
+        5306
+      ],
+      "content": "The fourth decimal place is worth up to 11 m: it can identify a parcel of land. It is comparable to the typical accuracy of an uncorrected GPS unit with no interference.",
+      "nodes": [
+        {
+          "content": "The fourth decimal place is worth up to 11 m: it can identify a parcel of land.",
+          "pos": [
+            0,
+            79
+          ]
+        },
+        {
+          "content": "It is comparable to the typical accuracy of an uncorrected GPS unit with no interference.",
+          "pos": [
+            80,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5309,
+        5492
+      ],
+      "content": "The fifth decimal place is worth up to 1.1 m: it distinguish trees from each other. Accuracy to this level with commercial GPS units can only be achieved with differential correction.",
+      "nodes": [
+        {
+          "content": "The fifth decimal place is worth up to 1.1 m: it distinguish trees from each other.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "Accuracy to this level with commercial GPS units can only be achieved with differential correction.",
+          "pos": [
+            84,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5495,
+        5819
+      ],
+      "content": "The sixth decimal place is worth up to 0.11 m: you can use this for laying out structures in detail, for designing landscapes, building roads. It should be more than good enough for tracking movements of glaciers and rivers. This can be achieved by taking painstaking measures with GPS, such as differentially corrected GPS.",
+      "nodes": [
+        {
+          "content": "The sixth decimal place is worth up to 0.11 m: you can use this for laying out structures in detail, for designing landscapes, building roads.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "It should be more than good enough for tracking movements of glaciers and rivers.",
+          "pos": [
+            143,
+            224
+          ]
+        },
+        {
+          "content": "This can be achieved by taking painstaking measures with GPS, such as differentially corrected GPS.",
+          "pos": [
+            225,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5821,
+        6105
+      ],
+      "content": "The location information can can be featurized as follows, separating out region, location and city information. Note that once can also call a REST end point such as Bing Maps API available at <ph id=\"ph15\">`https://msdn.microsoft.com/library/ff701710.aspx`</ph><ph id=\"ph16\"/> to get the region/district information.",
+      "nodes": [
+        {
+          "content": "The location information can can be featurized as follows, separating out region, location and city information.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "Note that once can also call a REST end point such as Bing Maps API available at <ph id=\"ph15\">`https://msdn.microsoft.com/library/ff701710.aspx`</ph><ph id=\"ph16\"/> to get the region/district information.",
+          "pos": [
+            113,
+            318
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7670,
+        7783
+      ],
+      "content": "The above location based features can be further used to generate additional count features as described earlier."
+    },
+    {
+      "pos": [
+        7789,
+        8095
+      ],
+      "content": "<ph id=\"ph17\">[AZURE.TIP]</ph><ph id=\"ph18\"/> You can programmatically insert the records using your language of choice. You may need to insert the data in chunks to improve write efficiency <bpt id=\"p8\">[</bpt>Check out the example of how to do this using pyodbc here<ept id=\"p8\">](https://code.google.com/p/pypyodbc/wiki/A_HelloWorld_sample_to_access_mssql_with_python)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph17\">[AZURE.TIP]</ph><ph id=\"ph18\"/> You can programmatically insert the records using your language of choice.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "You may need to insert the data in chunks to improve write efficiency <bpt id=\"p8\">[</bpt>Check out the example of how to do this using pyodbc here<ept id=\"p8\">](https://code.google.com/p/pypyodbc/wiki/A_HelloWorld_sample_to_access_mssql_with_python)</ept>.",
+          "pos": [
+            121,
+            378
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8102,
+        8237
+      ],
+      "content": "<ph id=\"ph19\">[AZURE.TIP]</ph><ph id=\"ph20\"/> Another alternative is to insert data in the database using <bpt id=\"p9\">[</bpt>BCP utility<ept id=\"p9\">](https://msdn.microsoft.com/library/ms162802.aspx)</ept>"
+    },
+    {
+      "pos": [
+        8239,
+        8242
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        8264,
+        8300
+      ],
+      "content": "Connecting to Azure Machine Learning"
+    },
+    {
+      "pos": [
+        8302,
+        8577
+      ],
+      "content": "The newly generated feature can be added as a column to an existing table or stored in a new table and joined with the original table for machine learning. Features can be generated or accessed if already created, using the [Reader][reader] module in Azure ML as shown below:",
+      "nodes": [
+        {
+          "content": "The newly generated feature can be added as a column to an existing table or stored in a new table and joined with the original table for machine learning.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "Features can be generated or accessed if already created, using the [Reader][reader] module in Azure ML as shown below:",
+          "pos": [
+            156,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8579,
+        8600
+      ],
+      "content": "<ph id=\"ph21\">![</ph>azureml readers<ph id=\"ph22\">][1]</ph>"
+    },
+    {
+      "pos": [
+        8603,
+        8605
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        8626,
+        8666
+      ],
+      "content": "Using a programming language like Python"
+    },
+    {
+      "pos": [
+        8668,
+        9152
+      ],
+      "content": "Using Python to explore data and generate features when the data is in SQL Server is similar to processing data in Azure blob using Python as documented in <bpt id=\"p10\">[</bpt>Process Azure Blob data in you data science environment<ept id=\"p10\">](machine-learning-data-science-process-data-blob.md)</ept>. The data needs to be loaded from the database into a pandas data frame and then can be processed further. We document the process of connecting to the database and loading the data into the data frame in this section.",
+      "nodes": [
+        {
+          "content": "Using Python to explore data and generate features when the data is in SQL Server is similar to processing data in Azure blob using Python as documented in <bpt id=\"p10\">[</bpt>Process Azure Blob data in you data science environment<ept id=\"p10\">](machine-learning-data-science-process-data-blob.md)</ept>.",
+          "pos": [
+            0,
+            306
+          ]
+        },
+        {
+          "content": "The data needs to be loaded from the database into a pandas data frame and then can be processed further.",
+          "pos": [
+            307,
+            412
+          ]
+        },
+        {
+          "content": "We document the process of connecting to the database and loading the data into the data frame in this section.",
+          "pos": [
+            413,
+            524
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9154,
+        9344
+      ],
+      "content": "The following connection string format can be used to connect to a SQL Server database from Python using pyodbc (replace servername, dbname, username and password with your specific values):"
+    },
+    {
+      "pos": [
+        9522,
+        9783
+      ],
+      "content": "The <bpt id=\"p11\">[</bpt>Pandas library<ept id=\"p11\">](http://pandas.pydata.org/)</ept><ph id=\"ph23\"/> in Python provides a rich set of data structures and data analysis tools for data manipulation for Python programming. The code below reads the results returned from a SQL Server database into a Pandas data frame:",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p11\">[</bpt>Pandas library<ept id=\"p11\">](http://pandas.pydata.org/)</ept><ph id=\"ph23\"/> in Python provides a rich set of data structures and data analysis tools for data manipulation for Python programming.",
+          "pos": [
+            0,
+            221
+          ]
+        },
+        {
+          "content": "The code below reads the results returned from a SQL Server database into a Pandas data frame:",
+          "pos": [
+            222,
+            316
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9956,
+        10131
+      ],
+      "content": "Now you can work with the Pandas data frame as covered in topics <bpt id=\"p12\">[</bpt>Process Azure Blob data in you data science environment<ept id=\"p12\">](machine-learning-data-science-process-data-blob.md)</ept>."
+    },
+    {
+      "pos": [
+        10136,
+        10172
+      ],
+      "content": "Azure Data Science in Action Example"
+    },
+    {
+      "pos": [
+        10174,
+        10371
+      ],
+      "content": "For an end-to-end walkthrough example of the Azure Data Science Process using a public dataset, see <bpt id=\"p13\">[</bpt>Azure Data Science Process in Action<ept id=\"p13\">](machine-learning-data-science-process-sql-walkthrough.md)</ept>."
+    },
+    {
+      "pos": [
+        10510,
+        10598
+      ],
+      "content": "[reader]: https://msdn.microsoft.com/library/azure/4e1b0fe6-aded-4b3f-a36f-39b8862b9004/"
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Process Data from SQL Azure | Microsoft Azure\" \n    description=\"Process Data from SQL Azure\" \n    services=\"machine-learning\" \n    documentationCenter=\"\" \n    authors=\"fashah\" \n    manager=\"paulettm\" \n    editor=\"\" />\n\n<tags \n    ms.service=\"machine-learning\" \n    ms.workload=\"data-services\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"02/08/2016\" \n    ms.author=\"fashah;garye\" /> \n\n#<a name=\"heading\"></a>Process Data in SQL Server Virtual Machine on Azure\n\nThis document covers how to explore data and generate features for data stored in a SQL Server VM on Azure. This can be done by data wrangling using SQL or by using a programming language like Python.\n\n\n> [AZURE.NOTE] The sample SQL statements in this document assume that data is in SQL Server. If it isn't, please refer to the cloud data science process map to learn how to move your data to SQL Server.\n\n##<a name=\"SQL\"></a>Using SQL\n\nWe describe the following data wrangling tasks in this section using SQL:\n\n1. [Data Exploration](#sql-dataexploration)\n2. [Feature Generation](#sql-featuregen)\n\n###<a name=\"sql-dataexploration\"></a>Data Exploration\nHere are a few sample SQL scripts that can be used to explore data stores in SQL Server.\n\n\n> [AZURE.NOTE] For a practical example, you can use the [NYC Taxi dataset](http://www.andresmh.com/nyctaxitrips/) and refer to the IPNB titled [NYC Data wrangling using IPython Notebook and SQL Server](https://github.com/Azure/Azure-MachineLearning-DataScience/blob/master/Misc/DataScienceProcess/iPythonNotebooks/machine-Learning-data-science-process-sql-walkthrough.ipynb) for an end-to-end walk-through.\n\n1. Get the count of observations per day\n\n    `SELECT CONVERT(date, <date_columnname>) as date, count(*) as c from <tablename> group by CONVERT(date, <date_columnname>)` \n\n2. Get the levels in a categorical column\n\n    `select  distinct <column_name> from <databasename>`\n\n3. Get the number of levels in combination of two categorical columns \n\n    `select <column_a>, <column_b>,count(*) from <tablename> group by <column_a>, <column_b>`\n\n4. Get the distribution for numerical columns\n\n    `select <column_name>, count(*) from <tablename> group by <column_name>`\n\n\n###<a name=\"sql-featuregen\"></a>Feature Generation\n\nIn this section, we describe ways of generating features using SQL:  \n\n1. [Count based Feature Generation](#sql-countfeature)\n2. [Binning Feature Generation](#sql-binningfeature)\n3. [Rolling out the features from a single column](#sql-featurerollout)\n\n\n> [AZURE.NOTE] Once you generate additional features, you can either add them as columns to the existing table or create a new table with the additional features and primary key, that can be joined with the original table. \n\n###<a name=\"sql-countfeature\"></a>Count based Feature Generation\n\nThis document demonstrates two ways of generating count features. The first method uses conditional sum and the second method uses the 'where` clause. These can then be joined with the original table (using primary key columns) to have count features alongside the original data.\n\n    select <column_name1>,<column_name2>,<column_name3>, COUNT(*) as Count_Features from <tablename> group by <column_name1>,<column_name2>,<column_name3> \n\n    select <column_name1>,<column_name2> , sum(1) as Count_Features from <tablename> \n    where <column_name3> = '<some_value>' group by <column_name1>,<column_name2> \n\n###<a name=\"sql-binningfeature\"></a>Binning Feature Generation\n\nThe following example shows how to generate binned features by binning (using 5 bins) a numerical column that can be used as a feature instead:\n\n    `SELECT <column_name>, NTILE(5) OVER (ORDER BY <column_name>) AS BinNumber from <tablename>`\n\n\n###<a name=\"sql-featurerollout\"></a>Rolling out the features from a single column\n\nIn this section, we demonstrate how to roll-out a single column in a table to generate additional features. The example assumes that there is a latitude or longitude column in the table from which you are trying to generate features.\n\nHere is a brief primer on latitude/longitude location data (resourced from stackoverflow `http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude`). This is useful to understand before featurizing the location field:\n\n- The sign tells us whether we are north or south, east or west on the globe.\n- A nonzero hundreds digit tells us we're using longitude, not latitude!\n- The tens digit gives a position to about 1,000 kilometers. It gives us useful information about what continent or ocean we are on.\n- The units digit (one decimal degree) gives a position up to 111 kilometers (60 nautical miles, about 69 miles). It can tell us roughly what large state or country we are in.\n- The first decimal place is worth up to 11.1 km: it can distinguish the position of one large city from a neighboring large city.\n- The second decimal place is worth up to 1.1 km: it can separate one village from the next.\n- The third decimal place is worth up to 110 m: it can identify a large agricultural field or institutional campus.\n- The fourth decimal place is worth up to 11 m: it can identify a parcel of land. It is comparable to the typical accuracy of an uncorrected GPS unit with no interference.\n- The fifth decimal place is worth up to 1.1 m: it distinguish trees from each other. Accuracy to this level with commercial GPS units can only be achieved with differential correction.\n- The sixth decimal place is worth up to 0.11 m: you can use this for laying out structures in detail, for designing landscapes, building roads. It should be more than good enough for tracking movements of glaciers and rivers. This can be achieved by taking painstaking measures with GPS, such as differentially corrected GPS.\n\nThe location information can can be featurized as follows, separating out region, location and city information. Note that once can also call a REST end point such as Bing Maps API available at `https://msdn.microsoft.com/library/ff701710.aspx` to get the region/district information.\n\n    select \n        <location_columnname>\n        ,round(<location_columnname>,0) as l1       \n        ,l2=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 1 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),1,1) else '0' end     \n        ,l3=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 2 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),2,1) else '0' end     \n        ,l4=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 3 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),3,1) else '0' end     \n        ,l5=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 4 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),4,1) else '0' end     \n        ,l6=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 5 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),5,1) else '0' end     \n        ,l7=case when LEN (PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1)) >= 6 then substring(PARSENAME(round(ABS(<location_columnname>) - FLOOR(ABS(<location_columnname>)),6),1),6,1) else '0' end     \n    from <tablename>\n\nThe above location based features can be further used to generate additional count features as described earlier. \n\n\n> [AZURE.TIP] You can programmatically insert the records using your language of choice. You may need to insert the data in chunks to improve write efficiency [Check out the example of how to do this using pyodbc here](https://code.google.com/p/pypyodbc/wiki/A_HelloWorld_sample_to_access_mssql_with_python). \n \n\n> [AZURE.TIP] Another alternative is to insert data in the database using [BCP utility](https://msdn.microsoft.com/library/ms162802.aspx)\n\n###<a name=\"sql-aml\"></a>Connecting to Azure Machine Learning\n\nThe newly generated feature can be added as a column to an existing table or stored in a new table and joined with the original table for machine learning. Features can be generated or accessed if already created, using the [Reader][reader] module in Azure ML as shown below:\n\n![azureml readers][1] \n\n##<a name=\"python\"></a>Using a programming language like Python\n\nUsing Python to explore data and generate features when the data is in SQL Server is similar to processing data in Azure blob using Python as documented in [Process Azure Blob data in you data science environment](machine-learning-data-science-process-data-blob.md). The data needs to be loaded from the database into a pandas data frame and then can be processed further. We document the process of connecting to the database and loading the data into the data frame in this section.\n\nThe following connection string format can be used to connect to a SQL Server database from Python using pyodbc (replace servername, dbname, username and password with your specific values):\n\n    #Set up the SQL Azure connection\n    import pyodbc   \n    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=<servername>;DATABASE=<dbname>;UID=<username>;PWD=<password>')\n\nThe [Pandas library](http://pandas.pydata.org/) in Python provides a rich set of data structures and data analysis tools for data manipulation for Python programming. The code below reads the results returned from a SQL Server database into a Pandas data frame:\n\n    # Query database and load the returned results in pandas data frame\n    data_frame = pd.read_sql('''select <columnname1>, <cloumnname2>... from <tablename>''', conn)\n\nNow you can work with the Pandas data frame as covered in topics [Process Azure Blob data in you data science environment](machine-learning-data-science-process-data-blob.md).\n\n## Azure Data Science in Action Example\n\nFor an end-to-end walkthrough example of the Azure Data Science Process using a public dataset, see [Azure Data Science Process in Action](machine-learning-data-science-process-sql-walkthrough.md).\n\n[1]: ./media/machine-learning-data-science-process-sql-server-virtual-machine/reader_db_featurizedinput.png\n\n\n<!-- Module References -->\n[reader]: https://msdn.microsoft.com/library/azure/4e1b0fe6-aded-4b3f-a36f-39b8862b9004/\n "
+}

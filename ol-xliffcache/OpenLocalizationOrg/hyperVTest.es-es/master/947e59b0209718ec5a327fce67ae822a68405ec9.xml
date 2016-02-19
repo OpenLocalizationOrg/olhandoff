@@ -1,0 +1,1123 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        101
+      ],
+      "content": "Create and load data into Hive tables from Blob storage | Microsoft Azure"
+    },
+    {
+      "pos": [
+        121,
+        176
+      ],
+      "content": "Create Hive tables and load data in blob to hive tables"
+    },
+    {
+      "pos": [
+        541,
+        602
+      ],
+      "content": "Create and load data into Hive tables from Azure blob storage"
+    },
+    {
+      "pos": [
+        607,
+        619
+      ],
+      "content": "Introduction"
+    },
+    {
+      "pos": [
+        620,
+        885
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>this document<ept id=\"p1\">**</ept>, generic Hive queries that create Hive tables and load data from Azure blob storage are presented. Some guidance is also provided on partitioning Hive tables and on using the Optimized Row Columnar (ORC) formatting to improve query performance.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p1\">**</bpt>this document<ept id=\"p1\">**</ept>, generic Hive queries that create Hive tables and load data from Azure blob storage are presented.",
+          "pos": [
+            0,
+            157
+          ]
+        },
+        {
+          "content": "Some guidance is also provided on partitioning Hive tables and on using the Optimized Row Columnar (ORC) formatting to improve query performance.",
+          "pos": [
+            158,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        887,
+        1062
+      ],
+      "content": "This <bpt id=\"p2\">**</bpt>menu<ept id=\"p2\">**</ept><ph id=\"ph2\"/> links to topics that describe how to ingest data into target environments where the data can be stored and processed during the Cortana Analytics Process (CAPS)."
+    },
+    {
+      "pos": [
+        1156,
+        1169
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1170,
+        1205
+      ],
+      "content": "This article assumes that you have:"
+    },
+    {
+      "pos": [
+        1210,
+        1344
+      ],
+      "content": "Created an Azure storage account. If you need instructions, see <bpt id=\"p3\">[</bpt>Create an Azure Storage account<ept id=\"p3\">](../hdinsight-get-started.md#storage)</ept>",
+      "nodes": [
+        {
+          "content": "Created an Azure storage account.",
+          "pos": [
+            0,
+            33
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p3\">[</bpt>Create an Azure Storage account<ept id=\"p3\">](../hdinsight-get-started.md#storage)</ept>",
+          "pos": [
+            34,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1348,
+        1573
+      ],
+      "content": "Provisioned a customized Hadoop cluster with the HDInsight service.  If you need instructions, see <bpt id=\"p4\">[</bpt>Customize Azure HDInsight Hadoop clusters for advanced analytics<ept id=\"p4\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Provisioned a customized Hadoop cluster with the HDInsight service.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p4\">[</bpt>Customize Azure HDInsight Hadoop clusters for advanced analytics<ept id=\"p4\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>.",
+          "pos": [
+            69,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1576,
+        1808
+      ],
+      "content": "Enabled remote access to the cluster, logged in, and opened the Hadoop Command Line console. If you need instructions, see <bpt id=\"p5\">[</bpt>Access the Head Node of Hadoop Cluster<ept id=\"p5\">](machine-learning-data-science-customize-hadoop-cluster.md#headnode)</ept>.",
+      "nodes": [
+        {
+          "content": "Enabled remote access to the cluster, logged in, and opened the Hadoop Command Line console.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p5\">[</bpt>Access the Head Node of Hadoop Cluster<ept id=\"p5\">](machine-learning-data-science-customize-hadoop-cluster.md#headnode)</ept>.",
+          "pos": [
+            93,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1814,
+        1847
+      ],
+      "content": "Upload data to Azure blob storage"
+    },
+    {
+      "pos": [
+        1848,
+        2350
+      ],
+      "content": "If you created an Azure virtual machine by following the instructions provided in <bpt id=\"p6\">[</bpt>Set up an Azure virtual machine for advanced analytics<ept id=\"p6\">](machine-learning-data-science-setup-virtual-machine.md)</ept>, this script file should have been downloaded to the <bpt id=\"p7\">*</bpt>C:\\\\Users\\\\\\&lt;user name\\&gt;\\\\Documents\\\\Data Science Scripts<ept id=\"p7\">*</ept><ph id=\"ph4\"/> directory on the virtual machine. These Hive queries only require that you plug in your own data schema and Azure blob storage configuration in the appropriate fields to be ready for submission.",
+      "nodes": [
+        {
+          "content": "If you created an Azure virtual machine by following the instructions provided in <bpt id=\"p6\">[</bpt>Set up an Azure virtual machine for advanced analytics<ept id=\"p6\">](machine-learning-data-science-setup-virtual-machine.md)</ept>, this script file should have been downloaded to the <bpt id=\"p7\">*</bpt>C:\\\\Users\\\\\\&lt;user name\\&gt;\\\\Documents\\\\Data Science Scripts<ept id=\"p7\">*</ept><ph id=\"ph4\"/> directory on the virtual machine.",
+          "pos": [
+            0,
+            437
+          ]
+        },
+        {
+          "content": "These Hive queries only require that you plug in your own data schema and Azure blob storage configuration in the appropriate fields to be ready for submission.",
+          "pos": [
+            438,
+            598
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2352,
+        2567
+      ],
+      "content": "We assume that the data for Hive tables is in an <bpt id=\"p8\">**</bpt>uncompressed<ept id=\"p8\">**</ept><ph id=\"ph5\"/> tabular format, and that the data has been uploaded to the default (or to an additional) container of the storage account used by the Hadoop cluster."
+    },
+    {
+      "pos": [
+        2570,
+        3299
+      ],
+      "content": "If you want to practice on the <bpt id=\"p9\">_</bpt>NYC Taxi Trip Data<ept id=\"p9\">_</ept>, you need to first  download the 24 <ph id=\"ph6\">&lt;a href=\"http://www.andresmh.com/nyctaxitrips/\" target=\"_blank\"&gt;</ph>NYC Taxi Trip Data<ph id=\"ph7\">&lt;/a&gt;</ph><ph id=\"ph8\"/> files (12 Trip files, and 12 Fare files), <bpt id=\"p10\">**</bpt>unzip<ept id=\"p10\">**</ept><ph id=\"ph9\"/> all files into .csv files, and then upload them to the default (or appropriate container) of the Azure storage account that was created by the procedure outlined in the <bpt id=\"p11\">[</bpt>Customize Azure HDInsight Hadoop clusters for Advanced Analytics Process and Technology<ept id=\"p11\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept><ph id=\"ph10\"/> topic. The process to upload the .csv files to the default container on the storage account can be found on this <bpt id=\"p12\">[</bpt>page<ept id=\"p12\">](machine-learning-data-science-process-hive-walkthrough/#upload)</ept>.",
+      "nodes": [
+        {
+          "content": "If you want to practice on the <bpt id=\"p9\">_</bpt>NYC Taxi Trip Data<ept id=\"p9\">_</ept>, you need to first  download the 24 <ph id=\"ph6\">&lt;a href=\"http://www.andresmh.com/nyctaxitrips/\" target=\"_blank\"&gt;</ph>NYC Taxi Trip Data<ph id=\"ph7\">&lt;/a&gt;</ph><ph id=\"ph8\"/> files (12 Trip files, and 12 Fare files), <bpt id=\"p10\">**</bpt>unzip<ept id=\"p10\">**</ept><ph id=\"ph9\"/> all files into .csv files, and then upload them to the default (or appropriate container) of the Azure storage account that was created by the procedure outlined in the <bpt id=\"p11\">[</bpt>Customize Azure HDInsight Hadoop clusters for Advanced Analytics Process and Technology<ept id=\"p11\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept><ph id=\"ph10\"/> topic.",
+          "pos": [
+            0,
+            760
+          ]
+        },
+        {
+          "content": "The process to upload the .csv files to the default container on the storage account can be found on this <bpt id=\"p12\">[</bpt>page<ept id=\"p12\">](machine-learning-data-science-process-hive-walkthrough/#upload)</ept>.",
+          "pos": [
+            761,
+            978
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3326,
+        3352
+      ],
+      "content": "How to Submit Hive Queries"
+    },
+    {
+      "pos": [
+        3353,
+        3392
+      ],
+      "content": "Hive queries can be submitted by using:"
+    },
+    {
+      "pos": [
+        3396,
+        3450
+      ],
+      "content": "the Hadoop Command Line on the headnode of the cluster"
+    },
+    {
+      "pos": [
+        3453,
+        3473
+      ],
+      "content": "the IPython Notebook"
+    },
+    {
+      "pos": [
+        3476,
+        3491
+      ],
+      "content": "the Hive Editor"
+    },
+    {
+      "pos": [
+        3494,
+        3518
+      ],
+      "content": "Azure PowerShell scripts"
+    },
+    {
+      "pos": [
+        3520,
+        3583
+      ],
+      "content": "Hive queries are SQL-like. Users familiar with SQL may find the",
+      "nodes": [
+        {
+          "content": "Hive queries are SQL-like.",
+          "pos": [
+            0,
+            26
+          ]
+        },
+        {
+          "content": "Users familiar with SQL may find the",
+          "pos": [
+            27,
+            63
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3707,
+        3730
+      ],
+      "content": "SQL-to-Hive Cheat Sheet"
+    },
+    {
+      "pos": [
+        3735,
+        3742
+      ],
+      "content": "useful."
+    },
+    {
+      "pos": [
+        3744,
+        3928
+      ],
+      "content": "When submitting a Hive query, you can also control the destination of the output from Hive queries, whether it be on the screen or to a local file on the head node or to an Azure blob."
+    },
+    {
+      "pos": [
+        3934,
+        4000
+      ],
+      "content": "Through Hadoop Command Line console in Head Node of Hadoop Cluster"
+    },
+    {
+      "pos": [
+        4002,
+        4214
+      ],
+      "content": "If the query is complex, submitting Hive queries directly from the head node of the Hadoop cluster typically leads to faster turn around than submitting it with a Hive Editor or by using Azure PowerShell scripts."
+    },
+    {
+      "pos": [
+        4216,
+        4342
+      ],
+      "content": "Log in to the head node of the Hadoop cluster, open the Hadoop Command Line on the desktop of the head node, and enter command"
+    },
+    {
+      "pos": [
+        4368,
+        4444
+      ],
+      "content": "Users have three ways to submit Hive queries in Hadoop Command Line console:"
+    },
+    {
+      "pos": [
+        4448,
+        4485
+      ],
+      "content": "directly from the Hadoop command line"
+    },
+    {
+      "pos": [
+        4488,
+        4504
+      ],
+      "content": "using .hql files"
+    },
+    {
+      "pos": [
+        4507,
+        4536
+      ],
+      "content": "from the Hive command console"
+    },
+    {
+      "pos": [
+        4543,
+        4600
+      ],
+      "content": "Submit Hive queries directly from the Hadoop Command Line"
+    },
+    {
+      "pos": [
+        4602,
+        4628
+      ],
+      "content": "Users can run command like"
+    },
+    {
+      "pos": [
+        4663,
+        4876
+      ],
+      "content": "to submit simple Hive queries directly in the Hadoop command line. Here is an example, where the red box outlines the command that submits the Hive query, and the green box outlines the output from the Hive query.",
+      "nodes": [
+        {
+          "content": "to submit simple Hive queries directly in the Hadoop command line.",
+          "pos": [
+            0,
+            66
+          ]
+        },
+        {
+          "content": "Here is an example, where the red box outlines the command that submits the Hive query, and the green box outlines the output from the Hive query.",
+          "pos": [
+            67,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4878,
+        4979
+      ],
+      "content": "<ph id=\"ph11\">![</ph>Create workspace<ph id=\"ph12\">](./media/machine-learning-data-science-process-hive-tables/run-hive-queries-1.png)</ph>"
+    },
+    {
+      "pos": [
+        4986,
+        5019
+      ],
+      "content": "Submit Hive queries in .hql files"
+    },
+    {
+      "pos": [
+        5021,
+        5441
+      ],
+      "content": "When the Hive query is more complicated and has multiple lines, editing queries in Hadoop command line or Hive command console is not practical. An alternative is to use a text editor in the head node of the Hadoop cluster and to save the Hive queries in a .hql file in a local directory of the head node. Then the Hive query in the .hql file can be submitted by using the <ph id=\"ph13\">`-f`</ph><ph id=\"ph14\"/> argument in the <ph id=\"ph15\">`hive`</ph><ph id=\"ph16\"/> command as follows:",
+      "nodes": [
+        {
+          "content": "When the Hive query is more complicated and has multiple lines, editing queries in Hadoop command line or Hive command console is not practical.",
+          "pos": [
+            0,
+            144
+          ]
+        },
+        {
+          "content": "An alternative is to use a text editor in the head node of the Hadoop cluster and to save the Hive queries in a .hql file in a local directory of the head node.",
+          "pos": [
+            145,
+            305
+          ]
+        },
+        {
+          "content": "Then the Hive query in the .hql file can be submitted by using the <ph id=\"ph13\">`-f`</ph><ph id=\"ph14\"/> argument in the <ph id=\"ph15\">`hive`</ph><ph id=\"ph16\"/> command as follows:",
+          "pos": [
+            306,
+            488
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5490,
+        5543
+      ],
+      "content": "Suppress progress status screen print of Hive queries"
+    },
+    {
+      "pos": [
+        5545,
+        5837
+      ],
+      "content": "By default, after Hive query is submitted in the Hadoop Command Line console, the progress of the Map/Reduce job will be printed out on screen. To suppress the screen print of the Map/Reduce job progress, you can use the argument <ph id=\"ph17\">`-S`</ph><ph id=\"ph18\"/> (case-sensitive) argument in the command line as follows:",
+      "nodes": [
+        {
+          "content": "By default, after Hive query is submitted in the Hadoop Command Line console, the progress of the Map/Reduce job will be printed out on screen.",
+          "pos": [
+            0,
+            143
+          ]
+        },
+        {
+          "content": "To suppress the screen print of the Map/Reduce job progress, you can use the argument <ph id=\"ph17\">`-S`</ph><ph id=\"ph18\"/> (case-sensitive) argument in the command line as follows:",
+          "pos": [
+            144,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5918,
+        5962
+      ],
+      "content": "Submit Hive queries in Hive command console."
+    },
+    {
+      "pos": [
+        5964,
+        6170
+      ],
+      "content": "Users can also enter the Hive command console by running the  <ph id=\"ph19\">`hive`</ph><ph id=\"ph20\"/> command from the Hadoop command line, and then submit Hive queries from Hive command console at the <bpt id=\"p13\">**</bpt>hive&gt;<ept id=\"p13\">**</ept><ph id=\"ph21\"/> prompt. Here is an example.",
+      "nodes": [
+        {
+          "content": "Users can also enter the Hive command console by running the  <ph id=\"ph19\">`hive`</ph><ph id=\"ph20\"/> command from the Hadoop command line, and then submit Hive queries from Hive command console at the <bpt id=\"p13\">**</bpt>hive&gt;<ept id=\"p13\">**</ept><ph id=\"ph21\"/> prompt.",
+          "pos": [
+            0,
+            278
+          ]
+        },
+        {
+          "content": "Here is an example.",
+          "pos": [
+            279,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6174,
+        6275
+      ],
+      "content": "<ph id=\"ph22\">![</ph>Create workspace<ph id=\"ph23\">](./media/machine-learning-data-science-process-hive-tables/run-hive-queries-2.png)</ph>"
+    },
+    {
+      "pos": [
+        6277,
+        6499
+      ],
+      "content": "In this example, the two red boxes highlight the commands used to enter the Hive command console, and the Hive query submitted in Hive command console, respectively. The green box highlights the output from the Hive query.",
+      "nodes": [
+        {
+          "content": "In this example, the two red boxes highlight the commands used to enter the Hive command console, and the Hive query submitted in Hive command console, respectively.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "The green box highlights the output from the Hive query.",
+          "pos": [
+            166,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6501,
+        6743
+      ],
+      "content": "The previous examples directly output the Hive query results on screen. Users can also write the output to a local file on the head node, or to an Azure blob. Then, users can use other tools to further analyze the output of from Hive queries.",
+      "nodes": [
+        {
+          "content": "The previous examples directly output the Hive query results on screen.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "Users can also write the output to a local file on the head node, or to an Azure blob.",
+          "pos": [
+            72,
+            158
+          ]
+        },
+        {
+          "content": "Then, users can use other tools to further analyze the output of from Hive queries.",
+          "pos": [
+            159,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6750,
+        6792
+      ],
+      "content": "Output Hive query results to a local file."
+    },
+    {
+      "pos": [
+        6794,
+        6936
+      ],
+      "content": "To output Hive query results to a local directory on the head node, users have to submit the Hive query in the Hadoop Command Line as follows:"
+    },
+    {
+      "pos": [
+        7006,
+        7048
+      ],
+      "content": "Output Hive query results to an Azure blob"
+    },
+    {
+      "pos": [
+        7050,
+        7207
+      ],
+      "content": "Users can also output the Hive query results to an Azure blob, within the default container of the Hadoop cluster. The Hive query to do this looks like this:",
+      "nodes": [
+        {
+          "content": "Users can also output the Hive query results to an Azure blob, within the default container of the Hadoop cluster.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "The Hive query to do this looks like this:",
+          "pos": [
+            115,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7315,
+        7667
+      ],
+      "content": "In the following example, the output of Hive query is written to a blob directory <ph id=\"ph24\">`queryoutputdir`</ph><ph id=\"ph25\"/> within the default container of the Hadoop cluster. Here, you must only provide the directory name, without the blob name. An error will be thrown out if you provide both the directory and the blob name, such as <bpt id=\"p14\">*</bpt>wasb:///queryoutputdir/queryoutput.txt<ept id=\"p14\">*</ept>.",
+      "nodes": [
+        {
+          "content": "In the following example, the output of Hive query is written to a blob directory <ph id=\"ph24\">`queryoutputdir`</ph><ph id=\"ph25\"/> within the default container of the Hadoop cluster.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "Here, you must only provide the directory name, without the blob name.",
+          "pos": [
+            185,
+            255
+          ]
+        },
+        {
+          "content": "An error will be thrown out if you provide both the directory and the blob name, such as <bpt id=\"p14\">*</bpt>wasb:///queryoutputdir/queryoutput.txt<ept id=\"p14\">*</ept>.",
+          "pos": [
+            256,
+            426
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7669,
+        7773
+      ],
+      "content": "<ph id=\"ph26\">![</ph>Create workspace<ph id=\"ph27\">](./media/machine-learning-data-science-process-hive-tables/output-hive-results-2.png)</ph>"
+    },
+    {
+      "pos": [
+        7775,
+        8060
+      ],
+      "content": "The output of the Hive query can be seen in blob storage by opening the default container of the Hadoop cluster using the Azure Storage Explorer (or equivalent) tool. You can apply the filter (highlighted by red box) if you only want to retrieve a blob with specified letters in names.",
+      "nodes": [
+        {
+          "content": "The output of the Hive query can be seen in blob storage by opening the default container of the Hadoop cluster using the Azure Storage Explorer (or equivalent) tool.",
+          "pos": [
+            0,
+            166
+          ]
+        },
+        {
+          "content": "You can apply the filter (highlighted by red box) if you only want to retrieve a blob with specified letters in names.",
+          "pos": [
+            167,
+            285
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8062,
+        8166
+      ],
+      "content": "<ph id=\"ph28\">![</ph>Create workspace<ph id=\"ph29\">](./media/machine-learning-data-science-process-hive-tables/output-hive-results-3.png)</ph>"
+    },
+    {
+      "pos": [
+        8172,
+        8220
+      ],
+      "content": "Through Hive Editor or Azure PowerShell Commands"
+    },
+    {
+      "pos": [
+        8222,
+        8304
+      ],
+      "content": "Users can also use the Query Console (Hive Editor) by entering the URL of the form"
+    },
+    {
+      "pos": [
+        8306,
+        8376
+      ],
+      "content": "<bpt id=\"p15\">*</bpt>https://&amp;#60;Hadoop cluster name&gt;.azurehdinsight.net/Home/HiveEditor<ept id=\"p15\">*</ept>"
+    },
+    {
+      "pos": [
+        8380,
+        8478
+      ],
+      "content": "into a web browser. Note that you will be asked to input the Hadoop cluster credentials to log in.",
+      "nodes": [
+        {
+          "content": "into a web browser.",
+          "pos": [
+            0,
+            19
+          ]
+        },
+        {
+          "content": "Note that you will be asked to input the Hadoop cluster credentials to log in.",
+          "pos": [
+            20,
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8481,
+        8594
+      ],
+      "content": "Alternatively, you can <bpt id=\"p16\">[</bpt>Run Hive queries using PowerShell<ept id=\"p16\">](../hdinsight/hdinsight-hadoop-use-hive-powershell.md)</ept>."
+    },
+    {
+      "pos": [
+        8628,
+        8659
+      ],
+      "content": "Create Hive database and tables"
+    },
+    {
+      "pos": [
+        8661,
+        8913
+      ],
+      "content": "The Hive queries are shared in the <bpt id=\"p17\">[</bpt>Github repository<ept id=\"p17\">](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts/sample_hive_create_db_tbls_load_data_generic.hql)</ept><ph id=\"ph30\"/> and can be downloaded from there."
+    },
+    {
+      "pos": [
+        8915,
+        8964
+      ],
+      "content": "Here is the Hive query that creates a Hive table."
+    },
+    {
+      "pos": [
+        9431,
+        9523
+      ],
+      "content": "Here are the descriptions of the fields that users need to plug in and other configurations:"
+    },
+    {
+      "pos": [
+        9527,
+        9693
+      ],
+      "content": "<bpt id=\"p18\">**</bpt>&amp;#60;database name&gt;<ept id=\"p18\">**</ept>: the name of the database users want to create. If users just want to use the default database, the query <bpt id=\"p19\">*</bpt>create database...<ept id=\"p19\">*</ept><ph id=\"ph31\"/> can be omitted.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p18\">**</bpt>&amp;#60;database name&gt;<ept id=\"p18\">**</ept>: the name of the database users want to create.",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "If users just want to use the default database, the query <bpt id=\"p19\">*</bpt>create database...<ept id=\"p19\">*</ept><ph id=\"ph31\"/> can be omitted.",
+          "pos": [
+            119,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9697,
+        9921
+      ],
+      "content": "<bpt id=\"p20\">**</bpt>&amp;#60;table name&gt;<ept id=\"p20\">**</ept>: the name of the table users want to create within the specified database. If users want to use the default database, the table can be directly referred by <bpt id=\"p21\">*</bpt>&amp;#60;table name&gt;<ept id=\"p21\">*</ept><ph id=\"ph32\"/> without &amp;#60;database name&gt;.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p20\">**</bpt>&amp;#60;table name&gt;<ept id=\"p20\">**</ept>: the name of the table users want to create within the specified database.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "If users want to use the default database, the table can be directly referred by <bpt id=\"p21\">*</bpt>&amp;#60;table name&gt;<ept id=\"p21\">*</ept><ph id=\"ph32\"/> without &amp;#60;database name&gt;.",
+          "pos": [
+            143,
+            340
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9924,
+        10036
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>&amp;#60;field separator&gt;<ept id=\"p22\">**</ept>: the separator that delimits fields in the data file to be uploaded to the Hive table."
+    },
+    {
+      "pos": [
+        10040,
+        10117
+      ],
+      "content": "<bpt id=\"p23\">**</bpt>&amp;#60;line separator&gt;<ept id=\"p23\">**</ept>: the separator that delimits lines in the data file."
+    },
+    {
+      "pos": [
+        10121,
+        10832
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>&amp;#60;storage location&gt;<ept id=\"p24\">**</ept>: the Azure storage location to save the data of Hive tables. If users do not specify <bpt id=\"p25\">*</bpt>LOCATION &amp;#60;storage location&gt;<ept id=\"p25\">*</ept>, the database and the tables are stored in <bpt id=\"p26\">*</bpt>hive/warehouse/<ept id=\"p26\">*</ept><ph id=\"ph33\"/> directory in the default container of the Hive cluster by default. If a user wants to specify the storage location, the storage location has to be within the default container for the database and tables. This location has to be referred as location relative to the default container of the cluster in the format of <bpt id=\"p27\">*</bpt>'wasb:///&amp;#60;directory 1&gt;/'<ept id=\"p27\">*</ept><ph id=\"ph34\"/> or <bpt id=\"p28\">*</bpt>'wasb:///&amp;#60;directory 1&gt;/&amp;#60;directory 2&gt;/'<ept id=\"p28\">*</ept>, etc. After the query is executed, the relative directories will be created within the default container.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p24\">**</bpt>&amp;#60;storage location&gt;<ept id=\"p24\">**</ept>: the Azure storage location to save the data of Hive tables.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "If users do not specify <bpt id=\"p25\">*</bpt>LOCATION &amp;#60;storage location&gt;<ept id=\"p25\">*</ept>, the database and the tables are stored in <bpt id=\"p26\">*</bpt>hive/warehouse/<ept id=\"p26\">*</ept><ph id=\"ph33\"/> directory in the default container of the Hive cluster by default.",
+          "pos": [
+            135,
+            422
+          ]
+        },
+        {
+          "content": "If a user wants to specify the storage location, the storage location has to be within the default container for the database and tables.",
+          "pos": [
+            423,
+            560
+          ]
+        },
+        {
+          "content": "This location has to be referred as location relative to the default container of the cluster in the format of <bpt id=\"p27\">*</bpt>'wasb:///&amp;#60;directory 1&gt;/'<ept id=\"p27\">*</ept><ph id=\"ph34\"/> or <bpt id=\"p28\">*</bpt>'wasb:///&amp;#60;directory 1&gt;/&amp;#60;directory 2&gt;/'<ept id=\"p28\">*</ept>, etc. After the query is executed, the relative directories will be created within the default container.",
+          "pos": [
+            561,
+            976
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10836,
+        11158
+      ],
+      "content": "<bpt id=\"p29\">**</bpt>TBLPROPERTIES(\"skip.header.line.count\"=\"1\")<ept id=\"p29\">**</ept>: If the data file has a header line, users have to add this property <bpt id=\"p30\">**</bpt>at the end<ept id=\"p30\">**</ept><ph id=\"ph35\"/> of the <bpt id=\"p31\">*</bpt>create table<ept id=\"p31\">*</ept><ph id=\"ph36\"/> query. Otherwise, the header line will be loaded as a record to the table. If the data file does not have a header line, this configuration can be omitted in the query.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p29\">**</bpt>TBLPROPERTIES(\"skip.header.line.count\"=\"1\")<ept id=\"p29\">**</ept>: If the data file has a header line, users have to add this property <bpt id=\"p30\">**</bpt>at the end<ept id=\"p30\">**</ept><ph id=\"ph35\"/> of the <bpt id=\"p31\">*</bpt>create table<ept id=\"p31\">*</ept><ph id=\"ph36\"/> query.",
+          "pos": [
+            0,
+            310
+          ]
+        },
+        {
+          "content": "Otherwise, the header line will be loaded as a record to the table.",
+          "pos": [
+            311,
+            378
+          ]
+        },
+        {
+          "content": "If the data file does not have a header line, this configuration can be omitted in the query.",
+          "pos": [
+            379,
+            472
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11188,
+        11212
+      ],
+      "content": "Load data to Hive tables"
+    },
+    {
+      "pos": [
+        11213,
+        11270
+      ],
+      "content": "Here is the Hive query that loads data into a Hive table."
+    },
+    {
+      "pos": [
+        11359,
+        11873
+      ],
+      "content": "<bpt id=\"p32\">**</bpt>&amp;#60;path to blob data&gt;<ept id=\"p32\">**</ept>: If the blob file to be uploaded to the Hive table is in the default container of the HDInsight Hadoop cluster, the <bpt id=\"p33\">*</bpt>&amp;#60;path to blob data&gt;<ept id=\"p33\">*</ept><ph id=\"ph37\"/> should be in the format <bpt id=\"p34\">*</bpt>'wasb:///&amp;#60;directory in this container&gt;/&amp;#60;blob file name&gt;'<ept id=\"p34\">*</ept>. The blob file can also be in an additional container of the HDInsight Hadoop cluster. In this case, <bpt id=\"p35\">*</bpt>&amp;#60;path to blob data&gt;<ept id=\"p35\">*</ept><ph id=\"ph38\"/> should be in the format <bpt id=\"p36\">*</bpt>'wasb://&amp;#60;container name&gt;@&amp;#60;storage account name&gt;.blob.core.windows.net/&amp;#60;blob file name&gt;'<ept id=\"p36\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p32\">**</bpt>&amp;#60;path to blob data&gt;<ept id=\"p32\">**</ept>: If the blob file to be uploaded to the Hive table is in the default container of the HDInsight Hadoop cluster, the <bpt id=\"p33\">*</bpt>&amp;#60;path to blob data&gt;<ept id=\"p33\">*</ept><ph id=\"ph37\"/> should be in the format <bpt id=\"p34\">*</bpt>'wasb:///&amp;#60;directory in this container&gt;/&amp;#60;blob file name&gt;'<ept id=\"p34\">*</ept>.",
+          "pos": [
+            0,
+            424
+          ]
+        },
+        {
+          "content": "The blob file can also be in an additional container of the HDInsight Hadoop cluster.",
+          "pos": [
+            425,
+            510
+          ]
+        },
+        {
+          "content": "In this case, <bpt id=\"p35\">*</bpt>&amp;#60;path to blob data&gt;<ept id=\"p35\">*</ept><ph id=\"ph38\"/> should be in the format <bpt id=\"p36\">*</bpt>'wasb://&amp;#60;container name&gt;@&amp;#60;storage account name&gt;.blob.core.windows.net/&amp;#60;blob file name&gt;'<ept id=\"p36\">*</ept>.",
+          "pos": [
+            511,
+            800
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11880,
+        12118
+      ],
+      "content": "<ph id=\"ph39\">[AZURE.NOTE]</ph><ph id=\"ph40\"/> The blob data to be uploaded to Hive table has to be in the default or additional container of the storage account for the Hadoop cluster. Otherwise, the <bpt id=\"p37\">*</bpt>LOAD DATA<ept id=\"p37\">*</ept><ph id=\"ph41\"/> query will fail complaining that it cannot access the data.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph39\">[AZURE.NOTE]</ph><ph id=\"ph40\"/> The blob data to be uploaded to Hive table has to be in the default or additional container of the storage account for the Hadoop cluster.",
+          "pos": [
+            0,
+            185
+          ]
+        },
+        {
+          "content": "Otherwise, the <bpt id=\"p37\">*</bpt>LOAD DATA<ept id=\"p37\">*</ept><ph id=\"ph41\"/> query will fail complaining that it cannot access the data.",
+          "pos": [
+            186,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12153,
+        12221
+      ],
+      "content": "Advanced topics: partitioned table and store Hive data in ORC format"
+    },
+    {
+      "pos": [
+        12223,
+        12428
+      ],
+      "content": "If the data is large, partitioning the table is beneficial for queries that only need to scan a few partitions of the table. For instance, it is reasonable to partition the log data of a web site by dates.",
+      "nodes": [
+        {
+          "content": "If the data is large, partitioning the table is beneficial for queries that only need to scan a few partitions of the table.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "For instance, it is reasonable to partition the log data of a web site by dates.",
+          "pos": [
+            125,
+            205
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12431,
+        12604
+      ],
+      "content": "In addition to partitioning Hive tables, it is also beneficial to store the Hive data in the Optimized Row Columnar (ORC) format. For more information on ORC formatting, see",
+      "nodes": [
+        {
+          "content": "In addition to partitioning Hive tables, it is also beneficial to store the Hive data in the Optimized Row Columnar (ORC) format.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "For more information on ORC formatting, see",
+          "pos": [
+            130,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12726,
+        12813
+      ],
+      "content": "Using ORC files improves performance when Hive is reading, writing, and processing data"
+    },
+    {
+      "pos": [
+        12817,
+        12818
+      ],
+      "content": "."
+    },
+    {
+      "pos": [
+        12824,
+        12841
+      ],
+      "content": "Partitioned table"
+    },
+    {
+      "pos": [
+        12842,
+        12921
+      ],
+      "content": "Here is the Hive query that creates a partitioned table and loads data into it."
+    },
+    {
+      "pos": [
+        13416,
+        13599
+      ],
+      "content": "When querying partitioned tables, it is recommended to add the partition condition in the <bpt id=\"p38\">**</bpt>beginning<ept id=\"p38\">**</ept><ph id=\"ph42\"/> of the <ph id=\"ph43\">`where`</ph><ph id=\"ph44\"/> clause as this improves the efficacy of searching significantly."
+    },
+    {
+      "pos": [
+        13786,
+        13815
+      ],
+      "content": "Store Hive data in ORC format"
+    },
+    {
+      "pos": [
+        13817,
+        14040
+      ],
+      "content": "Users cannot directly load data from blob storage into Hive tables that is stored in the ORC format. Here are the steps that the users need to take in order to load data from Azure blobs to Hive tables stored in ORC format.",
+      "nodes": [
+        {
+          "content": "Users cannot directly load data from blob storage into Hive tables that is stored in the ORC format.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "Here are the steps that the users need to take in order to load data from Azure blobs to Hive tables stored in ORC format.",
+          "pos": [
+            101,
+            223
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14046,
+        14139
+      ],
+      "content": "Create an external table <bpt id=\"p39\">**</bpt>STORED AS TEXTFILE<ept id=\"p39\">**</ept><ph id=\"ph45\"/> and load data from blob storage to the table."
+    },
+    {
+      "pos": [
+        14686,
+        14838
+      ],
+      "content": "Create an internal table with the same schema as the external table in step 1, with the same field delimiter, and store the Hive data in the ORC format."
+    },
+    {
+      "pos": [
+        15110,
+        15185
+      ],
+      "content": "Select data from the external table in step 1 and insert into the ORC table"
+    },
+    {
+      "pos": [
+        15331,
+        15921
+      ],
+      "content": "<ph id=\"ph46\">[AZURE.NOTE]</ph><ph id=\"ph47\"/> If the TEXTFILE table <bpt id=\"p40\">*</bpt>&amp;#60;database name&gt;.&amp;#60;external textfile table name&gt;<ept id=\"p40\">*</ept><ph id=\"ph48\"/> has partitions, in STEP 3, the <ph id=\"ph49\">`SELECT * FROM &lt;database name&gt;.&lt;external textfile table name&gt;`</ph><ph id=\"ph50\"/> command will select the partition variable as a field in the returned data set. Inserting it into the <bpt id=\"p41\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p41\">*</ept><ph id=\"ph51\"/> will fail since <bpt id=\"p42\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p42\">*</ept><ph id=\"ph52\"/> does not have the partition variable as a field in the table schema. In this case, users need to specifically select the fields to be inserted to <bpt id=\"p43\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p43\">*</ept><ph id=\"ph53\"/> as follows:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph46\">[AZURE.NOTE]</ph><ph id=\"ph47\"/> If the TEXTFILE table <bpt id=\"p40\">*</bpt>&amp;#60;database name&gt;.&amp;#60;external textfile table name&gt;<ept id=\"p40\">*</ept><ph id=\"ph48\"/> has partitions, in STEP 3, the <ph id=\"ph49\">`SELECT * FROM &lt;database name&gt;.&lt;external textfile table name&gt;`</ph><ph id=\"ph50\"/> command will select the partition variable as a field in the returned data set.",
+          "pos": [
+            0,
+            414
+          ]
+        },
+        {
+          "content": "Inserting it into the <bpt id=\"p41\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p41\">*</ept><ph id=\"ph51\"/> will fail since <bpt id=\"p42\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p42\">*</ept><ph id=\"ph52\"/> does not have the partition variable as a field in the table schema.",
+          "pos": [
+            415,
+            745
+          ]
+        },
+        {
+          "content": "In this case, users need to specifically select the fields to be inserted to <bpt id=\"p43\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p43\">*</ept><ph id=\"ph53\"/> as follows:",
+          "pos": [
+            746,
+            946
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16209,
+        16381
+      ],
+      "content": "It is safe to drop the <bpt id=\"p44\">*</bpt>&amp;#60;external textfile table name&gt;<ept id=\"p44\">*</ept><ph id=\"ph54\"/> when using the following query after all data has been inserted into <bpt id=\"p45\">*</bpt>&amp;#60;database name&gt;.&amp;#60;ORC table name&gt;<ept id=\"p45\">*</ept>:"
+    },
+    {
+      "pos": [
+        16461,
+        16558
+      ],
+      "content": "After following this procedure, you should have a table with data in the ORC format ready to use."
+    },
+    {
+      "pos": [
+        16565,
+        16595
+      ],
+      "content": "Tuning sections should go here"
+    },
+    {
+      "pos": [
+        16597,
+        16720
+      ],
+      "content": "In the final section, parameters that users can tune so that the performance of Hive queries can be improved are discussed."
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Create and load data into Hive tables from Blob storage | Microsoft Azure\" \n    description=\"Create Hive tables and load data in blob to hive tables\" \n    services=\"machine-learning,storage\" \n    documentationCenter=\"\" \n    authors=\"hangzh-msft\" \n    manager=\"jacob.spoelstra\" \n    editor=\"cgronlun\"  />\n\n<tags \n    ms.service=\"machine-learning\" \n    ms.workload=\"data-services\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"02/08/2016\" \n    ms.author=\"hangzh;bradsev\" />\n\n \n#Create and load data into Hive tables from Azure blob storage\n\n## Introduction\nIn **this document**, generic Hive queries that create Hive tables and load data from Azure blob storage are presented. Some guidance is also provided on partitioning Hive tables and on using the Optimized Row Columnar (ORC) formatting to improve query performance.\n\nThis **menu** links to topics that describe how to ingest data into target environments where the data can be stored and processed during the Cortana Analytics Process (CAPS).\n\n[AZURE.INCLUDE [cap-ingest-data-selector](../../includes/cap-ingest-data-selector.md)]\n\n\n## Prerequisites\nThis article assumes that you have:\n \n* Created an Azure storage account. If you need instructions, see [Create an Azure Storage account](../hdinsight-get-started.md#storage) \n* Provisioned a customized Hadoop cluster with the HDInsight service.  If you need instructions, see [Customize Azure HDInsight Hadoop clusters for advanced analytics](machine-learning-data-science-customize-hadoop-cluster.md).\n* Enabled remote access to the cluster, logged in, and opened the Hadoop Command Line console. If you need instructions, see [Access the Head Node of Hadoop Cluster](machine-learning-data-science-customize-hadoop-cluster.md#headnode). \n\n## Upload data to Azure blob storage\nIf you created an Azure virtual machine by following the instructions provided in [Set up an Azure virtual machine for advanced analytics](machine-learning-data-science-setup-virtual-machine.md), this script file should have been downloaded to the *C:\\\\Users\\\\\\<user name\\>\\\\Documents\\\\Data Science Scripts* directory on the virtual machine. These Hive queries only require that you plug in your own data schema and Azure blob storage configuration in the appropriate fields to be ready for submission.\n\nWe assume that the data for Hive tables is in an **uncompressed** tabular format, and that the data has been uploaded to the default (or to an additional) container of the storage account used by the Hadoop cluster. \n\nIf you want to practice on the _NYC Taxi Trip Data_, you need to first  download the 24 <a href=\"http://www.andresmh.com/nyctaxitrips/\" target=\"_blank\">NYC Taxi Trip Data</a> files (12 Trip files, and 12 Fare files), **unzip** all files into .csv files, and then upload them to the default (or appropriate container) of the Azure storage account that was created by the procedure outlined in the [Customize Azure HDInsight Hadoop clusters for Advanced Analytics Process and Technology](machine-learning-data-science-customize-hadoop-cluster.md) topic. The process to upload the .csv files to the default container on the storage account can be found on this [page](machine-learning-data-science-process-hive-walkthrough/#upload). \n\n## <a name=\"submit\"></a>How to Submit Hive Queries\nHive queries can be submitted by using:\n\n* the Hadoop Command Line on the headnode of the cluster\n* the IPython Notebook\n* the Hive Editor\n* Azure PowerShell scripts\n\nHive queries are SQL-like. Users familiar with SQL may find the <a href=\"http://hortonworks.com/wp-content/uploads/downloads/2013/08/Hortonworks.CheatSheet.SQLtoHive.pdf\" target=\"_blank\">SQL-to-Hive Cheat Sheet</a> useful.\n\nWhen submitting a Hive query, you can also control the destination of the output from Hive queries, whether it be on the screen or to a local file on the head node or to an Azure blob.\n\n### Through Hadoop Command Line console in Head Node of Hadoop Cluster\n\nIf the query is complex, submitting Hive queries directly from the head node of the Hadoop cluster typically leads to faster turn around than submitting it with a Hive Editor or by using Azure PowerShell scripts.\n\nLog in to the head node of the Hadoop cluster, open the Hadoop Command Line on the desktop of the head node, and enter command\n\n    cd %hive_home%\\bin\n\nUsers have three ways to submit Hive queries in Hadoop Command Line console:\n\n* directly from the Hadoop command line\n* using .hql files\n* from the Hive command console\n\n#### Submit Hive queries directly from the Hadoop Command Line\n\nUsers can run command like\n\n    hive -e \"<your hive query>;\n\nto submit simple Hive queries directly in the Hadoop command line. Here is an example, where the red box outlines the command that submits the Hive query, and the green box outlines the output from the Hive query.\n\n![Create workspace](./media/machine-learning-data-science-process-hive-tables/run-hive-queries-1.png)\n\n#### Submit Hive queries in .hql files\n\nWhen the Hive query is more complicated and has multiple lines, editing queries in Hadoop command line or Hive command console is not practical. An alternative is to use a text editor in the head node of the Hadoop cluster and to save the Hive queries in a .hql file in a local directory of the head node. Then the Hive query in the .hql file can be submitted by using the `-f` argument in the `hive` command as follows:\n\n    `hive -f \"<path to the .hql file>\"`\n\n\n#### Suppress progress status screen print of Hive queries\n\nBy default, after Hive query is submitted in the Hadoop Command Line console, the progress of the Map/Reduce job will be printed out on screen. To suppress the screen print of the Map/Reduce job progress, you can use the argument `-S` (case-sensitive) argument in the command line as follows:\n\n    hive -S -f \"<path to the .hql file>\"\n    hive -S -e \"<Hive queries>\"\n\n#### Submit Hive queries in Hive command console.\n\nUsers can also enter the Hive command console by running the  `hive` command from the Hadoop command line, and then submit Hive queries from Hive command console at the **hive>** prompt. Here is an example.  \n\n![Create workspace](./media/machine-learning-data-science-process-hive-tables/run-hive-queries-2.png)\n\nIn this example, the two red boxes highlight the commands used to enter the Hive command console, and the Hive query submitted in Hive command console, respectively. The green box highlights the output from the Hive query.\n\nThe previous examples directly output the Hive query results on screen. Users can also write the output to a local file on the head node, or to an Azure blob. Then, users can use other tools to further analyze the output of from Hive queries.\n\n#### Output Hive query results to a local file.\n\nTo output Hive query results to a local directory on the head node, users have to submit the Hive query in the Hadoop Command Line as follows:\n\n    `hive -e \"<hive query>\" > <local path in the head node>`\n\n\n#### Output Hive query results to an Azure blob\n\nUsers can also output the Hive query results to an Azure blob, within the default container of the Hadoop cluster. The Hive query to do this looks like this:\n\n    insert overwrite directory wasb:///<directory within the default container> <select clause from ...>\n\nIn the following example, the output of Hive query is written to a blob directory `queryoutputdir` within the default container of the Hadoop cluster. Here, you must only provide the directory name, without the blob name. An error will be thrown out if you provide both the directory and the blob name, such as *wasb:///queryoutputdir/queryoutput.txt*.\n\n![Create workspace](./media/machine-learning-data-science-process-hive-tables/output-hive-results-2.png)\n\nThe output of the Hive query can be seen in blob storage by opening the default container of the Hadoop cluster using the Azure Storage Explorer (or equivalent) tool. You can apply the filter (highlighted by red box) if you only want to retrieve a blob with specified letters in names.\n\n![Create workspace](./media/machine-learning-data-science-process-hive-tables/output-hive-results-3.png)\n\n### Through Hive Editor or Azure PowerShell Commands\n\nUsers can also use the Query Console (Hive Editor) by entering the URL of the form\n\n*https://&#60;Hadoop cluster name>.azurehdinsight.net/Home/HiveEditor*  \n\ninto a web browser. Note that you will be asked to input the Hadoop cluster credentials to log in. \n\nAlternatively, you can [Run Hive queries using PowerShell](../hdinsight/hdinsight-hadoop-use-hive-powershell.md).\n\n\n## <a name=\"create-tables\"></a>Create Hive database and tables\n\nThe Hive queries are shared in the [Github repository](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts/sample_hive_create_db_tbls_load_data_generic.hql) and can be downloaded from there.\n\nHere is the Hive query that creates a Hive table.\n\n    create database if not exists <database name>;\n    CREATE EXTERNAL TABLE if not exists <database name>.<table name>\n    (\n        field1 string, \n        field2 int, \n        field3 float, \n        field4 double, \n        ...,\n        fieldN string\n    ) \n    ROW FORMAT DELIMITED FIELDS TERMINATED BY '<field separator>' lines terminated by '<line separator>' \n    STORED AS TEXTFILE LOCATION '<storage location>' TBLPROPERTIES(\"skip.header.line.count\"=\"1\");\n\nHere are the descriptions of the fields that users need to plug in and other configurations:\n\n- **&#60;database name>**: the name of the database users want to create. If users just want to use the default database, the query *create database...* can be omitted. \n- **&#60;table name>**: the name of the table users want to create within the specified database. If users want to use the default database, the table can be directly referred by *&#60;table name>* without &#60;database name>.\n- **&#60;field separator>**: the separator that delimits fields in the data file to be uploaded to the Hive table. \n- **&#60;line separator>**: the separator that delimits lines in the data file. \n- **&#60;storage location>**: the Azure storage location to save the data of Hive tables. If users do not specify *LOCATION &#60;storage location>*, the database and the tables are stored in *hive/warehouse/* directory in the default container of the Hive cluster by default. If a user wants to specify the storage location, the storage location has to be within the default container for the database and tables. This location has to be referred as location relative to the default container of the cluster in the format of *'wasb:///&#60;directory 1>/'* or *'wasb:///&#60;directory 1>/&#60;directory 2>/'*, etc. After the query is executed, the relative directories will be created within the default container. \n- **TBLPROPERTIES(\"skip.header.line.count\"=\"1\")**: If the data file has a header line, users have to add this property **at the end** of the *create table* query. Otherwise, the header line will be loaded as a record to the table. If the data file does not have a header line, this configuration can be omitted in the query. \n\n## <a name=\"load-data\"></a>Load data to Hive tables\nHere is the Hive query that loads data into a Hive table.\n\n    LOAD DATA INPATH '<path to blob data>' INTO TABLE <database name>.<table name>;\n\n- **&#60;path to blob data>**: If the blob file to be uploaded to the Hive table is in the default container of the HDInsight Hadoop cluster, the *&#60;path to blob data>* should be in the format *'wasb:///&#60;directory in this container>/&#60;blob file name>'*. The blob file can also be in an additional container of the HDInsight Hadoop cluster. In this case, *&#60;path to blob data>* should be in the format *'wasb://&#60;container name>@&#60;storage account name>.blob.core.windows.net/&#60;blob file name>'*.\n\n    >[AZURE.NOTE] The blob data to be uploaded to Hive table has to be in the default or additional container of the storage account for the Hadoop cluster. Otherwise, the *LOAD DATA* query will fail complaining that it cannot access the data. \n\n\n## <a name=\"partition-orc\"></a>Advanced topics: partitioned table and store Hive data in ORC format\n\nIf the data is large, partitioning the table is beneficial for queries that only need to scan a few partitions of the table. For instance, it is reasonable to partition the log data of a web site by dates. \n\nIn addition to partitioning Hive tables, it is also beneficial to store the Hive data in the Optimized Row Columnar (ORC) format. For more information on ORC formatting, see <a href=\"https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC#LanguageManualORC-ORCFiles\" target=\"_blank\">Using ORC files improves performance when Hive is reading, writing, and processing data</a>.\n\n### Partitioned table\nHere is the Hive query that creates a partitioned table and loads data into it.\n\n    CREATE EXTERNAL TABLE IF NOT EXISTS <database name>.<table name>\n    (field1 string,\n    ...\n    fieldN string\n    )\n    PARTITIONED BY (<partitionfieldname> vartype) ROW FORMAT DELIMITED FIELDS TERMINATED BY '<field separator>'\n         lines terminated by '<line separator>' TBLPROPERTIES(\"skip.header.line.count\"=\"1\");\n    LOAD DATA INPATH '<path to the source file>' INTO TABLE <database name>.<partitioned table name> \n        PARTITION (<partitionfieldname>=<partitionfieldvalue>);\n\nWhen querying partitioned tables, it is recommended to add the partition condition in the **beginning** of the `where` clause as this improves the efficacy of searching significantly. \n\n    select \n        field1, field2, ..., fieldN\n    from <database name>.<partitioned table name> \n    where <partitionfieldname>=<partitionfieldvalue> and ...;\n\n### <a name=\"orc\"></a>Store Hive data in ORC format\n\nUsers cannot directly load data from blob storage into Hive tables that is stored in the ORC format. Here are the steps that the users need to take in order to load data from Azure blobs to Hive tables stored in ORC format. \n\n1. Create an external table **STORED AS TEXTFILE** and load data from blob storage to the table.\n\n        CREATE EXTERNAL TABLE IF NOT EXISTS <database name>.<external textfile table name>\n        (\n            field1 string,\n            field2 int,\n            ...\n            fieldN date\n        )\n        ROW FORMAT DELIMITED FIELDS TERMINATED BY '<field separator>' \n            lines terminated by '<line separator>' STORED AS TEXTFILE \n            LOCATION 'wasb:///<directory in Azure blob>' TBLPROPERTIES(\"skip.header.line.count\"=\"1\");\n\n        LOAD DATA INPATH '<path to the source file>' INTO TABLE <database name>.<table name>;\n\n2. Create an internal table with the same schema as the external table in step 1, with the same field delimiter, and store the Hive data in the ORC format.\n\n        CREATE TABLE IF NOT EXISTS <database name>.<ORC table name> \n        (\n            field1 string,\n            field2 int,\n            ...\n            fieldN date\n        ) \n        ROW FORMAT DELIMITED FIELDS TERMINATED BY '<field separator>' STORED AS ORC;\n\n3. Select data from the external table in step 1 and insert into the ORC table\n\n        INSERT OVERWRITE TABLE <database name>.<ORC table name>\n            SELECT * FROM <database name>.<external textfile table name>;\n\n    >[AZURE.NOTE] If the TEXTFILE table *&#60;database name>.&#60;external textfile table name>* has partitions, in STEP 3, the `SELECT * FROM <database name>.<external textfile table name>` command will select the partition variable as a field in the returned data set. Inserting it into the *&#60;database name>.&#60;ORC table name>* will fail since *&#60;database name>.&#60;ORC table name>* does not have the partition variable as a field in the table schema. In this case, users need to specifically select the fields to be inserted to *&#60;database name>.&#60;ORC table name>* as follows:\n\n        INSERT OVERWRITE TABLE <database name>.<ORC table name> PARTITION (<partition variable>=<partition value>)\n           SELECT field1, field2, ..., fieldN\n           FROM <database name>.<external textfile table name> \n           WHERE <partition variable>=<partition value>;\n\n4. It is safe to drop the *&#60;external textfile table name>* when using the following query after all data has been inserted into *&#60;database name>.&#60;ORC table name>*:\n\n        DROP TABLE IF EXISTS <database name>.<external textfile table name>;\n\nAfter following this procedure, you should have a table with data in the ORC format ready to use.  \n\n\n##Tuning sections should go here\n\nIn the final section, parameters that users can tune so that the performance of Hive queries can be improved are discussed."
+}

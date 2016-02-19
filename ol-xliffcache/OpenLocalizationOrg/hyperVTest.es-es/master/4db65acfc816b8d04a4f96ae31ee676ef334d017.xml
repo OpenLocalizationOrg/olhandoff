@@ -1,0 +1,669 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        65
+      ],
+      "content": "Custom caching in Azure API Management"
+    },
+    {
+      "pos": [
+        84,
+        139
+      ],
+      "content": "Learn how to cache items by key in Azure API Management"
+    },
+    {
+      "pos": [
+        440,
+        478
+      ],
+      "content": "Custom caching in Azure API Management"
+    },
+    {
+      "pos": [
+        479,
+        1358
+      ],
+      "content": "Azure API Management service has built-in support for <bpt id=\"p1\">[</bpt>HTTP response caching<ept id=\"p1\">](api-management-howto-cache.md)</ept><ph id=\"ph2\"/> using the resource URL as the key. The key can be modified by request headers using the <ph id=\"ph3\">`vary-by`</ph><ph id=\"ph4\"/> properties. This is useful for caching entire HTTP responses (aka representations), but sometimes it is useful to just cache a portion of a representation. The new <bpt id=\"p2\">[</bpt>cache-lookup-value<ept id=\"p2\">](https://msdn.microsoft.com/library/azure/dn894086.aspx#GetFromCacheByKey)</ept><ph id=\"ph5\"/> and <bpt id=\"p3\">[</bpt>cache-store-value<ept id=\"p3\">](https://msdn.microsoft.com/library/azure/dn894086.aspx#StoreToCacheByKey)</ept><ph id=\"ph6\"/> policies provide the ability to store and retrieve arbitrary pieces of data from within policy definitions. This ability also adds value to the previously introduced <bpt id=\"p4\">[</bpt>send-request<ept id=\"p4\">](https://msdn.microsoft.com/library/azure/dn894085.aspx#SendRequest)</ept><ph id=\"ph7\"/> policy because you can now cache responses from external services.",
+      "nodes": [
+        {
+          "content": "Azure API Management service has built-in support for <bpt id=\"p1\">[</bpt>HTTP response caching<ept id=\"p1\">](api-management-howto-cache.md)</ept><ph id=\"ph2\"/> using the resource URL as the key.",
+          "pos": [
+            0,
+            195
+          ]
+        },
+        {
+          "content": "The key can be modified by request headers using the <ph id=\"ph3\">`vary-by`</ph><ph id=\"ph4\"/> properties.",
+          "pos": [
+            196,
+            302
+          ]
+        },
+        {
+          "content": "This is useful for caching entire HTTP responses (aka representations), but sometimes it is useful to just cache a portion of a representation.",
+          "pos": [
+            303,
+            446
+          ]
+        },
+        {
+          "content": "The new <bpt id=\"p2\">[</bpt>cache-lookup-value<ept id=\"p2\">](https://msdn.microsoft.com/library/azure/dn894086.aspx#GetFromCacheByKey)</ept><ph id=\"ph5\"/> and <bpt id=\"p3\">[</bpt>cache-store-value<ept id=\"p3\">](https://msdn.microsoft.com/library/azure/dn894086.aspx#StoreToCacheByKey)</ept><ph id=\"ph6\"/> policies provide the ability to store and retrieve arbitrary pieces of data from within policy definitions.",
+          "pos": [
+            447,
+            859
+          ]
+        },
+        {
+          "content": "This ability also adds value to the previously introduced <bpt id=\"p4\">[</bpt>send-request<ept id=\"p4\">](https://msdn.microsoft.com/library/azure/dn894085.aspx#SendRequest)</ept><ph id=\"ph7\"/> policy because you can now cache responses from external services.",
+          "pos": [
+            860,
+            1119
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1363,
+        1375
+      ],
+      "content": "Architecture"
+    },
+    {
+      "pos": [
+        1378,
+        1922
+      ],
+      "content": "API Management service uses a shared per-tenant data cache so that, as you scale up to multiple units you will still get access to the same cached data. However, when working with a multi-region deployment there are independent caches within each of the regions. Due to this, it is important to not treat the cache as a data store, where it is the only source of some piece of information. If you did, and later decided to take advantage of the multi-region deployment, then customers with users that travel may lose access to that cached data.",
+      "nodes": [
+        {
+          "content": "API Management service uses a shared per-tenant data cache so that, as you scale up to multiple units you will still get access to the same cached data.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "However, when working with a multi-region deployment there are independent caches within each of the regions.",
+          "pos": [
+            153,
+            262
+          ]
+        },
+        {
+          "content": "Due to this, it is important to not treat the cache as a data store, where it is the only source of some piece of information.",
+          "pos": [
+            263,
+            389
+          ]
+        },
+        {
+          "content": "If you did, and later decided to take advantage of the multi-region deployment, then customers with users that travel may lose access to that cached data.",
+          "pos": [
+            390,
+            544
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1927,
+        1943
+      ],
+      "content": "Fragment caching"
+    },
+    {
+      "pos": [
+        1944,
+        2772
+      ],
+      "content": "There are certain cases where responses being returned contain some portion of data that is expensive to determine and yet remains fresh for a reasonable amount of time. As an example, consider a service built by an airline that provides information relating flight reservations, flight status, etc. If the user is a member of the airlines points program, they would also have information relating to their current status and mileage accumulated. This user-related information might be stored in a different system, but it may be desirable to include it in responses returned about flight status and reservations. This can be done using a process called fragment caching. The primary representation can be returned from the origin server using some kind of token to indicate where the user-related information is to be inserted.",
+      "nodes": [
+        {
+          "content": "There are certain cases where responses being returned contain some portion of data that is expensive to determine and yet remains fresh for a reasonable amount of time.",
+          "pos": [
+            0,
+            169
+          ]
+        },
+        {
+          "content": "As an example, consider a service built by an airline that provides information relating flight reservations, flight status, etc. If the user is a member of the airlines points program, they would also have information relating to their current status and mileage accumulated.",
+          "pos": [
+            170,
+            446
+          ]
+        },
+        {
+          "content": "This user-related information might be stored in a different system, but it may be desirable to include it in responses returned about flight status and reservations.",
+          "pos": [
+            447,
+            613
+          ]
+        },
+        {
+          "content": "This can be done using a process called fragment caching.",
+          "pos": [
+            614,
+            671
+          ]
+        },
+        {
+          "content": "The primary representation can be returned from the origin server using some kind of token to indicate where the user-related information is to be inserted.",
+          "pos": [
+            672,
+            828
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2775,
+        2831
+      ],
+      "content": "Consider the following JSON response from a backend API."
+    },
+    {
+      "pos": [
+        3019,
+        3085
+      ],
+      "content": "And secondary resource at <ph id=\"ph8\">`/userprofile/{userid}`</ph><ph id=\"ph9\"/> that looks like,"
+    },
+    {
+      "pos": [
+        3141,
+        3356
+      ],
+      "content": "In order to determine the appropriate user information to include, we need to identify who the end user is. This mechanism is implementation dependent. As an example, I am using the <ph id=\"ph10\">`Subject`</ph><ph id=\"ph11\"/> claim of a <ph id=\"ph12\">`JWT`</ph><ph id=\"ph13\"/> token.",
+      "nodes": [
+        {
+          "content": "In order to determine the appropriate user information to include, we need to identify who the end user is.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "This mechanism is implementation dependent.",
+          "pos": [
+            108,
+            151
+          ]
+        },
+        {
+          "content": "As an example, I am using the <ph id=\"ph10\">`Subject`</ph><ph id=\"ph11\"/> claim of a <ph id=\"ph12\">`JWT`</ph><ph id=\"ph13\"/> token.",
+          "pos": [
+            152,
+            283
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3514,
+        3754
+      ],
+      "content": "We store this <ph id=\"ph14\">`enduserid`</ph><ph id=\"ph15\"/> value in a context variable for later use. The next step is to determine if a previous request has already retrieved the user information and stored it in the cache. For this we use the <ph id=\"ph16\">`cache-lookup-value`</ph><ph id=\"ph17\"/> policy.",
+      "nodes": [
+        {
+          "content": "We store this <ph id=\"ph14\">`enduserid`</ph><ph id=\"ph15\"/> value in a context variable for later use.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "The next step is to determine if a previous request has already retrieved the user information and stored it in the cache.",
+          "pos": [
+            103,
+            225
+          ]
+        },
+        {
+          "content": "For this we use the <ph id=\"ph16\">`cache-lookup-value`</ph><ph id=\"ph17\"/> policy.",
+          "pos": [
+            226,
+            308
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3883,
+        4082
+      ],
+      "content": "If there is no entry in the cache that corresponds to the key value, then no <ph id=\"ph18\">`userprofile`</ph><ph id=\"ph19\"/> context variable will be created. We check the success of the lookup using the <ph id=\"ph20\">`choose`</ph><ph id=\"ph21\"/> control flow policy.",
+      "nodes": [
+        {
+          "content": "If there is no entry in the cache that corresponds to the key value, then no <ph id=\"ph18\">`userprofile`</ph><ph id=\"ph19\"/> context variable will be created.",
+          "pos": [
+            0,
+            158
+          ]
+        },
+        {
+          "content": "We check the success of the lookup using the <ph id=\"ph20\">`choose`</ph><ph id=\"ph21\"/> control flow policy.",
+          "pos": [
+            159,
+            267
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4314,
+        4432
+      ],
+      "content": "If the <ph id=\"ph22\">`userprofile`</ph><ph id=\"ph23\"/> context variable doesn’t exist, then we are going to have to make an HTTP request to retrieve it."
+    },
+    {
+      "pos": [
+        4873,
+        5062
+      ],
+      "content": "We use the <ph id=\"ph24\">`enduserid`</ph><ph id=\"ph25\"/> to construct the URL to the user profile resource. Once we have the response, we can pull the body text out of the response and store it back into a context variable.",
+      "nodes": [
+        {
+          "content": "We use the <ph id=\"ph24\">`enduserid`</ph><ph id=\"ph25\"/> to construct the URL to the user profile resource.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "Once we have the response, we can pull the body text out of the response and store it back into a context variable.",
+          "pos": [
+            108,
+            223
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5204,
+        5341
+      ],
+      "content": "To avoid us having to make this HTTP request again, when the same user makes another request, we can store the user profile in the cache."
+    },
+    {
+      "pos": [
+        5513,
+        5774
+      ],
+      "content": "We store the value in the cache using the exact same key that we originally attempted to retrieve it with. The duration that we choose to store the value should be based on how often the information changes and how tolerant users are to out of date information.",
+      "nodes": [
+        {
+          "content": "We store the value in the cache using the exact same key that we originally attempted to retrieve it with.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "The duration that we choose to store the value should be based on how often the information changes and how tolerant users are to out of date information.",
+          "pos": [
+            107,
+            261
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5777,
+        6134
+      ],
+      "content": "It is important to realize that retrieving from the cache is still an out-of-process, network request and potentially can still add tens of milliseconds to the request. The benefits come when determining the user profile information takes significantly longer than that due to needing to do database queries or aggregate information from multiple back-ends.",
+      "nodes": [
+        {
+          "content": "It is important to realize that retrieving from the cache is still an out-of-process, network request and potentially can still add tens of milliseconds to the request.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "The benefits come when determining the user profile information takes significantly longer than that due to needing to do database queries or aggregate information from multiple back-ends.",
+          "pos": [
+            169,
+            357
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6136,
+        6235
+      ],
+      "content": "The final step in the process is to update the returned response with our user profile information."
+    },
+    {
+      "pos": [
+        6400,
+        6584
+      ],
+      "content": "I chose to include the quotation marks as part of the token so that even when the replace doesn’t occur, the response was still valid JSON. This was primarily to make debugging easier.",
+      "nodes": [
+        {
+          "content": "I chose to include the quotation marks as part of the token so that even when the replace doesn’t occur, the response was still valid JSON.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "This was primarily to make debugging easier.",
+          "pos": [
+            140,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6586,
+        6690
+      ],
+      "content": "Once you combine all these steps together, the end result is a policy that looks like the following one."
+    },
+    {
+      "pos": [
+        8927,
+        9219
+      ],
+      "content": "This caching approach is primarily used in web sites where HTML is composed on the server side so that it can be rendered as a single page. However, it can also be useful in APIs where clients cannot do client side HTTP caching or it is desirable not to put that responsibility on the client.",
+      "nodes": [
+        {
+          "content": "This caching approach is primarily used in web sites where HTML is composed on the server side so that it can be rendered as a single page.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "However, it can also be useful in APIs where clients cannot do client side HTTP caching or it is desirable not to put that responsibility on the client.",
+          "pos": [
+            140,
+            292
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9221,
+        9492
+      ],
+      "content": "This same kind of fragment caching can also be done on the backend web servers using a Redis caching server, however, using the API Management service to perform this work is useful when the cached fragments are coming from different back-ends than the primary responses."
+    },
+    {
+      "pos": [
+        9497,
+        9519
+      ],
+      "content": "Transparent versioning"
+    },
+    {
+      "pos": [
+        9520,
+        9826
+      ],
+      "content": "It is common practice for multiple different implementation versions of an API to be supported at any one time. This is perhaps to support different environments, like dev, test, production, etc, or it may be to support older versions of the API to give time for API consumers to migrate to newer versions.",
+      "nodes": [
+        {
+          "content": "It is common practice for multiple different implementation versions of an API to be supported at any one time.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "This is perhaps to support different environments, like dev, test, production, etc, or it may be to support older versions of the API to give time for API consumers to migrate to newer versions.",
+          "pos": [
+            112,
+            306
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9829,
+        10316
+      ],
+      "content": "One approach to handling this instead of requiring client developers to change the URLs from <ph id=\"ph26\">`/v1/customers`</ph><ph id=\"ph27\"/> to <ph id=\"ph28\">`/v2/customers`</ph><ph id=\"ph29\"/> is to store in the consumer’s profile data which version of the API they currently wish to use and call the appropriate backend URL. In order to determine the correct backend URL to call for a particular client, it is necessary to query some configuration data. By caching this configuration data, we can minimize the performance penalty of doing this lookup.",
+      "nodes": [
+        {
+          "content": "One approach to handling this instead of requiring client developers to change the URLs from <ph id=\"ph26\">`/v1/customers`</ph><ph id=\"ph27\"/> to <ph id=\"ph28\">`/v2/customers`</ph><ph id=\"ph29\"/> is to store in the consumer’s profile data which version of the API they currently wish to use and call the appropriate backend URL.",
+          "pos": [
+            0,
+            328
+          ]
+        },
+        {
+          "content": "In order to determine the correct backend URL to call for a particular client, it is necessary to query some configuration data.",
+          "pos": [
+            329,
+            457
+          ]
+        },
+        {
+          "content": "By caching this configuration data, we can minimize the performance penalty of doing this lookup.",
+          "pos": [
+            458,
+            555
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10318,
+        10485
+      ],
+      "content": "The first step is to determine the identifier used to configure the desired version. In this example, I chose to associate the version to the product subscription key.",
+      "nodes": [
+        {
+          "content": "The first step is to determine the identifier used to configure the desired version.",
+          "pos": [
+            0,
+            84
+          ]
+        },
+        {
+          "content": "In this example, I chose to associate the version to the product subscription key.",
+          "pos": [
+            85,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10566,
+        10655
+      ],
+      "content": "We then do a cache lookup to see if we already have retrieved the desired client version."
+    },
+    {
+      "pos": [
+        10793,
+        10849
+      ],
+      "content": "Then we check to see if we did not find it in the cache."
+    },
+    {
+      "pos": [
+        10943,
+        10983
+      ],
+      "content": "If we didn’t then we go and retrieve it."
+    },
+    {
+      "pos": [
+        11355,
+        11404
+      ],
+      "content": "Extract the response body text from the response."
+    },
+    {
+      "pos": [
+        11554,
+        11596
+      ],
+      "content": "Store it back in the cache for future use."
+    },
+    {
+      "pos": [
+        11785,
+        11880
+      ],
+      "content": "And finally update the back-end URL to select the version of the service desired by the client."
+    },
+    {
+      "pos": [
+        12029,
+        12065
+      ],
+      "content": "The completely policy is as follows."
+    },
+    {
+      "pos": [
+        13464,
+        13675
+      ],
+      "content": "Enabling API consumers to transparently control which backend version is being accessed by clients without having to update and redeploy clients is a elegant solution that addresses many API versioning concerns."
+    },
+    {
+      "pos": [
+        13680,
+        13696
+      ],
+      "content": "Tenant Isolation"
+    },
+    {
+      "pos": [
+        13698,
+        14236
+      ],
+      "content": "In larger, multi-tenant deployments some companies create separate groups of tenants on distinct deployments of backend hardware. This minimizes the number of customers who are impacted by a hardware issue on the backend. It also enables new software versions to be rolled out in stages. Ideally this backend architecture should be transparent to API consumers. This can be achieved in a similar way to transparent versioning because it is based on the same technique of manipulating the backend URL using configuration state per API key.",
+      "nodes": [
+        {
+          "content": "In larger, multi-tenant deployments some companies create separate groups of tenants on distinct deployments of backend hardware.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "This minimizes the number of customers who are impacted by a hardware issue on the backend.",
+          "pos": [
+            130,
+            221
+          ]
+        },
+        {
+          "content": "It also enables new software versions to be rolled out in stages.",
+          "pos": [
+            222,
+            287
+          ]
+        },
+        {
+          "content": "Ideally this backend architecture should be transparent to API consumers.",
+          "pos": [
+            288,
+            361
+          ]
+        },
+        {
+          "content": "This can be achieved in a similar way to transparent versioning because it is based on the same technique of manipulating the backend URL using configuration state per API key.",
+          "pos": [
+            362,
+            538
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14240,
+        14473
+      ],
+      "content": "Instead of returning a preferred version of the API for each subscription key, you would return an identifier that relates a tenant to the assigned hardware group. That identifier can be used to construct the appropriate backend URL.",
+      "nodes": [
+        {
+          "content": "Instead of returning a preferred version of the API for each subscription key, you would return an identifier that relates a tenant to the assigned hardware group.",
+          "pos": [
+            0,
+            163
+          ]
+        },
+        {
+          "content": "That identifier can be used to construct the appropriate backend URL.",
+          "pos": [
+            164,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14478,
+        14485
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        14486,
+        14769
+      ],
+      "content": "The freedom to use the Azure API management cache for storing any kind of data enables efficient access to configuration data that can affect the way an inbound request is processed. It can also be used to store data fragments that can augment responses, returned from a backend API.",
+      "nodes": [
+        {
+          "content": "The freedom to use the Azure API management cache for storing any kind of data enables efficient access to configuration data that can affect the way an inbound request is processed.",
+          "pos": [
+            0,
+            182
+          ]
+        },
+        {
+          "content": "It can also be used to store data fragments that can augment responses, returned from a backend API.",
+          "pos": [
+            183,
+            283
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14774,
+        14784
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        14785,
+        15012
+      ],
+      "content": "Please give us your feedback in the Disqus thread for this topic if there are other scenarios that these policies have enabled for you, or if there are scenarios you would like to achieve but do not feel are currently possible."
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Custom caching in Azure API Management\"\n    description=\"Learn how to cache items by key in Azure API Management\"\n    services=\"api-management\"\n    documentationCenter=\"\"\n    authors=\"darrelmiller\"\n    manager=\"\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"api-management\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.tgt_pltfrm=\"na\"\n    ms.workload=\"na\"\n    ms.date=\"12/16/2015\"\n    ms.author=\"v-darmi\"/>\n\n# Custom caching in Azure API Management\nAzure API Management service has built-in support for [HTTP response caching](api-management-howto-cache.md) using the resource URL as the key. The key can be modified by request headers using the `vary-by` properties. This is useful for caching entire HTTP responses (aka representations), but sometimes it is useful to just cache a portion of a representation. The new [cache-lookup-value](https://msdn.microsoft.com/library/azure/dn894086.aspx#GetFromCacheByKey) and [cache-store-value](https://msdn.microsoft.com/library/azure/dn894086.aspx#StoreToCacheByKey) policies provide the ability to store and retrieve arbitrary pieces of data from within policy definitions. This ability also adds value to the previously introduced [send-request](https://msdn.microsoft.com/library/azure/dn894085.aspx#SendRequest) policy because you can now cache responses from external services.\n\n## Architecture  \nAPI Management service uses a shared per-tenant data cache so that, as you scale up to multiple units you will still get access to the same cached data. However, when working with a multi-region deployment there are independent caches within each of the regions. Due to this, it is important to not treat the cache as a data store, where it is the only source of some piece of information. If you did, and later decided to take advantage of the multi-region deployment, then customers with users that travel may lose access to that cached data.\n\n## Fragment caching\nThere are certain cases where responses being returned contain some portion of data that is expensive to determine and yet remains fresh for a reasonable amount of time. As an example, consider a service built by an airline that provides information relating flight reservations, flight status, etc. If the user is a member of the airlines points program, they would also have information relating to their current status and mileage accumulated. This user-related information might be stored in a different system, but it may be desirable to include it in responses returned about flight status and reservations. This can be done using a process called fragment caching. The primary representation can be returned from the origin server using some kind of token to indicate where the user-related information is to be inserted. \n\nConsider the following JSON response from a backend API.\n\n\n    {\n      \"airline\" : \"Air Canada\",\n      \"flightno\" : \"871\",\n      \"status\" : \"ontime\",\n      \"gate\" : \"B40\",\n      \"terminal\" : \"2A\",\n      \"userprofile\" : \"$userprofile$\"\n    }  \n\nAnd secondary resource at `/userprofile/{userid}` that looks like,\n\n     { \"username\" : \"Bob Smith\", \"Status\" : \"Gold\" }\n\nIn order to determine the appropriate user information to include, we need to identify who the end user is. This mechanism is implementation dependent. As an example, I am using the `Subject` claim of a `JWT` token. \n\n    <set-variable\n      name=\"enduserid\"\n      value=\"@(context.Request.Headers.GetValueOrDefault(\"Authorization\",\"\").Split(' ')[1].AsJwt()?.Subject)\" />\n\nWe store this `enduserid` value in a context variable for later use. The next step is to determine if a previous request has already retrieved the user information and stored it in the cache. For this we use the `cache-lookup-value` policy.\n\n      <cache-lookup-value\n      key=\"@(\"userprofile-\" + context.Variables[\"enduserid\"])\"\n      variable-name=\"userprofile\" />\n\nIf there is no entry in the cache that corresponds to the key value, then no `userprofile` context variable will be created. We check the success of the lookup using the `choose` control flow policy.\n\n    <choose>\n        <when condition=\"@(!context.Variables.ContainsKey(\"userprofile\"))\">\n            <!— If the userprofile context variable doesn’t exist, make an HTTP request to retrieve it.  -->\n        </when>\n    </choose>\n\n\nIf the `userprofile` context variable doesn’t exist, then we are going to have to make an HTTP request to retrieve it.\n\n    <send-request\n      mode=\"new\"\n      response-variable-name=\"userprofileresponse\"\n      timeout=\"10\"\n      ignore-error=\"true\">\n\n      <!-- Build a URL that points to the profile for the current end-user -->\n      <set-url>@(new Uri(new Uri(\"https://apimairlineapi.azurewebsites.net/UserProfile/\"),\n          (string)context.Variables[\"enduserid\"]).AbsoluteUri)\n      </set-url>\n      <set-method>GET</set-method>\n    </send-request>\n\nWe use the `enduserid` to construct the URL to the user profile resource. Once we have the response, we can pull the body text out of the response and store it back into a context variable.\n\n    <set-variable\n        name=\"userprofile\"\n        value=\"@(((IResponse)context.Variables[\"userprofileresponse\"]).Body.As<string>())\" />\n\nTo avoid us having to make this HTTP request again, when the same user makes another request, we can store the user profile in the cache.\n\n    <cache-store-value\n        key=\"@(\"userprofile-\" + context.Variables[\"enduserid\"])\"\n        value=\"@((string)context.Variables[\"userprofile\"])\" duration=\"100000\" />\n\nWe store the value in the cache using the exact same key that we originally attempted to retrieve it with. The duration that we choose to store the value should be based on how often the information changes and how tolerant users are to out of date information. \n\nIt is important to realize that retrieving from the cache is still an out-of-process, network request and potentially can still add tens of milliseconds to the request. The benefits come when determining the user profile information takes significantly longer than that due to needing to do database queries or aggregate information from multiple back-ends.\n\nThe final step in the process is to update the returned response with our user profile information.\n\n    <!—Update response body with user profile-->\n    <find-and-replace\n        from='\"$userprofile$\"'\n        to=\"@((string)context.Variables[\"userprofile\"])\" />\n\nI chose to include the quotation marks as part of the token so that even when the replace doesn’t occur, the response was still valid JSON. This was primarily to make debugging easier.\n\nOnce you combine all these steps together, the end result is a policy that looks like the following one.\n\n     <policies>\n        <inbound>\n            <!-- How you determine user identity is application dependent -->\n            <set-variable\n              name=\"enduserid\"\n              value=\"@(context.Request.Headers.GetValueOrDefault(\"Authorization\",\"\").Split(' ')[1].AsJwt()?.Subject)\" />\n\n            <!--Look for userprofile for this user in the cache -->\n            <cache-lookup-value\n              key=\"@(\"userprofile-\" + context.Variables[\"enduserid\"])\"\n              variable-name=\"userprofile\" />\n\n            <!-- If we don’t find it in the cache, make a request for it and store it -->\n            <choose>\n                <when condition=\"@(!context.Variables.ContainsKey(\"userprofile\"))\">\n                    <!—Make HTTP request to get user profile -->\n                    <send-request\n                      mode=\"new\"\n                      response-variable-name=\"userprofileresponse\"\n                      timeout=\"10\"\n                      ignore-error=\"true\">\n\n                       <!-- Build a URL that points to the profile for the current end-user -->\n                        <set-url>@(new Uri(new Uri(\"https://apimairlineapi.azurewebsites.net/UserProfile/\"),(string)context.Variables[\"enduserid\"]).AbsoluteUri)</set-url>\n                        <set-method>GET</set-method>\n                    </send-request>\n\n                    <!—Store response body in context variable -->\n                    <set-variable\n                      name=\"userprofile\"\n                      value=\"@(((IResponse)context.Variables[\"userprofileresponse\"]).Body.As<string>())\" />\n\n                    <!—Store result in cache -->\n                    <cache-store-value\n                      key=\"@(\"userprofile-\" + context.Variables[\"enduserid\"])\"\n                      value=\"@((string)context.Variables[\"userprofile\"])\"\n                      duration=\"100000\" />\n                </when>\n            </choose>\n            <base />\n        </inbound>\n        <outbound>\n            <!—Update response body with user profile-->\n            <find-and-replace\n                  from='\"$userprofile$\"'\n                  to=\"@((string)context.Variables[\"userprofile\"])\" />\n            <base />\n        </outbound>\n     </policies>\n\nThis caching approach is primarily used in web sites where HTML is composed on the server side so that it can be rendered as a single page. However, it can also be useful in APIs where clients cannot do client side HTTP caching or it is desirable not to put that responsibility on the client.\n\nThis same kind of fragment caching can also be done on the backend web servers using a Redis caching server, however, using the API Management service to perform this work is useful when the cached fragments are coming from different back-ends than the primary responses.\n\n## Transparent versioning\nIt is common practice for multiple different implementation versions of an API to be supported at any one time. This is perhaps to support different environments, like dev, test, production, etc, or it may be to support older versions of the API to give time for API consumers to migrate to newer versions. \n\nOne approach to handling this instead of requiring client developers to change the URLs from `/v1/customers` to `/v2/customers` is to store in the consumer’s profile data which version of the API they currently wish to use and call the appropriate backend URL. In order to determine the correct backend URL to call for a particular client, it is necessary to query some configuration data. By caching this configuration data, we can minimize the performance penalty of doing this lookup.\n\nThe first step is to determine the identifier used to configure the desired version. In this example, I chose to associate the version to the product subscription key. \n\n        <set-variable name=\"clientid\" value=\"@(context.Subscription.Key)\" />\n\nWe then do a cache lookup to see if we already have retrieved the desired client version.\n\n        <cache-lookup-value\n        key=\"@(\"clientversion-\" + context.Variables[\"clientid\"])\"\n        variable-name=\"clientversion\" />\n\nThen we check to see if we did not find it in the cache.\n\n    <choose>\n        <when condition=\"@(!context.Variables.ContainsKey(\"clientversion\"))\">\n\nIf we didn’t then we go and retrieve it.\n\n    <send-request\n        mode=\"new\"\n        response-variable-name=\"clientconfiguresponse\"\n        timeout=\"10\"\n        ignore-error=\"true\">\n                <set-url>@(new Uri(new Uri(context.Api.ServiceUrl.ToString() + \"api/ClientConfig/\"),(string)context.Variables[\"clientid\"]).AbsoluteUri)</set-url>\n                <set-method>GET</set-method>\n    </send-request>\n\nExtract the response body text from the response.\n\n    <set-variable\n          name=\"clientversion\"\n          value=\"@(((IResponse)context.Variables[\"clientconfiguresponse\"]).Body.As<string>())\" />\n\nStore it back in the cache for future use.\n\n    <cache-store-value\n          key=\"@(\"clientversion-\" + context.Variables[\"clientid\"])\"\n          value=\"@((string)context.Variables[\"clientversion\"])\"\n          duration=\"100000\" />\n\nAnd finally update the back-end URL to select the version of the service desired by the client.\n\n    <set-backend-service\n          base-url=\"@(context.Api.ServiceUrl.ToString() + \"api/\" + (string)context.Variables[\"clientversion\"] + \"/\")\" />\n\nThe completely policy is as follows.\n\n     <inbound>\n        <base />\n        <set-variable name=\"clientid\" value=\"@(context.Subscription.Key)\" />\n        <cache-lookup-value key=\"@(\"clientversion-\" + context.Variables[\"clientid\"])\" variable-name=\"clientversion\" />\n\n        <!-- If we don’t find it in the cache, make a request for it and store it -->\n        <choose>\n            <when condition=\"@(!context.Variables.ContainsKey(\"clientversion\"))\">\n                <send-request mode=\"new\" response-variable-name=\"clientconfiguresponse\" timeout=\"10\" ignore-error=\"true\">\n                    <set-url>@(new Uri(new Uri(context.Api.ServiceUrl.ToString() + \"api/ClientConfig/\"),(string)context.Variables[\"clientid\"]).AbsoluteUri)</set-url>\n                    <set-method>GET</set-method>\n                </send-request>\n                <!-- Store response body in context variable -->\n                <set-variable name=\"clientversion\" value=\"@(((IResponse)context.Variables[\"clientconfiguresponse\"]).Body.As<string>())\" />\n                <!-- Store result in cache -->\n                <cache-store-value key=\"@(\"clientversion-\" + context.Variables[\"clientid\"])\" value=\"@((string)context.Variables[\"clientversion\"])\" duration=\"100000\" />\n            </when>\n        </choose>\n        <set-backend-service base-url=\"@(context.Api.ServiceUrl.ToString() + \"api/\" + (string)context.Variables[\"clientversion\"] + \"/\")\" />\n    </inbound>\n\n\nEnabling API consumers to transparently control which backend version is being accessed by clients without having to update and redeploy clients is a elegant solution that addresses many API versioning concerns.\n\n## Tenant Isolation\n\nIn larger, multi-tenant deployments some companies create separate groups of tenants on distinct deployments of backend hardware. This minimizes the number of customers who are impacted by a hardware issue on the backend. It also enables new software versions to be rolled out in stages. Ideally this backend architecture should be transparent to API consumers. This can be achieved in a similar way to transparent versioning because it is based on the same technique of manipulating the backend URL using configuration state per API key.  \n\nInstead of returning a preferred version of the API for each subscription key, you would return an identifier that relates a tenant to the assigned hardware group. That identifier can be used to construct the appropriate backend URL.\n\n## Summary\nThe freedom to use the Azure API management cache for storing any kind of data enables efficient access to configuration data that can affect the way an inbound request is processed. It can also be used to store data fragments that can augment responses, returned from a backend API.\n\n## Next steps\nPlease give us your feedback in the Disqus thread for this topic if there are other scenarios that these policies have enabled for you, or if there are scenarios you would like to achieve but do not feel are currently possible.\n"
+}

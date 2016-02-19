@@ -1,0 +1,1958 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        123
+      ],
+      "content": "Use Azure Event Hubs with Apache Spark in HDInsight to process streaming data | Microsoft Azure"
+    },
+    {
+      "pos": [
+        143,
+        281
+      ],
+      "content": "Step-by-step instructions on how to send a data stream to Azure Event Hub and then receive those events in Spark using a scala application"
+    },
+    {
+      "pos": [
+        622,
+        714
+      ],
+      "content": "Spark Streaming: Process events from Azure Event Hubs with Apache Spark on HDInsight (Linux)"
+    },
+    {
+      "pos": [
+        716,
+        1033
+      ],
+      "content": "Spark Streaming extends the core Spark API to build scalable, high-throughput, fault-tolerant stream processing applications. Data can be ingested from many sources. In this article we use Azure Event Hubs to ingest data. Event Hubs is a highly scalable ingestion system that can intake millions of events per second.",
+      "nodes": [
+        {
+          "content": "Spark Streaming extends the core Spark API to build scalable, high-throughput, fault-tolerant stream processing applications.",
+          "pos": [
+            0,
+            125
+          ]
+        },
+        {
+          "content": "Data can be ingested from many sources.",
+          "pos": [
+            126,
+            165
+          ]
+        },
+        {
+          "content": "In this article we use Azure Event Hubs to ingest data.",
+          "pos": [
+            166,
+            221
+          ]
+        },
+        {
+          "content": "Event Hubs is a highly scalable ingestion system that can intake millions of events per second.",
+          "pos": [
+            222,
+            317
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1036,
+        1404
+      ],
+      "content": "In this tutorial, you will learn how to create an Azure Event Hub, how to ingest messages into an Event Hub using a console application in Java, and to retrieve them in parallel using a Spark application written in Scala. This application consumes the data streamed through Event Hubs and routes it to different outputs (Azure Storage Blob, Hive table, and SQL table).",
+      "nodes": [
+        {
+          "content": "In this tutorial, you will learn how to create an Azure Event Hub, how to ingest messages into an Event Hub using a console application in Java, and to retrieve them in parallel using a Spark application written in Scala.",
+          "pos": [
+            0,
+            221
+          ]
+        },
+        {
+          "content": "This application consumes the data streamed through Event Hubs and routes it to different outputs (Azure Storage Blob, Hive table, and SQL table).",
+          "pos": [
+            222,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1408,
+        1722
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> To follow the instructions in this article, you will have to use both versions of the Azure portal. To create an Event Hub you will use the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](https://manage.windowsazure.com)</ept>. To work with the HDInsight Spark cluster, you will use the <bpt id=\"p2\">[</bpt>Azure Preview Portal<ept id=\"p2\">](https://ms.portal.azure.com/)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> To follow the instructions in this article, you will have to use both versions of the Azure portal.",
+          "pos": [
+            0,
+            144
+          ]
+        },
+        {
+          "content": "To create an Event Hub you will use the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](https://manage.windowsazure.com)</ept>.",
+          "pos": [
+            145,
+            271
+          ]
+        },
+        {
+          "content": "To work with the HDInsight Spark cluster, you will use the <bpt id=\"p2\">[</bpt>Azure Preview Portal<ept id=\"p2\">](https://ms.portal.azure.com/)</ept>.",
+          "pos": [
+            272,
+            422
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1726,
+        1744
+      ],
+      "content": "<bpt id=\"p3\">**</bpt>Prerequisites:<ept id=\"p3\">**</ept>"
+    },
+    {
+      "pos": [
+        1746,
+        1774
+      ],
+      "content": "You must have the following:"
+    },
+    {
+      "pos": [
+        1778,
+        1932
+      ],
+      "content": "An Azure subscription. See <bpt id=\"p4\">[</bpt>Get Azure free trial<ept id=\"p4\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+      "nodes": [
+        {
+          "content": "An Azure subscription.",
+          "pos": [
+            0,
+            22
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p4\">[</bpt>Get Azure free trial<ept id=\"p4\">](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/)</ept>.",
+          "pos": [
+            23,
+            192
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1935,
+        2077
+      ],
+      "content": "An Apache Spark cluster. For instructions, see <bpt id=\"p5\">[</bpt>Create Apache Spark clusters in Azure HDInsight<ept id=\"p5\">](hdinsight-apache-spark-jupyter-spark-sql.md)</ept>.",
+      "nodes": [
+        {
+          "content": "An Apache Spark cluster.",
+          "pos": [
+            0,
+            24
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p5\">[</bpt>Create Apache Spark clusters in Azure HDInsight<ept id=\"p5\">](hdinsight-apache-spark-jupyter-spark-sql.md)</ept>.",
+          "pos": [
+            25,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2080,
+        2225
+      ],
+      "content": "Oracle Java Development kit. You can install it from <bpt id=\"p6\">[</bpt>here<ept id=\"p6\">](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)</ept>.",
+      "nodes": [
+        {
+          "content": "Oracle Java Development kit.",
+          "pos": [
+            0,
+            28
+          ]
+        },
+        {
+          "content": "You can install it from <bpt id=\"p6\">[</bpt>here<ept id=\"p6\">](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)</ept>.",
+          "pos": [
+            29,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2228,
+        2353
+      ],
+      "content": "A Java IDE. This article uses IntelliJ IDEA 15.0.1. You can install it from <bpt id=\"p7\">[</bpt>here<ept id=\"p7\">](https://www.jetbrains.com/idea/download/)</ept>.",
+      "nodes": [
+        {
+          "content": "A Java IDE.",
+          "pos": [
+            0,
+            11
+          ]
+        },
+        {
+          "content": "This article uses IntelliJ IDEA 15.0.1.",
+          "pos": [
+            12,
+            51
+          ]
+        },
+        {
+          "content": "You can install it from <bpt id=\"p7\">[</bpt>here<ept id=\"p7\">](https://www.jetbrains.com/idea/download/)</ept>.",
+          "pos": [
+            52,
+            163
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2356,
+        2561
+      ],
+      "content": "Microsoft JDBC driver for SQL Server, v4.1 or later. This is required to write the event data into a SQL Server database. You can install it from <bpt id=\"p8\">[</bpt>here<ept id=\"p8\">](https://msdn.microsoft.com/sqlserver/aa937724.aspx)</ept>.",
+      "nodes": [
+        {
+          "content": "Microsoft JDBC driver for SQL Server, v4.1 or later.",
+          "pos": [
+            0,
+            52
+          ]
+        },
+        {
+          "content": "This is required to write the event data into a SQL Server database.",
+          "pos": [
+            53,
+            121
+          ]
+        },
+        {
+          "content": "You can install it from <bpt id=\"p8\">[</bpt>here<ept id=\"p8\">](https://msdn.microsoft.com/sqlserver/aa937724.aspx)</ept>.",
+          "pos": [
+            122,
+            243
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2564,
+        2688
+      ],
+      "content": "An Azure SQL database. For instructions, see <bpt id=\"p9\">[</bpt>Create a SQL database in minutes<ept id=\"p9\">](../sql-database/sql-database-get-started.md)</ept>",
+      "nodes": [
+        {
+          "content": "An Azure SQL database.",
+          "pos": [
+            0,
+            22
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p9\">[</bpt>Create a SQL database in minutes<ept id=\"p9\">](../sql-database/sql-database-get-started.md)</ept>",
+          "pos": [
+            23,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2693,
+        2720
+      ],
+      "content": "What does this solution do?"
+    },
+    {
+      "pos": [
+        2722,
+        2763
+      ],
+      "content": "This is how the streaming solution flows:"
+    },
+    {
+      "pos": [
+        2768,
+        2831
+      ],
+      "content": "Create an Azure Event Hub that will receive a stream of events."
+    },
+    {
+      "pos": [
+        2836,
+        3127
+      ],
+      "content": "Run a local standalone application that generates events and pushes it the Azure Event Hub. The sample application that does this is published at <bpt id=\"p10\">[</bpt>https://github.com/hdinsight/spark-streaming-data-persistence-examples<ept id=\"p10\">](https://github.com/hdinsight/spark-streaming-data-persistence-examples)</ept>.",
+      "nodes": [
+        {
+          "content": "Run a local standalone application that generates events and pushes it the Azure Event Hub.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "The sample application that does this is published at <bpt id=\"p10\">[</bpt>https://github.com/hdinsight/spark-streaming-data-persistence-examples<ept id=\"p10\">](https://github.com/hdinsight/spark-streaming-data-persistence-examples)</ept>.",
+          "pos": [
+            92,
+            331
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3132,
+        3327
+      ],
+      "content": "Run a streaming application remotely on a Spark cluster that reads streaming events from Azure Event Hub and pushes it out to different locations (Azure Blob, Hive table, and SQL database table)."
+    },
+    {
+      "pos": [
+        3333,
+        3355
+      ],
+      "content": "Create Azure Event Hub"
+    },
+    {
+      "pos": [
+        3360,
+        3487
+      ],
+      "content": "From the <bpt id=\"p11\">[</bpt>Azure portal<ept id=\"p11\">](https://manage.windowsazure.com)</ept>, select <bpt id=\"p12\">**</bpt>NEW<ept id=\"p12\">**</ept><ph id=\"ph4\"/> &gt; <bpt id=\"p13\">**</bpt>Service Bus<ept id=\"p13\">**</ept><ph id=\"ph5\"/> &gt; <bpt id=\"p14\">**</bpt>Event Hub<ept id=\"p14\">**</ept><ph id=\"ph6\"/> &gt; <bpt id=\"p15\">**</bpt>Custom Create<ept id=\"p15\">**</ept>."
+    },
+    {
+      "pos": [
+        3492,
+        3690
+      ],
+      "content": "On the <bpt id=\"p16\">**</bpt>Add a new Event Hub<ept id=\"p16\">**</ept><ph id=\"ph7\"/> screen, enter an <bpt id=\"p17\">**</bpt>Event Hub Name<ept id=\"p17\">**</ept>, select the <bpt id=\"p18\">**</bpt>Region<ept id=\"p18\">**</ept><ph id=\"ph8\"/> to create the hub in, and create a new namespace or select an existing one. Click the <bpt id=\"p19\">**</bpt>Arrow<ept id=\"p19\">**</ept><ph id=\"ph9\"/> to continue.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p16\">**</bpt>Add a new Event Hub<ept id=\"p16\">**</ept><ph id=\"ph7\"/> screen, enter an <bpt id=\"p17\">**</bpt>Event Hub Name<ept id=\"p17\">**</ept>, select the <bpt id=\"p18\">**</bpt>Region<ept id=\"p18\">**</ept><ph id=\"ph8\"/> to create the hub in, and create a new namespace or select an existing one.",
+          "pos": [
+            0,
+            313
+          ]
+        },
+        {
+          "content": "Click the <bpt id=\"p19\">**</bpt>Arrow<ept id=\"p19\">**</ept><ph id=\"ph9\"/> to continue.",
+          "pos": [
+            314,
+            400
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3696,
+        3831
+      ],
+      "content": "<ph id=\"ph10\">![</ph>wizard page 1<ph id=\"ph11\">](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.create.event.hub.png \"Create an Azure Event Hub\")</ph>"
+    },
+    {
+      "pos": [
+        3839,
+        3962
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.NOTE]</ph><ph id=\"ph13\"/> You should select the same <bpt id=\"p20\">**</bpt>Location<ept id=\"p20\">**</ept><ph id=\"ph14\"/> as your Apache Spark cluster in HDInsight to reduce latency and costs."
+    },
+    {
+      "pos": [
+        3967,
+        4241
+      ],
+      "content": "On the <bpt id=\"p21\">**</bpt>Configure Event Hub<ept id=\"p21\">**</ept><ph id=\"ph15\"/> screen, enter the <bpt id=\"p22\">**</bpt>Partition count<ept id=\"p22\">**</ept><ph id=\"ph16\"/> and <bpt id=\"p23\">**</bpt>Message Retention<ept id=\"p23\">**</ept><ph id=\"ph17\"/> values, and then click the check mark. For this example, use a partition count of 10 and a message retention of 1. Note the partition count because you will need this value later.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p21\">**</bpt>Configure Event Hub<ept id=\"p21\">**</ept><ph id=\"ph15\"/> screen, enter the <bpt id=\"p22\">**</bpt>Partition count<ept id=\"p22\">**</ept><ph id=\"ph16\"/> and <bpt id=\"p23\">**</bpt>Message Retention<ept id=\"p23\">**</ept><ph id=\"ph17\"/> values, and then click the check mark.",
+          "pos": [
+            0,
+            298
+          ]
+        },
+        {
+          "content": "For this example, use a partition count of 10 and a message retention of 1.",
+          "pos": [
+            299,
+            374
+          ]
+        },
+        {
+          "content": "Note the partition count because you will need this value later.",
+          "pos": [
+            375,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4247,
+        4413
+      ],
+      "content": "<ph id=\"ph18\">![</ph>wizard page 2<ph id=\"ph19\">](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.create.event.hub2.png \"Specify partition size and retention days for Event Hub\")</ph>"
+    },
+    {
+      "pos": [
+        4418,
+        4531
+      ],
+      "content": "Click the Event Hub that you created, click <bpt id=\"p24\">**</bpt>Configure<ept id=\"p24\">**</ept>, and then create two access policies for the event hub."
+    },
+    {
+      "pos": [
+        4537,
+        4705
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph20\">&lt;table&gt;</ph><ph id=\"ph21\">\n &lt;tr&gt;</ph><ph id=\"ph22\">&lt;th&gt;</ph>Name<ph id=\"ph23\">&lt;/th&gt;</ph><ph id=\"ph24\">&lt;th&gt;</ph>Permissions<ph id=\"ph25\">&lt;/th&gt;</ph><ph id=\"ph26\">&lt;/tr&gt;</ph><ph id=\"ph27\">\n &lt;tr&gt;</ph><ph id=\"ph28\">&lt;td&gt;</ph>mysendpolicy<ph id=\"ph29\">&lt;/td&gt;</ph><ph id=\"ph30\">&lt;td&gt;</ph>Send<ph id=\"ph31\">&lt;/td&gt;</ph><ph id=\"ph32\">&lt;/tr&gt;</ph><ph id=\"ph33\">\n &lt;tr&gt;</ph><ph id=\"ph34\">&lt;td&gt;</ph>myreceivepolicy<ph id=\"ph35\">&lt;/td&gt;</ph><ph id=\"ph36\">&lt;td&gt;</ph>Listen<ph id=\"ph37\">&lt;/td&gt;</ph><ph id=\"ph38\">&lt;/tr&gt;</ph><ph id=\"ph39\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        4711,
+        4933
+      ],
+      "content": "After You create the permissions, select the <bpt id=\"p25\">**</bpt>Save<ept id=\"p25\">**</ept><ph id=\"ph40\"/> icon at the bottom of the page. This creates the shared access policies that will be used to send (<bpt id=\"p26\">**</bpt>mysendpolicy<ept id=\"p26\">**</ept>) and listen (<bpt id=\"p27\">**</bpt>myreceivepolicy<ept id=\"p27\">**</ept>) to this Event Hub.",
+      "nodes": [
+        {
+          "content": "After You create the permissions, select the <bpt id=\"p25\">**</bpt>Save<ept id=\"p25\">**</ept><ph id=\"ph40\"/> icon at the bottom of the page.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "This creates the shared access policies that will be used to send (<bpt id=\"p26\">**</bpt>mysendpolicy<ept id=\"p26\">**</ept>) and listen (<bpt id=\"p27\">**</bpt>myreceivepolicy<ept id=\"p27\">**</ept>) to this Event Hub.",
+          "pos": [
+            141,
+            357
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4939,
+        5071
+      ],
+      "content": "<ph id=\"ph41\">![</ph>policies<ph id=\"ph42\">](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policies.png \"Create Event Hub policies\")</ph>"
+    },
+    {
+      "pos": [
+        5081,
+        5210
+      ],
+      "content": "On the same page, take a note of the policy keys generated for the two policies. Save these keys because they will be used later.",
+      "nodes": [
+        {
+          "content": "On the same page, take a note of the policy keys generated for the two policies.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "Save these keys because they will be used later.",
+          "pos": [
+            81,
+            129
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5216,
+        5345
+      ],
+      "content": "<ph id=\"ph43\">![</ph>policy keys<ph id=\"ph44\">](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policy.keys.png \"Save policy keys\")</ph>"
+    },
+    {
+      "pos": [
+        5350,
+        5511
+      ],
+      "content": "On the <bpt id=\"p28\">**</bpt>Dashboard<ept id=\"p28\">**</ept><ph id=\"ph45\"/> page, click <bpt id=\"p29\">**</bpt>Connection Information<ept id=\"p29\">**</ept><ph id=\"ph46\"/> from the bottom to retrieve and save the connection strings for the Event Hub using the two policies."
+    },
+    {
+      "pos": [
+        5517,
+        5674
+      ],
+      "content": "<ph id=\"ph47\">![</ph>policy keys<ph id=\"ph48\">](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policy.connection.strings.png \"Save policy connection strings\")</ph>"
+    },
+    {
+      "pos": [
+        5679,
+        5732
+      ],
+      "content": "Use a Scala application to send messages to Event Hub"
+    },
+    {
+      "pos": [
+        5734,
+        6123
+      ],
+      "content": "In this section you use a standalone local Scala application to send a stream of events to Azure Event Hub that you created in the previous step. This application is available on GitHub at <bpt id=\"p30\">[</bpt>https://github.com/hdinsight/eventhubs-sample-event-producer<ept id=\"p30\">](https://github.com/hdinsight/eventhubs-sample-event-producer)</ept>. The steps here assume that you have already forked this GitHub repository.",
+      "nodes": [
+        {
+          "content": "In this section you use a standalone local Scala application to send a stream of events to Azure Event Hub that you created in the previous step.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "This application is available on GitHub at <bpt id=\"p30\">[</bpt>https://github.com/hdinsight/eventhubs-sample-event-producer<ept id=\"p30\">](https://github.com/hdinsight/eventhubs-sample-event-producer)</ept>.",
+          "pos": [
+            146,
+            354
+          ]
+        },
+        {
+          "content": "The steps here assume that you have already forked this GitHub repository.",
+          "pos": [
+            355,
+            429
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6128,
+        6201
+      ],
+      "content": "Open the application, <bpt id=\"p31\">**</bpt>EventhubsSampleEventProducer<ept id=\"p31\">**</ept>, in IntelliJ IDEA."
+    },
+    {
+      "pos": [
+        6210,
+        6329
+      ],
+      "content": "Build the project. From the <bpt id=\"p32\">**</bpt>Build<ept id=\"p32\">**</ept><ph id=\"ph49\"/> menu, click <bpt id=\"p33\">**</bpt>Make Project<ept id=\"p33\">**</ept>. The output jar is created under <bpt id=\"p34\">**</bpt>\\out\\artifacts<ept id=\"p34\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Build the project.",
+          "pos": [
+            0,
+            18
+          ]
+        },
+        {
+          "content": "From the <bpt id=\"p32\">**</bpt>Build<ept id=\"p32\">**</ept><ph id=\"ph49\"/> menu, click <bpt id=\"p33\">**</bpt>Make Project<ept id=\"p33\">**</ept>.",
+          "pos": [
+            19,
+            162
+          ]
+        },
+        {
+          "content": "The output jar is created under <bpt id=\"p34\">**</bpt>\\out\\artifacts<ept id=\"p34\">**</ept>.",
+          "pos": [
+            163,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6332,
+        6705
+      ],
+      "content": "<ph id=\"ph50\">[AZURE.TIP]</ph><ph id=\"ph51\"/> You can also use an option available in IntelliJ IDEA to directly create the project from a GitHub repository. To understand how to use that approach, use the instructions in the next section for guidance. Note that a lot of steps that are described in the next section will not be applicable for the Scala application that you create in this step. For example:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph50\">[AZURE.TIP]</ph><ph id=\"ph51\"/> You can also use an option available in IntelliJ IDEA to directly create the project from a GitHub repository.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "To understand how to use that approach, use the instructions in the next section for guidance.",
+          "pos": [
+            157,
+            251
+          ]
+        },
+        {
+          "content": "Note that a lot of steps that are described in the next section will not be applicable for the Scala application that you create in this step.",
+          "pos": [
+            252,
+            394
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            395,
+            407
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6711,
+        6853
+      ],
+      "content": "You will not have to update the POM to include the Spark version. That's because there is no dependency on Spark for creating this application",
+      "nodes": [
+        {
+          "content": "You will not have to update the POM to include the Spark version.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "That's because there is no dependency on Spark for creating this application",
+          "pos": [
+            66,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6858,
+        6988
+      ],
+      "content": "You will not have to add some dependency jars to the project library. That's because those jars are not required for this project.",
+      "nodes": [
+        {
+          "content": "You will not have to add some dependency jars to the project library.",
+          "pos": [
+            0,
+            69
+          ]
+        },
+        {
+          "content": "That's because those jars are not required for this project.",
+          "pos": [
+            70,
+            130
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6993,
+        7056
+      ],
+      "content": "Update the Scala streaming application for receiving the events"
+    },
+    {
+      "pos": [
+        7058,
+        7382
+      ],
+      "content": "A sample Scala application to receive the event and route it to different destinations is available at <bpt id=\"p35\">[</bpt>https://github.com/hdinsight/spark-streaming-data-persistence-examples<ept id=\"p35\">](https://github.com/hdinsight/spark-streaming-data-persistence-examples)</ept>. Follow the steps below to update the application and create the output jar.",
+      "nodes": [
+        {
+          "content": "A sample Scala application to receive the event and route it to different destinations is available at <bpt id=\"p35\">[</bpt>https://github.com/hdinsight/spark-streaming-data-persistence-examples<ept id=\"p35\">](https://github.com/hdinsight/spark-streaming-data-persistence-examples)</ept>.",
+          "pos": [
+            0,
+            288
+          ]
+        },
+        {
+          "content": "Follow the steps below to update the application and create the output jar.",
+          "pos": [
+            289,
+            364
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7387,
+        7500
+      ],
+      "content": "Launch IntelliJ IDEA and from the launch screen select <bpt id=\"p36\">**</bpt>Check out from Version Control<ept id=\"p36\">**</ept><ph id=\"ph52\"/> and then click <bpt id=\"p37\">**</bpt>Git<ept id=\"p37\">**</ept>."
+    },
+    {
+      "pos": [
+        7514,
+        7612
+      ],
+      "content": "<ph id=\"ph53\">![</ph>Get sources from Git<ph id=\"ph54\">](./media/hdinsight-apache-spark-eventhub-streaming/get-source-from-git.png)</ph>"
+    },
+    {
+      "pos": [
+        7617,
+        7770
+      ],
+      "content": "In the <bpt id=\"p38\">**</bpt>Clone Repository<ept id=\"p38\">**</ept><ph id=\"ph55\"/> dialog box, provide the URL to the Git repository to clone from, specify the directory to clone to, and then click <bpt id=\"p39\">**</bpt>Clone<ept id=\"p39\">**</ept>."
+    },
+    {
+      "pos": [
+        7776,
+        7863
+      ],
+      "content": "<ph id=\"ph56\">![</ph>Clone from Git<ph id=\"ph57\">](./media/hdinsight-apache-spark-eventhub-streaming/clone-from-git.png)</ph>"
+    },
+    {
+      "pos": [
+        7873,
+        8012
+      ],
+      "content": "Follow the prompts till the project is completely cloned. Press <bpt id=\"p40\">**</bpt>Alt + 1<ept id=\"p40\">**</ept><ph id=\"ph58\"/> to open the <bpt id=\"p41\">**</bpt>Project View<ept id=\"p41\">**</ept>. It should resemble the following.",
+      "nodes": [
+        {
+          "content": "Follow the prompts till the project is completely cloned.",
+          "pos": [
+            0,
+            57
+          ]
+        },
+        {
+          "content": "Press <bpt id=\"p40\">**</bpt>Alt + 1<ept id=\"p40\">**</ept><ph id=\"ph58\"/> to open the <bpt id=\"p41\">**</bpt>Project View<ept id=\"p41\">**</ept>.",
+          "pos": [
+            58,
+            200
+          ]
+        },
+        {
+          "content": "It should resemble the following.",
+          "pos": [
+            201,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8018,
+        8101
+      ],
+      "content": "<ph id=\"ph59\">![</ph>Project View<ph id=\"ph60\">](./media/hdinsight-apache-spark-eventhub-streaming/project-view.png)</ph>"
+    },
+    {
+      "pos": [
+        8110,
+        8256
+      ],
+      "content": "Open the pom.xml and make sure the Spark version is correct. Under <ph id=\"ph61\">&lt;properties&gt;</ph><ph id=\"ph62\"/> node, look for the following snippet and verify the Spark version.",
+      "nodes": [
+        {
+          "content": "Open the pom.xml and make sure the Spark version is correct.",
+          "pos": [
+            0,
+            60
+          ]
+        },
+        {
+          "content": "Under <ph id=\"ph61\">&lt;properties&gt;</ph><ph id=\"ph62\"/> node, look for the following snippet and verify the Spark version.",
+          "pos": [
+            61,
+            186
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8472,
+        8534
+      ],
+      "content": "Make sure the value for <bpt id=\"p42\">**</bpt>spark.version<ept id=\"p42\">**</ept><ph id=\"ph63\"/> is set to <bpt id=\"p43\">**</bpt>1.5.1<ept id=\"p43\">**</ept>."
+    },
+    {
+      "pos": [
+        8539,
+        8584
+      ],
+      "content": "The application requires two dependency jars:"
+    },
+    {
+      "pos": [
+        8592,
+        8908
+      ],
+      "content": "<bpt id=\"p44\">**</bpt>EventHub receiver jar<ept id=\"p44\">**</ept>. This is required for Spark to receive the messages from Event Hub. This jar is available on your Spark Linux cluster at <ph id=\"ph64\">`/usr/hdp/current/spark-client/lib/spark-streaming-eventhubs-example-1.5.2.2.3.3.1-7-jar-with-dependencies.jar`</ph>. You can use pscp to copy the jar to your local computer.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p44\">**</bpt>EventHub receiver jar<ept id=\"p44\">**</ept>.",
+          "pos": [
+            0,
+            66
+          ]
+        },
+        {
+          "content": "This is required for Spark to receive the messages from Event Hub.",
+          "pos": [
+            67,
+            133
+          ]
+        },
+        {
+          "content": "This jar is available on your Spark Linux cluster at <ph id=\"ph64\">`/usr/hdp/current/spark-client/lib/spark-streaming-eventhubs-example-1.5.2.2.3.3.1-7-jar-with-dependencies.jar`</ph>.",
+          "pos": [
+            134,
+            318
+          ]
+        },
+        {
+          "content": "You can use pscp to copy the jar to your local computer.",
+          "pos": [
+            319,
+            375
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9107,
+        9184
+      ],
+      "content": "This will copy the jar file from the Spark cluster on to your local computer."
+    },
+    {
+      "pos": [
+        9193,
+        9423
+      ],
+      "content": "<bpt id=\"p45\">**</bpt>JDBC driver jar<ept id=\"p45\">**</ept>. This is required to write the messages received from Event Hub into an Azure SQL database. You can download v4.1 or later of this jar file from <bpt id=\"p46\">[</bpt>here<ept id=\"p46\">](https://msdn.microsoft.com/en-us/sqlserver/aa937724.aspx)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p45\">**</bpt>JDBC driver jar<ept id=\"p45\">**</ept>.",
+          "pos": [
+            0,
+            60
+          ]
+        },
+        {
+          "content": "This is required to write the messages received from Event Hub into an Azure SQL database.",
+          "pos": [
+            61,
+            151
+          ]
+        },
+        {
+          "content": "You can download v4.1 or later of this jar file from <bpt id=\"p46\">[</bpt>here<ept id=\"p46\">](https://msdn.microsoft.com/en-us/sqlserver/aa937724.aspx)</ept>.",
+          "pos": [
+            152,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10377,
+        10433
+      ],
+      "content": "Create the output jar file. Perform the following steps.",
+      "nodes": [
+        {
+          "content": "Create the output jar file.",
+          "pos": [
+            0,
+            27
+          ]
+        },
+        {
+          "content": "Perform the following steps.",
+          "pos": [
+            28,
+            56
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10441,
+        10627
+      ],
+      "content": "In the <bpt id=\"p47\">**</bpt>Project Structure<ept id=\"p47\">**</ept><ph id=\"ph65\"/> dialog box, click <bpt id=\"p48\">**</bpt>Artifacts<ept id=\"p48\">**</ept><ph id=\"ph66\"/> and then click the plus symbol. From the pop-up dialog box, click <bpt id=\"p49\">**</bpt>JAR<ept id=\"p49\">**</ept>, and then click <bpt id=\"p50\">**</bpt>From modules with dependencies<ept id=\"p50\">**</ept>.",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p47\">**</bpt>Project Structure<ept id=\"p47\">**</ept><ph id=\"ph65\"/> dialog box, click <bpt id=\"p48\">**</bpt>Artifacts<ept id=\"p48\">**</ept><ph id=\"ph66\"/> and then click the plus symbol.",
+          "pos": [
+            0,
+            202
+          ]
+        },
+        {
+          "content": "From the pop-up dialog box, click <bpt id=\"p49\">**</bpt>JAR<ept id=\"p49\">**</ept>, and then click <bpt id=\"p50\">**</bpt>From modules with dependencies<ept id=\"p50\">**</ept>.",
+          "pos": [
+            203,
+            376
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10637,
+        10718
+      ],
+      "content": "<ph id=\"ph67\">![</ph>Create JAR<ph id=\"ph68\">](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-1.png)</ph>"
+    },
+    {
+      "pos": [
+        10727,
+        10898
+      ],
+      "content": "In the <bpt id=\"p51\">**</bpt>Create JAR from Modules<ept id=\"p51\">**</ept><ph id=\"ph69\"/> dialog box, click the ellipsis (<ph id=\"ph70\">![</ph>ellipsis<ph id=\"ph71\">](./media/hdinsight-apache-spark-eventhub-streaming/ellipsis.png)</ph>) against the <bpt id=\"p52\">**</bpt>Main Class<ept id=\"p52\">**</ept>."
+    },
+    {
+      "pos": [
+        10907,
+        11006
+      ],
+      "content": "In the <bpt id=\"p53\">**</bpt>Select Main Class<ept id=\"p53\">**</ept><ph id=\"ph72\"/> dialog box, select any of the available classes and then click <bpt id=\"p54\">**</bpt>OK<ept id=\"p54\">**</ept>."
+    },
+    {
+      "pos": [
+        11016,
+        11097
+      ],
+      "content": "<ph id=\"ph73\">![</ph>Create JAR<ph id=\"ph74\">](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-2.png)</ph>"
+    },
+    {
+      "pos": [
+        11106,
+        11296
+      ],
+      "content": "In the <bpt id=\"p55\">**</bpt>Create JAR from Modules<ept id=\"p55\">**</ept><ph id=\"ph75\"/> dialog box, make sure that the option to <bpt id=\"p56\">**</bpt>extract to the target JAR<ept id=\"p56\">**</ept><ph id=\"ph76\"/> is selected, and then click <bpt id=\"p57\">**</bpt>OK<ept id=\"p57\">**</ept>. This creates a single JAR with all dependencies.",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p55\">**</bpt>Create JAR from Modules<ept id=\"p55\">**</ept><ph id=\"ph75\"/> dialog box, make sure that the option to <bpt id=\"p56\">**</bpt>extract to the target JAR<ept id=\"p56\">**</ept><ph id=\"ph76\"/> is selected, and then click <bpt id=\"p57\">**</bpt>OK<ept id=\"p57\">**</ept>.",
+          "pos": [
+            0,
+            291
+          ]
+        },
+        {
+          "content": "This creates a single JAR with all dependencies.",
+          "pos": [
+            292,
+            340
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11306,
+        11387
+      ],
+      "content": "<ph id=\"ph77\">![</ph>Create JAR<ph id=\"ph78\">](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-3.png)</ph>"
+    },
+    {
+      "pos": [
+        11396,
+        11861
+      ],
+      "content": "The <bpt id=\"p58\">**</bpt>Output Layout<ept id=\"p58\">**</ept><ph id=\"ph79\"/> tab lists all the jars that are included as part of the Maven project. You can select and delete the ones on which the Scala application has no direct dependency. For the application we are creating here, you can remove all but the last one (<bpt id=\"p59\">**</bpt>microsoft-spark-streaming-examples compile output<ept id=\"p59\">**</ept>). Select the jars to delete and then click the <bpt id=\"p60\">**</bpt>Delete<ept id=\"p60\">**</ept><ph id=\"ph80\"/> icon (<ph id=\"ph81\">![</ph>delete icon<ph id=\"ph82\">](./media/hdinsight-apache-spark-eventhub-streaming/delete-icon.png)</ph>).",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p58\">**</bpt>Output Layout<ept id=\"p58\">**</ept><ph id=\"ph79\"/> tab lists all the jars that are included as part of the Maven project.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "You can select and delete the ones on which the Scala application has no direct dependency.",
+          "pos": [
+            148,
+            239
+          ]
+        },
+        {
+          "content": "For the application we are creating here, you can remove all but the last one (<bpt id=\"p59\">**</bpt>microsoft-spark-streaming-examples compile output<ept id=\"p59\">**</ept>).",
+          "pos": [
+            240,
+            414
+          ]
+        },
+        {
+          "content": "Select the jars to delete and then click the <bpt id=\"p60\">**</bpt>Delete<ept id=\"p60\">**</ept><ph id=\"ph80\"/> icon (<ph id=\"ph81\">![</ph>delete icon<ph id=\"ph82\">](./media/hdinsight-apache-spark-eventhub-streaming/delete-icon.png)</ph>).",
+          "pos": [
+            415,
+            653
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11871,
+        11958
+      ],
+      "content": "<ph id=\"ph83\">![</ph>Create JAR<ph id=\"ph84\">](./media/hdinsight-apache-spark-eventhub-streaming/delete-output-jars.png)</ph>"
+    },
+    {
+      "pos": [
+        11968,
+        12127
+      ],
+      "content": "Make sure <bpt id=\"p61\">**</bpt>Build on make<ept id=\"p61\">**</ept><ph id=\"ph85\"/> box is selected, which ensures that the jar is created every time the project is built or updated. Click <bpt id=\"p62\">**</bpt>Apply<ept id=\"p62\">**</ept><ph id=\"ph86\"/> and then <bpt id=\"p63\">**</bpt>OK<ept id=\"p63\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Make sure <bpt id=\"p61\">**</bpt>Build on make<ept id=\"p61\">**</ept><ph id=\"ph85\"/> box is selected, which ensures that the jar is created every time the project is built or updated.",
+          "pos": [
+            0,
+            181
+          ]
+        },
+        {
+          "content": "Click <bpt id=\"p62\">**</bpt>Apply<ept id=\"p62\">**</ept><ph id=\"ph86\"/> and then <bpt id=\"p63\">**</bpt>OK<ept id=\"p63\">**</ept>.",
+          "pos": [
+            182,
+            309
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12136,
+        12413
+      ],
+      "content": "In the <bpt id=\"p64\">**</bpt>Output Layout<ept id=\"p64\">**</ept><ph id=\"ph87\"/> tab, right at the bottom of the Available Elements box, you have the two dependency jars that you added earlier to the project library. You must add these to the Output Layout tab. Right-click each jar file, and then click <bpt id=\"p65\">**</bpt>Extract Into Output Root<ept id=\"p65\">**</ept>.",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p64\">**</bpt>Output Layout<ept id=\"p64\">**</ept><ph id=\"ph87\"/> tab, right at the bottom of the Available Elements box, you have the two dependency jars that you added earlier to the project library.",
+          "pos": [
+            0,
+            215
+          ]
+        },
+        {
+          "content": "You must add these to the Output Layout tab.",
+          "pos": [
+            216,
+            260
+          ]
+        },
+        {
+          "content": "Right-click each jar file, and then click <bpt id=\"p65\">**</bpt>Extract Into Output Root<ept id=\"p65\">**</ept>.",
+          "pos": [
+            261,
+            372
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12423,
+        12526
+      ],
+      "content": "<ph id=\"ph88\">![</ph>Extract dependency jar<ph id=\"ph89\">](./media/hdinsight-apache-spark-eventhub-streaming/extract-dependency-jar.png)</ph>"
+    },
+    {
+      "pos": [
+        12538,
+        12645
+      ],
+      "content": "Repeat this step for the other dependency jar as well. The <bpt id=\"p66\">**</bpt>Output Layout<ept id=\"p66\">**</ept><ph id=\"ph90\"/> tab should now look like this.",
+      "nodes": [
+        {
+          "content": "Repeat this step for the other dependency jar as well.",
+          "pos": [
+            0,
+            54
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p66\">**</bpt>Output Layout<ept id=\"p66\">**</ept><ph id=\"ph90\"/> tab should now look like this.",
+          "pos": [
+            55,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12655,
+        12746
+      ],
+      "content": "<ph id=\"ph91\">![</ph>Final output tab<ph id=\"ph92\">](./media/hdinsight-apache-spark-eventhub-streaming/final-output-tab.png)</ph>"
+    },
+    {
+      "pos": [
+        12761,
+        12840
+      ],
+      "content": "In the <bpt id=\"p67\">**</bpt>Project Structure<ept id=\"p67\">**</ept><ph id=\"ph93\"/> dialog box, click <bpt id=\"p68\">**</bpt>Apply<ept id=\"p68\">**</ept><ph id=\"ph94\"/> and then click <bpt id=\"p69\">**</bpt>OK<ept id=\"p69\">**</ept>."
+    },
+    {
+      "pos": [
+        12850,
+        13028
+      ],
+      "content": "From the menu bar, click <bpt id=\"p70\">**</bpt>Build<ept id=\"p70\">**</ept>, and then click <bpt id=\"p71\">**</bpt>Make Project<ept id=\"p71\">**</ept>. You can also click <bpt id=\"p72\">**</bpt>Build Artifacts<ept id=\"p72\">**</ept><ph id=\"ph95\"/> to create the jar. The output jar is created under <bpt id=\"p73\">**</bpt>\\out\\artifacts<ept id=\"p73\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From the menu bar, click <bpt id=\"p70\">**</bpt>Build<ept id=\"p70\">**</ept>, and then click <bpt id=\"p71\">**</bpt>Make Project<ept id=\"p71\">**</ept>.",
+          "pos": [
+            0,
+            148
+          ]
+        },
+        {
+          "content": "You can also click <bpt id=\"p72\">**</bpt>Build Artifacts<ept id=\"p72\">**</ept><ph id=\"ph95\"/> to create the jar.",
+          "pos": [
+            149,
+            261
+          ]
+        },
+        {
+          "content": "The output jar is created under <bpt id=\"p73\">**</bpt>\\out\\artifacts<ept id=\"p73\">**</ept>.",
+          "pos": [
+            262,
+            353
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13038,
+        13124
+      ],
+      "content": "<ph id=\"ph96\">![</ph>Create JAR<ph id=\"ph97\">](./media/hdinsight-apache-spark-create-standalone-application/output.png)</ph>"
+    },
+    {
+      "pos": [
+        13129,
+        13188
+      ],
+      "content": "Run the applications remotely on a Spark cluster using Livy"
+    },
+    {
+      "pos": [
+        13190,
+        13580
+      ],
+      "content": "We will use Livy to run the streaming application remotely on a Spark cluster. For detailed discussion on how to use Livy with HDInsight Spark cluster, see <bpt id=\"p74\">[</bpt>Submit jobs remotely to an Apache Spark cluster on Azure HDInsight<ept id=\"p74\">](hdinsight-apache-spark-livy-rest-interface.md)</ept>. Before you can start running the remote jobs to stream events using Spark there are a couple of things you should do:",
+      "nodes": [
+        {
+          "content": "We will use Livy to run the streaming application remotely on a Spark cluster.",
+          "pos": [
+            0,
+            78
+          ]
+        },
+        {
+          "content": "For detailed discussion on how to use Livy with HDInsight Spark cluster, see <bpt id=\"p74\">[</bpt>Submit jobs remotely to an Apache Spark cluster on Azure HDInsight<ept id=\"p74\">](hdinsight-apache-spark-livy-rest-interface.md)</ept>.",
+          "pos": [
+            79,
+            312
+          ]
+        },
+        {
+          "content": "Before you can start running the remote jobs to stream events using Spark there are a couple of things you should do:",
+          "pos": [
+            313,
+            430
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13585,
+        13701
+      ],
+      "content": "Start the local standalone application to generate events and sent to Event Hub. Use the following command to do so:",
+      "nodes": [
+        {
+          "content": "Start the local standalone application to generate events and sent to Event Hub.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "Use the following command to do so:",
+          "pos": [
+            81,
+            116
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14000,
+        14418
+      ],
+      "content": "Copy the streaming jar (<bpt id=\"p75\">**</bpt>microsoft-spark-streaming-examples.jar<ept id=\"p75\">**</ept>) to the Azure Blob storage associated with the cluster. This makes the jar accessible to Livy. You can use <bpt id=\"p76\">[</bpt><bpt id=\"p77\">**</bpt>AzCopy<ept id=\"p77\">**</ept><ept id=\"p76\">](../storage/storage-use-azcopy.md)</ept>, a command line utility, to do so. There are a lot of other clients you can use to upload data. You can find more about them at <bpt id=\"p78\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p78\">](hdinsight-upload-data.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Copy the streaming jar (<bpt id=\"p75\">**</bpt>microsoft-spark-streaming-examples.jar<ept id=\"p75\">**</ept>) to the Azure Blob storage associated with the cluster.",
+          "pos": [
+            0,
+            162
+          ]
+        },
+        {
+          "content": "This makes the jar accessible to Livy.",
+          "pos": [
+            163,
+            201
+          ]
+        },
+        {
+          "content": "You can use <bpt id=\"p76\">[</bpt><bpt id=\"p77\">**</bpt>AzCopy<ept id=\"p77\">**</ept><ept id=\"p76\">](../storage/storage-use-azcopy.md)</ept>, a command line utility, to do so.",
+          "pos": [
+            202,
+            375
+          ]
+        },
+        {
+          "content": "There are a lot of other clients you can use to upload data.",
+          "pos": [
+            376,
+            436
+          ]
+        },
+        {
+          "content": "You can find more about them at <bpt id=\"p78\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p78\">](hdinsight-upload-data.md)</ept>.",
+          "pos": [
+            437,
+            578
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14423,
+        14565
+      ],
+      "content": "Install CURL on the computer where you are running these applications from. We use CURL to invoke the Livy endpoints to run the jobs remotely.",
+      "nodes": [
+        {
+          "content": "Install CURL on the computer where you are running these applications from.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "We use CURL to invoke the Livy endpoints to run the jobs remotely.",
+          "pos": [
+            76,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14571,
+        14648
+      ],
+      "content": "Run the applications to receive the events into an Azure Storage Blob as text"
+    },
+    {
+      "pos": [
+        14650,
+        14800
+      ],
+      "content": "Open a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):"
+    },
+    {
+      "pos": [
+        14977,
+        15045
+      ],
+      "content": "The parameters in the file <bpt id=\"p79\">**</bpt>inputBlob.txt<ept id=\"p79\">**</ept><ph id=\"ph98\"/> are defined as follows:"
+    },
+    {
+      "pos": [
+        15641,
+        15701
+      ],
+      "content": "Let us understand what the parameters in the input file are:"
+    },
+    {
+      "pos": [
+        15705,
+        15811
+      ],
+      "content": "<bpt id=\"p80\">**</bpt>file<ept id=\"p80\">**</ept><ph id=\"ph99\"/> is the path to the application jar file on the Azure storage account associated with the cluster."
+    },
+    {
+      "pos": [
+        15814,
+        15864
+      ],
+      "content": "<bpt id=\"p81\">**</bpt>className<ept id=\"p81\">**</ept><ph id=\"ph100\"/> is the name of the class in the jar."
+    },
+    {
+      "pos": [
+        15867,
+        15922
+      ],
+      "content": "<bpt id=\"p82\">**</bpt>args<ept id=\"p82\">**</ept><ph id=\"ph101\"/> is the list of arguments required by the class"
+    },
+    {
+      "pos": [
+        15925,
+        16085
+      ],
+      "content": "<bpt id=\"p83\">**</bpt>numExecutors<ept id=\"p83\">**</ept><ph id=\"ph102\"/> is the number of cores used by Spark to run the streaming application. This should always be at least twice the number of Event Hub partitions.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p83\">**</bpt>numExecutors<ept id=\"p83\">**</ept><ph id=\"ph102\"/> is the number of cores used by Spark to run the streaming application.",
+          "pos": [
+            0,
+            143
+          ]
+        },
+        {
+          "content": "This should always be at least twice the number of Event Hub partitions.",
+          "pos": [
+            144,
+            216
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16088,
+        16222
+      ],
+      "content": "<bpt id=\"p84\">**</bpt>executorMemory<ept id=\"p84\">**</ept>, <bpt id=\"p85\">**</bpt>executorCores<ept id=\"p85\">**</ept>, <bpt id=\"p86\">**</bpt>driverMemory<ept id=\"p86\">**</ept><ph id=\"ph103\"/> are parameters used to assign required resources to the streaming application."
+    },
+    {
+      "pos": [
+        16225,
+        16402
+      ],
+      "content": "<ph id=\"ph104\">[AZURE.NOTE]</ph><ph id=\"ph105\"/> You do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters. The streaming application creates them for you.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph104\">[AZURE.NOTE]</ph><ph id=\"ph105\"/> You do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "The streaming application creates them for you.",
+          "pos": [
+            166,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16408,
+        16478
+      ],
+      "content": "When you run the command, you should see an output like the following:"
+    },
+    {
+      "pos": [
+        16851,
+        17293
+      ],
+      "content": "Make a note of the batch ID in the last line of the output (in this example it is '1'). To verify that the application runs successfully, you can look at your Azure storage account associated with the cluster and you should see the <bpt id=\"p87\">**</bpt>/EventCount/EventCount10<ept id=\"p87\">**</ept><ph id=\"ph106\"/> folder created there. This folder should contain blobs that captures the number of events processed within the time period specified for the parameter <bpt id=\"p88\">**</bpt>batch-interval-in-seconds<ept id=\"p88\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Make a note of the batch ID in the last line of the output (in this example it is '1').",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "To verify that the application runs successfully, you can look at your Azure storage account associated with the cluster and you should see the <bpt id=\"p87\">**</bpt>/EventCount/EventCount10<ept id=\"p87\">**</ept><ph id=\"ph106\"/> folder created there.",
+          "pos": [
+            88,
+            338
+          ]
+        },
+        {
+          "content": "This folder should contain blobs that captures the number of events processed within the time period specified for the parameter <bpt id=\"p88\">**</bpt>batch-interval-in-seconds<ept id=\"p88\">**</ept>.",
+          "pos": [
+            339,
+            538
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17295,
+        17387
+      ],
+      "content": "The application will continue to run until you kill it. To do so, use the following command:",
+      "nodes": [
+        {
+          "content": "The application will continue to run until you kill it.",
+          "pos": [
+            0,
+            55
+          ]
+        },
+        {
+          "content": "To do so, use the following command:",
+          "pos": [
+            56,
+            92
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17506,
+        17583
+      ],
+      "content": "Run the applications to receive the events into an Azure Storage Blob as JSON"
+    },
+    {
+      "pos": [
+        17585,
+        17735
+      ],
+      "content": "Open a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):"
+    },
+    {
+      "pos": [
+        17912,
+        17980
+      ],
+      "content": "The parameters in the file <bpt id=\"p89\">**</bpt>inputJSON.txt<ept id=\"p89\">**</ept><ph id=\"ph107\"/> are defined as follows:"
+    },
+    {
+      "pos": [
+        18624,
+        18887
+      ],
+      "content": "The parameters are similar to what you specified for the text output, in the previous step. Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters. The streaming application creates them for you.",
+      "nodes": [
+        {
+          "content": "The parameters are similar to what you specified for the text output, in the previous step.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters.",
+          "pos": [
+            92,
+            215
+          ]
+        },
+        {
+          "content": "The streaming application creates them for you.",
+          "pos": [
+            216,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18890,
+        19146
+      ],
+      "content": "After you run the command, you can look at your Azure storage account associated with the cluster and you should see the <bpt id=\"p90\">**</bpt>/EventStore10<ept id=\"p90\">**</ept><ph id=\"ph108\"/> folder created there. Open any file prefixed with <bpt id=\"p91\">**</bpt>part-<ept id=\"p91\">**</ept><ph id=\"ph109\"/> and you should see the events processed in a JSON format.",
+      "nodes": [
+        {
+          "content": "After you run the command, you can look at your Azure storage account associated with the cluster and you should see the <bpt id=\"p90\">**</bpt>/EventStore10<ept id=\"p90\">**</ept><ph id=\"ph108\"/> folder created there.",
+          "pos": [
+            0,
+            216
+          ]
+        },
+        {
+          "content": "Open any file prefixed with <bpt id=\"p91\">**</bpt>part-<ept id=\"p91\">**</ept><ph id=\"ph109\"/> and you should see the events processed in a JSON format.",
+          "pos": [
+            217,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19152,
+        19212
+      ],
+      "content": "Run the applications to receive the events into a Hive table"
+    },
+    {
+      "pos": [
+        19214,
+        19322
+      ],
+      "content": "To run the application that streams events into a Hive table you need some additional components. These are:",
+      "nodes": [
+        {
+          "content": "To run the application that streams events into a Hive table you need some additional components.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "These are:",
+          "pos": [
+            98,
+            108
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19326,
+        19355
+      ],
+      "content": "datanucleus-api-jdo-3.2.6.jar"
+    },
+    {
+      "pos": [
+        19358,
+        19385
+      ],
+      "content": "datanucleus-rdbms-3.2.9.jar"
+    },
+    {
+      "pos": [
+        19388,
+        19415
+      ],
+      "content": "datanucleus-core-3.2.10.jar"
+    },
+    {
+      "pos": [
+        19418,
+        19431
+      ],
+      "content": "hive-site.xml"
+    },
+    {
+      "pos": [
+        19433,
+        19613
+      ],
+      "content": "The <bpt id=\"p92\">**</bpt>.jar<ept id=\"p92\">**</ept><ph id=\"ph110\"/> files are available on your HDInsight Spark cluster at <ph id=\"ph111\">`/usr/hdp/current/spark-client/lib`</ph>. The <bpt id=\"p93\">**</bpt>hive-site.xml<ept id=\"p93\">**</ept><ph id=\"ph112\"/> is available at <ph id=\"ph113\">`/usr/hdp/current/spark-client/conf`</ph>.",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p92\">**</bpt>.jar<ept id=\"p92\">**</ept><ph id=\"ph110\"/> files are available on your HDInsight Spark cluster at <ph id=\"ph111\">`/usr/hdp/current/spark-client/lib`</ph>.",
+          "pos": [
+            0,
+            180
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p93\">**</bpt>hive-site.xml<ept id=\"p93\">**</ept><ph id=\"ph112\"/> is available at <ph id=\"ph113\">`/usr/hdp/current/spark-client/conf`</ph>.",
+          "pos": [
+            181,
+            332
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19615,
+        19980
+      ],
+      "content": "You can use <bpt id=\"p94\">[</bpt>WinScp<ept id=\"p94\">](http://winscp.net/eng/download.php)</ept><ph id=\"ph114\"/> to copy over these files from the cluster to your local computer. You can then use tools to copy these files over to your storage account associated with the cluster. For more information on how to upload files to the storage account, see <bpt id=\"p95\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p95\">](hdinsight-upload-data.md)</ept>.",
+      "nodes": [
+        {
+          "content": "You can use <bpt id=\"p94\">[</bpt>WinScp<ept id=\"p94\">](http://winscp.net/eng/download.php)</ept><ph id=\"ph114\"/> to copy over these files from the cluster to your local computer.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "You can then use tools to copy these files over to your storage account associated with the cluster.",
+          "pos": [
+            179,
+            279
+          ]
+        },
+        {
+          "content": "For more information on how to upload files to the storage account, see <bpt id=\"p95\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p95\">](hdinsight-upload-data.md)</ept>.",
+          "pos": [
+            280,
+            461
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19982,
+        20199
+      ],
+      "content": "Once you have copied over the files to your Azure storage account, open a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):"
+    },
+    {
+      "pos": [
+        20376,
+        20444
+      ],
+      "content": "The parameters in the file <bpt id=\"p96\">**</bpt>inputHive.txt<ept id=\"p96\">**</ept><ph id=\"ph115\"/> are defined as follows:"
+    },
+    {
+      "pos": [
+        21299,
+        21751
+      ],
+      "content": "The parameters are similar to what you specified for the text output, in the previous steps. Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) or the output Hive table (EventHiveTable10) that are used as parameters. The streaming application creates them for you. Note that the <bpt id=\"p97\">**</bpt>jars<ept id=\"p97\">**</ept><ph id=\"ph116\"/> and <bpt id=\"p98\">**</bpt>files<ept id=\"p98\">**</ept><ph id=\"ph117\"/> option includes paths to the .jar files and the hive-site.xml that you copied over to the storage account.",
+      "nodes": [
+        {
+          "content": "The parameters are similar to what you specified for the text output, in the previous steps.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) or the output Hive table (EventHiveTable10) that are used as parameters.",
+          "pos": [
+            93,
+            260
+          ]
+        },
+        {
+          "content": "The streaming application creates them for you.",
+          "pos": [
+            261,
+            308
+          ]
+        },
+        {
+          "content": "Note that the <bpt id=\"p97\">**</bpt>jars<ept id=\"p97\">**</ept><ph id=\"ph116\"/> and <bpt id=\"p98\">**</bpt>files<ept id=\"p98\">**</ept><ph id=\"ph117\"/> option includes paths to the .jar files and the hive-site.xml that you copied over to the storage account.",
+          "pos": [
+            309,
+            564
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21753,
+        22094
+      ],
+      "content": "To verify that the hive table was successfully created, you can SSH into the cluster and run Hive queries. For instructions, see <bpt id=\"p99\">[</bpt>Use Hive with Hadoop in HDInsight with SSH<ept id=\"p99\">](hdinsight-hadoop-use-hive-ssh.md)</ept>. Once you are connected using SSH, you can run the following command to verify that the Hive table, <bpt id=\"p100\">**</bpt>EventHiveTable10<ept id=\"p100\">**</ept>, is created.",
+      "nodes": [
+        {
+          "content": "To verify that the hive table was successfully created, you can SSH into the cluster and run Hive queries.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p99\">[</bpt>Use Hive with Hadoop in HDInsight with SSH<ept id=\"p99\">](hdinsight-hadoop-use-hive-ssh.md)</ept>.",
+          "pos": [
+            107,
+            248
+          ]
+        },
+        {
+          "content": "Once you are connected using SSH, you can run the following command to verify that the Hive table, <bpt id=\"p100\">**</bpt>EventHiveTable10<ept id=\"p100\">**</ept>, is created.",
+          "pos": [
+            249,
+            423
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22114,
+        22164
+      ],
+      "content": "You should see an output similar to the following:"
+    },
+    {
+      "pos": [
+        22215,
+        22281
+      ],
+      "content": "You can also run a SELECT query to view the contents of the table."
+    },
+    {
+      "pos": [
+        22329,
+        22373
+      ],
+      "content": "You should see an output like the following:"
+    },
+    {
+      "pos": [
+        22801,
+        22876
+      ],
+      "content": "Run the applications to receive the events into an Azure SQL database table"
+    },
+    {
+      "pos": [
+        22878,
+        23174
+      ],
+      "content": "Before running this step, make sure you have an Azure SQL database created. You will need values for database name, database server name, and the database administrator credentials as parameters. You do not need to create the database table though. The streaming application creates that for you.",
+      "nodes": [
+        {
+          "content": "Before running this step, make sure you have an Azure SQL database created.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "You will need values for database name, database server name, and the database administrator credentials as parameters.",
+          "pos": [
+            76,
+            195
+          ]
+        },
+        {
+          "content": "You do not need to create the database table though.",
+          "pos": [
+            196,
+            248
+          ]
+        },
+        {
+          "content": "The streaming application creates that for you.",
+          "pos": [
+            249,
+            296
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23176,
+        23281
+      ],
+      "content": "Open a command prompt, navigate to the directory where you installed CURL, and run the following command:"
+    },
+    {
+      "pos": [
+        23457,
+        23524
+      ],
+      "content": "The parameters in the file <bpt id=\"p101\">**</bpt>inputSQL.txt<ept id=\"p101\">**</ept><ph id=\"ph118\"/> are defined as follows:"
+    },
+    {
+      "pos": [
+        24358,
+        24849
+      ],
+      "content": "To verify that the application runs successfully, you can connect to the Azure SQL database using SQL Server Management Studio. For instructions on how to do that, see <bpt id=\"p102\">[</bpt>Connect to SQL Database with SQL Server Management Studio<ept id=\"p102\">](sql-database/sql-database-connect-query-ssms)</ept>. Once you are connected to the database, you can navigate to the <bpt id=\"p103\">**</bpt>EventContent<ept id=\"p103\">**</ept><ph id=\"ph119\"/> table that was created by the streaming application. You can run a quick query to get the data from the table. Run the following query:",
+      "nodes": [
+        {
+          "content": "To verify that the application runs successfully, you can connect to the Azure SQL database using SQL Server Management Studio.",
+          "pos": [
+            0,
+            127
+          ]
+        },
+        {
+          "content": "For instructions on how to do that, see <bpt id=\"p102\">[</bpt>Connect to SQL Database with SQL Server Management Studio<ept id=\"p102\">](sql-database/sql-database-connect-query-ssms)</ept>.",
+          "pos": [
+            128,
+            316
+          ]
+        },
+        {
+          "content": "Once you are connected to the database, you can navigate to the <bpt id=\"p103\">**</bpt>EventContent<ept id=\"p103\">**</ept><ph id=\"ph119\"/> table that was created by the streaming application.",
+          "pos": [
+            317,
+            508
+          ]
+        },
+        {
+          "content": "You can run a quick query to get the data from the table.",
+          "pos": [
+            509,
+            566
+          ]
+        },
+        {
+          "content": "Run the following query:",
+          "pos": [
+            567,
+            591
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        24881,
+        24928
+      ],
+      "content": "You should see output similar to the following:"
+    },
+    {
+      "pos": [
+        25445,
+        25453
+      ],
+      "content": "See also"
+    },
+    {
+      "pos": [
+        25458,
+        25537
+      ],
+      "content": "<bpt id=\"p104\">[</bpt>Overview: Apache Spark on Azure HDInsight<ept id=\"p104\">](hdinsight-apache-spark-overview.md)</ept>"
+    },
+    {
+      "pos": [
+        25543,
+        25552
+      ],
+      "content": "Scenarios"
+    },
+    {
+      "pos": [
+        25556,
+        25685
+      ],
+      "content": "<bpt id=\"p105\">[</bpt>Spark with BI: Perform interactive data analysis using Spark in HDInsight with BI tools<ept id=\"p105\">](hdinsight-apache-spark-use-bi-tools.md)</ept>"
+    },
+    {
+      "pos": [
+        25689,
+        25854
+      ],
+      "content": "<bpt id=\"p106\">[</bpt>Spark with Machine Learning: Use Spark in HDInsight for analyzing building temperature using HVAC data<ept id=\"p106\">](hdinsight-apache-spark-ipython-notebook-machine-learning.md)</ept>"
+    },
+    {
+      "pos": [
+        25858,
+        26004
+      ],
+      "content": "<bpt id=\"p107\">[</bpt>Spark with Machine Learning: Use Spark in HDInsight to predict food inspection results<ept id=\"p107\">](hdinsight-apache-spark-machine-learning-mllib-ipython.md)</ept>"
+    },
+    {
+      "pos": [
+        26008,
+        26118
+      ],
+      "content": "<bpt id=\"p108\">[</bpt>Website log analysis using Spark in HDInsight<ept id=\"p108\">](hdinsight-apache-spark-custom-library-website-log-analysis.md)</ept>"
+    },
+    {
+      "pos": [
+        26124,
+        26151
+      ],
+      "content": "Create and run applications"
+    },
+    {
+      "pos": [
+        26155,
+        26257
+      ],
+      "content": "<bpt id=\"p109\">[</bpt>Create a standalone application using Scala<ept id=\"p109\">](hdinsight-apache-spark-create-standalone-application.md)</ept>"
+    },
+    {
+      "pos": [
+        26261,
+        26357
+      ],
+      "content": "<bpt id=\"p110\">[</bpt>Run jobs remotely on a Spark cluster using Livy<ept id=\"p110\">](hdinsight-apache-spark-livy-rest-interface.md)</ept>"
+    },
+    {
+      "pos": [
+        26363,
+        26383
+      ],
+      "content": "Tools and extensions"
+    },
+    {
+      "pos": [
+        26387,
+        26526
+      ],
+      "content": "<bpt id=\"p111\">[</bpt>Use HDInsight Tools Plugin for IntelliJ IDEA to create and submit Spark Scala applicatons<ept id=\"p111\">](hdinsight-apache-spark-intellij-tool-plugin.md)</ept>"
+    },
+    {
+      "pos": [
+        26530,
+        26637
+      ],
+      "content": "<bpt id=\"p112\">[</bpt>Use Zeppelin notebooks with a Spark cluster on HDInsight<ept id=\"p112\">](hdinsight-apache-spark-use-zeppelin-notebook.md)</ept>"
+    },
+    {
+      "pos": [
+        26641,
+        26764
+      ],
+      "content": "<bpt id=\"p113\">[</bpt>Kernels available for Jupyter notebook in Spark cluster for HDInsight<ept id=\"p113\">](hdinsight-apache-spark-jupyter-notebook-kernels.md)</ept>"
+    },
+    {
+      "pos": [
+        26770,
+        26786
+      ],
+      "content": "Manage resources"
+    },
+    {
+      "pos": [
+        26790,
+        26900
+      ],
+      "content": "<bpt id=\"p114\">[</bpt>Manage resources for the Apache Spark cluster in Azure HDInsight<ept id=\"p114\">](hdinsight-apache-spark-resource-manager.md)</ept>"
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Use Azure Event Hubs with Apache Spark in HDInsight to process streaming data | Microsoft Azure\" \n    description=\"Step-by-step instructions on how to send a data stream to Azure Event Hub and then receive those events in Spark using a scala application\" \n    services=\"hdinsight\" \n    documentationCenter=\"\" \n    authors=\"nitinme\" \n    manager=\"paulettm\" \n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags \n    ms.service=\"hdinsight\" \n    ms.workload=\"big-data\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"02/05/2016\" \n    ms.author=\"nitinme\"/>\n\n\n# Spark Streaming: Process events from Azure Event Hubs with Apache Spark on HDInsight (Linux)\n\nSpark Streaming extends the core Spark API to build scalable, high-throughput, fault-tolerant stream processing applications. Data can be ingested from many sources. In this article we use Azure Event Hubs to ingest data. Event Hubs is a highly scalable ingestion system that can intake millions of events per second. \n\nIn this tutorial, you will learn how to create an Azure Event Hub, how to ingest messages into an Event Hub using a console application in Java, and to retrieve them in parallel using a Spark application written in Scala. This application consumes the data streamed through Event Hubs and routes it to different outputs (Azure Storage Blob, Hive table, and SQL table).\n\n> [AZURE.NOTE] To follow the instructions in this article, you will have to use both versions of the Azure portal. To create an Event Hub you will use the [Azure portal](https://manage.windowsazure.com). To work with the HDInsight Spark cluster, you will use the [Azure Preview Portal](https://ms.portal.azure.com/).  \n\n**Prerequisites:**\n\nYou must have the following:\n\n- An Azure subscription. See [Get Azure free trial](https://azure.microsoft.com/documentation/videos/get-azure-free-trial-for-testing-hadoop-in-hdinsight/).\n- An Apache Spark cluster. For instructions, see [Create Apache Spark clusters in Azure HDInsight](hdinsight-apache-spark-jupyter-spark-sql.md).\n- Oracle Java Development kit. You can install it from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).\n- A Java IDE. This article uses IntelliJ IDEA 15.0.1. You can install it from [here](https://www.jetbrains.com/idea/download/).\n- Microsoft JDBC driver for SQL Server, v4.1 or later. This is required to write the event data into a SQL Server database. You can install it from [here](https://msdn.microsoft.com/sqlserver/aa937724.aspx).\n- An Azure SQL database. For instructions, see [Create a SQL database in minutes](../sql-database/sql-database-get-started.md)\n\n## What does this solution do?\n\nThis is how the streaming solution flows:\n\n1. Create an Azure Event Hub that will receive a stream of events.\n\n2. Run a local standalone application that generates events and pushes it the Azure Event Hub. The sample application that does this is published at [https://github.com/hdinsight/spark-streaming-data-persistence-examples](https://github.com/hdinsight/spark-streaming-data-persistence-examples).\n\n2. Run a streaming application remotely on a Spark cluster that reads streaming events from Azure Event Hub and pushes it out to different locations (Azure Blob, Hive table, and SQL database table). \n\n## Create Azure Event Hub\n\n1. From the [Azure portal](https://manage.windowsazure.com), select **NEW** > **Service Bus** > **Event Hub** > **Custom Create**.\n\n2. On the **Add a new Event Hub** screen, enter an **Event Hub Name**, select the **Region** to create the hub in, and create a new namespace or select an existing one. Click the **Arrow** to continue.\n\n    ![wizard page 1](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.create.event.hub.png \"Create an Azure Event Hub\")\n\n    > [AZURE.NOTE] You should select the same **Location** as your Apache Spark cluster in HDInsight to reduce latency and costs.\n\n3. On the **Configure Event Hub** screen, enter the **Partition count** and **Message Retention** values, and then click the check mark. For this example, use a partition count of 10 and a message retention of 1. Note the partition count because you will need this value later.\n\n    ![wizard page 2](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.create.event.hub2.png \"Specify partition size and retention days for Event Hub\")\n\n4. Click the Event Hub that you created, click **Configure**, and then create two access policies for the event hub.\n\n    <table>\n    <tr><th>Name</th><th>Permissions</th></tr>\n    <tr><td>mysendpolicy</td><td>Send</td></tr>\n    <tr><td>myreceivepolicy</td><td>Listen</td></tr>\n    </table>\n\n    After You create the permissions, select the **Save** icon at the bottom of the page. This creates the shared access policies that will be used to send (**mysendpolicy**) and listen (**myreceivepolicy**) to this Event Hub.\n\n    ![policies](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policies.png \"Create Event Hub policies\")\n\n    \n5. On the same page, take a note of the policy keys generated for the two policies. Save these keys because they will be used later.\n\n    ![policy keys](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policy.keys.png \"Save policy keys\")\n\n6. On the **Dashboard** page, click **Connection Information** from the bottom to retrieve and save the connection strings for the Event Hub using the two policies.\n\n    ![policy keys](./media/hdinsight-apache-spark-eventhub-streaming/hdispark.streaming.event.hub.policy.connection.strings.png \"Save policy connection strings\")\n\n## Use a Scala application to send messages to Event Hub\n\nIn this section you use a standalone local Scala application to send a stream of events to Azure Event Hub that you created in the previous step. This application is available on GitHub at [https://github.com/hdinsight/eventhubs-sample-event-producer](https://github.com/hdinsight/eventhubs-sample-event-producer). The steps here assume that you have already forked this GitHub repository.\n\n1. Open the application, **EventhubsSampleEventProducer**, in IntelliJ IDEA.\n    \n2. Build the project. From the **Build** menu, click **Make Project**. The output jar is created under **\\out\\artifacts**.\n\n>[AZURE.TIP] You can also use an option available in IntelliJ IDEA to directly create the project from a GitHub repository. To understand how to use that approach, use the instructions in the next section for guidance. Note that a lot of steps that are described in the next section will not be applicable for the Scala application that you create in this step. For example:\n\n> * You will not have to update the POM to include the Spark version. That's because there is no dependency on Spark for creating this application\n> * You will not have to add some dependency jars to the project library. That's because those jars are not required for this project.\n\n## Update the Scala streaming application for receiving the events\n\nA sample Scala application to receive the event and route it to different destinations is available at [https://github.com/hdinsight/spark-streaming-data-persistence-examples](https://github.com/hdinsight/spark-streaming-data-persistence-examples). Follow the steps below to update the application and create the output jar.\n\n1. Launch IntelliJ IDEA and from the launch screen select **Check out from Version Control** and then click **Git**.\n        \n    ![Get sources from Git](./media/hdinsight-apache-spark-eventhub-streaming/get-source-from-git.png)\n\n2. In the **Clone Repository** dialog box, provide the URL to the Git repository to clone from, specify the directory to clone to, and then click **Clone**.\n\n    ![Clone from Git](./media/hdinsight-apache-spark-eventhub-streaming/clone-from-git.png)\n\n    \n3. Follow the prompts till the project is completely cloned. Press **Alt + 1** to open the **Project View**. It should resemble the following.\n\n    ![Project View](./media/hdinsight-apache-spark-eventhub-streaming/project-view.png)\n    \n4. Open the pom.xml and make sure the Spark version is correct. Under <properties> node, look for the following snippet and verify the Spark version.\n\n        <scala.version>2.10.4</scala.version>\n        <scala.compat.version>2.10.4</scala.compat.version>\n        <scala.binary.version>2.10</scala.binary.version>\n        <spark.version>1.5.1</spark.version>\n\n    Make sure the value for **spark.version** is set to **1.5.1**.\n\n5. The application requires two dependency jars:\n\n    * **EventHub receiver jar**. This is required for Spark to receive the messages from Event Hub. This jar is available on your Spark Linux cluster at `/usr/hdp/current/spark-client/lib/spark-streaming-eventhubs-example-1.5.2.2.3.3.1-7-jar-with-dependencies.jar`. You can use pscp to copy the jar to your local computer.\n\n            pscp sshuser@mysparkcluster-ssh.azurehdinsight.net:/usr/hdp/current/spark-client/lib/spark-streaming-eventhubs-example-1.5.2.2.3.3.1-7-jar-with-dependencies.jar C:/eventhubjar\n\n        This will copy the jar file from the Spark cluster on to your local computer. \n\n    * **JDBC driver jar**. This is required to write the messages received from Event Hub into an Azure SQL database. You can download v4.1 or later of this jar file from [here](https://msdn.microsoft.com/en-us/sqlserver/aa937724.aspx). \n    \n\n        Add reference to these jars in the project library. Perform the following steps:\n\n        1. From IntelliJ IDEA window where you have the application open, click **File**, click **Project Structure**, and then click **Libraries**. \n\n            ![add missing dependencies](./media/hdinsight-apache-spark-eventhub-streaming/add-missing-dependency-jars.png \"Add missing dependency jars\")\n\n            Click the add icon (![add icon](./media/hdinsight-apache-spark-eventhub-streaming/add-icon.png)), click **Java**, and then navigate to the location where you downloaded the EventHub receiver jar. Follow the prompts to add the jar file to the project library.\n\n        1. Repeat the previous step to add the JDBC jar as well to the project library.\n    \n            ![add missing dependencies](./media/hdinsight-apache-spark-eventhub-streaming/add-missing-dependency-jars.png \"Add missing dependency jars\")\n\n        1. Click **Apply**.\n\n6. Create the output jar file. Perform the following steps.\n    1. In the **Project Structure** dialog box, click **Artifacts** and then click the plus symbol. From the pop-up dialog box, click **JAR**, and then click **From modules with dependencies**.\n\n        ![Create JAR](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-1.png)\n\n    1. In the **Create JAR from Modules** dialog box, click the ellipsis (![ellipsis](./media/hdinsight-apache-spark-eventhub-streaming/ellipsis.png)) against the **Main Class**.\n\n    1. In the **Select Main Class** dialog box, select any of the available classes and then click **OK**.\n\n        ![Create JAR](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-2.png)\n\n    1. In the **Create JAR from Modules** dialog box, make sure that the option to **extract to the target JAR** is selected, and then click **OK**. This creates a single JAR with all dependencies.\n\n        ![Create JAR](./media/hdinsight-apache-spark-eventhub-streaming/create-jar-3.png)\n\n    1. The **Output Layout** tab lists all the jars that are included as part of the Maven project. You can select and delete the ones on which the Scala application has no direct dependency. For the application we are creating here, you can remove all but the last one (**microsoft-spark-streaming-examples compile output**). Select the jars to delete and then click the **Delete** icon (![delete icon](./media/hdinsight-apache-spark-eventhub-streaming/delete-icon.png)).\n\n        ![Create JAR](./media/hdinsight-apache-spark-eventhub-streaming/delete-output-jars.png)\n\n        Make sure **Build on make** box is selected, which ensures that the jar is created every time the project is built or updated. Click **Apply** and then **OK**.\n\n    1. In the **Output Layout** tab, right at the bottom of the Available Elements box, you have the two dependency jars that you added earlier to the project library. You must add these to the Output Layout tab. Right-click each jar file, and then click **Extract Into Output Root**.\n\n        ![Extract dependency jar](./media/hdinsight-apache-spark-eventhub-streaming/extract-dependency-jar.png)  \n\n        Repeat this step for the other dependency jar as well. The **Output Layout** tab should now look like this.\n\n        ![Final output tab](./media/hdinsight-apache-spark-eventhub-streaming/final-output-tab.png)     \n\n        In the **Project Structure** dialog box, click **Apply** and then click **OK**. \n\n    1. From the menu bar, click **Build**, and then click **Make Project**. You can also click **Build Artifacts** to create the jar. The output jar is created under **\\out\\artifacts**.\n\n        ![Create JAR](./media/hdinsight-apache-spark-create-standalone-application/output.png)\n\n## Run the applications remotely on a Spark cluster using Livy\n\nWe will use Livy to run the streaming application remotely on a Spark cluster. For detailed discussion on how to use Livy with HDInsight Spark cluster, see [Submit jobs remotely to an Apache Spark cluster on Azure HDInsight](hdinsight-apache-spark-livy-rest-interface.md). Before you can start running the remote jobs to stream events using Spark there are a couple of things you should do:\n\n1. Start the local standalone application to generate events and sent to Event Hub. Use the following command to do so:\n\n        java -cp EventhubsSampleEventProducer.jar com.microsoft.eventhubs.client.example.EventhubsClientDriver --eventhubs-namespace \"mysbnamespace\" --eventhubs-name \"myeventhub\" --policy-name \"mysendpolicy\" --policy-key \"<policy key>\" --message-length 32 --thread-count 32 --message-count -1\n\n2. Copy the streaming jar (**microsoft-spark-streaming-examples.jar**) to the Azure Blob storage associated with the cluster. This makes the jar accessible to Livy. You can use [**AzCopy**](../storage/storage-use-azcopy.md), a command line utility, to do so. There are a lot of other clients you can use to upload data. You can find more about them at [Upload data for Hadoop jobs in HDInsight](hdinsight-upload-data.md).\n\n3. Install CURL on the computer where you are running these applications from. We use CURL to invoke the Livy endpoints to run the jobs remotely.\n\n### Run the applications to receive the events into an Azure Storage Blob as text\n\nOpen a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):\n\n    curl -k --user \"admin:mypassword1!\" -v -H \"Content-Type: application/json\" -X POST --data @C:\\Temp\\inputBlob.txt \"https://mysparkcluster.azurehdinsight.net/livy/batches\"\n\nThe parameters in the file **inputBlob.txt** are defined as follows:\n\n    { \"file\":\"wasb:///example/jars/microsoft-spark-streaming-examples.jar\", \"className\":\"com.microsoft.spark.streaming.examples.workloads.EventhubsEventCount\", \"args\":[\"--eventhubs-namespace\", \"mysbnamespace\", \"--eventhubs-name\", \"myeventhub\", \"--policy-name\", \"myreceivepolicy\", \"--policy-key\", \"<put-your-key-here>\", \"--consumer-group\", \"$default\", \"--partition-count\", 10, \"--batch-interval-in-seconds\", 20, \"--checkpoint-directory\", \"/EventCheckpoint\", \"--event-count-folder\", \"/EventCount/EventCount10\"], \"numExecutors\":20, \"executorMemory\":\"1G\", \"executorCores\":1, \"driverMemory\":\"2G\" }\n\nLet us understand what the parameters in the input file are:\n\n* **file** is the path to the application jar file on the Azure storage account associated with the cluster.\n* **className** is the name of the class in the jar.\n* **args** is the list of arguments required by the class\n* **numExecutors** is the number of cores used by Spark to run the streaming application. This should always be at least twice the number of Event Hub partitions.\n* **executorMemory**, **executorCores**, **driverMemory** are parameters used to assign required resources to the streaming application.\n\n>[AZURE.NOTE] You do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters. The streaming application creates them for you.\n    \nWhen you run the command, you should see an output like the following:\n\n    < HTTP/1.1 201 Created\n    < Content-Type: application/json; charset=UTF-8\n    < Location: /18\n    < Server: Microsoft-IIS/8.5\n    < X-Powered-By: ARR/2.5\n    < X-Powered-By: ASP.NET\n    < Date: Tue, 01 Dec 2015 05:39:10 GMT\n    < Content-Length: 37\n    <\n    {\"id\":1,\"state\":\"starting\",\"log\":[]}* Connection #0 to host mysparkcluster.azurehdinsight.net left intact\n\nMake a note of the batch ID in the last line of the output (in this example it is '1'). To verify that the application runs successfully, you can look at your Azure storage account associated with the cluster and you should see the **/EventCount/EventCount10** folder created there. This folder should contain blobs that captures the number of events processed within the time period specified for the parameter **batch-interval-in-seconds**.\n\nThe application will continue to run until you kill it. To do so, use the following command:\n\n    curl -k --user \"admin:mypassword1!\" -v -X DELETE \"https://mysparkcluster.azurehdinsight.net/livy/batches/1\"\n\n### Run the applications to receive the events into an Azure Storage Blob as JSON\n\nOpen a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):\n\n    curl -k --user \"admin:mypassword1!\" -v -H \"Content-Type: application/json\" -X POST --data @C:\\Temp\\inputJSON.txt \"https://mysparkcluster.azurehdinsight.net/livy/batches\"\n\nThe parameters in the file **inputJSON.txt** are defined as follows:\n\n    { \"file\":\"wasb:///example/jars/microsoft-spark-streaming-examples.jar\", \"className\":\"com.microsoft.spark.streaming.examples.workloads.EventhubsToAzureBlobAsJSON\", \"args\":[\"--eventhubs-namespace\", \"mysbnamespace\", \"--eventhubs-name\", \"myeventhub\", \"--policy-name\", \"myreceivepolicy\", \"--policy-key\", \"<put-your-key-here>\", \"--consumer-group\", \"$default\", \"--partition-count\", 10, \"--batch-interval-in-seconds\", 20, \"--checkpoint-directory\", \"/EventCheckpoint\", \"--event-count-folder\", \"/EventCount/EventCount10\", \"--event-store-folder\", \"/EventStore10\"], \"numExecutors\":20, \"executorMemory\":\"1G\", \"executorCores\":1, \"driverMemory\":\"2G\" }\n\nThe parameters are similar to what you specified for the text output, in the previous step. Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) that are used as parameters. The streaming application creates them for you.\n\n After you run the command, you can look at your Azure storage account associated with the cluster and you should see the **/EventStore10** folder created there. Open any file prefixed with **part-** and you should see the events processed in a JSON format.\n\n### Run the applications to receive the events into a Hive table\n\nTo run the application that streams events into a Hive table you need some additional components. These are:\n\n* datanucleus-api-jdo-3.2.6.jar\n* datanucleus-rdbms-3.2.9.jar\n* datanucleus-core-3.2.10.jar\n* hive-site.xml\n\nThe **.jar** files are available on your HDInsight Spark cluster at `/usr/hdp/current/spark-client/lib`. The **hive-site.xml** is available at `/usr/hdp/current/spark-client/conf`.\n\nYou can use [WinScp](http://winscp.net/eng/download.php) to copy over these files from the cluster to your local computer. You can then use tools to copy these files over to your storage account associated with the cluster. For more information on how to upload files to the storage account, see [Upload data for Hadoop jobs in HDInsight](hdinsight-upload-data.md).\n\nOnce you have copied over the files to your Azure storage account, open a command prompt, navigate to the directory where you installed CURL, and run the following command (replace username/password and cluster name):\n\n    curl -k --user \"admin:mypassword1!\" -v -H \"Content-Type: application/json\" -X POST --data @C:\\Temp\\inputHive.txt \"https://mysparkcluster.azurehdinsight.net/livy/batches\"\n\nThe parameters in the file **inputHive.txt** are defined as follows:\n\n    { \"file\":\"wasb:///example/jars/microsoft-spark-streaming-examples.jar\", \"className\":\"com.microsoft.spark.streaming.examples.workloads.EventhubsToHiveTable\", \"args\":[\"--eventhubs-namespace\", \"mysbnamespace\", \"--eventhubs-name\", \"myeventhub\", \"--policy-name\", \"myreceivepolicy\", \"--policy-key\", \"<put-your-key-here>\", \"--consumer-group\", \"$default\", \"--partition-count\", 10, \"--batch-interval-in-seconds\", 20, \"--checkpoint-directory\", \"/EventCheckpoint\", \"--event-count-folder\", \"/EventCount/EventCount10\", \"--event-hive-table\", \"EventHiveTable10\" ], \"jars\":[\"wasb:///example/jars/datanucleus-api-jdo-3.2.6.jar\", \"wasb:///example/jars/datanucleus-rdbms-3.2.9.jar\", \"wasb:///example/jars/datanucleus-core-3.2.10.jar\"], \"files\":[\"wasb:///example/jars/hive-site.xml\"], \"numExecutors\":20, \"executorMemory\":\"1G\", \"executorCores\":1, \"driverMemory\":\"2G\" }\n\nThe parameters are similar to what you specified for the text output, in the previous steps. Again, you do not need to create the output folders (EventCheckpoint, EventCount/EventCount10) or the output Hive table (EventHiveTable10) that are used as parameters. The streaming application creates them for you. Note that the **jars** and **files** option includes paths to the .jar files and the hive-site.xml that you copied over to the storage account.\n\nTo verify that the hive table was successfully created, you can SSH into the cluster and run Hive queries. For instructions, see [Use Hive with Hadoop in HDInsight with SSH](hdinsight-hadoop-use-hive-ssh.md). Once you are connected using SSH, you can run the following command to verify that the Hive table, **EventHiveTable10**, is created.\n\n    show tables;\n\nYou should see an output similar to the following:\n\n    OK\n    eventhivetable10\n    hivesampletable\n\nYou can also run a SELECT query to view the contents of the table.\n\n    SELECT * FROM eventhivetable10 LIMIT 10;\n\nYou should see an output like the following:\n\n    ZN90apUSQODDTx7n6Toh6jDbuPngqT4c\n    sor2M7xsFwmaRW8W8NDwMneFNMrOVkW1\n    o2HcsU735ejSi2bGEcbUSB4btCFmI1lW\n    TLuibq4rbj0T9st9eEzIWJwNGtMWYoYS\n    HKCpPlWFWAJILwR69MAq863nCWYzDEw6\n    Mvx0GQOPYvPR7ezBEpIHYKTKiEhYammQ\n    85dRppSBSbZgThLr1s0GMgKqynDUqudr\n    5LAWkNqorLj3ZN9a2mfWr9rZqeXKN4pF\n    ulf9wSFNjD7BZXCyunozecov9QpEIYmJ\n    vWzM3nvOja8DhYcwn0n5eTfOItZ966pa\n    Time taken: 4.434 seconds, Fetched: 10 row(s)\n\n\n### Run the applications to receive the events into an Azure SQL database table\n\nBefore running this step, make sure you have an Azure SQL database created. You will need values for database name, database server name, and the database administrator credentials as parameters. You do not need to create the database table though. The streaming application creates that for you.\n\nOpen a command prompt, navigate to the directory where you installed CURL, and run the following command:\n\n    curl -k --user \"admin:mypassword1!\" -v -H \"Content-Type: application/json\" -X POST --data @C:\\Temp\\inputSQL.txt \"https://mysparkcluster.azurehdinsight.net/livy/batches\"\n\nThe parameters in the file **inputSQL.txt** are defined as follows:\n\n    { \"file\":\"wasb:///example/jars/microsoft-spark-streaming-examples.jar\", \"className\":\"com.microsoft.spark.streaming.examples.workloads.EventhubsToAzureSQLTable\", \"args\":[\"--eventhubs-namespace\", \"mysbnamespace\", \"--eventhubs-name\", \"myeventhub\", \"--policy-name\", \"myreceivepolicy\", \"--policy-key\", \"<put-your-key-here>\", \"--consumer-group\", \"$default\", \"--partition-count\", 10, \"--batch-interval-in-seconds\", 20, \"--checkpoint-directory\", \"/EventCheckpoint\", \"--event-count-folder\", \"/EventCount/EventCount10\", \"--sql-server-fqdn\", \"<database-server-name>.database.windows.net\", \"--sql-database-name\", \"mysparkdatabase\", \"--database-username\", \"sparkdbadmin\", \"--database-password\", \"<put-password-here>\", \"--event-sql-table\", \"EventContent\" ], \"numExecutors\":20, \"executorMemory\":\"1G\", \"executorCores\":1, \"driverMemory\":\"2G\" }\n\nTo verify that the application runs successfully, you can connect to the Azure SQL database using SQL Server Management Studio. For instructions on how to do that, see [Connect to SQL Database with SQL Server Management Studio](sql-database/sql-database-connect-query-ssms). Once you are connected to the database, you can navigate to the **EventContent** table that was created by the streaming application. You can run a quick query to get the data from the table. Run the following query:\n\n    SELECT * FROM EventCount\n\nYou should see output similar to the following:\n\n    00046b0f-2552-4980-9c3f-8bba5647c8ee\n    000b7530-12f9-4081-8e19-90acd26f9c0c\n    000bc521-9c1b-4a42-ab08-dc1893b83f3b\n    00123a2a-e00d-496a-9104-108920955718\n    0017c68f-7a4e-452d-97ad-5cb1fe5ba81b\n    001KsmqL2gfu5ZcuQuTqTxQvVyGCqPp9\n    001vIZgOStka4DXtud0e3tX7XbfMnZrN\n    00220586-3e1a-4d2d-a89b-05c5892e541a\n    0029e309-9e54-4e1b-84be-cd04e6fce5ec\n    003333cf-874f-4045-9da3-9f98c2b4ea49\n    0043c07e-8d73-420a-9af7-1fcb94575356\n    004a11a9-0c2c-4bc0-a7d5-2e0ebd947ab9\n\n    \n## <a name=\"seealso\"></a>See also\n\n\n* [Overview: Apache Spark on Azure HDInsight](hdinsight-apache-spark-overview.md)\n\n### Scenarios\n\n* [Spark with BI: Perform interactive data analysis using Spark in HDInsight with BI tools](hdinsight-apache-spark-use-bi-tools.md)\n\n* [Spark with Machine Learning: Use Spark in HDInsight for analyzing building temperature using HVAC data](hdinsight-apache-spark-ipython-notebook-machine-learning.md)\n\n* [Spark with Machine Learning: Use Spark in HDInsight to predict food inspection results](hdinsight-apache-spark-machine-learning-mllib-ipython.md)\n\n* [Website log analysis using Spark in HDInsight](hdinsight-apache-spark-custom-library-website-log-analysis.md)\n\n### Create and run applications\n\n* [Create a standalone application using Scala](hdinsight-apache-spark-create-standalone-application.md)\n\n* [Run jobs remotely on a Spark cluster using Livy](hdinsight-apache-spark-livy-rest-interface.md)\n\n### Tools and extensions\n\n* [Use HDInsight Tools Plugin for IntelliJ IDEA to create and submit Spark Scala applicatons](hdinsight-apache-spark-intellij-tool-plugin.md)\n\n* [Use Zeppelin notebooks with a Spark cluster on HDInsight](hdinsight-apache-spark-use-zeppelin-notebook.md)\n\n* [Kernels available for Jupyter notebook in Spark cluster for HDInsight](hdinsight-apache-spark-jupyter-notebook-kernels.md)\n\n### Manage resources\n\n* [Manage resources for the Apache Spark cluster in Azure HDInsight](hdinsight-apache-spark-resource-manager.md)\n\n\n[hdinsight-versions]: hdinsight-component-versioning.md\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-storage]: hdinsight-hadoop-use-blob-storage.md\n\n[azure-purchase-options]: http://azure.microsoft.com/pricing/purchase-options/\n[azure-member-offers]: http://azure.microsoft.com/pricing/member-offers/\n[azure-free-trial]: http://azure.microsoft.com/pricing/free-trial/\n[azure-management-portal]: https://manage.windowsazure.com/\n[azure-create-storageaccount]: ../storage-create-storage-account/ "
+}

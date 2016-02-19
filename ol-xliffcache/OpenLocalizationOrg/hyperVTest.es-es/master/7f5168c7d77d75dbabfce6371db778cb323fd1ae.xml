@@ -1,0 +1,811 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        23,
+        118
+      ],
+      "content": "Build an HBase application using Maven, and deploy to Windows-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        133,
+        269
+      ],
+      "content": "Learn how to use Apache Maven to build a Java-based Apache HBase application, then deploy it to a Windows-based Azure HDInsight cluster."
+    },
+    {
+      "pos": [
+        546,
+        621
+      ],
+      "content": "Use Maven to build Java applications that use HBase with HDInsight (Hadoop)"
+    },
+    {
+      "pos": [
+        623,
+        795
+      ],
+      "content": "Learn how to create and build an <bpt id=\"p1\">[</bpt>Apache HBase<ept id=\"p1\">](http://hbase.apache.org/)</ept><ph id=\"ph2\"/> application in Java by using Apache Maven. Then use the application with Azure HDInsight (Hadoop).",
+      "nodes": [
+        {
+          "content": "Learn how to create and build an <bpt id=\"p1\">[</bpt>Apache HBase<ept id=\"p1\">](http://hbase.apache.org/)</ept><ph id=\"ph2\"/> application in Java by using Apache Maven.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "Then use the application with Azure HDInsight (Hadoop).",
+          "pos": [
+            169,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        797,
+        1134
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Maven<ept id=\"p2\">](http://maven.apache.org/)</ept><ph id=\"ph3\"/> is a software project management and comprehension tool that allows you to build software, documentation, and reports for Java projects. In this article, you will learn how to use it to create a basic Java application that that creates, queries, and deletes an HBase table on an Azure HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">[</bpt>Maven<ept id=\"p2\">](http://maven.apache.org/)</ept><ph id=\"ph3\"/> is a software project management and comprehension tool that allows you to build software, documentation, and reports for Java projects.",
+          "pos": [
+            0,
+            222
+          ]
+        },
+        {
+          "content": "In this article, you will learn how to use it to create a basic Java application that that creates, queries, and deletes an HBase table on an Azure HDInsight cluster.",
+          "pos": [
+            223,
+            389
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1138,
+        1150
+      ],
+      "content": "Requirements"
+    },
+    {
+      "pos": [
+        1154,
+        1252
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Java platform JDK<ept id=\"p3\">](http://www.oracle.com/technetwork/java/javase/downloads/index.html)</ept><ph id=\"ph4\"/> 7 or later"
+    },
+    {
+      "pos": [
+        1256,
+        1289
+      ],
+      "content": "<bpt id=\"p4\">[</bpt>Maven<ept id=\"p4\">](http://maven.apache.org/)</ept>"
+    },
+    {
+      "pos": [
+        1293,
+        1385
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>An Azure HDInsight cluster with HBase<ept id=\"p5\">](hdinsight-hbase-get-started.md#create-hbase-cluster)</ept>"
+    },
+    {
+      "pos": [
+        1389,
+        1407
+      ],
+      "content": "Create the project"
+    },
+    {
+      "pos": [
+        1412,
+        1573
+      ],
+      "content": "From the command-line in your development environment, change directories to the location where you want to create the project, for example, <ph id=\"ph5\">`cd code\\hdinsight`</ph>."
+    },
+    {
+      "pos": [
+        1578,
+        1678
+      ],
+      "content": "Use the <bpt id=\"p6\">__</bpt>mvn<ept id=\"p6\">__</ept><ph id=\"ph6\"/> command, which is installed with Maven, to generate the scaffolding for the project."
+    },
+    {
+      "pos": [
+        1844,
+        2035
+      ],
+      "content": "This creates a new directory in the current directory, with the name specified by the <bpt id=\"p7\">__</bpt>artifactID<ept id=\"p7\">__</ept><ph id=\"ph7\"/> parameter (<bpt id=\"p8\">**</bpt>hbaseapp<ept id=\"p8\">**</ept><ph id=\"ph8\"/> in this example.) This directory will contain the following items:"
+    },
+    {
+      "pos": [
+        2043,
+        2237
+      ],
+      "content": "<bpt id=\"p9\">__</bpt>pom.xml<ept id=\"p9\">__</ept>:  The Project Object Model (<bpt id=\"p10\">[</bpt>POM<ept id=\"p10\">](http://maven.apache.org/guides/introduction/introduction-to-the-pom.html)</ept>) contains information and configuration details used to build the project."
+    },
+    {
+      "pos": [
+        2245,
+        2372
+      ],
+      "content": "<bpt id=\"p11\">__</bpt>src<ept id=\"p11\">__</ept>: The directory that contains the <bpt id=\"p12\">__</bpt>main\\java\\com\\microsoft\\examples<ept id=\"p12\">__</ept><ph id=\"ph9\"/> directory, where you will author the application."
+    },
+    {
+      "pos": [
+        2377,
+        2491
+      ],
+      "content": "Delete the <bpt id=\"p13\">__</bpt>src\\test\\java\\com\\microsoft\\examples\\apptest.java<ept id=\"p13\">__</ept><ph id=\"ph10\"/> file because it will not be used in this example."
+    },
+    {
+      "pos": [
+        2495,
+        2526
+      ],
+      "content": "Update the Project Object Model"
+    },
+    {
+      "pos": [
+        2531,
+        2620
+      ],
+      "content": "Edit the <bpt id=\"p14\">__</bpt>pom.xml<ept id=\"p14\">__</ept><ph id=\"ph11\"/> file and add the following code inside the <ph id=\"ph12\">`&lt;dependencies&gt;`</ph><ph id=\"ph13\"/> section:"
+    },
+    {
+      "pos": [
+        2808,
+        3157
+      ],
+      "content": "This tells Maven that the project requires <bpt id=\"p15\">__</bpt>hbase-client<ept id=\"p15\">__</ept><ph id=\"ph14\"/> version <bpt id=\"p16\">__</bpt>0.98.4-hadoop2<ept id=\"p16\">__</ept>. At compile time, this will be downloaded from the default Maven repository. You can use the <bpt id=\"p17\">[</bpt>Maven Central Repository Search<ept id=\"p17\">](http://search.maven.org/#artifactdetails%7Corg.apache.hbase%7Chbase-client%7C0.98.4-hadoop2%7Cjar)</ept><ph id=\"ph15\"/> to learn more about this dependency.",
+      "nodes": [
+        {
+          "content": "This tells Maven that the project requires <bpt id=\"p15\">__</bpt>hbase-client<ept id=\"p15\">__</ept><ph id=\"ph14\"/> version <bpt id=\"p16\">__</bpt>0.98.4-hadoop2<ept id=\"p16\">__</ept>.",
+          "pos": [
+            0,
+            182
+          ]
+        },
+        {
+          "content": "At compile time, this will be downloaded from the default Maven repository.",
+          "pos": [
+            183,
+            258
+          ]
+        },
+        {
+          "content": "You can use the <bpt id=\"p17\">[</bpt>Maven Central Repository Search<ept id=\"p17\">](http://search.maven.org/#artifactdetails%7Corg.apache.hbase%7Chbase-client%7C0.98.4-hadoop2%7Cjar)</ept><ph id=\"ph15\"/> to learn more about this dependency.",
+          "pos": [
+            259,
+            499
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3162,
+        3333
+      ],
+      "content": "Add the following code to the <bpt id=\"p18\">__</bpt>pom.xml<ept id=\"p18\">__</ept><ph id=\"ph16\"/> file. This must be inside the <ph id=\"ph17\">`&lt;project&gt;...&lt;/project&gt;`</ph><ph id=\"ph18\"/> tags in the file, for example, between <ph id=\"ph19\">`&lt;/dependencies&gt;`</ph><ph id=\"ph20\"/> and <ph id=\"ph21\">`&lt;/project&gt;`</ph>.",
+      "nodes": [
+        {
+          "content": "Add the following code to the <bpt id=\"p18\">__</bpt>pom.xml<ept id=\"p18\">__</ept><ph id=\"ph16\"/> file.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "This must be inside the <ph id=\"ph17\">`&lt;project&gt;...&lt;/project&gt;`</ph><ph id=\"ph18\"/> tags in the file, for example, between <ph id=\"ph19\">`&lt;/dependencies&gt;`</ph><ph id=\"ph20\"/> and <ph id=\"ph21\">`&lt;/project&gt;`</ph>.",
+          "pos": [
+            103,
+            337
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4846,
+        4950
+      ],
+      "content": "This configures a resource (<bpt id=\"p19\">__</bpt>conf\\hbase-site.xml<ept id=\"p19\">__</ept>,) that contains configuration information for HBase."
+    },
+    {
+      "pos": [
+        4958,
+        5099
+      ],
+      "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> You can also set configuration values via code. See the comments in the <bpt id=\"p20\">__</bpt>CreateTable<ept id=\"p20\">__</ept><ph id=\"ph24\"/> example that follows for how to do this.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> You can also set configuration values via code.",
+          "pos": [
+            0,
+            94
+          ]
+        },
+        {
+          "content": "See the comments in the <bpt id=\"p20\">__</bpt>CreateTable<ept id=\"p20\">__</ept><ph id=\"ph24\"/> example that follows for how to do this.",
+          "pos": [
+            95,
+            230
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5105,
+        5660
+      ],
+      "content": "This also configures the <bpt id=\"p21\">[</bpt>Maven Compiler Plugin<ept id=\"p21\">](http://maven.apache.org/plugins/maven-compiler-plugin/)</ept><ph id=\"ph25\"/> and <bpt id=\"p22\">[</bpt>Maven Shade Plugin<ept id=\"p22\">](http://maven.apache.org/plugins/maven-shade-plugin/)</ept>. The compiler plug-in is used to compile the topology. The shade plug-in is used to prevent license duplication in the JAR package that is built by Maven. The reason this is used is that the duplicate license files cause an error at run time on the HDInsight cluster. Using maven-shade-plugin with the <ph id=\"ph26\">`ApacheLicenseResourceTransformer`</ph><ph id=\"ph27\"/> implementation prevents this error.",
+      "nodes": [
+        {
+          "content": "This also configures the <bpt id=\"p21\">[</bpt>Maven Compiler Plugin<ept id=\"p21\">](http://maven.apache.org/plugins/maven-compiler-plugin/)</ept><ph id=\"ph25\"/> and <bpt id=\"p22\">[</bpt>Maven Shade Plugin<ept id=\"p22\">](http://maven.apache.org/plugins/maven-shade-plugin/)</ept>.",
+          "pos": [
+            0,
+            278
+          ]
+        },
+        {
+          "content": "The compiler plug-in is used to compile the topology.",
+          "pos": [
+            279,
+            332
+          ]
+        },
+        {
+          "content": "The shade plug-in is used to prevent license duplication in the JAR package that is built by Maven.",
+          "pos": [
+            333,
+            432
+          ]
+        },
+        {
+          "content": "The reason this is used is that the duplicate license files cause an error at run time on the HDInsight cluster.",
+          "pos": [
+            433,
+            545
+          ]
+        },
+        {
+          "content": "Using maven-shade-plugin with the <ph id=\"ph26\">`ApacheLicenseResourceTransformer`</ph><ph id=\"ph27\"/> implementation prevents this error.",
+          "pos": [
+            546,
+            684
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5666,
+        5792
+      ],
+      "content": "The maven-shade-plugin also produces an uber jar (or fat jar,) that contains all the dependencies required by the application."
+    },
+    {
+      "pos": [
+        5797,
+        5823
+      ],
+      "content": "Save the <bpt id=\"p23\">__</bpt>pom.xml<ept id=\"p23\">__</ept><ph id=\"ph28\"/> file."
+    },
+    {
+      "pos": [
+        5828,
+        6005
+      ],
+      "content": "Create a new directory named <bpt id=\"p24\">__</bpt>conf<ept id=\"p24\">__</ept><ph id=\"ph29\"/> in the <bpt id=\"p25\">__</bpt>hbaseapp<ept id=\"p25\">__</ept><ph id=\"ph30\"/> directory. In the <bpt id=\"p26\">__</bpt>conf<ept id=\"p26\">__</ept><ph id=\"ph31\"/> directory, create a new file named <bpt id=\"p27\">__</bpt>hbase-site.xml<ept id=\"p27\">__</ept><ph id=\"ph32\"/> and use the following as the contents:",
+      "nodes": [
+        {
+          "content": "Create a new directory named <bpt id=\"p24\">__</bpt>conf<ept id=\"p24\">__</ept><ph id=\"ph29\"/> in the <bpt id=\"p25\">__</bpt>hbaseapp<ept id=\"p25\">__</ept><ph id=\"ph30\"/> directory.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "In the <bpt id=\"p26\">__</bpt>conf<ept id=\"p26\">__</ept><ph id=\"ph31\"/> directory, create a new file named <bpt id=\"p27\">__</bpt>hbase-site.xml<ept id=\"p27\">__</ept><ph id=\"ph32\"/> and use the following as the contents:",
+          "pos": [
+            179,
+            397
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7896,
+        7976
+      ],
+      "content": "This file will be used to load the HBase configuration for an HDInsight cluster."
+    },
+    {
+      "pos": [
+        7984,
+        8258
+      ],
+      "content": "<ph id=\"ph33\">[AZURE.NOTE]</ph><ph id=\"ph34\"/> This is a very minimal hbase-site.xml file, and it contains the bare minimum settings for the HDInsight cluster. For Linux-based clusters, you must uncomment the entry for <ph id=\"ph35\">`zookeeper.znode.parent`</ph><ph id=\"ph36\"/> to correctly set the root Zookeeper znode that is used by HBase.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph33\">[AZURE.NOTE]</ph><ph id=\"ph34\"/> This is a very minimal hbase-site.xml file, and it contains the bare minimum settings for the HDInsight cluster.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "For Linux-based clusters, you must uncomment the entry for <ph id=\"ph35\">`zookeeper.znode.parent`</ph><ph id=\"ph36\"/> to correctly set the root Zookeeper znode that is used by HBase.",
+          "pos": [
+            160,
+            342
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8263,
+        8296
+      ],
+      "content": "Save the <bpt id=\"p28\">__</bpt>hbase-site.xml<ept id=\"p28\">__</ept><ph id=\"ph37\"/> file."
+    },
+    {
+      "pos": [
+        8300,
+        8322
+      ],
+      "content": "Create the application"
+    },
+    {
+      "pos": [
+        8327,
+        8450
+      ],
+      "content": "Go to the <bpt id=\"p29\">__</bpt>hbaseapp\\src\\main\\java\\com\\microsoft\\examples<ept id=\"p29\">__</ept><ph id=\"ph38\"/> directory and rename the app.java file to <bpt id=\"p30\">__</bpt>CreateTable.java<ept id=\"p30\">__</ept>."
+    },
+    {
+      "pos": [
+        8455,
+        8543
+      ],
+      "content": "Open the <bpt id=\"p31\">__</bpt>CreateTable.java<ept id=\"p31\">__</ept><ph id=\"ph39\"/> file and replace the existing contents with the following:"
+    },
+    {
+      "pos": [
+        11634,
+        11755
+      ],
+      "content": "This is the <bpt id=\"p32\">__</bpt>CreateTable<ept id=\"p32\">__</ept><ph id=\"ph40\"/> class, which will create a table named <bpt id=\"p33\">__</bpt>people<ept id=\"p33\">__</ept><ph id=\"ph41\"/> and populate it with some predefined users."
+    },
+    {
+      "pos": [
+        11760,
+        11795
+      ],
+      "content": "Save the <bpt id=\"p34\">__</bpt>CreateTable.java<ept id=\"p34\">__</ept><ph id=\"ph42\"/> file."
+    },
+    {
+      "pos": [
+        11800,
+        11963
+      ],
+      "content": "In the <bpt id=\"p35\">__</bpt>hbaseapp\\src\\main\\java\\com\\microsoft\\examples<ept id=\"p35\">__</ept><ph id=\"ph43\"/> directory, create a new file named <bpt id=\"p36\">__</bpt>SearchByEmail.java<ept id=\"p36\">__</ept>. Use the following as the contents of this file:",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p35\">__</bpt>hbaseapp\\src\\main\\java\\com\\microsoft\\examples<ept id=\"p35\">__</ept><ph id=\"ph43\"/> directory, create a new file named <bpt id=\"p36\">__</bpt>SearchByEmail.java<ept id=\"p36\">__</ept>.",
+          "pos": [
+            0,
+            210
+          ]
+        },
+        {
+          "content": "Use the following as the contents of this file:",
+          "pos": [
+            211,
+            258
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15207,
+        15405
+      ],
+      "content": "The <bpt id=\"p37\">__</bpt>SearchByEmail<ept id=\"p37\">__</ept><ph id=\"ph44\"/> class can be used to query for rows by email address. Because it uses a regular expression filter, you can provide either a string or a regular expression when using the class.",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p37\">__</bpt>SearchByEmail<ept id=\"p37\">__</ept><ph id=\"ph44\"/> class can be used to query for rows by email address.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "Because it uses a regular expression filter, you can provide either a string or a regular expression when using the class.",
+          "pos": [
+            131,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15410,
+        15447
+      ],
+      "content": "Save the <bpt id=\"p38\">__</bpt>SearchByEmail.java<ept id=\"p38\">__</ept><ph id=\"ph45\"/> file."
+    },
+    {
+      "pos": [
+        15452,
+        15613
+      ],
+      "content": "In the <bpt id=\"p39\">__</bpt>hbaseapp\\src\\main\\hava\\com\\microsoft\\examples<ept id=\"p39\">__</ept><ph id=\"ph46\"/> directory, create a new file named <bpt id=\"p40\">__</bpt>DeleteTable.java<ept id=\"p40\">__</ept>. Use the following as the contents of this file:",
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p39\">__</bpt>hbaseapp\\src\\main\\hava\\com\\microsoft\\examples<ept id=\"p39\">__</ept><ph id=\"ph46\"/> directory, create a new file named <bpt id=\"p40\">__</bpt>DeleteTable.java<ept id=\"p40\">__</ept>.",
+          "pos": [
+            0,
+            208
+          ]
+        },
+        {
+          "content": "Use the following as the contents of this file:",
+          "pos": [
+            209,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16304,
+        16420
+      ],
+      "content": "This class is for cleaning up this example by disabling and dropping the table created by the <bpt id=\"p41\">__</bpt>CreateTable<ept id=\"p41\">__</ept><ph id=\"ph47\"/> class."
+    },
+    {
+      "pos": [
+        16425,
+        16460
+      ],
+      "content": "Save the <bpt id=\"p42\">__</bpt>DeleteTable.java<ept id=\"p42\">__</ept><ph id=\"ph48\"/> file."
+    },
+    {
+      "pos": [
+        16464,
+        16497
+      ],
+      "content": "Build and package the application"
+    },
+    {
+      "pos": [
+        16502,
+        16577
+      ],
+      "content": "Open a command prompt and change directories to the <bpt id=\"p43\">__</bpt>hbaseapp<ept id=\"p43\">__</ept><ph id=\"ph49\"/> directory."
+    },
+    {
+      "pos": [
+        16582,
+        16658
+      ],
+      "content": "Use the following command to build a JAR file that contains the application:"
+    },
+    {
+      "pos": [
+        16691,
+        16839
+      ],
+      "content": "This cleans any previous build artifacts, downloads any dependencies that have not already been installed, then builds and packages the application."
+    },
+    {
+      "pos": [
+        16844,
+        16962
+      ],
+      "content": "When the command completes, the <bpt id=\"p44\">__</bpt>hbaseapp\\target<ept id=\"p44\">__</ept><ph id=\"ph50\"/> directory will contain a file named <bpt id=\"p45\">__</bpt>hbaseapp-1.0-SNAPSHOT.jar<ept id=\"p45\">__</ept>."
+    },
+    {
+      "pos": [
+        16970,
+        17135
+      ],
+      "content": "<ph id=\"ph51\">[AZURE.NOTE]</ph><ph id=\"ph52\"/> The <bpt id=\"p46\">__</bpt>hbaseapp-1.0-SNAPSHOT.jar<ept id=\"p46\">__</ept><ph id=\"ph53\"/> file is an uber jar (sometimes called a fat jar,) which contains all the dependencies required to run the application."
+    },
+    {
+      "pos": [
+        17139,
+        17174
+      ],
+      "content": "Upload the JAR file and start a job"
+    },
+    {
+      "pos": [
+        17178,
+        17420
+      ],
+      "content": "<ph id=\"ph54\">[AZURE.NOTE]</ph><ph id=\"ph55\"/> There are many ways to upload a file to your HDInsight cluster, as described in <bpt id=\"p47\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p47\">](hdinsight-upload-data.md)</ept>. The following steps use <bpt id=\"p48\">[</bpt>Azure PowerShell<ept id=\"p48\">](../powershell-install-configure.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph54\">[AZURE.NOTE]</ph><ph id=\"ph55\"/> There are many ways to upload a file to your HDInsight cluster, as described in <bpt id=\"p47\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p47\">](hdinsight-upload-data.md)</ept>.",
+          "pos": [
+            0,
+            236
+          ]
+        },
+        {
+          "content": "The following steps use <bpt id=\"p48\">[</bpt>Azure PowerShell<ept id=\"p48\">](../powershell-install-configure.md)</ept>.",
+          "pos": [
+            237,
+            356
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17425,
+        17570
+      ],
+      "content": "After installing and configuring Azure PowerShell, create a new file named <bpt id=\"p49\">__</bpt>hbase-runner.psm1<ept id=\"p49\">__</ept>. Use the following as the contents of this file:",
+      "nodes": [
+        {
+          "content": "After installing and configuring Azure PowerShell, create a new file named <bpt id=\"p49\">__</bpt>hbase-runner.psm1<ept id=\"p49\">__</ept>.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "Use the following as the contents of this file:",
+          "pos": [
+            138,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25273,
+        25304
+      ],
+      "content": "This file contains two modules:"
+    },
+    {
+      "pos": [
+        25312,
+        25369
+      ],
+      "content": "<bpt id=\"p50\">__</bpt>Add-HDInsightFile<ept id=\"p50\">__</ept><ph id=\"ph56\"/> - used to upload files to HDInsight"
+    },
+    {
+      "pos": [
+        25377,
+        25441
+      ],
+      "content": "<bpt id=\"p51\">__</bpt>Start-HBaseExample<ept id=\"p51\">__</ept><ph id=\"ph57\"/> - used to run the classes created earlier"
+    },
+    {
+      "pos": [
+        25446,
+        25482
+      ],
+      "content": "Save the <bpt id=\"p52\">__</bpt>hbase-runner.psm1<ept id=\"p52\">__</ept><ph id=\"ph58\"/> file."
+    },
+    {
+      "pos": [
+        25487,
+        25608
+      ],
+      "content": "Open a new Azure PowerShell window, change directories to the <bpt id=\"p53\">__</bpt>hbaseapp<ept id=\"p53\">__</ept><ph id=\"ph59\"/> directory, and then run the following command."
+    },
+    {
+      "pos": [
+        25673,
+        25816
+      ],
+      "content": "Change the path to the location of the <bpt id=\"p54\">__</bpt>hbase-runner.psm1<ept id=\"p54\">__</ept><ph id=\"ph60\"/> file created earlier. This registers the module for this Azure PowerShell session.",
+      "nodes": [
+        {
+          "content": "Change the path to the location of the <bpt id=\"p54\">__</bpt>hbase-runner.psm1<ept id=\"p54\">__</ept><ph id=\"ph60\"/> file created earlier.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "This registers the module for this Azure PowerShell session.",
+          "pos": [
+            138,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25821,
+        25917
+      ],
+      "content": "Use the following command to upload the <bpt id=\"p55\">__</bpt>hbaseapp-1.0-SNAPSHOT.jar<ept id=\"p55\">__</ept><ph id=\"ph61\"/> to your HDInsight cluster."
+    },
+    {
+      "pos": [
+        26084,
+        26304
+      ],
+      "content": "Replace <bpt id=\"p56\">__</bpt>hdinsightclustername<ept id=\"p56\">__</ept><ph id=\"ph62\"/> with the name of your HDInsight cluster. The command will then upload the <bpt id=\"p57\">__</bpt>hbaseapp-1.0-SNAPSHOT.jar<ept id=\"p57\">__</ept><ph id=\"ph63\"/> to the <bpt id=\"p58\">__</bpt>example/jars<ept id=\"p58\">__</ept><ph id=\"ph64\"/> location in the primary storage for your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Replace <bpt id=\"p56\">__</bpt>hdinsightclustername<ept id=\"p56\">__</ept><ph id=\"ph62\"/> with the name of your HDInsight cluster.",
+          "pos": [
+            0,
+            128
+          ]
+        },
+        {
+          "content": "The command will then upload the <bpt id=\"p57\">__</bpt>hbaseapp-1.0-SNAPSHOT.jar<ept id=\"p57\">__</ept><ph id=\"ph63\"/> to the <bpt id=\"p58\">__</bpt>example/jars<ept id=\"p58\">__</ept><ph id=\"ph64\"/> location in the primary storage for your HDInsight cluster.",
+          "pos": [
+            129,
+            385
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        26309,
+        26407
+      ],
+      "content": "After the files are uploaded, use the following code to create a new table using the <bpt id=\"p59\">__</bpt>hbaseapp<ept id=\"p59\">__</ept>:"
+    },
+    {
+      "pos": [
+        26521,
+        26594
+      ],
+      "content": "Replace <bpt id=\"p60\">__</bpt>hdinsightclustername<ept id=\"p60\">__</ept><ph id=\"ph65\"/> with the name of your HDInsight cluster."
+    },
+    {
+      "pos": [
+        26600,
+        26737
+      ],
+      "content": "This command creates a new table named <bpt id=\"p61\">__</bpt>people<ept id=\"p61\">__</ept><ph id=\"ph66\"/> in your HDInsight cluster. This command does not show any output in the console window.",
+      "nodes": [
+        {
+          "content": "This command creates a new table named <bpt id=\"p61\">__</bpt>people<ept id=\"p61\">__</ept><ph id=\"ph66\"/> in your HDInsight cluster.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "This command does not show any output in the console window.",
+          "pos": [
+            132,
+            192
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        26742,
+        26804
+      ],
+      "content": "To search for entries in the table, use the following command:"
+    },
+    {
+      "pos": [
+        26944,
+        27017
+      ],
+      "content": "Replace <bpt id=\"p62\">__</bpt>hdinsightclustername<ept id=\"p62\">__</ept><ph id=\"ph67\"/> with the name of your HDInsight cluster."
+    },
+    {
+      "pos": [
+        27023,
+        27243
+      ],
+      "content": "This command uses the <bpt id=\"p63\">**</bpt>SearchByEmail<ept id=\"p63\">**</ept><ph id=\"ph68\"/> class to search for any rows where the <bpt id=\"p64\">__</bpt>contactinformation<ept id=\"p64\">__</ept><ph id=\"ph69\"/> column family and the <bpt id=\"p65\">__</bpt>email<ept id=\"p65\">__</ept><ph id=\"ph70\"/> column, contains the string <bpt id=\"p66\">__</bpt>contoso.com<ept id=\"p66\">__</ept>. You should receive the following results:",
+      "nodes": [
+        {
+          "content": "This command uses the <bpt id=\"p63\">**</bpt>SearchByEmail<ept id=\"p63\">**</ept><ph id=\"ph68\"/> class to search for any rows where the <bpt id=\"p64\">__</bpt>contactinformation<ept id=\"p64\">__</ept><ph id=\"ph69\"/> column family and the <bpt id=\"p65\">__</bpt>email<ept id=\"p65\">__</ept><ph id=\"ph70\"/> column, contains the string <bpt id=\"p66\">__</bpt>contoso.com<ept id=\"p66\">__</ept>.",
+          "pos": [
+            0,
+            383
+          ]
+        },
+        {
+          "content": "You should receive the following results:",
+          "pos": [
+            384,
+            425
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27512,
+        27834
+      ],
+      "content": "Using <bpt id=\"p67\">__</bpt>fabrikam.com<ept id=\"p67\">__</ept><ph id=\"ph71\"/> for the <ph id=\"ph72\">`-emailRegex`</ph><ph id=\"ph73\"/> value will return the users that have <bpt id=\"p68\">__</bpt>fabrikam.com<ept id=\"p68\">__</ept><ph id=\"ph74\"/> in the email field. Since this search is implemented by using a regular expression-based filter, you can also enter regular expressions, such as <bpt id=\"p69\">__</bpt>^r<ept id=\"p69\">__</ept>, which will return entries where the email begins with the letter 'r'.",
+      "nodes": [
+        {
+          "content": "Using <bpt id=\"p67\">__</bpt>fabrikam.com<ept id=\"p67\">__</ept><ph id=\"ph71\"/> for the <ph id=\"ph72\">`-emailRegex`</ph><ph id=\"ph73\"/> value will return the users that have <bpt id=\"p68\">__</bpt>fabrikam.com<ept id=\"p68\">__</ept><ph id=\"ph74\"/> in the email field.",
+          "pos": [
+            0,
+            263
+          ]
+        },
+        {
+          "content": "Since this search is implemented by using a regular expression-based filter, you can also enter regular expressions, such as <bpt id=\"p69\">__</bpt>^r<ept id=\"p69\">__</ept>, which will return entries where the email begins with the letter 'r'.",
+          "pos": [
+            264,
+            506
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27838,
+        27854
+      ],
+      "content": "Delete the table"
+    },
+    {
+      "pos": [
+        27856,
+        28004
+      ],
+      "content": "When you are done with the example, use the following command from the Azure PowerShell session to delete the <bpt id=\"p70\">__</bpt>people<ept id=\"p70\">__</ept><ph id=\"ph75\"/> table used in this example:"
+    },
+    {
+      "pos": [
+        28110,
+        28183
+      ],
+      "content": "Replace <bpt id=\"p71\">__</bpt>hdinsightclustername<ept id=\"p71\">__</ept><ph id=\"ph76\"/> with the name of your HDInsight cluster."
+    },
+    {
+      "pos": [
+        28187,
+        28202
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        28207,
+        28269
+      ],
+      "content": "No results or unexpected results when using Start-HBaseExample"
+    },
+    {
+      "pos": [
+        28271,
+        28375
+      ],
+      "content": "Use the <ph id=\"ph77\">`-showErr`</ph><ph id=\"ph78\"/> parameter to view the standard error (STDERR) that is produced while running the job."
+    }
+  ],
+  "content": "<properties\npageTitle=\"Build an HBase application using Maven, and deploy to Windows-based HDInsight | Microsoft Azure\"\ndescription=\"Learn how to use Apache Maven to build a Java-based Apache HBase application, then deploy it to a Windows-based Azure HDInsight cluster.\"\nservices=\"hdinsight\"\ndocumentationCenter=\"\"\nauthors=\"Blackmist\"\nmanager=\"paulettm\"\neditor=\"cgronlun\"\ntags=\"azure-portal\"/>\n\n<tags\nms.service=\"hdinsight\"\nms.workload=\"big-data\"\nms.tgt_pltfrm=\"na\"\nms.devlang=\"na\"\nms.topic=\"article\"\nms.date=\"02/01/2016\"\nms.author=\"larryfr\"/>\n\n#Use Maven to build Java applications that use HBase with HDInsight (Hadoop)\n\nLearn how to create and build an [Apache HBase](http://hbase.apache.org/) application in Java by using Apache Maven. Then use the application with Azure HDInsight (Hadoop).\n\n[Maven](http://maven.apache.org/) is a software project management and comprehension tool that allows you to build software, documentation, and reports for Java projects. In this article, you will learn how to use it to create a basic Java application that that creates, queries, and deletes an HBase table on an Azure HDInsight cluster.\n\n##Requirements\n\n* [Java platform JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 7 or later\n\n* [Maven](http://maven.apache.org/)\n\n* [An Azure HDInsight cluster with HBase](hdinsight-hbase-get-started.md#create-hbase-cluster)\n\n##Create the project\n\n1. From the command-line in your development environment, change directories to the location where you want to create the project, for example, `cd code\\hdinsight`.\n\n2. Use the __mvn__ command, which is installed with Maven, to generate the scaffolding for the project.\n\n        mvn archetype:generate -DgroupId=com.microsoft.examples -DartifactId=hbaseapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false\n\n    This creates a new directory in the current directory, with the name specified by the __artifactID__ parameter (**hbaseapp** in this example.) This directory will contain the following items:\n\n    * __pom.xml__:  The Project Object Model ([POM](http://maven.apache.org/guides/introduction/introduction-to-the-pom.html)) contains information and configuration details used to build the project.\n\n    * __src__: The directory that contains the __main\\java\\com\\microsoft\\examples__ directory, where you will author the application.\n\n3. Delete the __src\\test\\java\\com\\microsoft\\examples\\apptest.java__ file because it will not be used in this example.\n\n##Update the Project Object Model\n\n1. Edit the __pom.xml__ file and add the following code inside the `<dependencies>` section:\n\n        <dependency>\n          <groupId>org.apache.hbase</groupId>\n          <artifactId>hbase-client</artifactId>\n          <version>0.98.4-hadoop2</version>\n        </dependency>\n\n    This tells Maven that the project requires __hbase-client__ version __0.98.4-hadoop2__. At compile time, this will be downloaded from the default Maven repository. You can use the [Maven Central Repository Search](http://search.maven.org/#artifactdetails%7Corg.apache.hbase%7Chbase-client%7C0.98.4-hadoop2%7Cjar) to learn more about this dependency.\n\n2. Add the following code to the __pom.xml__ file. This must be inside the `<project>...</project>` tags in the file, for example, between `</dependencies>` and `</project>`.\n\n        <build>\n          <sourceDirectory>src</sourceDirectory>\n          <resources>\n              <resource>\n                <directory>${basedir}/conf</directory>\n                <filtering>false</filtering>\n                <includes>\n                  <include>hbase-site.xml</include>\n                </includes>\n              </resource>\n            </resources>\n          <plugins>\n            <plugin>\n                <groupId>org.apache.maven.plugins</groupId>\n                <artifactId>maven-compiler-plugin</artifactId>\n                <version>3.3</version>\n                <configuration>\n                    <source>1.6</source>\n                    <target>1.6</target>\n                </configuration>\n              </plugin>\n            <plugin>\n              <groupId>org.apache.maven.plugins</groupId>\n              <artifactId>maven-shade-plugin</artifactId>\n              <version>2.3</version>\n              <configuration>\n                <transformers>\n                  <transformer implementation=\"org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer\">\n                    </transformer>\n                  </transformers>\n              </configuration>\n              <executions>\n                <execution>\n                  <phase>package</phase>\n                  <goals>\n                    <goal>shade</goal>\n                  </goals>\n                </execution>\n              </executions>\n            </plugin>\n          </plugins>\n        </build>\n\n    This configures a resource (__conf\\hbase-site.xml__,) that contains configuration information for HBase.\n\n    > [AZURE.NOTE] You can also set configuration values via code. See the comments in the __CreateTable__ example that follows for how to do this.\n\n    This also configures the [Maven Compiler Plugin](http://maven.apache.org/plugins/maven-compiler-plugin/) and [Maven Shade Plugin](http://maven.apache.org/plugins/maven-shade-plugin/). The compiler plug-in is used to compile the topology. The shade plug-in is used to prevent license duplication in the JAR package that is built by Maven. The reason this is used is that the duplicate license files cause an error at run time on the HDInsight cluster. Using maven-shade-plugin with the `ApacheLicenseResourceTransformer` implementation prevents this error.\n\n    The maven-shade-plugin also produces an uber jar (or fat jar,) that contains all the dependencies required by the application.\n\n3. Save the __pom.xml__ file.\n\n4. Create a new directory named __conf__ in the __hbaseapp__ directory. In the __conf__ directory, create a new file named __hbase-site.xml__ and use the following as the contents:\n\n        <?xml version=\"1.0\"?>\n        <?xml-stylesheet type=\"text/xsl\" href=\"configuration.xsl\"?>\n        <!--\n        /**\n          * Copyright 2010 The Apache Software Foundation\n          *\n          * Licensed to the Apache Software Foundation (ASF) under one\n          * or more contributor license agreements.  See the NOTICE file\n          * distributed with this work for additional information\n          * regarding copyright ownership.  The ASF licenses this file\n          * to you under the Apache License, Version 2.0 (the\n          * \"License\"); you may not use this file except in compliance\n          * with the License.  You may obtain a copy of the License at\n          *\n          *     http://www.apache.org/licenses/LICENSE-2.0\n          *\n          * Unless required by applicable law or agreed to in writing, software\n          * distributed under the License is distributed on an \"AS IS\" BASIS,\n          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n          * See the License for the specific language governing permissions and\n          * limitations under the License.\n          */\n        -->\n        <configuration>\n          <property>\n            <name>hbase.cluster.distributed</name>\n            <value>true</value>\n          </property>\n          <property>\n            <name>hbase.zookeeper.quorum</name>\n            <value>zookeeper0,zookeeper1,zookeeper2</value>\n          </property>\n          <property>\n            <name>hbase.zookeeper.property.clientPort</name>\n            <value>2181</value>\n          </property>\n          <!-- Uncomment the following if you are using\n               a Linux-based HDInsight cluster -->\n          <!--\n          <property>\n            <name>zookeeper.znode.parent</name>\n            <value>/hbase-unsecure</value>\n          </property>\n          -->\n        </configuration>\n\n    This file will be used to load the HBase configuration for an HDInsight cluster.\n\n    > [AZURE.NOTE] This is a very minimal hbase-site.xml file, and it contains the bare minimum settings for the HDInsight cluster. For Linux-based clusters, you must uncomment the entry for `zookeeper.znode.parent` to correctly set the root Zookeeper znode that is used by HBase.\n\n3. Save the __hbase-site.xml__ file.\n\n##Create the application\n\n1. Go to the __hbaseapp\\src\\main\\java\\com\\microsoft\\examples__ directory and rename the app.java file to __CreateTable.java__.\n\n2. Open the __CreateTable.java__ file and replace the existing contents with the following:\n\n        package com.microsoft.examples;\n        import java.io.IOException;\n\n        import org.apache.hadoop.conf.Configuration;\n        import org.apache.hadoop.hbase.HBaseConfiguration;\n        import org.apache.hadoop.hbase.client.HBaseAdmin;\n        import org.apache.hadoop.hbase.HTableDescriptor;\n        import org.apache.hadoop.hbase.TableName;\n        import org.apache.hadoop.hbase.HColumnDescriptor;\n        import org.apache.hadoop.hbase.client.HTable;\n        import org.apache.hadoop.hbase.client.Put;\n        import org.apache.hadoop.hbase.util.Bytes;\n\n        public class CreateTable {\n          public static void main(String[] args) throws IOException {\n            Configuration config = HBaseConfiguration.create();\n\n            // Example of setting zookeeper values for HDInsight\n            // in code instead of an hbase-site.xml file\n            //\n            // config.set(\"hbase.zookeeper.quorum\",\n            //            \"zookeepernode0,zookeepernode1,zookeepernode2\");\n            //config.set(\"hbase.zookeeper.property.clientPort\", \"2181\");\n            //config.set(\"hbase.cluster.distributed\", \"true\");\n            // The following sets the znode root for Linux-based HDInsight\n            //config.set(\"zookeeper.znode.parent\",\"/hbase-unsecure\");\n\n            // create an admin object using the config\n            HBaseAdmin admin = new HBaseAdmin(config);\n\n            // create the table...\n            HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(\"people\"));\n            // ... with two column families\n            tableDescriptor.addFamily(new HColumnDescriptor(\"name\"));\n            tableDescriptor.addFamily(new HColumnDescriptor(\"contactinfo\"));\n            admin.createTable(tableDescriptor);\n\n            // define some people\n            String[][] people = {\n                { \"1\", \"Marcel\", \"Haddad\", \"marcel@fabrikam.com\"},\n                { \"2\", \"Franklin\", \"Holtz\", \"franklin@contoso.com\" },\n                { \"3\", \"Dwayne\", \"McKee\", \"dwayne@fabrikam.com\" },\n                { \"4\", \"Rae\", \"Schroeder\", \"rae@contoso.com\" },\n                { \"5\", \"Rosalie\", \"burton\", \"rosalie@fabrikam.com\"},\n                { \"6\", \"Gabriela\", \"Ingram\", \"gabriela@contoso.com\"} };\n\n            HTable table = new HTable(config, \"people\");\n\n            // Add each person to the table\n            //   Use the `name` column family for the name\n            //   Use the `contactinfo` column family for the email\n            for (int i = 0; i< people.length; i++) {\n              Put person = new Put(Bytes.toBytes(people[i][0]));\n              person.add(Bytes.toBytes(\"name\"), Bytes.toBytes(\"first\"), Bytes.toBytes(people[i][1]));\n              person.add(Bytes.toBytes(\"name\"), Bytes.toBytes(\"last\"), Bytes.toBytes(people[i][2]));\n              person.add(Bytes.toBytes(\"contactinfo\"), Bytes.toBytes(\"email\"), Bytes.toBytes(people[i][3]));\n              table.put(person);\n            }\n            // flush commits and close the table\n            table.flushCommits();\n            table.close();\n          }\n        }\n\n    This is the __CreateTable__ class, which will create a table named __people__ and populate it with some predefined users.\n\n3. Save the __CreateTable.java__ file.\n\n4. In the __hbaseapp\\src\\main\\java\\com\\microsoft\\examples__ directory, create a new file named __SearchByEmail.java__. Use the following as the contents of this file:\n\n        package com.microsoft.examples;\n        import java.io.IOException;\n\n        import org.apache.hadoop.conf.Configuration;\n        import org.apache.hadoop.hbase.HBaseConfiguration;\n        import org.apache.hadoop.hbase.client.HTable;\n        import org.apache.hadoop.hbase.client.Scan;\n        import org.apache.hadoop.hbase.client.ResultScanner;\n        import org.apache.hadoop.hbase.client.Result;\n        import org.apache.hadoop.hbase.filter.RegexStringComparator;\n        import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;\n        import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;\n        import org.apache.hadoop.hbase.util.Bytes;\n        import org.apache.hadoop.util.GenericOptionsParser;\n\n        public class SearchByEmail {\n          public static void main(String[] args) throws IOException {\n            Configuration config = HBaseConfiguration.create();\n\n            // Use GenericOptionsParser to get only the parameters to the class\n            // and not all the parameters passed (when using WebHCat for example)\n            String[] otherArgs = new GenericOptionsParser(config, args).getRemainingArgs();\n            if (otherArgs.length != 1) {\n              System.out.println(\"usage: [regular expression]\");\n              System.exit(-1);\n            }\n\n            // Open the table\n            HTable table = new HTable(config, \"people\");\n\n            // Define the family and qualifiers to be used\n            byte[] contactFamily = Bytes.toBytes(\"contactinfo\");\n            byte[] emailQualifier = Bytes.toBytes(\"email\");\n            byte[] nameFamily = Bytes.toBytes(\"name\");\n            byte[] firstNameQualifier = Bytes.toBytes(\"first\");\n            byte[] lastNameQualifier = Bytes.toBytes(\"last\");\n\n            // Create a new regex filter\n            RegexStringComparator emailFilter = new RegexStringComparator(otherArgs[0]);\n            // Attach the regex filter to a filter\n            //   for the email column\n            SingleColumnValueFilter filter = new SingleColumnValueFilter(\n              contactFamily,\n              emailQualifier,\n              CompareOp.EQUAL,\n              emailFilter\n            );\n\n            // Create a scan and set the filter\n            Scan scan = new Scan();\n            scan.setFilter(filter);\n\n            // Get the results\n            ResultScanner results = table.getScanner(scan);\n            // Iterate over results and print  values\n            for (Result result : results ) {\n              String id = new String(result.getRow());\n              byte[] firstNameObj = result.getValue(nameFamily, firstNameQualifier);\n              String firstName = new String(firstNameObj);\n              byte[] lastNameObj = result.getValue(nameFamily, lastNameQualifier);\n              String lastName = new String(lastNameObj);\n              System.out.println(firstName + \" \" + lastName + \" - ID: \" + id);\n              byte[] emailObj = result.getValue(contactFamily, emailQualifier);\n              String email = new String(emailObj);\n              System.out.println(firstName + \" \" + lastName + \" - \" + email + \" - ID: \" + id);\n            }\n            results.close();\n            table.close();\n          }\n        }\n\n    The __SearchByEmail__ class can be used to query for rows by email address. Because it uses a regular expression filter, you can provide either a string or a regular expression when using the class.\n\n5. Save the __SearchByEmail.java__ file.\n\n6. In the __hbaseapp\\src\\main\\hava\\com\\microsoft\\examples__ directory, create a new file named __DeleteTable.java__. Use the following as the contents of this file:\n\n        package com.microsoft.examples;\n        import java.io.IOException;\n\n        import org.apache.hadoop.conf.Configuration;\n        import org.apache.hadoop.hbase.HBaseConfiguration;\n        import org.apache.hadoop.hbase.client.HBaseAdmin;\n\n        public class DeleteTable {\n          public static void main(String[] args) throws IOException {\n            Configuration config = HBaseConfiguration.create();\n\n            // Create an admin object using the config\n            HBaseAdmin admin = new HBaseAdmin(config);\n\n            // Disable, and then delete the table\n            admin.disableTable(\"people\");\n            admin.deleteTable(\"people\");\n          }\n        }\n\n    This class is for cleaning up this example by disabling and dropping the table created by the __CreateTable__ class.\n\n7. Save the __DeleteTable.java__ file.\n\n##Build and package the application\n\n1. Open a command prompt and change directories to the __hbaseapp__ directory.\n\n2. Use the following command to build a JAR file that contains the application:\n\n        mvn clean package\n\n    This cleans any previous build artifacts, downloads any dependencies that have not already been installed, then builds and packages the application.\n\n3. When the command completes, the __hbaseapp\\target__ directory will contain a file named __hbaseapp-1.0-SNAPSHOT.jar__.\n\n    > [AZURE.NOTE] The __hbaseapp-1.0-SNAPSHOT.jar__ file is an uber jar (sometimes called a fat jar,) which contains all the dependencies required to run the application.\n\n##Upload the JAR file and start a job\n\n> [AZURE.NOTE] There are many ways to upload a file to your HDInsight cluster, as described in [Upload data for Hadoop jobs in HDInsight](hdinsight-upload-data.md). The following steps use [Azure PowerShell](../powershell-install-configure.md).\n\n1. After installing and configuring Azure PowerShell, create a new file named __hbase-runner.psm1__. Use the following as the contents of this file:\n\n        <#\n        .SYNOPSIS\n        Copies a file to the primary storage of an HDInsight cluster.\n        .DESCRIPTION\n        Copies a file from a local directory to the blob container for\n        the HDInsight cluster.\n        .EXAMPLE\n        Start-HBaseExample -className \"com.microsoft.examples.CreateTable\"\n        -clusterName \"MyHDInsightCluster\"\n        \n        .EXAMPLE\n        Start-HBaseExample -className \"com.microsoft.examples.SearchByEmail\"\n        -clusterName \"MyHDInsightCluster\"\n        -emailRegex \"contoso.com\"\n        \n        .EXAMPLE\n        Start-HBaseExample -className \"com.microsoft.examples.SearchByEmail\"\n        -clusterName \"MyHDInsightCluster\"\n        -emailRegex \"^r\" -showErr\n        #>\n        \n        function Start-HBaseExample {\n        [CmdletBinding(SupportsShouldProcess = $true)]\n        param(\n        #The class to run\n        [Parameter(Mandatory = $true)]\n        [String]$className,\n        \n        #The name of the HDInsight cluster\n        [Parameter(Mandatory = $true)]\n        [String]$clusterName,\n        \n        #Only used when using SearchByEmail\n        [Parameter(Mandatory = $false)]\n        [String]$emailRegex,\n        \n        #Use if you want to see stderr output\n        [Parameter(Mandatory = $false)]\n        [Switch]$showErr\n        )\n        \n        Set-StrictMode -Version 3\n        \n        # Is the Azure module installed?\n        FindAzure\n        \n        # Get the login for the HDInsight cluster\n        $creds = Get-Credential\n        \n        # Get storage information\n        $storage = GetStorage -clusterName $clusterName\n        \n        # The JAR\n        $jarFile = \"wasb:///example/jars/hbaseapp-1.0-SNAPSHOT.jar\"\n        \n        # The job definition\n        $jobDefinition = New-AzureRmHDInsightMapReduceJobDefinition `\n            -JarFile $jarFile `\n            -ClassName $className `\n            -Arguments $emailRegex\n        \n        # Get the job output\n        $job = Start-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobDefinition $jobDefinition `\n            -HttpCredential $creds\n        Write-Host \"Wait for the job to complete ...\" -ForegroundColor Green\n        Wait-AzureRmHDInsightJob `\n            -ClusterName $clusterName `\n            -JobId $job.JobId `\n            -HttpCredential $creds\n        if($showErr)\n        {\n        Write-Host \"STDERR\"\n        Get-AzureRmHDInsightJobOutput `\n                    -Clustername $clusterName `\n                    -JobId $job.JobId `\n                    -DefaultContainer $storage.container `\n                    -DefaultStorageAccountName $storage.storageAccountName `\n                    -DefaultStorageAccountKey $storage.storageAccountKey `\n                    -HttpCredential $creds\n                    -DisplayOutputType StandardError\n        }\n        Write-Host \"Display the standard output ...\" -ForegroundColor Green\n        Get-AzureRmHDInsightJobOutput `\n                    -Clustername $clusterName `\n                    -JobId $job.JobId `\n                    -DefaultContainer $storage.container `\n                    -DefaultStorageAccountName $storage.storageAccountName `\n                    -DefaultStorageAccountKey $storage.storageAccountKey `\n                    -HttpCredential $creds\n        }\n        \n        <#\n        .SYNOPSIS\n        Copies a file to the primary storage of an HDInsight cluster.\n        .DESCRIPTION\n        Copies a file from a local directory to the blob container for\n        the HDInsight cluster.\n        .EXAMPLE\n        Add-HDInsightFile -localPath \"C:\\temp\\data.txt\"\n        -destinationPath \"example/data/data.txt\"\n        -ClusterName \"MyHDInsightCluster\"\n        .EXAMPLE\n        Add-HDInsightFile -localPath \"C:\\temp\\data.txt\"\n        -destinationPath \"example/data/data.txt\"\n        -ClusterName \"MyHDInsightCluster\"\n        -Container \"MyContainer\"\n        #>\n        \n        function Add-HDInsightFile {\n            [CmdletBinding(SupportsShouldProcess = $true)]\n            param(\n                #The path to the local file.\n                [Parameter(Mandatory = $true)]\n                [String]$localPath,\n                \n                #The destination path and file name, relative to the root of the container.\n                [Parameter(Mandatory = $true)]\n                [String]$destinationPath,\n                \n                #The name of the HDInsight cluster\n                [Parameter(Mandatory = $true)]\n                [String]$clusterName,\n                \n                #If specified, overwrites existing files without prompting\n                [Parameter(Mandatory = $false)]\n                [Switch]$force\n            )\n            \n            Set-StrictMode -Version 3\n            \n            # Is the Azure module installed?\n            FindAzure\n            \n            # Get authentication for the cluster\n            $creds=Get-Credential\n            \n            # Does the local path exist?\n            if (-not (Test-Path $localPath))\n            {\n                throw \"Source path '$localPath' does not exist.\"\n            }\n            \n            # Get the primary storage container\n            $storage = GetStorage -clusterName $clusterName\n            \n            # Upload file to storage, overwriting existing files if -force was used.\n            Set-AzureStorageBlobContent -File $localPath `\n                -Blob $destinationPath `\n                -force:$force `\n                -Container $storage.container `\n                -Context $storage.context\n        }\n        \n        function FindAzure {\n            # Is there an active Azure subscription?\n            $sub = Get-AzureRmSubscription -ErrorAction SilentlyContinue\n            if(-not($sub))\n            {\n                throw \"No active Azure subscription found! If you have a subscription, use the Login-AzureRmAccount cmdlet to login to your subscription.\"\n            }\n        }\n        \n        function GetStorage {\n            param(\n                [Parameter(Mandatory = $true)]\n                [String]$clusterName\n            )\n            $hdi = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n            # Does the cluster exist?\n            if (!$hdi)\n            {\n                throw \"HDInsight cluster '$clusterName' does not exist.\"\n            }\n            # Create a return object for context & container\n            $return = @{}\n            $storageAccounts = @{}\n            \n            # Get storage information\n            $resourceGroup = $hdi.ResourceGroup\n            $storageAccountName=$hdi.DefaultStorageAccount.split('.')[0]\n            $container=$hdi.DefaultStorageContainer\n            $storageAccountKey=Get-AzureRmStorageAccountKey `\n                -Name $storageAccountName `\n                -ResourceGroupName $resourceGroup `\n                | %{ $_.Key1 }\n            # Get the resource group, in case we need that\n            $return.resourceGroup = $resourceGroup\n            # Get the storage context, as we can't depend\n            # on using the default storage context\n            $return.context = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey\n            # Get the container, so we know where to\n            # find/store blobs\n            $return.container = $container\n            # Return storage accounts to support finding all accounts for\n            # a cluster\n            $return.storageAccount = $storageAccountName\n            $return.storageAccountKey = $storageAccountKey\n            \n            return $return\n        }\n        # Only export the verb-phrase things\n        export-modulemember *-*\n\n    This file contains two modules:\n\n    * __Add-HDInsightFile__ - used to upload files to HDInsight\n\n    * __Start-HBaseExample__ - used to run the classes created earlier\n\n2. Save the __hbase-runner.psm1__ file.\n\n3. Open a new Azure PowerShell window, change directories to the __hbaseapp__ directory, and then run the following command.\n\n        PS C:\\ Import-Module c:\\path\\to\\hbase-runner.psm1\n\n    Change the path to the location of the __hbase-runner.psm1__ file created earlier. This registers the module for this Azure PowerShell session.\n\n2. Use the following command to upload the __hbaseapp-1.0-SNAPSHOT.jar__ to your HDInsight cluster.\n\n        Add-HDInsightFile -localPath target\\hbaseapp-1.0-SNAPSHOT.jar -destinationPath example/jars/hbaseapp-1.0-SNAPSHOT.jar -clusterName hdinsightclustername\n\n    Replace __hdinsightclustername__ with the name of your HDInsight cluster. The command will then upload the __hbaseapp-1.0-SNAPSHOT.jar__ to the __example/jars__ location in the primary storage for your HDInsight cluster.\n\n3. After the files are uploaded, use the following code to create a new table using the __hbaseapp__:\n\n        Start-HBaseExample -className com.microsoft.examples.CreateTable -clusterName hdinsightclustername\n\n    Replace __hdinsightclustername__ with the name of your HDInsight cluster.\n\n    This command creates a new table named __people__ in your HDInsight cluster. This command does not show any output in the console window.\n\n2. To search for entries in the table, use the following command:\n\n        Start-HBaseExample -className com.microsoft.examples.SearchByEmail -clusterName hdinsightclustername -emailRegex contoso.com\n\n    Replace __hdinsightclustername__ with the name of your HDInsight cluster.\n\n    This command uses the **SearchByEmail** class to search for any rows where the __contactinformation__ column family and the __email__ column, contains the string __contoso.com__. You should receive the following results:\n\n          Franklin Holtz - ID: 2\n          Franklin Holtz - franklin@contoso.com - ID: 2\n          Rae Schroeder - ID: 4\n          Rae Schroeder - rae@contoso.com - ID: 4\n          Gabriela Ingram - ID: 6\n          Gabriela Ingram - gabriela@contoso.com - ID: 6\n\n    Using __fabrikam.com__ for the `-emailRegex` value will return the users that have __fabrikam.com__ in the email field. Since this search is implemented by using a regular expression-based filter, you can also enter regular expressions, such as __^r__, which will return entries where the email begins with the letter 'r'.\n\n##Delete the table\n\nWhen you are done with the example, use the following command from the Azure PowerShell session to delete the __people__ table used in this example:\n\n    Start-HBaseExample -className com.microsoft.examples.DeleteTable -clusterName hdinsightclustername\n\nReplace __hdinsightclustername__ with the name of your HDInsight cluster.\n\n##Troubleshooting\n\n###No results or unexpected results when using Start-HBaseExample\n\nUse the `-showErr` parameter to view the standard error (STDERR) that is produced while running the job."
+}

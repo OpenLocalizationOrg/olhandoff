@@ -1,0 +1,954 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        86
+      ],
+      "content": "Use Hadoop Sqoop in Linux-based HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        105,
+        222
+      ],
+      "content": "Learn how to run Sqoop import and export between a Linux-based Hadoop on HDInsight cluster and an Azure SQL database."
+    },
+    {
+      "pos": [
+        551,
+        591
+      ],
+      "content": "Use Sqoop with Hadoop in HDInsight (SSH)"
+    },
+    {
+      "pos": [
+        675,
+        805
+      ],
+      "content": "Learn how to use Sqoop to import and export between a Linux-based HDInsight cluster and Azure SQL Database or SQL Server database."
+    },
+    {
+      "pos": [
+        809,
+        1083
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> The steps in this article use SSH to connect to a Linux-based HDInsight cluster. Windows clients can also use Azure PowerShell to work with Sqoop on Linux-based clusters as documented in <bpt id=\"p1\">[</bpt>Use Sqoop with Hadoop in HDInsight (PowerShell)<ept id=\"p1\">](hdinsight-use-sqoop.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> The steps in this article use SSH to connect to a Linux-based HDInsight cluster.",
+          "pos": [
+            0,
+            125
+          ]
+        },
+        {
+          "content": "Windows clients can also use Azure PowerShell to work with Sqoop on Linux-based clusters as documented in <bpt id=\"p1\">[</bpt>Use Sqoop with Hadoop in HDInsight (PowerShell)<ept id=\"p1\">](hdinsight-use-sqoop.md)</ept>.",
+          "pos": [
+            126,
+            344
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1087,
+        1101
+      ],
+      "content": "What is Sqoop?"
+    },
+    {
+      "pos": [
+        1103,
+        1307
+      ],
+      "content": "Although Hadoop is a natural choice for processing unstructured and semistructured data, such as logs and files, there may also be a need to process structured data that is stored in relational databases."
+    },
+    {
+      "pos": [
+        1309,
+        1776
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Sqoop<ept id=\"p2\">][sqoop-user-guide-1.4.4]</ept><ph id=\"ph5\"/> is a tool designed to transfer data between Hadoop clusters and relational databases. You can use it to import data from a relational database management system (RDBMS) such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS. In this tutorial, you are using a SQL Server database for your relational database.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p2\">[</bpt>Sqoop<ept id=\"p2\">][sqoop-user-guide-1.4.4]</ept><ph id=\"ph5\"/> is a tool designed to transfer data between Hadoop clusters and relational databases.",
+          "pos": [
+            0,
+            169
+          ]
+        },
+        {
+          "content": "You can use it to import data from a relational database management system (RDBMS) such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS.",
+          "pos": [
+            170,
+            435
+          ]
+        },
+        {
+          "content": "In this tutorial, you are using a SQL Server database for your relational database.",
+          "pos": [
+            436,
+            519
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1778,
+        1923
+      ],
+      "content": "For Sqoop versions that are supported on HDInsight clusters, see <bpt id=\"p3\">[</bpt>What's new in the cluster versions provided by HDInsight?<ept id=\"p3\">][hdinsight-versions]</ept>."
+    },
+    {
+      "pos": [
+        1928,
+        1941
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1943,
+        2003
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        2007,
+        2054
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Workstation<ept id=\"p4\">**</ept>: A computer with an SSH client."
+    },
+    {
+      "pos": [
+        2058,
+        2161
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>Azure CLI<ept id=\"p5\">**</ept>: For more information, see <bpt id=\"p6\">[</bpt>Install and Configure the Azure CLI<ept id=\"p6\">](../xplat-cli-install.md)</ept>"
+    },
+    {
+      "pos": [
+        2165,
+        2379
+      ],
+      "content": "<bpt id=\"p7\">**</bpt>Linux-based HDInsight cluster<ept id=\"p7\">**</ept>: For instructions about cluster provision, see <bpt id=\"p8\">[</bpt>Get started using HDInsight<ept id=\"p8\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept><ph id=\"ph6\"/> or <bpt id=\"p9\">[</bpt>Provision HDInsight clusters<ept id=\"p9\">][hdinsight-provision]</ept>."
+    },
+    {
+      "pos": [
+        2383,
+        2587
+      ],
+      "content": "<bpt id=\"p10\">**</bpt>Azure SQL database<ept id=\"p10\">**</ept>: This document provides instructions for creating an example SQL database. For more information on SQL Database, see <bpt id=\"p11\">[</bpt>Get started using Azure SQL database<ept id=\"p11\">][sqldatabase-get-started]</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p10\">**</bpt>Azure SQL database<ept id=\"p10\">**</ept>: This document provides instructions for creating an example SQL database.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "For more information on SQL Database, see <bpt id=\"p11\">[</bpt>Get started using Azure SQL database<ept id=\"p11\">][sqldatabase-get-started]</ept>.",
+          "pos": [
+            138,
+            284
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2591,
+        2926
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>SQL Server<ept id=\"p12\">**</ept>: The steps in this document can also be used, with some modification, with SQL Server; however, both the HDInsight cluster and SQL Server must be on the same Azure Virtual Network. For more information on requirements specific to using this article with SQL Server, see the <bpt id=\"p13\">[</bpt>Using SQL Server<ept id=\"p13\">](#using-sql-server)</ept><ph id=\"ph7\"/> section.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p12\">**</bpt>SQL Server<ept id=\"p12\">**</ept>: The steps in this document can also be used, with some modification, with SQL Server; however, both the HDInsight cluster and SQL Server must be on the same Azure Virtual Network.",
+          "pos": [
+            0,
+            235
+          ]
+        },
+        {
+          "content": "For more information on requirements specific to using this article with SQL Server, see the <bpt id=\"p13\">[</bpt>Using SQL Server<ept id=\"p13\">](#using-sql-server)</ept><ph id=\"ph7\"/> section.",
+          "pos": [
+            236,
+            429
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2930,
+        2953
+      ],
+      "content": "Understand the scenario"
+    },
+    {
+      "pos": [
+        2955,
+        3213
+      ],
+      "content": "An HDInsight cluster comes with some sample data. You will use a Hive table named <bpt id=\"p14\">**</bpt>hivesampletable<ept id=\"p14\">**</ept>, which references the data file located at <bpt id=\"p15\">**</bpt>wasb:///hive/warehouse/hivesampletable<ept id=\"p15\">**</ept>. The table contains some mobile device data. The Hive table schema is:",
+      "nodes": [
+        {
+          "content": "An HDInsight cluster comes with some sample data.",
+          "pos": [
+            0,
+            49
+          ]
+        },
+        {
+          "content": "You will use a Hive table named <bpt id=\"p14\">**</bpt>hivesampletable<ept id=\"p14\">**</ept>, which references the data file located at <bpt id=\"p15\">**</bpt>wasb:///hive/warehouse/hivesampletable<ept id=\"p15\">**</ept>.",
+          "pos": [
+            50,
+            268
+          ]
+        },
+        {
+          "content": "The table contains some mobile device data.",
+          "pos": [
+            269,
+            312
+          ]
+        },
+        {
+          "content": "The Hive table schema is:",
+          "pos": [
+            313,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3217,
+        3222
+      ],
+      "content": "Field"
+    },
+    {
+      "pos": [
+        3225,
+        3234
+      ],
+      "content": "Data type"
+    },
+    {
+      "pos": [
+        3261,
+        3269
+      ],
+      "content": "clientid"
+    },
+    {
+      "pos": [
+        3272,
+        3278
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3283,
+        3292
+      ],
+      "content": "querytime"
+    },
+    {
+      "pos": [
+        3295,
+        3301
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3306,
+        3312
+      ],
+      "content": "market"
+    },
+    {
+      "pos": [
+        3315,
+        3321
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3326,
+        3340
+      ],
+      "content": "deviceplatform"
+    },
+    {
+      "pos": [
+        3343,
+        3349
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3354,
+        3364
+      ],
+      "content": "devicemake"
+    },
+    {
+      "pos": [
+        3367,
+        3373
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3378,
+        3389
+      ],
+      "content": "devicemodel"
+    },
+    {
+      "pos": [
+        3392,
+        3398
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3403,
+        3408
+      ],
+      "content": "state"
+    },
+    {
+      "pos": [
+        3411,
+        3417
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3422,
+        3429
+      ],
+      "content": "country"
+    },
+    {
+      "pos": [
+        3432,
+        3438
+      ],
+      "content": "string"
+    },
+    {
+      "pos": [
+        3443,
+        3457
+      ],
+      "content": "querydwelltime"
+    },
+    {
+      "pos": [
+        3460,
+        3466
+      ],
+      "content": "double"
+    },
+    {
+      "pos": [
+        3471,
+        3480
+      ],
+      "content": "sessionid"
+    },
+    {
+      "pos": [
+        3483,
+        3489
+      ],
+      "content": "bigint"
+    },
+    {
+      "pos": [
+        3494,
+        3514
+      ],
+      "content": "sessionpagevieworder"
+    },
+    {
+      "pos": [
+        3517,
+        3523
+      ],
+      "content": "bigint"
+    },
+    {
+      "pos": [
+        3527,
+        3736
+      ],
+      "content": "You will first export <bpt id=\"p16\">**</bpt>hivesampletable<ept id=\"p16\">**</ept><ph id=\"ph8\"/> to the Azure SQL database or to SQL Server in a table named <bpt id=\"p17\">**</bpt>mobiledata<ept id=\"p17\">**</ept>, and then import the table back to HDInsight at <bpt id=\"p18\">**</bpt>wasb:///tutorials/usesqoop/importeddata<ept id=\"p18\">**</ept>."
+    },
+    {
+      "pos": [
+        3740,
+        3757
+      ],
+      "content": "Create a database"
+    },
+    {
+      "pos": [
+        3762,
+        3868
+      ],
+      "content": "Open a terminal or command prompt and use the following command to create a new Azure SQL Database server:"
+    },
+    {
+      "pos": [
+        3945,
+        4009
+      ],
+      "content": "For exmaple, <ph id=\"ph9\">`azure sql server create admin password \"West US\"`</ph>."
+    },
+    {
+      "pos": [
+        4015,
+        4096
+      ],
+      "content": "When the command completes, you will receive a response similar to the following:"
+    },
+    {
+      "pos": [
+        4274,
+        4492
+      ],
+      "content": "<ph id=\"ph10\">[AZURE.IMPORTANT]</ph><ph id=\"ph11\"/> Note the server name returned by this command. This is the short name of the SQL Database server that was created. The fully qualified domain name (FQDN) is <bpt id=\"p19\">**</bpt>&amp;lt;shortname&amp;gt;.database.windows.net<ept id=\"p19\">**</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph10\">[AZURE.IMPORTANT]</ph><ph id=\"ph11\"/> Note the server name returned by this command.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "This is the short name of the SQL Database server that was created.",
+          "pos": [
+            99,
+            166
+          ]
+        },
+        {
+          "content": "The fully qualified domain name (FQDN) is <bpt id=\"p19\">**</bpt>&amp;lt;shortname&amp;gt;.database.windows.net<ept id=\"p19\">**</ept>.",
+          "pos": [
+            167,
+            300
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4497,
+        4591
+      ],
+      "content": "Use the following command to create a database named <bpt id=\"p20\">**</bpt>sqooptest<ept id=\"p20\">**</ept><ph id=\"ph12\"/> on the SQL Database server:"
+    },
+    {
+      "pos": [
+        4688,
+        4739
+      ],
+      "content": "This will return an \"OK\" message when it completes."
+    },
+    {
+      "pos": [
+        4747,
+        4938
+      ],
+      "content": "<ph id=\"ph13\">[AZURE.NOTE]</ph><ph id=\"ph14\"/> If you receive an error indicating that you do not have access, you may need to add your client workstation's IP address to the SQL Database firewall using the following command:"
+    },
+    {
+      "pos": [
+        5052,
+        5066
+      ],
+      "content": "Create a table"
+    },
+    {
+      "pos": [
+        5070,
+        5235
+      ],
+      "content": "<ph id=\"ph16\">[AZURE.NOTE]</ph><ph id=\"ph17\"/> There are many ways to connect to SQL Database to create a table. The following steps use <bpt id=\"p21\">[</bpt>FreeTDS<ept id=\"p21\">](http://www.freetds.org/)</ept><ph id=\"ph18\"/> from the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph16\">[AZURE.NOTE]</ph><ph id=\"ph17\"/> There are many ways to connect to SQL Database to create a table.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "The following steps use <bpt id=\"p21\">[</bpt>FreeTDS<ept id=\"p21\">](http://www.freetds.org/)</ept><ph id=\"ph18\"/> from the HDInsight cluster.",
+          "pos": [
+            113,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5240,
+        5393
+      ],
+      "content": "Use SSH to connect to the Linux-based HDInsight cluster. The address to use when connecting is <ph id=\"ph19\">`CLUSTERNAME-ssh.azurehdinsight.net`</ph><ph id=\"ph20\"/> and the port is <ph id=\"ph21\">`22`</ph>.",
+      "nodes": [
+        {
+          "content": "Use SSH to connect to the Linux-based HDInsight cluster.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "The address to use when connecting is <ph id=\"ph19\">`CLUSTERNAME-ssh.azurehdinsight.net`</ph><ph id=\"ph20\"/> and the port is <ph id=\"ph21\">`22`</ph>.",
+          "pos": [
+            57,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5399,
+        5486
+      ],
+      "content": "For more information on using SSH to connect to HDInsight, see the following documents:"
+    },
+    {
+      "pos": [
+        5494,
+        5683
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>Linux, Unix or OS X clients<ept id=\"p22\">**</ept>: See <bpt id=\"p23\">[</bpt>Connect to a Linux-based HDInsight cluster from Linux, OS X or Unix<ept id=\"p23\">](hdinsight-hadoop-linux-use-ssh-unix.md#connect-to-a-linux-based-hdinsight-cluster)</ept>"
+    },
+    {
+      "pos": [
+        5691,
+        5859
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>Windows clients<ept id=\"p24\">**</ept>: See <bpt id=\"p25\">[</bpt>Connect to a Linux-based HDInsight cluster from Windows<ept id=\"p25\">](hdinsight-hadoop-linux-use-ssh-windows.md#connect-to-a-linux-based-hdinsight-cluster)</ept>"
+    },
+    {
+      "pos": [
+        5864,
+        5909
+      ],
+      "content": "Use the following command to install FreeTDS:"
+    },
+    {
+      "pos": [
+        5981,
+        6101
+      ],
+      "content": "Once FreeTDS has been installed, use the following command to connect to the SQL Database server you created previously:"
+    },
+    {
+      "pos": [
+        6225,
+        6274
+      ],
+      "content": "You will receive output similar to the following:"
+    },
+    {
+      "pos": [
+        6443,
+        6489
+      ],
+      "content": "At the <ph id=\"ph22\">`1&gt;`</ph><ph id=\"ph23\"/> prompt, enter the following lines:"
+    },
+    {
+      "pos": [
+        7032,
+        7220
+      ],
+      "content": "When the <ph id=\"ph24\">`GO`</ph><ph id=\"ph25\"/> statement is entered, the previous statements will be evaluated. First, the <bpt id=\"p26\">**</bpt>mobiledata<ept id=\"p26\">**</ept><ph id=\"ph26\"/> table is created, then a clustered index is added to it (required by SQL Database.)",
+      "nodes": [
+        {
+          "content": "When the <ph id=\"ph24\">`GO`</ph><ph id=\"ph25\"/> statement is entered, the previous statements will be evaluated.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "First, the <bpt id=\"p26\">**</bpt>mobiledata<ept id=\"p26\">**</ept><ph id=\"ph26\"/> table is created, then a clustered index is added to it (required by SQL Database.)",
+          "pos": [
+            113,
+            277
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7226,
+        7286
+      ],
+      "content": "Use the following to verify that the table has been created:"
+    },
+    {
+      "pos": [
+        7352,
+        7399
+      ],
+      "content": "You should see output similar to the following:"
+    },
+    {
+      "pos": [
+        7531,
+        7588
+      ],
+      "content": "Enter <ph id=\"ph27\">`exit`</ph><ph id=\"ph28\"/> at the <ph id=\"ph29\">`1&gt;`</ph><ph id=\"ph30\"/> prompt to exit the tsql utility."
+    },
+    {
+      "pos": [
+        7592,
+        7604
+      ],
+      "content": "Sqoop export"
+    },
+    {
+      "pos": [
+        7609,
+        7773
+      ],
+      "content": "Use the following command to create a link to the SQL Server JDBC driver from the Sqoop lib directory. This allows Sqoop to use this driver to talk to SQL Database:",
+      "nodes": [
+        {
+          "content": "Use the following command to create a link to the SQL Server JDBC driver from the Sqoop lib directory.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "This allows Sqoop to use this driver to talk to SQL Database:",
+          "pos": [
+            103,
+            164
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7889,
+        7962
+      ],
+      "content": "Use the following command to verify that Sqoop can see your SQL Database:"
+    },
+    {
+      "pos": [
+        8115,
+        8217
+      ],
+      "content": "This should return a list of databases, including the <bpt id=\"p27\">**</bpt>sqooptest<ept id=\"p27\">**</ept><ph id=\"ph31\"/> database that you created earlier."
+    },
+    {
+      "pos": [
+        8222,
+        8316
+      ],
+      "content": "Use the following command to export data from <bpt id=\"p28\">**</bpt>hivesampletable<ept id=\"p28\">**</ept><ph id=\"ph32\"/> to the <bpt id=\"p29\">**</bpt>mobiledata<ept id=\"p29\">**</ept><ph id=\"ph33\"/> table:"
+    },
+    {
+      "pos": [
+        8590,
+        8810
+      ],
+      "content": "This instructs Sqoop to connect to SQL Database, to the <bpt id=\"p30\">**</bpt>sqooptest<ept id=\"p30\">**</ept><ph id=\"ph34\"/> database, and export data from the <bpt id=\"p31\">**</bpt>wasb:///hive/warehouse/hivesampletable<ept id=\"p31\">**</ept><ph id=\"ph35\"/> (physical files for the <bpt id=\"p32\">*</bpt>hivesampletable<ept id=\"p32\">*</ept>,) to the <bpt id=\"p33\">**</bpt>mobiledata<ept id=\"p33\">**</ept><ph id=\"ph36\"/> table."
+    },
+    {
+      "pos": [
+        8815,
+        8900
+      ],
+      "content": "After the command completes, use the following to connect to the database using TSQL:"
+    },
+    {
+      "pos": [
+        9024,
+        9134
+      ],
+      "content": "Once connected, use the following statements to verify that the data was exported to the <bpt id=\"p34\">**</bpt>mobiledata<ept id=\"p34\">**</ept><ph id=\"ph37\"/> table:"
+    },
+    {
+      "pos": [
+        9185,
+        9269
+      ],
+      "content": "You should see a listing of data in the table. Type <ph id=\"ph38\">`exit`</ph><ph id=\"ph39\"/> to exit the tsql utility.",
+      "nodes": [
+        {
+          "content": "You should see a listing of data in the table.",
+          "pos": [
+            0,
+            46
+          ]
+        },
+        {
+          "content": "Type <ph id=\"ph38\">`exit`</ph><ph id=\"ph39\"/> to exit the tsql utility.",
+          "pos": [
+            47,
+            118
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9273,
+        9285
+      ],
+      "content": "Sqoop import"
+    },
+    {
+      "pos": [
+        9290,
+        9444
+      ],
+      "content": "Use the following to import data from the <bpt id=\"p35\">**</bpt>mobiledata<ept id=\"p35\">**</ept><ph id=\"ph40\"/> table in SQL Database, to the <bpt id=\"p36\">**</bpt>wasb:///tutorials/usesqoop/importeddata<ept id=\"p36\">**</ept><ph id=\"ph41\"/> directory on HDInsight:"
+    },
+    {
+      "pos": [
+        9746,
+        9877
+      ],
+      "content": "The imported data will have fields that are separated by a tab character, and the lines will be terminated by a new-line character."
+    },
+    {
+      "pos": [
+        9882,
+        9981
+      ],
+      "content": "Once the import has completed, use the following command to list out the data in the new directory:"
+    },
+    {
+      "pos": [
+        10063,
+        10079
+      ],
+      "content": "Using SQL Server"
+    },
+    {
+      "pos": [
+        10081,
+        10277
+      ],
+      "content": "You can also use Sqoop to import and export data from SQL Server, either in your data center or on a Virtual Machine hosted in Azure. The differences between using SQL Database and SQL Server are:",
+      "nodes": [
+        {
+          "content": "You can also use Sqoop to import and export data from SQL Server, either in your data center or on a Virtual Machine hosted in Azure.",
+          "pos": [
+            0,
+            133
+          ]
+        },
+        {
+          "content": "The differences between using SQL Database and SQL Server are:",
+          "pos": [
+            134,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10281,
+        10356
+      ],
+      "content": "Both HDInsight and the SQL Server must be on the same Azure Virtual Network"
+    },
+    {
+      "pos": [
+        10364,
+        10508
+      ],
+      "content": "<ph id=\"ph42\">[AZURE.NOTE]</ph><ph id=\"ph43\"/> HDInsight supports only location-based virtual networks, and it does not currently work with affinity group-based virtual networks."
+    },
+    {
+      "pos": [
+        10514,
+        10640
+      ],
+      "content": "When you are using SQL Server in your datacenter, you must configure the virtual network as <bpt id=\"p37\">*</bpt>site-to-site<ept id=\"p37\">*</ept><ph id=\"ph44\"/> or <bpt id=\"p38\">*</bpt>point-to-site<ept id=\"p38\">*</ept>."
+    },
+    {
+      "pos": [
+        10648,
+        10856
+      ],
+      "content": "<ph id=\"ph45\">[AZURE.NOTE]</ph><ph id=\"ph46\"/> For <bpt id=\"p39\">**</bpt>point-to-site<ept id=\"p39\">**</ept><ph id=\"ph47\"/> virtual networks, SQL Server must be running the VPN client configuration application, which is available from the <bpt id=\"p40\">**</bpt>Dashboard<ept id=\"p40\">**</ept><ph id=\"ph48\"/> of your Azure virtual network configuration."
+    },
+    {
+      "pos": [
+        10862,
+        11003
+      ],
+      "content": "For more information on creating and configuring a virtual network, see <bpt id=\"p41\">[</bpt>Virtual Network Configuration Tasks<ept id=\"p41\">](../services/virtual-machines/)</ept>."
+    },
+    {
+      "pos": [
+        11007,
+        11165
+      ],
+      "content": "SQL Server must be configured to allow SQL authentication. For more information, see <bpt id=\"p42\">[</bpt>Choose an Authentication Mode<ept id=\"p42\">](https://msdn.microsoft.com/ms144284.aspx)</ept>",
+      "nodes": [
+        {
+          "content": "SQL Server must be configured to allow SQL authentication.",
+          "pos": [
+            0,
+            58
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p42\">[</bpt>Choose an Authentication Mode<ept id=\"p42\">](https://msdn.microsoft.com/ms144284.aspx)</ept>",
+          "pos": [
+            59,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11169,
+        11462
+      ],
+      "content": "You may have to configure SQL Server to accept remote connections. See <bpt id=\"p43\">[</bpt>How to troubleshoot connecting to the SQL Server database engine<ept id=\"p43\">](http://social.technet.microsoft.com/wiki/contents/articles/2102.how-to-troubleshoot-connecting-to-the-sql-server-database-engine.aspx)</ept><ph id=\"ph49\"/> for more information",
+      "nodes": [
+        {
+          "content": "You may have to configure SQL Server to accept remote connections.",
+          "pos": [
+            0,
+            66
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p43\">[</bpt>How to troubleshoot connecting to the SQL Server database engine<ept id=\"p43\">](http://social.technet.microsoft.com/wiki/contents/articles/2102.how-to-troubleshoot-connecting-to-the-sql-server-database-engine.aspx)</ept><ph id=\"ph49\"/> for more information",
+          "pos": [
+            67,
+            348
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11466,
+        11660
+      ],
+      "content": "You must create the <bpt id=\"p44\">**</bpt>sqooptest<ept id=\"p44\">**</ept><ph id=\"ph50\"/> database in SQL Server using a utility such as <bpt id=\"p45\">**</bpt>SQL Server Management Studio<ept id=\"p45\">**</ept><ph id=\"ph51\"/> or <bpt id=\"p46\">**</bpt>tsql<ept id=\"p46\">**</ept><ph id=\"ph52\"/> - the steps for using the Azure CLI only work for Azure SQL Database"
+    },
+    {
+      "pos": [
+        11666,
+        11848
+      ],
+      "content": "The TSQL statements to create the <bpt id=\"p47\">**</bpt>mobiledata<ept id=\"p47\">**</ept><ph id=\"ph53\"/> table are similar those used for SQL Database, with the exception of creating a clusterd index - this is not required for SQL Server:"
+    },
+    {
+      "pos": [
+        12285,
+        12501
+      ],
+      "content": "When connecting to the SQL Server from HDInsight, you may have to use the IP address of the SQL Server unless you have configured a Domain Name System (DNS) to resolve names on the Azure Virtual Network. For example:",
+      "nodes": [
+        {
+          "content": "When connecting to the SQL Server from HDInsight, you may have to use the IP address of the SQL Server unless you have configured a Domain Name System (DNS) to resolve names on the Azure Virtual Network.",
+          "pos": [
+            0,
+            203
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            204,
+            216
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12776,
+        12786
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        12788,
+        12846
+      ],
+      "content": "Now you have learned how to use Sqoop. To learn more, see:",
+      "nodes": [
+        {
+          "content": "Now you have learned how to use Sqoop.",
+          "pos": [
+            0,
+            38
+          ]
+        },
+        {
+          "content": "To learn more, see:",
+          "pos": [
+            39,
+            58
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12850,
+        12937
+      ],
+      "content": "<bpt id=\"p48\">[</bpt>Use Oozie with HDInsight<ept id=\"p48\">][hdinsight-use-oozie]</ept>: Use Sqoop action in an Oozie workflow."
+    },
+    {
+      "pos": [
+        12940,
+        13114
+      ],
+      "content": "<bpt id=\"p49\">[</bpt>Analyze flight delay data using HDInsight<ept id=\"p49\">][hdinsight-analyze-flight-data]</ept>: Use Hive to analyze flight delay data, and then use Sqoop to export data to an Azure SQL database."
+    },
+    {
+      "pos": [
+        13117,
+        13238
+      ],
+      "content": "<bpt id=\"p50\">[</bpt>Upload data to HDInsight<ept id=\"p50\">][hdinsight-upload-data]</ept>: Find other methods for uploading data to HDInsight/Azure Blob storage."
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Use Hadoop Sqoop in Linux-based HDInsight | Microsoft Azure\"\n    description=\"Learn how to run Sqoop import and export between a Linux-based Hadoop on HDInsight cluster and an Azure SQL database.\"\n    editor=\"cgronlun\"\n    manager=\"paulettm\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"larryfr\"/>\n\n#Use Sqoop with Hadoop in HDInsight (SSH)\n\n[AZURE.INCLUDE [sqoop-selector](../../includes/hdinsight-selector-use-sqoop.md)]\n\nLearn how to use Sqoop to import and export between a Linux-based HDInsight cluster and Azure SQL Database or SQL Server database.\n\n> [AZURE.NOTE] The steps in this article use SSH to connect to a Linux-based HDInsight cluster. Windows clients can also use Azure PowerShell to work with Sqoop on Linux-based clusters as documented in [Use Sqoop with Hadoop in HDInsight (PowerShell)](hdinsight-use-sqoop.md).\n\n##What is Sqoop?\n\nAlthough Hadoop is a natural choice for processing unstructured and semistructured data, such as logs and files, there may also be a need to process structured data that is stored in relational databases.\n\n[Sqoop][sqoop-user-guide-1.4.4] is a tool designed to transfer data between Hadoop clusters and relational databases. You can use it to import data from a relational database management system (RDBMS) such as SQL Server, MySQL, or Oracle into the Hadoop distributed file system (HDFS), transform the data in Hadoop with MapReduce or Hive, and then export the data back into an RDBMS. In this tutorial, you are using a SQL Server database for your relational database.\n\nFor Sqoop versions that are supported on HDInsight clusters, see [What's new in the cluster versions provided by HDInsight?][hdinsight-versions].\n\n\n##Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- **Workstation**: A computer with an SSH client.\n\n- **Azure CLI**: For more information, see [Install and Configure the Azure CLI](../xplat-cli-install.md)\n\n- **Linux-based HDInsight cluster**: For instructions about cluster provision, see [Get started using HDInsight](hdinsight-hadoop-linux-tutorial-get-started.md) or [Provision HDInsight clusters][hdinsight-provision].\n\n- **Azure SQL database**: This document provides instructions for creating an example SQL database. For more information on SQL Database, see [Get started using Azure SQL database][sqldatabase-get-started].\n\n* **SQL Server**: The steps in this document can also be used, with some modification, with SQL Server; however, both the HDInsight cluster and SQL Server must be on the same Azure Virtual Network. For more information on requirements specific to using this article with SQL Server, see the [Using SQL Server](#using-sql-server) section.\n\n##Understand the scenario\n\nAn HDInsight cluster comes with some sample data. You will use a Hive table named **hivesampletable**, which references the data file located at **wasb:///hive/warehouse/hivesampletable**. The table contains some mobile device data. The Hive table schema is:\n\n| Field | Data type |\n| ----- | --------- |\n| clientid | string |\n| querytime | string |\n| market | string |\n| deviceplatform | string |\n| devicemake | string |\n| devicemodel | string |\n| state | string |\n| country | string |\n| querydwelltime | double |\n| sessionid | bigint |\n| sessionpagevieworder | bigint |\n\nYou will first export **hivesampletable** to the Azure SQL database or to SQL Server in a table named **mobiledata**, and then import the table back to HDInsight at **wasb:///tutorials/usesqoop/importeddata**.\n\n##Create a database\n\n1. Open a terminal or command prompt and use the following command to create a new Azure SQL Database server:\n\n        azure sql server create <adminLogin> <adminPassword> <region>\n\n    For exmaple, `azure sql server create admin password \"West US\"`.\n\n    When the command completes, you will receive a response similar to the following:\n\n        info:    Executing command sql server create\n        + Creating SQL Server\n        data:    Server Name i1qwc540ts\n        info:    sql server create command OK\n\n    > [AZURE.IMPORTANT] Note the server name returned by this command. This is the short name of the SQL Database server that was created. The fully qualified domain name (FQDN) is **&lt;shortname&gt;.database.windows.net**.\n\n2. Use the following command to create a database named **sqooptest** on the SQL Database server:\n\n        azure sql db create [options] <serverName> sqooptest <adminLogin> <adminPassword>\n\n    This will return an \"OK\" message when it completes.\n\n    > [AZURE.NOTE] If you receive an error indicating that you do not have access, you may need to add your client workstation's IP address to the SQL Database firewall using the following command:\n    >\n    > `azure sql firewallrule create [options] <serverName> <ruleName> <startIPAddress> <endIPAddress>`\n\n##Create a table\n\n> [AZURE.NOTE] There are many ways to connect to SQL Database to create a table. The following steps use [FreeTDS](http://www.freetds.org/) from the HDInsight cluster.\n\n1. Use SSH to connect to the Linux-based HDInsight cluster. The address to use when connecting is `CLUSTERNAME-ssh.azurehdinsight.net` and the port is `22`.\n\n    For more information on using SSH to connect to HDInsight, see the following documents:\n\n    * **Linux, Unix or OS X clients**: See [Connect to a Linux-based HDInsight cluster from Linux, OS X or Unix](hdinsight-hadoop-linux-use-ssh-unix.md#connect-to-a-linux-based-hdinsight-cluster)\n\n    * **Windows clients**: See [Connect to a Linux-based HDInsight cluster from Windows](hdinsight-hadoop-linux-use-ssh-windows.md#connect-to-a-linux-based-hdinsight-cluster)\n\n3. Use the following command to install FreeTDS:\n\n        sudo apt-get --assume-yes install freetds-dev freetds-bin\n\n4. Once FreeTDS has been installed, use the following command to connect to the SQL Database server you created previously:\n\n        TDSVER=8.0 tsql -H <serverName>.database.windows.net -U <adminLogin> -P <adminPassword> -p 1433 -D sqooptest\n\n    You will receive output similar to the following:\n\n        locale is \"en_US.UTF-8\"\n        locale charset is \"UTF-8\"\n        using default charset \"UTF-8\"\n        Default database being set to sqooptest\n        1>\n\n5. At the `1>` prompt, enter the following lines:\n\n        CREATE TABLE [dbo].[mobiledata](\n        [clientid] [nvarchar](50),\n        [querytime] [nvarchar](50),\n        [market] [nvarchar](50),\n        [deviceplatform] [nvarchar](50),\n        [devicemake] [nvarchar](50),\n        [devicemodel] [nvarchar](50),\n        [state] [nvarchar](50),\n        [country] [nvarchar](50),\n        [querydwelltime] [float],\n        [sessionid] [bigint],\n        [sessionpagevieworder] [bigint])\n        GO\n        CREATE CLUSTERED INDEX mobiledata_clustered_index on mobiledata(clientid)\n        GO\n\n    When the `GO` statement is entered, the previous statements will be evaluated. First, the **mobiledata** table is created, then a clustered index is added to it (required by SQL Database.)\n\n    Use the following to verify that the table has been created:\n\n        SELECT * FROM information_schema.tables\n        GO\n\n    You should see output similar to the following:\n\n        TABLE_CATALOG   TABLE_SCHEMA    TABLE_NAME      TABLE_TYPE\n        sqooptest       dbo     mobiledata      BASE TABLE\n\n8. Enter `exit` at the `1>` prompt to exit the tsql utility.\n\n##Sqoop export\n\n2. Use the following command to create a link to the SQL Server JDBC driver from the Sqoop lib directory. This allows Sqoop to use this driver to talk to SQL Database:\n\n        sudo ln /usr/share/java/sqljdbc_4.1/enu/sqljdbc41.jar /usr/hdp/current/sqoop-client/lib/sqljdbc41.jar\n\n3. Use the following command to verify that Sqoop can see your SQL Database:\n\n        sqoop list-databases --connect jdbc:sqlserver://<serverName>.database.windows.net:1433 --username <adminLogin> --password <adminPassword>\n\n    This should return a list of databases, including the **sqooptest** database that you created earlier.\n\n4. Use the following command to export data from **hivesampletable** to the **mobiledata** table:\n\n        sqoop export --connect 'jdbc:sqlserver://<serverName>.database.windows.net:1433;database=sqooptest' --username <adminLogin> --password <adminPassword> --table 'mobiledata' --export-dir 'wasb:///hive/warehouse/hivesampletable' --fields-terminated-by '\\t' -m 1\n\n    This instructs Sqoop to connect to SQL Database, to the **sqooptest** database, and export data from the **wasb:///hive/warehouse/hivesampletable** (physical files for the *hivesampletable*,) to the **mobiledata** table.\n\n5. After the command completes, use the following to connect to the database using TSQL:\n\n        TDSVER=8.0 tsql -H <serverName>.database.windows.net -U <adminLogin> -P <adminPassword> -p 1433 -D sqooptest\n\n    Once connected, use the following statements to verify that the data was exported to the **mobiledata** table:\n\n        SELECT * FROM mobiledata\n        GO\n\n    You should see a listing of data in the table. Type `exit` to exit the tsql utility.\n\n##Sqoop import\n\n1. Use the following to import data from the **mobiledata** table in SQL Database, to the **wasb:///tutorials/usesqoop/importeddata** directory on HDInsight:\n\n        sqoop import --connect 'jdbc:sqlserver://<serverName>.database.windows.net:1433;database=sqooptest' --username <adminLogin> --password <adminPassword> --table 'mobiledata' --target-dir 'wasb:///tutorials/usesqoop/importeddata' --fields-terminated-by '\\t' --lines-terminated-by '\\n' -m 1\n\n    The imported data will have fields that are separated by a tab character, and the lines will be terminated by a new-line character.\n\n2. Once the import has completed, use the following command to list out the data in the new directory:\n\n        hadoop fs -text wasb:///tutorials/usesqoop/importeddata/part-m-00000\n\n##Using SQL Server\n\nYou can also use Sqoop to import and export data from SQL Server, either in your data center or on a Virtual Machine hosted in Azure. The differences between using SQL Database and SQL Server are:\n\n* Both HDInsight and the SQL Server must be on the same Azure Virtual Network\n\n    > [AZURE.NOTE] HDInsight supports only location-based virtual networks, and it does not currently work with affinity group-based virtual networks.\n\n    When you are using SQL Server in your datacenter, you must configure the virtual network as *site-to-site* or *point-to-site*.\n\n    > [AZURE.NOTE] For **point-to-site** virtual networks, SQL Server must be running the VPN client configuration application, which is available from the **Dashboard** of your Azure virtual network configuration.\n\n    For more information on creating and configuring a virtual network, see [Virtual Network Configuration Tasks](../services/virtual-machines/).\n\n* SQL Server must be configured to allow SQL authentication. For more information, see [Choose an Authentication Mode](https://msdn.microsoft.com/ms144284.aspx)\n\n* You may have to configure SQL Server to accept remote connections. See [How to troubleshoot connecting to the SQL Server database engine](http://social.technet.microsoft.com/wiki/contents/articles/2102.how-to-troubleshoot-connecting-to-the-sql-server-database-engine.aspx) for more information\n\n* You must create the **sqooptest** database in SQL Server using a utility such as **SQL Server Management Studio** or **tsql** - the steps for using the Azure CLI only work for Azure SQL Database\n\n    The TSQL statements to create the **mobiledata** table are similar those used for SQL Database, with the exception of creating a clusterd index - this is not required for SQL Server:\n\n        CREATE TABLE [dbo].[mobiledata](\n        [clientid] [nvarchar](50),\n        [querytime] [nvarchar](50),\n        [market] [nvarchar](50),\n        [deviceplatform] [nvarchar](50),\n        [devicemake] [nvarchar](50),\n        [devicemodel] [nvarchar](50),\n        [state] [nvarchar](50),\n        [country] [nvarchar](50),\n        [querydwelltime] [float],\n        [sessionid] [bigint],\n        [sessionpagevieworder] [bigint])\n\n* When connecting to the SQL Server from HDInsight, you may have to use the IP address of the SQL Server unless you have configured a Domain Name System (DNS) to resolve names on the Azure Virtual Network. For example:\n\n        sqoop import --connect 'jdbc:sqlserver://10.0.1.1:1433;database=sqooptest' --username <adminLogin> --password <adminPassword> --table 'mobiledata' --target-dir 'wasb:///tutorials/usesqoop/importeddata' --fields-terminated-by '\\t' --lines-terminated-by '\\n' -m 1\n\n##Next steps\n\nNow you have learned how to use Sqoop. To learn more, see:\n\n- [Use Oozie with HDInsight][hdinsight-use-oozie]: Use Sqoop action in an Oozie workflow.\n- [Analyze flight delay data using HDInsight][hdinsight-analyze-flight-data]: Use Hive to analyze flight delay data, and then use Sqoop to export data to an Azure SQL database.\n- [Upload data to HDInsight][hdinsight-upload-data]: Find other methods for uploading data to HDInsight/Azure Blob storage.\n\n\n\n[hdinsight-versions]:  hdinsight-component-versioning.md\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-get-started]: hdinsight-hadoop-linux-tutorial-get-started.md\n[hdinsight-storage]: ../hdinsight-hadoop-use-blob-storage.md\n[hdinsight-analyze-flight-data]: hdinsight-analyze-flight-delay-data.md\n[hdinsight-use-oozie]: hdinsight-use-oozie.md\n[hdinsight-upload-data]: hdinsight-upload-data.md\n[hdinsight-submit-jobs]: hdinsight-submit-hadoop-jobs-programmatically.md\n\n[sqldatabase-get-started]: ../sql-database-get-started.md\n[sqldatabase-create-configue]: ../sql-database-create-configure.md\n\n[powershell-start]: http://technet.microsoft.com/library/hh847889.aspx\n[powershell-install]: powershell-install-configure.md\n[powershell-script]: http://technet.microsoft.com/library/ee176949.aspx\n\n[sqoop-user-guide-1.4.4]: https://sqoop.apache.org/docs/1.4.4/SqoopUserGuide.html\n"
+}
