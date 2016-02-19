@@ -1,0 +1,948 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        90
+      ],
+      "content": "Troubleshoot the Mobile Services .NET Backend | Microsoft Azure"
+    },
+    {
+      "pos": [
+        109,
+        194
+      ],
+      "content": "Learn how to diagnose and fix issues with your mobile services using the .NET backend"
+    },
+    {
+      "pos": [
+        527,
+        572
+      ],
+      "content": "Troubleshoot the Mobile Services .NET Backend"
+    },
+    {
+      "pos": [
+        677,
+        683
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        686,
+        925
+      ],
+      "content": "Developing with Mobile Services is usually easy and painless, but even then things can sometimes go wrong. This tutorial covers some techniques that let you troubleshoot common problems that can arise with the Mobile Services .NET backend.",
+      "nodes": [
+        {
+          "content": "Developing with Mobile Services is usually easy and painless, but even then things can sometimes go wrong.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "This tutorial covers some techniques that let you troubleshoot common problems that can arise with the Mobile Services .NET backend.",
+          "pos": [
+            107,
+            239
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        930,
+        962
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>HTTP Debugging<ept id=\"p1\">](#HttpDebugging)</ept>"
+    },
+    {
+      "pos": [
+        966,
+        1004
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Runtime Debugging<ept id=\"p2\">](#RuntimeDebugging)</ept>"
+    },
+    {
+      "pos": [
+        1008,
+        1042
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Analyzing Diagnostic Logs<ept id=\"p3\">](#Logs)</ept>"
+    },
+    {
+      "pos": [
+        1046,
+        1104
+      ],
+      "content": "<bpt id=\"p4\">[</bpt>Debugging Cloud Assembly Resolution<ept id=\"p4\">](#AssemblyResolution)</ept>"
+    },
+    {
+      "pos": [
+        1108,
+        1168
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>Troubleshooting Entity Framework Migrations<ept id=\"p5\">](#EFMigrations)</ept>"
+    },
+    {
+      "pos": [
+        1202,
+        1216
+      ],
+      "content": "HTTP Debugging"
+    },
+    {
+      "pos": [
+        1218,
+        1854
+      ],
+      "content": "When developing apps with Mobile Services, you usually take advantage of the Mobile Services client SDK for the platform you are using (Windows Store, iOS, Android, etc). However some times it is helpful to drop down to the HTTP level and observe the raw calls as they happen on the network. This approach is particularly useful when debugging connectivity and serialization issues. With the Mobile Services .NET backend you can use this approach in combination with Visual Studio local and remote debugging (more on that in the next section) to get a complete idea of the the path a HTTP call makes before it invokes your service code.",
+      "nodes": [
+        {
+          "content": "When developing apps with Mobile Services, you usually take advantage of the Mobile Services client SDK for the platform you are using (Windows Store, iOS, Android, etc).",
+          "pos": [
+            0,
+            170
+          ]
+        },
+        {
+          "content": "However some times it is helpful to drop down to the HTTP level and observe the raw calls as they happen on the network.",
+          "pos": [
+            171,
+            291
+          ]
+        },
+        {
+          "content": "This approach is particularly useful when debugging connectivity and serialization issues.",
+          "pos": [
+            292,
+            382
+          ]
+        },
+        {
+          "content": "With the Mobile Services .NET backend you can use this approach in combination with Visual Studio local and remote debugging (more on that in the next section) to get a complete idea of the the path a HTTP call makes before it invokes your service code.",
+          "pos": [
+            383,
+            636
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1856,
+        2564
+      ],
+      "content": "You can use any HTTP debugger to send and inspect HTTP traffic. <bpt id=\"p6\">[</bpt>Fiddler<ept id=\"p6\">](http://www.telerik.com/fiddler)</ept><ph id=\"ph5\"/> is a popular tool commonly used by developers for this purpose. To make developers' lives easier, Mobile Services bundles a web-based HTTP debugger (also referred to as the \"test client) right with your mobile service, reducing the need for external tooling. When hosting your mobile service locally, it will be available at a URI similar to <bpt id=\"p7\">[</bpt>http://localhost:59233<ept id=\"p7\">](http://localhost:59233)</ept><ph id=\"ph6\"/> and when hosting in the cloud, the URI will be of the form <bpt id=\"p8\">[</bpt>http://todo-list.azure-mobile.net<ept id=\"p8\">](http://todo-list.azure-mobile.net)</ept>. The following steps work the same way regardless of where the service is hosted:",
+      "nodes": [
+        {
+          "content": "You can use any HTTP debugger to send and inspect HTTP traffic.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "<bpt id=\"p6\">[</bpt>Fiddler<ept id=\"p6\">](http://www.telerik.com/fiddler)</ept><ph id=\"ph5\"/> is a popular tool commonly used by developers for this purpose.",
+          "pos": [
+            64,
+            221
+          ]
+        },
+        {
+          "content": "To make developers' lives easier, Mobile Services bundles a web-based HTTP debugger (also referred to as the \"test client) right with your mobile service, reducing the need for external tooling.",
+          "pos": [
+            222,
+            416
+          ]
+        },
+        {
+          "content": "When hosting your mobile service locally, it will be available at a URI similar to <bpt id=\"p7\">[</bpt>http://localhost:59233<ept id=\"p7\">](http://localhost:59233)</ept><ph id=\"ph6\"/> and when hosting in the cloud, the URI will be of the form <bpt id=\"p8\">[</bpt>http://todo-list.azure-mobile.net<ept id=\"p8\">](http://todo-list.azure-mobile.net)</ept>.",
+          "pos": [
+            417,
+            769
+          ]
+        },
+        {
+          "content": "The following steps work the same way regardless of where the service is hosted:",
+          "pos": [
+            770,
+            850
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2569,
+        2848
+      ],
+      "content": "Start with a Mobile Services server project open in <bpt id=\"p9\">**</bpt>Visual Studio 2013 Update 2<ept id=\"p9\">**</ept><ph id=\"ph7\"/> or later. If you don't have one handy, you can create one by selecting <bpt id=\"p10\">**</bpt>File<ept id=\"p10\">**</ept>, <bpt id=\"p11\">**</bpt>New<ept id=\"p11\">**</ept>, <bpt id=\"p12\">**</bpt>Project<ept id=\"p12\">**</ept>, then selecting the <bpt id=\"p13\">**</bpt>Cloud<ept id=\"p13\">**</ept><ph id=\"ph8\"/> node and then the <bpt id=\"p14\">**</bpt>Microsoft Azure Mobile Services<ept id=\"p14\">**</ept><ph id=\"ph9\"/> template.",
+      "nodes": [
+        {
+          "content": "Start with a Mobile Services server project open in <bpt id=\"p9\">**</bpt>Visual Studio 2013 Update 2<ept id=\"p9\">**</ept><ph id=\"ph7\"/> or later.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "If you don't have one handy, you can create one by selecting <bpt id=\"p10\">**</bpt>File<ept id=\"p10\">**</ept>, <bpt id=\"p11\">**</bpt>New<ept id=\"p11\">**</ept>, <bpt id=\"p12\">**</bpt>Project<ept id=\"p12\">**</ept>, then selecting the <bpt id=\"p13\">**</bpt>Cloud<ept id=\"p13\">**</ept><ph id=\"ph8\"/> node and then the <bpt id=\"p14\">**</bpt>Microsoft Azure Mobile Services<ept id=\"p14\">**</ept><ph id=\"ph9\"/> template.",
+          "pos": [
+            146,
+            559
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2852,
+        2943
+      ],
+      "content": "Hit <bpt id=\"p15\">**</bpt>F5<ept id=\"p15\">**</ept>, which will build and run the project. On the start page, select <bpt id=\"p16\">**</bpt>try it out<ept id=\"p16\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Hit <bpt id=\"p15\">**</bpt>F5<ept id=\"p15\">**</ept>, which will build and run the project.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "On the start page, select <bpt id=\"p16\">**</bpt>try it out<ept id=\"p16\">**</ept>.",
+          "pos": [
+            90,
+            171
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2950,
+        3515
+      ],
+      "leadings": [
+        "",
+        "    > "
+      ],
+      "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph>\nIf the service is hosted locally, clicking the link will direct you to the next page. However, if hosting in the cloud, you will be prompted for a set of credentials. This is to ensure that unauthenticated users don't have access to information about your API and payloads. In order to see the page, you need to log in with a <bpt id=\"p17\">**</bpt>blank username<ept id=\"p17\">**</ept><ph id=\"ph11\"/> and your <bpt id=\"p18\">**</bpt>application key<ept id=\"p18\">**</ept><ph id=\"ph12\"/> as the password. Your application key is available in the Azure classic portal by navigating to the <bpt id=\"p19\">**</bpt>Dashboard<ept id=\"p19\">**</ept><ph id=\"ph13\"/> tab for your mobile service and selecting <bpt id=\"p20\">**</bpt>Manage keys<ept id=\"p20\">**</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph10\">[AZURE.NOTE]</ph>\nIf the service is hosted locally, clicking the link will direct you to the next page.",
+          "pos": [
+            0,
+            117
+          ]
+        },
+        {
+          "content": "However, if hosting in the cloud, you will be prompted for a set of credentials.",
+          "pos": [
+            118,
+            198
+          ]
+        },
+        {
+          "content": "This is to ensure that unauthenticated users don't have access to information about your API and payloads.",
+          "pos": [
+            199,
+            305
+          ]
+        },
+        {
+          "content": "In order to see the page, you need to log in with a <bpt id=\"p17\">**</bpt>blank username<ept id=\"p17\">**</ept><ph id=\"ph11\"/> and your <bpt id=\"p18\">**</bpt>application key<ept id=\"p18\">**</ept><ph id=\"ph12\"/> as the password.",
+          "pos": [
+            306,
+            532
+          ]
+        },
+        {
+          "content": "Your application key is available in the Azure classic portal by navigating to the <bpt id=\"p19\">**</bpt>Dashboard<ept id=\"p19\">**</ept><ph id=\"ph13\"/> tab for your mobile service and selecting <bpt id=\"p20\">**</bpt>Manage keys<ept id=\"p20\">**</ept>.",
+          "pos": [
+            533,
+            783
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3528,
+        3586
+      ],
+      "content": "<ph id=\"ph14\">![</ph>Authentication prompt to access help page<ph id=\"ph15\">][HelpPageAuth]</ph>"
+    },
+    {
+      "pos": [
+        3591,
+        3857
+      ],
+      "content": "The page you see (referred to as the \"help page\") shows a list of all HTTP APIs that your mobile service is making available. Select one of the APIs (if you started using the Mobile Services project template in Visual Studio, you should see <bpt id=\"p21\">**</bpt>GET tables/TodoItem<ept id=\"p21\">**</ept>).",
+      "nodes": [
+        {
+          "content": "The page you see (referred to as the \"help page\") shows a list of all HTTP APIs that your mobile service is making available.",
+          "pos": [
+            0,
+            125
+          ]
+        },
+        {
+          "content": "Select one of the APIs (if you started using the Mobile Services project template in Visual Studio, you should see <bpt id=\"p21\">**</bpt>GET tables/TodoItem<ept id=\"p21\">**</ept>).",
+          "pos": [
+            126,
+            306
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3863,
+        3885
+      ],
+      "content": "<ph id=\"ph16\">![</ph>Help page<ph id=\"ph17\">][HelpPage]</ph>"
+    },
+    {
+      "pos": [
+        3890,
+        4037
+      ],
+      "content": "The  resulting page shows any documentation and JSON examples of the request and response that the API expects. Select the <bpt id=\"p22\">**</bpt>try this out<ept id=\"p22\">**</ept><ph id=\"ph18\"/> button.",
+      "nodes": [
+        {
+          "content": "The  resulting page shows any documentation and JSON examples of the request and response that the API expects.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "Select the <bpt id=\"p22\">**</bpt>try this out<ept id=\"p22\">**</ept><ph id=\"ph18\"/> button.",
+          "pos": [
+            112,
+            202
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4043,
+        4079
+      ],
+      "content": "<ph id=\"ph19\">![</ph>Test page for an API<ph id=\"ph20\">][HelpPageApi]</ph>"
+    },
+    {
+      "pos": [
+        4084,
+        4183
+      ],
+      "content": "This is the \"test client\", which lets you send a HTTP request to try out your API. Select <bpt id=\"p23\">**</bpt>send<ept id=\"p23\">**</ept>.",
+      "nodes": [
+        {
+          "content": "This is the \"test client\", which lets you send a HTTP request to try out your API.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "Select <bpt id=\"p23\">**</bpt>send<ept id=\"p23\">**</ept>.",
+          "pos": [
+            83,
+            139
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4189,
+        4215
+      ],
+      "content": "<ph id=\"ph21\">![</ph>Test client<ph id=\"ph22\">][TestClient]</ph>"
+    },
+    {
+      "pos": [
+        4220,
+        4316
+      ],
+      "content": "You will see the HTTP response coming back from your mobile service right in the browser window."
+    },
+    {
+      "pos": [
+        4322,
+        4375
+      ],
+      "content": "<ph id=\"ph23\">![</ph>Test client with HTTP response<ph id=\"ph24\">][TestClientResponse]</ph>"
+    },
+    {
+      "pos": [
+        4377,
+        4500
+      ],
+      "content": "Now you are ready to explore the different HTTP APIs exposed by your mobile service in the convenience of your web browser."
+    },
+    {
+      "pos": [
+        4537,
+        4554
+      ],
+      "content": "Runtime Debugging"
+    },
+    {
+      "pos": [
+        4556,
+        4735
+      ],
+      "content": "One of the key features of the .NET backend is the ability to debug the service code locally, but also to debug the code running live in the cloud environment. Follow these steps:",
+      "nodes": [
+        {
+          "content": "One of the key features of the .NET backend is the ability to debug the service code locally, but also to debug the code running live in the cloud environment.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "Follow these steps:",
+          "pos": [
+            160,
+            179
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4740,
+        4840
+      ],
+      "content": "Open the mobile service project you would like to debug in <bpt id=\"p24\">**</bpt>Visual Studio 2013 Update 2<ept id=\"p24\">**</ept><ph id=\"ph27\"/> or later."
+    },
+    {
+      "pos": [
+        4844,
+        5040
+      ],
+      "content": "Configure symbol loading. Navigate to the <bpt id=\"p25\">**</bpt>Debug<ept id=\"p25\">**</ept><ph id=\"ph28\"/> menu and select <bpt id=\"p26\">**</bpt>Options and Settings<ept id=\"p26\">**</ept>. Ensure that <bpt id=\"p27\">**</bpt>Enable Just My Code<ept id=\"p27\">**</ept><ph id=\"ph29\"/> is unchecked and that <bpt id=\"p28\">**</bpt>Enable source server support<ept id=\"p28\">**</ept><ph id=\"ph30\"/> is checked.",
+      "nodes": [
+        {
+          "content": "Configure symbol loading.",
+          "pos": [
+            0,
+            25
+          ]
+        },
+        {
+          "content": "Navigate to the <bpt id=\"p25\">**</bpt>Debug<ept id=\"p25\">**</ept><ph id=\"ph28\"/> menu and select <bpt id=\"p26\">**</bpt>Options and Settings<ept id=\"p26\">**</ept>.",
+          "pos": [
+            26,
+            188
+          ]
+        },
+        {
+          "content": "Ensure that <bpt id=\"p27\">**</bpt>Enable Just My Code<ept id=\"p27\">**</ept><ph id=\"ph29\"/> is unchecked and that <bpt id=\"p28\">**</bpt>Enable source server support<ept id=\"p28\">**</ept><ph id=\"ph30\"/> is checked.",
+          "pos": [
+            189,
+            401
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5046,
+        5088
+      ],
+      "content": "<ph id=\"ph31\">![</ph>Configure symbol loading<ph id=\"ph32\">][SymbolLoading]</ph>"
+    },
+    {
+      "pos": [
+        5093,
+        5371
+      ],
+      "content": "Select the <bpt id=\"p29\">**</bpt>Symbols<ept id=\"p29\">**</ept><ph id=\"ph33\"/> node on the left and add a reference to the [SymbolSource] server using the URI <bpt id=\"p30\">[</bpt>http://srv.symbolsource.org/pdb/Public<ept id=\"p30\">](http://srv.symbolsource.org/pdb/Public)</ept>. Symbols for the Mobile Services .NET backend are made available there with every new release.",
+      "nodes": [
+        {
+          "content": "Select the <bpt id=\"p29\">**</bpt>Symbols<ept id=\"p29\">**</ept><ph id=\"ph33\"/> node on the left and add a reference to the [SymbolSource] server using the URI <bpt id=\"p30\">[</bpt>http://srv.symbolsource.org/pdb/Public<ept id=\"p30\">](http://srv.symbolsource.org/pdb/Public)</ept>.",
+          "pos": [
+            0,
+            279
+          ]
+        },
+        {
+          "content": "Symbols for the Mobile Services .NET backend are made available there with every new release.",
+          "pos": [
+            280,
+            373
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5377,
+        5417
+      ],
+      "content": "<ph id=\"ph34\">![</ph>Configure symbol server<ph id=\"ph35\">][SymbolServer]</ph>"
+    },
+    {
+      "pos": [
+        5422,
+        5650
+      ],
+      "content": "Set a breakpoint in the piece of code you would like to debug. For example set a breakpoint in the <bpt id=\"p31\">**</bpt>GetAllTodoItems()<ept id=\"p31\">**</ept><ph id=\"ph36\"/> method of the <bpt id=\"p32\">**</bpt>TodoItemController<ept id=\"p32\">**</ept><ph id=\"ph37\"/> that comes with the Mobile Services project template in Visual Studio.",
+      "nodes": [
+        {
+          "content": "Set a breakpoint in the piece of code you would like to debug.",
+          "pos": [
+            0,
+            62
+          ]
+        },
+        {
+          "content": "For example set a breakpoint in the <bpt id=\"p31\">**</bpt>GetAllTodoItems()<ept id=\"p31\">**</ept><ph id=\"ph36\"/> method of the <bpt id=\"p32\">**</bpt>TodoItemController<ept id=\"p32\">**</ept><ph id=\"ph37\"/> that comes with the Mobile Services project template in Visual Studio.",
+          "pos": [
+            63,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5654,
+        5804
+      ],
+      "content": "Debug the service locally by pressing <bpt id=\"p33\">**</bpt>F5<ept id=\"p33\">**</ept>. The first load may be slow as Visual Studio is downloading symbols for the Mobile Services .NET backend.",
+      "nodes": [
+        {
+          "content": "Debug the service locally by pressing <bpt id=\"p33\">**</bpt>F5<ept id=\"p33\">**</ept>.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "The first load may be slow as Visual Studio is downloading symbols for the Mobile Services .NET backend.",
+          "pos": [
+            86,
+            190
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5808,
+        6127
+      ],
+      "content": "As described in the previous section on HTTP debugging, use the test client to send a HTTP request to the method where you set the breakpoint. For example you can send a request to the <bpt id=\"p34\">**</bpt>GetAllTodoItems()<ept id=\"p34\">**</ept><ph id=\"ph38\"/> method by selecting <bpt id=\"p35\">**</bpt>GET tables/TodoItem<ept id=\"p35\">**</ept><ph id=\"ph39\"/> on the help page, then selecting <bpt id=\"p36\">**</bpt>try this out<ept id=\"p36\">**</ept><ph id=\"ph40\"/> and then <bpt id=\"p37\">**</bpt>send<ept id=\"p37\">**</ept>.",
+      "nodes": [
+        {
+          "content": "As described in the previous section on HTTP debugging, use the test client to send a HTTP request to the method where you set the breakpoint.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "For example you can send a request to the <bpt id=\"p34\">**</bpt>GetAllTodoItems()<ept id=\"p34\">**</ept><ph id=\"ph38\"/> method by selecting <bpt id=\"p35\">**</bpt>GET tables/TodoItem<ept id=\"p35\">**</ept><ph id=\"ph39\"/> on the help page, then selecting <bpt id=\"p36\">**</bpt>try this out<ept id=\"p36\">**</ept><ph id=\"ph40\"/> and then <bpt id=\"p37\">**</bpt>send<ept id=\"p37\">**</ept>.",
+          "pos": [
+            143,
+            524
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6131,
+        6291
+      ],
+      "content": "Visual Studio should break at the breakpoint you set, and a full stack trace with source code should be available in the <bpt id=\"p38\">**</bpt>Call Stack<ept id=\"p38\">**</ept><ph id=\"ph41\"/> window in Visual Studio."
+    },
+    {
+      "pos": [
+        6297,
+        6332
+      ],
+      "content": "<ph id=\"ph42\">![</ph>Hitting a breakpoint<ph id=\"ph43\">][Breakpoint]</ph>"
+    },
+    {
+      "pos": [
+        6337,
+        6532
+      ],
+      "content": "You can now publish the service to Azure, and we will be able to use debugging just like we did above. Publish the project by right-clicking it in <bpt id=\"p39\">**</bpt>Solution Explorer<ept id=\"p39\">**</ept><ph id=\"ph44\"/> and selecting <bpt id=\"p40\">**</bpt>Publish<ept id=\"p40\">**</ept>.",
+      "nodes": [
+        {
+          "content": "You can now publish the service to Azure, and we will be able to use debugging just like we did above.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "Publish the project by right-clicking it in <bpt id=\"p39\">**</bpt>Solution Explorer<ept id=\"p39\">**</ept><ph id=\"ph44\"/> and selecting <bpt id=\"p40\">**</bpt>Publish<ept id=\"p40\">**</ept>.",
+          "pos": [
+            103,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6536,
+        6697
+      ],
+      "content": "On the <bpt id=\"p41\">**</bpt>Settings<ept id=\"p41\">**</ept><ph id=\"ph45\"/> tab of the Publish wizard, select the <bpt id=\"p42\">**</bpt>Debug<ept id=\"p42\">**</ept><ph id=\"ph46\"/> configuration. This ensures that the relevant debugging symbols are published with your code.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p41\">**</bpt>Settings<ept id=\"p41\">**</ept><ph id=\"ph45\"/> tab of the Publish wizard, select the <bpt id=\"p42\">**</bpt>Debug<ept id=\"p42\">**</ept><ph id=\"ph46\"/> configuration.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "This ensures that the relevant debugging symbols are published with your code.",
+          "pos": [
+            193,
+            271
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6703,
+        6733
+      ],
+      "content": "<ph id=\"ph47\">![</ph>Publish debug<ph id=\"ph48\">][PublishDebug]</ph>"
+    },
+    {
+      "pos": [
+        6739,
+        6886
+      ],
+      "content": "Once the service has published successfully, open <bpt id=\"p43\">**</bpt>Server Explorer<ept id=\"p43\">**</ept><ph id=\"ph49\"/> and expand the <bpt id=\"p44\">**</bpt>Azure<ept id=\"p44\">**</ept><ph id=\"ph50\"/> and <bpt id=\"p45\">**</bpt>Mobile Services<ept id=\"p45\">**</ept><ph id=\"ph51\"/> nodes. Sign in if necessary.",
+      "nodes": [
+        {
+          "content": "Once the service has published successfully, open <bpt id=\"p43\">**</bpt>Server Explorer<ept id=\"p43\">**</ept><ph id=\"ph49\"/> and expand the <bpt id=\"p44\">**</bpt>Azure<ept id=\"p44\">**</ept><ph id=\"ph50\"/> and <bpt id=\"p45\">**</bpt>Mobile Services<ept id=\"p45\">**</ept><ph id=\"ph51\"/> nodes.",
+          "pos": [
+            0,
+            290
+          ]
+        },
+        {
+          "content": "Sign in if necessary.",
+          "pos": [
+            291,
+            312
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6891,
+        6975
+      ],
+      "content": "Right click the mobile service you just published to and select <bpt id=\"p46\">**</bpt>Attach Debugger<ept id=\"p46\">**</ept>."
+    },
+    {
+      "pos": [
+        6981,
+        7015
+      ],
+      "content": "<ph id=\"ph52\">![</ph>Attach debugger<ph id=\"ph53\">][AttachDebugger]</ph>"
+    },
+    {
+      "pos": [
+        7021,
+        7199
+      ],
+      "content": "Just as you did in step 6, send a HTTP request to invoke the method where you set the breakpoint. This time use the help page and test client for the Azure-hosted mobile service.",
+      "nodes": [
+        {
+          "content": "Just as you did in step 6, send a HTTP request to invoke the method where you set the breakpoint.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "This time use the help page and test client for the Azure-hosted mobile service.",
+          "pos": [
+            98,
+            178
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7204,
+        7247
+      ],
+      "content": "Visual Studio will break at the breakpoint."
+    },
+    {
+      "pos": [
+        7249,
+        7388
+      ],
+      "content": "You now have access the the full power of the Visual Studio debugger when developing locally and against your live mobile service in Azure."
+    },
+    {
+      "pos": [
+        7413,
+        7438
+      ],
+      "content": "Analyzing Diagnostic Logs"
+    },
+    {
+      "pos": [
+        7440,
+        8109
+      ],
+      "content": "As your mobile service handles requests from your customers, it generates a variety of useful diagnostic information, and also captures any exceptions encountered. In addition to that, you can instrument your controller code with additional logs by taking advantage of the <bpt id=\"p47\">[</bpt><bpt id=\"p48\">**</bpt>Log<ept id=\"p48\">**</ept><ept id=\"p47\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.apiservices.log.aspx)</ept><ph id=\"ph56\"/> property available on the <bpt id=\"p49\">[</bpt><bpt id=\"p50\">**</bpt>Services<ept id=\"p50\">**</ept><ept id=\"p49\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.services.aspx)</ept><ph id=\"ph57\"/> property of every <bpt id=\"p51\">[</bpt><bpt id=\"p52\">**</bpt>TableController<ept id=\"p52\">**</ept><ept id=\"p51\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.aspx)</ept>.",
+      "nodes": [
+        {
+          "content": "As your mobile service handles requests from your customers, it generates a variety of useful diagnostic information, and also captures any exceptions encountered.",
+          "pos": [
+            0,
+            163
+          ]
+        },
+        {
+          "content": "In addition to that, you can instrument your controller code with additional logs by taking advantage of the <bpt id=\"p47\">[</bpt><bpt id=\"p48\">**</bpt>Log<ept id=\"p48\">**</ept><ept id=\"p47\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.apiservices.log.aspx)</ept><ph id=\"ph56\"/> property available on the <bpt id=\"p49\">[</bpt><bpt id=\"p50\">**</bpt>Services<ept id=\"p50\">**</ept><ept id=\"p49\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.services.aspx)</ept><ph id=\"ph57\"/> property of every <bpt id=\"p51\">[</bpt><bpt id=\"p52\">**</bpt>TableController<ept id=\"p52\">**</ept><ept id=\"p51\">](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.aspx)</ept>.",
+          "pos": [
+            164,
+            939
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8111,
+        8195
+      ],
+      "content": "When debugging locally, the logs will appear in the Visual Studio <bpt id=\"p53\">**</bpt>Output<ept id=\"p53\">**</ept><ph id=\"ph58\"/> window."
+    },
+    {
+      "pos": [
+        8197,
+        8253
+      ],
+      "content": "<ph id=\"ph59\">![</ph>Logs in Visual Studio Output window<ph id=\"ph60\">][LogsOutputWindow]</ph>"
+    },
+    {
+      "pos": [
+        8255,
+        8474
+      ],
+      "content": "After you publish your service to Azure, the logs for the service instance running in the cloud are available by right-clicking the mobile service in Visual Studio's <bpt id=\"p54\">**</bpt>Server Explorer<ept id=\"p54\">**</ept><ph id=\"ph61\"/> and then selecting <bpt id=\"p55\">**</bpt>View Logs<ept id=\"p55\">**</ept>."
+    },
+    {
+      "pos": [
+        8476,
+        8536
+      ],
+      "content": "<ph id=\"ph62\">![</ph>Logs in Visual Studio Server Explorer<ph id=\"ph63\">][LogsServerExplorer]</ph>"
+    },
+    {
+      "pos": [
+        8538,
+        8643
+      ],
+      "content": "The same logs are also available in the Azure classic portal on the <bpt id=\"p56\">**</bpt>Logs<ept id=\"p56\">**</ept><ph id=\"ph64\"/> tab for your mobile service."
+    },
+    {
+      "pos": [
+        8645,
+        8688
+      ],
+      "content": "<ph id=\"ph65\">![</ph>Logs in Azure classic portal<ph id=\"ph66\">][LogsPortal]</ph>"
+    },
+    {
+      "pos": [
+        8727,
+        8762
+      ],
+      "content": "Debugging Cloud Assembly Resolution"
+    },
+    {
+      "pos": [
+        8764,
+        9198
+      ],
+      "content": "When you publish your mobile service to Azure, it gets loaded by the Mobile Services hosting environment, which ensures seamless upgrades and patches to the HTTP pipeline hosting your controller code. This includes all assemblies referenced by the <bpt id=\"p57\">[</bpt>.NET backend NuGet packages<ept id=\"p57\">](http://www.nuget.org/packages?q=%22mobile+services+.net+backend%22)</ept>: the team constantly updates the service to use the latest versions of those assemblies.",
+      "nodes": [
+        {
+          "content": "When you publish your mobile service to Azure, it gets loaded by the Mobile Services hosting environment, which ensures seamless upgrades and patches to the HTTP pipeline hosting your controller code.",
+          "pos": [
+            0,
+            200
+          ]
+        },
+        {
+          "content": "This includes all assemblies referenced by the <bpt id=\"p57\">[</bpt>.NET backend NuGet packages<ept id=\"p57\">](http://www.nuget.org/packages?q=%22mobile+services+.net+backend%22)</ept>: the team constantly updates the service to use the latest versions of those assemblies.",
+          "pos": [
+            201,
+            474
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9200,
+        9510
+      ],
+      "content": "It is sometimes possible to introduce versioning conflicts by referencing <bpt id=\"p58\">*</bpt>different major versions<ept id=\"p58\">*</ept><ph id=\"ph69\"/> of required assemblies (different <bpt id=\"p59\">*</bpt>minor<ept id=\"p59\">*</ept><ph id=\"ph70\"/> versions are allowed). Frequently this happens when NuGet prompts you to upgrade to the latest version of one of the packages used by the Mobile Services .NET backend.",
+      "nodes": [
+        {
+          "content": "It is sometimes possible to introduce versioning conflicts by referencing <bpt id=\"p58\">*</bpt>different major versions<ept id=\"p58\">*</ept><ph id=\"ph69\"/> of required assemblies (different <bpt id=\"p59\">*</bpt>minor<ept id=\"p59\">*</ept><ph id=\"ph70\"/> versions are allowed).",
+          "pos": [
+            0,
+            275
+          ]
+        },
+        {
+          "content": "Frequently this happens when NuGet prompts you to upgrade to the latest version of one of the packages used by the Mobile Services .NET backend.",
+          "pos": [
+            276,
+            420
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9513,
+        9716
+      ],
+      "content": "<ph id=\"ph71\">[AZURE.NOTE]</ph><ph id=\"ph72\"/> Mobile Services is currently compatible only with ASP.NET 5.1; ASP.NET 5.2 is not presently supported. Upgrading your ASP.NET NuGet packages to 5.2.* may result in an error after deployment.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph71\">[AZURE.NOTE]</ph><ph id=\"ph72\"/> Mobile Services is currently compatible only with ASP.NET 5.1; ASP.NET 5.2 is not presently supported.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "Upgrading your ASP.NET NuGet packages to 5.2.* may result in an error after deployment.",
+          "pos": [
+            150,
+            237
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9718,
+        9854
+      ],
+      "content": "If you do upgrade any such packages, when you publish the updated service to Azure, you will see a warning page indicating the conflict:"
+    },
+    {
+      "pos": [
+        9856,
+        9919
+      ],
+      "content": "<ph id=\"ph73\">![</ph>Help page indicating assembly loading conflict<ph id=\"ph74\">][HelpConflict]</ph>"
+    },
+    {
+      "pos": [
+        9921,
+        10030
+      ],
+      "content": "This will be accompanied by an exception message similar to the following being recored in your service logs:"
+    },
+    {
+      "pos": [
+        10270,
+        10392
+      ],
+      "content": "This problem is easy to correct: simply revert to a supported version of the required assembly and republish your service."
+    },
+    {
+      "pos": [
+        10425,
+        10468
+      ],
+      "content": "Troubleshooting Entity Framework Migrations"
+    },
+    {
+      "pos": [
+        10470,
+        10924
+      ],
+      "content": "When using the Mobile Services .NET backend with a SQL Database, Entity Framework (EF) is used as the data access technology that enables you to query the database and persist objects into it. One important aspect that EF handles on behalf of the developer is how the database columns (also known as <bpt id=\"p60\">*</bpt>schema<ept id=\"p60\">*</ept>) change as the model classes specified in code change. This process is known as <bpt id=\"p61\">[</bpt>Code First Migrations<ept id=\"p61\">](http://msdn.microsoft.com/data/jj591621)</ept>.",
+      "nodes": [
+        {
+          "content": "When using the Mobile Services .NET backend with a SQL Database, Entity Framework (EF) is used as the data access technology that enables you to query the database and persist objects into it.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "One important aspect that EF handles on behalf of the developer is how the database columns (also known as <bpt id=\"p60\">*</bpt>schema<ept id=\"p60\">*</ept>) change as the model classes specified in code change.",
+          "pos": [
+            193,
+            403
+          ]
+        },
+        {
+          "content": "This process is known as <bpt id=\"p61\">[</bpt>Code First Migrations<ept id=\"p61\">](http://msdn.microsoft.com/data/jj591621)</ept>.",
+          "pos": [
+            404,
+            534
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10926,
+        11277
+      ],
+      "content": "Migrations can be complex and require that the database state be kept in sync with the EF model in order to succeed. For instructions on how to handle migrations with you mobile service and errors that can arise, see <bpt id=\"p62\">[</bpt>How to make data model changes to a .NET backend mobile service<ept id=\"p62\">](mobile-services-dotnet-backend-how-to-use-code-first-migrations.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Migrations can be complex and require that the database state be kept in sync with the EF model in order to succeed.",
+          "pos": [
+            0,
+            116
+          ]
+        },
+        {
+          "content": "For instructions on how to handle migrations with you mobile service and errors that can arise, see <bpt id=\"p62\">[</bpt>How to make data model changes to a .NET backend mobile service<ept id=\"p62\">](mobile-services-dotnet-backend-how-to-use-code-first-migrations.md)</ept>.",
+          "pos": [
+            117,
+            391
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12460,
+        12498
+      ],
+      "content": "[SymbolSource]:http://symbolsource.org"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Troubleshoot the Mobile Services .NET Backend | Microsoft Azure\"\n    description=\"Learn how to diagnose and fix issues with your mobile services using the .NET backend\"\n    services=\"mobile-services\"\n    documentationCenter=\"\"\n    authors=\"wesmc7777\"\n    manager=\"dwrede\"\n    editor=\"mollybos\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"multiple\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.date=\"02/07/2016\" \n    ms.author=\"wesmc;ricksal\"/>\n\n# Troubleshoot the Mobile Services .NET Backend\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\nDeveloping with Mobile Services is usually easy and painless, but even then things can sometimes go wrong. This tutorial covers some techniques that let you troubleshoot common problems that can arise with the Mobile Services .NET backend.\n\n1. [HTTP Debugging](#HttpDebugging)\n2. [Runtime Debugging](#RuntimeDebugging)\n3. [Analyzing Diagnostic Logs](#Logs)\n4. [Debugging Cloud Assembly Resolution](#AssemblyResolution)\n5. [Troubleshooting Entity Framework Migrations](#EFMigrations)\n\n<a name=\"HttpDebugging\"></a>\n## HTTP Debugging\n\nWhen developing apps with Mobile Services, you usually take advantage of the Mobile Services client SDK for the platform you are using (Windows Store, iOS, Android, etc). However some times it is helpful to drop down to the HTTP level and observe the raw calls as they happen on the network. This approach is particularly useful when debugging connectivity and serialization issues. With the Mobile Services .NET backend you can use this approach in combination with Visual Studio local and remote debugging (more on that in the next section) to get a complete idea of the the path a HTTP call makes before it invokes your service code.\n\nYou can use any HTTP debugger to send and inspect HTTP traffic. [Fiddler](http://www.telerik.com/fiddler) is a popular tool commonly used by developers for this purpose. To make developers' lives easier, Mobile Services bundles a web-based HTTP debugger (also referred to as the \"test client) right with your mobile service, reducing the need for external tooling. When hosting your mobile service locally, it will be available at a URI similar to [http://localhost:59233](http://localhost:59233) and when hosting in the cloud, the URI will be of the form [http://todo-list.azure-mobile.net](http://todo-list.azure-mobile.net). The following steps work the same way regardless of where the service is hosted:\n\n1. Start with a Mobile Services server project open in **Visual Studio 2013 Update 2** or later. If you don't have one handy, you can create one by selecting **File**, **New**, **Project**, then selecting the **Cloud** node and then the **Microsoft Azure Mobile Services** template.\n2. Hit **F5**, which will build and run the project. On the start page, select **try it out**.\n\n    >[AZURE.NOTE]\n    > If the service is hosted locally, clicking the link will direct you to the next page. However, if hosting in the cloud, you will be prompted for a set of credentials. This is to ensure that unauthenticated users don't have access to information about your API and payloads. In order to see the page, you need to log in with a **blank username** and your **application key** as the password. Your application key is available in the Azure classic portal by navigating to the **Dashboard** tab for your mobile service and selecting **Manage keys**.\n    >\n    > ![Authentication prompt to access help page][HelpPageAuth]\n\n3. The page you see (referred to as the \"help page\") shows a list of all HTTP APIs that your mobile service is making available. Select one of the APIs (if you started using the Mobile Services project template in Visual Studio, you should see **GET tables/TodoItem**).\n\n    ![Help page][HelpPage]\n\n4. The  resulting page shows any documentation and JSON examples of the request and response that the API expects. Select the **try this out** button.\n\n    ![Test page for an API][HelpPageApi]\n\n5. This is the \"test client\", which lets you send a HTTP request to try out your API. Select **send**.\n\n    ![Test client][TestClient]\n\n6. You will see the HTTP response coming back from your mobile service right in the browser window.\n\n    ![Test client with HTTP response][TestClientResponse]\n\nNow you are ready to explore the different HTTP APIs exposed by your mobile service in the convenience of your web browser.\n\n<a name=\"RuntimeDebugging\"></a>\n## Runtime Debugging\n\nOne of the key features of the .NET backend is the ability to debug the service code locally, but also to debug the code running live in the cloud environment. Follow these steps:\n\n1. Open the mobile service project you would like to debug in **Visual Studio 2013 Update 2** or later.\n2. Configure symbol loading. Navigate to the **Debug** menu and select **Options and Settings**. Ensure that **Enable Just My Code** is unchecked and that **Enable source server support** is checked.\n\n    ![Configure symbol loading][SymbolLoading]\n\n3. Select the **Symbols** node on the left and add a reference to the [SymbolSource] server using the URI [http://srv.symbolsource.org/pdb/Public](http://srv.symbolsource.org/pdb/Public). Symbols for the Mobile Services .NET backend are made available there with every new release.\n\n    ![Configure symbol server][SymbolServer]\n\n4. Set a breakpoint in the piece of code you would like to debug. For example set a breakpoint in the **GetAllTodoItems()** method of the **TodoItemController** that comes with the Mobile Services project template in Visual Studio.\n5. Debug the service locally by pressing **F5**. The first load may be slow as Visual Studio is downloading symbols for the Mobile Services .NET backend.\n6. As described in the previous section on HTTP debugging, use the test client to send a HTTP request to the method where you set the breakpoint. For example you can send a request to the **GetAllTodoItems()** method by selecting **GET tables/TodoItem** on the help page, then selecting **try this out** and then **send**.\n7. Visual Studio should break at the breakpoint you set, and a full stack trace with source code should be available in the **Call Stack** window in Visual Studio.\n\n    ![Hitting a breakpoint][Breakpoint]\n\n8. You can now publish the service to Azure, and we will be able to use debugging just like we did above. Publish the project by right-clicking it in **Solution Explorer** and selecting **Publish**.\n9. On the **Settings** tab of the Publish wizard, select the **Debug** configuration. This ensures that the relevant debugging symbols are published with your code.\n\n    ![Publish debug][PublishDebug]\n\n10. Once the service has published successfully, open **Server Explorer** and expand the **Azure** and **Mobile Services** nodes. Sign in if necessary.\n11. Right click the mobile service you just published to and select **Attach Debugger**.\n\n    ![Attach debugger][AttachDebugger]\n\n12. Just as you did in step 6, send a HTTP request to invoke the method where you set the breakpoint. This time use the help page and test client for the Azure-hosted mobile service.\n13. Visual Studio will break at the breakpoint.\n\nYou now have access the the full power of the Visual Studio debugger when developing locally and against your live mobile service in Azure.\n\n<a name=\"Logs\"></a>\n## Analyzing Diagnostic Logs\n\nAs your mobile service handles requests from your customers, it generates a variety of useful diagnostic information, and also captures any exceptions encountered. In addition to that, you can instrument your controller code with additional logs by taking advantage of the [**Log**](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.apiservices.log.aspx) property available on the [**Services**](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.services.aspx) property of every [**TableController**](http://msdn.microsoft.com/library/microsoft.windowsazure.mobile.service.tables.tablecontroller.aspx).\n\nWhen debugging locally, the logs will appear in the Visual Studio **Output** window.\n\n![Logs in Visual Studio Output window][LogsOutputWindow]\n\nAfter you publish your service to Azure, the logs for the service instance running in the cloud are available by right-clicking the mobile service in Visual Studio's **Server Explorer** and then selecting **View Logs**.\n\n![Logs in Visual Studio Server Explorer][LogsServerExplorer]\n\nThe same logs are also available in the Azure classic portal on the **Logs** tab for your mobile service.\n\n![Logs in Azure classic portal][LogsPortal]\n\n<a name=\"AssemblyResolution\"></a>\n## Debugging Cloud Assembly Resolution\n\nWhen you publish your mobile service to Azure, it gets loaded by the Mobile Services hosting environment, which ensures seamless upgrades and patches to the HTTP pipeline hosting your controller code. This includes all assemblies referenced by the [.NET backend NuGet packages](http://www.nuget.org/packages?q=%22mobile+services+.net+backend%22): the team constantly updates the service to use the latest versions of those assemblies.\n\nIt is sometimes possible to introduce versioning conflicts by referencing *different major versions* of required assemblies (different *minor* versions are allowed). Frequently this happens when NuGet prompts you to upgrade to the latest version of one of the packages used by the Mobile Services .NET backend.\n\n>[AZURE.NOTE] Mobile Services is currently compatible only with ASP.NET 5.1; ASP.NET 5.2 is not presently supported. Upgrading your ASP.NET NuGet packages to 5.2.* may result in an error after deployment.\n\nIf you do upgrade any such packages, when you publish the updated service to Azure, you will see a warning page indicating the conflict:\n\n![Help page indicating assembly loading conflict][HelpConflict]\n\nThis will be accompanied by an exception message similar to the following being recored in your service logs:\n\n    Found conflicts between different versions of the same dependent assembly 'Microsoft.ServiceBus': 2.2.0.0, 2.3.0.0. Please change your project to use version '2.2.0.0' which is the one currently supported by the hosting environment.\n\nThis problem is easy to correct: simply revert to a supported version of the required assembly and republish your service.\n\n<a name=\"EFMigrations\"></a>\n## Troubleshooting Entity Framework Migrations\n\nWhen using the Mobile Services .NET backend with a SQL Database, Entity Framework (EF) is used as the data access technology that enables you to query the database and persist objects into it. One important aspect that EF handles on behalf of the developer is how the database columns (also known as *schema*) change as the model classes specified in code change. This process is known as [Code First Migrations](http://msdn.microsoft.com/data/jj591621).\n\nMigrations can be complex and require that the database state be kept in sync with the EF model in order to succeed. For instructions on how to handle migrations with you mobile service and errors that can arise, see [How to make data model changes to a .NET backend mobile service](mobile-services-dotnet-backend-how-to-use-code-first-migrations.md).\n\n<!-- IMAGES -->\n\n[HelpPageAuth]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/6.png\n[HelpPage]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/7.png\n[HelpPageApi]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/8.png\n[TestClient]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/9.png\n[TestClientResponse]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/10.png\n[SymbolLoading]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/1.png\n[SymbolServer]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/2.png\n[Breakpoint]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/3.png\n[PublishDebug]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/4.png\n[AttachDebugger]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/5.png\n[LogsOutputWindow]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/11.png\n[LogsServerExplorer]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/12.png\n[LogsPortal]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/13.png\n[HelpConflict]: ./media/mobile-services-dotnet-backend-how-to-troubleshoot/14.png\n\n\n<!-- Links -->\n[SymbolSource]:http://symbolsource.org"
+}
