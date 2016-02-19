@@ -1,0 +1,1477 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        23,
+        87
+      ],
+      "content": "Restrict HDInsight access to data using Shared Access Signatures"
+    },
+    {
+      "pos": [
+        102,
+        211
+      ],
+      "content": "Learn how to use Shared Access Signatures to restrict HDInsight access to data stored in Azure storage blobs."
+    },
+    {
+      "pos": [
+        468,
+        552
+      ],
+      "content": "Use Azure Storage Shared Access Signatures to restrict access to data with HDInsight"
+    },
+    {
+      "pos": [
+        554,
+        880
+      ],
+      "content": "HDInsight uses Azure storage Blobs for data storage. While HDInsight must have full access to the blob used as default storage for the cluster, you can restrict permissions to data stored in other blobs used by the cluster. For example, you may want to make some data read-only. You can do this using Shared Access Signatures.",
+      "nodes": [
+        {
+          "content": "HDInsight uses Azure storage Blobs for data storage.",
+          "pos": [
+            0,
+            52
+          ]
+        },
+        {
+          "content": "While HDInsight must have full access to the blob used as default storage for the cluster, you can restrict permissions to data stored in other blobs used by the cluster.",
+          "pos": [
+            53,
+            223
+          ]
+        },
+        {
+          "content": "For example, you may want to make some data read-only.",
+          "pos": [
+            224,
+            278
+          ]
+        },
+        {
+          "content": "You can do this using Shared Access Signatures.",
+          "pos": [
+            279,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        882,
+        1162
+      ],
+      "content": "Shared Access Signatures (SAS) are a feature of Azure storage accounts that allows you to limit access to data. For example, providing read-only access to data. In this document, you will learn how to use SAS to enable read and list-only access to a blob container from HDInsight.",
+      "nodes": [
+        {
+          "content": "Shared Access Signatures (SAS) are a feature of Azure storage accounts that allows you to limit access to data.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "For example, providing read-only access to data.",
+          "pos": [
+            112,
+            160
+          ]
+        },
+        {
+          "content": "In this document, you will learn how to use SAS to enable read and list-only access to a blob container from HDInsight.",
+          "pos": [
+            161,
+            280
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1166,
+        1178
+      ],
+      "content": "Requirements"
+    },
+    {
+      "pos": [
+        1182,
+        1203
+      ],
+      "content": "An Azure subscription"
+    },
+    {
+      "pos": [
+        1207,
+        1277
+      ],
+      "content": "C# or Python. C# example code is provided as a Visual Studio solution.",
+      "nodes": [
+        {
+          "content": "C# or Python.",
+          "pos": [
+            0,
+            13
+          ]
+        },
+        {
+          "content": "C# example code is provided as a Visual Studio solution.",
+          "pos": [
+            14,
+            70
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1285,
+        1327
+      ],
+      "content": "Visual Studio must be version 2013 or 2015"
+    },
+    {
+      "pos": [
+        1339,
+        1375
+      ],
+      "content": "Python must be version 2.7 or higher"
+    },
+    {
+      "pos": [
+        1379,
+        1679
+      ],
+      "content": "A Linux-based HDInsight cluster OR <bpt id=\"p1\">[</bpt>Azure PowerShell<ept id=\"p1\">][powershell]</ept><ph id=\"ph2\"/> - If you have an existing Linux-based cluster, you can use Ambari to add a Shared Access Signature to the cluster. If not, you can use Azure PowerShell to create a new cluster and add a Shared Access Signature during cluster creation.",
+      "nodes": [
+        {
+          "content": "A Linux-based HDInsight cluster OR <bpt id=\"p1\">[</bpt>Azure PowerShell<ept id=\"p1\">][powershell]</ept><ph id=\"ph2\"/> - If you have an existing Linux-based cluster, you can use Ambari to add a Shared Access Signature to the cluster.",
+          "pos": [
+            0,
+            232
+          ]
+        },
+        {
+          "content": "If not, you can use Azure PowerShell to create a new cluster and add a Shared Access Signature during cluster creation.",
+          "pos": [
+            233,
+            352
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1683,
+        1934
+      ],
+      "content": "The example files from <bpt id=\"p2\">[</bpt>https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature<ept id=\"p2\">](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature)</ept>. This repository has the following:",
+      "nodes": [
+        {
+          "content": "The example files from <bpt id=\"p2\">[</bpt>https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature<ept id=\"p2\">](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature)</ept>.",
+          "pos": [
+            0,
+            254
+          ]
+        },
+        {
+          "content": "This repository has the following:",
+          "pos": [
+            255,
+            289
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1942,
+        2048
+      ],
+      "content": "A Visual Studio project that can create a storage container, stored policy, and SAS for use with HDInsight"
+    },
+    {
+      "pos": [
+        2060,
+        2158
+      ],
+      "content": "A Python script that can create a storage container, stored policy, and SAS for use with HDInsight"
+    },
+    {
+      "pos": [
+        2170,
+        2262
+      ],
+      "content": "A PowerShell script that can create a new HDInsight cluster and configure it to use the SAS."
+    },
+    {
+      "pos": [
+        2266,
+        2290
+      ],
+      "content": "Shared Access Signatures"
+    },
+    {
+      "pos": [
+        2292,
+        2340
+      ],
+      "content": "There are two forms of Shared Access Signatures:"
+    },
+    {
+      "pos": [
+        2344,
+        2496
+      ],
+      "content": "Ad hoc: The start time, expiry time, and permissions for the SAS are all specified on the SAS URI (or implied, in the case where start time is omitted)."
+    },
+    {
+      "pos": [
+        2500,
+        2883
+      ],
+      "content": "Stored access policy: A stored access policy is defined on a resource container - a blob container, table, queue, or file share - and can be used to manage constraints for one or more shared access signatures. When you associate a SAS with a stored access policy, the SAS inherits the constraints - the start time, expiry time, and permissions - defined for the stored access policy.",
+      "nodes": [
+        {
+          "content": "Stored access policy: A stored access policy is defined on a resource container - a blob container, table, queue, or file share - and can be used to manage constraints for one or more shared access signatures.",
+          "pos": [
+            0,
+            209
+          ]
+        },
+        {
+          "content": "When you associate a SAS with a stored access policy, the SAS inherits the constraints - the start time, expiry time, and permissions - defined for the stored access policy.",
+          "pos": [
+            210,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2885,
+        3212
+      ],
+      "content": "The difference between the two forms is important for one key scenario: revocation. A SAS is a URL, so anyone who obtains the SAS can use it, regardless of who requested it to begin with. If a SAS is published publicly, it can be used by anyone in the world. A SAS that is distributed is valid until one of four things happens:",
+      "nodes": [
+        {
+          "content": "The difference between the two forms is important for one key scenario: revocation.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "A SAS is a URL, so anyone who obtains the SAS can use it, regardless of who requested it to begin with.",
+          "pos": [
+            84,
+            187
+          ]
+        },
+        {
+          "content": "If a SAS is published publicly, it can be used by anyone in the world.",
+          "pos": [
+            188,
+            258
+          ]
+        },
+        {
+          "content": "A SAS that is distributed is valid until one of four things happens:",
+          "pos": [
+            259,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3217,
+        3265
+      ],
+      "content": "The expiry time specified on the SAS is reached."
+    },
+    {
+      "pos": [
+        3270,
+        3613
+      ],
+      "content": "The expiry time specified on the stored access policy referenced by the SAS is reached (if a stored access policy is referenced, and if it specifies an expiry time). This can either occur because the interval elapses, or because you have modified the stored access policy to have an expiry time in the past, which is one way to revoke the SAS.",
+      "nodes": [
+        {
+          "content": "The expiry time specified on the stored access policy referenced by the SAS is reached (if a stored access policy is referenced, and if it specifies an expiry time).",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "This can either occur because the interval elapses, or because you have modified the stored access policy to have an expiry time in the past, which is one way to revoke the SAS.",
+          "pos": [
+            166,
+            343
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3618,
+        4110
+      ],
+      "content": "The stored access policy referenced by the SAS is deleted, which is another way to revoke the SAS. Note that if you recreate the stored access policy with exactly the same name, all existing SAS tokens will again be valid according to the permissions associated with that stored access policy (assuming that the expiry time on the SAS has not passed). If you are intending to revoke the SAS, be sure to use a different name if you recreate the access policy with an expiry time in the future.",
+      "nodes": [
+        {
+          "content": "The stored access policy referenced by the SAS is deleted, which is another way to revoke the SAS.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "Note that if you recreate the stored access policy with exactly the same name, all existing SAS tokens will again be valid according to the permissions associated with that stored access policy (assuming that the expiry time on the SAS has not passed).",
+          "pos": [
+            99,
+            351
+          ]
+        },
+        {
+          "content": "If you are intending to revoke the SAS, be sure to use a different name if you recreate the access policy with an expiry time in the future.",
+          "pos": [
+            352,
+            492
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4115,
+        4387
+      ],
+      "content": "The account key that was used to create the SAS is regenerated. Note that doing this will cause all application components using that account key to fail to authenticate until they are updated to use either the other valid account key or the newly regenerated account key.",
+      "nodes": [
+        {
+          "content": "The account key that was used to create the SAS is regenerated.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "Note that doing this will cause all application components using that account key to fail to authenticate until they are updated to use either the other valid account key or the newly regenerated account key.",
+          "pos": [
+            64,
+            272
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4391,
+        4673
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.IMPORTANT]</ph><ph id=\"ph4\"/> A shared access signature URI is associated with the account key used to create the signature, and the associated stored access policy (if any). If no stored access policy is specified, the only way to revoke a shared access signature is to change the account key.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.IMPORTANT]</ph><ph id=\"ph4\"/> A shared access signature URI is associated with the account key used to create the signature, and the associated stored access policy (if any).",
+          "pos": [
+            0,
+            194
+          ]
+        },
+        {
+          "content": "If no stored access policy is specified, the only way to revoke a shared access signature is to change the account key.",
+          "pos": [
+            195,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4676,
+        4886
+      ],
+      "content": "It is recommended that you always use stored access policies, so that you can either revoke signatures or extend the expiry date as needed. The steps in this document use stored access policies to generate SAS.",
+      "nodes": [
+        {
+          "content": "It is recommended that you always use stored access policies, so that you can either revoke signatures or extend the expiry date as needed.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "The steps in this document use stored access policies to generate SAS.",
+          "pos": [
+            140,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4888,
+        5033
+      ],
+      "content": "For more information on Shared Access Signatures, see <bpt id=\"p3\">[</bpt>Understanding the SAS model<ept id=\"p3\">](../storage/storage-dotnet-shared-access-signature-part-1.md)</ept>."
+    },
+    {
+      "pos": [
+        5037,
+        5078
+      ],
+      "content": "Create a stored policy and generate a SAS"
+    },
+    {
+      "pos": [
+        5080,
+        5416
+      ],
+      "content": "Currently you must create a stored policy programmatically. You can find both the C# and Python example of creating a stored policy and SAS at <bpt id=\"p4\">[</bpt>https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature<ept id=\"p4\">](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature)</ept>.",
+      "nodes": [
+        {
+          "content": "Currently you must create a stored policy programmatically.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "You can find both the C# and Python example of creating a stored policy and SAS at <bpt id=\"p4\">[</bpt>https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature<ept id=\"p4\">](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature)</ept>.",
+          "pos": [
+            60,
+            374
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5421,
+        5460
+      ],
+      "content": "Create a stored policy and SAS using C\\"
+    },
+    {
+      "pos": [
+        5466,
+        5501
+      ],
+      "content": "Open the solution in Visual Studio."
+    },
+    {
+      "pos": [
+        5506,
+        5594
+      ],
+      "content": "In Solution Explorer, right-click on the <bpt id=\"p5\">__</bpt>SASToken<ept id=\"p5\">__</ept><ph id=\"ph5\"/> project and select <bpt id=\"p6\">__</bpt>Properties<ept id=\"p6\">__</ept>."
+    },
+    {
+      "pos": [
+        5599,
+        5660
+      ],
+      "content": "Select <bpt id=\"p7\">__</bpt>Settings<ept id=\"p7\">__</ept><ph id=\"ph6\"/> and add values for the following entries:"
+    },
+    {
+      "pos": [
+        5668,
+        5986
+      ],
+      "content": "StorageConnectionString: The connection string for the storage account that you want to create a stored policy and SAS for. The format should be <ph id=\"ph7\">`DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=mykey`</ph><ph id=\"ph8\"/> where <ph id=\"ph9\">`myaccount`</ph><ph id=\"ph10\"/> is the name of your storage account and <ph id=\"ph11\">`mykey`</ph><ph id=\"ph12\"/> is the key for the storage account.",
+      "nodes": [
+        {
+          "content": "StorageConnectionString: The connection string for the storage account that you want to create a stored policy and SAS for.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "The format should be <ph id=\"ph7\">`DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=mykey`</ph><ph id=\"ph8\"/> where <ph id=\"ph9\">`myaccount`</ph><ph id=\"ph10\"/> is the name of your storage account and <ph id=\"ph11\">`mykey`</ph><ph id=\"ph12\"/> is the key for the storage account.",
+          "pos": [
+            124,
+            417
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5998,
+        6086
+      ],
+      "content": "ContainerName: The container in the storage account that you want to restrict access to."
+    },
+    {
+      "pos": [
+        6098,
+        6172
+      ],
+      "content": "SASPolicyName: The name to use for the stored policy that will be created."
+    },
+    {
+      "pos": [
+        6184,
+        6256
+      ],
+      "content": "FileToUpload: The path to a file that will be uploaded to the container."
+    },
+    {
+      "pos": [
+        6265,
+        6403
+      ],
+      "content": "Run the project. A console window will appear, and information similar to the following will be displayed once the SAS has been generated:",
+      "nodes": [
+        {
+          "content": "Run the project.",
+          "pos": [
+            0,
+            16
+          ]
+        },
+        {
+          "content": "A console window will appear, and information similar to the following will be displayed once the SAS has been generated:",
+          "pos": [
+            17,
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6558,
+        6741
+      ],
+      "content": "Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster. You will also need the storage account name, and the container name.",
+      "nodes": [
+        {
+          "content": "Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "You will also need the storage account name, and the container name.",
+          "pos": [
+            115,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6750,
+        6793
+      ],
+      "content": "Create a stored policy and SAS using Python"
+    },
+    {
+      "pos": [
+        6798,
+        6856
+      ],
+      "content": "Open the SASToken.py file and change the following values:"
+    },
+    {
+      "pos": [
+        6864,
+        6937
+      ],
+      "content": "policy\\_name: The name to use for the stored policy that will be created."
+    },
+    {
+      "pos": [
+        6949,
+        7006
+      ],
+      "content": "storage\\_account\\_name: The name of your storage account."
+    },
+    {
+      "pos": [
+        7018,
+        7073
+      ],
+      "content": "storage\\_account\\_key: The key for the storage account."
+    },
+    {
+      "pos": [
+        7085,
+        7184
+      ],
+      "content": "storage\\_container\\_name: The container in the storage account that you want to restrict access to."
+    },
+    {
+      "pos": [
+        7196,
+        7274
+      ],
+      "content": "example\\_file\\_path: The path to a file that will be uploaded to the container"
+    },
+    {
+      "pos": [
+        7279,
+        7376
+      ],
+      "content": "Run the script. It will display the SAS token similar to the following when the script completes:",
+      "nodes": [
+        {
+          "content": "Run the script.",
+          "pos": [
+            0,
+            15
+          ]
+        },
+        {
+          "content": "It will display the SAS token similar to the following when the script completes:",
+          "pos": [
+            16,
+            97
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7479,
+        7662
+      ],
+      "content": "Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster. You will also need the storage account name, and the container name.",
+      "nodes": [
+        {
+          "content": "Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "You will also need the storage account name, and the container name.",
+          "pos": [
+            115,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7670,
+        7696
+      ],
+      "content": "Use the SAS with HDInsight"
+    },
+    {
+      "pos": [
+        7698,
+        7950
+      ],
+      "content": "When creating an HDInsight cluster, you must specify a primary storage account and you can optionally specify additional storage accounts. Both of these methods of adding storage require full access to the storage accounts and containers that are used.",
+      "nodes": [
+        {
+          "content": "When creating an HDInsight cluster, you must specify a primary storage account and you can optionally specify additional storage accounts.",
+          "pos": [
+            0,
+            138
+          ]
+        },
+        {
+          "content": "Both of these methods of adding storage require full access to the storage accounts and containers that are used.",
+          "pos": [
+            139,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7952,
+        8105
+      ],
+      "content": "In order to use a Shared Access Signature to limit access to a container, you must add a custom entry to the <bpt id=\"p8\">__</bpt>core-site<ept id=\"p8\">__</ept><ph id=\"ph13\"/> configuration for the cluster."
+    },
+    {
+      "pos": [
+        8109,
+        8227
+      ],
+      "content": "For <bpt id=\"p9\">__</bpt>Windows-based<ept id=\"p9\">__</ept><ph id=\"ph14\"/> or <bpt id=\"p10\">__</bpt>Linux-based<ept id=\"p10\">__</ept><ph id=\"ph15\"/> HDInsight clusters, you can do this during cluster creation using PowerShell."
+    },
+    {
+      "pos": [
+        8231,
+        8336
+      ],
+      "content": "For <bpt id=\"p11\">__</bpt>Linux-based<ept id=\"p11\">__</ept><ph id=\"ph16\"/> HDInsight clusters, you change the configuration after cluster creation using Ambari."
+    },
+    {
+      "pos": [
+        8341,
+        8379
+      ],
+      "content": "Create a new cluster that uses the SAS"
+    },
+    {
+      "pos": [
+        8381,
+        8542
+      ],
+      "content": "An example of creating an HDInsight cluster that uses the SAS is included in the <ph id=\"ph17\">`CreateCluster`</ph><ph id=\"ph18\"/> directory of the repository. To use it, use the following steps:",
+      "nodes": [
+        {
+          "content": "An example of creating an HDInsight cluster that uses the SAS is included in the <ph id=\"ph17\">`CreateCluster`</ph><ph id=\"ph18\"/> directory of the repository.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "To use it, use the following steps:",
+          "pos": [
+            160,
+            195
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8547,
+        8676
+      ],
+      "content": "Open the <ph id=\"ph19\">`CreateCluster\\HDInsightSAS.ps1`</ph><ph id=\"ph20\"/> file in a text editor and modify the following values at the beginning of the document."
+    },
+    {
+      "pos": [
+        9653,
+        9843
+      ],
+      "content": "For example, change <ph id=\"ph21\">`'mycluster'`</ph><ph id=\"ph22\"/> to the name of the cluster you want to create. The SAS values should match the values from the previous steps when creating a storage account and SAS token.",
+      "nodes": [
+        {
+          "content": "For example, change <ph id=\"ph21\">`'mycluster'`</ph><ph id=\"ph22\"/> to the name of the cluster you want to create.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "The SAS values should match the values from the previous steps when creating a storage account and SAS token.",
+          "pos": [
+            115,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9853,
+        9901
+      ],
+      "content": "Once you have changed the values, save the file."
+    },
+    {
+      "pos": [
+        9906,
+        10070
+      ],
+      "content": "Open a new Azure PowerShell prompt. If you are unfamiliar with Azure PowerShell, or have not installed it, see <bpt id=\"p12\">[</bpt>Install and configure Azure PowerShell<ept id=\"p12\">][powershell]</ept>.",
+      "nodes": [
+        {
+          "content": "Open a new Azure PowerShell prompt.",
+          "pos": [
+            0,
+            35
+          ]
+        },
+        {
+          "content": "If you are unfamiliar with Azure PowerShell, or have not installed it, see <bpt id=\"p12\">[</bpt>Install and configure Azure PowerShell<ept id=\"p12\">][powershell]</ept>.",
+          "pos": [
+            36,
+            204
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10075,
+        10153
+      ],
+      "content": "From the prompt, use the following to authenticate to your Azure subscription:"
+    },
+    {
+      "pos": [
+        10193,
+        10259
+      ],
+      "content": "When prompted, login with the account for your Azure subscription."
+    },
+    {
+      "pos": [
+        10269,
+        10424
+      ],
+      "content": "If your login is associated with multiple Azure subscriptions, you may need to use <ph id=\"ph23\">`Select-AzureRmSubscription`</ph><ph id=\"ph24\"/> to select the subscription you wish to use."
+    },
+    {
+      "pos": [
+        10429,
+        10579
+      ],
+      "content": "From the prompt, change directories to the <ph id=\"ph25\">`CreateCluster`</ph><ph id=\"ph26\"/> directory that contains the HDInsightSAS.ps1 file. Then use the following to run the script",
+      "nodes": [
+        {
+          "content": "From the prompt, change directories to the <ph id=\"ph25\">`CreateCluster`</ph><ph id=\"ph26\"/> directory that contains the HDInsightSAS.ps1 file.",
+          "pos": [
+            0,
+            143
+          ]
+        },
+        {
+          "content": "Then use the following to run the script",
+          "pos": [
+            144,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10625,
+        10887
+      ],
+      "content": "As the script runs, it will log output to the PowerShell prompt as it creates the resource group and storage accounts. It will then prompt you to enter the HTTP user for the HDInsight cluster. This is the user account used to secure HTTP/s access to the cluster.",
+      "nodes": [
+        {
+          "content": "As the script runs, it will log output to the PowerShell prompt as it creates the resource group and storage accounts.",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "It will then prompt you to enter the HTTP user for the HDInsight cluster.",
+          "pos": [
+            119,
+            192
+          ]
+        },
+        {
+          "content": "This is the user account used to secure HTTP/s access to the cluster.",
+          "pos": [
+            193,
+            262
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10897,
+        11055
+      ],
+      "content": "If you are creating a Linux-based cluster, you will also be prompted for an SSH user account name and password. This is used to remotely login to the cluster.",
+      "nodes": [
+        {
+          "content": "If you are creating a Linux-based cluster, you will also be prompted for an SSH user account name and password.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "This is used to remotely login to the cluster.",
+          "pos": [
+            112,
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11067,
+        11207
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.IMPORTANT]</ph><ph id=\"ph28\"/> When prompted for the HTTP/s or SSH user name and password, you must provide a password that meets the following criteria:"
+    },
+    {
+      "pos": [
+        11222,
+        11262
+      ],
+      "content": "Must be at least 10 characters in length"
+    },
+    {
+      "pos": [
+        11271,
+        11302
+      ],
+      "content": "Must contain at least one digit"
+    },
+    {
+      "pos": [
+        11311,
+        11363
+      ],
+      "content": "Must contain at least one non-alphanumeric character"
+    },
+    {
+      "pos": [
+        11372,
+        11424
+      ],
+      "content": "Must contain at least one upper or lower case letter"
+    },
+    {
+      "pos": [
+        11427,
+        11579
+      ],
+      "content": "It will take a while for this script to complete, usually around 15 minutes. When the script completes without any errors, the cluster has been created.",
+      "nodes": [
+        {
+          "content": "It will take a while for this script to complete, usually around 15 minutes.",
+          "pos": [
+            0,
+            76
+          ]
+        },
+        {
+          "content": "When the script completes without any errors, the cluster has been created.",
+          "pos": [
+            77,
+            152
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11584,
+        11625
+      ],
+      "content": "Update an existing cluster to use the SAS"
+    },
+    {
+      "pos": [
+        11627,
+        11756
+      ],
+      "content": "If you have an existing Linux-based cluster, you can add the SAS to the <bpt id=\"p13\">__</bpt>core-site<ept id=\"p13\">__</ept><ph id=\"ph29\"/> configuration by using the following steps:"
+    },
+    {
+      "pos": [
+        11761,
+        11996
+      ],
+      "content": "Open the Ambari web UI for your cluster. The address for this page is https://YOURCLUSTERNAME.azurehdinsight.net. When prompted, authenticate to the cluster using the admin name (admin,) and password you used when creating the cluster.",
+      "nodes": [
+        {
+          "content": "Open the Ambari web UI for your cluster.",
+          "pos": [
+            0,
+            40
+          ]
+        },
+        {
+          "content": "The address for this page is https://YOURCLUSTERNAME.azurehdinsight.net.",
+          "pos": [
+            41,
+            113
+          ]
+        },
+        {
+          "content": "When prompted, authenticate to the cluster using the admin name (admin,) and password you used when creating the cluster.",
+          "pos": [
+            114,
+            235
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12001,
+        12120
+      ],
+      "content": "From the left side of the Ambari web UI, select <bpt id=\"p14\">__</bpt>HDFS<ept id=\"p14\">__</ept><ph id=\"ph30\"/> and then select the <bpt id=\"p15\">__</bpt>Configs<ept id=\"p15\">__</ept><ph id=\"ph31\"/> tab in the middle of the page."
+    },
+    {
+      "pos": [
+        12125,
+        12218
+      ],
+      "content": "Select the <bpt id=\"p16\">__</bpt>Advanced<ept id=\"p16\">__</ept><ph id=\"ph32\"/> tab, and then scroll until you find the <bpt id=\"p17\">__</bpt>Custom core-site<ept id=\"p17\">__</ept><ph id=\"ph33\"/> section."
+    },
+    {
+      "pos": [
+        12223,
+        12390
+      ],
+      "content": "Expand the <bpt id=\"p18\">__</bpt>Custom core-site<ept id=\"p18\">__</ept><ph id=\"ph34\"/> section, then scroll to the end and select the <bpt id=\"p19\">__</bpt>Add property...<ept id=\"p19\">__</ept><ph id=\"ph35\"/> link. Use the following values for the <bpt id=\"p20\">__</bpt>Key<ept id=\"p20\">__</ept><ph id=\"ph36\"/> and <bpt id=\"p21\">__</bpt>Value<ept id=\"p21\">__</ept><ph id=\"ph37\"/> fields:",
+      "nodes": [
+        {
+          "content": "Expand the <bpt id=\"p18\">__</bpt>Custom core-site<ept id=\"p18\">__</ept><ph id=\"ph34\"/> section, then scroll to the end and select the <bpt id=\"p19\">__</bpt>Add property...<ept id=\"p19\">__</ept><ph id=\"ph35\"/> link.",
+          "pos": [
+            0,
+            214
+          ]
+        },
+        {
+          "content": "Use the following values for the <bpt id=\"p20\">__</bpt>Key<ept id=\"p20\">__</ept><ph id=\"ph36\"/> and <bpt id=\"p21\">__</bpt>Value<ept id=\"p21\">__</ept><ph id=\"ph37\"/> fields:",
+          "pos": [
+            215,
+            387
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12398,
+        12474
+      ],
+      "content": "<bpt id=\"p22\">__</bpt>Key<ept id=\"p22\">__</ept>: fs.azure.sas.CONTAINERNAME.STORAGEACCOUNTNAME.blob.core.windows.net"
+    },
+    {
+      "pos": [
+        12486,
+        12564
+      ],
+      "content": "<bpt id=\"p23\">__</bpt>Value<ept id=\"p23\">__</ept>: The SAS returned by the C# or Python application you ran previously"
+    },
+    {
+      "pos": [
+        12574,
+        12735
+      ],
+      "content": "Replace <bpt id=\"p24\">__</bpt>CONTAINERNAME<ept id=\"p24\">__</ept><ph id=\"ph38\"/> with the container name you used with the C# or SAS application. Replace <bpt id=\"p25\">__</bpt>STORAGEACCOUNTNAME<ept id=\"p25\">__</ept><ph id=\"ph39\"/> with the storage account name you used.",
+      "nodes": [
+        {
+          "content": "Replace <bpt id=\"p24\">__</bpt>CONTAINERNAME<ept id=\"p24\">__</ept><ph id=\"ph38\"/> with the container name you used with the C# or SAS application.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p25\">__</bpt>STORAGEACCOUNTNAME<ept id=\"p25\">__</ept><ph id=\"ph39\"/> with the storage account name you used.",
+          "pos": [
+            146,
+            271
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12740,
+        12973
+      ],
+      "content": "Click the <bpt id=\"p26\">__</bpt>Add<ept id=\"p26\">__</ept><ph id=\"ph40\"/> button to save this key and value, then click the <bpt id=\"p27\">__</bpt>Save<ept id=\"p27\">__</ept><ph id=\"ph41\"/> button to save the configuration changes. When prompted, add a description of the change (\"adding SAS storage access\" for example,) and then click <bpt id=\"p28\">__</bpt>Save<ept id=\"p28\">__</ept>.",
+      "nodes": [
+        {
+          "content": "Click the <bpt id=\"p26\">__</bpt>Add<ept id=\"p26\">__</ept><ph id=\"ph40\"/> button to save this key and value, then click the <bpt id=\"p27\">__</bpt>Save<ept id=\"p27\">__</ept><ph id=\"ph41\"/> button to save the configuration changes.",
+          "pos": [
+            0,
+            228
+          ]
+        },
+        {
+          "content": "When prompted, add a description of the change (\"adding SAS storage access\" for example,) and then click <bpt id=\"p28\">__</bpt>Save<ept id=\"p28\">__</ept>.",
+          "pos": [
+            229,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12979,
+        13029
+      ],
+      "content": "Click <bpt id=\"p29\">__</bpt>OK<ept id=\"p29\">__</ept><ph id=\"ph42\"/> when the changes have been completed."
+    },
+    {
+      "pos": [
+        13037,
+        13162
+      ],
+      "content": "<ph id=\"ph43\">[AZURE.IMPORTANT]</ph><ph id=\"ph44\"/> This saves the configuration changes, but you must restart several services before the change takes effect."
+    },
+    {
+      "pos": [
+        13167,
+        13412
+      ],
+      "content": "In the Ambari web UI, select <bpt id=\"p30\">__</bpt>HDFS<ept id=\"p30\">__</ept><ph id=\"ph45\"/> from the list on the left, and then select <bpt id=\"p31\">__</bpt>Restart All<ept id=\"p31\">__</ept><ph id=\"ph46\"/> from the <bpt id=\"p32\">__</bpt>Service Actions<ept id=\"p32\">__</ept><ph id=\"ph47\"/> drop down list on the right. When prompted, select <bpt id=\"p33\">__</bpt>Turn on maintenance mode<ept id=\"p33\">__</ept><ph id=\"ph48\"/> and then select __Conform Restart All\".",
+      "nodes": [
+        {
+          "content": "In the Ambari web UI, select <bpt id=\"p30\">__</bpt>HDFS<ept id=\"p30\">__</ept><ph id=\"ph45\"/> from the list on the left, and then select <bpt id=\"p31\">__</bpt>Restart All<ept id=\"p31\">__</ept><ph id=\"ph46\"/> from the <bpt id=\"p32\">__</bpt>Service Actions<ept id=\"p32\">__</ept><ph id=\"ph47\"/> drop down list on the right.",
+          "pos": [
+            0,
+            319
+          ]
+        },
+        {
+          "content": "When prompted, select <bpt id=\"p33\">__</bpt>Turn on maintenance mode<ept id=\"p33\">__</ept><ph id=\"ph48\"/> and then select __Conform Restart All\".",
+          "pos": [
+            320,
+            465
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13418,
+        13512
+      ],
+      "content": "Repeat this process for the MapReduce2 and YARN entries from the list on the left of the page."
+    },
+    {
+      "pos": [
+        13517,
+        13628
+      ],
+      "content": "Once these have restarted, select each one and disable maintenance mode from the <bpt id=\"p34\">__</bpt>Service Actions<ept id=\"p34\">__</ept><ph id=\"ph49\"/> drop down."
+    },
+    {
+      "pos": [
+        13632,
+        13654
+      ],
+      "content": "Test restricted access"
+    },
+    {
+      "pos": [
+        13656,
+        13725
+      ],
+      "content": "To verify that you have restricted access, use the following methods:"
+    },
+    {
+      "pos": [
+        13729,
+        13953
+      ],
+      "content": "For <bpt id=\"p35\">__</bpt>Windows-based<ept id=\"p35\">__</ept><ph id=\"ph50\"/> HDInsight clusters, use Remote Desktop to connect to the cluster. See <bpt id=\"p36\">[</bpt>Connecto to HDInsight using RDP<ept id=\"p36\">](hdinsight-administer-use-management-portal.md#connect-to-clusters-using-rdp)</ept><ph id=\"ph51\"/> for more information.",
+      "nodes": [
+        {
+          "content": "For <bpt id=\"p35\">__</bpt>Windows-based<ept id=\"p35\">__</ept><ph id=\"ph50\"/> HDInsight clusters, use Remote Desktop to connect to the cluster.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p36\">[</bpt>Connecto to HDInsight using RDP<ept id=\"p36\">](hdinsight-administer-use-management-portal.md#connect-to-clusters-using-rdp)</ept><ph id=\"ph51\"/> for more information.",
+          "pos": [
+            143,
+            334
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13959,
+        14052
+      ],
+      "content": "Once connected, use the <bpt id=\"p37\">__</bpt>Hadoop Command Line<ept id=\"p37\">__</ept><ph id=\"ph52\"/> icon on the desktop to open a command prompt."
+    },
+    {
+      "pos": [
+        14056,
+        14211
+      ],
+      "content": "For <bpt id=\"p38\">__</bpt>Linux-based<ept id=\"p38\">__</ept><ph id=\"ph53\"/> HDInsight clusters, use SSH to connect to the cluster. See one of the following for information on using SSH with Linux-based clusters:",
+      "nodes": [
+        {
+          "content": "For <bpt id=\"p38\">__</bpt>Linux-based<ept id=\"p38\">__</ept><ph id=\"ph53\"/> HDInsight clusters, use SSH to connect to the cluster.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "See one of the following for information on using SSH with Linux-based clusters:",
+          "pos": [
+            130,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14219,
+        14332
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, OS X, and Unix<ept id=\"p39\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        14339,
+        14441
+      ],
+      "content": "<bpt id=\"p40\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p40\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        14447,
+        14577
+      ],
+      "content": "Once connected to the cluster, use the following steps to verify that you can only read and list items on the SAS storage account:"
+    },
+    {
+      "pos": [
+        14582,
+        14793
+      ],
+      "content": "From the prompt, type the following. Replace <bpt id=\"p41\">__</bpt>SASCONTAINER<ept id=\"p41\">__</ept><ph id=\"ph54\"/> with the name of the container created for the SAS storage account. Replace <bpt id=\"p42\">__</bpt>SASACCOUNTNAME<ept id=\"p42\">__</ept><ph id=\"ph55\"/> with the name of the storage account used for the SAS:",
+      "nodes": [
+        {
+          "content": "From the prompt, type the following.",
+          "pos": [
+            0,
+            36
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p41\">__</bpt>SASCONTAINER<ept id=\"p41\">__</ept><ph id=\"ph54\"/> with the name of the container created for the SAS storage account.",
+          "pos": [
+            37,
+            184
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p42\">__</bpt>SASACCOUNTNAME<ept id=\"p42\">__</ept><ph id=\"ph55\"/> with the name of the storage account used for the SAS:",
+          "pos": [
+            185,
+            321
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14883,
+        15016
+      ],
+      "content": "This will list the contents of the container, which should include the file that was uploaded when the container and SAS was created."
+    },
+    {
+      "pos": [
+        15025,
+        15255
+      ],
+      "content": "Use the following to verify that you can read the contents of the file. Replace the <bpt id=\"p43\">__</bpt>SASCONTAINER<ept id=\"p43\">__</ept><ph id=\"ph56\"/> and <bpt id=\"p44\">__</bpt>SASACCOUNTNAME<ept id=\"p44\">__</ept><ph id=\"ph57\"/> as in the previous step. Replace <bpt id=\"p45\">__</bpt>FILENAME<ept id=\"p45\">__</ept><ph id=\"ph58\"/> with the name of the file displayed in the previous command:",
+      "nodes": [
+        {
+          "content": "Use the following to verify that you can read the contents of the file.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "Replace the <bpt id=\"p43\">__</bpt>SASCONTAINER<ept id=\"p43\">__</ept><ph id=\"ph56\"/> and <bpt id=\"p44\">__</bpt>SASACCOUNTNAME<ept id=\"p44\">__</ept><ph id=\"ph57\"/> as in the previous step.",
+          "pos": [
+            72,
+            258
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p45\">__</bpt>FILENAME<ept id=\"p45\">__</ept><ph id=\"ph58\"/> with the name of the file displayed in the previous command:",
+          "pos": [
+            259,
+            395
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15359,
+        15399
+      ],
+      "content": "This will list the contents of the file."
+    },
+    {
+      "pos": [
+        15408,
+        15472
+      ],
+      "content": "Use the following to download the file to the local file system:"
+    },
+    {
+      "pos": [
+        15584,
+        15651
+      ],
+      "content": "This will download the file to a local file named <bpt id=\"p46\">__</bpt>testfile.txt<ept id=\"p46\">__</ept>."
+    },
+    {
+      "pos": [
+        15656,
+        15757
+      ],
+      "content": "Use the following to upload the local file to a new file named <bpt id=\"p47\">__</bpt>testupload.txt<ept id=\"p47\">__</ept><ph id=\"ph59\"/> on the SAS storage:"
+    },
+    {
+      "pos": [
+        15875,
+        15927
+      ],
+      "content": "You will receive a message similar to the following:"
+    },
+    {
+      "pos": [
+        15979,
+        16137
+      ],
+      "content": "This error occurs because the storage location is read+list only. Use the following to put the data on the default storage for the cluster, which is writable:",
+      "nodes": [
+        {
+          "content": "This error occurs because the storage location is read+list only.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "Use the following to put the data on the default storage for the cluster, which is writable:",
+          "pos": [
+            66,
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16214,
+        16268
+      ],
+      "content": "This time, the operation should complete successfully."
+    },
+    {
+      "pos": [
+        16276,
+        16291
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        16296,
+        16315
+      ],
+      "content": "A task was canceled"
+    },
+    {
+      "pos": [
+        16317,
+        16428
+      ],
+      "content": "<bpt id=\"p48\">__</bpt>Symptoms<ept id=\"p48\">__</ept>: When creating a cluster using the PowerShell script, you may receive the following error message:"
+    },
+    {
+      "pos": [
+        16902,
+        17041
+      ],
+      "content": "<bpt id=\"p49\">__</bpt>Cause<ept id=\"p49\">__</ept>: This error can occur if you use a password for the admin/HTTP user for the cluster, or (for Linux-based clusters,) the SSH user."
+    },
+    {
+      "pos": [
+        17043,
+        17108
+      ],
+      "content": "<bpt id=\"p50\">__</bpt>Resolution<ept id=\"p50\">__</ept>: Use a password that meets the following criteria:"
+    },
+    {
+      "pos": [
+        17112,
+        17152
+      ],
+      "content": "Must be at least 10 characters in length"
+    },
+    {
+      "pos": [
+        17155,
+        17186
+      ],
+      "content": "Must contain at least one digit"
+    },
+    {
+      "pos": [
+        17189,
+        17241
+      ],
+      "content": "Must contain at least one non-alphanumeric character"
+    },
+    {
+      "pos": [
+        17244,
+        17296
+      ],
+      "content": "Must contain at least one upper or lower case letter"
+    },
+    {
+      "pos": [
+        17300,
+        17310
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        17312,
+        17450
+      ],
+      "content": "Now that you have learned how to add limited-access storage to your HDInsight cluster, learn other ways to work with data on your cluster:"
+    },
+    {
+      "pos": [
+        17454,
+        17502
+      ],
+      "content": "<bpt id=\"p51\">[</bpt>Use Hive with HDInsight<ept id=\"p51\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        17506,
+        17552
+      ],
+      "content": "<bpt id=\"p52\">[</bpt>Use Pig with HDInsight<ept id=\"p52\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        17556,
+        17614
+      ],
+      "content": "<bpt id=\"p53\">[</bpt>Use MapReduce with HDInsight<ept id=\"p53\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\npageTitle=\"Restrict HDInsight access to data using Shared Access Signatures\"\ndescription=\"Learn how to use Shared Access Signatures to restrict HDInsight access to data stored in Azure storage blobs.\"\nservices=\"hdinsight\"\ndocumentationCenter=\"\"\nauthors=\"Blackmist\"\nmanager=\"paulettm\"\neditor=\"cgronlun\"/>\n\n<tags\nms.service=\"hdinsight\"\nms.devlang=\"na\"\nms.topic=\"article\"\nms.tgt_pltfrm=\"na\"\nms.workload=\"big-data\"\nms.date=\"02/01/2016\"\nms.author=\"larryfr\"/>\n\n#Use Azure Storage Shared Access Signatures to restrict access to data with HDInsight\n\nHDInsight uses Azure storage Blobs for data storage. While HDInsight must have full access to the blob used as default storage for the cluster, you can restrict permissions to data stored in other blobs used by the cluster. For example, you may want to make some data read-only. You can do this using Shared Access Signatures.\n\nShared Access Signatures (SAS) are a feature of Azure storage accounts that allows you to limit access to data. For example, providing read-only access to data. In this document, you will learn how to use SAS to enable read and list-only access to a blob container from HDInsight.\n\n##Requirements\n\n* An Azure subscription\n\n* C# or Python. C# example code is provided as a Visual Studio solution.\n\n    * Visual Studio must be version 2013 or 2015\n    \n    * Python must be version 2.7 or higher\n\n* A Linux-based HDInsight cluster OR [Azure PowerShell][powershell] - If you have an existing Linux-based cluster, you can use Ambari to add a Shared Access Signature to the cluster. If not, you can use Azure PowerShell to create a new cluster and add a Shared Access Signature during cluster creation.\n\n* The example files from [https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature). This repository has the following:\n\n    * A Visual Studio project that can create a storage container, stored policy, and SAS for use with HDInsight\n    \n    * A Python script that can create a storage container, stored policy, and SAS for use with HDInsight\n    \n    * A PowerShell script that can create a new HDInsight cluster and configure it to use the SAS.\n\n##Shared Access Signatures\n\nThere are two forms of Shared Access Signatures:\n\n* Ad hoc: The start time, expiry time, and permissions for the SAS are all specified on the SAS URI (or implied, in the case where start time is omitted).\n\n* Stored access policy: A stored access policy is defined on a resource container - a blob container, table, queue, or file share - and can be used to manage constraints for one or more shared access signatures. When you associate a SAS with a stored access policy, the SAS inherits the constraints - the start time, expiry time, and permissions - defined for the stored access policy.\n\nThe difference between the two forms is important for one key scenario: revocation. A SAS is a URL, so anyone who obtains the SAS can use it, regardless of who requested it to begin with. If a SAS is published publicly, it can be used by anyone in the world. A SAS that is distributed is valid until one of four things happens:\n\n1. The expiry time specified on the SAS is reached.\n\n2. The expiry time specified on the stored access policy referenced by the SAS is reached (if a stored access policy is referenced, and if it specifies an expiry time). This can either occur because the interval elapses, or because you have modified the stored access policy to have an expiry time in the past, which is one way to revoke the SAS.\n\n3. The stored access policy referenced by the SAS is deleted, which is another way to revoke the SAS. Note that if you recreate the stored access policy with exactly the same name, all existing SAS tokens will again be valid according to the permissions associated with that stored access policy (assuming that the expiry time on the SAS has not passed). If you are intending to revoke the SAS, be sure to use a different name if you recreate the access policy with an expiry time in the future.\n\n4. The account key that was used to create the SAS is regenerated. Note that doing this will cause all application components using that account key to fail to authenticate until they are updated to use either the other valid account key or the newly regenerated account key.\n\n> [AZURE.IMPORTANT] A shared access signature URI is associated with the account key used to create the signature, and the associated stored access policy (if any). If no stored access policy is specified, the only way to revoke a shared access signature is to change the account key. \n\nIt is recommended that you always use stored access policies, so that you can either revoke signatures or extend the expiry date as needed. The steps in this document use stored access policies to generate SAS.\n\nFor more information on Shared Access Signatures, see [Understanding the SAS model](../storage/storage-dotnet-shared-access-signature-part-1.md).\n\n##Create a stored policy and generate a SAS\n\nCurrently you must create a stored policy programmatically. You can find both the C# and Python example of creating a stored policy and SAS at [https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature](https://github.com/Azure-Samples/hdinsight-dotnet-python-azure-storage-shared-access-signature).\n\n###Create a stored policy and SAS using C\\#\n\n1. Open the solution in Visual Studio.\n\n2. In Solution Explorer, right-click on the __SASToken__ project and select __Properties__.\n\n3. Select __Settings__ and add values for the following entries:\n\n    * StorageConnectionString: The connection string for the storage account that you want to create a stored policy and SAS for. The format should be `DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=mykey` where `myaccount` is the name of your storage account and `mykey` is the key for the storage account.\n    \n    * ContainerName: The container in the storage account that you want to restrict access to.\n    \n    * SASPolicyName: The name to use for the stored policy that will be created.\n    \n    * FileToUpload: The path to a file that will be uploaded to the container.\n    \n4. Run the project. A console window will appear, and information similar to the following will be displayed once the SAS has been generated:\n\n        Container SAS token using stored access policy: sr=c&si=policyname&sig=dOAi8CXuz5Fm15EjRUu5dHlOzYNtcK3Afp1xqxniEps%3D&sv=2014-02-14\n        \n    Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster. You will also need the storage account name, and the container name.\n    \n###Create a stored policy and SAS using Python\n\n1. Open the SASToken.py file and change the following values:\n\n    * policy\\_name: The name to use for the stored policy that will be created.\n    \n    * storage\\_account\\_name: The name of your storage account.\n    \n    * storage\\_account\\_key: The key for the storage account.\n    \n    * storage\\_container\\_name: The container in the storage account that you want to restrict access to.\n    \n    * example\\_file\\_path: The path to a file that will be uploaded to the container\n\n2. Run the script. It will display the SAS token similar to the following when the script completes:\n\n        sr=c&si=policyname&sig=dOAi8CXuz5Fm15EjRUu5dHlOzYNtcK3Afp1xqxniEps%3D&sv=2014-02-14\n    \n    Save the SAS policy token, as you will need this when associating the storage account with your HDInsight cluster. You will also need the storage account name, and the container name.\n    \n##Use the SAS with HDInsight\n\nWhen creating an HDInsight cluster, you must specify a primary storage account and you can optionally specify additional storage accounts. Both of these methods of adding storage require full access to the storage accounts and containers that are used.\n\nIn order to use a Shared Access Signature to limit access to a container, you must add a custom entry to the __core-site__ configuration for the cluster.\n\n* For __Windows-based__ or __Linux-based__ HDInsight clusters, you can do this during cluster creation using PowerShell.\n\n* For __Linux-based__ HDInsight clusters, you change the configuration after cluster creation using Ambari.\n\n###Create a new cluster that uses the SAS\n\nAn example of creating an HDInsight cluster that uses the SAS is included in the `CreateCluster` directory of the repository. To use it, use the following steps:\n\n1. Open the `CreateCluster\\HDInsightSAS.ps1` file in a text editor and modify the following values at the beginning of the document.\n\n        # Replace 'mycluster' with the name of the cluster to be created\n        $clusterName = 'mycluster'\n        # Valid values are 'Linux' and 'Windows'\n        $osType = 'Linux'\n        # Replace 'myresourcegroup' with the name of the group to be created\n        $resourceGroupName = 'myresourcegroup'\n        # Replace with the Azure data center you want to the cluster to live in\n        $location = 'North Europe'\n        # Replace with the name of the default storage account to be created\n        $defaultStorageAccountName = 'mystorageaccount'\n        # Replace with the name of the SAS container created earlier\n        $SASContainerName = 'sascontainer'\n        # Replace with the name of the SAS storage account created earlier\n        $SASStorageAccountName = 'sasaccount'\n        # Replace with the SAS token generated earlier\n        $SASToken = 'sastoken'\n        # Set the number of worker nodes in the cluster\n        $clusterSizeInNodes = 2\n        \n    For example, change `'mycluster'` to the name of the cluster you want to create. The SAS values should match the values from the previous steps when creating a storage account and SAS token.\n    \n    Once you have changed the values, save the file.\n\n1. Open a new Azure PowerShell prompt. If you are unfamiliar with Azure PowerShell, or have not installed it, see [Install and configure Azure PowerShell][powershell].\n\n2. From the prompt, use the following to authenticate to your Azure subscription:\n\n        Login-AzureRmAccount\n    \n    When prompted, login with the account for your Azure subscription.\n    \n    If your login is associated with multiple Azure subscriptions, you may need to use `Select-AzureRmSubscription` to select the subscription you wish to use.\n\n2. From the prompt, change directories to the `CreateCluster` directory that contains the HDInsightSAS.ps1 file. Then use the following to run the script\n        \n        .\\HDInsightSAS.ps1\n    \n    As the script runs, it will log output to the PowerShell prompt as it creates the resource group and storage accounts. It will then prompt you to enter the HTTP user for the HDInsight cluster. This is the user account used to secure HTTP/s access to the cluster.\n    \n    If you are creating a Linux-based cluster, you will also be prompted for an SSH user account name and password. This is used to remotely login to the cluster.\n    \n    > [AZURE.IMPORTANT] When prompted for the HTTP/s or SSH user name and password, you must provide a password that meets the following criteria:\n    >\n    > - Must be at least 10 characters in length\n    > - Must contain at least one digit\n    > - Must contain at least one non-alphanumeric character\n    > - Must contain at least one upper or lower case letter\n\n\nIt will take a while for this script to complete, usually around 15 minutes. When the script completes without any errors, the cluster has been created.\n\n###Update an existing cluster to use the SAS\n\nIf you have an existing Linux-based cluster, you can add the SAS to the __core-site__ configuration by using the following steps:\n\n1. Open the Ambari web UI for your cluster. The address for this page is https://YOURCLUSTERNAME.azurehdinsight.net. When prompted, authenticate to the cluster using the admin name (admin,) and password you used when creating the cluster.\n\n2. From the left side of the Ambari web UI, select __HDFS__ and then select the __Configs__ tab in the middle of the page.\n\n3. Select the __Advanced__ tab, and then scroll until you find the __Custom core-site__ section.\n\n4. Expand the __Custom core-site__ section, then scroll to the end and select the __Add property...__ link. Use the following values for the __Key__ and __Value__ fields:\n\n    * __Key__: fs.azure.sas.CONTAINERNAME.STORAGEACCOUNTNAME.blob.core.windows.net\n    \n    * __Value__: The SAS returned by the C# or Python application you ran previously\n    \n    Replace __CONTAINERNAME__ with the container name you used with the C# or SAS application. Replace __STORAGEACCOUNTNAME__ with the storage account name you used.\n\n5. Click the __Add__ button to save this key and value, then click the __Save__ button to save the configuration changes. When prompted, add a description of the change (\"adding SAS storage access\" for example,) and then click __Save__.\n\n    Click __OK__ when the changes have been completed.\n\n    > [AZURE.IMPORTANT] This saves the configuration changes, but you must restart several services before the change takes effect.\n\n6. In the Ambari web UI, select __HDFS__ from the list on the left, and then select __Restart All__ from the __Service Actions__ drop down list on the right. When prompted, select __Turn on maintenance mode__ and then select __Conform Restart All\".\n\n    Repeat this process for the MapReduce2 and YARN entries from the list on the left of the page.\n\n7. Once these have restarted, select each one and disable maintenance mode from the __Service Actions__ drop down.\n\n##Test restricted access\n\nTo verify that you have restricted access, use the following methods:\n\n* For __Windows-based__ HDInsight clusters, use Remote Desktop to connect to the cluster. See [Connecto to HDInsight using RDP](hdinsight-administer-use-management-portal.md#connect-to-clusters-using-rdp) for more information.\n\n    Once connected, use the __Hadoop Command Line__ icon on the desktop to open a command prompt.\n\n* For __Linux-based__ HDInsight clusters, use SSH to connect to the cluster. See one of the following for information on using SSH with Linux-based clusters:\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Linux, OS X, and Unix](hdinsight-hadoop-linux-use-ssh-unix.md)\n    * [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n    \nOnce connected to the cluster, use the following steps to verify that you can only read and list items on the SAS storage account:\n\n1. From the prompt, type the following. Replace __SASCONTAINER__ with the name of the container created for the SAS storage account. Replace __SASACCOUNTNAME__ with the name of the storage account used for the SAS:\n\n        hdfs dfs -ls wasb://SASCONTAINER@SASACCOUNTNAME.blob.core.windows.net/\n    \n    This will list the contents of the container, which should include the file that was uploaded when the container and SAS was created.\n    \n2. Use the following to verify that you can read the contents of the file. Replace the __SASCONTAINER__ and __SASACCOUNTNAME__ as in the previous step. Replace __FILENAME__ with the name of the file displayed in the previous command:\n\n        hdfs dfs -text wasb://SASCONTAINER@SASACCOUNTNAME.blob.core.windows.net/FILENAME\n        \n    This will list the contents of the file.\n    \n3. Use the following to download the file to the local file system:\n\n        hdfs dfs -get wasb://SASCONTAINER@SASACCOUNTNAME.blob.core.windows.net/FILENAME testfile.txt\n    \n    This will download the file to a local file named __testfile.txt__.\n\n4. Use the following to upload the local file to a new file named __testupload.txt__ on the SAS storage:\n\n        hdfs dfs -put testfile.txt wasb://SASCONTAINER@SASACCOUNTNAME.blob.core.windows.net/testupload.txt\n    \n    You will receive a message similar to the following:\n    \n        put: java.io.IOException\n        \n    This error occurs because the storage location is read+list only. Use the following to put the data on the default storage for the cluster, which is writable:\n    \n        hdfs dfs -put testfile.txt wasb:///testupload.txt\n        \n    This time, the operation should complete successfully.\n    \n##Troubleshooting\n\n###A task was canceled\n\n__Symptoms__: When creating a cluster using the PowerShell script, you may receive the following error message:\n\n    New-AzureRmHDInsightCluster : A task was canceled.\n    At C:\\Users\\larryfr\\Documents\\GitHub\\hdinsight-azure-storage-sas\\CreateCluster\\HDInsightSAS.ps1:62 char:5\n    +     New-AzureRmHDInsightCluster `\n    +     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n        + CategoryInfo          : NotSpecified: (:) [New-AzureRmHDInsightCluster], CloudException\n        + FullyQualifiedErrorId : Hyak.Common.CloudException,Microsoft.Azure.Commands.HDInsight.NewAzureHDInsightClusterCommand\n\n__Cause__: This error can occur if you use a password for the admin/HTTP user for the cluster, or (for Linux-based clusters,) the SSH user.\n\n__Resolution__: Use a password that meets the following criteria:\n\n- Must be at least 10 characters in length\n- Must contain at least one digit\n- Must contain at least one non-alphanumeric character\n- Must contain at least one upper or lower case letter\n\n##Next steps\n\nNow that you have learned how to add limited-access storage to your HDInsight cluster, learn other ways to work with data on your cluster:\n\n* [Use Hive with HDInsight](hdinsight-use-hive.md)\n\n* [Use Pig with HDInsight](hdinsight-use-pig.md)\n\n* [Use MapReduce with HDInsight](hdinsight-use-mapreduce.md)\n\n[powershell]: ../powershell-install-configure.md"
+}

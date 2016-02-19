@@ -1,0 +1,1279 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        92
+      ],
+      "content": "Analyze real-time Twitter sentiment with HBase | Microsoft Azure"
+    },
+    {
+      "pos": [
+        112,
+        227
+      ],
+      "content": "Learn how to do real-time sentiment analysis of big data from Twitter using HBase in an HDInsight (Hadoop) cluster."
+    },
+    {
+      "pos": [
+        539,
+        598
+      ],
+      "content": "Analyze real-time Twitter sentiment with HBase in HDInsight"
+    },
+    {
+      "pos": [
+        600,
+        769
+      ],
+      "content": "Learn how to do real-time <bpt id=\"p1\">[</bpt>sentiment analysis<ept id=\"p1\">](http://en.wikipedia.org/wiki/Sentiment_analysis)</ept><ph id=\"ph2\"/> of big data from Twitter by using HBase in an HDInsight (Hadoop) cluster."
+    },
+    {
+      "pos": [
+        772,
+        1097
+      ],
+      "content": "Social websites are one of the major driving forces for big data adoption. Public APIs provided by sites like Twitter are a useful source of data for analyzing and understanding popular trends. In this tutorial, you will develop a console streaming service application and an ASP.NET web application to perform the following:",
+      "nodes": [
+        {
+          "content": "Social websites are one of the major driving forces for big data adoption.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "Public APIs provided by sites like Twitter are a useful source of data for analyzing and understanding popular trends.",
+          "pos": [
+            75,
+            193
+          ]
+        },
+        {
+          "content": "In this tutorial, you will develop a console streaming service application and an ASP.NET web application to perform the following:",
+          "pos": [
+            194,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1120,
+        1145
+      ],
+      "content": "The streaming application"
+    },
+    {
+      "pos": [
+        1152,
+        1221
+      ],
+      "content": "get geo-tagged tweets in real time by using the Twitter streaming API"
+    },
+    {
+      "pos": [
+        1228,
+        1266
+      ],
+      "content": "evaluate the sentiment of these tweets"
+    },
+    {
+      "pos": [
+        1273,
+        1346
+      ],
+      "content": "store the sentiment information in HBase by using the Microsoft HBase SDK"
+    },
+    {
+      "pos": [
+        1349,
+        1379
+      ],
+      "content": "The Azure Websites application"
+    },
+    {
+      "pos": [
+        1386,
+        1535
+      ],
+      "content": "plot the real-time statistical results on Bing maps by using an ASP.NET web application. A visualization of the tweets will look something like this:",
+      "nodes": [
+        {
+          "content": "plot the real-time statistical results on Bing maps by using an ASP.NET web application.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "A visualization of the tweets will look something like this:",
+          "pos": [
+            89,
+            149
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1541,
+        1600
+      ],
+      "content": "<ph id=\"ph4\">![</ph>hdinsight.hbase.twitter.sentiment.bing.map<ph id=\"ph5\">][img-bing-map]</ph>"
+    },
+    {
+      "pos": [
+        1610,
+        1756
+      ],
+      "content": "You will be able to query tweets with certain keywords to get a sense of if the expressed opinion in the tweets is positive, negative, or neutral."
+    },
+    {
+      "pos": [
+        1758,
+        1907
+      ],
+      "content": "A complete Visual Studio solution sample can be found on GitHub: <bpt id=\"p2\">[</bpt>Realtime social sentiment analysis app<ept id=\"p2\">](https://github.com/maxluk/tweet-sentiment)</ept>."
+    },
+    {
+      "pos": [
+        1943,
+        1956
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1957,
+        2017
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        2021,
+        2235
+      ],
+      "content": "<bpt id=\"p3\">**</bpt>An HBase cluster in HDInsight<ept id=\"p3\">**</ept>. For instructions about creating clusters, see  <bpt id=\"p4\">[</bpt>Get started using HBase with Hadoop in HDInsight<ept id=\"p4\">] [hbase-get-started]</ept>. You will need the following data to go through the tutorial:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p3\">**</bpt>An HBase cluster in HDInsight<ept id=\"p3\">**</ept>.",
+          "pos": [
+            0,
+            72
+          ]
+        },
+        {
+          "content": "For instructions about creating clusters, see  <bpt id=\"p4\">[</bpt>Get started using HBase with Hadoop in HDInsight<ept id=\"p4\">] [hbase-get-started]</ept>.",
+          "pos": [
+            73,
+            229
+          ]
+        },
+        {
+          "content": "You will need the following data to go through the tutorial:",
+          "pos": [
+            230,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2689,
+        2840
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>A workstation<ept id=\"p5\">**</ept><ph id=\"ph6\"/> with Visual Studio 2013 installed. For instructions, see <bpt id=\"p6\">[</bpt>Installing Visual Studio<ept id=\"p6\">](http://msdn.microsoft.com/library/e2h7fzkw.aspx)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p5\">**</bpt>A workstation<ept id=\"p5\">**</ept><ph id=\"ph6\"/> with Visual Studio 2013 installed.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p6\">[</bpt>Installing Visual Studio<ept id=\"p6\">](http://msdn.microsoft.com/library/e2h7fzkw.aspx)</ept>.",
+          "pos": [
+            105,
+            241
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2849,
+        2892
+      ],
+      "content": "Create a Twitter application ID and secrets"
+    },
+    {
+      "pos": [
+        2894,
+        3064
+      ],
+      "content": "The Twitter streaming APIs use <bpt id=\"p7\">[</bpt>OAuth<ept id=\"p7\">](http://oauth.net/)</ept><ph id=\"ph7\"/> to authorize requests. The first step to use OAuth is to create a new application on the Twitter developer site.",
+      "nodes": [
+        {
+          "content": "The Twitter streaming APIs use <bpt id=\"p7\">[</bpt>OAuth<ept id=\"p7\">](http://oauth.net/)</ept><ph id=\"ph7\"/> to authorize requests.",
+          "pos": [
+            0,
+            132
+          ]
+        },
+        {
+          "content": "The first step to use OAuth is to create a new application on the Twitter developer site.",
+          "pos": [
+            133,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3066,
+        3114
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>To create Twitter application ID and secrets<ept id=\"p8\">**</ept>"
+    },
+    {
+      "pos": [
+        3119,
+        3240
+      ],
+      "content": "Sign in to <bpt id=\"p9\">[</bpt>Twitter Apps<ept id=\"p9\">](https://apps.twitter.com/)</ept>. Click the <bpt id=\"p10\">**</bpt>Sign up now<ept id=\"p10\">**</ept><ph id=\"ph8\"/> link if you don't have a Twitter account.",
+      "nodes": [
+        {
+          "content": "Sign in to <bpt id=\"p9\">[</bpt>Twitter Apps<ept id=\"p9\">](https://apps.twitter.com/)</ept>.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "Click the <bpt id=\"p10\">**</bpt>Sign up now<ept id=\"p10\">**</ept><ph id=\"ph8\"/> link if you don't have a Twitter account.",
+          "pos": [
+            92,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3244,
+        3269
+      ],
+      "content": "Click <bpt id=\"p11\">**</bpt>Create New App<ept id=\"p11\">**</ept>."
+    },
+    {
+      "pos": [
+        3273,
+        3450
+      ],
+      "content": "Enter a <bpt id=\"p12\">**</bpt>Name<ept id=\"p12\">**</ept>, <bpt id=\"p13\">**</bpt>Description<ept id=\"p13\">**</ept>, and <bpt id=\"p14\">**</bpt>Website<ept id=\"p14\">**</ept>. The Twitter application name must be an unique name. The Website field is not really used. It doesn't have to be a valid URL.",
+      "nodes": [
+        {
+          "content": "Enter a <bpt id=\"p12\">**</bpt>Name<ept id=\"p12\">**</ept>, <bpt id=\"p13\">**</bpt>Description<ept id=\"p13\">**</ept>, and <bpt id=\"p14\">**</bpt>Website<ept id=\"p14\">**</ept>.",
+          "pos": [
+            0,
+            171
+          ]
+        },
+        {
+          "content": "The Twitter application name must be an unique name.",
+          "pos": [
+            172,
+            224
+          ]
+        },
+        {
+          "content": "The Website field is not really used.",
+          "pos": [
+            225,
+            262
+          ]
+        },
+        {
+          "content": "It doesn't have to be a valid URL.",
+          "pos": [
+            263,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3455,
+        3530
+      ],
+      "content": "Check <bpt id=\"p15\">**</bpt>Yes, I agree<ept id=\"p15\">**</ept>, and then click <bpt id=\"p16\">**</bpt>Create your Twitter application<ept id=\"p16\">**</ept>."
+    },
+    {
+      "pos": [
+        3534,
+        3643
+      ],
+      "content": "Click the <bpt id=\"p17\">**</bpt>Permissions<ept id=\"p17\">**</ept><ph id=\"ph9\"/> tab. The default permission is <bpt id=\"p18\">**</bpt>Read only<ept id=\"p18\">**</ept>. This is sufficient for this tutorial.",
+      "nodes": [
+        {
+          "content": "Click the <bpt id=\"p17\">**</bpt>Permissions<ept id=\"p17\">**</ept><ph id=\"ph9\"/> tab.",
+          "pos": [
+            0,
+            84
+          ]
+        },
+        {
+          "content": "The default permission is <bpt id=\"p18\">**</bpt>Read only<ept id=\"p18\">**</ept>.",
+          "pos": [
+            85,
+            165
+          ]
+        },
+        {
+          "content": "This is sufficient for this tutorial.",
+          "pos": [
+            166,
+            203
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3648,
+        3689
+      ],
+      "content": "Click the <bpt id=\"p19\">**</bpt>Keys and Access Tokens<ept id=\"p19\">**</ept><ph id=\"ph10\"/> tab."
+    },
+    {
+      "pos": [
+        3693,
+        3726
+      ],
+      "content": "Click <bpt id=\"p20\">**</bpt>Create my access token<ept id=\"p20\">**</ept>."
+    },
+    {
+      "pos": [
+        3730,
+        3789
+      ],
+      "content": "Click <bpt id=\"p21\">**</bpt>Test OAuth<ept id=\"p21\">**</ept><ph id=\"ph11\"/> in the upper-right corner of the page."
+    },
+    {
+      "pos": [
+        3793,
+        3944
+      ],
+      "content": "Copy the <bpt id=\"p22\">**</bpt>Consumer key<ept id=\"p22\">**</ept>, <bpt id=\"p23\">**</bpt>Consumer secret<ept id=\"p23\">**</ept>, <bpt id=\"p24\">**</bpt>Access token<ept id=\"p24\">**</ept>, and <bpt id=\"p25\">**</bpt>Access token secret<ept id=\"p25\">**</ept><ph id=\"ph12\"/> values. You will need these values later in the tutorial.",
+      "nodes": [
+        {
+          "content": "Copy the <bpt id=\"p22\">**</bpt>Consumer key<ept id=\"p22\">**</ept>, <bpt id=\"p23\">**</bpt>Consumer secret<ept id=\"p23\">**</ept>, <bpt id=\"p24\">**</bpt>Access token<ept id=\"p24\">**</ept>, and <bpt id=\"p25\">**</bpt>Access token secret<ept id=\"p25\">**</ept><ph id=\"ph12\"/> values.",
+          "pos": [
+            0,
+            276
+          ]
+        },
+        {
+          "content": "You will need these values later in the tutorial.",
+          "pos": [
+            277,
+            326
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3950,
+        4009
+      ],
+      "content": "<ph id=\"ph13\">![</ph>hdi.hbase.twitter.sentiment.twitter.app<ph id=\"ph14\">][img-twitter-app]</ph>"
+    },
+    {
+      "pos": [
+        4043,
+        4075
+      ],
+      "content": "Create Twitter streaming service"
+    },
+    {
+      "pos": [
+        4077,
+        4203
+      ],
+      "content": "You need to create an application to get tweets, calculate tweet sentiment score, and send the processed tweet words to HBase."
+    },
+    {
+      "pos": [
+        4205,
+        4244
+      ],
+      "content": "<bpt id=\"p26\">**</bpt>To create the streaming application<ept id=\"p26\">**</ept>"
+    },
+    {
+      "pos": [
+        4249,
+        4351
+      ],
+      "content": "Open <bpt id=\"p27\">**</bpt>Visual Studio<ept id=\"p27\">**</ept>, and create a Visual C# console application called <bpt id=\"p28\">**</bpt>TweetSentimentStreaming<ept id=\"p28\">**</ept>."
+    },
+    {
+      "pos": [
+        4356,
+        4417
+      ],
+      "content": "From <bpt id=\"p29\">**</bpt>Package Manager Console<ept id=\"p29\">**</ept>, run the following commands:"
+    },
+    {
+      "pos": [
+        4507,
+        4792
+      ],
+      "content": "These commands install the <bpt id=\"p30\">[</bpt>HBase .NET SDK<ept id=\"p30\">](https://www.nuget.org/packages/Microsoft.HBase.Client/)</ept><ph id=\"ph15\"/> package, which is the client library to access the HBase cluster, and the <bpt id=\"p31\">[</bpt>Tweetinvi API<ept id=\"p31\">](https://www.nuget.org/packages/TweetinviAPI/)</ept><ph id=\"ph16\"/> package, which is used to access the Twitter API."
+    },
+    {
+      "pos": [
+        4796,
+        4869
+      ],
+      "content": "From <bpt id=\"p32\">**</bpt>Solution Explorer<ept id=\"p32\">**</ept>, add **System.Configuration\" to the reference."
+    },
+    {
+      "pos": [
+        4873,
+        4981
+      ],
+      "content": "Add a new class file to the project called <bpt id=\"p33\">**</bpt>HBaseWriter.cs<ept id=\"p33\">**</ept>, and then replace the code with the following:"
+    },
+    {
+      "pos": [
+        14546,
+        14985
+      ],
+      "content": "Set the constants in the previous code, including <bpt id=\"p34\">**</bpt>CLUSTERNAME<ept id=\"p34\">**</ept>, <bpt id=\"p35\">**</bpt>HADOOPUSERNAME<ept id=\"p35\">**</ept>, <bpt id=\"p36\">**</bpt>HADOOPUSERPASSWORD<ept id=\"p36\">**</ept>, and DICTIONARYFILENAME. The DICTIONARYFILENAME is the filename and the location of the direction.tsv.  The file can be downloaded from <bpt id=\"p37\">**</bpt>https://hditutorialdata.blob.core.windows.net/twittersentiment/dictionary.tsv<ept id=\"p37\">**</ept>. If you want to change the HBase table name, you must change the table name in the web application accordingly.",
+      "nodes": [
+        {
+          "content": "Set the constants in the previous code, including <bpt id=\"p34\">**</bpt>CLUSTERNAME<ept id=\"p34\">**</ept>, <bpt id=\"p35\">**</bpt>HADOOPUSERNAME<ept id=\"p35\">**</ept>, <bpt id=\"p36\">**</bpt>HADOOPUSERPASSWORD<ept id=\"p36\">**</ept>, and DICTIONARYFILENAME.",
+          "pos": [
+            0,
+            254
+          ]
+        },
+        {
+          "content": "The DICTIONARYFILENAME is the filename and the location of the direction.tsv.",
+          "pos": [
+            255,
+            332
+          ]
+        },
+        {
+          "content": "The file can be downloaded from <bpt id=\"p37\">**</bpt>https://hditutorialdata.blob.core.windows.net/twittersentiment/dictionary.tsv<ept id=\"p37\">**</ept>.",
+          "pos": [
+            334,
+            488
+          ]
+        },
+        {
+          "content": "If you want to change the HBase table name, you must change the table name in the web application accordingly.",
+          "pos": [
+            489,
+            599
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14990,
+        15051
+      ],
+      "content": "Open <bpt id=\"p38\">**</bpt>Program.cs<ept id=\"p38\">**</ept>, and replace the code with the following:"
+    },
+    {
+      "pos": [
+        18094,
+        18231
+      ],
+      "content": "Set the constants including <bpt id=\"p39\">**</bpt>TWITTERAPPACCESSTOKEN<ept id=\"p39\">**</ept>, <bpt id=\"p40\">**</bpt>TWITTERAPPACCESSTOKENSECRET<ept id=\"p40\">**</ept>, <bpt id=\"p41\">**</bpt>TWITTERAPPAPIKEY<ept id=\"p41\">**</ept><ph id=\"ph17\"/> and <bpt id=\"p42\">**</bpt>TWITTERAPPAPISECRET<ept id=\"p42\">**</ept>."
+    },
+    {
+      "pos": [
+        18234,
+        18335
+      ],
+      "content": "To run the streaming service, press <bpt id=\"p43\">**</bpt>F5<ept id=\"p43\">**</ept>. The following is a screenshot of the console application:",
+      "nodes": [
+        {
+          "content": "To run the streaming service, press <bpt id=\"p43\">**</bpt>F5<ept id=\"p43\">**</ept>.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "The following is a screenshot of the console application:",
+          "pos": [
+            84,
+            141
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18424,
+        18723
+      ],
+      "content": "Keep the streaming console application running while you develop the web application, so you have more data to use. To examine the data inserted into the table, you can use HBase Shell. See <bpt id=\"p44\">[</bpt>Get started with HBase in HDInsight<ept id=\"p44\">](hdinsight-hbase-tutorial-get-started.md#create-tables-and-insert-data)</ept>.",
+      "nodes": [
+        {
+          "content": "Keep the streaming console application running while you develop the web application, so you have more data to use.",
+          "pos": [
+            0,
+            115
+          ]
+        },
+        {
+          "content": "To examine the data inserted into the table, you can use HBase Shell.",
+          "pos": [
+            116,
+            185
+          ]
+        },
+        {
+          "content": "See <bpt id=\"p44\">[</bpt>Get started with HBase in HDInsight<ept id=\"p44\">](hdinsight-hbase-tutorial-get-started.md#create-tables-and-insert-data)</ept>.",
+          "pos": [
+            186,
+            339
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18729,
+        18758
+      ],
+      "content": "Visualize real-time sentiment"
+    },
+    {
+      "pos": [
+        18760,
+        18903
+      ],
+      "content": "In this section, you will create an ASP.NET MVC web application to read the real-time sentiment data from HBase and plot the data on Bing maps."
+    },
+    {
+      "pos": [
+        18905,
+        18949
+      ],
+      "content": "<bpt id=\"p45\">**</bpt>To create an ASP.NET MVC Web application<ept id=\"p45\">**</ept>"
+    },
+    {
+      "pos": [
+        18954,
+        18973
+      ],
+      "content": "Open Visual Studio."
+    },
+    {
+      "pos": [
+        18977,
+        19035
+      ],
+      "content": "Click <bpt id=\"p46\">**</bpt>File<ept id=\"p46\">**</ept>, click <bpt id=\"p47\">**</bpt>New<ept id=\"p47\">**</ept>, and then click <bpt id=\"p48\">**</bpt>Project<ept id=\"p48\">**</ept>."
+    },
+    {
+      "pos": [
+        19039,
+        19071
+      ],
+      "content": "Enter the following information:"
+    },
+    {
+      "pos": [
+        19079,
+        19115
+      ],
+      "content": "Template category: <bpt id=\"p49\">**</bpt>Visual C#/Web<ept id=\"p49\">**</ept>"
+    },
+    {
+      "pos": [
+        19122,
+        19159
+      ],
+      "content": "Template: <bpt id=\"p50\">**</bpt>ASP.NET Web Application<ept id=\"p50\">**</ept>"
+    },
+    {
+      "pos": [
+        19166,
+        19193
+      ],
+      "content": "Name: <bpt id=\"p51\">**</bpt>TweetSentimentWeb<ept id=\"p51\">**</ept>"
+    },
+    {
+      "pos": [
+        19200,
+        19226
+      ],
+      "content": "Location: <bpt id=\"p52\">**</bpt>C:\\Tutorials<ept id=\"p52\">**</ept>"
+    },
+    {
+      "pos": [
+        19231,
+        19244
+      ],
+      "content": "Click <bpt id=\"p53\">**</bpt>OK<ept id=\"p53\">**</ept>."
+    },
+    {
+      "pos": [
+        19248,
+        19288
+      ],
+      "content": "In <bpt id=\"p54\">**</bpt>Select a template<ept id=\"p54\">**</ept>, click <bpt id=\"p55\">**</bpt>MVC<ept id=\"p55\">**</ept>."
+    },
+    {
+      "pos": [
+        19293,
+        19348
+      ],
+      "content": "In <bpt id=\"p56\">**</bpt>Microsoft Azure<ept id=\"p56\">**</ept>, click <bpt id=\"p57\">**</bpt>Manage Subscriptions<ept id=\"p57\">**</ept>."
+    },
+    {
+      "pos": [
+        19352,
+        19417
+      ],
+      "content": "From <bpt id=\"p58\">**</bpt>Manage Microsoft Azure Subscriptions<ept id=\"p58\">**</ept>, click <bpt id=\"p59\">**</bpt>Sign in<ept id=\"p59\">**</ept>."
+    },
+    {
+      "pos": [
+        19421,
+        19525
+      ],
+      "content": "Enter your Azure credentials. Your Azure subscription information will be shown on the <bpt id=\"p60\">**</bpt>Accounts<ept id=\"p60\">**</ept><ph id=\"ph18\"/> tab.",
+      "nodes": [
+        {
+          "content": "Enter your Azure credentials.",
+          "pos": [
+            0,
+            29
+          ]
+        },
+        {
+          "content": "Your Azure subscription information will be shown on the <bpt id=\"p60\">**</bpt>Accounts<ept id=\"p60\">**</ept><ph id=\"ph18\"/> tab.",
+          "pos": [
+            30,
+            159
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19529,
+        19606
+      ],
+      "content": "Click <bpt id=\"p61\">**</bpt>Close<ept id=\"p61\">**</ept><ph id=\"ph19\"/> to close the <bpt id=\"p62\">**</bpt>Manage Microsoft Azure Subscriptions<ept id=\"p62\">**</ept><ph id=\"ph20\"/> window."
+    },
+    {
+      "pos": [
+        19611,
+        19674
+      ],
+      "content": "From <bpt id=\"p63\">**</bpt>New ASP.NET Project - TweetSentimentWeb<ept id=\"p63\">**</ept>, click <bpt id=\"p64\">**</bpt>OK<ept id=\"p64\">**</ept>."
+    },
+    {
+      "pos": [
+        19679,
+        19819
+      ],
+      "content": "From <bpt id=\"p65\">**</bpt>Configure Microsoft Azure Site Settings<ept id=\"p65\">**</ept>, select the <bpt id=\"p66\">**</bpt>Region<ept id=\"p66\">**</ept><ph id=\"ph21\"/> that is closest to you. You don't need to specify a database server.",
+      "nodes": [
+        {
+          "content": "From <bpt id=\"p65\">**</bpt>Configure Microsoft Azure Site Settings<ept id=\"p65\">**</ept>, select the <bpt id=\"p66\">**</bpt>Region<ept id=\"p66\">**</ept><ph id=\"ph21\"/> that is closest to you.",
+          "pos": [
+            0,
+            190
+          ]
+        },
+        {
+          "content": "You don't need to specify a database server.",
+          "pos": [
+            191,
+            235
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19825,
+        19838
+      ],
+      "content": "Click <bpt id=\"p67\">**</bpt>OK<ept id=\"p67\">**</ept>."
+    },
+    {
+      "pos": [
+        19840,
+        19869
+      ],
+      "content": "<bpt id=\"p68\">**</bpt>To install NuGet packages<ept id=\"p68\">**</ept>"
+    },
+    {
+      "pos": [
+        19874,
+        20030
+      ],
+      "content": "From the <bpt id=\"p69\">**</bpt>Tools<ept id=\"p69\">**</ept><ph id=\"ph22\"/> menu, click <bpt id=\"p70\">**</bpt>Nuget Package Manager<ept id=\"p70\">**</ept>, and then click <bpt id=\"p71\">**</bpt>Package Manager Console<ept id=\"p71\">**</ept>. The console panel is opened at the bottom of the page.",
+      "nodes": [
+        {
+          "content": "From the <bpt id=\"p69\">**</bpt>Tools<ept id=\"p69\">**</ept><ph id=\"ph22\"/> menu, click <bpt id=\"p70\">**</bpt>Nuget Package Manager<ept id=\"p70\">**</ept>, and then click <bpt id=\"p71\">**</bpt>Package Manager Console<ept id=\"p71\">**</ept>.",
+          "pos": [
+            0,
+            236
+          ]
+        },
+        {
+          "content": "The console panel is opened at the bottom of the page.",
+          "pos": [
+            237,
+            291
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20034,
+        20209
+      ],
+      "content": "Use the following command to install the <bpt id=\"p72\">[</bpt>HBase .NET SDK<ept id=\"p72\">](https://www.nuget.org/packages/Microsoft.HBase.Client/)</ept><ph id=\"ph23\"/> package, which is the client library to access HBase cluster:"
+    },
+    {
+      "pos": [
+        20260,
+        20288
+      ],
+      "content": "<bpt id=\"p73\">**</bpt>To add HBaseReader class<ept id=\"p73\">**</ept>"
+    },
+    {
+      "pos": [
+        20293,
+        20347
+      ],
+      "content": "From <bpt id=\"p74\">**</bpt>Solution Explorer<ept id=\"p74\">**</ept>, expand <bpt id=\"p75\">**</bpt>TweetSentiment<ept id=\"p75\">**</ept>."
+    },
+    {
+      "pos": [
+        20351,
+        20415
+      ],
+      "content": "Right-click <bpt id=\"p76\">**</bpt>Models<ept id=\"p76\">**</ept>, click <bpt id=\"p77\">**</bpt>Add<ept id=\"p77\">**</ept>, and then click <bpt id=\"p78\">**</bpt>Class<ept id=\"p78\">**</ept>."
+    },
+    {
+      "pos": [
+        20419,
+        20490
+      ],
+      "content": "In the <bpt id=\"p79\">**</bpt>Name<ept id=\"p79\">**</ept><ph id=\"ph24\"/> field, type <bpt id=\"p80\">**</bpt>HBaseReader.cs<ept id=\"p80\">**</ept>, and then click <bpt id=\"p81\">**</bpt>Add<ept id=\"p81\">**</ept>."
+    },
+    {
+      "pos": [
+        20494,
+        20530
+      ],
+      "content": "Replace the code with the following:"
+    },
+    {
+      "pos": [
+        25217,
+        25289
+      ],
+      "content": "Inside the <bpt id=\"p82\">**</bpt>HBaseReader<ept id=\"p82\">**</ept><ph id=\"ph25\"/> class, change the constant values as follows:"
+    },
+    {
+      "pos": [
+        25297,
+        25400
+      ],
+      "content": "<bpt id=\"p83\">**</bpt>CLUSTERNAME<ept id=\"p83\">**</ept>: The HBase cluster name, for example, <bpt id=\"p84\">*</bpt>https://<ph id=\"ph26\">&lt;HBaseClusterName&gt;</ph>.azurehdinsight.net/<ept id=\"p84\">*</ept>."
+    },
+    {
+      "pos": [
+        25408,
+        25497
+      ],
+      "content": "<bpt id=\"p85\">**</bpt>HADOOPUSERNAME<ept id=\"p85\">**</ept>: The HBase cluster Hadoop user user name. The default name is <bpt id=\"p86\">*</bpt>admin<ept id=\"p86\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p85\">**</bpt>HADOOPUSERNAME<ept id=\"p85\">**</ept>: The HBase cluster Hadoop user user name.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "The default name is <bpt id=\"p86\">*</bpt>admin<ept id=\"p86\">*</ept>.",
+          "pos": [
+            101,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25504,
+        25567
+      ],
+      "content": "<bpt id=\"p87\">**</bpt>HADOOPUSERPASSWORD<ept id=\"p87\">**</ept>: The HBase cluster Hadoop user password."
+    },
+    {
+      "pos": [
+        25574,
+        25613
+      ],
+      "content": "<bpt id=\"p88\">**</bpt>HBASETABLENAME<ept id=\"p88\">**</ept><ph id=\"ph27\"/> = \"tweets_by_words\";"
+    },
+    {
+      "pos": [
+        25619,
+        25804
+      ],
+      "content": "The HBase table name is <bpt id=\"p89\">**</bpt>\"tweets_by_words\";<ept id=\"p89\">**</ept>. The values must match the values you sent in the streaming service, so that the web application reads the data from the same HBase table.",
+      "nodes": [
+        {
+          "content": "The HBase table name is <bpt id=\"p89\">**</bpt>\"tweets_by_words\";<ept id=\"p89\">**</ept>.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "The values must match the values you sent in the streaming service, so that the web application reads the data from the same HBase table.",
+          "pos": [
+            88,
+            225
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25809,
+        25847
+      ],
+      "content": "<bpt id=\"p90\">**</bpt>To add TweetsController controller<ept id=\"p90\">**</ept>"
+    },
+    {
+      "pos": [
+        25852,
+        25909
+      ],
+      "content": "From <bpt id=\"p91\">**</bpt>Solution Explorer<ept id=\"p91\">**</ept>, expand <bpt id=\"p92\">**</bpt>TweetSentimentWeb<ept id=\"p92\">**</ept>."
+    },
+    {
+      "pos": [
+        25913,
+        25987
+      ],
+      "content": "Right-click <bpt id=\"p93\">**</bpt>Controllers<ept id=\"p93\">**</ept>, click <bpt id=\"p94\">**</bpt>Add<ept id=\"p94\">**</ept>, and then click <bpt id=\"p95\">**</bpt>Controller<ept id=\"p95\">**</ept>."
+    },
+    {
+      "pos": [
+        25991,
+        26054
+      ],
+      "content": "Click <bpt id=\"p96\">**</bpt>Web API 2 Controller - Empty<ept id=\"p96\">**</ept>, and then click <bpt id=\"p97\">**</bpt>Add<ept id=\"p97\">**</ept>."
+    },
+    {
+      "pos": [
+        26058,
+        26142
+      ],
+      "content": "In the <bpt id=\"p98\">**</bpt>Controller name<ept id=\"p98\">**</ept><ph id=\"ph28\"/> field, type <bpt id=\"p99\">**</bpt>TweetsController<ept id=\"p99\">**</ept>, and then click <bpt id=\"p100\">**</bpt>Add<ept id=\"p100\">**</ept>."
+    },
+    {
+      "pos": [
+        26146,
+        26224
+      ],
+      "content": "From <bpt id=\"p101\">**</bpt>Solution Explorer<ept id=\"p101\">**</ept>, double-click TweetsController.cs to open the file."
+    },
+    {
+      "pos": [
+        26228,
+        26276
+      ],
+      "content": "Modify the file, so it looks like the following:"
+    },
+    {
+      "pos": [
+        26966,
+        26987
+      ],
+      "content": "<bpt id=\"p102\">**</bpt>To add heatmap.js<ept id=\"p102\">**</ept>"
+    },
+    {
+      "pos": [
+        26992,
+        27049
+      ],
+      "content": "From <bpt id=\"p103\">**</bpt>Solution Explorer<ept id=\"p103\">**</ept>, expand <bpt id=\"p104\">**</bpt>TweetSentimentWeb<ept id=\"p104\">**</ept>."
+    },
+    {
+      "pos": [
+        27053,
+        27119
+      ],
+      "content": "Right-click <bpt id=\"p105\">**</bpt>Scripts<ept id=\"p105\">**</ept>, click <bpt id=\"p106\">**</bpt>Add<ept id=\"p106\">**</ept>, click <bpt id=\"p107\">**</bpt>JavaScript File<ept id=\"p107\">**</ept>."
+    },
+    {
+      "pos": [
+        27123,
+        27171
+      ],
+      "content": "In the <bpt id=\"p108\">**</bpt>Item name<ept id=\"p108\">**</ept><ph id=\"ph29\"/> field, type <bpt id=\"p109\">**</bpt>heatmap.js<ept id=\"p109\">**</ept>."
+    },
+    {
+      "pos": [
+        27175,
+        27399
+      ],
+      "content": "Paste the following code into the file. The code was written by Alastair Aitchison. For more information, see <bpt id=\"p110\">[</bpt>Bing Maps AJAX v7 HeatMap Library<ept id=\"p110\">](http://alastaira.wordpress.com/2011/04/15/bing-maps-ajax-v7-heatmap-library/)</ept>.",
+      "nodes": [
+        {
+          "content": "Paste the following code into the file.",
+          "pos": [
+            0,
+            39
+          ]
+        },
+        {
+          "content": "The code was written by Alastair Aitchison.",
+          "pos": [
+            40,
+            83
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p110\">[</bpt>Bing Maps AJAX v7 HeatMap Library<ept id=\"p110\">](http://alastaira.wordpress.com/2011/04/15/bing-maps-ajax-v7-heatmap-library/)</ept>.",
+          "pos": [
+            84,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        38007,
+        38034
+      ],
+      "content": "<bpt id=\"p111\">**</bpt>To add twitterStream.js<ept id=\"p111\">**</ept>"
+    },
+    {
+      "pos": [
+        38039,
+        38096
+      ],
+      "content": "From <bpt id=\"p112\">**</bpt>Solution Explorer<ept id=\"p112\">**</ept>, expand <bpt id=\"p113\">**</bpt>TweetSentimentWeb<ept id=\"p113\">**</ept>."
+    },
+    {
+      "pos": [
+        38100,
+        38166
+      ],
+      "content": "Right-click <bpt id=\"p114\">**</bpt>Scripts<ept id=\"p114\">**</ept>, click <bpt id=\"p115\">**</bpt>Add<ept id=\"p115\">**</ept>, click <bpt id=\"p116\">**</bpt>JavaScript File<ept id=\"p116\">**</ept>."
+    },
+    {
+      "pos": [
+        38170,
+        38223
+      ],
+      "content": "In the <bpt id=\"p117\">**</bpt>Item name<ept id=\"p117\">**</ept><ph id=\"ph30\"/> field, type<bpt id=\"p118\">**</bpt>twitterStream.js<ept id=\"p118\">**</ept>."
+    },
+    {
+      "pos": [
+        38227,
+        38275
+      ],
+      "content": "Copy and paste the following code into the file:"
+    },
+    {
+      "pos": [
+        45534,
+        45565
+      ],
+      "content": "<bpt id=\"p119\">**</bpt>To modify the layout.cshtml<ept id=\"p119\">**</ept>"
+    },
+    {
+      "pos": [
+        45570,
+        45706
+      ],
+      "content": "From <bpt id=\"p120\">**</bpt>Solution Explorer<ept id=\"p120\">**</ept>, expand <bpt id=\"p121\">**</bpt>TweetSentimentWeb<ept id=\"p121\">**</ept>, expand <bpt id=\"p122\">**</bpt>Views<ept id=\"p122\">**</ept>, expand <bpt id=\"p123\">**</bpt>Shared<ept id=\"p123\">**</ept>, and then double-click _<bpt id=\"p124\">**</bpt>Layout.cshtml<ept id=\"p124\">**</ept>."
+    },
+    {
+      "pos": [
+        45710,
+        45749
+      ],
+      "content": "Replace the content with the following:"
+    },
+    {
+      "pos": [
+        48799,
+        48829
+      ],
+      "content": "<bpt id=\"p125\">**</bpt>To modify the Index.cshtml<ept id=\"p125\">**</ept>"
+    },
+    {
+      "pos": [
+        48834,
+        48966
+      ],
+      "content": "From <bpt id=\"p126\">**</bpt>Solution Explorer<ept id=\"p126\">**</ept>, expand <bpt id=\"p127\">**</bpt>TweetSentimentWeb<ept id=\"p127\">**</ept>, expand <bpt id=\"p128\">**</bpt>Views<ept id=\"p128\">**</ept>, expand <bpt id=\"p129\">**</bpt>Home<ept id=\"p129\">**</ept>, and then double-click <bpt id=\"p130\">**</bpt>Index.cshtml<ept id=\"p130\">**</ept>."
+    },
+    {
+      "pos": [
+        48970,
+        49009
+      ],
+      "content": "Replace the content with the following:"
+    },
+    {
+      "pos": [
+        49175,
+        49206
+      ],
+      "content": "<bpt id=\"p131\">**</bpt>To modify the site.css file<ept id=\"p131\">**</ept>"
+    },
+    {
+      "pos": [
+        49211,
+        49324
+      ],
+      "content": "From <bpt id=\"p132\">**</bpt>Solution Explorer<ept id=\"p132\">**</ept>, expand <bpt id=\"p133\">**</bpt>TweetSentimentWeb<ept id=\"p133\">**</ept>, expand <bpt id=\"p134\">**</bpt>Content<ept id=\"p134\">**</ept>, and then double-click <bpt id=\"p135\">**</bpt>Site.css<ept id=\"p135\">**</ept>."
+    },
+    {
+      "pos": [
+        49328,
+        49366
+      ],
+      "content": "Append the following code to the file:"
+    },
+    {
+      "pos": [
+        49741,
+        49775
+      ],
+      "content": "<bpt id=\"p136\">**</bpt>To modify the global.asax file<ept id=\"p136\">**</ept>"
+    },
+    {
+      "pos": [
+        49780,
+        49876
+      ],
+      "content": "From <bpt id=\"p137\">**</bpt>Solution Explorer<ept id=\"p137\">**</ept>, expand <bpt id=\"p138\">**</bpt>TweetSentimentWeb<ept id=\"p138\">**</ept>, and then double-click <bpt id=\"p139\">**</bpt>Global.asax<ept id=\"p139\">**</ept>."
+    },
+    {
+      "pos": [
+        49880,
+        49918
+      ],
+      "content": "Add the following <bpt id=\"p140\">**</bpt>using<ept id=\"p140\">**</ept><ph id=\"ph31\"/> statement:"
+    },
+    {
+      "pos": [
+        49955,
+        50023
+      ],
+      "content": "Add the following lines inside the <bpt id=\"p141\">**</bpt>Application_Start()<ept id=\"p141\">**</ept><ph id=\"ph32\"/> function:"
+    },
+    {
+      "pos": [
+        50125,
+        50230
+      ],
+      "content": "Modify the registration of the API routes to make the Web API controller work inside the MVC application."
+    },
+    {
+      "pos": [
+        50232,
+        50262
+      ],
+      "content": "<bpt id=\"p142\">**</bpt>To run the web application<ept id=\"p142\">**</ept>"
+    },
+    {
+      "pos": [
+        50267,
+        50375
+      ],
+      "content": "Verify that the streaming service console application is still running so you can see the real-time changes."
+    },
+    {
+      "pos": [
+        50379,
+        50419
+      ],
+      "content": "Press <bpt id=\"p143\">**</bpt>F5<ept id=\"p143\">**</ept><ph id=\"ph33\"/> to run the web application:"
+    },
+    {
+      "pos": [
+        50425,
+        50484
+      ],
+      "content": "<ph id=\"ph34\">![</ph>hdinsight.hbase.twitter.sentiment.bing.map<ph id=\"ph35\">][img-bing-map]</ph>"
+    },
+    {
+      "pos": [
+        50488,
+        50700
+      ],
+      "content": "In the text box, enter a keyword, and then click <bpt id=\"p144\">**</bpt>Go<ept id=\"p144\">**</ept>.  Depending on the data collected in the HBase table, some keywords might not be found. Try some common keywords, such as \"love,\" \"xbox,\" and \"playstation.\"",
+      "nodes": [
+        {
+          "content": "In the text box, enter a keyword, and then click <bpt id=\"p144\">**</bpt>Go<ept id=\"p144\">**</ept>.",
+          "pos": [
+            0,
+            98
+          ]
+        },
+        {
+          "content": "Depending on the data collected in the HBase table, some keywords might not be found.",
+          "pos": [
+            100,
+            185
+          ]
+        },
+        {
+          "content": "Try some common keywords, such as \"love,\" \"xbox,\" and \"playstation.\"",
+          "pos": [
+            186,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        50705,
+        50798
+      ],
+      "content": "Toggle among <bpt id=\"p145\">**</bpt>Positive<ept id=\"p145\">**</ept>, <bpt id=\"p146\">**</bpt>Neutral<ept id=\"p146\">**</ept>, and <bpt id=\"p147\">**</bpt>Negative<ept id=\"p147\">**</ept><ph id=\"ph36\"/> to compare sentiment on the subject."
+    },
+    {
+      "pos": [
+        50802,
+        50909
+      ],
+      "content": "Let the streaming service run for another hour, and then search the same keywords, and compare the results."
+    },
+    {
+      "pos": [
+        50913,
+        51064
+      ],
+      "content": "Optionally, you can deploy the application to Azure Websites. For instructions, see <bpt id=\"p148\">[</bpt>Get started with Azure Websites and ASP.NET<ept id=\"p148\">][website-get-started]</ept>.",
+      "nodes": [
+        {
+          "content": "Optionally, you can deploy the application to Azure Websites.",
+          "pos": [
+            0,
+            61
+          ]
+        },
+        {
+          "content": "For instructions, see <bpt id=\"p148\">[</bpt>Get started with Azure Websites and ASP.NET<ept id=\"p148\">][website-get-started]</ept>.",
+          "pos": [
+            62,
+            193
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        51070,
+        51080
+      ],
+      "content": "Next Steps"
+    },
+    {
+      "pos": [
+        51082,
+        51280
+      ],
+      "content": "In this tutorial, you learned how to get tweets, analyze the sentiment of tweets, save the sentiment data to HBase, and present the real-time Twitter sentiment data to Bing maps. To learn more, see:",
+      "nodes": [
+        {
+          "content": "In this tutorial, you learned how to get tweets, analyze the sentiment of tweets, save the sentiment data to HBase, and present the real-time Twitter sentiment data to Bing maps.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "To learn more, see:",
+          "pos": [
+            179,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        51284,
+        51335
+      ],
+      "content": "<bpt id=\"p149\">[</bpt>Get started with HDInsight<ept id=\"p149\">][hdinsight-get-started]</ept>"
+    },
+    {
+      "pos": [
+        51338,
+        51416
+      ],
+      "content": "<bpt id=\"p150\">[</bpt>Configure HBase replication in HDInsight<ept id=\"p150\">](hdinsight-hbase-geo-replication.md)</ept>"
+    },
+    {
+      "pos": [
+        51420,
+        51499
+      ],
+      "content": "<bpt id=\"p151\">[</bpt>Analyze Twitter data with Hadoop in HDInsight<ept id=\"p151\">][hdinsight-analyze-twitter-data]</ept>"
+    },
+    {
+      "pos": [
+        51502,
+        51582
+      ],
+      "content": "<bpt id=\"p152\">[</bpt>Analyze flight delay data using HDInsight<ept id=\"p152\">][hdinsight-analyze-flight-delay-data]</ept>"
+    },
+    {
+      "pos": [
+        51585,
+        51666
+      ],
+      "content": "<bpt id=\"p153\">[</bpt>Develop C# Hadoop streaming programs for HDInsight<ept id=\"p153\">][hdinsight-develop-streaming]</ept>"
+    },
+    {
+      "pos": [
+        51669,
+        51745
+      ],
+      "content": "<bpt id=\"p154\">[</bpt>Develop Java MapReduce programs for HDInsight<ept id=\"p154\">][hdinsight-develop-mapreduce]</ept>"
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Analyze real-time Twitter sentiment with HBase | Microsoft Azure\" \n    description=\"Learn how to do real-time sentiment analysis of big data from Twitter using HBase in an HDInsight (Hadoop) cluster.\" \n    services=\"hdinsight\" \n    documentationCenter=\"\" \n    authors=\"mumian\" \n    manager=\"paulettm\" \n    editor=\"cgronlun\"/>\n\n<tags \n    ms.service=\"hdinsight\" \n    ms.workload=\"big-data\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"02/01/2016\" \n    ms.author=\"jgao\"/>\n\n# Analyze real-time Twitter sentiment with HBase in HDInsight\n\nLearn how to do real-time [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) of big data from Twitter by using HBase in an HDInsight (Hadoop) cluster.\n\n\nSocial websites are one of the major driving forces for big data adoption. Public APIs provided by sites like Twitter are a useful source of data for analyzing and understanding popular trends. In this tutorial, you will develop a console streaming service application and an ASP.NET web application to perform the following:\n\n![][img-app-arch]\n\n- The streaming application\n    - get geo-tagged tweets in real time by using the Twitter streaming API\n    - evaluate the sentiment of these tweets\n    - store the sentiment information in HBase by using the Microsoft HBase SDK\n- The Azure Websites application\n    - plot the real-time statistical results on Bing maps by using an ASP.NET web application. A visualization of the tweets will look something like this:\n\n    ![hdinsight.hbase.twitter.sentiment.bing.map][img-bing-map]\n    \n    You will be able to query tweets with certain keywords to get a sense of if the expressed opinion in the tweets is positive, negative, or neutral.\n\nA complete Visual Studio solution sample can be found on GitHub: [Realtime social sentiment analysis app](https://github.com/maxluk/tweet-sentiment).\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### Prerequisites\nBefore you begin this tutorial, you must have the following:\n\n- **An HBase cluster in HDInsight**. For instructions about creating clusters, see  [Get started using HBase with Hadoop in HDInsight] [hbase-get-started]. You will need the following data to go through the tutorial:\n\n\n    <table border=\"1\">\n    <tr><th>Cluster property</th><th>Description</th></tr>\n    <tr><td>HBase cluster name</td><td>Your HDInsight HBase cluster name. For example: https://myhbase.azurehdinsight.net/</td></tr>\n    <tr><td>Cluster user name</td><td>The Hadoop user account name. The default Hadoop user name is <strong>admin</strong>.</td></tr>\n    <tr><td>Cluster user password</td><td>The Hadoop cluster user password.</td></tr>\n    </table>\n\n- **A workstation** with Visual Studio 2013 installed. For instructions, see [Installing Visual Studio](http://msdn.microsoft.com/library/e2h7fzkw.aspx).\n\n\n\n\n\n## Create a Twitter application ID and secrets\n\nThe Twitter streaming APIs use [OAuth](http://oauth.net/) to authorize requests. The first step to use OAuth is to create a new application on the Twitter developer site.\n\n**To create Twitter application ID and secrets**\n\n1. Sign in to [Twitter Apps](https://apps.twitter.com/). Click the **Sign up now** link if you don't have a Twitter account.\n2. Click **Create New App**.\n3. Enter a **Name**, **Description**, and **Website**. The Twitter application name must be an unique name. The Website field is not really used. It doesn't have to be a valid URL. \n4. Check **Yes, I agree**, and then click **Create your Twitter application**.\n5. Click the **Permissions** tab. The default permission is **Read only**. This is sufficient for this tutorial. \n6. Click the **Keys and Access Tokens** tab.\n7. Click **Create my access token**.\n8. Click **Test OAuth** in the upper-right corner of the page.\n9. Copy the **Consumer key**, **Consumer secret**, **Access token**, and **Access token secret** values. You will need these values later in the tutorial.\n\n    ![hdi.hbase.twitter.sentiment.twitter.app][img-twitter-app]\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Create Twitter streaming service\n\nYou need to create an application to get tweets, calculate tweet sentiment score, and send the processed tweet words to HBase.\n\n**To create the streaming application**\n\n1. Open **Visual Studio**, and create a Visual C# console application called **TweetSentimentStreaming**. \n2. From **Package Manager Console**, run the following commands:\n\n        Install-Package Microsoft.HBase.Client\n        Install-Package TweetinviAPI\n    These commands install the [HBase .NET SDK](https://www.nuget.org/packages/Microsoft.HBase.Client/) package, which is the client library to access the HBase cluster, and the [Tweetinvi API](https://www.nuget.org/packages/TweetinviAPI/) package, which is used to access the Twitter API.\n3. From **Solution Explorer**, add **System.Configuration\" to the reference.\n4. Add a new class file to the project called **HBaseWriter.cs**, and then replace the code with the following:\n\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Text;\n        using System.IO;\n        using System.Threading;\n        using Microsoft.HBase.Client;\n        using Tweetinvi.Core.Interfaces;\n        using org.apache.hadoop.hbase.rest.protobuf.generated;\n\n        namespace TweetSentimentStreaming\n        {\n            class HBaseWriter\n            {\n                // HDinsight HBase cluster and HBase table information\n                const string CLUSTERNAME = \"https://<Enter Your Cluster Name>.azurehdinsight.net/\";\n                const string HADOOPUSERNAME = \"admin\"; //the default name is \"admin\"\n                const string HADOOPUSERPASSWORD = \"<Enter the Hadoop User Password>\";\n                const string HBASETABLENAME = \"tweets_by_words\";\n\n                // Sentiment dictionary file and the punctuation characters\n                const string DICTIONARYFILENAME = @\"..\\..\\dictionary.tsv\";\n                private static char[] _punctuationChars = new[] {\n            ' ', '!', '\\\"', '#', '$', '%', '&', '\\'', '(', ')', '*', '+', ',', '-', '.', '/',   //ascii 23--47\n            ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~' };   //ascii 58--64 + misc.\n\n                // For writting to HBase\n                HBaseClient client;\n\n                // a sentiment dictionary for estimate sentiment. It is loaded from a physical file.\n                Dictionary<string, DictionaryItem> dictionary;\n\n                // use multithread write\n                Thread writerThread;\n                Queue<ITweet> queue = new Queue<ITweet>();\n                bool threadRunning = true;\n\n                // This function connects to HBase, loads the sentiment dictionary, and starts the thread for writting.\n                public HBaseWriter()\n                {\n                    ClusterCredentials credentials = new ClusterCredentials(new Uri(CLUSTERNAME), HADOOPUSERNAME, HADOOPUSERPASSWORD);\n                    client = new HBaseClient(credentials);\n\n                    // create the HBase table if it doesn't exist\n                    if (!client.ListTables().name.Contains(HBASETABLENAME))\n                    {\n                        TableSchema tableSchema = new TableSchema();\n                        tableSchema.name = HBASETABLENAME;\n                        tableSchema.columns.Add(new ColumnSchema { name = \"d\" });\n                        client.CreateTable(tableSchema);\n                        Console.WriteLine(\"Table \\\"{0}\\\" is created.\", HBASETABLENAME);\n                    }\n\n                    // Load sentiment dictionary from a file\n                    LoadDictionary();\n\n                    // Start a thread for writting to HBase\n                    writerThread = new Thread(new ThreadStart(WriterThreadFunction));\n                    writerThread.Start();\n                }\n\n                ~HBaseWriter()\n                {\n                    threadRunning = false;\n                }\n\n                // Enqueue the Tweets received\n                public void WriteTweet(ITweet tweet)\n                {\n                    lock (queue)\n                    {\n                        queue.Enqueue(tweet);\n                    }\n                }\n\n                // Load sentiment dictionary from a file\n                private void LoadDictionary()\n                {\n                    List<string> lines = File.ReadAllLines(DICTIONARYFILENAME).ToList();\n                    var items = lines.Select(line =>\n                    {\n                        var fields = line.Split('\\t');\n                        var pos = 0;\n                        return new DictionaryItem\n                        {\n                            Type = fields[pos++],\n                            Length = Convert.ToInt32(fields[pos++]),\n                            Word = fields[pos++],\n                            Pos = fields[pos++],\n                            Stemmed = fields[pos++],\n                            Polarity = fields[pos++]\n                        };\n                    });\n\n                    dictionary = new Dictionary<string, DictionaryItem>();\n                    foreach (var item in items)\n                    {\n                        if (!dictionary.Keys.Contains(item.Word))\n                        {\n                            dictionary.Add(item.Word, item);\n                        }\n                    }\n                }\n\n                // Calculate sentiment score\n                private int CalcSentimentScore(string[] words)\n                {\n                    Int32 total = 0;\n                    foreach (string word in words)\n                    {\n                        if (dictionary.Keys.Contains(word))\n                        {\n                            switch (dictionary[word].Polarity)\n                            {\n                                case \"negative\": total -= 1; break;\n                                case \"positive\": total += 1; break;\n                            }\n                        }\n                    }\n                    if (total > 0)\n                    {\n                        return 1;\n                    }\n                    else if (total < 0)\n                    {\n                        return -1;\n                    }\n                    else\n                    {\n                        return 0;\n                    }\n                }\n\n                // Popular a CellSet object to be written into HBase\n                private void CreateTweetByWordsCells(CellSet set, ITweet tweet)\n                {\n                    // Split the Tweet into words\n                    string[] words = tweet.Text.ToLower().Split(_punctuationChars);\n\n                    // Calculate sentiment score base on the words\n                    int sentimentScore = CalcSentimentScore(words);\n                    var word_pairs = words.Take(words.Length - 1)\n                                        .Select((word, idx) => string.Format(\"{0} {1}\", word, words[idx + 1]));\n                    var all_words = words.Concat(word_pairs).ToList();\n\n                    // For each word in the Tweet add a row to the HBase table\n                    foreach (string word in all_words)\n                    {\n                        string time_index = (ulong.MaxValue - (ulong)tweet.CreatedAt.ToBinary()).ToString().PadLeft(20) + tweet.IdStr;\n                        string key = word + \"_\" + time_index;\n\n                        // Create a row\n                        var row = new CellSet.Row { key = Encoding.UTF8.GetBytes(key) };\n\n                        // Add columns to the row, including Tweet identifier, language, coordinator(if available), and sentiment \n                        var value = new Cell { column = Encoding.UTF8.GetBytes(\"d:id_str\"), data = Encoding.UTF8.GetBytes(tweet.IdStr) };\n                        row.values.Add(value);\n\n                        value = new Cell { column = Encoding.UTF8.GetBytes(\"d:lang\"), data = Encoding.UTF8.GetBytes(tweet.Language.ToString()) };\n                        row.values.Add(value);\n\n                        if (tweet.Coordinates != null)\n                        {\n                            var str = tweet.Coordinates.Longitude.ToString() + \",\" + tweet.Coordinates.Latitude.ToString();\n                            value = new Cell { column = Encoding.UTF8.GetBytes(\"d:coor\"), data = Encoding.UTF8.GetBytes(str) };\n                            row.values.Add(value);\n                        }\n\n                        value = new Cell { column = Encoding.UTF8.GetBytes(\"d:sentiment\"), data = Encoding.UTF8.GetBytes(sentimentScore.ToString()) };\n                        row.values.Add(value);\n\n                        set.rows.Add(row);\n                    }\n                }\n\n                // Write a Tweet (CellSet) to HBase\n                public void WriterThreadFunction()\n                {\n                    try\n                    {\n                        while (threadRunning)\n                        {\n                            if (queue.Count > 0)\n                            {\n                                CellSet set = new CellSet();\n                                lock (queue)\n                                {\n                                    do\n                                    {\n                                        ITweet tweet = queue.Dequeue();\n                                        CreateTweetByWordsCells(set, tweet);\n                                    } while (queue.Count > 0);\n                                }\n\n                                // Write the Tweet by words cell set to the HBase table\n                                client.StoreCells(HBASETABLENAME, set);\n                                Console.WriteLine(\"\\tRows written: {0}\", set.rows.Count);\n                            }\n                            Thread.Sleep(100);\n                        }\n                    }\n                    catch (Exception ex)\n                    {\n                        Console.WriteLine(\"Exception: \" + ex.Message);\n                    }\n                }\n            }\n            public class DictionaryItem\n            {\n                public string Type { get; set; }\n                public int Length { get; set; }\n                public string Word { get; set; }\n                public string Pos { get; set; }\n                public string Stemmed { get; set; }\n                public string Polarity { get; set; }\n            }\n        }\n\n6. Set the constants in the previous code, including **CLUSTERNAME**, **HADOOPUSERNAME**, **HADOOPUSERPASSWORD**, and DICTIONARYFILENAME. The DICTIONARYFILENAME is the filename and the location of the direction.tsv.  The file can be downloaded from **https://hditutorialdata.blob.core.windows.net/twittersentiment/dictionary.tsv**. If you want to change the HBase table name, you must change the table name in the web application accordingly.\n\n7. Open **Program.cs**, and replace the code with the following:\n\n        using System;\n        using System.Diagnostics;\n        using Tweetinvi;\n        using Tweetinvi.Core.Parameters;\n\n        namespace TweetSentimentStreaming\n        {\n            class Program\n            {\n                const string TWITTERAPPACCESSTOKEN = \"<Enter Twitter App Access Token>\";\n                const string TWITTERAPPACCESSTOKENSECRET = \"<Enter Twitter Access Token Secret>\";\n                const string TWITTERAPPAPIKEY = \"<Enter Twitter App API Key>\";\n                const string TWITTERAPPAPISECRET = \"<Enter Twitter App API Secret>\";\n\n                static void Main(string[] args)\n                {\n                    Auth.SetUserCredentials(TWITTERAPPAPIKEY, TWITTERAPPAPISECRET, TWITTERAPPACCESSTOKEN, TWITTERAPPACCESSTOKENSECRET);\n\n                    Stream_FilteredStreamExample();\n                }\n\n                private static void Stream_FilteredStreamExample()\n                {\n                    for (;;)\n                    {\n                        try\n                        {\n                            HBaseWriter hbase = new HBaseWriter();\n                            var stream = Stream.CreateFilteredStream();\n                            stream.AddLocation(new Coordinates(-180, -90), new Coordinates(180, 90)); //Geo .GenerateLocation(-180, -90, 180, 90));\n\n                            var tweetCount = 0;\n                            var timer = Stopwatch.StartNew();\n\n                            stream.MatchingTweetReceived += (sender, args) =>\n                            {\n                                tweetCount++;\n                                var tweet = args.Tweet;\n\n                                // Write Tweets to HBase\n                                hbase.WriteTweet(tweet);\n\n                                if (timer.ElapsedMilliseconds > 1000)\n                                {\n                                    if (tweet.Coordinates != null)\n                                    {\n                                        Console.ForegroundColor = ConsoleColor.Green;\n                                        Console.WriteLine(\"\\n{0}: {1} {2}\", tweet.Id, tweet.Language.ToString(), tweet.Text);\n                                        Console.ForegroundColor = ConsoleColor.White;\n                                        Console.WriteLine(\"\\tLocation: {0}, {1}\", tweet.Coordinates.Longitude, tweet.Coordinates.Latitude);\n                                    }\n\n                                    timer.Restart();\n                                    Console.WriteLine(\"\\tTweets/sec: {0}\", tweetCount);\n                                    tweetCount = 0;\n                                }\n                            };\n\n                            stream.StartStreamMatchingAllConditions();\n                        }\n                        catch (Exception ex)\n                        {\n                            Console.WriteLine(\"Exception: {0}\", ex.Message);\n                        }\n                    }\n                }\n\n            }\n        }\n\n8. Set the constants including **TWITTERAPPACCESSTOKEN**, **TWITTERAPPACCESSTOKENSECRET**, **TWITTERAPPAPIKEY** and **TWITTERAPPAPISECRET**. \n\nTo run the streaming service, press **F5**. The following is a screenshot of the console application:\n\n    ![hdinsight.hbase.twitter.sentiment.streaming.service][img-streaming-service]\n    \nKeep the streaming console application running while you develop the web application, so you have more data to use. To examine the data inserted into the table, you can use HBase Shell. See [Get started with HBase in HDInsight](hdinsight-hbase-tutorial-get-started.md#create-tables-and-insert-data).\n\n\n## Visualize real-time sentiment\n\nIn this section, you will create an ASP.NET MVC web application to read the real-time sentiment data from HBase and plot the data on Bing maps.\n\n**To create an ASP.NET MVC Web application**\n\n1. Open Visual Studio.\n2. Click **File**, click **New**, and then click **Project**.\n3. Enter the following information:\n\n    - Template category: **Visual C#/Web**\n    - Template: **ASP.NET Web Application**\n    - Name: **TweetSentimentWeb**\n    - Location: **C:\\Tutorials** \n4. Click **OK**.\n5. In **Select a template**, click **MVC**. \n6. In **Microsoft Azure**, click **Manage Subscriptions**.\n7. From **Manage Microsoft Azure Subscriptions**, click **Sign in**.\n8. Enter your Azure credentials. Your Azure subscription information will be shown on the **Accounts** tab.\n9. Click **Close** to close the **Manage Microsoft Azure Subscriptions** window.\n10. From **New ASP.NET Project - TweetSentimentWeb**, click **OK**.\n11. From **Configure Microsoft Azure Site Settings**, select the **Region** that is closest to you. You don't need to specify a database server. \n12. Click **OK**.\n\n**To install NuGet packages**\n\n1. From the **Tools** menu, click **Nuget Package Manager**, and then click **Package Manager Console**. The console panel is opened at the bottom of the page.\n2. Use the following command to install the [HBase .NET SDK](https://www.nuget.org/packages/Microsoft.HBase.Client/) package, which is the client library to access HBase cluster:\n\n        Install-Package Microsoft.HBase.Client \n\n**To add HBaseReader class**\n\n1. From **Solution Explorer**, expand **TweetSentiment**.\n2. Right-click **Models**, click **Add**, and then click **Class**.\n3. In the **Name** field, type **HBaseReader.cs**, and then click **Add**.\n4. Replace the code with the following:\n\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Web;\n        \n        using System.Configuration;\n        using System.Threading.Tasks;\n        using System.Text;\n        using Microsoft.HBase.Client;\n        using org.apache.hadoop.hbase.rest.protobuf.generated;\n        \n        namespace TweetSentimentWeb.Models\n        {\n            public class HBaseReader\n            {\n                // For reading Tweet sentiment data from HDInsight HBase\n                HBaseClient client;\n        \n                // HDinsight HBase cluster and HBase table information\n                const string CLUSTERNAME = \"<HBaseClusterName>\";\n                const string HADOOPUSERNAME = \"<HBaseClusterHadoopUserName>\"\n                const string HADOOPUSERPASSWORD = \"<HBaseCluserUserPassword>\";\n                const string HBASETABLENAME = \"tweets_by_words\";\n        \n                // The constructor\n                public HBaseReader()\n                {\n                    ClusterCredentials creds = new ClusterCredentials(\n                                    new Uri(CLUSTERNAME),\n                                    HADOOPUSERNAME,\n                                    HADOOPUSERPASSWORD);\n                    client = new HBaseClient(creds);\n                }\n        \n                // Query Tweets sentiment data from the HBase table asynchronously \n                public async Task<IEnumerable<Tweet>> QueryTweetsByKeywordAsync(string keyword)\n                {\n                    List<Tweet> list = new List<Tweet>();\n        \n                    // Demonstrate Filtering the data from the past 6 hours the row key\n                    string timeIndex = (ulong.MaxValue -\n                        (ulong)DateTime.UtcNow.Subtract(new TimeSpan(6, 0, 0)).ToBinary()).ToString().PadLeft(20);\n                    string startRow = keyword + \"_\" + timeIndex;\n                    string endRow = keyword + \"|\";\n                    Scanner scanSettings = new Scanner\n                    {\n                        batch = 100000,\n                        startRow = Encoding.UTF8.GetBytes(startRow),\n                        endRow = Encoding.UTF8.GetBytes(endRow)\n                    };\n        \n                    // Make async scan call\n                    ScannerInformation scannerInfo =\n                        await client.CreateScannerAsync(HBASETABLENAME, scanSettings);\n        \n                    CellSet next;\n        \n                    while ((next = await client.ScannerGetNextAsync(scannerInfo)) != null)\n                    {\n                        foreach (CellSet.Row row in next.rows)\n                        {\n                            // find the cell with string pattern \"d:coor\" \n                            var coordinates =\n                                row.values.Find(c => Encoding.UTF8.GetString(c.column) == \"d:coor\");\n        \n                            if (coordinates != null)\n                            {\n                                string[] lonlat = Encoding.UTF8.GetString(coordinates.data).Split(',');\n        \n                                var sentimentField =\n                                    row.values.Find(c => Encoding.UTF8.GetString(c.column) == \"d:sentiment\");\n                                Int32 sentiment = 0;\n                                if (sentimentField != null)\n                                {\n                                    sentiment = Convert.ToInt32(Encoding.UTF8.GetString(sentimentField.data));\n                                }\n        \n                                list.Add(new Tweet\n                                {\n                                    Longtitude = Convert.ToDouble(lonlat[0]),\n                                    Latitude = Convert.ToDouble(lonlat[1]),\n                                    Sentiment = sentiment\n                                });\n                            }\n        \n                            if (coordinates != null)\n                            {\n                                string[] lonlat = Encoding.UTF8.GetString(coordinates.data).Split(',');\n                            }\n                        }\n                    }\n        \n                    return list;\n                }\n            }\n        \n            public class Tweet\n            {\n                public string IdStr { get; set; }\n                public string Text { get; set; }\n                public string Lang { get; set; }\n                public double Longtitude { get; set; }\n                public double Latitude { get; set; }\n                public int Sentiment { get; set; }\n            }\n        }\n\n4. Inside the **HBaseReader** class, change the constant values as follows:\n\n    - **CLUSTERNAME**: The HBase cluster name, for example, *https://<HBaseClusterName>.azurehdinsight.net/*. \n    - **HADOOPUSERNAME**: The HBase cluster Hadoop user user name. The default name is *admin*.\n    - **HADOOPUSERPASSWORD**: The HBase cluster Hadoop user password.\n    - **HBASETABLENAME** = \"tweets_by_words\";\n\n    The HBase table name is **\"tweets_by_words\";**. The values must match the values you sent in the streaming service, so that the web application reads the data from the same HBase table.\n\n\n\n\n**To add TweetsController controller**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**.\n2. Right-click **Controllers**, click **Add**, and then click **Controller**.\n3. Click **Web API 2 Controller - Empty**, and then click **Add**.\n4. In the **Controller name** field, type **TweetsController**, and then click **Add**.\n5. From **Solution Explorer**, double-click TweetsController.cs to open the file.\n5. Modify the file, so it looks like the following:\n\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Net;\n        using System.Net.Http;\n        using System.Web.Http;\n        \n        using System.Threading.Tasks;\n        using TweetSentimentWeb.Models;\n        \n        namespace TweetSentimentWeb.Controllers\n        {\n            public class TweetsController : ApiController\n            {\n                HBaseReader hbase = new HBaseReader();\n        \n                public async Task<IEnumerable<Tweet>> GetTweetsByQuery(string query)\n                {\n                    return await hbase.QueryTweetsByKeywordAsync(query);\n                }\n            }\n        }\n\n**To add heatmap.js**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**.\n2. Right-click **Scripts**, click **Add**, click **JavaScript File**.\n3. In the **Item name** field, type **heatmap.js**.\n4. Paste the following code into the file. The code was written by Alastair Aitchison. For more information, see [Bing Maps AJAX v7 HeatMap Library](http://alastaira.wordpress.com/2011/04/15/bing-maps-ajax-v7-heatmap-library/).\n\n        /*******************************************************************************\n        * Author: Alastair Aitchison\n        * Website: http://alastaira.wordpress.com\n        * Date: 15th April 2011\n        * \n        * Description: \n        * This JavaScript file provides an algorithm that can be used to add a heatmap\n        * overlay on a Bing Maps v7 control. The intensity and temperature palette\n        * of the heatmap are designed to be easily customisable.\n        *\n        * Requirements:\n        * The heatmap layer itself is created dynamically on the client-side using\n        * the HTML5 <canvas> element, and therefore requires a browser that supports\n        * this element. It has been tested on IE9, Firefox 3.6/4 and \n        * Chrome 10 browsers. If you can confirm whether it works on other browsers or\n        * not, I'd love to hear from you!\n        \n        * Usage:\n        * The HeatMapLayer constructor requires:\n        * - A reference to a map object\n        * - An array or Microsoft.Maps.Location items\n        * - Optional parameters to customise the appearance of the layer\n        *  (Radius,, Unit, Intensity, and ColourGradient), and a callback function\n        *\n        */\n        \n        var HeatMapLayer = function (map, locations, options) {\n        \n            /* Private Properties */\n            var _map = map,\n              _canvas,\n              _temperaturemap,\n              _locations = [],\n              _viewchangestarthandler,\n              _viewchangeendhandler;\n        \n            // Set default options\n            var _options = {\n                // Opacity at the centre of each heat point\n                intensity: 0.5,\n        \n                // Affected radius of each heat point\n                radius: 1000,\n        \n                // Whether the radius is an absolute pixel value or meters\n                unit: 'meters',\n        \n                // Colour temperature gradient of the map\n                colourgradient: {\n                    \"0.00\": 'rgba(255,0,255,20)',  // Magenta\n                    \"0.25\": 'rgba(0,0,255,40)',    // Blue\n                    \"0.50\": 'rgba(0,255,0,80)',    // Green\n                    \"0.75\": 'rgba(255,255,0,120)', // Yellow\n                    \"1.00\": 'rgba(255,0,0,150)'    // Red\n                },\n        \n                // Callback function to be fired after heatmap layer has been redrawn \n                callback: null\n            };\n        \n            /* Private Methods */\n            function _init() {\n                var _mapDiv = _map.getRootElement();\n        \n                if (_mapDiv.childNodes.length >= 3 && _mapDiv.childNodes[2].childNodes.length >= 2) {\n                    // Create the canvas element\n                    _canvas = document.createElement('canvas');\n                    _canvas.style.position = 'relative';\n        \n                    var container = document.createElement('div');\n                    container.style.position = 'absolute';\n                    container.style.left = '0px';\n                    container.style.top = '0px';\n                    container.appendChild(_canvas);\n        \n                    _mapDiv.childNodes[2].childNodes[1].appendChild(container);\n        \n                    // Override defaults with any options passed in the constructor\n                    _setOptions(options);\n        \n                    // Load array of location data\n                    _setPoints(locations);\n        \n                    // Create a colour gradient from the suppied colourstops\n                    _temperaturemap = _createColourGradient(_options.colourgradient);\n        \n                    // Wire up the event handler to redraw heatmap canvas\n                    _viewchangestarthandler = Microsoft.Maps.Events.addHandler(_map, 'viewchangestart', _clearHeatMap);\n                    _viewchangeendhandler = Microsoft.Maps.Events.addHandler(_map, 'viewchangeend', _createHeatMap);\n        \n                    _createHeatMap();\n        \n                    delete _init;\n                } else {\n                    setTimeout(_init, 100);\n                }\n            }\n        \n            // Resets the heat map\n            function _clearHeatMap() {\n                var ctx = _canvas.getContext(\"2d\");\n                ctx.clearRect(0, 0, _canvas.width, _canvas.height);\n            }\n        \n            // Creates a colour gradient from supplied colour stops on initialisation\n            function _createColourGradient(colourstops) {\n                var ctx = document.createElement('canvas').getContext('2d');\n                var grd = ctx.createLinearGradient(0, 0, 256, 0);\n                for (var c in colourstops) {\n                    grd.addColorStop(c, colourstops[c]);\n                }\n                ctx.fillStyle = grd;\n                ctx.fillRect(0, 0, 256, 1);\n                return ctx.getImageData(0, 0, 256, 1).data;\n            }\n        \n            // Applies a colour gradient to the intensity map\n            function _colouriseHeatMap() {\n                var ctx = _canvas.getContext(\"2d\");\n                var dat = ctx.getImageData(0, 0, _canvas.width, _canvas.height);\n                var pix = dat.data; // pix is a CanvasPixelArray containing height x width x 4 bytes of data (RGBA)\n                for (var p = 0, len = pix.length; p < len;) {\n                    var a = pix[p + 3] * 4; // get the alpha of this pixel\n                    if (a != 0) { // If there is any data to plot\n                        pix[p] = _temperaturemap[a]; // set the red value of the gradient that corresponds to this alpha\n                        pix[p + 1] = _temperaturemap[a + 1]; //set the green value based on alpha\n                        pix[p + 2] = _temperaturemap[a + 2]; //set the blue value based on alpha\n                    }\n                    p += 4; // Move on to the next pixel\n                }\n                ctx.putImageData(dat, 0, 0);\n            }\n        \n            // Sets any options passed in\n            function _setOptions(options) {\n                for (attrname in options) {\n                    _options[attrname] = options[attrname];\n                }\n            }\n        \n            // Sets the heatmap points from an array of Microsoft.Maps.Locations  \n            function _setPoints(locations) {\n                _locations = locations;\n            }\n        \n            // Main method to draw the heatmap\n            function _createHeatMap() {\n                // Ensure the canvas matches the current dimensions of the map\n                // This also has the effect of resetting the canvas\n                _canvas.height = _map.getHeight();\n                _canvas.width = _map.getWidth();\n        \n                _canvas.style.top = -_canvas.height / 2 + 'px';\n                _canvas.style.left = -_canvas.width / 2 + 'px';\n        \n                // Calculate the pixel radius of each heatpoint at the current map zoom\n                if (_options.unit == \"pixels\") {\n                    radiusInPixel = _options.radius;\n                } else {\n                    radiusInPixel = _options.radius / _map.getMetersPerPixel();\n                }\n        \n                var ctx = _canvas.getContext(\"2d\");\n        \n                // Convert lat/long to pixel location\n                var pixlocs = _map.tryLocationToPixel(_locations, Microsoft.Maps.PixelReference.control);\n                var shadow = 'rgba(0, 0, 0, ' + _options.intensity + ')';\n                var mapWidth = 256 * Math.pow(2, _map.getZoom());\n        \n                // Create the Intensity Map by looping through each location\n                for (var i = 0, len = pixlocs.length; i < len; i++) {\n                    var x = pixlocs[i].x;\n                    var y = pixlocs[i].y;\n        \n                    if (x < 0) {\n                        x += mapWidth * Math.ceil(Math.abs(x / mapWidth));\n                    }\n        \n                    // Create radial gradient centred on this point\n                    var grd = ctx.createRadialGradient(x, y, 0, x, y, radiusInPixel);\n                    grd.addColorStop(0.0, shadow);\n                    grd.addColorStop(1.0, 'transparent');\n        \n                    // Draw the heatpoint onto the canvas\n                    ctx.fillStyle = grd;\n                    ctx.fillRect(x - radiusInPixel, y - radiusInPixel, 2 * radiusInPixel, 2 * radiusInPixel);\n                }\n        \n                // Apply the specified colour gradient to the intensity map\n                _colouriseHeatMap();\n        \n                // Call the callback function, if specified\n                if (_options.callback) {\n                    _options.callback();\n                }\n            }\n        \n            /* Public Methods */\n        \n            this.Show = function () {\n                if (_canvas) {\n                    _canvas.style.display = '';\n                }\n            };\n        \n            this.Hide = function () {\n                if (_canvas) {\n                    _canvas.style.display = 'none';\n                }\n            };\n        \n            // Sets options for intensity, radius, colourgradient etc.\n            this.SetOptions = function (options) {\n                _setOptions(options);\n            }\n        \n            // Sets an array of Microsoft.Maps.Locations from which the heatmap is created\n            this.SetPoints = function (locations) {\n                // Reset the existing heatmap layer\n                _clearHeatMap();\n                // Pass in the new set of locations\n                _setPoints(locations);\n                // Recreate the layer\n                _createHeatMap();\n            }\n        \n            // Removes the heatmap layer from the DOM\n            this.Remove = function () {\n                _canvas.parentNode.parentNode.removeChild(_canvas.parentNode);\n        \n                if (_viewchangestarthandler) { Microsoft.Maps.Events.removeHandler(_viewchangestarthandler); }\n                if (_viewchangeendhandler) { Microsoft.Maps.Events.removeHandler(_viewchangeendhandler); }\n        \n                _locations = null;\n                _temperaturemap = null;\n                _canvas = null;\n                _options = null;\n                _viewchangestarthandler = null;\n                _viewchangeendhandler = null;\n            }\n        \n            // Call the initialisation routine\n            _init();\n        };\n        \n        // Call the Module Loaded method\n        Microsoft.Maps.moduleLoaded('HeatMapModule');\n\n\n**To add twitterStream.js**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**.\n2. Right-click **Scripts**, click **Add**, click **JavaScript File**.\n3. In the **Item name** field, type**twitterStream.js**.\n4. Copy and paste the following code into the file:\n\n        var liveTweetsPos = [];\n        var liveTweets = [];\n        var liveTweetsNeg = [];\n        var map;\n        var heatmap;\n        var heatmapNeg;\n        var heatmapPos;\n        \n        function initialize() {\n            // Initialize the map\n            var options = {\n                credentials: \"AvFJTZPZv8l3gF8VC3Y7BPBd0r7LKo8dqKG02EAlqg9WAi0M7la6zSIT-HwkMQbx\",\n                center: new Microsoft.Maps.Location(23.0, 8.0),\n                mapTypeId: Microsoft.Maps.MapTypeId.ordnanceSurvey,\n                labelOverlay: Microsoft.Maps.LabelOverlay.hidden,\n                zoom: 2.5\n            };\n            var map = new Microsoft.Maps.Map(document.getElementById('map_canvas'), options);\n        \n            // Heatmap options for positive, neutral and negative layers\n        \n            var heatmapOptions = {\n                // Opacity at the centre of each heat point\n                intensity: 0.5,\n        \n                // Affected radius of each heat point\n                radius: 15,\n        \n                // Whether the radius is an absolute pixel value or meters\n                unit: 'pixels'\n            };\n        \n            var heatmapPosOptions = {\n                // Opacity at the centre of each heat point\n                intensity: 0.5,\n        \n                // Affected radius of each heat point\n                radius: 15,\n        \n                // Whether the radius is an absolute pixel value or meters\n                unit: 'pixels',\n        \n                colourgradient: {\n                    0.0: 'rgba(0, 255, 255, 0)',\n                    0.1: 'rgba(0, 255, 255, 1)',\n                    0.2: 'rgba(0, 255, 191, 1)',\n                    0.3: 'rgba(0, 255, 127, 1)',\n                    0.4: 'rgba(0, 255, 63, 1)',\n                    0.5: 'rgba(0, 127, 0, 1)',\n                    0.7: 'rgba(0, 159, 0, 1)',\n                    0.8: 'rgba(0, 191, 0, 1)',\n                    0.9: 'rgba(0, 223, 0, 1)',\n                    1.0: 'rgba(0, 255, 0, 1)'\n                }\n            };\n        \n            var heatmapNegOptions = {\n                // Opacity at the centre of each heat point\n                intensity: 0.5,\n        \n                // Affected radius of each heat point\n                radius: 15,\n        \n                // Whether the radius is an absolute pixel value or meters\n                unit: 'pixels',\n        \n                colourgradient: {\n                    0.0: 'rgba(0, 255, 255, 0)',\n                    0.1: 'rgba(0, 255, 255, 1)',\n                    0.2: 'rgba(0, 191, 255, 1)',\n                    0.3: 'rgba(0, 127, 255, 1)',\n                    0.4: 'rgba(0, 63, 255, 1)',\n                    0.5: 'rgba(0, 0, 127, 1)',\n                    0.7: 'rgba(0, 0, 159, 1)',\n                    0.8: 'rgba(0, 0, 191, 1)',\n                    0.9: 'rgba(0, 0, 223, 1)',\n                    1.0: 'rgba(0, 0, 255, 1)'\n                }\n            };\n        \n            // Register and load the Client Side HeatMap Module\n            Microsoft.Maps.registerModule(\"HeatMapModule\", \"scripts/heatmap.js\");\n            Microsoft.Maps.loadModule(\"HeatMapModule\", {\n                callback: function () {\n                    // Create heatmap layers for positive, neutral and negative tweets\n                    heatmapPos = new HeatMapLayer(map, liveTweetsPos, heatmapPosOptions);\n                    heatmap = new HeatMapLayer(map, liveTweets, heatmapOptions);\n                    heatmapNeg = new HeatMapLayer(map, liveTweetsNeg, heatmapNegOptions);\n                }\n            });\n        \n            $(\"#searchbox\").val(\"xbox\");\n            $(\"#searchBtn\").click(onsearch);\n            $(\"#positiveBtn\").click(onPositiveBtn);\n            $(\"#negativeBtn\").click(onNegativeBtn);\n            $(\"#neutralBtn\").click(onNeutralBtn);\n            $(\"#neutralBtn\").button(\"toggle\");\n        }\n        \n        function onsearch() {\n            var uri = 'api/tweets?query=';\n            var query = $('#searchbox').val();\n            $.getJSON(uri + query)\n                .done(function (data) {\n                    liveTweetsPos = [];\n                    liveTweets = [];\n                    liveTweetsNeg = [];\n        \n                    // On success, 'data' contains a list of tweets.\n                    $.each(data, function (key, item) {\n                        addTweet(item);\n                    });\n        \n                    if (!$(\"#neutralBtn\").hasClass('active')) {\n                        $(\"#neutralBtn\").button(\"toggle\");\n                    }\n                    onNeutralBtn();\n                })\n                .fail(function (jqXHR, textStatus, err) {\n                    $('#statustext').text('Error: ' + err);\n                });\n        }\n        \n        function addTweet(item) {\n            //Add tweet to the heat map arrays.\n            var tweetLocation = new Microsoft.Maps.Location(item.Latitude, item.Longtitude);\n            if (item.Sentiment > 0) {\n                liveTweetsPos.push(tweetLocation);\n            } else if (item.Sentiment < 0) {\n                liveTweetsNeg.push(tweetLocation);\n            } else {\n                liveTweets.push(tweetLocation);\n            }\n        }\n        \n        function onPositiveBtn() {\n            if ($(\"#neutralBtn\").hasClass('active')) {\n                $(\"#neutralBtn\").button(\"toggle\");\n            }\n            if ($(\"#negativeBtn\").hasClass('active')) {\n                $(\"#negativeBtn\").button(\"toggle\");\n            }\n        \n            heatmapPos.SetPoints(liveTweetsPos);\n            heatmapPos.Show();\n            heatmapNeg.Hide();\n            heatmap.Hide();\n        \n            $('#statustext').text('Tweets: ' + liveTweetsPos.length + \"   \" + getPosNegRatio());\n        }\n        \n        function onNeutralBtn() {\n            if ($(\"#positiveBtn\").hasClass('active')) {\n                $(\"#positiveBtn\").button(\"toggle\");\n            }\n            if ($(\"#negativeBtn\").hasClass('active')) {\n                $(\"#negativeBtn\").button(\"toggle\");\n            }\n        \n            heatmap.SetPoints(liveTweets);\n            heatmap.Show();\n            heatmapNeg.Hide();\n            heatmapPos.Hide();\n        \n            $('#statustext').text('Tweets: ' + liveTweets.length + \"   \" + getPosNegRatio());\n        }\n        \n        function onNegativeBtn() {\n            if ($(\"#positiveBtn\").hasClass('active')) {\n                $(\"#positiveBtn\").button(\"toggle\");\n            }\n            if ($(\"#neutralBtn\").hasClass('active')) {\n                $(\"#neutralBtn\").button(\"toggle\");\n            }\n        \n            heatmapNeg.SetPoints(liveTweetsNeg);\n            heatmapNeg.Show();\n            heatmap.Hide();;\n            heatmapPos.Hide();;\n        \n            $('#statustext').text('Tweets: ' + liveTweetsNeg.length + \"\\t\" + getPosNegRatio());\n        }\n        \n        function getPosNegRatio() {\n            if (liveTweetsNeg.length == 0) {\n                return \"\";\n            }\n            else {\n                var ratio = liveTweetsPos.length / liveTweetsNeg.length;\n                var str = parseFloat(Math.round(ratio * 10) / 10).toFixed(1);\n                return \"Positive/Negative Ratio: \" + str;\n            }\n        }\n\n\n**To modify the layout.cshtml**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**, expand **Views**, expand **Shared**, and then double-click _**Layout.cshtml**.\n2. Replace the content with the following:\n\n        <!DOCTYPE html>\n        <html>\n        <head>\n            <meta charset=\"utf-8\" />\n            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n            <title>@ViewBag.Title</title>\n            @Styles.Render(\"~/Content/css\")\n            @Scripts.Render(\"~/bundles/modernizr\")\n            <!-- Bing Maps -->\n            <script type=\"text/javascript\" src=\"http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&mkt=en-gb\"></script>\n            <!-- Spatial Dashboard JavaScript -->\n            <script src=\"~/Scripts/twitterStream.js\" type=\"text/javascript\"></script>\n        </head>\n        <body onload=\"initialize()\">\n            <div class=\"navbar navbar-inverse navbar-fixed-top\">\n                <div class=\"container\">\n                    <div class=\"navbar-header\">\n                        <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                            <span class=\"icon-bar\"></span>\n                            <span class=\"icon-bar\"></span>\n                            <span class=\"icon-bar\"></span>\n                        </button>\n                    </div>\n                    <div class=\"navbar-collapse collapse\">\n                        <div class=\"row\">\n                            <ul class=\"nav navbar-nav col-lg-5\">\n                                <li class=\"col-lg-12\">\n                                    <div class=\"navbar-form\">\n                                        <input id=\"searchbox\" type=\"search\" class=\"form-control\">\n                                        <button type=\"button\" id=\"searchBtn\" class=\"btn btn-primary\">Go</button>\n                                    </div>\n                                </li>\n                            </ul>\n                            <ul class=\"nav navbar-nav col-lg-7\">\n                                <li>\n                                    <div class=\"navbar-form\">\n                                        <div class=\"btn-group\" data-toggle=\"buttons-radio\">\n                                            <button type=\"button\" id=\"positiveBtn\" class=\"btn btn-primary\">Positive</button>\n                                            <button type=\"button\" id=\"neutralBtn\" class=\"btn btn-primary\">Neutral</button>\n                                            <button type=\"button\" id=\"negativeBtn\" class=\"btn btn-primary\">Negative</button>\n                                        </div>\n                                    </div>\n                                </li>\n                                <li><span id=\"statustext\" class=\"navbar-text\"></span></li>\n                            </ul>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"map_container\">\n                @RenderBody()\n            </div>\n            @Scripts.Render(\"~/bundles/jquery\")\n            @Scripts.Render(\"~/bundles/bootstrap\")\n            @RenderSection(\"scripts\", required: false)\n        </body>\n        </html>\n\n\n\n**To modify the Index.cshtml**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**, expand **Views**, expand **Home**, and then double-click **Index.cshtml**.\n2. Replace the content with the following:\n\n        @{\n            ViewBag.Title = \"Tweet Sentiment\";\n        }\n        \n        <div class=\"map_container\">\n            <div id=\"map_canvas\"/>\n        </div>\n\n**To modify the site.css file**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**, expand **Content**, and then double-click **Site.css**.\n2. Append the following code to the file:\n        \n        /* make container, and thus map, 100% width */\n        .map_container {\n            width: 100%;\n            height: 100%;\n        }\n        \n        #map_canvas{\n          height:100%;\n        }\n        \n        #tweets{\n          position: absolute;\n          top: 60px;\n          left: 75px;\n          z-index:1000;\n          font-size: 30px;\n        }\n\n**To modify the global.asax file**\n\n1. From **Solution Explorer**, expand **TweetSentimentWeb**, and then double-click **Global.asax**.\n2. Add the following **using** statement:\n\n        using System.Web.Http;\n\n2. Add the following lines inside the **Application_Start()** function:\n\n        // Register API routes\n        GlobalConfiguration.Configure(WebApiConfig.Register);\n  \n    Modify the registration of the API routes to make the Web API controller work inside the MVC application.\n\n**To run the web application**\n\n1. Verify that the streaming service console application is still running so you can see the real-time changes.\n2. Press **F5** to run the web application:\n\n    ![hdinsight.hbase.twitter.sentiment.bing.map][img-bing-map]\n2. In the text box, enter a keyword, and then click **Go**.  Depending on the data collected in the HBase table, some keywords might not be found. Try some common keywords, such as \"love,\" \"xbox,\" and \"playstation.\" \n3. Toggle among **Positive**, **Neutral**, and **Negative** to compare sentiment on the subject.\n4. Let the streaming service run for another hour, and then search the same keywords, and compare the results.\n\n \nOptionally, you can deploy the application to Azure Websites. For instructions, see [Get started with Azure Websites and ASP.NET][website-get-started].\n \n## Next Steps\n\nIn this tutorial, you learned how to get tweets, analyze the sentiment of tweets, save the sentiment data to HBase, and present the real-time Twitter sentiment data to Bing maps. To learn more, see:\n\n- [Get started with HDInsight][hdinsight-get-started]\n- [Configure HBase replication in HDInsight](hdinsight-hbase-geo-replication.md) \n- [Analyze Twitter data with Hadoop in HDInsight][hdinsight-analyze-twitter-data]\n- [Analyze flight delay data using HDInsight][hdinsight-analyze-flight-delay-data]\n- [Develop C# Hadoop streaming programs for HDInsight][hdinsight-develop-streaming]\n- [Develop Java MapReduce programs for HDInsight][hdinsight-develop-mapreduce]\n\n\n[hbase-get-started]: ../hdinsight-hbase-tutorial-get-started.md\n[website-get-started]: ../web-sites-dotnet-get-started.md\n\n\n\n[img-app-arch]: ./media/hdinsight-hbase-analyze-twitter-sentiment/AppArchitecture.png\n[img-twitter-app]: ./media/hdinsight-hbase-analyze-twitter-sentiment/TwitterApp.png\n[img-streaming-service]: ./media/hdinsight-hbase-analyze-twitter-sentiment/StreamingService.png\n[img-bing-map]: ./media/hdinsight-hbase-analyze-twitter-sentiment/TwitterSentimentBingMap.png\n\n\n\n[hdinsight-develop-streaming]: hdinsight-hadoop-develop-deploy-streaming-jobs.md\n[hdinsight-develop-mapreduce]: hdinsight-develop-deploy-java-mapreduce.md\n[hdinsight-analyze-twitter-data]: hdinsight-analyze-twitter-data.md\n[hdinsight-hbase-get-started]: ../hdinsight-hbase-tutorial-get-started.md\n\n\n\n\n[curl]: http://curl.haxx.se\n[curl-download]: http://curl.haxx.se/download.html\n\n[apache-hive-tutorial]: https://cwiki.apache.org/confluence/display/Hive/Tutorial\n\n[twitter-streaming-api]: https://dev.twitter.com/docs/streaming-apis\n[twitter-statuses-filter]: https://dev.twitter.com/docs/api/1.1/post/statuses/filter\n\n[powershell-start]: http://technet.microsoft.com/library/hh847889.aspx\n[powershell-install]: powershell-install-configure.md\n[powershell-script]: http://technet.microsoft.com/library/ee176949.aspx\n\n[hdinsight-provision]: hdinsight-provision-clusters.md\n[hdinsight-get-started]: hdinsight-hadoop-linux-tutorial-get-started.md\n[hdinsight-storage-powershell]: hdinsight-hadoop-use-blob-storage.md#powershell\n[hdinsight-analyze-flight-delay-data]: hdinsight-analyze-flight-delay-data.md\n[hdinsight-storage]: hdinsight-hadoop-use-blob-storage.md\n[hdinsight-use-sqoop]: hdinsight-use-sqoop.md\n[hdinsight-power-query]: hdinsight-connect-excel-power-query.md\n[hdinsight-hive-odbc]: hdinsight-connect-excel-hive-ODBC-driver.md\n "
+}

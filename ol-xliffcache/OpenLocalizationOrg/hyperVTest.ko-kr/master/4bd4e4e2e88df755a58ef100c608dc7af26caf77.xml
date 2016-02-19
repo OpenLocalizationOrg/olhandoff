@@ -1,0 +1,573 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        28,
+        89
+      ],
+      "content": "How to log events to Azure Event Hubs in Azure API Management"
+    },
+    {
+      "pos": [
+        109,
+        177
+      ],
+      "content": "Learn how to log events to Azure Event Hubs in Azure API Management."
+    },
+    {
+      "pos": [
+        491,
+        552
+      ],
+      "content": "How to log events to Azure Event Hubs in Azure API Management"
+    },
+    {
+      "pos": [
+        554,
+        1147
+      ],
+      "content": "Azure Event Hubs is a highly scalable data ingress service that can ingest millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications. Event Hubs acts as the \"front door\" for an event pipeline, and once data is collected into an event hub, it can be transformed and stored using any real-time analytics provider or batching/storage adapters. Event Hubs decouples the production of a stream of events from the consumption of those events, so that event consumers can access the events on their own schedule.",
+      "nodes": [
+        {
+          "content": "Azure Event Hubs is a highly scalable data ingress service that can ingest millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications.",
+          "pos": [
+            0,
+            221
+          ]
+        },
+        {
+          "content": "Event Hubs acts as the \"front door\" for an event pipeline, and once data is collected into an event hub, it can be transformed and stored using any real-time analytics provider or batching/storage adapters.",
+          "pos": [
+            222,
+            428
+          ]
+        },
+        {
+          "content": "Event Hubs decouples the production of a stream of events from the consumption of those events, so that event consumers can access the events on their own schedule.",
+          "pos": [
+            429,
+            593
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1149,
+        1407
+      ],
+      "content": "This article is a companion to the <bpt id=\"p1\">[</bpt>Integrate Azure API Management with Event Hubs<ept id=\"p1\">](https://azure.microsoft.com/documentation/videos/integrate-azure-api-management-with-event-hubs/)</ept><ph id=\"ph2\"/> video and describes how to log API Management events using Azure Event Hubs."
+    },
+    {
+      "pos": [
+        1412,
+        1437
+      ],
+      "content": "Create an Azure Event Hub"
+    },
+    {
+      "pos": [
+        1439,
+        1909
+      ],
+      "content": "To create a new Event Hub, sign-in to the <bpt id=\"p2\">[</bpt>Azure classic portal<ept id=\"p2\">](https://manage.windowsazure.com)</ept><ph id=\"ph3\"/> and click <bpt id=\"p3\">**</bpt>New<ept id=\"p3\">**</ept>-&gt;<bpt id=\"p4\">**</bpt>App Services<ept id=\"p4\">**</ept>-&gt;<bpt id=\"p5\">**</bpt>Service Bus<ept id=\"p5\">**</ept>-&gt;<bpt id=\"p6\">**</bpt>Event Hub<ept id=\"p6\">**</ept>-&gt;<bpt id=\"p7\">**</bpt>Quick Create<ept id=\"p7\">**</ept>. Enter an Event Hub name, region, select a subscription, and select a namespace. If you haven't previously created a namespace you can create one by typing a name in the <bpt id=\"p8\">**</bpt>Namespace<ept id=\"p8\">**</ept><ph id=\"ph4\"/> textbox. Once all properties are configured, click <bpt id=\"p9\">**</bpt>Create a new Event Hub<ept id=\"p9\">**</ept><ph id=\"ph5\"/> to create the Event Hub.",
+      "nodes": [
+        {
+          "content": "To create a new Event Hub, sign-in to the <bpt id=\"p2\">[</bpt>Azure classic portal<ept id=\"p2\">](https://manage.windowsazure.com)</ept><ph id=\"ph3\"/> and click <bpt id=\"p3\">**</bpt>New<ept id=\"p3\">**</ept>-&gt;<bpt id=\"p4\">**</bpt>App Services<ept id=\"p4\">**</ept>-&gt;<bpt id=\"p5\">**</bpt>Service Bus<ept id=\"p5\">**</ept>-&gt;<bpt id=\"p6\">**</bpt>Event Hub<ept id=\"p6\">**</ept>-&gt;<bpt id=\"p7\">**</bpt>Quick Create<ept id=\"p7\">**</ept>.",
+          "pos": [
+            0,
+            438
+          ]
+        },
+        {
+          "content": "Enter an Event Hub name, region, select a subscription, and select a namespace.",
+          "pos": [
+            439,
+            518
+          ]
+        },
+        {
+          "content": "If you haven't previously created a namespace you can create one by typing a name in the <bpt id=\"p8\">**</bpt>Namespace<ept id=\"p8\">**</ept><ph id=\"ph4\"/> textbox.",
+          "pos": [
+            519,
+            682
+          ]
+        },
+        {
+          "content": "Once all properties are configured, click <bpt id=\"p9\">**</bpt>Create a new Event Hub<ept id=\"p9\">**</ept><ph id=\"ph5\"/> to create the Event Hub.",
+          "pos": [
+            683,
+            828
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1911,
+        1948
+      ],
+      "content": "<ph id=\"ph6\">![</ph>Create event hub<ph id=\"ph7\">][create-event-hub]</ph>"
+    },
+    {
+      "pos": [
+        1950,
+        2120
+      ],
+      "content": "Next, navigate to the <bpt id=\"p10\">**</bpt>Configure<ept id=\"p10\">**</ept><ph id=\"ph8\"/> tab for your new Event Hub and create two <bpt id=\"p11\">**</bpt>shared access policies<ept id=\"p11\">**</ept>. Name the first one <bpt id=\"p12\">**</bpt>Sending<ept id=\"p12\">**</ept><ph id=\"ph9\"/> and give it <bpt id=\"p13\">**</bpt>Send<ept id=\"p13\">**</ept><ph id=\"ph10\"/> permissions.",
+      "nodes": [
+        {
+          "content": "Next, navigate to the <bpt id=\"p10\">**</bpt>Configure<ept id=\"p10\">**</ept><ph id=\"ph8\"/> tab for your new Event Hub and create two <bpt id=\"p11\">**</bpt>shared access policies<ept id=\"p11\">**</ept>.",
+          "pos": [
+            0,
+            199
+          ]
+        },
+        {
+          "content": "Name the first one <bpt id=\"p12\">**</bpt>Sending<ept id=\"p12\">**</ept><ph id=\"ph9\"/> and give it <bpt id=\"p13\">**</bpt>Send<ept id=\"p13\">**</ept><ph id=\"ph10\"/> permissions.",
+          "pos": [
+            200,
+            373
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2122,
+        2155
+      ],
+      "content": "<ph id=\"ph11\">![</ph>Sending policy<ph id=\"ph12\">][sending-policy]</ph>"
+    },
+    {
+      "pos": [
+        2157,
+        2243
+      ],
+      "content": "Name the second one <bpt id=\"p14\">**</bpt>Receiving<ept id=\"p14\">**</ept>, give it <bpt id=\"p15\">**</bpt>Listen<ept id=\"p15\">**</ept><ph id=\"ph13\"/> permissions, and click <bpt id=\"p16\">**</bpt>Save<ept id=\"p16\">**</ept>."
+    },
+    {
+      "pos": [
+        2245,
+        2282
+      ],
+      "content": "<ph id=\"ph14\">![</ph>Receiving policy<ph id=\"ph15\">][receiving-policy]</ph>"
+    },
+    {
+      "pos": [
+        2284,
+        2525
+      ],
+      "content": "Each shared access policy allows applications to send and receive events to and from the Event Hub. To access the connection strings for these policies, navigate to the <bpt id=\"p17\">**</bpt>Dashboard<ept id=\"p17\">**</ept><ph id=\"ph16\"/> tab of the Event Hub and click <bpt id=\"p18\">**</bpt>Connection information<ept id=\"p18\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Each shared access policy allows applications to send and receive events to and from the Event Hub.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "To access the connection strings for these policies, navigate to the <bpt id=\"p17\">**</bpt>Dashboard<ept id=\"p17\">**</ept><ph id=\"ph16\"/> tab of the Event Hub and click <bpt id=\"p18\">**</bpt>Connection information<ept id=\"p18\">**</ept>.",
+          "pos": [
+            100,
+            336
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2527,
+        2568
+      ],
+      "content": "<ph id=\"ph17\">![</ph>Connection string<ph id=\"ph18\">][event-hub-dashboard]</ph>"
+    },
+    {
+      "pos": [
+        2570,
+        2724
+      ],
+      "content": "The <bpt id=\"p19\">**</bpt>Sending<ept id=\"p19\">**</ept><ph id=\"ph19\"/> connection string is used when logging events, and the <bpt id=\"p20\">**</bpt>Receiving<ept id=\"p20\">**</ept><ph id=\"ph20\"/> connection string is used when downloading events from the Event Hub."
+    },
+    {
+      "pos": [
+        2726,
+        2775
+      ],
+      "content": "<ph id=\"ph21\">![</ph>Connection string<ph id=\"ph22\">][event-hub-connection-string]</ph>"
+    },
+    {
+      "pos": [
+        2780,
+        2811
+      ],
+      "content": "Create an API Management logger"
+    },
+    {
+      "pos": [
+        2813,
+        3016
+      ],
+      "content": "Now that you have an Event Hub, the next step is to configure a <bpt id=\"p21\">[</bpt>Logger<ept id=\"p21\">](https://msdn.microsoft.com/library/azure/mt592020.aspx)</ept><ph id=\"ph23\"/> in your API Management service so that it can log events to the Event Hub."
+    },
+    {
+      "pos": [
+        3018,
+        3385
+      ],
+      "content": "API Management loggers are configured using the <bpt id=\"p22\">[</bpt>API Management REST API<ept id=\"p22\">](http://aka.ms/smapi)</ept>. Before using the REST API for the first time, review the <bpt id=\"p23\">[</bpt>prerequisites<ept id=\"p23\">](https://msdn.microsoft.com/library/azure/dn776326.aspx#Prerequisites)</ept><ph id=\"ph24\"/> and ensure that you have <bpt id=\"p24\">[</bpt>enabled access to the REST API<ept id=\"p24\">](https://msdn.microsoft.com/library/azure/dn776326.aspx#EnableRESTAPI)</ept>.",
+      "nodes": [
+        {
+          "content": "API Management loggers are configured using the <bpt id=\"p22\">[</bpt>API Management REST API<ept id=\"p22\">](http://aka.ms/smapi)</ept>.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "Before using the REST API for the first time, review the <bpt id=\"p23\">[</bpt>prerequisites<ept id=\"p23\">](https://msdn.microsoft.com/library/azure/dn776326.aspx#Prerequisites)</ept><ph id=\"ph24\"/> and ensure that you have <bpt id=\"p24\">[</bpt>enabled access to the REST API<ept id=\"p24\">](https://msdn.microsoft.com/library/azure/dn776326.aspx#EnableRESTAPI)</ept>.",
+          "pos": [
+            136,
+            502
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3387,
+        3465
+      ],
+      "content": "To create a logger, make an HTTP PUT request using the following URL template."
+    },
+    {
+      "pos": [
+        3581,
+        3660
+      ],
+      "content": "Replace <ph id=\"ph25\">`{your service}`</ph><ph id=\"ph26\"/> with the name of your API Management service instance."
+    },
+    {
+      "pos": [
+        3665,
+        3884
+      ],
+      "content": "Replace <ph id=\"ph27\">`{new logger name}`</ph><ph id=\"ph28\"/> with the desired name for your new logger. You will reference this name when you configure the <bpt id=\"p25\">[</bpt>log-to-eventhub<ept id=\"p25\">](https://msdn.microsoft.com/library/azure/dn894085.aspx#log-to-eventhub)</ept><ph id=\"ph29\"/> policy",
+      "nodes": [
+        {
+          "content": "Replace <ph id=\"ph27\">`{new logger name}`</ph><ph id=\"ph28\"/> with the desired name for your new logger.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "You will reference this name when you configure the <bpt id=\"p25\">[</bpt>log-to-eventhub<ept id=\"p25\">](https://msdn.microsoft.com/library/azure/dn894085.aspx#log-to-eventhub)</ept><ph id=\"ph29\"/> policy",
+          "pos": [
+            105,
+            308
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3886,
+        3927
+      ],
+      "content": "Add the following headers to the request."
+    },
+    {
+      "pos": [
+        3933,
+        3964
+      ],
+      "content": "Content-Type : application/json"
+    },
+    {
+      "pos": [
+        3969,
+        4014
+      ],
+      "content": "Authorization : SharedAccessSignature uid=..."
+    },
+    {
+      "pos": [
+        4023,
+        4189
+      ],
+      "content": "For instructions on generating the <ph id=\"ph30\">`SharedAccessSignature`</ph><ph id=\"ph31\"/> see <bpt id=\"p26\">[</bpt>Azure API Management REST API Authentication<ept id=\"p26\">](https://msdn.microsoft.com/library/azure/dn798668.aspx)</ept>."
+    },
+    {
+      "pos": [
+        4191,
+        4245
+      ],
+      "content": "Specify the request body using the following template."
+    },
+    {
+      "pos": [
+        4528,
+        4566
+      ],
+      "content": "<ph id=\"ph32\">`type`</ph><ph id=\"ph33\"/> must be set to <ph id=\"ph34\">`AzureEventHub`</ph>."
+    },
+    {
+      "pos": [
+        4571,
+        4675
+      ],
+      "content": "<ph id=\"ph35\">`description`</ph><ph id=\"ph36\"/> provides an optional description of the logger and can be a zero length string if desired."
+    },
+    {
+      "pos": [
+        4680,
+        4761
+      ],
+      "content": "<ph id=\"ph37\">`credentials`</ph><ph id=\"ph38\"/> contains the <ph id=\"ph39\">`name`</ph><ph id=\"ph40\"/> and <ph id=\"ph41\">`connectionString`</ph><ph id=\"ph42\"/> of your Azure Event Hub."
+    },
+    {
+      "pos": [
+        4763,
+        4858
+      ],
+      "content": "When you make the request, if the logger is created a status code of <ph id=\"ph43\">`201 Created`</ph><ph id=\"ph44\"/> is returned."
+    },
+    {
+      "pos": [
+        4862,
+        5173
+      ],
+      "content": "<ph id=\"ph45\">[AZURE.NOTE]</ph><ph id=\"ph46\"/> For other possible return codes and their reasons, see <bpt id=\"p27\">[</bpt>Create a Logger<ept id=\"p27\">](https://msdn.microsoft.com/library/azure/mt592020.aspx#PUT)</ept>. To see how perform other operations such as list, update, and delete, see the <bpt id=\"p28\">[</bpt>Logger<ept id=\"p28\">](https://msdn.microsoft.com/library/azure/mt592020.aspx)</ept><ph id=\"ph47\"/> entity documentation.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph45\">[AZURE.NOTE]</ph><ph id=\"ph46\"/> For other possible return codes and their reasons, see <bpt id=\"p27\">[</bpt>Create a Logger<ept id=\"p27\">](https://msdn.microsoft.com/library/azure/mt592020.aspx#PUT)</ept>.",
+          "pos": [
+            0,
+            220
+          ]
+        },
+        {
+          "content": "To see how perform other operations such as list, update, and delete, see the <bpt id=\"p28\">[</bpt>Logger<ept id=\"p28\">](https://msdn.microsoft.com/library/azure/mt592020.aspx)</ept><ph id=\"ph47\"/> entity documentation.",
+          "pos": [
+            221,
+            440
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5178,
+        5213
+      ],
+      "content": "Configure log-to-eventhubs policies"
+    },
+    {
+      "pos": [
+        5215,
+        5449
+      ],
+      "content": "Once your logger is configured in API Management, you can configure your log-to-eventhubs policies to log the desired events. The log-to-eventhubs policy can be used in either the inbound policy section or the outbound policy section.",
+      "nodes": [
+        {
+          "content": "Once your logger is configured in API Management, you can configure your log-to-eventhubs policies to log the desired events.",
+          "pos": [
+            0,
+            125
+          ]
+        },
+        {
+          "content": "The log-to-eventhubs policy can be used in either the inbound policy section or the outbound policy section.",
+          "pos": [
+            126,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5451,
+        5667
+      ],
+      "content": "To configure policies, sign-in to the <bpt id=\"p29\">[</bpt>Azure classic portal<ept id=\"p29\">](https://manage.windowsazure.com)</ept>, navigate your API Management service, and click either <bpt id=\"p30\">**</bpt>publisher portal<ept id=\"p30\">**</ept><ph id=\"ph48\"/> or <bpt id=\"p31\">**</bpt>Manage<ept id=\"p31\">**</ept><ph id=\"ph49\"/> to access the publisher portal."
+    },
+    {
+      "pos": [
+        5669,
+        5706
+      ],
+      "content": "<ph id=\"ph50\">![</ph>Publisher portal<ph id=\"ph51\">][publisher-portal]</ph>"
+    },
+    {
+      "pos": [
+        5708,
+        5916
+      ],
+      "content": "Click <bpt id=\"p32\">**</bpt>Policies<ept id=\"p32\">**</ept><ph id=\"ph52\"/> in the API Management menu on the left, select the desired product and API, and click <bpt id=\"p33\">**</bpt>Add policy<ept id=\"p33\">**</ept>. In this example we're adding a policy to the <bpt id=\"p34\">**</bpt>Echo API<ept id=\"p34\">**</ept><ph id=\"ph53\"/> in the <bpt id=\"p35\">**</bpt>Unlimited<ept id=\"p35\">**</ept><ph id=\"ph54\"/> product.",
+      "nodes": [
+        {
+          "content": "Click <bpt id=\"p32\">**</bpt>Policies<ept id=\"p32\">**</ept><ph id=\"ph52\"/> in the API Management menu on the left, select the desired product and API, and click <bpt id=\"p33\">**</bpt>Add policy<ept id=\"p33\">**</ept>.",
+          "pos": [
+            0,
+            215
+          ]
+        },
+        {
+          "content": "In this example we're adding a policy to the <bpt id=\"p34\">**</bpt>Echo API<ept id=\"p34\">**</ept><ph id=\"ph53\"/> in the <bpt id=\"p35\">**</bpt>Unlimited<ept id=\"p35\">**</ept><ph id=\"ph54\"/> product.",
+          "pos": [
+            216,
+            413
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5918,
+        5943
+      ],
+      "content": "<ph id=\"ph55\">![</ph>Add policy<ph id=\"ph56\">][add-policy]</ph>"
+    },
+    {
+      "pos": [
+        5945,
+        6097
+      ],
+      "content": "Position your cursor in the <ph id=\"ph57\">`inbound`</ph><ph id=\"ph58\"/> policy section and click the <bpt id=\"p36\">**</bpt>Log to EventHub<ept id=\"p36\">**</ept><ph id=\"ph59\"/> policy to insert the <ph id=\"ph60\">`log-to-eventhub`</ph><ph id=\"ph61\"/> policy statement template."
+    },
+    {
+      "pos": [
+        6099,
+        6133
+      ],
+      "content": "<ph id=\"ph62\">![</ph>Policy editor<ph id=\"ph63\">][event-hub-policy]</ph>"
+    },
+    {
+      "pos": [
+        6350,
+        6449
+      ],
+      "content": "Replace <ph id=\"ph64\">`logger-id`</ph><ph id=\"ph65\"/> with the name of the API Management logger you configured in the previous step."
+    },
+    {
+      "pos": [
+        6451,
+        6678
+      ],
+      "content": "You can use any expression that returns a string as the value for the <ph id=\"ph66\">`log-to-eventhub`</ph><ph id=\"ph67\"/> element. In this example a string containing the date and time, service name, request id, request ip address, and operation name is logged.",
+      "nodes": [
+        {
+          "content": "You can use any expression that returns a string as the value for the <ph id=\"ph66\">`log-to-eventhub`</ph><ph id=\"ph67\"/> element.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "In this example a string containing the date and time, service name, request id, request ip address, and operation name is logged.",
+          "pos": [
+            131,
+            261
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6680,
+        6831
+      ],
+      "content": "Click <bpt id=\"p37\">**</bpt>Save<ept id=\"p37\">**</ept><ph id=\"ph68\"/> to save the updated policy configuration. As soon as it is saved the policy is active and events are logged to the designated Event Hub.",
+      "nodes": [
+        {
+          "content": "Click <bpt id=\"p37\">**</bpt>Save<ept id=\"p37\">**</ept><ph id=\"ph68\"/> to save the updated policy configuration.",
+          "pos": [
+            0,
+            111
+          ]
+        },
+        {
+          "content": "As soon as it is saved the policy is active and events are logged to the designated Event Hub.",
+          "pos": [
+            112,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6836,
+        6846
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        6852,
+        6885
+      ],
+      "content": "Learn more about Azure Event Hubs"
+    },
+    {
+      "pos": [
+        6894,
+        6982
+      ],
+      "content": "<bpt id=\"p38\">[</bpt>Get started with Azure Event Hubs<ept id=\"p38\">](../event-hubs/event-hubs-csharp-ephcs-getstarted.md)</ept>"
+    },
+    {
+      "pos": [
+        6991,
+        7127
+      ],
+      "content": "<bpt id=\"p39\">[</bpt>Receive messages with EventProcessorHost<ept id=\"p39\">](../event-hubs/event-hubs-csharp-ephcs-getstarted.md#receive-messages-with-eventprocessorhost)</ept>"
+    },
+    {
+      "pos": [
+        7136,
+        7213
+      ],
+      "content": "<bpt id=\"p40\">[</bpt>Event Hubs programming guide<ept id=\"p40\">](../event-hubs/event-hubs-programming-guide.md)</ept>"
+    },
+    {
+      "pos": [
+        7218,
+        7276
+      ],
+      "content": "Learn more about API Management and Event Hubs integration"
+    },
+    {
+      "pos": [
+        7285,
+        7366
+      ],
+      "content": "<bpt id=\"p41\">[</bpt>Logger entity reference<ept id=\"p41\">](https://msdn.microsoft.com/library/azure/mt592020.aspx)</ept>"
+    },
+    {
+      "pos": [
+        7375,
+        7481
+      ],
+      "content": "<bpt id=\"p42\">[</bpt>log-to-eventhub policy reference<ept id=\"p42\">](https://msdn.microsoft.com/library/azure/dn894085.aspx#log-to-eventhub)</ept>"
+    },
+    {
+      "pos": [
+        7490,
+        7602
+      ],
+      "content": "<bpt id=\"p43\">[</bpt>Monitor your APIs with Azure API Management, Event Hubs and Runscope<ept id=\"p43\">](api-management-log-to-eventhub-sample.md)</ept>"
+    },
+    {
+      "pos": [
+        7611,
+        7636
+      ],
+      "content": "Watch a video walkthrough"
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"How to log events to Azure Event Hubs in Azure API Management\" \n    description=\"Learn how to log events to Azure Event Hubs in Azure API Management.\" \n    services=\"api-management\" \n    documentationCenter=\"\" \n    authors=\"steved0x\" \n    manager=\"dwrede\" \n    editor=\"\"/>\n\n<tags \n    ms.service=\"api-management\" \n    ms.workload=\"mobile\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"12/07/2015\" \n    ms.author=\"sdanie\"/>\n\n# How to log events to Azure Event Hubs in Azure API Management\n\nAzure Event Hubs is a highly scalable data ingress service that can ingest millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications. Event Hubs acts as the \"front door\" for an event pipeline, and once data is collected into an event hub, it can be transformed and stored using any real-time analytics provider or batching/storage adapters. Event Hubs decouples the production of a stream of events from the consumption of those events, so that event consumers can access the events on their own schedule.\n\nThis article is a companion to the [Integrate Azure API Management with Event Hubs](https://azure.microsoft.com/documentation/videos/integrate-azure-api-management-with-event-hubs/) video and describes how to log API Management events using Azure Event Hubs.\n\n## Create an Azure Event Hub\n\nTo create a new Event Hub, sign-in to the [Azure classic portal](https://manage.windowsazure.com) and click **New**->**App Services**->**Service Bus**->**Event Hub**->**Quick Create**. Enter an Event Hub name, region, select a subscription, and select a namespace. If you haven't previously created a namespace you can create one by typing a name in the **Namespace** textbox. Once all properties are configured, click **Create a new Event Hub** to create the Event Hub.\n\n![Create event hub][create-event-hub]\n\nNext, navigate to the **Configure** tab for your new Event Hub and create two **shared access policies**. Name the first one **Sending** and give it **Send** permissions.\n\n![Sending policy][sending-policy]\n\nName the second one **Receiving**, give it **Listen** permissions, and click **Save**.\n\n![Receiving policy][receiving-policy]\n\nEach shared access policy allows applications to send and receive events to and from the Event Hub. To access the connection strings for these policies, navigate to the **Dashboard** tab of the Event Hub and click **Connection information**.\n\n![Connection string][event-hub-dashboard]\n\nThe **Sending** connection string is used when logging events, and the **Receiving** connection string is used when downloading events from the Event Hub.\n\n![Connection string][event-hub-connection-string]\n\n## Create an API Management logger\n\nNow that you have an Event Hub, the next step is to configure a [Logger](https://msdn.microsoft.com/library/azure/mt592020.aspx) in your API Management service so that it can log events to the Event Hub.\n\nAPI Management loggers are configured using the [API Management REST API](http://aka.ms/smapi). Before using the REST API for the first time, review the [prerequisites](https://msdn.microsoft.com/library/azure/dn776326.aspx#Prerequisites) and ensure that you have [enabled access to the REST API](https://msdn.microsoft.com/library/azure/dn776326.aspx#EnableRESTAPI).\n\nTo create a logger, make an HTTP PUT request using the following URL template.\n\n    https://{your service}.management.azure-api.net/loggers/{new logger name}?api-version=2014-02-14-preview\n\n-   Replace `{your service}` with the name of your API Management service instance.\n-   Replace `{new logger name}` with the desired name for your new logger. You will reference this name when you configure the [log-to-eventhub](https://msdn.microsoft.com/library/azure/dn894085.aspx#log-to-eventhub) policy\n\nAdd the following headers to the request.\n\n-   Content-Type : application/json\n-   Authorization : SharedAccessSignature uid=...\n    -   For instructions on generating the `SharedAccessSignature` see [Azure API Management REST API Authentication](https://msdn.microsoft.com/library/azure/dn798668.aspx).\n\nSpecify the request body using the following template.\n\n    {\n      \"type\" : \"AzureEventHub\",\n      \"description\" : \"Sample logger description\",\n      \"credentials\" : {\n        \"name\" : \"Name of the Event Hub from the Azure Classic Portal\",\n        \"connectionString\" : \"Endpoint=Event Hub Sender connection string\"\n        }\n    }\n\n-   `type` must be set to `AzureEventHub`.\n-   `description` provides an optional description of the logger and can be a zero length string if desired.\n-   `credentials` contains the `name` and `connectionString` of your Azure Event Hub.\n\nWhen you make the request, if the logger is created a status code of `201 Created` is returned. \n\n>[AZURE.NOTE] For other possible return codes and their reasons, see [Create a Logger](https://msdn.microsoft.com/library/azure/mt592020.aspx#PUT). To see how perform other operations such as list, update, and delete, see the [Logger](https://msdn.microsoft.com/library/azure/mt592020.aspx) entity documentation.\n\n## Configure log-to-eventhubs policies\n\nOnce your logger is configured in API Management, you can configure your log-to-eventhubs policies to log the desired events. The log-to-eventhubs policy can be used in either the inbound policy section or the outbound policy section.\n\nTo configure policies, sign-in to the [Azure classic portal](https://manage.windowsazure.com), navigate your API Management service, and click either **publisher portal** or **Manage** to access the publisher portal.\n\n![Publisher portal][publisher-portal]\n\nClick **Policies** in the API Management menu on the left, select the desired product and API, and click **Add policy**. In this example we're adding a policy to the **Echo API** in the **Unlimited** product.\n\n![Add policy][add-policy]\n\nPosition your cursor in the `inbound` policy section and click the **Log to EventHub** policy to insert the `log-to-eventhub` policy statement template.\n\n![Policy editor][event-hub-policy]\n\n    <log-to-eventhub logger-id ='logger-id'>\n      @( string.Join(\",\", DateTime.UtcNow, context.Deployment.ServiceName, context.RequestId, context.Request.IpAddress, context.Operation.Name))\n    </log-to-eventhub>\n\nReplace `logger-id` with the name of the API Management logger you configured in the previous step.\n\nYou can use any expression that returns a string as the value for the `log-to-eventhub` element. In this example a string containing the date and time, service name, request id, request ip address, and operation name is logged.\n\nClick **Save** to save the updated policy configuration. As soon as it is saved the policy is active and events are logged to the designated Event Hub.\n\n## Next steps\n\n-   Learn more about Azure Event Hubs\n    -   [Get started with Azure Event Hubs](../event-hubs/event-hubs-csharp-ephcs-getstarted.md)\n    -   [Receive messages with EventProcessorHost](../event-hubs/event-hubs-csharp-ephcs-getstarted.md#receive-messages-with-eventprocessorhost)\n    -   [Event Hubs programming guide](../event-hubs/event-hubs-programming-guide.md)\n-   Learn more about API Management and Event Hubs integration\n    -   [Logger entity reference](https://msdn.microsoft.com/library/azure/mt592020.aspx)\n    -   [log-to-eventhub policy reference](https://msdn.microsoft.com/library/azure/dn894085.aspx#log-to-eventhub)\n    -   [Monitor your APIs with Azure API Management, Event Hubs and Runscope](api-management-log-to-eventhub-sample.md)    \n\n## Watch a video walkthrough\n\n> [AZURE.VIDEO integrate-azure-api-management-with-event-hubs]\n\n\n[publisher-portal]: ./media/api-management-howto-log-event-hubs/publisher-portal.png\n[create-event-hub]: ./media/api-management-howto-log-event-hubs/create-event-hub.png\n[event-hub-connection-string]: ./media/api-management-howto-log-event-hubs/event-hub-connection-string.png\n[event-hub-dashboard]: ./media/api-management-howto-log-event-hubs/event-hub-dashboard.png\n[receiving-policy]: ./media/api-management-howto-log-event-hubs/receiving-policy.png\n[sending-policy]: ./media/api-management-howto-log-event-hubs/sending-policy.png\n[event-hub-policy]: ./media/api-management-howto-log-event-hubs/event-hub-policy.png\n[add-policy]: ./media/api-management-howto-log-event-hubs/add-policy.png\n\n\n\n\n\n\n"
+}

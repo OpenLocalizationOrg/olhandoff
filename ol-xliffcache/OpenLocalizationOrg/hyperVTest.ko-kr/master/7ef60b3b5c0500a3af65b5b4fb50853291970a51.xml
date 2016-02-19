@@ -1,0 +1,1366 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        86
+      ],
+      "content": "Use Python with Hive and Pig in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        105,
+        227
+      ],
+      "content": "Learn how to use Python User Defined Functions (UDF) from Hive and Pig in HDInsight, the Hadoop technology stack on Azure."
+    },
+    {
+      "pos": [
+        561,
+        602
+      ],
+      "content": "Use Python with Hive and Pig in HDInsight"
+    },
+    {
+      "pos": [
+        604,
+        902
+      ],
+      "content": "Hive and Pig are great for working with data in HDInsight, but sometimes you need a more general purpose language. Both Hive and Pig allow you to create User Defined Functions (UDF) using a variety of programming languages. In this article, you will learn how to use a Python UDF from Hive and Pig.",
+      "nodes": [
+        {
+          "content": "Hive and Pig are great for working with data in HDInsight, but sometimes you need a more general purpose language.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "Both Hive and Pig allow you to create User Defined Functions (UDF) using a variety of programming languages.",
+          "pos": [
+            115,
+            223
+          ]
+        },
+        {
+          "content": "In this article, you will learn how to use a Python UDF from Hive and Pig.",
+          "pos": [
+            224,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        906,
+        1004
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this article apply to HDInsight cluster versions 2.1, 3.0, 3.1, and 3.2."
+    },
+    {
+      "pos": [
+        1008,
+        1020
+      ],
+      "content": "Requirements"
+    },
+    {
+      "pos": [
+        1024,
+        1069
+      ],
+      "content": "An HDInsight cluster (Windows or Linux-based)"
+    },
+    {
+      "pos": [
+        1073,
+        1086
+      ],
+      "content": "A text editor"
+    },
+    {
+      "pos": [
+        1094,
+        1455
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.IMPORTANT]</ph><ph id=\"ph5\"/> If you are using a Linux-based HDInsight server, but creating the Python files on a Windows client, you must use an editor that uses LF as a line ending. If you are not sure whether your editor uses LF or CRLF, see the <bpt id=\"p1\">[</bpt>Troubleshooting<ept id=\"p1\">](#troubleshooting)</ept><ph id=\"ph6\"/> section for steps on removing the CR character using utilities on the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph4\">[AZURE.IMPORTANT]</ph><ph id=\"ph5\"/> If you are using a Linux-based HDInsight server, but creating the Python files on a Windows client, you must use an editor that uses LF as a line ending.",
+          "pos": [
+            0,
+            203
+          ]
+        },
+        {
+          "content": "If you are not sure whether your editor uses LF or CRLF, see the <bpt id=\"p1\">[</bpt>Troubleshooting<ept id=\"p1\">](#troubleshooting)</ept><ph id=\"ph6\"/> section for steps on removing the CR character using utilities on the HDInsight cluster.",
+          "pos": [
+            204,
+            445
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1461,
+        1463
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1484,
+        1503
+      ],
+      "content": "Python on HDInsight"
+    },
+    {
+      "pos": [
+        1505,
+        1703
+      ],
+      "content": "Python2.7 is installed by default on HDInsight 3.0 and later clusters. Hive can be used with this version of Python for stream processing (data is passed between Hive and Python using STDOUT/STDIN).",
+      "nodes": [
+        {
+          "content": "Python2.7 is installed by default on HDInsight 3.0 and later clusters.",
+          "pos": [
+            0,
+            70
+          ]
+        },
+        {
+          "content": "Hive can be used with this version of Python for stream processing (data is passed between Hive and Python using STDOUT/STDIN).",
+          "pos": [
+            71,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1705,
+        1898
+      ],
+      "content": "HDInsight also includes Jython, which is a Python implementation written in Java. Pig understands how to talk to Jython without having to resort to streaming, so it's preferable when using Pig.",
+      "nodes": [
+        {
+          "content": "HDInsight also includes Jython, which is a Python implementation written in Java.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "Pig understands how to talk to Jython without having to resort to streaming, so it's preferable when using Pig.",
+          "pos": [
+            82,
+            193
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1900,
+        1903
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        1928,
+        1943
+      ],
+      "content": "Hive and Python"
+    },
+    {
+      "pos": [
+        1945,
+        2121
+      ],
+      "content": "Python can be used as a UDF from Hive through the HiveQL <bpt id=\"p2\">**</bpt>TRANSFORM<ept id=\"p2\">**</ept><ph id=\"ph7\"/> statement. For example, the following HiveQL invokes a Python script stored in the <bpt id=\"p3\">**</bpt>streaming.py<ept id=\"p3\">**</ept><ph id=\"ph8\"/> file.",
+      "nodes": [
+        {
+          "content": "Python can be used as a UDF from Hive through the HiveQL <bpt id=\"p2\">**</bpt>TRANSFORM<ept id=\"p2\">**</ept><ph id=\"ph7\"/> statement.",
+          "pos": [
+            0,
+            133
+          ]
+        },
+        {
+          "content": "For example, the following HiveQL invokes a Python script stored in the <bpt id=\"p3\">**</bpt>streaming.py<ept id=\"p3\">**</ept><ph id=\"ph8\"/> file.",
+          "pos": [
+            134,
+            280
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2123,
+        2148
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Linux-based HDInsight<ept id=\"p4\">**</ept>"
+    },
+    {
+      "pos": [
+        2392,
+        2419
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>Windows-based HDInsight<ept id=\"p5\">**</ept>"
+    },
+    {
+      "pos": [
+        2688,
+        2841
+      ],
+      "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> On Windows-based HDInsight clusters, the <bpt id=\"p6\">**</bpt>USING<ept id=\"p6\">**</ept><ph id=\"ph11\"/> clause must specify the full path to python.exe. This is always <ph id=\"ph12\">`D:\\Python27\\python.exe`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph9\">[AZURE.NOTE]</ph><ph id=\"ph10\"/> On Windows-based HDInsight clusters, the <bpt id=\"p6\">**</bpt>USING<ept id=\"p6\">**</ept><ph id=\"ph11\"/> clause must specify the full path to python.exe.",
+          "pos": [
+            0,
+            198
+          ]
+        },
+        {
+          "content": "This is always <ph id=\"ph12\">`D:\\Python27\\python.exe`</ph>.",
+          "pos": [
+            199,
+            258
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2843,
+        2873
+      ],
+      "content": "Here's what this example does:"
+    },
+    {
+      "pos": [
+        2878,
+        3038
+      ],
+      "content": "The <bpt id=\"p7\">**</bpt>add file<ept id=\"p7\">**</ept><ph id=\"ph13\"/> statement at the beginning of the file adds the <bpt id=\"p8\">**</bpt>streaming.py<ept id=\"p8\">**</ept><ph id=\"ph14\"/> file to the distributed cache, so it's accessible by all nodes in the cluster."
+    },
+    {
+      "pos": [
+        3043,
+        3212
+      ],
+      "content": "The  <bpt id=\"p9\">**</bpt>SELECT TRANSFORM ... USING<ept id=\"p9\">**</ept><ph id=\"ph15\"/> statement selects data from the <bpt id=\"p10\">**</bpt>hivesampletable<ept id=\"p10\">**</ept>, and passes clientid, devicemake, and devicemodel to the <bpt id=\"p11\">**</bpt>streaming.py<ept id=\"p11\">**</ept><ph id=\"ph16\"/> script."
+    },
+    {
+      "pos": [
+        3217,
+        3286
+      ],
+      "content": "The <bpt id=\"p12\">**</bpt>AS<ept id=\"p12\">**</ept><ph id=\"ph17\"/> clause describes the fields returned from <bpt id=\"p13\">**</bpt>streaming.py<ept id=\"p13\">**</ept>"
+    },
+    {
+      "pos": [
+        3288,
+        3375
+      ],
+      "content": "<ph id=\"ph18\">&lt;a name=\"streamingpy\"&gt;</ph><ph id=\"ph19\">&lt;/a&gt;</ph>\nHere's the <bpt id=\"p14\">**</bpt>streaming.py<ept id=\"p14\">**</ept><ph id=\"ph20\"/> file used by the HiveQL example."
+    },
+    {
+      "pos": [
+        3784,
+        3850
+      ],
+      "content": "Since we are using streaming, this script has to do the following:"
+    },
+    {
+      "pos": [
+        3855,
+        3946
+      ],
+      "content": "Read data from STDIN. This is accomplished by using <ph id=\"ph21\">`sys.stdin.readline()`</ph><ph id=\"ph22\"/> in this example.",
+      "nodes": [
+        {
+          "content": "Read data from STDIN.",
+          "pos": [
+            0,
+            21
+          ]
+        },
+        {
+          "content": "This is accomplished by using <ph id=\"ph21\">`sys.stdin.readline()`</ph><ph id=\"ph22\"/> in this example.",
+          "pos": [
+            22,
+            125
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3951,
+        4095
+      ],
+      "content": "The trailing newline character is removed using <ph id=\"ph23\">`string.strip(line, \"\\n \")`</ph>, since we just want the text data and not the end of line indicator."
+    },
+    {
+      "pos": [
+        4100,
+        4309
+      ],
+      "content": "When doing stream processing, a single line contains all the values with a tab character between each value. So <ph id=\"ph24\">`string.split(line, \"\\t\")`</ph><ph id=\"ph25\"/> can be used to split the input at each tab, returning just the fields.",
+      "nodes": [
+        {
+          "content": "When doing stream processing, a single line contains all the values with a tab character between each value.",
+          "pos": [
+            0,
+            108
+          ]
+        },
+        {
+          "content": "So <ph id=\"ph24\">`string.split(line, \"\\t\")`</ph><ph id=\"ph25\"/> can be used to split the input at each tab, returning just the fields.",
+          "pos": [
+            109,
+            243
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4314,
+        4540
+      ],
+      "content": "When processing is complete, the output must be written to STDOUT as a single line, with a tab between each field. This is accomplished by using <ph id=\"ph26\">`print \"\\t\".join([clientid, phone_label, hashlib.md5(phone_label).hexdigest()])`</ph>.",
+      "nodes": [
+        {
+          "content": "When processing is complete, the output must be written to STDOUT as a single line, with a tab between each field.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "This is accomplished by using <ph id=\"ph26\">`print \"\\t\".join([clientid, phone_label, hashlib.md5(phone_label).hexdigest()])`</ph>.",
+          "pos": [
+            115,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4545,
+        4690
+      ],
+      "content": "This all occurs within a <ph id=\"ph27\">`while`</ph><ph id=\"ph28\"/> loop, that will repeat until no <ph id=\"ph29\">`line`</ph><ph id=\"ph30\"/> is read, at which point <ph id=\"ph31\">`break`</ph><ph id=\"ph32\"/> exits the loop and the script terminates."
+    },
+    {
+      "pos": [
+        4692,
+        5077
+      ],
+      "content": "Beyond that, the script just concatenates the input values for <ph id=\"ph33\">`devicemake`</ph><ph id=\"ph34\"/> and <ph id=\"ph35\">`devicemodel`</ph>, and calculates a hash of the concatenated value. Pretty simple, but it describes the basics of how any Python script invoked from Hive should function: Loop, read input until there is no more, break each line of input apart at the tabs, process, write a single line of tab delimited output.",
+      "nodes": [
+        {
+          "content": "Beyond that, the script just concatenates the input values for <ph id=\"ph33\">`devicemake`</ph><ph id=\"ph34\"/> and <ph id=\"ph35\">`devicemodel`</ph>, and calculates a hash of the concatenated value.",
+          "pos": [
+            0,
+            196
+          ]
+        },
+        {
+          "content": "Pretty simple, but it describes the basics of how any Python script invoked from Hive should function: Loop, read input until there is no more, break each line of input apart at the tabs, process, write a single line of tab delimited output.",
+          "pos": [
+            197,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5079,
+        5170
+      ],
+      "content": "See <bpt id=\"p15\">[</bpt>Running the examples<ept id=\"p15\">](#running)</ept><ph id=\"ph36\"/> for how to run this example on your HDInsight cluster."
+    },
+    {
+      "pos": [
+        5172,
+        5175
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        5199,
+        5213
+      ],
+      "content": "Pig and Python"
+    },
+    {
+      "pos": [
+        5215,
+        5386
+      ],
+      "content": "A Python script can be used as a UDF from Pig through the <bpt id=\"p16\">**</bpt>GENERATE<ept id=\"p16\">**</ept><ph id=\"ph37\"/> statement. For example, the following example uses a Python script stored in the <bpt id=\"p17\">**</bpt>jython.py<ept id=\"p17\">**</ept><ph id=\"ph38\"/> file.",
+      "nodes": [
+        {
+          "content": "A Python script can be used as a UDF from Pig through the <bpt id=\"p16\">**</bpt>GENERATE<ept id=\"p16\">**</ept><ph id=\"ph37\"/> statement.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "For example, the following example uses a Python script stored in the <bpt id=\"p17\">**</bpt>jython.py<ept id=\"p17\">**</ept><ph id=\"ph38\"/> file.",
+          "pos": [
+            137,
+            281
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5646,
+        5676
+      ],
+      "content": "Here's how this example works:"
+    },
+    {
+      "pos": [
+        5681,
+        6015
+      ],
+      "content": "It registers the file containing the Python script (<bpt id=\"p18\">**</bpt>jython.py<ept id=\"p18\">**</ept>,) using <bpt id=\"p19\">**</bpt>Jython<ept id=\"p19\">**</ept>, and exposes it to Pig as <bpt id=\"p20\">**</bpt>myfuncs<ept id=\"p20\">**</ept>. Jython is a Python implementation in Java, and runs in the same Java Virtual machine as Pig. This allows us to treat the Python script like a traditional function call vs. the streaming approach used with Hive.",
+      "nodes": [
+        {
+          "content": "It registers the file containing the Python script (<bpt id=\"p18\">**</bpt>jython.py<ept id=\"p18\">**</ept>,) using <bpt id=\"p19\">**</bpt>Jython<ept id=\"p19\">**</ept>, and exposes it to Pig as <bpt id=\"p20\">**</bpt>myfuncs<ept id=\"p20\">**</ept>.",
+          "pos": [
+            0,
+            243
+          ]
+        },
+        {
+          "content": "Jython is a Python implementation in Java, and runs in the same Java Virtual machine as Pig.",
+          "pos": [
+            244,
+            336
+          ]
+        },
+        {
+          "content": "This allows us to treat the Python script like a traditional function call vs. the streaming approach used with Hive.",
+          "pos": [
+            337,
+            454
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6020,
+        6255
+      ],
+      "content": "The next line loads the sample data file, <bpt id=\"p21\">**</bpt>sample.log<ept id=\"p21\">**</ept><ph id=\"ph39\"/> into <bpt id=\"p22\">**</bpt>LOGS<ept id=\"p22\">**</ept>. Since this log file doesn't have a consistent schema, it also defines each record (<bpt id=\"p23\">**</bpt>LINE<ept id=\"p23\">**</ept><ph id=\"ph40\"/> in this case,) as a <bpt id=\"p24\">**</bpt>chararray<ept id=\"p24\">**</ept>. Chararray is, essentially, a string.",
+      "nodes": [
+        {
+          "content": "The next line loads the sample data file, <bpt id=\"p21\">**</bpt>sample.log<ept id=\"p21\">**</ept><ph id=\"ph39\"/> into <bpt id=\"p22\">**</bpt>LOGS<ept id=\"p22\">**</ept>.",
+          "pos": [
+            0,
+            166
+          ]
+        },
+        {
+          "content": "Since this log file doesn't have a consistent schema, it also defines each record (<bpt id=\"p23\">**</bpt>LINE<ept id=\"p23\">**</ept><ph id=\"ph40\"/> in this case,) as a <bpt id=\"p24\">**</bpt>chararray<ept id=\"p24\">**</ept>.",
+          "pos": [
+            167,
+            388
+          ]
+        },
+        {
+          "content": "Chararray is, essentially, a string.",
+          "pos": [
+            389,
+            425
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6260,
+        6353
+      ],
+      "content": "The third line filters out any null values, storing the result of the operation into <bpt id=\"p25\">**</bpt>LOG<ept id=\"p25\">**</ept>."
+    },
+    {
+      "pos": [
+        6358,
+        6590
+      ],
+      "content": "Next, it iterates over the records in <bpt id=\"p26\">**</bpt>LOG<ept id=\"p26\">**</ept><ph id=\"ph41\"/> and uses <bpt id=\"p27\">**</bpt>GENERATE<ept id=\"p27\">**</ept><ph id=\"ph42\"/> to invoke the <bpt id=\"p28\">**</bpt>create_structure<ept id=\"p28\">**</ept><ph id=\"ph43\"/> method contained in the <bpt id=\"p29\">**</bpt>jython.py<ept id=\"p29\">**</ept><ph id=\"ph44\"/> script loaded as <bpt id=\"p30\">**</bpt>myfuncs<ept id=\"p30\">**</ept>.  <bpt id=\"p31\">**</bpt>LINE<ept id=\"p31\">**</ept><ph id=\"ph45\"/> is used to pass the current record to the function.",
+      "nodes": [
+        {
+          "content": "Next, it iterates over the records in <bpt id=\"p26\">**</bpt>LOG<ept id=\"p26\">**</ept><ph id=\"ph41\"/> and uses <bpt id=\"p27\">**</bpt>GENERATE<ept id=\"p27\">**</ept><ph id=\"ph42\"/> to invoke the <bpt id=\"p28\">**</bpt>create_structure<ept id=\"p28\">**</ept><ph id=\"ph43\"/> method contained in the <bpt id=\"p29\">**</bpt>jython.py<ept id=\"p29\">**</ept><ph id=\"ph44\"/> script loaded as <bpt id=\"p30\">**</bpt>myfuncs<ept id=\"p30\">**</ept>.",
+          "pos": [
+            0,
+            430
+          ]
+        },
+        {
+          "content": "<bpt id=\"p31\">**</bpt>LINE<ept id=\"p31\">**</ept><ph id=\"ph45\"/> is used to pass the current record to the function.",
+          "pos": [
+            432,
+            547
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6595,
+        6812
+      ],
+      "content": "Finally, the outputs are dumped to STDOUT using the <bpt id=\"p32\">**</bpt>DUMP<ept id=\"p32\">**</ept><ph id=\"ph46\"/> command. This is just to immediately show the results after the operation completes; in a real script you would normally <bpt id=\"p33\">**</bpt>STORE<ept id=\"p33\">**</ept><ph id=\"ph47\"/> the data into a new file.",
+      "nodes": [
+        {
+          "content": "Finally, the outputs are dumped to STDOUT using the <bpt id=\"p32\">**</bpt>DUMP<ept id=\"p32\">**</ept><ph id=\"ph46\"/> command.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "This is just to immediately show the results after the operation completes; in a real script you would normally <bpt id=\"p33\">**</bpt>STORE<ept id=\"p33\">**</ept><ph id=\"ph47\"/> the data into a new file.",
+          "pos": [
+            125,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6814,
+        6892
+      ],
+      "content": "<ph id=\"ph48\">&lt;a name=\"jythonpy\"&gt;</ph><ph id=\"ph49\">&lt;/a&gt;</ph>\nHere's the <bpt id=\"p34\">**</bpt>jython.py<ept id=\"p34\">**</ept><ph id=\"ph50\"/> file used by the Pig example:"
+    },
+    {
+      "pos": [
+        7276,
+        7514
+      ],
+      "content": "Remember that we previously just defined the <bpt id=\"p35\">**</bpt>LINE<ept id=\"p35\">**</ept><ph id=\"ph51\"/> input as a chararray because there was no consistent schema for the input? What the <bpt id=\"p36\">**</bpt>jython.py<ept id=\"p36\">**</ept><ph id=\"ph52\"/> does is to transform the data into a consistent schema for output. It works like this:",
+      "nodes": [
+        {
+          "content": "Remember that we previously just defined the <bpt id=\"p35\">**</bpt>LINE<ept id=\"p35\">**</ept><ph id=\"ph51\"/> input as a chararray because there was no consistent schema for the input?",
+          "pos": [
+            0,
+            183
+          ]
+        },
+        {
+          "content": "What the <bpt id=\"p36\">**</bpt>jython.py<ept id=\"p36\">**</ept><ph id=\"ph52\"/> does is to transform the data into a consistent schema for output.",
+          "pos": [
+            184,
+            328
+          ]
+        },
+        {
+          "content": "It works like this:",
+          "pos": [
+            329,
+            348
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7519,
+        7749
+      ],
+      "content": "The <bpt id=\"p37\">**</bpt>@outputSchema<ept id=\"p37\">**</ept><ph id=\"ph53\"/> statement defines the format of the data that will be returned to Pig. In this case, it's a <bpt id=\"p38\">**</bpt>data bag<ept id=\"p38\">**</ept>, which is a Pig data type. The bag contains the following fields, all of which are chararray (strings):",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p37\">**</bpt>@outputSchema<ept id=\"p37\">**</ept><ph id=\"ph53\"/> statement defines the format of the data that will be returned to Pig.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "In this case, it's a <bpt id=\"p38\">**</bpt>data bag<ept id=\"p38\">**</ept>, which is a Pig data type.",
+          "pos": [
+            148,
+            248
+          ]
+        },
+        {
+          "content": "The bag contains the following fields, all of which are chararray (strings):",
+          "pos": [
+            249,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7757,
+        7798
+      ],
+      "content": "date - the date the log entry was created"
+    },
+    {
+      "pos": [
+        7805,
+        7846
+      ],
+      "content": "time - the time the log entry was created"
+    },
+    {
+      "pos": [
+        7853,
+        7905
+      ],
+      "content": "classname - the class name the entry was created for"
+    },
+    {
+      "pos": [
+        7912,
+        7933
+      ],
+      "content": "level - the log level"
+    },
+    {
+      "pos": [
+        7940,
+        7982
+      ],
+      "content": "detail - verbose details for the log entry"
+    },
+    {
+      "pos": [
+        7987,
+        8083
+      ],
+      "content": "Next, the <bpt id=\"p39\">**</bpt>def create_structure(input)<ept id=\"p39\">**</ept><ph id=\"ph54\"/> defines the function that Pig will pass line items to."
+    },
+    {
+      "pos": [
+        8088,
+        8523
+      ],
+      "content": "The example data, <bpt id=\"p40\">**</bpt>sample.log<ept id=\"p40\">**</ept>, mostly conforms to the date, time, classname, level, and detail schema we want to return. But it also contains a few lines that begin with the string '<bpt id=\"p41\">*</bpt>java.lang.Exception<ept id=\"p41\">*</ept>' that need to be modified to match the schema. The <bpt id=\"p42\">**</bpt>if<ept id=\"p42\">**</ept><ph id=\"ph55\"/> statement checks for those, then massages the input data to move the '<bpt id=\"p43\">*</bpt>java.lang.Exception<ept id=\"p43\">*</ept>' string to the end, bringing the data in-line with our expected output schema.",
+      "nodes": [
+        {
+          "content": "The example data, <bpt id=\"p40\">**</bpt>sample.log<ept id=\"p40\">**</ept>, mostly conforms to the date, time, classname, level, and detail schema we want to return.",
+          "pos": [
+            0,
+            163
+          ]
+        },
+        {
+          "content": "But it also contains a few lines that begin with the string '<bpt id=\"p41\">*</bpt>java.lang.Exception<ept id=\"p41\">*</ept>' that need to be modified to match the schema.",
+          "pos": [
+            164,
+            333
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p42\">**</bpt>if<ept id=\"p42\">**</ept><ph id=\"ph55\"/> statement checks for those, then massages the input data to move the '<bpt id=\"p43\">*</bpt>java.lang.Exception<ept id=\"p43\">*</ept>' string to the end, bringing the data in-line with our expected output schema.",
+          "pos": [
+            334,
+            610
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8528,
+        8732
+      ],
+      "content": "Next, the <bpt id=\"p44\">**</bpt>split<ept id=\"p44\">**</ept><ph id=\"ph56\"/> command is used to split the data at the first four space characters. This results in five values, which are assigned into <bpt id=\"p45\">**</bpt>date<ept id=\"p45\">**</ept>, <bpt id=\"p46\">**</bpt>time<ept id=\"p46\">**</ept>, <bpt id=\"p47\">**</bpt>classname<ept id=\"p47\">**</ept>, <bpt id=\"p48\">**</bpt>level<ept id=\"p48\">**</ept>, and <bpt id=\"p49\">**</bpt>detail<ept id=\"p49\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Next, the <bpt id=\"p44\">**</bpt>split<ept id=\"p44\">**</ept><ph id=\"ph56\"/> command is used to split the data at the first four space characters.",
+          "pos": [
+            0,
+            144
+          ]
+        },
+        {
+          "content": "This results in five values, which are assigned into <bpt id=\"p45\">**</bpt>date<ept id=\"p45\">**</ept>, <bpt id=\"p46\">**</bpt>time<ept id=\"p46\">**</ept>, <bpt id=\"p47\">**</bpt>classname<ept id=\"p47\">**</ept>, <bpt id=\"p48\">**</bpt>level<ept id=\"p48\">**</ept>, and <bpt id=\"p49\">**</bpt>detail<ept id=\"p49\">**</ept>.",
+          "pos": [
+            145,
+            459
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8737,
+        8777
+      ],
+      "content": "Finally, the values are returned to Pig."
+    },
+    {
+      "pos": [
+        8779,
+        8892
+      ],
+      "content": "When the data is returned to Pig, it will have a consistent schema as defined in the <bpt id=\"p50\">**</bpt>@outputSchema<ept id=\"p50\">**</ept><ph id=\"ph57\"/> statement."
+    },
+    {
+      "pos": [
+        8894,
+        8896
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        8918,
+        8938
+      ],
+      "content": "Running the examples"
+    },
+    {
+      "pos": [
+        8940,
+        9121
+      ],
+      "content": "If you are using a Linux-based HDInsight cluster, use the <bpt id=\"p51\">**</bpt>SSH<ept id=\"p51\">**</ept><ph id=\"ph58\"/> steps below. If you are using a Windows-based HDInsight cluster and a Windows client, use the <bpt id=\"p52\">**</bpt>PowerShell<ept id=\"p52\">**</ept><ph id=\"ph59\"/> steps.",
+      "nodes": [
+        {
+          "content": "If you are using a Linux-based HDInsight cluster, use the <bpt id=\"p51\">**</bpt>SSH<ept id=\"p51\">**</ept><ph id=\"ph58\"/> steps below.",
+          "pos": [
+            0,
+            133
+          ]
+        },
+        {
+          "content": "If you are using a Windows-based HDInsight cluster and a Windows client, use the <bpt id=\"p52\">**</bpt>PowerShell<ept id=\"p52\">**</ept><ph id=\"ph59\"/> steps.",
+          "pos": [
+            134,
+            291
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9126,
+        9129
+      ],
+      "content": "SSH"
+    },
+    {
+      "pos": [
+        9131,
+        9169
+      ],
+      "content": "For more information on using SSH, see"
+    },
+    {
+      "pos": [
+        9236,
+        9306
+      ],
+      "content": "Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X"
+    },
+    {
+      "pos": [
+        9311,
+        9313
+      ],
+      "content": "or"
+    },
+    {
+      "pos": [
+        9383,
+        9440
+      ],
+      "content": "Use SSH with Linux-based Hadoop on HDInsight from Windows"
+    },
+    {
+      "pos": [
+        9444,
+        9445
+      ],
+      "content": "."
+    },
+    {
+      "pos": [
+        9450,
+        9594
+      ],
+      "content": "Using the Python examples <bpt id=\"p53\">[</bpt>streaming.py<ept id=\"p53\">](#streamingpy)</ept><ph id=\"ph60\"/> and <bpt id=\"p54\">[</bpt>jython.py<ept id=\"p54\">](#jythonpy)</ept>, create local copies of the files on your development machine."
+    },
+    {
+      "pos": [
+        9599,
+        9735
+      ],
+      "content": "Use <ph id=\"ph61\">`scp`</ph><ph id=\"ph62\"/> to copy the files to your HDInsight cluster. For example, the following would copy the files to a cluster named <bpt id=\"p55\">**</bpt>mycluster<ept id=\"p55\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Use <ph id=\"ph61\">`scp`</ph><ph id=\"ph62\"/> to copy the files to your HDInsight cluster.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "For example, the following would copy the files to a cluster named <bpt id=\"p55\">**</bpt>mycluster<ept id=\"p55\">**</ept>.",
+          "pos": [
+            89,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9817,
+        9945
+      ],
+      "content": "Use SSH to connect to the cluster. For example, the following would connect to a cluster named <bpt id=\"p56\">**</bpt>mycluster<ept id=\"p56\">**</ept><ph id=\"ph63\"/> as user <bpt id=\"p57\">**</bpt>myuser<ept id=\"p57\">**</ept>.",
+      "nodes": [
+        {
+          "content": "Use SSH to connect to the cluster.",
+          "pos": [
+            0,
+            34
+          ]
+        },
+        {
+          "content": "For example, the following would connect to a cluster named <bpt id=\"p56\">**</bpt>mycluster<ept id=\"p56\">**</ept><ph id=\"ph63\"/> as user <bpt id=\"p57\">**</bpt>myuser<ept id=\"p57\">**</ept>.",
+          "pos": [
+            35,
+            223
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10003,
+        10102
+      ],
+      "content": "From the SSH session, add the python files uploaded previously to the WASB storage for the cluster."
+    },
+    {
+      "pos": [
+        10219,
+        10299
+      ],
+      "content": "After uploading the files, use the following steps to run the Hive and Pig jobs."
+    },
+    {
+      "pos": [
+        10305,
+        10309
+      ],
+      "content": "Hive"
+    },
+    {
+      "pos": [
+        10314,
+        10420
+      ],
+      "content": "Use the <ph id=\"ph64\">`hive`</ph><ph id=\"ph65\"/> command to start the hive shell. You should see a <ph id=\"ph66\">`hive&gt;`</ph><ph id=\"ph67\"/> prompt once the shell has loaded.",
+      "nodes": [
+        {
+          "content": "Use the <ph id=\"ph64\">`hive`</ph><ph id=\"ph65\"/> command to start the hive shell.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "You should see a <ph id=\"ph66\">`hive&gt;`</ph><ph id=\"ph67\"/> prompt once the shell has loaded.",
+          "pos": [
+            82,
+            177
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10425,
+        10467
+      ],
+      "content": "Enter the following at the <ph id=\"ph68\">`hive&gt;`</ph><ph id=\"ph69\"/> prompt."
+    },
+    {
+      "pos": [
+        10737,
+        10847
+      ],
+      "content": "After entering the last line, the job should start. Eventually it will return output similar to the following.",
+      "nodes": [
+        {
+          "content": "After entering the last line, the job should start.",
+          "pos": [
+            0,
+            51
+          ]
+        },
+        {
+          "content": "Eventually it will return output similar to the following.",
+          "pos": [
+            52,
+            110
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11183,
+        11186
+      ],
+      "content": "Pig"
+    },
+    {
+      "pos": [
+        11191,
+        11292
+      ],
+      "content": "Use the <ph id=\"ph70\">`pig`</ph><ph id=\"ph71\"/> command to start the shell. You should see a <ph id=\"ph72\">`grunt&gt;`</ph><ph id=\"ph73\"/> prompt once the shell has loaded.",
+      "nodes": [
+        {
+          "content": "Use the <ph id=\"ph70\">`pig`</ph><ph id=\"ph71\"/> command to start the shell.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "You should see a <ph id=\"ph72\">`grunt&gt;`</ph><ph id=\"ph73\"/> prompt once the shell has loaded.",
+          "pos": [
+            76,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11297,
+        11351
+      ],
+      "content": "Enter the following statements at the <ph id=\"ph74\">`grunt&gt;`</ph><ph id=\"ph75\"/> prompt."
+    },
+    {
+      "pos": [
+        11632,
+        11746
+      ],
+      "content": "After entering the following line,the job should start. Eventually it will return output similar to the following.",
+      "nodes": [
+        {
+          "content": "After entering the following line,the job should start.",
+          "pos": [
+            0,
+            55
+          ]
+        },
+        {
+          "content": "Eventually it will return output similar to the following.",
+          "pos": [
+            56,
+            114
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12174,
+        12184
+      ],
+      "content": "PowerShell"
+    },
+    {
+      "pos": [
+        12186,
+        12418
+      ],
+      "content": "These steps use Azure PowerShell. If this is not already installed and configured on your development machine, see <bpt id=\"p58\">[</bpt>How to install and configure Azure PowerShell<ept id=\"p58\">](../powershell-install-configure.md)</ept><ph id=\"ph76\"/> before using the following steps.",
+      "nodes": [
+        {
+          "content": "These steps use Azure PowerShell.",
+          "pos": [
+            0,
+            33
+          ]
+        },
+        {
+          "content": "If this is not already installed and configured on your development machine, see <bpt id=\"p58\">[</bpt>How to install and configure Azure PowerShell<ept id=\"p58\">](../powershell-install-configure.md)</ept><ph id=\"ph76\"/> before using the following steps.",
+          "pos": [
+            34,
+            287
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12423,
+        12567
+      ],
+      "content": "Using the Python examples <bpt id=\"p59\">[</bpt>streaming.py<ept id=\"p59\">](#streamingpy)</ept><ph id=\"ph77\"/> and <bpt id=\"p60\">[</bpt>jython.py<ept id=\"p60\">](#jythonpy)</ept>, create local copies of the files on your development machine."
+    },
+    {
+      "pos": [
+        12572,
+        12832
+      ],
+      "content": "Use  the following PowerShell script to upload the <bpt id=\"p61\">**</bpt>streaming.py<ept id=\"p61\">**</ept><ph id=\"ph78\"/> and <bpt id=\"p62\">**</bpt>jython.py<ept id=\"p62\">**</ept><ph id=\"ph79\"/> files to the server. Substitute the name of your Azure HDInsight cluster, and the path to the <bpt id=\"p63\">**</bpt>streaming.py<ept id=\"p63\">**</ept><ph id=\"ph80\"/> and <bpt id=\"p64\">**</bpt>jython.py<ept id=\"p64\">**</ept><ph id=\"ph81\"/> files on the first three lines of the script.",
+      "nodes": [
+        {
+          "content": "Use  the following PowerShell script to upload the <bpt id=\"p61\">**</bpt>streaming.py<ept id=\"p61\">**</ept><ph id=\"ph78\"/> and <bpt id=\"p62\">**</bpt>jython.py<ept id=\"p62\">**</ept><ph id=\"ph79\"/> files to the server.",
+          "pos": [
+            0,
+            216
+          ]
+        },
+        {
+          "content": "Substitute the name of your Azure HDInsight cluster, and the path to the <bpt id=\"p63\">**</bpt>streaming.py<ept id=\"p63\">**</ept><ph id=\"ph80\"/> and <bpt id=\"p64\">**</bpt>jython.py<ept id=\"p64\">**</ept><ph id=\"ph81\"/> files on the first three lines of the script.",
+          "pos": [
+            217,
+            480
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14001,
+        14181
+      ],
+      "content": "This script retrieves information for your HDInsight cluster, then extracts the account and key for the default storage account, and uploads the files to the root of the container."
+    },
+    {
+      "pos": [
+        14189,
+        14339
+      ],
+      "content": "<ph id=\"ph82\">[AZURE.NOTE]</ph><ph id=\"ph83\"/> Other methods of uploading the scripts can be found in the <bpt id=\"p65\">[</bpt>Upload data for Hadoop jobs in HDInsight<ept id=\"p65\">](hdinsight-upload-data.md)</ept><ph id=\"ph84\"/> document."
+    },
+    {
+      "pos": [
+        14341,
+        14503
+      ],
+      "content": "After uploading the files, use the following PowerShell scripts to start the jobs. When the job completes, the output should be written to the PowerShell console.",
+      "nodes": [
+        {
+          "content": "After uploading the files, use the following PowerShell scripts to start the jobs.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "When the job completes, the output should be written to the PowerShell console.",
+          "pos": [
+            83,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14509,
+        14513
+      ],
+      "content": "Hive"
+    },
+    {
+      "pos": [
+        14515,
+        14676
+      ],
+      "content": "The following script will run the <bpt id=\"p66\">__</bpt>streaming.py<ept id=\"p66\">__</ept><ph id=\"ph85\"/> script. Before running, it will prompt you for the HTTPs/Admin account information for your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "The following script will run the <bpt id=\"p66\">__</bpt>streaming.py<ept id=\"p66\">__</ept><ph id=\"ph85\"/> script.",
+          "pos": [
+            0,
+            113
+          ]
+        },
+        {
+          "content": "Before running, it will prompt you for the HTTPs/Admin account information for your HDInsight cluster.",
+          "pos": [
+            114,
+            216
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17023,
+        17094
+      ],
+      "content": "The output for the <bpt id=\"p67\">**</bpt>Hive<ept id=\"p67\">**</ept><ph id=\"ph86\"/> job should appear similar to the following:"
+    },
+    {
+      "pos": [
+        17410,
+        17413
+      ],
+      "content": "Pig"
+    },
+    {
+      "pos": [
+        17415,
+        17557
+      ],
+      "content": "The following will use the <bpt id=\"p68\">__</bpt>jython.py<ept id=\"p68\">__</ept><ph id=\"ph87\"/> script. Before running, it will prompt you for the HTTPs/Admin information for the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "The following will use the <bpt id=\"p68\">__</bpt>jython.py<ept id=\"p68\">__</ept><ph id=\"ph87\"/> script.",
+          "pos": [
+            0,
+            103
+          ]
+        },
+        {
+          "content": "Before running, it will prompt you for the HTTPs/Admin information for the HDInsight cluster.",
+          "pos": [
+            104,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19872,
+        19942
+      ],
+      "content": "The output for the <bpt id=\"p69\">**</bpt>Pig<ept id=\"p69\">**</ept><ph id=\"ph88\"/> job should appear similar to the following:"
+    },
+    {
+      "pos": [
+        20347,
+        20349
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        20379,
+        20394
+      ],
+      "content": "Troubleshooting"
+    },
+    {
+      "pos": [
+        20399,
+        20423
+      ],
+      "content": "Errors when running jobs"
+    },
+    {
+      "pos": [
+        20425,
+        20504
+      ],
+      "content": "When running the hive job, you may encounter an error similar to the following:"
+    },
+    {
+      "pos": [
+        20692,
+        20869
+      ],
+      "content": "This problem may be caused by the line endings in the streaming.py file. Many Windows editors default to using CRLF as the line ending, but Linux applications usually expect LF.",
+      "nodes": [
+        {
+          "content": "This problem may be caused by the line endings in the streaming.py file.",
+          "pos": [
+            0,
+            72
+          ]
+        },
+        {
+          "content": "Many Windows editors default to using CRLF as the line ending, but Linux applications usually expect LF.",
+          "pos": [
+            73,
+            177
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20871,
+        21089
+      ],
+      "content": "If you are using an editor that cannot create LF line endings, or are unsure what line endings are being used, use the following PowerShell statements to remove the CR characters before uploading the file to HDInsight:"
+    },
+    {
+      "pos": [
+        21265,
+        21283
+      ],
+      "content": "PowerShell scripts"
+    },
+    {
+      "pos": [
+        21285,
+        21555
+      ],
+      "content": "Both of the example PowerShell scripts used to run the examples contain a commented line that will display error output for the job. If you are not seeing the expected output for the job, uncomment the following line and see if the error information indicates a problem.",
+      "nodes": [
+        {
+          "content": "Both of the example PowerShell scripts used to run the examples contain a commented line that will display error output for the job.",
+          "pos": [
+            0,
+            132
+          ]
+        },
+        {
+          "content": "If you are not seeing the expected output for the job, uncomment the following line and see if the error information indicates a problem.",
+          "pos": [
+            133,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21913,
+        22072
+      ],
+      "content": "The error information (STDERR,) and the result of the job (STDOUT,) are also logged to the default blob container for your clusters at the following locations."
+    },
+    {
+      "pos": [
+        22074,
+        22088
+      ],
+      "content": "For this job.."
+    },
+    {
+      "pos": [
+        22089,
+        22130
+      ],
+      "content": "Look at these files in the blob container"
+    },
+    {
+      "pos": [
+        22139,
+        22143
+      ],
+      "content": "Hive"
+    },
+    {
+      "pos": [
+        22144,
+        22162
+      ],
+      "content": "/HivePython/stderr"
+    },
+    {
+      "pos": [
+        22165,
+        22183
+      ],
+      "content": "/HivePython/stdout"
+    },
+    {
+      "pos": [
+        22184,
+        22187
+      ],
+      "content": "Pig"
+    },
+    {
+      "pos": [
+        22188,
+        22205
+      ],
+      "content": "/PigPython/stderr"
+    },
+    {
+      "pos": [
+        22208,
+        22225
+      ],
+      "content": "/PigPython/stdout"
+    },
+    {
+      "pos": [
+        22227,
+        22229
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        22248,
+        22258
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        22260,
+        22524
+      ],
+      "content": "If you need to load Python modules that aren't provided by default, see <bpt id=\"p70\">[</bpt>How to deploy a module to Azure HDInsight<ept id=\"p70\">](http://blogs.msdn.com/b/benjguin/archive/2014/03/03/how-to-deploy-a-python-module-to-windows-azure-hdinsight.aspx)</ept><ph id=\"ph89\"/> for an example of how to do this."
+    },
+    {
+      "pos": [
+        22526,
+        22613
+      ],
+      "content": "For other ways to use Pig, Hive, and to learn about using MapReduce, see the following."
+    },
+    {
+      "pos": [
+        22617,
+        22665
+      ],
+      "content": "<bpt id=\"p71\">[</bpt>Use Hive with HDInsight<ept id=\"p71\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        22669,
+        22715
+      ],
+      "content": "<bpt id=\"p72\">[</bpt>Use Pig with HDInsight<ept id=\"p72\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        22719,
+        22777
+      ],
+      "content": "<bpt id=\"p73\">[</bpt>Use MapReduce with HDInsight<ept id=\"p73\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Use Python with Hive and Pig in HDInsight | Microsoft Azure\"\n    description=\"Learn how to use Python User Defined Functions (UDF) from Hive and Pig in HDInsight, the Hadoop technology stack on Azure.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"python\"\n    ms.topic=\"article\"\n    ms.date=\"02/10/2016\" \n    ms.author=\"larryfr\"/>\n\n#Use Python with Hive and Pig in HDInsight\n\nHive and Pig are great for working with data in HDInsight, but sometimes you need a more general purpose language. Both Hive and Pig allow you to create User Defined Functions (UDF) using a variety of programming languages. In this article, you will learn how to use a Python UDF from Hive and Pig.\n\n> [AZURE.NOTE] The steps in this article apply to HDInsight cluster versions 2.1, 3.0, 3.1, and 3.2.\n\n##Requirements\n\n* An HDInsight cluster (Windows or Linux-based)\n\n* A text editor\n\n    > [AZURE.IMPORTANT] If you are using a Linux-based HDInsight server, but creating the Python files on a Windows client, you must use an editor that uses LF as a line ending. If you are not sure whether your editor uses LF or CRLF, see the [Troubleshooting](#troubleshooting) section for steps on removing the CR character using utilities on the HDInsight cluster.\n    \n##<a name=\"python\"></a>Python on HDInsight\n\nPython2.7 is installed by default on HDInsight 3.0 and later clusters. Hive can be used with this version of Python for stream processing (data is passed between Hive and Python using STDOUT/STDIN).\n\nHDInsight also includes Jython, which is a Python implementation written in Java. Pig understands how to talk to Jython without having to resort to streaming, so it's preferable when using Pig.\n\n###<a name=\"hivepython\"></a>Hive and Python\n\nPython can be used as a UDF from Hive through the HiveQL **TRANSFORM** statement. For example, the following HiveQL invokes a Python script stored in the **streaming.py** file.\n\n**Linux-based HDInsight**\n\n    add file wasb:///streaming.py;\n\n    SELECT TRANSFORM (clientid, devicemake, devicemodel)\n      USING 'streaming.py' AS\n      (clientid string, phoneLable string, phoneHash string)\n    FROM hivesampletable\n    ORDER BY clientid LIMIT 50;\n\n**Windows-based HDInsight**\n\n    add file wasb:///streaming.py;\n\n    SELECT TRANSFORM (clientid, devicemake, devicemodel)\n      USING 'D:\\Python27\\python.exe streaming.py' AS\n      (clientid string, phoneLable string, phoneHash string)\n    FROM hivesampletable\n    ORDER BY clientid LIMIT 50;\n\n> [AZURE.NOTE] On Windows-based HDInsight clusters, the **USING** clause must specify the full path to python.exe. This is always `D:\\Python27\\python.exe`.\n\nHere's what this example does:\n\n1. The **add file** statement at the beginning of the file adds the **streaming.py** file to the distributed cache, so it's accessible by all nodes in the cluster.\n\n2. The  **SELECT TRANSFORM ... USING** statement selects data from the **hivesampletable**, and passes clientid, devicemake, and devicemodel to the **streaming.py** script.\n\n3. The **AS** clause describes the fields returned from **streaming.py**\n\n<a name=\"streamingpy\"></a>\nHere's the **streaming.py** file used by the HiveQL example.\n\n    #!/usr/bin/env python\n\n    import sys\n    import string\n    import hashlib\n\n    while True:\n      line = sys.stdin.readline()\n      if not line:\n        break\n\n      line = string.strip(line, \"\\n \")\n      clientid, devicemake, devicemodel = string.split(line, \"\\t\")\n      phone_label = devicemake + ' ' + devicemodel\n      print \"\\t\".join([clientid, phone_label, hashlib.md5(phone_label).hexdigest()])\n\nSince we are using streaming, this script has to do the following:\n\n1. Read data from STDIN. This is accomplished by using `sys.stdin.readline()` in this example.\n\n2. The trailing newline character is removed using `string.strip(line, \"\\n \")`, since we just want the text data and not the end of line indicator.\n\n2. When doing stream processing, a single line contains all the values with a tab character between each value. So `string.split(line, \"\\t\")` can be used to split the input at each tab, returning just the fields.\n\n3. When processing is complete, the output must be written to STDOUT as a single line, with a tab between each field. This is accomplished by using `print \"\\t\".join([clientid, phone_label, hashlib.md5(phone_label).hexdigest()])`.\n\n4. This all occurs within a `while` loop, that will repeat until no `line` is read, at which point `break` exits the loop and the script terminates.\n\nBeyond that, the script just concatenates the input values for `devicemake` and `devicemodel`, and calculates a hash of the concatenated value. Pretty simple, but it describes the basics of how any Python script invoked from Hive should function: Loop, read input until there is no more, break each line of input apart at the tabs, process, write a single line of tab delimited output.\n\nSee [Running the examples](#running) for how to run this example on your HDInsight cluster.\n\n###<a name=\"pigpython\"></a>Pig and Python\n\nA Python script can be used as a UDF from Pig through the **GENERATE** statement. For example, the following example uses a Python script stored in the **jython.py** file.\n\n    Register 'wasb:///jython.py' using jython as myfuncs;\n    LOGS = LOAD 'wasb:///example/data/sample.log' as (LINE:chararray);\n    LOG = FILTER LOGS by LINE is not null;\n    DETAILS = FOREACH LOG GENERATE myfuncs.create_structure(LINE);\n    DUMP DETAILS;\n\nHere's how this example works:\n\n1. It registers the file containing the Python script (**jython.py**,) using **Jython**, and exposes it to Pig as **myfuncs**. Jython is a Python implementation in Java, and runs in the same Java Virtual machine as Pig. This allows us to treat the Python script like a traditional function call vs. the streaming approach used with Hive.\n\n2. The next line loads the sample data file, **sample.log** into **LOGS**. Since this log file doesn't have a consistent schema, it also defines each record (**LINE** in this case,) as a **chararray**. Chararray is, essentially, a string.\n\n3. The third line filters out any null values, storing the result of the operation into **LOG**.\n\n4. Next, it iterates over the records in **LOG** and uses **GENERATE** to invoke the **create_structure** method contained in the **jython.py** script loaded as **myfuncs**.  **LINE** is used to pass the current record to the function.\n\n5. Finally, the outputs are dumped to STDOUT using the **DUMP** command. This is just to immediately show the results after the operation completes; in a real script you would normally **STORE** the data into a new file.\n\n<a name=\"jythonpy\"></a>\nHere's the **jython.py** file used by the Pig example:\n\n    @outputSchema(\"log: {(date:chararray, time:chararray, classname:chararray, level:chararray, detail:chararray)}\")\n    def create_structure(input):\n      if (input.startswith('java.lang.Exception')):\n        input = input[21:len(input)] + ' - java.lang.Exception'\n      date, time, classname, level, detail = input.split(' ', 4)\n      return date, time, classname, level, detail\n\nRemember that we previously just defined the **LINE** input as a chararray because there was no consistent schema for the input? What the **jython.py** does is to transform the data into a consistent schema for output. It works like this:\n\n1. The **@outputSchema** statement defines the format of the data that will be returned to Pig. In this case, it's a **data bag**, which is a Pig data type. The bag contains the following fields, all of which are chararray (strings):\n\n    * date - the date the log entry was created\n    * time - the time the log entry was created\n    * classname - the class name the entry was created for\n    * level - the log level\n    * detail - verbose details for the log entry\n\n2. Next, the **def create_structure(input)** defines the function that Pig will pass line items to.\n\n3. The example data, **sample.log**, mostly conforms to the date, time, classname, level, and detail schema we want to return. But it also contains a few lines that begin with the string '*java.lang.Exception*' that need to be modified to match the schema. The **if** statement checks for those, then massages the input data to move the '*java.lang.Exception*' string to the end, bringing the data in-line with our expected output schema.\n\n4. Next, the **split** command is used to split the data at the first four space characters. This results in five values, which are assigned into **date**, **time**, **classname**, **level**, and **detail**.\n\n5. Finally, the values are returned to Pig.\n\nWhen the data is returned to Pig, it will have a consistent schema as defined in the **@outputSchema** statement.\n\n##<a name=\"running\"></a>Running the examples\n\nIf you are using a Linux-based HDInsight cluster, use the **SSH** steps below. If you are using a Windows-based HDInsight cluster and a Windows client, use the **PowerShell** steps.\n\n###SSH\n\nFor more information on using SSH, see <a href=\"../hdinsight-hadoop-linux-use-ssh-unix/\" target=\"_blank\">Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X</a> or <a href=\"../hdinsight-hadoop-linux-use-ssh-windows/\" target=\"_blank\">Use SSH with Linux-based Hadoop on HDInsight from Windows</a>.\n\n1. Using the Python examples [streaming.py](#streamingpy) and [jython.py](#jythonpy), create local copies of the files on your development machine.\n\n2. Use `scp` to copy the files to your HDInsight cluster. For example, the following would copy the files to a cluster named **mycluster**.\n\n        scp streaming.py jython.py myuser@mycluster-ssh.azurehdinsight.net:\n\n3. Use SSH to connect to the cluster. For example, the following would connect to a cluster named **mycluster** as user **myuser**.\n\n        ssh myuser@mycluster-ssh.azurehdinsight.net\n\n4. From the SSH session, add the python files uploaded previously to the WASB storage for the cluster.\n\n        hadoop fs -copyFromLocal streaming.py /streaming.py\n        hadoop fs -copyFromLocal jython.py /jython.py\n\nAfter uploading the files, use the following steps to run the Hive and Pig jobs.\n\n####Hive\n\n1. Use the `hive` command to start the hive shell. You should see a `hive>` prompt once the shell has loaded.\n\n2. Enter the following at the `hive>` prompt.\n\n        add file wasb:///streaming.py;\n        SELECT TRANSFORM (clientid, devicemake, devicemodel)\n          USING 'streaming.py' AS\n          (clientid string, phoneLabel string, phoneHash string)\n        FROM hivesampletable\n        ORDER BY clientid LIMIT 50;\n\n3. After entering the last line, the job should start. Eventually it will return output similar to the following.\n\n        100041  RIM 9650    d476f3687700442549a83fac4560c51c\n        100041  RIM 9650    d476f3687700442549a83fac4560c51c\n        100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n        100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n        100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n\n####Pig\n\n1. Use the `pig` command to start the shell. You should see a `grunt>` prompt once the shell has loaded.\n\n2. Enter the following statements at the `grunt>` prompt.\n\n        Register wasb:///jython.py using jython as myfuncs;\n        LOGS = LOAD 'wasb:///example/data/sample.log' as (LINE:chararray);\n        LOG = FILTER LOGS by LINE is not null;\n        DETAILS = foreach LOG generate myfuncs.create_structure(LINE);\n        DUMP DETAILS;\n\n3. After entering the following line,the job should start. Eventually it will return output similar to the following.\n\n        ((2012-02-03,20:11:56,SampleClass5,[TRACE],verbose detail for id 990982084))\n        ((2012-02-03,20:11:56,SampleClass7,[TRACE],verbose detail for id 1560323914))\n        ((2012-02-03,20:11:56,SampleClass8,[DEBUG],detail for id 2083681507))\n        ((2012-02-03,20:11:56,SampleClass3,[TRACE],verbose detail for id 1718828806))\n        ((2012-02-03,20:11:56,SampleClass3,[INFO],everything normal for id 530537821))\n\n###PowerShell\n\nThese steps use Azure PowerShell. If this is not already installed and configured on your development machine, see [How to install and configure Azure PowerShell](../powershell-install-configure.md) before using the following steps.\n\n1. Using the Python examples [streaming.py](#streamingpy) and [jython.py](#jythonpy), create local copies of the files on your development machine.\n\n2. Use  the following PowerShell script to upload the **streaming.py** and **jython.py** files to the server. Substitute the name of your Azure HDInsight cluster, and the path to the **streaming.py** and **jython.py** files on the first three lines of the script.\n\n        $clusterName = YourHDIClusterName\n        $pathToStreamingFile = \"C:\\path\\to\\streaming.py\"\n        $pathToJythonFile = \"C:\\path\\to\\jython.py\"\n\n        $clusterInfo = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n        $resourceGroup = $clusterInfo.ResourceGroup\n        $storageAccountName=$clusterInfo.DefaultStorageAccount.split('.')[0]\n        $container=$clusterInfo.DefaultStorageContainer\n        $storageAccountKey=Get-AzureRmStorageAccountKey `\n            -Name $storageAccountName `\n            -ResourceGroupName $resourceGroup `\n            | %{ $_.Key1 }\n\n        #Create a storage content and upload the file\n        $context = New-AzureStorageContext `\n            -StorageAccountName $storageAccountName `\n            -StorageAccountKey $storageAccountKey\n        \n        Set-AzureStorageBlobContent `\n            -File $pathToStreamingFile `\n            -Blob \"streaming.py\" `\n            -Container $container `\n            -Context $context\n        \n        Set-AzureStorageBlobContent `\n            -File $pathToJythonFile `\n            -Blob \"jython.py\" `\n            -Container $container `\n            -Context $context\n\n    This script retrieves information for your HDInsight cluster, then extracts the account and key for the default storage account, and uploads the files to the root of the container.\n\n    > [AZURE.NOTE] Other methods of uploading the scripts can be found in the [Upload data for Hadoop jobs in HDInsight](hdinsight-upload-data.md) document.\n\nAfter uploading the files, use the following PowerShell scripts to start the jobs. When the job completes, the output should be written to the PowerShell console.\n\n####Hive\n\nThe following script will run the __streaming.py__ script. Before running, it will prompt you for the HTTPs/Admin account information for your HDInsight cluster.\n\n    # Replace 'YourHDIClusterName' with the name of your cluster\n    $clusterName = YourHDIClusterName\n    $creds=Get-Credential\n    #Get the cluster info so we can get the resource group, storage, etc.\n    $clusterInfo = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n    $resourceGroup = $clusterInfo.ResourceGroup\n    $storageAccountName=$clusterInfo.DefaultStorageAccount.split('.')[0]\n    $container=$clusterInfo.DefaultStorageContainer\n    $storageAccountKey=Get-AzureRmStorageAccountKey `\n        -Name $storageAccountName `\n        -ResourceGroupName $resourceGroup `\n        | %{ $_.Key1 }\n    #Create a storage content and upload the file\n    $context = New-AzureStorageContext `\n        -StorageAccountName $storageAccountName `\n        -StorageAccountKey $storageAccountKey\n            \n    $HiveQuery = \"add file wasb:///streaming.py;\" +\n                 \"SELECT TRANSFORM (clientid, devicemake, devicemodel) \" +\n                   \"USING 'D:\\Python27\\python.exe streaming.py' AS \" +\n                   \"(clientid string, phoneLabel string, phoneHash string) \" +\n                 \"FROM hivesampletable \" +\n                 \"ORDER BY clientid LIMIT 50;\"\n\n    $jobDefinition = New-AzureRmHDInsightHiveJobDefinition `\n        -Query $HiveQuery\n\n    $job = Start-AzureRmHDInsightJob `\n        -ClusterName $clusterName `\n        -JobDefinition $jobDefinition `\n        -HttpCredential $creds\n    Write-Host \"Wait for the Hive job to complete ...\" -ForegroundColor Green\n    Wait-AzureRmHDInsightJob `\n        -JobId $job.JobId `\n        -ClusterName $clusterName `\n        -HttpCredential $creds\n    # Uncomment the following to see stderr output\n    # Get-AzureRmHDInsightJobOutput `\n        -Clustername $clusterName `\n        -JobId $job.JobId `\n        -DefaultContainer $container `\n        -DefaultStorageAccountName $storageAccountName `\n        -DefaultStorageAccountKey $storageAccountKey `\n        -HttpCredential $creds `\n        -DisplayOutputType StandardError\n    Write-Host \"Display the standard output ...\" -ForegroundColor Green\n    Get-AzureRmHDInsightJobOutput `\n        -Clustername $clusterName `\n        -JobId $job.JobId `\n        -DefaultContainer $container `\n        -DefaultStorageAccountName $storageAccountName `\n        -DefaultStorageAccountKey $storageAccountKey `\n        -HttpCredential $creds\n\nThe output for the **Hive** job should appear similar to the following:\n\n    100041  RIM 9650    d476f3687700442549a83fac4560c51c\n    100041  RIM 9650    d476f3687700442549a83fac4560c51c\n    100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n    100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n    100042  Apple iPhone 4.2.x  375ad9a0ddc4351536804f1d5d0ea9b9\n\n####Pig\n\nThe following will use the __jython.py__ script. Before running, it will prompt you for the HTTPs/Admin information for the HDInsight cluster.\n\n    # Replace 'YourHDIClusterName' with the name of your cluster\n    $clusterName = YourHDIClusterName\n\n    $creds = Get-Credential\n    #Get the cluster info so we can get the resource group, storage, etc.\n    $clusterInfo = Get-AzureRmHDInsightCluster -ClusterName $clusterName\n    $resourceGroup = $clusterInfo.ResourceGroup\n    $storageAccountName=$clusterInfo.DefaultStorageAccount.split('.')[0]\n    $container=$clusterInfo.DefaultStorageContainer\n    $storageAccountKey=Get-AzureRmStorageAccountKey `\n        -Name $storageAccountName `\n        -ResourceGroupName $resourceGroup `\n        | %{ $_.Key1 }\n    \n    #Create a storage content and upload the file\n    $context = New-AzureStorageContext `\n        -StorageAccountName $storageAccountName `\n        -StorageAccountKey $storageAccountKey\n            \n    $PigQuery = \"Register wasb:///jython.py using jython as myfuncs;\" +\n                \"LOGS = LOAD 'wasb:///example/data/sample.log' as (LINE:chararray);\" +\n                \"LOG = FILTER LOGS by LINE is not null;\" +\n                \"DETAILS = foreach LOG generate myfuncs.create_structure(LINE);\" +\n                \"DUMP DETAILS;\"\n\n    $jobDefinition = New-AzureRmHDInsightPigJobDefinition -Query $PigQuery\n\n    $job = Start-AzureRmHDInsightJob `\n        -ClusterName $clusterName `\n        -JobDefinition $jobDefinition `\n        -HttpCredential $creds\n        \n    Write-Host \"Wait for the Pig job to complete ...\" -ForegroundColor Green\n    Wait-AzureRmHDInsightJob `\n        -Job $job.JobId `\n        -ClusterName $clusterName `\n        -HttpCredential $creds\n    # Uncomment the following to see stderr output\n    # Get-AzureRmHDInsightJobOutput `\n        -Clustername $clusterName `\n        -JobId $job.JobId `\n        -DefaultContainer $container `\n        -DefaultStorageAccountName $storageAccountName `\n        -DefaultStorageAccountKey $storageAccountKey `\n        -HttpCredential $creds `\n        -DisplayOutputType StandardError\n    Write-Host \"Display the standard output ...\" -ForegroundColor Green\n    Get-AzureRmHDInsightJobOutput `\n        -Clustername $clusterName `\n        -JobId $job.JobId `\n        -DefaultContainer $container `\n        -DefaultStorageAccountName $storageAccountName `\n        -DefaultStorageAccountKey $storageAccountKey `\n        -HttpCredential $creds\n\nThe output for the **Pig** job should appear similar to the following:\n\n    ((2012-02-03,20:11:56,SampleClass5,[TRACE],verbose detail for id 990982084))\n    ((2012-02-03,20:11:56,SampleClass7,[TRACE],verbose detail for id 1560323914))\n    ((2012-02-03,20:11:56,SampleClass8,[DEBUG],detail for id 2083681507))\n    ((2012-02-03,20:11:56,SampleClass3,[TRACE],verbose detail for id 1718828806))\n    ((2012-02-03,20:11:56,SampleClass3,[INFO],everything normal for id 530537821))\n\n##<a name=\"troubleshooting\"></a>Troubleshooting\n\n###Errors when running jobs\n\nWhen running the hive job, you may encounter an error similar to the following:\n\n    Caused by: org.apache.hadoop.hive.ql.metadata.HiveException: [Error 20001]: An error occurred while reading or writing to your custom script. It may have crashed with an error.\n    \nThis problem may be caused by the line endings in the streaming.py file. Many Windows editors default to using CRLF as the line ending, but Linux applications usually expect LF.\n\nIf you are using an editor that cannot create LF line endings, or are unsure what line endings are being used, use the following PowerShell statements to remove the CR characters before uploading the file to HDInsight:\n\n    $original_file ='c:\\path\\to\\streaming.py'\n    $text = [IO.File]::ReadAllText($original_file) -replace \"`r`n\", \"`n\"\n    [IO.File]::WriteAllText($original_file, $text)\n\n###PowerShell scripts\n\nBoth of the example PowerShell scripts used to run the examples contain a commented line that will display error output for the job. If you are not seeing the expected output for the job, uncomment the following line and see if the error information indicates a problem.\n\n    # Get-AzureRmHDInsightJobOutput `\n            -Clustername $clusterName `\n            -JobId $job.JobId `\n            -DefaultContainer $container `\n            -DefaultStorageAccountName $storageAccountName `\n            -DefaultStorageAccountKey $storageAccountKey `\n            -HttpCredential $creds `\n            -DisplayOutputType StandardError\n\nThe error information (STDERR,) and the result of the job (STDOUT,) are also logged to the default blob container for your clusters at the following locations.\n\nFor this job..|Look at these files in the blob container\n---|---\nHive|/HivePython/stderr<p>/HivePython/stdout\nPig|/PigPython/stderr<p>/PigPython/stdout\n\n##<a name=\"next\"></a>Next steps\n\nIf you need to load Python modules that aren't provided by default, see [How to deploy a module to Azure HDInsight](http://blogs.msdn.com/b/benjguin/archive/2014/03/03/how-to-deploy-a-python-module-to-windows-azure-hdinsight.aspx) for an example of how to do this.\n\nFor other ways to use Pig, Hive, and to learn about using MapReduce, see the following.\n\n* [Use Hive with HDInsight](hdinsight-use-hive.md)\n\n* [Use Pig with HDInsight](hdinsight-use-pig.md)\n\n* [Use MapReduce with HDInsight](hdinsight-use-mapreduce.md)\n"
+}

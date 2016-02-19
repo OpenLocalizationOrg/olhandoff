@@ -1,0 +1,2549 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        110
+      ],
+      "content": "Debug Hadoop in HDInsight: View logs and interpret error messages | Microsoft Azure"
+    },
+    {
+      "pos": [
+        129,
+        259
+      ],
+      "content": "Learn about the error messages you might receive when administering HDInsight using PowerShell, and steps you can take to recover."
+    },
+    {
+      "pos": [
+        583,
+        605
+      ],
+      "content": "Analyze HDInsight logs"
+    },
+    {
+      "pos": [
+        607,
+        1135
+      ],
+      "content": "Each Hadoop cluster in Azure HDInsight has an Azure storage account used as the default file system. The storage account is referred as the default Storage account. Cluster uses the Azure Table storage and the Blob storage on the default Storage account to store its logs.  To find out the default storage account for your cluster, see <bpt id=\"p1\">[</bpt>Manage Hadoop clusters in HDInsight<ept id=\"p1\">](hdinsight-administer-use-management-portal.md#find-the-default-storage-account)</ept>. The logs retain in the Storage account even after the cluster is deleted.",
+      "nodes": [
+        {
+          "content": "Each Hadoop cluster in Azure HDInsight has an Azure storage account used as the default file system.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "The storage account is referred as the default Storage account.",
+          "pos": [
+            101,
+            164
+          ]
+        },
+        {
+          "content": "Cluster uses the Azure Table storage and the Blob storage on the default Storage account to store its logs.",
+          "pos": [
+            165,
+            272
+          ]
+        },
+        {
+          "content": "To find out the default storage account for your cluster, see <bpt id=\"p1\">[</bpt>Manage Hadoop clusters in HDInsight<ept id=\"p1\">](hdinsight-administer-use-management-portal.md#find-the-default-storage-account)</ept>.",
+          "pos": [
+            274,
+            492
+          ]
+        },
+        {
+          "content": "The logs retain in the Storage account even after the cluster is deleted.",
+          "pos": [
+            493,
+            566
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1139,
+        1167
+      ],
+      "content": "Logs written to Azure Tables"
+    },
+    {
+      "pos": [
+        1169,
+        1280
+      ],
+      "content": "The logs written to Azure Tables provide one level of insight into what is happening with an HDInsight cluster."
+    },
+    {
+      "pos": [
+        1282,
+        1409
+      ],
+      "content": "When you create an HDInsight cluster, 6 tables are automatically created for Linux-based clusters in the default Table storage:"
+    },
+    {
+      "pos": [
+        1413,
+        1430
+      ],
+      "content": "hdinsightagentlog"
+    },
+    {
+      "pos": [
+        1433,
+        1439
+      ],
+      "content": "syslog"
+    },
+    {
+      "pos": [
+        1442,
+        1451
+      ],
+      "content": "daemonlog"
+    },
+    {
+      "pos": [
+        1454,
+        1470
+      ],
+      "content": "hadoopservicelog"
+    },
+    {
+      "pos": [
+        1473,
+        1488
+      ],
+      "content": "ambariserverlog"
+    },
+    {
+      "pos": [
+        1491,
+        1505
+      ],
+      "content": "ambariagentlog"
+    },
+    {
+      "pos": [
+        1507,
+        1555
+      ],
+      "content": "3 tables are created for Windows-based clusters:"
+    },
+    {
+      "pos": [
+        1559,
+        1655
+      ],
+      "content": "setuplog: Log of events/exceptions encountered in provisioning/setting up of HDInsight clusters."
+    },
+    {
+      "pos": [
+        1658,
+        1848
+      ],
+      "content": "hadoopinstalllog: Log of events/exceptions encountered when installing Hadoop on the cluster. This table may be useful in debugging issues related to clusters created with custom parameters.",
+      "nodes": [
+        {
+          "content": "hadoopinstalllog: Log of events/exceptions encountered when installing Hadoop on the cluster.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "This table may be useful in debugging issues related to clusters created with custom parameters.",
+          "pos": [
+            94,
+            190
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1851,
+        2018
+      ],
+      "content": "hadoopservicelog: Log of events/exceptions recorded by all Hadoop services. This table may be useful in debugging issues related to job failures on HDInsight clusters.",
+      "nodes": [
+        {
+          "content": "hadoopservicelog: Log of events/exceptions recorded by all Hadoop services.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "This table may be useful in debugging issues related to job failures on HDInsight clusters.",
+          "pos": [
+            76,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2020,
+        2095
+      ],
+      "content": "The table file names are <bpt id=\"p2\">**</bpt>u<ph id=\"ph2\">&lt;ClusterName&gt;</ph>DDMonYYYYatHHMMSSsss<ph id=\"ph3\">&lt;TableName&gt;</ph><ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        2097,
+        2140
+      ],
+      "content": "These tables contains the following fields:"
+    },
+    {
+      "pos": [
+        2144,
+        2158
+      ],
+      "content": "ClusterDnsName"
+    },
+    {
+      "pos": [
+        2161,
+        2174
+      ],
+      "content": "ComponentName"
+    },
+    {
+      "pos": [
+        2177,
+        2191
+      ],
+      "content": "EventTimestamp"
+    },
+    {
+      "pos": [
+        2194,
+        2198
+      ],
+      "content": "Host"
+    },
+    {
+      "pos": [
+        2201,
+        2214
+      ],
+      "content": "MALoggingHash"
+    },
+    {
+      "pos": [
+        2217,
+        2224
+      ],
+      "content": "Message"
+    },
+    {
+      "pos": [
+        2227,
+        2228
+      ],
+      "content": "N"
+    },
+    {
+      "pos": [
+        2231,
+        2247
+      ],
+      "content": "PreciseTimeStamp"
+    },
+    {
+      "pos": [
+        2250,
+        2254
+      ],
+      "content": "Role"
+    },
+    {
+      "pos": [
+        2257,
+        2265
+      ],
+      "content": "RowIndex"
+    },
+    {
+      "pos": [
+        2268,
+        2274
+      ],
+      "content": "Tenant"
+    },
+    {
+      "pos": [
+        2277,
+        2286
+      ],
+      "content": "TIMESTAMP"
+    },
+    {
+      "pos": [
+        2289,
+        2299
+      ],
+      "content": "TraceLevel"
+    },
+    {
+      "pos": [
+        2305,
+        2333
+      ],
+      "content": "Tools for accessing the logs"
+    },
+    {
+      "pos": [
+        2335,
+        2401
+      ],
+      "content": "There are many tools available for accessing data in these tables:"
+    },
+    {
+      "pos": [
+        2406,
+        2419
+      ],
+      "content": "Visual Studio"
+    },
+    {
+      "pos": [
+        2423,
+        2445
+      ],
+      "content": "Azure Storage Explorer"
+    },
+    {
+      "pos": [
+        2449,
+        2470
+      ],
+      "content": "Power Query for Excel"
+    },
+    {
+      "pos": [
+        2477,
+        2502
+      ],
+      "content": "Use Power Query for Excel"
+    },
+    {
+      "pos": [
+        2504,
+        2709
+      ],
+      "content": "Power Query can be installed from <bpt id=\"p3\">[</bpt>www.microsoft.com/en-us/download/details.aspx?id=39379<ept id=\"p3\">]( http://www.microsoft.com/en-us/download/details.aspx?id=39379)</ept>. See the download page for the system requirements",
+      "nodes": [
+        {
+          "content": "Power Query can be installed from <bpt id=\"p3\">[</bpt>www.microsoft.com/en-us/download/details.aspx?id=39379<ept id=\"p3\">]( http://www.microsoft.com/en-us/download/details.aspx?id=39379)</ept>.",
+          "pos": [
+            0,
+            193
+          ]
+        },
+        {
+          "content": "See the download page for the system requirements",
+          "pos": [
+            194,
+            243
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2711,
+        2769
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>To use Power Query to open and analyze the service log<ept id=\"p4\">**</ept>"
+    },
+    {
+      "pos": [
+        2774,
+        2799
+      ],
+      "content": "Open <bpt id=\"p5\">**</bpt>Microsoft Excel<ept id=\"p5\">**</ept>."
+    },
+    {
+      "pos": [
+        2803,
+        2910
+      ],
+      "content": "From the <bpt id=\"p6\">**</bpt>Power Query<ept id=\"p6\">**</ept><ph id=\"ph4\"/> menu, click <bpt id=\"p7\">**</bpt>From Azure<ept id=\"p7\">**</ept>, and then click <bpt id=\"p8\">**</bpt>From Microsoft Azure Table storage<ept id=\"p8\">**</ept>."
+    },
+    {
+      "pos": [
+        2917,
+        3071
+      ],
+      "content": "<ph id=\"ph5\">![</ph>HDInsight Hadoop Excel PowerQuery open Azure Table storage<ph id=\"ph6\">](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-using-excel-power-query-open.png)</ph>"
+    },
+    {
+      "pos": [
+        3075,
+        3153
+      ],
+      "content": "Enter the storage account name. This can be either the short name or the FQDN.",
+      "nodes": [
+        {
+          "content": "Enter the storage account name.",
+          "pos": [
+            0,
+            31
+          ]
+        },
+        {
+          "content": "This can be either the short name or the FQDN.",
+          "pos": [
+            32,
+            78
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3157,
+        3219
+      ],
+      "content": "Enter the storage account key. You shall see a list of tables:",
+      "nodes": [
+        {
+          "content": "Enter the storage account key.",
+          "pos": [
+            0,
+            30
+          ]
+        },
+        {
+          "content": "You shall see a list of tables:",
+          "pos": [
+            31,
+            62
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3225,
+        3355
+      ],
+      "content": "<ph id=\"ph7\">![</ph>HDInsight Hadoop logs stored in Azure Table storage<ph id=\"ph8\">](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-table-names.png)</ph>"
+    },
+    {
+      "pos": [
+        3359,
+        3634
+      ],
+      "content": "Right-click the hadoopservicelog table in the <bpt id=\"p9\">**</bpt>Navigator<ept id=\"p9\">**</ept><ph id=\"ph9\"/> pane and select <bpt id=\"p10\">**</bpt>Edit<ept id=\"p10\">**</ept>. You shall see 4 columns. Optionally, delete the <bpt id=\"p11\">**</bpt>Partition Key<ept id=\"p11\">**</ept>, <bpt id=\"p12\">**</bpt>Row Key<ept id=\"p12\">**</ept>, and <bpt id=\"p13\">**</bpt>Timestamp<ept id=\"p13\">**</ept><ph id=\"ph10\"/> columns by selecting them, then clicking <bpt id=\"p14\">**</bpt>Remove Columns<ept id=\"p14\">**</ept><ph id=\"ph11\"/> from the options in the ribbon.",
+      "nodes": [
+        {
+          "content": "Right-click the hadoopservicelog table in the <bpt id=\"p9\">**</bpt>Navigator<ept id=\"p9\">**</ept><ph id=\"ph9\"/> pane and select <bpt id=\"p10\">**</bpt>Edit<ept id=\"p10\">**</ept>.",
+          "pos": [
+            0,
+            177
+          ]
+        },
+        {
+          "content": "You shall see 4 columns.",
+          "pos": [
+            178,
+            202
+          ]
+        },
+        {
+          "content": "Optionally, delete the <bpt id=\"p11\">**</bpt>Partition Key<ept id=\"p11\">**</ept>, <bpt id=\"p12\">**</bpt>Row Key<ept id=\"p12\">**</ept>, and <bpt id=\"p13\">**</bpt>Timestamp<ept id=\"p13\">**</ept><ph id=\"ph10\"/> columns by selecting them, then clicking <bpt id=\"p14\">**</bpt>Remove Columns<ept id=\"p14\">**</ept><ph id=\"ph11\"/> from the options in the ribbon.",
+          "pos": [
+            203,
+            557
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3638,
+        3883
+      ],
+      "content": "Click the expand icon on the Content column to choose the columns you want to import into the Excel spreadsheet. For this demonstration, I chose TraceLevel, and ComponentName: It can give me some basic information on which components had issues.",
+      "nodes": [
+        {
+          "content": "Click the expand icon on the Content column to choose the columns you want to import into the Excel spreadsheet.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "For this demonstration, I chose TraceLevel, and ComponentName: It can give me some basic information on which components had issues.",
+          "pos": [
+            113,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3889,
+        4023
+      ],
+      "content": "<ph id=\"ph12\">![</ph>HDInsight Hadoop logs choose columns<ph id=\"ph13\">](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-using-excel-power-query-filter.png)</ph>"
+    },
+    {
+      "pos": [
+        4027,
+        4059
+      ],
+      "content": "Click <bpt id=\"p15\">**</bpt>OK<ept id=\"p15\">**</ept><ph id=\"ph14\"/> to import the data."
+    },
+    {
+      "pos": [
+        4063,
+        4177
+      ],
+      "content": "Select the <bpt id=\"p16\">**</bpt>TraceLevel<ept id=\"p16\">**</ept>, Role, and <bpt id=\"p17\">**</bpt>ComponentName<ept id=\"p17\">**</ept><ph id=\"ph15\"/> columns, and then click <bpt id=\"p18\">**</bpt>Group By<ept id=\"p18\">**</ept><ph id=\"ph16\"/> control in the ribbon."
+    },
+    {
+      "pos": [
+        4181,
+        4220
+      ],
+      "content": "Click <bpt id=\"p19\">**</bpt>OK<ept id=\"p19\">**</ept><ph id=\"ph17\"/> in the Group By dialog box"
+    },
+    {
+      "pos": [
+        4225,
+        4249
+      ],
+      "content": "Click** Apply &amp; Close**."
+    },
+    {
+      "pos": [
+        4252,
+        4620
+      ],
+      "content": "You can now use Excel to filter and sort as necessary. Obviously, you may want to include other columns (e.g. Message) in order to drill down into issues when they occur, but selecting and grouping the columns described above provides a decent picture of what is happening with Hadoop services. The same idea can be applied to the setuplog and hadoopinstalllog tables.",
+      "nodes": [
+        {
+          "content": "You can now use Excel to filter and sort as necessary.",
+          "pos": [
+            0,
+            54
+          ]
+        },
+        {
+          "content": "Obviously, you may want to include other columns (e.g. Message) in order to drill down into issues when they occur, but selecting and grouping the columns described above provides a decent picture of what is happening with Hadoop services.",
+          "pos": [
+            55,
+            294
+          ]
+        },
+        {
+          "content": "The same idea can be applied to the setuplog and hadoopinstalllog tables.",
+          "pos": [
+            295,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4627,
+        4644
+      ],
+      "content": "Use Visual Studio"
+    },
+    {
+      "pos": [
+        4646,
+        4670
+      ],
+      "content": "<bpt id=\"p20\">**</bpt>To use Visual Studio<ept id=\"p20\">**</ept>"
+    },
+    {
+      "pos": [
+        4675,
+        4694
+      ],
+      "content": "Open Visual Studio."
+    },
+    {
+      "pos": [
+        4698,
+        4783
+      ],
+      "content": "From the <bpt id=\"p21\">**</bpt>View<ept id=\"p21\">**</ept><ph id=\"ph18\"/> menu, click <bpt id=\"p22\">**</bpt>Cloud Explorer<ept id=\"p22\">**</ept>. Or simply click <bpt id=\"p23\">**</bpt>CTRL+\\, CTRL+X<ept id=\"p23\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From the <bpt id=\"p21\">**</bpt>View<ept id=\"p21\">**</ept><ph id=\"ph18\"/> menu, click <bpt id=\"p22\">**</bpt>Cloud Explorer<ept id=\"p22\">**</ept>.",
+          "pos": [
+            0,
+            144
+          ]
+        },
+        {
+          "content": "Or simply click <bpt id=\"p23\">**</bpt>CTRL+\\, CTRL+X<ept id=\"p23\">**</ept>.",
+          "pos": [
+            145,
+            220
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4787,
+        4890
+      ],
+      "content": "From <bpt id=\"p24\">**</bpt>Cloud Explorer<ept id=\"p24\">**</ept>, select <bpt id=\"p25\">**</bpt>Resource Types<ept id=\"p25\">**</ept>.  The other available option is <bpt id=\"p26\">**</bpt>Resource Groups<ept id=\"p26\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From <bpt id=\"p24\">**</bpt>Cloud Explorer<ept id=\"p24\">**</ept>, select <bpt id=\"p25\">**</bpt>Resource Types<ept id=\"p25\">**</ept>.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "The other available option is <bpt id=\"p26\">**</bpt>Resource Groups<ept id=\"p26\">**</ept>.",
+          "pos": [
+            133,
+            223
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4894,
+        4989
+      ],
+      "content": "Expand <bpt id=\"p27\">**</bpt>Storage Accounts<ept id=\"p27\">**</ept>, the default storage account for your cluster, and then <bpt id=\"p28\">**</bpt>Tables<ept id=\"p28\">**</ept>."
+    },
+    {
+      "pos": [
+        4993,
+        5023
+      ],
+      "content": "Double-click hadoopservicelog."
+    },
+    {
+      "pos": [
+        5027,
+        5053
+      ],
+      "content": "Add a filter. For example:",
+      "nodes": [
+        {
+          "content": "Add a filter.",
+          "pos": [
+            0,
+            13
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            14,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5094,
+        5218
+      ],
+      "content": "<ph id=\"ph19\">![</ph>HDInsight Hadoop logs choose columns<ph id=\"ph20\">](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-visual-studio-filter.png)</ph>"
+    },
+    {
+      "pos": [
+        5224,
+        5386
+      ],
+      "content": "For more information about constructing filters, see <bpt id=\"p29\">[</bpt>Constructing Filter Strings for the Table Designer<ept id=\"p29\">](https://msdn.microsoft.com/library/azure/ff683669.aspx)</ept>."
+    },
+    {
+      "pos": [
+        5391,
+        5425
+      ],
+      "content": "Logs Written to Azure Blob Storage"
+    },
+    {
+      "pos": [
+        5427,
+        6047
+      ],
+      "content": "<bpt id=\"p30\">[</bpt>The logs written to Azure Tables<ept id=\"p30\">](#log-written-to-azure-tables)</ept><ph id=\"ph21\"/> provide one level of insight into what is happening with an HDInsight cluster. However, these tables do not provide task-level logs, which can be helpful in drilling further into issues when they occur. To provide this next level of detail, HDInsight clusters are configured to write task logs to your Blob Storage account for any job that is submitted through Templeton. Practically, this means jobs submitted using the Microsoft Azure PowerShell cmdlets or the .NET Job Submission APIs, not jobs submitted through RDP/command-line access to the cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p30\">[</bpt>The logs written to Azure Tables<ept id=\"p30\">](#log-written-to-azure-tables)</ept><ph id=\"ph21\"/> provide one level of insight into what is happening with an HDInsight cluster.",
+          "pos": [
+            0,
+            198
+          ]
+        },
+        {
+          "content": "However, these tables do not provide task-level logs, which can be helpful in drilling further into issues when they occur.",
+          "pos": [
+            199,
+            322
+          ]
+        },
+        {
+          "content": "To provide this next level of detail, HDInsight clusters are configured to write task logs to your Blob Storage account for any job that is submitted through Templeton.",
+          "pos": [
+            323,
+            491
+          ]
+        },
+        {
+          "content": "Practically, this means jobs submitted using the Microsoft Azure PowerShell cmdlets or the .NET Job Submission APIs, not jobs submitted through RDP/command-line access to the cluster.",
+          "pos": [
+            492,
+            675
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6050,
+        6176
+      ],
+      "content": "To view the logs, see <bpt id=\"p31\">[</bpt>Access YARN application logs on Linux-based HDInsight<ept id=\"p31\">](hdinsight-hadoop-access-yarn-app-logs-linux.md)</ept>."
+    },
+    {
+      "pos": [
+        6178,
+        6363
+      ],
+      "content": "For more information about application logs, see <bpt id=\"p32\">[</bpt>Simplifying user-logs management and access in YARN<ept id=\"p32\">](http://hortonworks.com/blog/simplifying-user-logs-management-and-access-in-yarn/)</ept>."
+    },
+    {
+      "pos": [
+        6371,
+        6403
+      ],
+      "content": "View cluster health and job logs"
+    },
+    {
+      "pos": [
+        6408,
+        6424
+      ],
+      "content": "Access Hadoop UI"
+    },
+    {
+      "pos": [
+        6426,
+        6552
+      ],
+      "content": "From the Azure Portal, click an HDInsight cluster name to open the cluster blade. From the cluster blade, click <bpt id=\"p33\">**</bpt>Dashboard<ept id=\"p33\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From the Azure Portal, click an HDInsight cluster name to open the cluster blade.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "From the cluster blade, click <bpt id=\"p33\">**</bpt>Dashboard<ept id=\"p33\">**</ept>.",
+          "pos": [
+            82,
+            166
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6554,
+        6642
+      ],
+      "content": "<ph id=\"ph22\">![</ph>Launch cluster dashboard<ph id=\"ph23\">](./media/hdinsight-debug-jobs/hdi-debug-launch-dashboard.png)</ph>"
+    },
+    {
+      "pos": [
+        6644,
+        6757
+      ],
+      "content": "When prompted, enter the cluster administrator credentials. In the Query Console that opens, click <bpt id=\"p34\">**</bpt>Hadoop UI<ept id=\"p34\">**</ept>.",
+      "nodes": [
+        {
+          "content": "When prompted, enter the cluster administrator credentials.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "In the Query Console that opens, click <bpt id=\"p34\">**</bpt>Hadoop UI<ept id=\"p34\">**</ept>.",
+          "pos": [
+            60,
+            153
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6759,
+        6848
+      ],
+      "content": "<ph id=\"ph24\">![</ph>Start Hadoop UI<ph id=\"ph25\">](./media/hdinsight-debug-jobs/hdi-debug-launch-dashboard-hadoop-ui.png)</ph>"
+    },
+    {
+      "pos": [
+        6854,
+        6872
+      ],
+      "content": "Access the Yarn UI"
+    },
+    {
+      "pos": [
+        6874,
+        7112
+      ],
+      "content": "From the Azure Portal, click an HDInsight cluster name to open the cluster blade. From the cluster blade, click <bpt id=\"p35\">**</bpt>Dashboard<ept id=\"p35\">**</ept>. When prompted, enter the cluster administrator credentials. In the Query Console that opens, click <bpt id=\"p36\">**</bpt>YARN UI<ept id=\"p36\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From the Azure Portal, click an HDInsight cluster name to open the cluster blade.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "From the cluster blade, click <bpt id=\"p35\">**</bpt>Dashboard<ept id=\"p35\">**</ept>.",
+          "pos": [
+            82,
+            166
+          ]
+        },
+        {
+          "content": "When prompted, enter the cluster administrator credentials.",
+          "pos": [
+            167,
+            226
+          ]
+        },
+        {
+          "content": "In the Query Console that opens, click <bpt id=\"p36\">**</bpt>YARN UI<ept id=\"p36\">**</ept>.",
+          "pos": [
+            227,
+            318
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7114,
+        7158
+      ],
+      "content": "You can use the YARN UI to do the following:"
+    },
+    {
+      "pos": [
+        7162,
+        7383
+      ],
+      "content": "<bpt id=\"p37\">**</bpt>Get cluster status<ept id=\"p37\">**</ept>. From the left pane, expand <bpt id=\"p38\">**</bpt>Cluster<ept id=\"p38\">**</ept>, and click <bpt id=\"p39\">**</bpt>About<ept id=\"p39\">**</ept>. This present cluster status details like total allocated memory, cores used, state of the cluster resource manager, cluster version etc.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p37\">**</bpt>Get cluster status<ept id=\"p37\">**</ept>.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "From the left pane, expand <bpt id=\"p38\">**</bpt>Cluster<ept id=\"p38\">**</ept>, and click <bpt id=\"p39\">**</bpt>About<ept id=\"p39\">**</ept>.",
+          "pos": [
+            64,
+            204
+          ]
+        },
+        {
+          "content": "This present cluster status details like total allocated memory, cores used, state of the cluster resource manager, cluster version etc.",
+          "pos": [
+            205,
+            341
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7389,
+        7479
+      ],
+      "content": "<ph id=\"ph26\">![</ph>Launch cluster dashboard<ph id=\"ph27\">](./media/hdinsight-debug-jobs/hdi-debug-yarn-cluster-state.png)</ph>"
+    },
+    {
+      "pos": [
+        7483,
+        7671
+      ],
+      "content": "<bpt id=\"p40\">**</bpt>Get node status<ept id=\"p40\">**</ept>. From the left pane, expand <bpt id=\"p41\">**</bpt>Cluster<ept id=\"p41\">**</ept>, and click <bpt id=\"p42\">**</bpt>Nodes<ept id=\"p42\">**</ept>. This lists all the nodes in the cluster, HTTP address of each node, resources allocated to each node, etc.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p40\">**</bpt>Get node status<ept id=\"p40\">**</ept>.",
+          "pos": [
+            0,
+            60
+          ]
+        },
+        {
+          "content": "From the left pane, expand <bpt id=\"p41\">**</bpt>Cluster<ept id=\"p41\">**</ept>, and click <bpt id=\"p42\">**</bpt>Nodes<ept id=\"p42\">**</ept>.",
+          "pos": [
+            61,
+            201
+          ]
+        },
+        {
+          "content": "This lists all the nodes in the cluster, HTTP address of each node, resources allocated to each node, etc.",
+          "pos": [
+            202,
+            308
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7675,
+        8051
+      ],
+      "content": "<bpt id=\"p43\">**</bpt>Monitor job status<ept id=\"p43\">**</ept>. From the left pane, expand <bpt id=\"p44\">**</bpt>Cluster<ept id=\"p44\">**</ept>, and then click <bpt id=\"p45\">**</bpt>Applications<ept id=\"p45\">**</ept><ph id=\"ph28\"/> to list all the jobs in the cluster. If you want to look at jobs in a specific state (such as new, submitted, running, etc.), click the appropriate link under <bpt id=\"p46\">**</bpt>Applications<ept id=\"p46\">**</ept>. You can further click the job name to find out more about the job such including the output, logs, etc.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p43\">**</bpt>Monitor job status<ept id=\"p43\">**</ept>.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "From the left pane, expand <bpt id=\"p44\">**</bpt>Cluster<ept id=\"p44\">**</ept>, and then click <bpt id=\"p45\">**</bpt>Applications<ept id=\"p45\">**</ept><ph id=\"ph28\"/> to list all the jobs in the cluster.",
+          "pos": [
+            64,
+            267
+          ]
+        },
+        {
+          "content": "If you want to look at jobs in a specific state (such as new, submitted, running, etc.), click the appropriate link under <bpt id=\"p46\">**</bpt>Applications<ept id=\"p46\">**</ept>.",
+          "pos": [
+            268,
+            447
+          ]
+        },
+        {
+          "content": "You can further click the job name to find out more about the job such including the output, logs, etc.",
+          "pos": [
+            448,
+            551
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8056,
+        8075
+      ],
+      "content": "Access the HBase UI"
+    },
+    {
+      "pos": [
+        8077,
+        8322
+      ],
+      "content": "From the Azure Portal, click an HDInsight HBase cluster name to open the cluster blade. From the cluster blade, click <bpt id=\"p47\">**</bpt>Dashboard<ept id=\"p47\">**</ept>. When prompted, enter the cluster administrator credentials. In the Query Console that opens, click <bpt id=\"p48\">**</bpt>HBase UI<ept id=\"p48\">**</ept>.",
+      "nodes": [
+        {
+          "content": "From the Azure Portal, click an HDInsight HBase cluster name to open the cluster blade.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "From the cluster blade, click <bpt id=\"p47\">**</bpt>Dashboard<ept id=\"p47\">**</ept>.",
+          "pos": [
+            88,
+            172
+          ]
+        },
+        {
+          "content": "When prompted, enter the cluster administrator credentials.",
+          "pos": [
+            173,
+            232
+          ]
+        },
+        {
+          "content": "In the Query Console that opens, click <bpt id=\"p48\">**</bpt>HBase UI<ept id=\"p48\">**</ept>.",
+          "pos": [
+            233,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8327,
+        8348
+      ],
+      "content": "HDInsight error codes"
+    },
+    {
+      "pos": [
+        8350,
+        8646
+      ],
+      "content": "The error messages itemized in this section are provided to help the users of Hadoop in Azure HDInsight understand possible error conditions that they can encounter when administering the service using Azure PowerShell and to advise them on the steps which can be taken to recover from the error."
+    },
+    {
+      "pos": [
+        8648,
+        8986
+      ],
+      "content": "Some of these error messages could also be seen in the Azure Portal when it is used to manage HDInsight clusters. But other error messages you might encounter there are less granular due to the constraints on the remedial actions possible in this context. Other error messages are provided in the contexts where the mitigation is obvious.",
+      "nodes": [
+        {
+          "content": "Some of these error messages could also be seen in the Azure Portal when it is used to manage HDInsight clusters.",
+          "pos": [
+            0,
+            113
+          ]
+        },
+        {
+          "content": "But other error messages you might encounter there are less granular due to the constraints on the remedial actions possible in this context.",
+          "pos": [
+            114,
+            255
+          ]
+        },
+        {
+          "content": "Other error messages are provided in the contexts where the mitigation is obvious.",
+          "pos": [
+            256,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9042,
+        9078
+      ],
+      "content": "AtleastOneSqlMetastoreMustBeProvided"
+    },
+    {
+      "pos": [
+        9081,
+        9229
+      ],
+      "content": "<bpt id=\"p49\">**</bpt>Description<ept id=\"p49\">**</ept>: Please provide Azure SQL database details for at least one component in order to use custom settings for Hive and Oozie metastores."
+    },
+    {
+      "pos": [
+        9232,
+        9323
+      ],
+      "content": "<bpt id=\"p50\">**</bpt>Mitigation<ept id=\"p50\">**</ept>: The user needs to supply a valid SQL Azure metastore and retry the request."
+    },
+    {
+      "pos": [
+        9367,
+        9390
+      ],
+      "content": "AzureRegionNotSupported"
+    },
+    {
+      "pos": [
+        9393,
+        9512
+      ],
+      "content": "<bpt id=\"p51\">**</bpt>Description<ept id=\"p51\">**</ept>: Could not create cluster in region <bpt id=\"p52\">*</bpt>nameOfYourRegion<ept id=\"p52\">*</ept>. Use a valid HDInsight region and retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p51\">**</bpt>Description<ept id=\"p51\">**</ept>: Could not create cluster in region <bpt id=\"p52\">*</bpt>nameOfYourRegion<ept id=\"p52\">*</ept>.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "Use a valid HDInsight region and retry request.",
+          "pos": [
+            152,
+            199
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9515,
+        9666
+      ],
+      "content": "<bpt id=\"p53\">**</bpt>Mitigation<ept id=\"p53\">**</ept>: Customer should create the cluster region that currently supports them: Southeast Asia, West Europe, North Europe, East US, or West US."
+    },
+    {
+      "pos": [
+        9717,
+        9747
+      ],
+      "content": "ClusterContainerRecordNotFound"
+    },
+    {
+      "pos": [
+        9750,
+        9822
+      ],
+      "content": "<bpt id=\"p54\">**</bpt>Description<ept id=\"p54\">**</ept>: The server could not find the requested cluster record."
+    },
+    {
+      "pos": [
+        9827,
+        9863
+      ],
+      "content": "<bpt id=\"p55\">**</bpt>Mitigation<ept id=\"p55\">**</ept>: Retry the operation."
+    },
+    {
+      "pos": [
+        9915,
+        9948
+      ],
+      "content": "ClusterDnsNameInvalidReservedWord"
+    },
+    {
+      "pos": [
+        9951,
+        10106
+      ],
+      "content": "<bpt id=\"p56\">**</bpt>Description<ept id=\"p56\">**</ept>: Cluster DNS name <bpt id=\"p57\">*</bpt>yourDnsName<ept id=\"p57\">*</ept><ph id=\"ph29\"/> is invalid. Please ensure name starts and ends with alphanumeric and can only contain '-' special character",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p56\">**</bpt>Description<ept id=\"p56\">**</ept>: Cluster DNS name <bpt id=\"p57\">*</bpt>yourDnsName<ept id=\"p57\">*</ept><ph id=\"ph29\"/> is invalid.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "Please ensure name starts and ends with alphanumeric and can only contain '-' special character",
+          "pos": [
+            155,
+            250
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10111,
+        10317
+      ],
+      "content": "<bpt id=\"p58\">**</bpt>Mitigation<ept id=\"p58\">**</ept>: Make sure that you have used a valid DNS name for your cluster that starts and ends with alphanumeric and contains no special characters other than the dash '-' and then retry the operation."
+    },
+    {
+      "pos": [
+        10358,
+        10380
+      ],
+      "content": "ClusterNameUnavailable"
+    },
+    {
+      "pos": [
+        10383,
+        10472
+      ],
+      "content": "<bpt id=\"p59\">**</bpt>Description<ept id=\"p59\">**</ept>: Cluster name <bpt id=\"p60\">*</bpt>yourClusterName<ept id=\"p60\">*</ept><ph id=\"ph30\"/> is unavailable. Please pick another name.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p59\">**</bpt>Description<ept id=\"p59\">**</ept>: Cluster name <bpt id=\"p60\">*</bpt>yourClusterName<ept id=\"p60\">*</ept><ph id=\"ph30\"/> is unavailable.",
+          "pos": [
+            0,
+            158
+          ]
+        },
+        {
+          "content": "Please pick another name.",
+          "pos": [
+            159,
+            184
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10477,
+        10697
+      ],
+      "content": "<bpt id=\"p61\">**</bpt>Mitigation<ept id=\"p61\">**</ept>: The user should specify a clustername that is unique and does not exist and retry. If the user is using the Portal, the UI will notify them if a cluster name is already being used during the create steps.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p61\">**</bpt>Mitigation<ept id=\"p61\">**</ept>: The user should specify a clustername that is unique and does not exist and retry.",
+          "pos": [
+            0,
+            138
+          ]
+        },
+        {
+          "content": "If the user is using the Portal, the UI will notify them if a cluster name is already being used during the create steps.",
+          "pos": [
+            139,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10739,
+        10761
+      ],
+      "content": "ClusterPasswordInvalid"
+    },
+    {
+      "pos": [
+        10764,
+        11015
+      ],
+      "content": "<bpt id=\"p62\">**</bpt>Description<ept id=\"p62\">**</ept>: Cluster password is invalid. Password must be at least 10 characters long and must contain at least one number, uppercase letter, lowercase letter and special character with no spaces and should not contain the username as part of it.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p62\">**</bpt>Description<ept id=\"p62\">**</ept>: Cluster password is invalid.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "Password must be at least 10 characters long and must contain at least one number, uppercase letter, lowercase letter and special character with no spaces and should not contain the username as part of it.",
+          "pos": [
+            86,
+            291
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11020,
+        11093
+      ],
+      "content": "<bpt id=\"p63\">**</bpt>Mitigation<ept id=\"p63\">**</ept>: Provide a valid cluster password and retry the operation."
+    },
+    {
+      "pos": [
+        11134,
+        11156
+      ],
+      "content": "ClusterUserNameInvalid"
+    },
+    {
+      "pos": [
+        11159,
+        11273
+      ],
+      "content": "<bpt id=\"p64\">**</bpt>Description<ept id=\"p64\">**</ept>: Cluster username is invalid. Please ensure username doesn't contain special characters or spaces.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p64\">**</bpt>Description<ept id=\"p64\">**</ept>: Cluster username is invalid.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "Please ensure username doesn't contain special characters or spaces.",
+          "pos": [
+            86,
+            154
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11278,
+        11351
+      ],
+      "content": "<bpt id=\"p65\">**</bpt>Mitigation<ept id=\"p65\">**</ept>: Provide a valid cluster username and retry the operation."
+    },
+    {
+      "pos": [
+        11404,
+        11438
+      ],
+      "content": "ClusterUserNameInvalidReservedWord"
+    },
+    {
+      "pos": [
+        11441,
+        11603
+      ],
+      "content": "<bpt id=\"p66\">**</bpt>Description<ept id=\"p66\">**</ept>: Cluster DNS name <bpt id=\"p67\">*</bpt>yourDnsClusterName<ept id=\"p67\">*</ept><ph id=\"ph31\"/> is invalid. Please ensure name starts and ends with alphanumeric and can only contain '-' special character",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p66\">**</bpt>Description<ept id=\"p66\">**</ept>: Cluster DNS name <bpt id=\"p67\">*</bpt>yourDnsClusterName<ept id=\"p67\">*</ept><ph id=\"ph31\"/> is invalid.",
+          "pos": [
+            0,
+            161
+          ]
+        },
+        {
+          "content": "Please ensure name starts and ends with alphanumeric and can only contain '-' special character",
+          "pos": [
+            162,
+            257
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11608,
+        11685
+      ],
+      "content": "<bpt id=\"p68\">**</bpt>Mitigation<ept id=\"p68\">**</ept>: Provide a valid DNS cluster username and retry the operation."
+    },
+    {
+      "pos": [
+        11736,
+        11768
+      ],
+      "content": "ContainerNameMisMatchWithDnsName"
+    },
+    {
+      "pos": [
+        11771,
+        11889
+      ],
+      "content": "<bpt id=\"p69\">**</bpt>Description<ept id=\"p69\">**</ept>: Container name in URI <bpt id=\"p70\">*</bpt>yourcontainerURI<ept id=\"p70\">*</ept><ph id=\"ph32\"/> and DNS name <bpt id=\"p71\">*</bpt>yourDnsName<ept id=\"p71\">*</ept><ph id=\"ph33\"/> in request body must be the same."
+    },
+    {
+      "pos": [
+        11894,
+        12000
+      ],
+      "content": "<bpt id=\"p72\">**</bpt>Mitigation<ept id=\"p72\">**</ept>: Make sure that your container Name and your DNS name are the same and retry the operation."
+    },
+    {
+      "pos": [
+        12045,
+        12071
+      ],
+      "content": "DataNodeDefinitionNotFound"
+    },
+    {
+      "pos": [
+        12074,
+        12176
+      ],
+      "content": "<bpt id=\"p73\">**</bpt>Description<ept id=\"p73\">**</ept>: Invalid cluster configuration. Unable to find any data node definitions in node size.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p73\">**</bpt>Description<ept id=\"p73\">**</ept>: Invalid cluster configuration.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "Unable to find any data node definitions in node size.",
+          "pos": [
+            88,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12181,
+        12217
+      ],
+      "content": "<bpt id=\"p74\">**</bpt>Mitigation<ept id=\"p74\">**</ept>: Retry the operation."
+    },
+    {
+      "pos": [
+        12261,
+        12286
+      ],
+      "content": "DeploymentDeletionFailure"
+    },
+    {
+      "pos": [
+        12289,
+        12351
+      ],
+      "content": "<bpt id=\"p75\">**</bpt>Description<ept id=\"p75\">**</ept>: Deletion of deployment failed for the Cluster"
+    },
+    {
+      "pos": [
+        12356,
+        12399
+      ],
+      "content": "<bpt id=\"p76\">**</bpt>Mitigation<ept id=\"p76\">**</ept>: Retry the delete operation."
+    },
+    {
+      "pos": [
+        12436,
+        12454
+      ],
+      "content": "DnsMappingNotFound"
+    },
+    {
+      "pos": [
+        12457,
+        12546
+      ],
+      "content": "<bpt id=\"p77\">**</bpt>Description<ept id=\"p77\">**</ept>: Service configuration error. Required DNS mapping information not found.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p77\">**</bpt>Description<ept id=\"p77\">**</ept>: Service configuration error.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "Required DNS mapping information not found.",
+          "pos": [
+            86,
+            129
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12551,
+        12607
+      ],
+      "content": "<bpt id=\"p78\">**</bpt>Mitigation<ept id=\"p78\">**</ept>: Delete cluster and create a new cluster."
+    },
+    {
+      "pos": [
+        12658,
+        12690
+      ],
+      "content": "DuplicateClusterContainerRequest"
+    },
+    {
+      "pos": [
+        12693,
+        12819
+      ],
+      "content": "<bpt id=\"p79\">**</bpt>Description<ept id=\"p79\">**</ept>: Duplicate cluster container creation attempt. Record exists for <bpt id=\"p80\">*</bpt>nameOfYourContainer<ept id=\"p80\">*</ept><ph id=\"ph34\"/> but Etags do not match.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p79\">**</bpt>Description<ept id=\"p79\">**</ept>: Duplicate cluster container creation attempt.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "Record exists for <bpt id=\"p80\">*</bpt>nameOfYourContainer<ept id=\"p80\">*</ept><ph id=\"ph34\"/> but Etags do not match.",
+          "pos": [
+            103,
+            221
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12822,
+        12909
+      ],
+      "content": "<bpt id=\"p81\">**</bpt>Mitigation<ept id=\"p81\">**</ept>: Provide a unique name for the container and retry the create operation."
+    },
+    {
+      "pos": [
+        12959,
+        12990
+      ],
+      "content": "DuplicateClusterInHostedService"
+    },
+    {
+      "pos": [
+        12993,
+        13128
+      ],
+      "content": "<bpt id=\"p82\">**</bpt>Description<ept id=\"p82\">**</ept>: Hosted service <bpt id=\"p83\">*</bpt>nameOfYourHostedService<ept id=\"p83\">*</ept><ph id=\"ph35\"/> already contains a cluster. A hosted service cannot contain multiple clusters",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p82\">**</bpt>Description<ept id=\"p82\">**</ept>: Hosted service <bpt id=\"p83\">*</bpt>nameOfYourHostedService<ept id=\"p83\">*</ept><ph id=\"ph35\"/> already contains a cluster.",
+          "pos": [
+            0,
+            180
+          ]
+        },
+        {
+          "content": "A hosted service cannot contain multiple clusters",
+          "pos": [
+            181,
+            230
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13133,
+        13192
+      ],
+      "content": "<bpt id=\"p84\">**</bpt>Mitigation<ept id=\"p84\">**</ept>: Host the cluster in another hosted service."
+    },
+    {
+      "pos": [
+        13242,
+        13273
+      ],
+      "content": "FailureToUpdateDeploymentStatus"
+    },
+    {
+      "pos": [
+        13276,
+        13357
+      ],
+      "content": "<bpt id=\"p85\">**</bpt>Description<ept id=\"p85\">**</ept>: The server could not update the state of the cluster deployment."
+    },
+    {
+      "pos": [
+        13362,
+        13443
+      ],
+      "content": "<bpt id=\"p86\">**</bpt>Mitigation<ept id=\"p86\">**</ept>: Retry the operation. If this happens multiple times, contact CSS.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p86\">**</bpt>Mitigation<ept id=\"p86\">**</ept>: Retry the operation.",
+          "pos": [
+            0,
+            76
+          ]
+        },
+        {
+          "content": "If this happens multiple times, contact CSS.",
+          "pos": [
+            77,
+            121
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13486,
+        13510
+      ],
+      "content": "HdiRestoreClusterAltered"
+    },
+    {
+      "pos": [
+        13513,
+        13620
+      ],
+      "content": "<bpt id=\"p87\">**</bpt>Description<ept id=\"p87\">**</ept>: Cluster <bpt id=\"p88\">*</bpt>yourClusterName<ept id=\"p88\">*</ept><ph id=\"ph36\"/> was deleted as part of maintenance. Please recreate the cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p87\">**</bpt>Description<ept id=\"p87\">**</ept>: Cluster <bpt id=\"p88\">*</bpt>yourClusterName<ept id=\"p88\">*</ept><ph id=\"ph36\"/> was deleted as part of maintenance.",
+          "pos": [
+            0,
+            173
+          ]
+        },
+        {
+          "content": "Please recreate the cluster.",
+          "pos": [
+            174,
+            202
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13623,
+        13660
+      ],
+      "content": "<bpt id=\"p89\">**</bpt>Mitigation<ept id=\"p89\">**</ept>: Recreate the cluster."
+    },
+    {
+      "pos": [
+        13701,
+        13723
+      ],
+      "content": "HeadNodeConfigNotFound"
+    },
+    {
+      "pos": [
+        13726,
+        13831
+      ],
+      "content": "<bpt id=\"p90\">**</bpt>Description<ept id=\"p90\">**</ept>: Invalid cluster configuration. Required head node configuration not found in node sizes.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p90\">**</bpt>Description<ept id=\"p90\">**</ept>: Invalid cluster configuration.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "Required head node configuration not found in node sizes.",
+          "pos": [
+            88,
+            145
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13834,
+        13870
+      ],
+      "content": "<bpt id=\"p91\">**</bpt>Mitigation<ept id=\"p91\">**</ept>: Retry the operation."
+    },
+    {
+      "pos": [
+        13917,
+        13945
+      ],
+      "content": "HostedServiceCreationFailure"
+    },
+    {
+      "pos": [
+        13948,
+        14045
+      ],
+      "content": "<bpt id=\"p92\">**</bpt>Description<ept id=\"p92\">**</ept>: Unable to create hosted service <bpt id=\"p93\">*</bpt>nameOfYourHostedService<ept id=\"p93\">*</ept>. Please retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p92\">**</bpt>Description<ept id=\"p92\">**</ept>: Unable to create hosted service <bpt id=\"p93\">*</bpt>nameOfYourHostedService<ept id=\"p93\">*</ept>.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "Please retry request.",
+          "pos": [
+            156,
+            177
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14050,
+        14084
+      ],
+      "content": "<bpt id=\"p94\">**</bpt>Mitigation<ept id=\"p94\">**</ept>: Retry the request."
+    },
+    {
+      "pos": [
+        14139,
+        14175
+      ],
+      "content": "HostedServiceHasProductionDeployment"
+    },
+    {
+      "pos": [
+        14178,
+        14386
+      ],
+      "content": "<bpt id=\"p95\">**</bpt>Description<ept id=\"p95\">**</ept>: Hosted Service <bpt id=\"p96\">*</bpt>nameOfYourHostedService<ept id=\"p96\">*</ept><ph id=\"ph37\"/> already has a production deployment. A hosted service cannot contain multiple production deployments. Retry the request with a different cluster name.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p95\">**</bpt>Description<ept id=\"p95\">**</ept>: Hosted Service <bpt id=\"p96\">*</bpt>nameOfYourHostedService<ept id=\"p96\">*</ept><ph id=\"ph37\"/> already has a production deployment.",
+          "pos": [
+            0,
+            189
+          ]
+        },
+        {
+          "content": "A hosted service cannot contain multiple production deployments.",
+          "pos": [
+            190,
+            254
+          ]
+        },
+        {
+          "content": "Retry the request with a different cluster name.",
+          "pos": [
+            255,
+            303
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14389,
+        14456
+      ],
+      "content": "<bpt id=\"p97\">**</bpt>Mitigation<ept id=\"p97\">**</ept>: Use a different cluster name and retry the request."
+    },
+    {
+      "pos": [
+        14496,
+        14517
+      ],
+      "content": "HostedServiceNotFound"
+    },
+    {
+      "pos": [
+        14520,
+        14613
+      ],
+      "content": "<bpt id=\"p98\">**</bpt>Description<ept id=\"p98\">**</ept>: Hosted Service <bpt id=\"p99\">*</bpt>nameOfYourHostedService<ept id=\"p99\">*</ept><ph id=\"ph38\"/> for the cluster could not be found."
+    },
+    {
+      "pos": [
+        14618,
+        14697
+      ],
+      "content": "<bpt id=\"p100\">**</bpt>Mitigation<ept id=\"p100\">**</ept>: If the cluster is in error state, delete it and then try again."
+    },
+    {
+      "pos": [
+        14745,
+        14774
+      ],
+      "content": "HostedServiceWithNoDeployment"
+    },
+    {
+      "pos": [
+        14777,
+        14864
+      ],
+      "content": "<bpt id=\"p101\">**</bpt>Description<ept id=\"p101\">**</ept>: Hosted Service <bpt id=\"p102\">*</bpt>nameOfYourHostedService<ept id=\"p102\">*</ept><ph id=\"ph39\"/> has no associated deployment."
+    },
+    {
+      "pos": [
+        14869,
+        14948
+      ],
+      "content": "<bpt id=\"p103\">**</bpt>Mitigation<ept id=\"p103\">**</ept>: If the cluster is in error state, delete it and then try again."
+    },
+    {
+      "pos": [
+        14993,
+        15019
+      ],
+      "content": "InsufficientResourcesCores"
+    },
+    {
+      "pos": [
+        15022,
+        15204
+      ],
+      "content": "<bpt id=\"p104\">**</bpt>Description<ept id=\"p104\">**</ept>: The SubscriptionId <bpt id=\"p105\">*</bpt>yourSubscriptionId<ept id=\"p105\">*</ept><ph id=\"ph40\"/> does not have cores left to create cluster <bpt id=\"p106\">*</bpt>yourClusterName<ept id=\"p106\">*</ept>. Required: <bpt id=\"p107\">*</bpt>resourcesRequired<ept id=\"p107\">*</ept>, Available: <bpt id=\"p108\">*</bpt>resourcesAvailable<ept id=\"p108\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p104\">**</bpt>Description<ept id=\"p104\">**</ept>: The SubscriptionId <bpt id=\"p105\">*</bpt>yourSubscriptionId<ept id=\"p105\">*</ept><ph id=\"ph40\"/> does not have cores left to create cluster <bpt id=\"p106\">*</bpt>yourClusterName<ept id=\"p106\">*</ept>.",
+          "pos": [
+            0,
+            259
+          ]
+        },
+        {
+          "content": "Required: <bpt id=\"p107\">*</bpt>resourcesRequired<ept id=\"p107\">*</ept>, Available: <bpt id=\"p108\">*</bpt>resourcesAvailable<ept id=\"p108\">*</ept>.",
+          "pos": [
+            260,
+            407
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15209,
+        15356
+      ],
+      "content": "<bpt id=\"p109\">**</bpt>Mitigation<ept id=\"p109\">**</ept>: Free up resources in your subscription or increase the resources available to the subscription and try to create the cluster again."
+    },
+    {
+      "pos": [
+        15410,
+        15445
+      ],
+      "content": "InsufficientResourcesHostedServices"
+    },
+    {
+      "pos": [
+        15448,
+        15582
+      ],
+      "content": "<bpt id=\"p110\">**</bpt>Description<ept id=\"p110\">**</ept>: Subscription ID <bpt id=\"p111\">*</bpt>yourSubscriptionId<ept id=\"p111\">*</ept><ph id=\"ph41\"/> does not have quota for a new HostedService to create cluster <bpt id=\"p112\">*</bpt>yourClusterName<ept id=\"p112\">*</ept>."
+    },
+    {
+      "pos": [
+        15587,
+        15734
+      ],
+      "content": "<bpt id=\"p113\">**</bpt>Mitigation<ept id=\"p113\">**</ept>: Free up resources in your subscription or increase the resources available to the subscription and try to create the cluster again."
+    },
+    {
+      "pos": [
+        15778,
+        15803
+      ],
+      "content": "InternalErrorRetryRequest"
+    },
+    {
+      "pos": [
+        15806,
+        15886
+      ],
+      "content": "<bpt id=\"p114\">**</bpt>Description<ept id=\"p114\">**</ept>: The server encountered an internal error. Please retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p114\">**</bpt>Description<ept id=\"p114\">**</ept>: The server encountered an internal error.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "Please retry request.",
+          "pos": [
+            101,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15891,
+        15925
+      ],
+      "content": "<bpt id=\"p115\">**</bpt>Mitigation<ept id=\"p115\">**</ept>: Retry the request."
+    },
+    {
+      "pos": [
+        15971,
+        15998
+      ],
+      "content": "InvalidAzureStorageLocation"
+    },
+    {
+      "pos": [
+        16001,
+        16133
+      ],
+      "content": "<bpt id=\"p116\">**</bpt>Description<ept id=\"p116\">**</ept>: Azure Storage location <bpt id=\"p117\">*</bpt>dataRegionName<ept id=\"p117\">*</ept><ph id=\"ph42\"/> is not a valid location. Make sure the region is correct and retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p116\">**</bpt>Description<ept id=\"p116\">**</ept>: Azure Storage location <bpt id=\"p117\">*</bpt>dataRegionName<ept id=\"p117\">*</ept><ph id=\"ph42\"/> is not a valid location.",
+          "pos": [
+            0,
+            180
+          ]
+        },
+        {
+          "content": "Make sure the region is correct and retry request.",
+          "pos": [
+            181,
+            231
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16136,
+        16265
+      ],
+      "content": "<bpt id=\"p118\">**</bpt>Mitigation<ept id=\"p118\">**</ept>: Select a Storage location that supports HDInsight, check that your cluster is co-located and retry the operation."
+    },
+    {
+      "pos": [
+        16310,
+        16336
+      ],
+      "content": "InvalidNodeSizeForDataNode"
+    },
+    {
+      "pos": [
+        16339,
+        16441
+      ],
+      "content": "<bpt id=\"p119\">**</bpt>Description<ept id=\"p119\">**</ept>: Invalid VM size for data nodes. Only 'Large VM' size is supported for all data nodes.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p119\">**</bpt>Description<ept id=\"p119\">**</ept>: Invalid VM size for data nodes.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "Only 'Large VM' size is supported for all data nodes.",
+          "pos": [
+            91,
+            144
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16446,
+        16536
+      ],
+      "content": "<bpt id=\"p120\">**</bpt>Mitigation<ept id=\"p120\">**</ept>: Specify the supported node size for the data node and retry the operation."
+    },
+    {
+      "pos": [
+        16581,
+        16607
+      ],
+      "content": "InvalidNodeSizeForHeadNode"
+    },
+    {
+      "pos": [
+        16610,
+        16711
+      ],
+      "content": "<bpt id=\"p121\">**</bpt>Description<ept id=\"p121\">**</ept>: Invalid VM size for head node. Only 'ExtraLarge VM' size is supported for head node.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p121\">**</bpt>Description<ept id=\"p121\">**</ept>: Invalid VM size for head node.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "Only 'ExtraLarge VM' size is supported for head node.",
+          "pos": [
+            90,
+            143
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16716,
+        16805
+      ],
+      "content": "<bpt id=\"p122\">**</bpt>Mitigation<ept id=\"p122\">**</ept>: Specify the supported node size for the head node and retry the operation"
+    },
+    {
+      "pos": [
+        16858,
+        16892
+      ],
+      "content": "InvalidRightsForDeploymentDeletion"
+    },
+    {
+      "pos": [
+        16895,
+        17055
+      ],
+      "content": "<bpt id=\"p123\">**</bpt>Description<ept id=\"p123\">**</ept>: Subscription ID <bpt id=\"p124\">*</bpt>yourSubscriptionId<ept id=\"p124\">*</ept><ph id=\"ph43\"/> being used does not have sufficient permissions to execute delete operation for cluster <bpt id=\"p125\">*</bpt>yourClusterName<ept id=\"p125\">*</ept>."
+    },
+    {
+      "pos": [
+        17060,
+        17137
+      ],
+      "content": "<bpt id=\"p126\">**</bpt>Mitigation<ept id=\"p126\">**</ept>: If the cluster is in error state, drop it and then try again."
+    },
+    {
+      "pos": [
+        17196,
+        17234
+      ],
+      "content": "InvalidStorageAccountBlobContainerName"
+    },
+    {
+      "pos": [
+        17237,
+        17421
+      ],
+      "content": "<bpt id=\"p127\">**</bpt>Description<ept id=\"p127\">**</ept>: External storage account blob container name <bpt id=\"p128\">*</bpt>yourContainerName<ept id=\"p128\">*</ept><ph id=\"ph44\"/> is invalid. Make sure name starts with a letter and contains only lowercase letters, numbers and dash.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p127\">**</bpt>Description<ept id=\"p127\">**</ept>: External storage account blob container name <bpt id=\"p128\">*</bpt>yourContainerName<ept id=\"p128\">*</ept><ph id=\"ph44\"/> is invalid.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "Make sure name starts with a letter and contains only lowercase letters, numbers and dash.",
+          "pos": [
+            193,
+            283
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17426,
+        17518
+      ],
+      "content": "<bpt id=\"p129\">**</bpt>Mitigation<ept id=\"p129\">**</ept>: Specify a valid storage account blob container name and retry the operation."
+    },
+    {
+      "pos": [
+        17580,
+        17623
+      ],
+      "content": "InvalidStorageAccountConfigurationSecretKey"
+    },
+    {
+      "pos": [
+        17626,
+        17760
+      ],
+      "content": "<bpt id=\"p130\">**</bpt>Description<ept id=\"p130\">**</ept>: Configuration for external storage account <bpt id=\"p131\">*</bpt>yourStorageAccountName<ept id=\"p131\">*</ept><ph id=\"ph45\"/> is required to have secret key details to be set."
+    },
+    {
+      "pos": [
+        17765,
+        17856
+      ],
+      "content": "<bpt id=\"p132\">**</bpt>Mitigation<ept id=\"p132\">**</ept>: Specify a valid secret key for the storage account and retry the operation."
+    },
+    {
+      "pos": [
+        17901,
+        17927
+      ],
+      "content": "InvalidVersionHeaderFormat"
+    },
+    {
+      "pos": [
+        17930,
+        18019
+      ],
+      "content": "<bpt id=\"p133\">**</bpt>Description<ept id=\"p133\">**</ept>: Version header <bpt id=\"p134\">*</bpt>yourVersionHeader<ept id=\"p134\">*</ept><ph id=\"ph46\"/> is not in valid format of yyyy-mm-dd."
+    },
+    {
+      "pos": [
+        18024,
+        18108
+      ],
+      "content": "<bpt id=\"p135\">**</bpt>Mitigation<ept id=\"p135\">**</ept>: Specify a valid format for the version-header and retry the request."
+    },
+    {
+      "pos": [
+        18146,
+        18165
+      ],
+      "content": "MoreThanOneHeadNode"
+    },
+    {
+      "pos": [
+        18168,
+        18260
+      ],
+      "content": "<bpt id=\"p136\">**</bpt>Description<ept id=\"p136\">**</ept>: Invalid cluster configuration. Found more than one head node configuration.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p136\">**</bpt>Description<ept id=\"p136\">**</ept>: Invalid cluster configuration.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "Found more than one head node configuration.",
+          "pos": [
+            90,
+            134
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18265,
+        18345
+      ],
+      "content": "<bpt id=\"p137\">**</bpt>Mitigation<ept id=\"p137\">**</ept>: Edit the configuration so that onloy one head node is specified."
+    },
+    {
+      "pos": [
+        18393,
+        18422
+      ],
+      "content": "OperationTimedOutRetryRequest"
+    },
+    {
+      "pos": [
+        18425,
+        18566
+      ],
+      "content": "<bpt id=\"p138\">**</bpt>Description<ept id=\"p138\">**</ept>: The operation could not be completed within the permitted time or the maximum retry attempts possible. Please retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p138\">**</bpt>Description<ept id=\"p138\">**</ept>: The operation could not be completed within the permitted time or the maximum retry attempts possible.",
+          "pos": [
+            0,
+            161
+          ]
+        },
+        {
+          "content": "Please retry request.",
+          "pos": [
+            162,
+            183
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18571,
+        18605
+      ],
+      "content": "<bpt id=\"p139\">**</bpt>Mitigation<ept id=\"p139\">**</ept>: Retry the request."
+    },
+    {
+      "pos": [
+        18644,
+        18664
+      ],
+      "content": "ParameterNullOrEmpty"
+    },
+    {
+      "pos": [
+        18667,
+        18738
+      ],
+      "content": "<bpt id=\"p140\">**</bpt>Description<ept id=\"p140\">**</ept>: Parameter <bpt id=\"p141\">*</bpt>yourParameterName<ept id=\"p141\">*</ept><ph id=\"ph47\"/> cannot be null or empty."
+    },
+    {
+      "pos": [
+        18743,
+        18799
+      ],
+      "content": "<bpt id=\"p142\">**</bpt>Mitigation<ept id=\"p142\">**</ept>: Specify a valid value for the parameter."
+    },
+    {
+      "pos": [
+        18853,
+        18888
+      ],
+      "content": "PreClusterCreationValidationFailure"
+    },
+    {
+      "pos": [
+        18891,
+        19030
+      ],
+      "content": "<bpt id=\"p143\">**</bpt>Description<ept id=\"p143\">**</ept>: One or more of the cluster creation request inputs is not valid. Make sure the input values are correct and retry request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p143\">**</bpt>Description<ept id=\"p143\">**</ept>: One or more of the cluster creation request inputs is not valid.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "Make sure the input values are correct and retry request.",
+          "pos": [
+            124,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19035,
+        19108
+      ],
+      "content": "<bpt id=\"p144\">**</bpt>Mitigation<ept id=\"p144\">**</ept>: Make sure the input values are correct and retry request."
+    },
+    {
+      "pos": [
+        19155,
+        19183
+      ],
+      "content": "RegionCapabilityNotAvailable"
+    },
+    {
+      "pos": [
+        19186,
+        19304
+      ],
+      "content": "<bpt id=\"p145\">**</bpt>Description<ept id=\"p145\">**</ept>: Region capability not available for region <bpt id=\"p146\">*</bpt>yourRegionName<ept id=\"p146\">*</ept><ph id=\"ph48\"/> and Subscription ID <bpt id=\"p147\">*</bpt>yourSubscriptionId<ept id=\"p147\">*</ept>."
+    },
+    {
+      "pos": [
+        19309,
+        19475
+      ],
+      "content": "<bpt id=\"p148\">**</bpt>Mitigation<ept id=\"p148\">**</ept>: Specify a region that supports HDInsight clusters. The publicly supported regions are: Southeast Asia, West Europe, North Europe, East US, or West US.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p148\">**</bpt>Mitigation<ept id=\"p148\">**</ept>: Specify a region that supports HDInsight clusters.",
+          "pos": [
+            0,
+            108
+          ]
+        },
+        {
+          "content": "The publicly supported regions are: Southeast Asia, West Europe, North Europe, East US, or West US.",
+          "pos": [
+            109,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19520,
+        19546
+      ],
+      "content": "StorageAccountNotColocated"
+    },
+    {
+      "pos": [
+        19549,
+        19705
+      ],
+      "content": "<bpt id=\"p149\">**</bpt>Description<ept id=\"p149\">**</ept>: Storage account <bpt id=\"p150\">*</bpt>yourStorageAccountName<ept id=\"p150\">*</ept><ph id=\"ph49\"/> is in region <bpt id=\"p151\">*</bpt>currentRegionName<ept id=\"p151\">*</ept>. It should be same as the cluster region <bpt id=\"p152\">*</bpt>yourClusterRegionName<ept id=\"p152\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p149\">**</bpt>Description<ept id=\"p149\">**</ept>: Storage account <bpt id=\"p150\">*</bpt>yourStorageAccountName<ept id=\"p150\">*</ept><ph id=\"ph49\"/> is in region <bpt id=\"p151\">*</bpt>currentRegionName<ept id=\"p151\">*</ept>.",
+          "pos": [
+            0,
+            232
+          ]
+        },
+        {
+          "content": "It should be same as the cluster region <bpt id=\"p152\">*</bpt>yourClusterRegionName<ept id=\"p152\">*</ept>.",
+          "pos": [
+            233,
+            339
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19710,
+        20004
+      ],
+      "content": "<bpt id=\"p153\">**</bpt>Mitigation<ept id=\"p153\">**</ept>: Either specify a storage account in the same region that your cluster is in or if your data is already in the storage account, create a new cluster in the same region as the existing storage account. If you are using the Portal, the UI will notify them of this issue in advance.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p153\">**</bpt>Mitigation<ept id=\"p153\">**</ept>: Either specify a storage account in the same region that your cluster is in or if your data is already in the storage account, create a new cluster in the same region as the existing storage account.",
+          "pos": [
+            0,
+            257
+          ]
+        },
+        {
+          "content": "If you are using the Portal, the UI will notify them of this issue in advance.",
+          "pos": [
+            258,
+            336
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20046,
+        20069
+      ],
+      "content": "SubscriptionIdNotActive"
+    },
+    {
+      "pos": [
+        20072,
+        20146
+      ],
+      "content": "<bpt id=\"p154\">**</bpt>Description<ept id=\"p154\">**</ept>: Given Subscription ID <bpt id=\"p155\">*</bpt>yourSubscriptionId<ept id=\"p155\">*</ept><ph id=\"ph50\"/> is not active."
+    },
+    {
+      "pos": [
+        20151,
+        20229
+      ],
+      "content": "<bpt id=\"p156\">**</bpt>Mitigation<ept id=\"p156\">**</ept>: Re-activate your subscription or get a new valid subscription."
+    },
+    {
+      "pos": [
+        20270,
+        20292
+      ],
+      "content": "SubscriptionIdNotFound"
+    },
+    {
+      "pos": [
+        20295,
+        20368
+      ],
+      "content": "<bpt id=\"p157\">**</bpt>Description<ept id=\"p157\">**</ept>: Subscription ID <bpt id=\"p158\">*</bpt>yourSubscriptionId<ept id=\"p158\">*</ept><ph id=\"ph51\"/> could not be found."
+    },
+    {
+      "pos": [
+        20373,
+        20454
+      ],
+      "content": "<bpt id=\"p159\">**</bpt>Mitigation<ept id=\"p159\">**</ept>: Check that your subscription ID is valid and retry the operation."
+    },
+    {
+      "pos": [
+        20491,
+        20509
+      ],
+      "content": "UnableToResolveDNS"
+    },
+    {
+      "pos": [
+        20512,
+        20637
+      ],
+      "content": "<bpt id=\"p160\">**</bpt>Description<ept id=\"p160\">**</ept>: Unable to resolve DNS <bpt id=\"p161\">*</bpt>yourDnsUrl<ept id=\"p161\">*</ept>. Please ensure the fully qualified URL for the blob endpoint is provided.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p160\">**</bpt>Description<ept id=\"p160\">**</ept>: Unable to resolve DNS <bpt id=\"p161\">*</bpt>yourDnsUrl<ept id=\"p161\">*</ept>.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "Please ensure the fully qualified URL for the blob endpoint is provided.",
+          "pos": [
+            137,
+            209
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20642,
+        20767
+      ],
+      "content": "<bpt id=\"p162\">**</bpt>Mitigation<ept id=\"p162\">**</ept>: Supply a valid blob URL. The URL MUST be fully valid, including starting with <bpt id=\"p163\">*</bpt>http://<ept id=\"p163\">*</ept><ph id=\"ph52\"/> and ending in <bpt id=\"p164\">*</bpt>.com<ept id=\"p164\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p162\">**</bpt>Mitigation<ept id=\"p162\">**</ept>: Supply a valid blob URL.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "The URL MUST be fully valid, including starting with <bpt id=\"p163\">*</bpt>http://<ept id=\"p163\">*</ept><ph id=\"ph52\"/> and ending in <bpt id=\"p164\">*</bpt>.com<ept id=\"p164\">*</ept>.",
+          "pos": [
+            83,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20818,
+        20850
+      ],
+      "content": "UnableToVerifyLocationOfResource"
+    },
+    {
+      "pos": [
+        20853,
+        20994
+      ],
+      "content": "<bpt id=\"p165\">**</bpt>Description<ept id=\"p165\">**</ept>: Unable to verify location of resource <bpt id=\"p166\">*</bpt>yourDnsUrl<ept id=\"p166\">*</ept>. Please ensure the fully qualified URL for the blob endpoint is provided.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p165\">**</bpt>Description<ept id=\"p165\">**</ept>: Unable to verify location of resource <bpt id=\"p166\">*</bpt>yourDnsUrl<ept id=\"p166\">*</ept>.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "Please ensure the fully qualified URL for the blob endpoint is provided.",
+          "pos": [
+            153,
+            225
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20999,
+        21124
+      ],
+      "content": "<bpt id=\"p167\">**</bpt>Mitigation<ept id=\"p167\">**</ept>: Supply a valid blob URL. The URL MUST be fully valid, including starting with <bpt id=\"p168\">*</bpt>http://<ept id=\"p168\">*</ept><ph id=\"ph53\"/> and ending in <bpt id=\"p169\">*</bpt>.com<ept id=\"p169\">*</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p167\">**</bpt>Mitigation<ept id=\"p167\">**</ept>: Supply a valid blob URL.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "The URL MUST be fully valid, including starting with <bpt id=\"p168\">*</bpt>http://<ept id=\"p168\">*</ept><ph id=\"ph53\"/> and ending in <bpt id=\"p169\">*</bpt>.com<ept id=\"p169\">*</ept>.",
+          "pos": [
+            83,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21172,
+        21201
+      ],
+      "content": "VersionCapabilityNotAvailable"
+    },
+    {
+      "pos": [
+        21204,
+        21326
+      ],
+      "content": "<bpt id=\"p170\">**</bpt>Description<ept id=\"p170\">**</ept>: Version capability not available for version <bpt id=\"p171\">*</bpt>specifiedVersion<ept id=\"p171\">*</ept><ph id=\"ph54\"/> and Subscription ID <bpt id=\"p172\">*</bpt>yourSubscriptionId<ept id=\"p172\">*</ept>."
+    },
+    {
+      "pos": [
+        21331,
+        21406
+      ],
+      "content": "<bpt id=\"p173\">**</bpt>Mitigation<ept id=\"p173\">**</ept>: Choose a version that is available and retry the operation."
+    },
+    {
+      "pos": [
+        21444,
+        21463
+      ],
+      "content": "VersionNotSupported"
+    },
+    {
+      "pos": [
+        21466,
+        21524
+      ],
+      "content": "<bpt id=\"p174\">**</bpt>Description<ept id=\"p174\">**</ept>: Version <bpt id=\"p175\">*</bpt>specifiedVersion<ept id=\"p175\">*</ept><ph id=\"ph55\"/> not supported."
+    },
+    {
+      "pos": [
+        21527,
+        21602
+      ],
+      "content": "<bpt id=\"p176\">**</bpt>Mitigation<ept id=\"p176\">**</ept>: Choose a version that is supported and retry the operation."
+    },
+    {
+      "pos": [
+        21648,
+        21675
+      ],
+      "content": "VersionNotSupportedInRegion"
+    },
+    {
+      "pos": [
+        21678,
+        21773
+      ],
+      "content": "<bpt id=\"p177\">**</bpt>Description<ept id=\"p177\">**</ept>: Version <bpt id=\"p178\">*</bpt>specifiedVersion<ept id=\"p178\">*</ept><ph id=\"ph56\"/> is not available in Azure region <bpt id=\"p179\">*</bpt>specifiedRegion<ept id=\"p179\">*</ept>."
+    },
+    {
+      "pos": [
+        21778,
+        21877
+      ],
+      "content": "<bpt id=\"p180\">**</bpt>Mitigation<ept id=\"p180\">**</ept>: Choose a version that is supported in the region specified and retry the operation."
+    },
+    {
+      "pos": [
+        21921,
+        21946
+      ],
+      "content": "WasbAccountConfigNotFound"
+    },
+    {
+      "pos": [
+        21949,
+        22064
+      ],
+      "content": "<bpt id=\"p181\">**</bpt>Description<ept id=\"p181\">**</ept>: Invalid cluster configuration. Required WASB account configuration not found in external accounts.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p181\">**</bpt>Description<ept id=\"p181\">**</ept>: Invalid cluster configuration.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "Required WASB account configuration not found in external accounts.",
+          "pos": [
+            90,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22069,
+        22183
+      ],
+      "content": "<bpt id=\"p182\">**</bpt>Mitigation<ept id=\"p182\">**</ept>: Verify that the account exists and is properly specified in configuration and retry the operation."
+    },
+    {
+      "pos": [
+        22188,
+        22198
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        22200,
+        22491
+      ],
+      "content": "<bpt id=\"p183\">[</bpt>Use Ambari Views to debug Tez Jobs on HDInsight<ept id=\"p183\">](hdinsight-debug-ambari-tez-view.md)</ept><bpt id=\"p184\">\n[</bpt>Enable heap dumps for Hadoop services on Linux-based HDInsight<ept id=\"p184\">](hdinsight-hadoop-collect-debug-heap-dump-linux.md)</ept><bpt id=\"p185\">\n[</bpt>Manage HDInsight clusters by using the Ambari Web UI<ept id=\"p185\">](hdinsight-hadoop-manage-ambari.md)</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Debug Hadoop in HDInsight: View logs and interpret error messages | Microsoft Azure\"\n    description=\"Learn about the error messages you might receive when administering HDInsight using PowerShell, and steps you can take to recover.\"\n    services=\"hdinsight\"\n    tags=\"azure-portal\"\n    editor=\"cgronlun\"\n    manager=\"paulettm\"\n    authors=\"mumian\"\n    documentationCenter=\"\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/16/2016\"\n    ms.author=\"jgao\"/>\n\n# Analyze HDInsight logs\n\nEach Hadoop cluster in Azure HDInsight has an Azure storage account used as the default file system. The storage account is referred as the default Storage account. Cluster uses the Azure Table storage and the Blob storage on the default Storage account to store its logs.  To find out the default storage account for your cluster, see [Manage Hadoop clusters in HDInsight](hdinsight-administer-use-management-portal.md#find-the-default-storage-account). The logs retain in the Storage account even after the cluster is deleted.\n\n##Logs written to Azure Tables\n\nThe logs written to Azure Tables provide one level of insight into what is happening with an HDInsight cluster.\n\nWhen you create an HDInsight cluster, 6 tables are automatically created for Linux-based clusters in the default Table storage:\n\n- hdinsightagentlog\n- syslog\n- daemonlog\n- hadoopservicelog\n- ambariserverlog\n- ambariagentlog\n\n3 tables are created for Windows-based clusters:\n\n- setuplog: Log of events/exceptions encountered in provisioning/setting up of HDInsight clusters.\n- hadoopinstalllog: Log of events/exceptions encountered when installing Hadoop on the cluster. This table may be useful in debugging issues related to clusters created with custom parameters.\n- hadoopservicelog: Log of events/exceptions recorded by all Hadoop services. This table may be useful in debugging issues related to job failures on HDInsight clusters.\n\nThe table file names are **u<ClusterName>DDMonYYYYatHHMMSSsss<TableName>**.\n\nThese tables contains the following fields:\n\n- ClusterDnsName\n- ComponentName\n- EventTimestamp\n- Host\n- MALoggingHash\n- Message\n- N\n- PreciseTimeStamp\n- Role\n- RowIndex\n- Tenant\n- TIMESTAMP\n- TraceLevel\n\n### Tools for accessing the logs\n\nThere are many tools available for accessing data in these tables:\n\n-  Visual Studio\n-  Azure Storage Explorer\n-  Power Query for Excel\n\n#### Use Power Query for Excel\n\nPower Query can be installed from [www.microsoft.com/en-us/download/details.aspx?id=39379]( http://www.microsoft.com/en-us/download/details.aspx?id=39379). See the download page for the system requirements\n\n**To use Power Query to open and analyze the service log**\n\n1. Open **Microsoft Excel**.\n2. From the **Power Query** menu, click **From Azure**, and then click **From Microsoft Azure Table storage**.\n \n    ![HDInsight Hadoop Excel PowerQuery open Azure Table storage](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-using-excel-power-query-open.png)\n3. Enter the storage account name. This can be either the short name or the FQDN.\n4. Enter the storage account key. You shall see a list of tables:\n\n    ![HDInsight Hadoop logs stored in Azure Table storage](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-table-names.png)\n5. Right-click the hadoopservicelog table in the **Navigator** pane and select **Edit**. You shall see 4 columns. Optionally, delete the **Partition Key**, **Row Key**, and **Timestamp** columns by selecting them, then clicking **Remove Columns** from the options in the ribbon.\n6. Click the expand icon on the Content column to choose the columns you want to import into the Excel spreadsheet. For this demonstration, I chose TraceLevel, and ComponentName: It can give me some basic information on which components had issues.\n\n    ![HDInsight Hadoop logs choose columns](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-using-excel-power-query-filter.png)\n7. Click **OK** to import the data.\n8. Select the **TraceLevel**, Role, and **ComponentName** columns, and then click **Group By** control in the ribbon.\n9. Click **OK** in the Group By dialog box\n10. Click** Apply & Close**.\n \nYou can now use Excel to filter and sort as necessary. Obviously, you may want to include other columns (e.g. Message) in order to drill down into issues when they occur, but selecting and grouping the columns described above provides a decent picture of what is happening with Hadoop services. The same idea can be applied to the setuplog and hadoopinstalllog tables.\n\n#### Use Visual Studio\n\n**To use Visual Studio**\n\n1. Open Visual Studio.\n2. From the **View** menu, click **Cloud Explorer**. Or simply click **CTRL+\\, CTRL+X**.\n3. From **Cloud Explorer**, select **Resource Types**.  The other available option is **Resource Groups**.\n4. Expand **Storage Accounts**, the default storage account for your cluster, and then **Tables**.\n5. Double-click hadoopservicelog.\n6. Add a filter. For example:\n    \n        TraceLevel eq 'ERROR'\n\n    ![HDInsight Hadoop logs choose columns](./media/hdinsight-debug-jobs/hdinsight-hadoop-analyze-logs-visual-studio-filter.png)\n\n    For more information about constructing filters, see [Constructing Filter Strings for the Table Designer](https://msdn.microsoft.com/library/azure/ff683669.aspx).\n \n##Logs Written to Azure Blob Storage\n\n[The logs written to Azure Tables](#log-written-to-azure-tables) provide one level of insight into what is happening with an HDInsight cluster. However, these tables do not provide task-level logs, which can be helpful in drilling further into issues when they occur. To provide this next level of detail, HDInsight clusters are configured to write task logs to your Blob Storage account for any job that is submitted through Templeton. Practically, this means jobs submitted using the Microsoft Azure PowerShell cmdlets or the .NET Job Submission APIs, not jobs submitted through RDP/command-line access to the cluster. \n\nTo view the logs, see [Access YARN application logs on Linux-based HDInsight](hdinsight-hadoop-access-yarn-app-logs-linux.md).\n\nFor more information about application logs, see [Simplifying user-logs management and access in YARN](http://hortonworks.com/blog/simplifying-user-logs-management-and-access-in-yarn/).\n \n \n## View cluster health and job logs\n\n###Access Hadoop UI\n\nFrom the Azure Portal, click an HDInsight cluster name to open the cluster blade. From the cluster blade, click **Dashboard**.\n\n![Launch cluster dashboard](./media/hdinsight-debug-jobs/hdi-debug-launch-dashboard.png)\n\nWhen prompted, enter the cluster administrator credentials. In the Query Console that opens, click **Hadoop UI**.\n\n![Start Hadoop UI](./media/hdinsight-debug-jobs/hdi-debug-launch-dashboard-hadoop-ui.png)\n\n\n###Access the Yarn UI\n\nFrom the Azure Portal, click an HDInsight cluster name to open the cluster blade. From the cluster blade, click **Dashboard**. When prompted, enter the cluster administrator credentials. In the Query Console that opens, click **YARN UI**.\n\nYou can use the YARN UI to do the following:\n\n* **Get cluster status**. From the left pane, expand **Cluster**, and click **About**. This present cluster status details like total allocated memory, cores used, state of the cluster resource manager, cluster version etc.\n\n    ![Launch cluster dashboard](./media/hdinsight-debug-jobs/hdi-debug-yarn-cluster-state.png)\n\n* **Get node status**. From the left pane, expand **Cluster**, and click **Nodes**. This lists all the nodes in the cluster, HTTP address of each node, resources allocated to each node, etc.\n\n* **Monitor job status**. From the left pane, expand **Cluster**, and then click **Applications** to list all the jobs in the cluster. If you want to look at jobs in a specific state (such as new, submitted, running, etc.), click the appropriate link under **Applications**. You can further click the job name to find out more about the job such including the output, logs, etc.\n\n###Access the HBase UI\n\nFrom the Azure Portal, click an HDInsight HBase cluster name to open the cluster blade. From the cluster blade, click **Dashboard**. When prompted, enter the cluster administrator credentials. In the Query Console that opens, click **HBase UI**.\n\n## HDInsight error codes\n\nThe error messages itemized in this section are provided to help the users of Hadoop in Azure HDInsight understand possible error conditions that they can encounter when administering the service using Azure PowerShell and to advise them on the steps which can be taken to recover from the error.\n\nSome of these error messages could also be seen in the Azure Portal when it is used to manage HDInsight clusters. But other error messages you might encounter there are less granular due to the constraints on the remedial actions possible in this context. Other error messages are provided in the contexts where the mitigation is obvious. \n\n### <a id=\"AtleastOneSqlMetastoreMustBeProvided\"></a>AtleastOneSqlMetastoreMustBeProvided\n- **Description**: Please provide Azure SQL database details for at least one component in order to use custom settings for Hive and Oozie metastores.\n- **Mitigation**: The user needs to supply a valid SQL Azure metastore and retry the request.  \n\n### <a id=\"AzureRegionNotSupported\"></a>AzureRegionNotSupported\n- **Description**: Could not create cluster in region *nameOfYourRegion*. Use a valid HDInsight region and retry request.\n- **Mitigation**: Customer should create the cluster region that currently supports them: Southeast Asia, West Europe, North Europe, East US, or West US.  \n\n### <a id=\"ClusterContainerRecordNotFound\"></a>ClusterContainerRecordNotFound\n- **Description**: The server could not find the requested cluster record.  \n- **Mitigation**: Retry the operation.\n\n### <a id=\"ClusterDnsNameInvalidReservedWord\"></a>ClusterDnsNameInvalidReservedWord\n- **Description**: Cluster DNS name *yourDnsName* is invalid. Please ensure name starts and ends with alphanumeric and can only contain '-' special character  \n- **Mitigation**: Make sure that you have used a valid DNS name for your cluster that starts and ends with alphanumeric and contains no special characters other than the dash '-' and then retry the operation.\n\n### <a id=\"ClusterNameUnavailable\"></a>ClusterNameUnavailable\n- **Description**: Cluster name *yourClusterName* is unavailable. Please pick another name.  \n- **Mitigation**: The user should specify a clustername that is unique and does not exist and retry. If the user is using the Portal, the UI will notify them if a cluster name is already being used during the create steps.\n\n\n### <a id=\"ClusterPasswordInvalid\"></a>ClusterPasswordInvalid\n- **Description**: Cluster password is invalid. Password must be at least 10 characters long and must contain at least one number, uppercase letter, lowercase letter and special character with no spaces and should not contain the username as part of it.  \n- **Mitigation**: Provide a valid cluster password and retry the operation.\n\n### <a id=\"ClusterUserNameInvalid\"></a>ClusterUserNameInvalid\n- **Description**: Cluster username is invalid. Please ensure username doesn't contain special characters or spaces.  \n- **Mitigation**: Provide a valid cluster username and retry the operation.\n\n### <a id=\"ClusterUserNameInvalidReservedWord\"></a>ClusterUserNameInvalidReservedWord\n- **Description**: Cluster DNS name *yourDnsClusterName* is invalid. Please ensure name starts and ends with alphanumeric and can only contain '-' special character  \n- **Mitigation**: Provide a valid DNS cluster username and retry the operation.\n\n### <a id=\"ContainerNameMisMatchWithDnsName\"></a>ContainerNameMisMatchWithDnsName\n- **Description**: Container name in URI *yourcontainerURI* and DNS name *yourDnsName* in request body must be the same.  \n- **Mitigation**: Make sure that your container Name and your DNS name are the same and retry the operation.\n\n### <a id=\"DataNodeDefinitionNotFound\"></a>DataNodeDefinitionNotFound\n- **Description**: Invalid cluster configuration. Unable to find any data node definitions in node size.  \n- **Mitigation**: Retry the operation.\n\n### <a id=\"DeploymentDeletionFailure\"></a>DeploymentDeletionFailure\n- **Description**: Deletion of deployment failed for the Cluster  \n- **Mitigation**: Retry the delete operation.\n\n### <a id=\"DnsMappingNotFound\"></a>DnsMappingNotFound\n- **Description**: Service configuration error. Required DNS mapping information not found.  \n- **Mitigation**: Delete cluster and create a new cluster.\n\n### <a id=\"DuplicateClusterContainerRequest\"></a>DuplicateClusterContainerRequest\n- **Description**: Duplicate cluster container creation attempt. Record exists for *nameOfYourContainer* but Etags do not match.\n- **Mitigation**: Provide a unique name for the container and retry the create operation.\n\n### <a id=\"DuplicateClusterInHostedService\"></a>DuplicateClusterInHostedService\n- **Description**: Hosted service *nameOfYourHostedService* already contains a cluster. A hosted service cannot contain multiple clusters  \n- **Mitigation**: Host the cluster in another hosted service.\n\n### <a id=\"FailureToUpdateDeploymentStatus\"></a>FailureToUpdateDeploymentStatus\n- **Description**: The server could not update the state of the cluster deployment.  \n- **Mitigation**: Retry the operation. If this happens multiple times, contact CSS.\n\n### <a id=\"HdiRestoreClusterAltered\"></a>HdiRestoreClusterAltered\n- **Description**: Cluster *yourClusterName* was deleted as part of maintenance. Please recreate the cluster.\n- **Mitigation**: Recreate the cluster.\n\n### <a id=\"HeadNodeConfigNotFound\"></a>HeadNodeConfigNotFound\n- **Description**: Invalid cluster configuration. Required head node configuration not found in node sizes.\n- **Mitigation**: Retry the operation.\n\n### <a id=\"HostedServiceCreationFailure\"></a>HostedServiceCreationFailure\n- **Description**: Unable to create hosted service *nameOfYourHostedService*. Please retry request.  \n- **Mitigation**: Retry the request.\n\n### <a id=\"HostedServiceHasProductionDeployment\"></a>HostedServiceHasProductionDeployment\n- **Description**: Hosted Service *nameOfYourHostedService* already has a production deployment. A hosted service cannot contain multiple production deployments. Retry the request with a different cluster name.\n- **Mitigation**: Use a different cluster name and retry the request.\n\n### <a id=\"HostedServiceNotFound\"></a>HostedServiceNotFound\n- **Description**: Hosted Service *nameOfYourHostedService* for the cluster could not be found.  \n- **Mitigation**: If the cluster is in error state, delete it and then try again.\n\n### <a id=\"HostedServiceWithNoDeployment\"></a>HostedServiceWithNoDeployment\n- **Description**: Hosted Service *nameOfYourHostedService* has no associated deployment.  \n- **Mitigation**: If the cluster is in error state, delete it and then try again.\n\n### <a id=\"InsufficientResourcesCores\"></a>InsufficientResourcesCores\n- **Description**: The SubscriptionId *yourSubscriptionId* does not have cores left to create cluster *yourClusterName*. Required: *resourcesRequired*, Available: *resourcesAvailable*.  \n- **Mitigation**: Free up resources in your subscription or increase the resources available to the subscription and try to create the cluster again.\n\n### <a id=\"InsufficientResourcesHostedServices\"></a>InsufficientResourcesHostedServices\n- **Description**: Subscription ID *yourSubscriptionId* does not have quota for a new HostedService to create cluster *yourClusterName*.  \n- **Mitigation**: Free up resources in your subscription or increase the resources available to the subscription and try to create the cluster again.\n\n### <a id=\"InternalErrorRetryRequest\"></a>InternalErrorRetryRequest\n- **Description**: The server encountered an internal error. Please retry request.  \n- **Mitigation**: Retry the request.\n\n### <a id=\"InvalidAzureStorageLocation\"></a>InvalidAzureStorageLocation\n- **Description**: Azure Storage location *dataRegionName* is not a valid location. Make sure the region is correct and retry request.\n- **Mitigation**: Select a Storage location that supports HDInsight, check that your cluster is co-located and retry the operation.\n\n### <a id=\"InvalidNodeSizeForDataNode\"></a>InvalidNodeSizeForDataNode\n- **Description**: Invalid VM size for data nodes. Only 'Large VM' size is supported for all data nodes.  \n- **Mitigation**: Specify the supported node size for the data node and retry the operation.\n\n### <a id=\"InvalidNodeSizeForHeadNode\"></a>InvalidNodeSizeForHeadNode\n- **Description**: Invalid VM size for head node. Only 'ExtraLarge VM' size is supported for head node.  \n- **Mitigation**: Specify the supported node size for the head node and retry the operation\n\n### <a id=\"InvalidRightsForDeploymentDeletion\"></a>InvalidRightsForDeploymentDeletion\n- **Description**: Subscription ID *yourSubscriptionId* being used does not have sufficient permissions to execute delete operation for cluster *yourClusterName*.  \n- **Mitigation**: If the cluster is in error state, drop it and then try again.  \n\n### <a id=\"InvalidStorageAccountBlobContainerName\"></a>InvalidStorageAccountBlobContainerName\n- **Description**: External storage account blob container name *yourContainerName* is invalid. Make sure name starts with a letter and contains only lowercase letters, numbers and dash.  \n- **Mitigation**: Specify a valid storage account blob container name and retry the operation.\n\n### <a id=\"InvalidStorageAccountConfigurationSecretKey\"></a>InvalidStorageAccountConfigurationSecretKey\n- **Description**: Configuration for external storage account *yourStorageAccountName* is required to have secret key details to be set.  \n- **Mitigation**: Specify a valid secret key for the storage account and retry the operation.\n\n### <a id=\"InvalidVersionHeaderFormat\"></a>InvalidVersionHeaderFormat\n- **Description**: Version header *yourVersionHeader* is not in valid format of yyyy-mm-dd.  \n- **Mitigation**: Specify a valid format for the version-header and retry the request.\n\n### <a id=\"MoreThanOneHeadNode\"></a>MoreThanOneHeadNode\n- **Description**: Invalid cluster configuration. Found more than one head node configuration.  \n- **Mitigation**: Edit the configuration so that onloy one head node is specified.\n\n### <a id=\"OperationTimedOutRetryRequest\"></a>OperationTimedOutRetryRequest\n- **Description**: The operation could not be completed within the permitted time or the maximum retry attempts possible. Please retry request.  \n- **Mitigation**: Retry the request.\n\n### <a id=\"ParameterNullOrEmpty\"></a>ParameterNullOrEmpty\n- **Description**: Parameter *yourParameterName* cannot be null or empty.  \n- **Mitigation**: Specify a valid value for the parameter.\n\n### <a id=\"PreClusterCreationValidationFailure\"></a>PreClusterCreationValidationFailure\n- **Description**: One or more of the cluster creation request inputs is not valid. Make sure the input values are correct and retry request.  \n- **Mitigation**: Make sure the input values are correct and retry request.\n\n### <a id=\"RegionCapabilityNotAvailable\"></a>RegionCapabilityNotAvailable\n- **Description**: Region capability not available for region *yourRegionName* and Subscription ID *yourSubscriptionId*.  \n- **Mitigation**: Specify a region that supports HDInsight clusters. The publicly supported regions are: Southeast Asia, West Europe, North Europe, East US, or West US.\n\n### <a id=\"StorageAccountNotColocated\"></a>StorageAccountNotColocated\n- **Description**: Storage account *yourStorageAccountName* is in region *currentRegionName*. It should be same as the cluster region *yourClusterRegionName*.  \n- **Mitigation**: Either specify a storage account in the same region that your cluster is in or if your data is already in the storage account, create a new cluster in the same region as the existing storage account. If you are using the Portal, the UI will notify them of this issue in advance.\n\n### <a id=\"SubscriptionIdNotActive\"></a>SubscriptionIdNotActive\n- **Description**: Given Subscription ID *yourSubscriptionId* is not active.  \n- **Mitigation**: Re-activate your subscription or get a new valid subscription.\n\n### <a id=\"SubscriptionIdNotFound\"></a>SubscriptionIdNotFound\n- **Description**: Subscription ID *yourSubscriptionId* could not be found.  \n- **Mitigation**: Check that your subscription ID is valid and retry the operation.\n\n### <a id=\"UnableToResolveDNS\"></a>UnableToResolveDNS\n- **Description**: Unable to resolve DNS *yourDnsUrl*. Please ensure the fully qualified URL for the blob endpoint is provided.  \n- **Mitigation**: Supply a valid blob URL. The URL MUST be fully valid, including starting with *http://* and ending in *.com*.\n\n### <a id=\"UnableToVerifyLocationOfResource\"></a>UnableToVerifyLocationOfResource\n- **Description**: Unable to verify location of resource *yourDnsUrl*. Please ensure the fully qualified URL for the blob endpoint is provided.  \n- **Mitigation**: Supply a valid blob URL. The URL MUST be fully valid, including starting with *http://* and ending in *.com*.\n\n### <a id=\"VersionCapabilityNotAvailable\"></a>VersionCapabilityNotAvailable\n- **Description**: Version capability not available for version *specifiedVersion* and Subscription ID *yourSubscriptionId*.  \n- **Mitigation**: Choose a version that is available and retry the operation.\n\n### <a id=\"VersionNotSupported\"></a>VersionNotSupported\n- **Description**: Version *specifiedVersion* not supported.\n- **Mitigation**: Choose a version that is supported and retry the operation.\n\n### <a id=\"VersionNotSupportedInRegion\"></a>VersionNotSupportedInRegion\n- **Description**: Version *specifiedVersion* is not available in Azure region *specifiedRegion*.  \n- **Mitigation**: Choose a version that is supported in the region specified and retry the operation.\n\n### <a id=\"WasbAccountConfigNotFound\"></a>WasbAccountConfigNotFound\n- **Description**: Invalid cluster configuration. Required WASB account configuration not found in external accounts.  \n- **Mitigation**: Verify that the account exists and is properly specified in configuration and retry the operation.\n\n## Next steps\n\n[Use Ambari Views to debug Tez Jobs on HDInsight](hdinsight-debug-ambari-tez-view.md)\n[Enable heap dumps for Hadoop services on Linux-based HDInsight](hdinsight-hadoop-collect-debug-heap-dump-linux.md)\n[Manage HDInsight clusters by using the Ambari Web UI](hdinsight-hadoop-manage-ambari.md)\n"
+}

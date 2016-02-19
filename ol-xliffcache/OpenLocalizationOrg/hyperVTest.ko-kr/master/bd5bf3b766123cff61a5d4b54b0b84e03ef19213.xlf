@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="ko-kr">
+    <body>
+      <group id="main" extype="content">
+        <trans-unit id="101" translate="yes" xml:space="preserve">
+          <source>Use Hadoop Hive with Curl in HDInsight | Microsoft Azure</source>
+          <target state="new">Use Hadoop Hive with Curl in HDInsight | Microsoft Azure</target>
+        </trans-unit>
+        <trans-unit id="102" translate="yes" xml:space="preserve">
+          <source>Learn how to remotely submit Pig jobs to HDInsight using Curl.</source>
+          <target state="new">Learn how to remotely submit Pig jobs to HDInsight using Curl.</target>
+        </trans-unit>
+        <trans-unit id="103" translate="yes" xml:space="preserve">
+          <source>Run Hive queries with Hadoop in HDInsight with Curl</source>
+          <target state="new">Run Hive queries with Hadoop in HDInsight with Curl</target>
+        </trans-unit>
+        <trans-unit id="104" translate="yes" xml:space="preserve">
+          <source>In this document, you will learn how to use Curl to run Hive queries on a Hadoop on Azure HDInsight cluster.</source>
+          <target state="new">In this document, you will learn how to use Curl to run Hive queries on a Hadoop on Azure HDInsight cluster.</target>
+        </trans-unit>
+        <trans-unit id="105" translate="yes" xml:space="preserve">
+          <source>Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Hive queries.</source>
+          <target state="new">Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Hive queries.</target>
+        </trans-unit>
+        <trans-unit id="106" translate="yes" xml:space="preserve">
+          <source>This works by using the WebHCat REST API (formerly known as Templeton) provided by your HDInsight cluster.</source>
+          <target state="new">This works by using the WebHCat REST API (formerly known as Templeton) provided by your HDInsight cluster.</target>
+        </trans-unit>
+        <trans-unit id="107" translate="yes" xml:space="preserve">
+          <source><ph id="ph3">[AZURE.NOTE]</ph><ph id="ph4" /> If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see <bpt id="p1">[</bpt>What you need to know about Hadoop on Linux-based HDInsight<ept id="p1">](hdinsight-hadoop-linux-information.md)</ept>.</source>
+          <target state="new"><ph id="ph3">[AZURE.NOTE]</ph><ph id="ph4" /> If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see <bpt id="p1">[</bpt>What you need to know about Hadoop on Linux-based HDInsight<ept id="p1">](hdinsight-hadoop-linux-information.md)</ept>.</target>
+        </trans-unit>
+        <trans-unit id="109" translate="yes" xml:space="preserve">
+          <source>Prerequisites</source>
+          <target state="new">Prerequisites</target>
+        </trans-unit>
+        <trans-unit id="110" translate="yes" xml:space="preserve">
+          <source>To complete the steps in this article, you will need the following:</source>
+          <target state="new">To complete the steps in this article, you will need the following:</target>
+        </trans-unit>
+        <trans-unit id="111" translate="yes" xml:space="preserve">
+          <source>A Hadoop on HDInsight cluster (Linux or Windows-based)</source>
+          <target state="new">A Hadoop on HDInsight cluster (Linux or Windows-based)</target>
+        </trans-unit>
+        <trans-unit id="112" translate="yes" xml:space="preserve">
+          <source><bpt id="p2">[</bpt>Curl<ept id="p2">](http://curl.haxx.se/)</ept></source>
+          <target state="new"><bpt id="p2">[</bpt>Curl<ept id="p2">](http://curl.haxx.se/)</ept></target>
+        </trans-unit>
+        <trans-unit id="113" translate="yes" xml:space="preserve">
+          <source><bpt id="p3">[</bpt>jq<ept id="p3">](http://stedolan.github.io/jq/)</ept></source>
+          <target state="new"><bpt id="p3">[</bpt>jq<ept id="p3">](http://stedolan.github.io/jq/)</ept></target>
+        </trans-unit>
+        <trans-unit id="115" translate="yes" xml:space="preserve">
+          <source>Run Hive queries by using Curl</source>
+          <target state="new">Run Hive queries by using Curl</target>
+        </trans-unit>
+        <trans-unit id="116" translate="yes" xml:space="preserve">
+          <source><ph id="ph5">[AZURE.NOTE]</ph><ph id="ph6" /> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the user name and password for the HDInsight cluster administrator.</source>
+          <target state="new"><ph id="ph5">[AZURE.NOTE]</ph><ph id="ph6" /> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the user name and password for the HDInsight cluster administrator.</target>
+        </trans-unit>
+        <trans-unit id="117" translate="yes" xml:space="preserve">
+          <source>You must also use the cluster name as part of the Uniform Resource Identifier (URI) used to send the requests to the server.</source>
+          <target state="new">You must also use the cluster name as part of the Uniform Resource Identifier (URI) used to send the requests to the server.</target>
+        </trans-unit>
+        <trans-unit id="118" translate="yes" xml:space="preserve">
+          <source>For the commands in this section, replace <bpt id="p4">**</bpt>USERNAME<ept id="p4">**</ept><ph id="ph7" /> with the user to authenticate to the cluster, and replace <bpt id="p5">**</bpt>PASSWORD<ept id="p5">**</ept><ph id="ph8" /> with the password for the user account.</source>
+          <target state="new">For the commands in this section, replace <bpt id="p4">**</bpt>USERNAME<ept id="p4">**</ept><ph id="ph7" /> with the user to authenticate to the cluster, and replace <bpt id="p5">**</bpt>PASSWORD<ept id="p5">**</ept><ph id="ph8" /> with the password for the user account.</target>
+        </trans-unit>
+        <trans-unit id="119" translate="yes" xml:space="preserve">
+          <source>Replace <bpt id="p6">**</bpt>CLUSTERNAME<ept id="p6">**</ept><ph id="ph9" /> with the name of your cluster.</source>
+          <target state="new">Replace <bpt id="p6">**</bpt>CLUSTERNAME<ept id="p6">**</ept><ph id="ph9" /> with the name of your cluster.</target>
+        </trans-unit>
+        <trans-unit id="120" translate="yes" xml:space="preserve">
+          <source>The REST API is secured via <bpt id="p7">[</bpt>basic authentication<ept id="p7">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>.</source>
+          <target state="new">The REST API is secured via <bpt id="p7">[</bpt>basic authentication<ept id="p7">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>.</target>
+        </trans-unit>
+        <trans-unit id="121" translate="yes" xml:space="preserve">
+          <source>You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.</source>
+          <target state="new">You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.</target>
+        </trans-unit>
+        <trans-unit id="122" translate="yes" xml:space="preserve">
+          <source>From a command line, use the following command to verify that you can connect to your HDInsight cluster:</source>
+          <target state="new">From a command line, use the following command to verify that you can connect to your HDInsight cluster:</target>
+        </trans-unit>
+        <trans-unit id="123" translate="yes" xml:space="preserve">
+          <source>You should receive a response similar to the following:</source>
+          <target state="new">You should receive a response similar to the following:</target>
+        </trans-unit>
+        <trans-unit id="124" translate="yes" xml:space="preserve">
+          <source>The parameters used in this command are as follows:</source>
+          <target state="new">The parameters used in this command are as follows:</target>
+        </trans-unit>
+        <trans-unit id="125" translate="yes" xml:space="preserve">
+          <source><bpt id="p8">**</bpt>-u<ept id="p8">**</ept><ph id="ph10" /> - The user name and password used to authenticate the request.</source>
+          <target state="new"><bpt id="p8">**</bpt>-u<ept id="p8">**</ept><ph id="ph10" /> - The user name and password used to authenticate the request.</target>
+        </trans-unit>
+        <trans-unit id="126" translate="yes" xml:space="preserve">
+          <source><bpt id="p9">**</bpt>-G<ept id="p9">**</ept><ph id="ph11" /> - Indicates that this is a GET request.</source>
+          <target state="new"><bpt id="p9">**</bpt>-G<ept id="p9">**</ept><ph id="ph11" /> - Indicates that this is a GET request.</target>
+        </trans-unit>
+        <trans-unit id="127" translate="yes" xml:space="preserve">
+          <source>The beginning of the URL, <bpt id="p10">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id="p10">**</ept>, will be the same for all requests.</source>
+          <target state="new">The beginning of the URL, <bpt id="p10">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id="p10">**</ept>, will be the same for all requests.</target>
+        </trans-unit>
+        <trans-unit id="128" translate="yes" xml:space="preserve">
+          <source>The path, <bpt id="p11">**</bpt>/status<ept id="p11">**</ept>, indicates that the request is to return a status of WebHCat (also known as Templeton) for the server.</source>
+          <target state="new">The path, <bpt id="p11">**</bpt>/status<ept id="p11">**</ept>, indicates that the request is to return a status of WebHCat (also known as Templeton) for the server.</target>
+        </trans-unit>
+        <trans-unit id="129" translate="yes" xml:space="preserve">
+          <source>You can also request the version of Hive by using the following command:</source>
+          <target state="new">You can also request the version of Hive by using the following command:</target>
+        </trans-unit>
+        <trans-unit id="130" translate="yes" xml:space="preserve">
+          <source>This should return a response similar to the following:</source>
+          <target state="new">This should return a response similar to the following:</target>
+        </trans-unit>
+        <trans-unit id="131" translate="yes" xml:space="preserve">
+          <source>Use the following to create a new table named <bpt id="p12">**</bpt>log4jLogs<ept id="p12">**</ept>:</source>
+          <target state="new">Use the following to create a new table named <bpt id="p12">**</bpt>log4jLogs<ept id="p12">**</ept>:</target>
+        </trans-unit>
+        <trans-unit id="132" translate="yes" xml:space="preserve">
+          <source>The parameters used in this command are as follows:</source>
+          <target state="new">The parameters used in this command are as follows:</target>
+        </trans-unit>
+        <trans-unit id="133" translate="yes" xml:space="preserve">
+          <source><bpt id="p13">**</bpt>-d<ept id="p13">**</ept><ph id="ph12" /> - Since <ph id="ph13">`-G`</ph><ph id="ph14" /> is not used, the request defaults to the POST method.</source>
+          <target state="new"><bpt id="p13">**</bpt>-d<ept id="p13">**</ept><ph id="ph12" /> - Since <ph id="ph13">`-G`</ph><ph id="ph14" /> is not used, the request defaults to the POST method.</target>
+        </trans-unit>
+        <trans-unit id="134" translate="yes" xml:space="preserve">
+          <source><ph id="ph15">`-d`</ph><ph id="ph16" /> specifies the data values that are sent with the request.</source>
+          <target state="new"><ph id="ph15">`-d`</ph><ph id="ph16" /> specifies the data values that are sent with the request.</target>
+        </trans-unit>
+        <trans-unit id="135" translate="yes" xml:space="preserve">
+          <source><bpt id="p14">**</bpt>user.name<ept id="p14">**</ept><ph id="ph17" /> - The user that is running the command.</source>
+          <target state="new"><bpt id="p14">**</bpt>user.name<ept id="p14">**</ept><ph id="ph17" /> - The user that is running the command.</target>
+        </trans-unit>
+        <trans-unit id="136" translate="yes" xml:space="preserve">
+          <source><bpt id="p15">**</bpt>execute<ept id="p15">**</ept><ph id="ph18" /> - The HiveQL statements to execute.</source>
+          <target state="new"><bpt id="p15">**</bpt>execute<ept id="p15">**</ept><ph id="ph18" /> - The HiveQL statements to execute.</target>
+        </trans-unit>
+        <trans-unit id="137" translate="yes" xml:space="preserve">
+          <source><bpt id="p16">**</bpt>statusdir<ept id="p16">**</ept><ph id="ph19" /> - The directory that the status for this job will be written to.</source>
+          <target state="new"><bpt id="p16">**</bpt>statusdir<ept id="p16">**</ept><ph id="ph19" /> - The directory that the status for this job will be written to.</target>
+        </trans-unit>
+        <trans-unit id="138" translate="yes" xml:space="preserve">
+          <source>These statements perform the following actions:</source>
+          <target state="new">These statements perform the following actions:</target>
+        </trans-unit>
+        <trans-unit id="139" translate="yes" xml:space="preserve">
+          <source><bpt id="p17">**</bpt>DROP TABLE<ept id="p17">**</ept><ph id="ph20" /> - Deletes the table and the data file, if the table already exists.</source>
+          <target state="new"><bpt id="p17">**</bpt>DROP TABLE<ept id="p17">**</ept><ph id="ph20" /> - Deletes the table and the data file, if the table already exists.</target>
+        </trans-unit>
+        <trans-unit id="140" translate="yes" xml:space="preserve">
+          <source><bpt id="p18">**</bpt>CREATE EXTERNAL TABLE<ept id="p18">**</ept><ph id="ph21" /> - Creates a new 'external' table in Hive.</source>
+          <target state="new"><bpt id="p18">**</bpt>CREATE EXTERNAL TABLE<ept id="p18">**</ept><ph id="ph21" /> - Creates a new 'external' table in Hive.</target>
+        </trans-unit>
+        <trans-unit id="141" translate="yes" xml:space="preserve">
+          <source>External tables store only the table definition in Hive.</source>
+          <target state="new">External tables store only the table definition in Hive.</target>
+        </trans-unit>
+        <trans-unit id="142" translate="yes" xml:space="preserve">
+          <source>The data is left in the original location.</source>
+          <target state="new">The data is left in the original location.</target>
+        </trans-unit>
+        <trans-unit id="143" translate="yes" xml:space="preserve">
+          <source><ph id="ph22">[AZURE.NOTE]</ph><ph id="ph23" /> External tables should be used when you expect the underlying data to be updated by an external source, such as an automated data upload process, or by another MapReduce operation, but always want Hive queries to use the latest data.</source>
+          <target state="new"><ph id="ph22">[AZURE.NOTE]</ph><ph id="ph23" /> External tables should be used when you expect the underlying data to be updated by an external source, such as an automated data upload process, or by another MapReduce operation, but always want Hive queries to use the latest data.</target>
+        </trans-unit>
+        <trans-unit id="144" translate="yes" xml:space="preserve">
+          <source>Dropping an external table does <bpt id="p19">**</bpt>not<ept id="p19">**</ept><ph id="ph24" /> delete the data, only the table definition.</source>
+          <target state="new">Dropping an external table does <bpt id="p19">**</bpt>not<ept id="p19">**</ept><ph id="ph24" /> delete the data, only the table definition.</target>
+        </trans-unit>
+        <trans-unit id="145" translate="yes" xml:space="preserve">
+          <source><bpt id="p20">**</bpt>ROW FORMAT<ept id="p20">**</ept><ph id="ph25" /> - Tells Hive how the data is formatted.</source>
+          <target state="new"><bpt id="p20">**</bpt>ROW FORMAT<ept id="p20">**</ept><ph id="ph25" /> - Tells Hive how the data is formatted.</target>
+        </trans-unit>
+        <trans-unit id="146" translate="yes" xml:space="preserve">
+          <source>In this case, the fields in each log are separated by a space.</source>
+          <target state="new">In this case, the fields in each log are separated by a space.</target>
+        </trans-unit>
+        <trans-unit id="147" translate="yes" xml:space="preserve">
+          <source><bpt id="p21">**</bpt>STORED AS TEXTFILE LOCATION<ept id="p21">**</ept><ph id="ph26" /> - Tells Hive where the data is stored (the example/data directory), and that it is stored as text.</source>
+          <target state="new"><bpt id="p21">**</bpt>STORED AS TEXTFILE LOCATION<ept id="p21">**</ept><ph id="ph26" /> - Tells Hive where the data is stored (the example/data directory), and that it is stored as text.</target>
+        </trans-unit>
+        <trans-unit id="148" translate="yes" xml:space="preserve">
+          <source><bpt id="p22">**</bpt>SELECT<ept id="p22">**</ept><ph id="ph27" /> - Selects a count of all rows where column <bpt id="p23">**</bpt>t4<ept id="p23">**</ept><ph id="ph28" /> contains the value <bpt id="p24">**</bpt>[ERROR]<ept id="p24">**</ept>.</source>
+          <target state="new"><bpt id="p22">**</bpt>SELECT<ept id="p22">**</ept><ph id="ph27" /> - Selects a count of all rows where column <bpt id="p23">**</bpt>t4<ept id="p23">**</ept><ph id="ph28" /> contains the value <bpt id="p24">**</bpt>[ERROR]<ept id="p24">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="149" translate="yes" xml:space="preserve">
+          <source>This should return a value of <bpt id="p25">**</bpt>3<ept id="p25">**</ept><ph id="ph29" /> as there are three rows that contain this value.</source>
+          <target state="new">This should return a value of <bpt id="p25">**</bpt>3<ept id="p25">**</ept><ph id="ph29" /> as there are three rows that contain this value.</target>
+        </trans-unit>
+        <trans-unit id="150" translate="yes" xml:space="preserve">
+          <source><ph id="ph30">[AZURE.NOTE]</ph><ph id="ph31" /> Notice that the spaces between HiveQL statements are replaced by the <ph id="ph32">`+`</ph><ph id="ph33" /> character when used with Curl.</source>
+          <target state="new"><ph id="ph30">[AZURE.NOTE]</ph><ph id="ph31" /> Notice that the spaces between HiveQL statements are replaced by the <ph id="ph32">`+`</ph><ph id="ph33" /> character when used with Curl.</target>
+        </trans-unit>
+        <trans-unit id="151" translate="yes" xml:space="preserve">
+          <source>Quoted values that contain a space, such as the delimiter, should not be replaced by <ph id="ph34">`+`</ph>.</source>
+          <target state="new">Quoted values that contain a space, such as the delimiter, should not be replaced by <ph id="ph34">`+`</ph>.</target>
+        </trans-unit>
+        <trans-unit id="152" translate="yes" xml:space="preserve">
+          <source><bpt id="p26">**</bpt>INPUT__FILE__NAME LIKE '%25.log'<ept id="p26">**</ept><ph id="ph35" /> - This limits the search to only use files ending in .log.</source>
+          <target state="new"><bpt id="p26">**</bpt>INPUT__FILE__NAME LIKE '%25.log'<ept id="p26">**</ept><ph id="ph35" /> - This limits the search to only use files ending in .log.</target>
+        </trans-unit>
+        <trans-unit id="153" translate="yes" xml:space="preserve">
+          <source>If this is not present, Hive will attempt to search all files in this directory and its subdirectories, including files that do not match the column schema defined for this table.</source>
+          <target state="new">If this is not present, Hive will attempt to search all files in this directory and its subdirectories, including files that do not match the column schema defined for this table.</target>
+        </trans-unit>
+        <trans-unit id="154" translate="yes" xml:space="preserve">
+          <source><ph id="ph36">[AZURE.NOTE]</ph><ph id="ph37" /> Note that %25 is the URL encoded form of %, so the actual condition is <ph id="ph38">`like '%.log'`</ph>.</source>
+          <target state="new"><ph id="ph36">[AZURE.NOTE]</ph><ph id="ph37" /> Note that %25 is the URL encoded form of %, so the actual condition is <ph id="ph38">`like '%.log'`</ph>.</target>
+        </trans-unit>
+        <trans-unit id="155" translate="yes" xml:space="preserve">
+          <source>The % has to be URL encoded, as it is treated as a special character in URLs.</source>
+          <target state="new">The % has to be URL encoded, as it is treated as a special character in URLs.</target>
+        </trans-unit>
+        <trans-unit id="156" translate="yes" xml:space="preserve">
+          <source>This command should return a job ID that can be used to check the status of the job.</source>
+          <target state="new">This command should return a job ID that can be used to check the status of the job.</target>
+        </trans-unit>
+        <trans-unit id="157" translate="yes" xml:space="preserve">
+          <source>To check the status of the job, use the following command.</source>
+          <target state="new">To check the status of the job, use the following command.</target>
+        </trans-unit>
+        <trans-unit id="158" translate="yes" xml:space="preserve">
+          <source>Replace <bpt id="p27">**</bpt>JOBID<ept id="p27">**</ept><ph id="ph39" /> with the value returned in the previous step.</source>
+          <target state="new">Replace <bpt id="p27">**</bpt>JOBID<ept id="p27">**</ept><ph id="ph39" /> with the value returned in the previous step.</target>
+        </trans-unit>
+        <trans-unit id="159" translate="yes" xml:space="preserve">
+          <source>For example, if the return value was <ph id="ph40">`{"id":"job_1415651640909_0026"}`</ph>, then <bpt id="p28">**</bpt>JOBID<ept id="p28">**</ept><ph id="ph41" /> would be <ph id="ph42">`job_1415651640909_0026`</ph>.</source>
+          <target state="new">For example, if the return value was <ph id="ph40">`{"id":"job_1415651640909_0026"}`</ph>, then <bpt id="p28">**</bpt>JOBID<ept id="p28">**</ept><ph id="ph41" /> would be <ph id="ph42">`job_1415651640909_0026`</ph>.</target>
+        </trans-unit>
+        <trans-unit id="160" translate="yes" xml:space="preserve">
+          <source>If the job has finished, the state will be <bpt id="p29">**</bpt>SUCCEEDED<ept id="p29">**</ept>.</source>
+          <target state="new">If the job has finished, the state will be <bpt id="p29">**</bpt>SUCCEEDED<ept id="p29">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="161" translate="yes" xml:space="preserve">
+          <source><ph id="ph43">[AZURE.NOTE]</ph><ph id="ph44" /> This Curl request returns a JavaScript Object Notation (JSON) document with information about the job; jq is used to retrieve only the state value.</source>
+          <target state="new"><ph id="ph43">[AZURE.NOTE]</ph><ph id="ph44" /> This Curl request returns a JavaScript Object Notation (JSON) document with information about the job; jq is used to retrieve only the state value.</target>
+        </trans-unit>
+        <trans-unit id="162" translate="yes" xml:space="preserve">
+          <source>Once the state of the job has changed to <bpt id="p30">**</bpt>SUCCEEDED<ept id="p30">**</ept>, you can retrieve the results of the job from Azure Blob storage.</source>
+          <target state="new">Once the state of the job has changed to <bpt id="p30">**</bpt>SUCCEEDED<ept id="p30">**</ept>, you can retrieve the results of the job from Azure Blob storage.</target>
+        </trans-unit>
+        <trans-unit id="163" translate="yes" xml:space="preserve">
+          <source>The <ph id="ph45">`statusdir`</ph><ph id="ph46" /> parameter passed with the query contains the location of the output file; in this case, <bpt id="p31">**</bpt>wasb:///example/curl<ept id="p31">**</ept>.</source>
+          <target state="new">The <ph id="ph45">`statusdir`</ph><ph id="ph46" /> parameter passed with the query contains the location of the output file; in this case, <bpt id="p31">**</bpt>wasb:///example/curl<ept id="p31">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="164" translate="yes" xml:space="preserve">
+          <source>This address stores the output of the job in the <bpt id="p32">**</bpt>example/curl<ept id="p32">**</ept><ph id="ph47" /> directory on the default storage container used by your HDInsight cluster.</source>
+          <target state="new">This address stores the output of the job in the <bpt id="p32">**</bpt>example/curl<ept id="p32">**</ept><ph id="ph47" /> directory on the default storage container used by your HDInsight cluster.</target>
+        </trans-unit>
+        <trans-unit id="165" translate="yes" xml:space="preserve">
+          <source>You can list and download these files by using the <bpt id="p33">[</bpt>Azure CLI for Mac, Linux and Windows<ept id="p33">](../xplat-cli-install.md)</ept>.</source>
+          <target state="new">You can list and download these files by using the <bpt id="p33">[</bpt>Azure CLI for Mac, Linux and Windows<ept id="p33">](../xplat-cli-install.md)</ept>.</target>
+        </trans-unit>
+        <trans-unit id="166" translate="yes" xml:space="preserve">
+          <source>For example, to list files in <bpt id="p34">**</bpt>example/curl<ept id="p34">**</ept>, use the following command:</source>
+          <target state="new">For example, to list files in <bpt id="p34">**</bpt>example/curl<ept id="p34">**</ept>, use the following command:</target>
+        </trans-unit>
+        <trans-unit id="167" translate="yes" xml:space="preserve">
+          <source>To download a file, use the following:</source>
+          <target state="new">To download a file, use the following:</target>
+        </trans-unit>
+        <trans-unit id="168" translate="yes" xml:space="preserve">
+          <source><ph id="ph48">[AZURE.NOTE]</ph><ph id="ph49" /> You must either specify the storage account name that contains the blob by using the <ph id="ph50">`-a`</ph><ph id="ph51" /> and <ph id="ph52">`-k`</ph><ph id="ph53" /> parameters, or set the <bpt id="p35">**</bpt>AZURE\_STORAGE\_ACCOUNT<ept id="p35">**</ept><ph id="ph54" /> and <bpt id="p36">**</bpt>AZURE\_STORAGE\_ACCESS\_KEY<ept id="p36">**</ept><ph id="ph55" /> environment variables. Se</source>
+          <target state="new"><ph id="ph48">[AZURE.NOTE]</ph><ph id="ph49" /> You must either specify the storage account name that contains the blob by using the <ph id="ph50">`-a`</ph><ph id="ph51" /> and <ph id="ph52">`-k`</ph><ph id="ph53" /> parameters, or set the <bpt id="p35">**</bpt>AZURE\_STORAGE\_ACCOUNT<ept id="p35">**</ept><ph id="ph54" /> and <bpt id="p36">**</bpt>AZURE\_STORAGE\_ACCESS\_KEY<ept id="p36">**</ept><ph id="ph55" /> environment variables. Se</target>
+        </trans-unit>
+        <trans-unit id="169" translate="yes" xml:space="preserve">
+          <source>e &lt;a href="hdinsight-upload-data.md" target="_blank" for more information.</source>
+          <target state="new">e &lt;a href="hdinsight-upload-data.md" target="_blank" for more information.</target>
+        </trans-unit>
+        <trans-unit id="170" translate="yes" xml:space="preserve">
+          <source>Use the following statements to create a new 'internal' table named <bpt id="p37">**</bpt>errorLogs<ept id="p37">**</ept>:</source>
+          <target state="new">Use the following statements to create a new 'internal' table named <bpt id="p37">**</bpt>errorLogs<ept id="p37">**</ept>:</target>
+        </trans-unit>
+        <trans-unit id="171" translate="yes" xml:space="preserve">
+          <source>These statements perform the following actions:</source>
+          <target state="new">These statements perform the following actions:</target>
+        </trans-unit>
+        <trans-unit id="172" translate="yes" xml:space="preserve">
+          <source><bpt id="p38">**</bpt>CREATE TABLE IF NOT EXISTS<ept id="p38">**</ept><ph id="ph56" /> - Creates a table, if it does not already exist.</source>
+          <target state="new"><bpt id="p38">**</bpt>CREATE TABLE IF NOT EXISTS<ept id="p38">**</ept><ph id="ph56" /> - Creates a table, if it does not already exist.</target>
+        </trans-unit>
+        <trans-unit id="173" translate="yes" xml:space="preserve">
+          <source>Since the <bpt id="p39">**</bpt>EXTERNAL<ept id="p39">**</ept><ph id="ph57" /> keyword is not used, this is an internal table, which is stored in the Hive data warehouse and is managed completely by Hive.</source>
+          <target state="new">Since the <bpt id="p39">**</bpt>EXTERNAL<ept id="p39">**</ept><ph id="ph57" /> keyword is not used, this is an internal table, which is stored in the Hive data warehouse and is managed completely by Hive.</target>
+        </trans-unit>
+        <trans-unit id="174" translate="yes" xml:space="preserve">
+          <source><ph id="ph58">[AZURE.NOTE]</ph><ph id="ph59" /> Unlike external tables, dropping an internal table will delete the underlying data as well.</source>
+          <target state="new"><ph id="ph58">[AZURE.NOTE]</ph><ph id="ph59" /> Unlike external tables, dropping an internal table will delete the underlying data as well.</target>
+        </trans-unit>
+        <trans-unit id="175" translate="yes" xml:space="preserve">
+          <source><bpt id="p40">**</bpt>STORED AS ORC<ept id="p40">**</ept><ph id="ph60" /> - Stores the data in Optimized Row Columnar (ORC) format.</source>
+          <target state="new"><bpt id="p40">**</bpt>STORED AS ORC<ept id="p40">**</ept><ph id="ph60" /> - Stores the data in Optimized Row Columnar (ORC) format.</target>
+        </trans-unit>
+        <trans-unit id="176" translate="yes" xml:space="preserve">
+          <source>This is a highly optimized and efficient format for storing Hive data.</source>
+          <target state="new">This is a highly optimized and efficient format for storing Hive data.</target>
+        </trans-unit>
+        <trans-unit id="177" translate="yes" xml:space="preserve">
+          <source><bpt id="p41">**</bpt>INSERT OVERWRITE ... SELECT<ept id="p41">**</ept><ph id="ph61" /> - Selects rows from the <bpt id="p42">**</bpt>log4jLogs<ept id="p42">**</ept><ph id="ph62" /> table that contain <bpt id="p43">**</bpt>[ERROR]<ept id="p43">**</ept>, then inserts the data into the <bpt id="p44">**</bpt>errorLogs<ept id="p44">**</ept><ph id="ph63" /> table.</source>
+          <target state="new"><bpt id="p41">**</bpt>INSERT OVERWRITE ... SELECT<ept id="p41">**</ept><ph id="ph61" /> - Selects rows from the <bpt id="p42">**</bpt>log4jLogs<ept id="p42">**</ept><ph id="ph62" /> table that contain <bpt id="p43">**</bpt>[ERROR]<ept id="p43">**</ept>, then inserts the data into the <bpt id="p44">**</bpt>errorLogs<ept id="p44">**</ept><ph id="ph63" /> table.</target>
+        </trans-unit>
+        <trans-unit id="178" translate="yes" xml:space="preserve">
+          <source><bpt id="p45">**</bpt>SELECT<ept id="p45">**</ept><ph id="ph64" /> - Selects all rows from the new <bpt id="p46">**</bpt>errorLogs<ept id="p46">**</ept><ph id="ph65" /> table.</source>
+          <target state="new"><bpt id="p45">**</bpt>SELECT<ept id="p45">**</ept><ph id="ph64" /> - Selects all rows from the new <bpt id="p46">**</bpt>errorLogs<ept id="p46">**</ept><ph id="ph65" /> table.</target>
+        </trans-unit>
+        <trans-unit id="179" translate="yes" xml:space="preserve">
+          <source>Use the job ID returned to check the status of the job.</source>
+          <target state="new">Use the job ID returned to check the status of the job.</target>
+        </trans-unit>
+        <trans-unit id="180" translate="yes" xml:space="preserve">
+          <source>Once it has succeeded, use Azure CLI for Mac, Linux and Windows as described previously to download and view the results.</source>
+          <target state="new">Once it has succeeded, use Azure CLI for Mac, Linux and Windows as described previously to download and view the results.</target>
+        </trans-unit>
+        <trans-unit id="181" translate="yes" xml:space="preserve">
+          <source>The output should contain three lines, all of which contain <bpt id="p47">**</bpt>[ERROR]<ept id="p47">**</ept>.</source>
+          <target state="new">The output should contain three lines, all of which contain <bpt id="p47">**</bpt>[ERROR]<ept id="p47">**</ept>.</target>
+        </trans-unit>
+        <trans-unit id="183" translate="yes" xml:space="preserve">
+          <source>Summary</source>
+          <target state="new">Summary</target>
+        </trans-unit>
+        <trans-unit id="184" translate="yes" xml:space="preserve">
+          <source>As demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Hive jobs on your HDInsight cluster.</source>
+          <target state="new">As demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Hive jobs on your HDInsight cluster.</target>
+        </trans-unit>
+        <trans-unit id="185" translate="yes" xml:space="preserve">
+          <source>For more information on the REST interface used in this article, see the</source>
+          <target state="new">For more information on the REST interface used in this article, see the</target>
+        </trans-unit>
+        <trans-unit id="186" translate="yes" xml:space="preserve">
+          <source>WebHCat Reference</source>
+          <target state="new">WebHCat Reference</target>
+        </trans-unit>
+        <trans-unit id="189" translate="yes" xml:space="preserve">
+          <source>Next steps</source>
+          <target state="new">Next steps</target>
+        </trans-unit>
+        <trans-unit id="190" translate="yes" xml:space="preserve">
+          <source>For general information on Hive with HDInsight:</source>
+          <target state="new">For general information on Hive with HDInsight:</target>
+        </trans-unit>
+        <trans-unit id="191" translate="yes" xml:space="preserve">
+          <source><bpt id="p48">[</bpt>Use Hive with Hadoop on HDInsight<ept id="p48">](hdinsight-use-hive.md)</ept></source>
+          <target state="new"><bpt id="p48">[</bpt>Use Hive with Hadoop on HDInsight<ept id="p48">](hdinsight-use-hive.md)</ept></target>
+        </trans-unit>
+        <trans-unit id="192" translate="yes" xml:space="preserve">
+          <source>For information on other ways you can work with Hadoop on HDInsight:</source>
+          <target state="new">For information on other ways you can work with Hadoop on HDInsight:</target>
+        </trans-unit>
+        <trans-unit id="193" translate="yes" xml:space="preserve">
+          <source><bpt id="p49">[</bpt>Use Pig with Hadoop on HDInsight<ept id="p49">](hdinsight-use-pig.md)</ept></source>
+          <target state="new"><bpt id="p49">[</bpt>Use Pig with Hadoop on HDInsight<ept id="p49">](hdinsight-use-pig.md)</ept></target>
+        </trans-unit>
+        <trans-unit id="194" translate="yes" xml:space="preserve">
+          <source><bpt id="p50">[</bpt>Use MapReduce with Hadoop on HDInsight<ept id="p50">](hdinsight-use-mapreduce.md)</ept></source>
+          <target state="new"><bpt id="p50">[</bpt>Use MapReduce with Hadoop on HDInsight<ept id="p50">](hdinsight-use-mapreduce.md)</ept></target>
+        </trans-unit>
+        <trans-unit id="195" translate="yes" xml:space="preserve">
+          <source>If you are using Tez with Hive, see the following documents for debugging information:</source>
+          <target state="new">If you are using Tez with Hive, see the following documents for debugging information:</target>
+        </trans-unit>
+        <trans-unit id="196" translate="yes" xml:space="preserve">
+          <source><bpt id="p51">[</bpt>Use the Tez UI on Windows-based HDInsight<ept id="p51">](hdinsight-debug-tez-ui.md)</ept></source>
+          <target state="new"><bpt id="p51">[</bpt>Use the Tez UI on Windows-based HDInsight<ept id="p51">](hdinsight-debug-tez-ui.md)</ept></target>
+        </trans-unit>
+        <trans-unit id="197" translate="yes" xml:space="preserve">
+          <source><bpt id="p52">[</bpt>Use the Ambari Tez view on Linux-based HDInsight<ept id="p52">](hdinsight-debug-ambari-tez-view.md)</ept></source>
+          <target state="new"><bpt id="p52">[</bpt>Use the Ambari Tez view on Linux-based HDInsight<ept id="p52">](hdinsight-debug-ambari-tez-view.md)</ept></target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+  <header xmlns="">
+    <xliffext:olfilehash xmlns:xliffext="urn:microsoft:content:schema:xliffextensions">bd5bf3b766123cff61a5d4b54b0b84e03ef19213</xliffext:olfilehash>
+  </header>
+</xliff>

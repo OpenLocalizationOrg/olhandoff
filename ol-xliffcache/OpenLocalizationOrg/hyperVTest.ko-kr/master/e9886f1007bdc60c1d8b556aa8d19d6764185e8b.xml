@@ -1,0 +1,2439 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        105
+      ],
+      "content": "The Cortana Analytics Process in action: Use Hadoop clusters | Microsoft Azure"
+    },
+    {
+      "pos": [
+        124,
+        312
+      ],
+      "content": "Using the Advanced Analytics Process and Technology (ADAPT) for an end-to-end scenario employing an HDInsight Hadoop cluster to build and deploy a model using a publicly available dataset."
+    },
+    {
+      "pos": [
+        655,
+        727
+      ],
+      "content": "The Cortana Analytics Process in action: using HDInsight Hadoop clusters"
+    },
+    {
+      "pos": [
+        729,
+        1207
+      ],
+      "content": "In this walkthrough, you use the Cortana Analytics Process in an end-to-end scenario using an <bpt id=\"p1\">[</bpt>Azure HDInsight Hadoop cluster<ept id=\"p1\">](https://azure.microsoft.com/services/hdinsight/)</ept><ph id=\"ph2\"/> to store, explore and feature engineer data from the publicly available <bpt id=\"p2\">[</bpt>NYC Taxi Trips<ept id=\"p2\">](http://www.andresmh.com/nyctaxitrips/)</ept><ph id=\"ph3\"/> dataset, and to down sample the data. Models of the data are built with Azure Machine Learning to handle binary and multiclass classification and regression predictive tasks.",
+      "nodes": [
+        {
+          "content": "In this walkthrough, you use the Cortana Analytics Process in an end-to-end scenario using an <bpt id=\"p1\">[</bpt>Azure HDInsight Hadoop cluster<ept id=\"p1\">](https://azure.microsoft.com/services/hdinsight/)</ept><ph id=\"ph2\"/> to store, explore and feature engineer data from the publicly available <bpt id=\"p2\">[</bpt>NYC Taxi Trips<ept id=\"p2\">](http://www.andresmh.com/nyctaxitrips/)</ept><ph id=\"ph3\"/> dataset, and to down sample the data.",
+          "pos": [
+            0,
+            445
+          ]
+        },
+        {
+          "content": "Models of the data are built with Azure Machine Learning to handle binary and multiclass classification and regression predictive tasks.",
+          "pos": [
+            446,
+            582
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1209,
+        1514
+      ],
+      "content": "For a walkthrough that shows how to handle a larger (1 terabyte) dataset for a similar scenario using HDInsight Hadoop clusters for data processing, see <bpt id=\"p3\">[</bpt>Cortana Analytics Process - Using Azure HDInsight Hadoop Clusters on a 1 TB dataset<ept id=\"p3\">](machine-learning-data-science-process-hive-criteo-walkthrough.md)</ept>."
+    },
+    {
+      "pos": [
+        1516,
+        1935
+      ],
+      "content": "It is also possible to use an IPython notebook to accomplish the tasks presented the walkthrough using the 1 TB dataset. Users who would like to try this approach should consult the <bpt id=\"p4\">[</bpt>Criteo walkthrough using a Hive ODBC connection<ept id=\"p4\">](https://github.com/Azure/Azure-MachineLearning-DataScience/blob/master/Misc/DataScienceProcess/iPythonNotebooks/machine-Learning-data-science-process-hive-walkthrough-criteo.ipynb)</ept><ph id=\"ph4\"/> topic.",
+      "nodes": [
+        {
+          "content": "It is also possible to use an IPython notebook to accomplish the tasks presented the walkthrough using the 1 TB dataset.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "Users who would like to try this approach should consult the <bpt id=\"p4\">[</bpt>Criteo walkthrough using a Hive ODBC connection<ept id=\"p4\">](https://github.com/Azure/Azure-MachineLearning-DataScience/blob/master/Misc/DataScienceProcess/iPythonNotebooks/machine-Learning-data-science-process-hive-walkthrough-criteo.ipynb)</ept><ph id=\"ph4\"/> topic.",
+          "pos": [
+            121,
+            471
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1963,
+        1997
+      ],
+      "content": "NYC Taxi Trips Dataset description"
+    },
+    {
+      "pos": [
+        1999,
+        2447
+      ],
+      "content": "The NYC Taxi Trip data is about 20GB of compressed comma-separated values (CSV) files (~48GB uncompressed), comprising more than 173 million individual trips and the fares paid for each trip. Each trip record includes the pickup and drop-off location and time, anonymized hack (driver's) license number and medallion (taxi’s unique id) number. The data covers all trips in the year 2013 and is provided in the following two datasets for each month:",
+      "nodes": [
+        {
+          "content": "The NYC Taxi Trip data is about 20GB of compressed comma-separated values (CSV) files (~48GB uncompressed), comprising more than 173 million individual trips and the fares paid for each trip.",
+          "pos": [
+            0,
+            191
+          ]
+        },
+        {
+          "content": "Each trip record includes the pickup and drop-off location and time, anonymized hack (driver's) license number and medallion (taxi’s unique id) number.",
+          "pos": [
+            192,
+            343
+          ]
+        },
+        {
+          "content": "The data covers all trips in the year 2013 and is provided in the following two datasets for each month:",
+          "pos": [
+            344,
+            448
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2452,
+        2619
+      ],
+      "content": "The 'trip_data' CSV files contain trip details, such as number of passengers, pickup and dropoff points, trip duration, and trip length. Here are a few sample records:",
+      "nodes": [
+        {
+          "content": "The 'trip_data' CSV files contain trip details, such as number of passengers, pickup and dropoff points, trip duration, and trip length.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "Here are a few sample records:",
+          "pos": [
+            137,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3715,
+        3918
+      ],
+      "content": "The 'trip_fare' CSV files contain details of the fare paid for each trip, such as payment type, fare amount, surcharge and taxes, tips and tolls, and the total amount paid. Here are a few sample records:",
+      "nodes": [
+        {
+          "content": "The 'trip_fare' CSV files contain details of the fare paid for each trip, such as payment type, fare amount, surcharge and taxes, tips and tolls, and the total amount paid.",
+          "pos": [
+            0,
+            172
+          ]
+        },
+        {
+          "content": "Here are a few sample records:",
+          "pos": [
+            173,
+            203
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4663,
+        4785
+      ],
+      "content": "The unique key to join trip\\_data and trip\\_fare is composed of the fields: medallion, hack\\_licence and pickup\\_datetime."
+    },
+    {
+      "pos": [
+        4787,
+        4942
+      ],
+      "content": "To get all of the details relevant to a particular trip, it is sufficient to join with three keys: the \"medallion\", \"hack\\_license\" and \"pickup\\_datetime\"."
+    },
+    {
+      "pos": [
+        4944,
+        5030
+      ],
+      "content": "We describe some more details of the data when we store them into Hive tables shortly."
+    },
+    {
+      "pos": [
+        5057,
+        5085
+      ],
+      "content": "Examples of prediction tasks"
+    },
+    {
+      "pos": [
+        5086,
+        5386
+      ],
+      "content": "When approaching data, determining the kind of predictions you want to make based on its analysis helps clarify the tasks that you will need to include in your process.\nHere are three examples of prediction problems that we address in this walkthrough whose formulation is based on the <bpt id=\"p5\">*</bpt>tip\\_amount<ept id=\"p5\">*</ept>:",
+      "nodes": [
+        {
+          "content": "When approaching data, determining the kind of predictions you want to make based on its analysis helps clarify the tasks that you will need to include in your process.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "Here are three examples of prediction problems that we address in this walkthrough whose formulation is based on the <bpt id=\"p5\">*</bpt>tip\\_amount<ept id=\"p5\">*</ept>:",
+          "pos": [
+            169,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5391,
+        5586
+      ],
+      "content": "<bpt id=\"p6\">**</bpt>Binary classification<ept id=\"p6\">**</ept>: Predict whether or not a tip was paid for a trip, i.e. a <bpt id=\"p7\">*</bpt>tip\\_amount<ept id=\"p7\">*</ept><ph id=\"ph5\"/> that is greater than $0 is a positive example, while a <bpt id=\"p8\">*</bpt>tip\\_amount<ept id=\"p8\">*</ept><ph id=\"ph6\"/> of $0 is a negative example."
+    },
+    {
+      "pos": [
+        5660,
+        5800
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>Multiclass classification<ept id=\"p9\">**</ept>: To predict the range of tip amounts paid for the trip. We divide the <bpt id=\"p10\">*</bpt>tip\\_amount<ept id=\"p10\">*</ept><ph id=\"ph7\"/> into five bins or classes:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p9\">**</bpt>Multiclass classification<ept id=\"p9\">**</ept>: To predict the range of tip amounts paid for the trip.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "We divide the <bpt id=\"p10\">*</bpt>tip\\_amount<ept id=\"p10\">*</ept><ph id=\"ph7\"/> into five bins or classes:",
+          "pos": [
+            124,
+            232
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6043,
+        6113
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>Regression task<ept id=\"p11\">**</ept>: To predict the amount of the tip paid for a trip."
+    },
+    {
+      "pos": [
+        6141,
+        6198
+      ],
+      "content": "Set up an HDInsight Hadoop cluster for advanced analytics"
+    },
+    {
+      "pos": [
+        6201,
+        6250
+      ],
+      "content": "<ph id=\"ph8\">[AZURE.NOTE]</ph><ph id=\"ph9\"/> This is typically an <bpt id=\"p12\">**</bpt>Admin<ept id=\"p12\">**</ept><ph id=\"ph10\"/> task."
+    },
+    {
+      "pos": [
+        6252,
+        6360
+      ],
+      "content": "You can set up an Azure environment for advanced analytics that employs an HDInsight cluster in three steps:"
+    },
+    {
+      "pos": [
+        6365,
+        6546
+      ],
+      "content": "<bpt id=\"p13\">[</bpt>Create a storage account<ept id=\"p13\">](../storage-whatis-account.md)</ept>: This storage account is used for storing data in Azure Blob Storage. The data used in HDInsight clusters also resides here.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p13\">[</bpt>Create a storage account<ept id=\"p13\">](../storage-whatis-account.md)</ept>: This storage account is used for storing data in Azure Blob Storage.",
+          "pos": [
+            0,
+            166
+          ]
+        },
+        {
+          "content": "The data used in HDInsight clusters also resides here.",
+          "pos": [
+            167,
+            221
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6551,
+        6896
+      ],
+      "content": "<bpt id=\"p14\">[</bpt>Customize Azure HDInsight Hadoop clusters for the Advanced Analytics Process and Technology<ept id=\"p14\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>. This step creates an Azure HDInsight Hadoop cluster with 64-bit Anaconda Python 2.7 installed on all nodes. There are two important steps to remember while customizing your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p14\">[</bpt>Customize Azure HDInsight Hadoop clusters for the Advanced Analytics Process and Technology<ept id=\"p14\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>.",
+          "pos": [
+            0,
+            193
+          ]
+        },
+        {
+          "content": "This step creates an Azure HDInsight Hadoop cluster with 64-bit Anaconda Python 2.7 installed on all nodes.",
+          "pos": [
+            194,
+            301
+          ]
+        },
+        {
+          "content": "There are two important steps to remember while customizing your HDInsight cluster.",
+          "pos": [
+            302,
+            385
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6904,
+        7086
+      ],
+      "content": "Remember to link the storage account created in step 1 with your HDInsight cluster when creating it. This storage account is used to access data that is processed within the cluster.",
+      "nodes": [
+        {
+          "content": "Remember to link the storage account created in step 1 with your HDInsight cluster when creating it.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "This storage account is used to access data that is processed within the cluster.",
+          "pos": [
+            101,
+            182
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7094,
+        7308
+      ],
+      "content": "After the cluster is created, enable Remote Access to the head node of the cluster. Navigate to the <bpt id=\"p15\">**</bpt>Configuration<ept id=\"p15\">**</ept><ph id=\"ph11\"/> tab and click <bpt id=\"p16\">**</bpt>Enable Remote<ept id=\"p16\">**</ept>. This step specifies the user credentials used for remote login.",
+      "nodes": [
+        {
+          "content": "After the cluster is created, enable Remote Access to the head node of the cluster.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "Navigate to the <bpt id=\"p15\">**</bpt>Configuration<ept id=\"p15\">**</ept><ph id=\"ph11\"/> tab and click <bpt id=\"p16\">**</bpt>Enable Remote<ept id=\"p16\">**</ept>.",
+          "pos": [
+            84,
+            245
+          ]
+        },
+        {
+          "content": "This step specifies the user credentials used for remote login.",
+          "pos": [
+            246,
+            309
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7313,
+        7591
+      ],
+      "content": "<bpt id=\"p17\">[</bpt>Create an Azure Machine Learning workspace<ept id=\"p17\">](machine-learning-create-workspace.md)</ept>: This Azure Machine Learning workspace is used to build machine learning models. This task is addressed after completing an initial data exploration and down sampling using the HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p17\">[</bpt>Create an Azure Machine Learning workspace<ept id=\"p17\">](machine-learning-create-workspace.md)</ept>: This Azure Machine Learning workspace is used to build machine learning models.",
+          "pos": [
+            0,
+            203
+          ]
+        },
+        {
+          "content": "This task is addressed after completing an initial data exploration and down sampling using the HDInsight cluster.",
+          "pos": [
+            204,
+            318
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7618,
+        7651
+      ],
+      "content": "Get the data from a public source"
+    },
+    {
+      "pos": [
+        7654,
+        7703
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.NOTE]</ph><ph id=\"ph13\"/> This is typically an <bpt id=\"p18\">**</bpt>Admin<ept id=\"p18\">**</ept><ph id=\"ph14\"/> task."
+    },
+    {
+      "pos": [
+        7705,
+        7976
+      ],
+      "content": "To get the <bpt id=\"p19\">[</bpt>NYC Taxi Trips<ept id=\"p19\">](http://www.andresmh.com/nyctaxitrips/)</ept><ph id=\"ph15\"/> dataset from its public location, you may use any of the methods described in <bpt id=\"p20\">[</bpt>Move Data to and from Azure Blob Storage<ept id=\"p20\">](machine-learning-data-science-move-azure-blob.md)</ept><ph id=\"ph16\"/> to copy the data to your machine."
+    },
+    {
+      "pos": [
+        7978,
+        8188
+      ],
+      "content": "Here we describe how use AzCopy to transfer the files containing data. To download and install AzCopy follow the instructions at <bpt id=\"p21\">[</bpt>Getting Started with the AzCopy Command-Line Utility<ept id=\"p21\">](../storage-use-azcopy.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Here we describe how use AzCopy to transfer the files containing data.",
+          "pos": [
+            0,
+            70
+          ]
+        },
+        {
+          "content": "To download and install AzCopy follow the instructions at <bpt id=\"p21\">[</bpt>Getting Started with the AzCopy Command-Line Utility<ept id=\"p21\">](../storage-use-azcopy.md)</ept>.",
+          "pos": [
+            71,
+            250
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8193,
+        8323
+      ],
+      "content": "From a Command Prompt window, issue the following AzCopy commands, replacing <bpt id=\"p22\">*</bpt>&lt;path_to_data_folder&gt;<ept id=\"p22\">*</ept><ph id=\"ph17\"/> with the desired destination:"
+    },
+    {
+      "pos": [
+        8485,
+        8794
+      ],
+      "content": "When the copy completes, a total of 24 zipped files are in the data folder chosen. Unzip the downloaded files to the same directory on your local machine. Make a note of the folder where the uncompressed files reside. This folder will be referred to as the <bpt id=\"p23\">*</bpt>&lt;path\\_to\\_unzipped_data\\_files\\&gt;<ept id=\"p23\">*</ept><ph id=\"ph18\"/> is what follows.",
+      "nodes": [
+        {
+          "content": "When the copy completes, a total of 24 zipped files are in the data folder chosen.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "Unzip the downloaded files to the same directory on your local machine.",
+          "pos": [
+            83,
+            154
+          ]
+        },
+        {
+          "content": "Make a note of the folder where the uncompressed files reside.",
+          "pos": [
+            155,
+            217
+          ]
+        },
+        {
+          "content": "This folder will be referred to as the <bpt id=\"p23\">*</bpt>&lt;path\\_to\\_unzipped_data\\_files\\&gt;<ept id=\"p23\">*</ept><ph id=\"ph18\"/> is what follows.",
+          "pos": [
+            218,
+            370
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8821,
+        8895
+      ],
+      "content": "Upload the data to the default container of Azure HDInsight Hadoop cluster"
+    },
+    {
+      "pos": [
+        8898,
+        8947
+      ],
+      "content": "<ph id=\"ph19\">[AZURE.NOTE]</ph><ph id=\"ph20\"/> This is typically an <bpt id=\"p24\">**</bpt>Admin<ept id=\"p24\">**</ept><ph id=\"ph21\"/> task."
+    },
+    {
+      "pos": [
+        8949,
+        9120
+      ],
+      "content": "In the following AzCopy commands, replace the following parameters with the actual values that you specified when creating the Hadoop cluster and unzipping the data files."
+    },
+    {
+      "pos": [
+        9124,
+        9240
+      ],
+      "content": "<bpt id=\"p25\">***</bpt><bpt id=\"p26\"/>&amp;#60;path_to_data_folder&gt;<ept id=\"p26\">***</ept><ept id=\"p25\"/><ph id=\"ph22\"/> the directory (along with path) on your machine that contain the unzipped data files"
+    },
+    {
+      "pos": [
+        9245,
+        9354
+      ],
+      "content": "<bpt id=\"p27\">***</bpt><bpt id=\"p28\"/>&amp;#60;storage account name of Hadoop cluster&gt;<ept id=\"p28\">***</ept><ept id=\"p27\"/><ph id=\"ph23\"/> the storage account associated with your HDInsight cluster"
+    },
+    {
+      "pos": [
+        9357,
+        9640
+      ],
+      "content": "<bpt id=\"p29\">***</bpt><bpt id=\"p30\"/>&amp;#60;default container of Hadoop cluster&gt;<ept id=\"p30\">***</ept><ept id=\"p29\"/><ph id=\"ph24\"/> the default container used by your cluster. Note that the name of the default container is usually the same name as the cluster itself. For example, if the cluster is called \"abc123.azurehdinsight.net\", the default container is abc123.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p29\">***</bpt><bpt id=\"p30\"/>&amp;#60;default container of Hadoop cluster&gt;<ept id=\"p30\">***</ept><ept id=\"p29\"/><ph id=\"ph24\"/> the default container used by your cluster.",
+          "pos": [
+            0,
+            183
+          ]
+        },
+        {
+          "content": "Note that the name of the default container is usually the same name as the cluster itself.",
+          "pos": [
+            184,
+            275
+          ]
+        },
+        {
+          "content": "For example, if the cluster is called \"abc123.azurehdinsight.net\", the default container is abc123.",
+          "pos": [
+            276,
+            375
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9643,
+        9727
+      ],
+      "content": "<bpt id=\"p31\">***</bpt><bpt id=\"p32\"/>&amp;#60;storage account key&gt;<ept id=\"p32\">***</ept><ept id=\"p31\"/><ph id=\"ph25\"/> the key for the storage account used by your cluster"
+    },
+    {
+      "pos": [
+        9729,
+        9837
+      ],
+      "content": "From a Command Prompt or a Windows PowerShell window in your machine, run the following two AzCopy commands."
+    },
+    {
+      "pos": [
+        9839,
+        9955
+      ],
+      "content": "This command uploads the trip data to <bpt id=\"p33\">***</bpt><bpt id=\"p34\"/>nyctaxitripraw<ept id=\"p34\">***</ept><ept id=\"p33\"/><ph id=\"ph26\"/> directory in the default container of the Hadoop cluster."
+    },
+    {
+      "pos": [
+        10253,
+        10369
+      ],
+      "content": "This command uploads the fare data to <bpt id=\"p35\">***</bpt><bpt id=\"p36\"/>nyctaxifareraw<ept id=\"p36\">***</ept><ept id=\"p35\"/><ph id=\"ph27\"/> directory in the default container of the Hadoop cluster."
+    },
+    {
+      "pos": [
+        10667,
+        10763
+      ],
+      "content": "The data should now in Azure Blob Storage and ready to be consumed within the HDInsight cluster."
+    },
+    {
+      "pos": [
+        10802,
+        10888
+      ],
+      "content": "Log into the head node of Hadoop cluster and and prepare for exploratory data analysis"
+    },
+    {
+      "pos": [
+        10891,
+        10940
+      ],
+      "content": "<ph id=\"ph28\">[AZURE.NOTE]</ph><ph id=\"ph29\"/> This is typically an <bpt id=\"p37\">**</bpt>Admin<ept id=\"p37\">**</ept><ph id=\"ph30\"/> task."
+    },
+    {
+      "pos": [
+        10942,
+        11184
+      ],
+      "content": "To access the head node of the cluster for exploratory data analysis and down sampling of the data, follow the procedure outlined in <bpt id=\"p38\">[</bpt>Access the Head Node of Hadoop Cluster<ept id=\"p38\">](machine-learning-data-science-customize-hadoop-cluster.md#headnode)</ept>."
+    },
+    {
+      "pos": [
+        11186,
+        11480
+      ],
+      "content": "In this walkthrough, we primarily use queries written in <bpt id=\"p39\">[</bpt>Hive<ept id=\"p39\">](https://hive.apache.org/)</ept>, a SQL-like query language, to perform preliminary data explorations. The Hive queries are stored in .hql files. We then down sample this data to be used within Azure Machine Learning for building models.",
+      "nodes": [
+        {
+          "content": "In this walkthrough, we primarily use queries written in <bpt id=\"p39\">[</bpt>Hive<ept id=\"p39\">](https://hive.apache.org/)</ept>, a SQL-like query language, to perform preliminary data explorations.",
+          "pos": [
+            0,
+            199
+          ]
+        },
+        {
+          "content": "The Hive queries are stored in .hql files.",
+          "pos": [
+            200,
+            242
+          ]
+        },
+        {
+          "content": "We then down sample this data to be used within Azure Machine Learning for building models.",
+          "pos": [
+            243,
+            334
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11482,
+        11896
+      ],
+      "content": "To prepare the cluster for exploratory data analysis, we download the .hql files containing the relevant Hive scripts from <bpt id=\"p40\">[</bpt>github<ept id=\"p40\">](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts)</ept><ph id=\"ph31\"/> to a local directory (C:\\temp) on the head node. To do this, open the <bpt id=\"p41\">**</bpt>Command Prompt<ept id=\"p41\">**</ept><ph id=\"ph32\"/> from within the head node of the cluster and issue the following two commands:",
+      "nodes": [
+        {
+          "content": "To prepare the cluster for exploratory data analysis, we download the .hql files containing the relevant Hive scripts from <bpt id=\"p40\">[</bpt>github<ept id=\"p40\">](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts)</ept><ph id=\"ph31\"/> to a local directory (C:\\temp) on the head node.",
+          "pos": [
+            0,
+            350
+          ]
+        },
+        {
+          "content": "To do this, open the <bpt id=\"p41\">**</bpt>Command Prompt<ept id=\"p41\">**</ept><ph id=\"ph32\"/> from within the head node of the cluster and issue the following two commands:",
+          "pos": [
+            351,
+            524
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12200,
+        12334
+      ],
+      "content": "These two commands will download all .hql files needed in this walkthrough to the local directory <bpt id=\"p42\">***</bpt><bpt id=\"p43\"/>C:\\temp&amp;#92;<ept id=\"p43\">***</ept><ept id=\"p42\"/><ph id=\"ph33\"/> in the head node."
+    },
+    {
+      "pos": [
+        12369,
+        12421
+      ],
+      "content": "Create Hive database and tables partitioned by month"
+    },
+    {
+      "pos": [
+        12424,
+        12473
+      ],
+      "content": "<ph id=\"ph34\">[AZURE.NOTE]</ph><ph id=\"ph35\"/> This is typically an <bpt id=\"p44\">**</bpt>Admin<ept id=\"p44\">**</ept><ph id=\"ph36\"/> task."
+    },
+    {
+      "pos": [
+        12475,
+        12700
+      ],
+      "content": "We are now ready to create Hive tables for our NYC taxi dataset.\nIn the head node of the Hadoop cluster, open the <bpt id=\"p45\">***</bpt><bpt id=\"p46\"/>Hadoop Command Line<ept id=\"p46\">***</ept><ept id=\"p45\"/><ph id=\"ph37\"/> on the desktop of the head node, and enter the Hive directory by entering the command",
+      "nodes": [
+        {
+          "content": "We are now ready to create Hive tables for our NYC taxi dataset.",
+          "pos": [
+            0,
+            64
+          ]
+        },
+        {
+          "content": "In the head node of the Hadoop cluster, open the <bpt id=\"p45\">***</bpt><bpt id=\"p46\"/>Hadoop Command Line<ept id=\"p46\">***</ept><ept id=\"p45\"/><ph id=\"ph37\"/> on the desktop of the head node, and enter the Hive directory by entering the command",
+          "pos": [
+            65,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12727,
+        13018
+      ],
+      "content": "<ph id=\"ph38\">[AZURE.NOTE]</ph> <bpt id=\"p47\">**</bpt>Run all Hive commands in this walkthrough from the above Hive bin/ directory prompt. This will take care of any path issues automatically. We use the terms \"Hive directory prompt\", \"Hive bin/ directory prompt\",  and \"Hadoop Command Line\" interchangeably in this walkthrough.<ept id=\"p47\">**</ept>"
+    },
+    {
+      "pos": [
+        13020,
+        13180
+      ],
+      "content": "From the Hive directory prompt, enter the following command in Hadoop Command Line of the head node to submit the Hive query to create Hive database and tables:"
+    },
+    {
+      "pos": [
+        13242,
+        13411
+      ],
+      "content": "Here is the content of the <bpt id=\"p48\">***</bpt><bpt id=\"p49\"/>C:\\temp\\sample\\_hive\\_create\\_db\\_and\\_tables.hql<ept id=\"p49\">***</ept><ept id=\"p48\"/><ph id=\"ph39\"/> file which creates Hive database <bpt id=\"p50\">***</bpt><bpt id=\"p51\"/>nyctaxidb<ept id=\"p51\">***</ept><ept id=\"p50\"/><ph id=\"ph40\"/> and tables <bpt id=\"p52\">***</bpt><bpt id=\"p53\"/>trip<ept id=\"p53\">***</ept><ept id=\"p52\"/><ph id=\"ph41\"/> and <bpt id=\"p54\">***</bpt><bpt id=\"p55\"/>fare<ept id=\"p55\">***</ept><ept id=\"p54\"/>."
+    },
+    {
+      "pos": [
+        14746,
+        14782
+      ],
+      "content": "This Hive script creates two tables:"
+    },
+    {
+      "pos": [
+        14786,
+        14892
+      ],
+      "content": "the \"trip\" table contains trip details of each ride (driver details, pickup time, trip distance and times)"
+    },
+    {
+      "pos": [
+        14895,
+        14982
+      ],
+      "content": "the \"fare\" table contains fare details (fare amount, tip amount, tolls and surcharges)."
+    },
+    {
+      "pos": [
+        14984,
+        15223
+      ],
+      "content": "If you need any additional assistance with these procedures or want to investigate alternative ones, see the section <bpt id=\"p56\">[</bpt>Submit Hive queries directly from the Hadoop Command Line <ept id=\"p56\">](machine-learning-data-science-process-hive-tables.md#submit)</ept>."
+    },
+    {
+      "pos": [
+        15253,
+        15291
+      ],
+      "content": "Load Data to Hive tables by partitions"
+    },
+    {
+      "pos": [
+        15294,
+        15343
+      ],
+      "content": "<ph id=\"ph42\">[AZURE.NOTE]</ph><ph id=\"ph43\"/> This is typically an <bpt id=\"p57\">**</bpt>Admin<ept id=\"p57\">**</ept><ph id=\"ph44\"/> task."
+    },
+    {
+      "pos": [
+        15345,
+        15626
+      ],
+      "content": "The NYC taxi dataset has a natural partitioning by month, which we use to enable faster processing and query times. The PowerShell commands below (issued from the Hive directory using the <bpt id=\"p58\">**</bpt>Hadoop Command Line<ept id=\"p58\">**</ept>) load data to the \"trip\" and \"fare\" Hive tables partitioned by month.",
+      "nodes": [
+        {
+          "content": "The NYC taxi dataset has a natural partitioning by month, which we use to enable faster processing and query times.",
+          "pos": [
+            0,
+            115
+          ]
+        },
+        {
+          "content": "The PowerShell commands below (issued from the Hive directory using the <bpt id=\"p58\">**</bpt>Hadoop Command Line<ept id=\"p58\">**</ept>) load data to the \"trip\" and \"fare\" Hive tables partitioned by month.",
+          "pos": [
+            116,
+            321
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15737,
+        15834
+      ],
+      "content": "The <bpt id=\"p59\">*</bpt>sample\\_hive\\_load\\_data\\_by\\_partitions.hql<ept id=\"p59\">*</ept><ph id=\"ph45\"/> file contains the following <bpt id=\"p60\">**</bpt>LOAD<ept id=\"p60\">**</ept><ph id=\"ph46\"/> commands."
+    },
+    {
+      "pos": [
+        16119,
+        16325
+      ],
+      "content": "Note that a number of Hive queries we use here in the exploration process involve looking at just a single partition or at only a couple of partitions. But these queries could be run across the entire data.",
+      "nodes": [
+        {
+          "content": "Note that a number of Hive queries we use here in the exploration process involve looking at just a single partition or at only a couple of partitions.",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "But these queries could be run across the entire data.",
+          "pos": [
+            152,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16354,
+        16400
+      ],
+      "content": "Show databases in the HDInsight Hadoop cluster"
+    },
+    {
+      "pos": [
+        16402,
+        16548
+      ],
+      "content": "To show the databases created in HDInsight Hadoop cluster inside the Hadoop Command Line window, run the following command in Hadoop Command Line:"
+    },
+    {
+      "pos": [
+        16612,
+        16658
+      ],
+      "content": "Show the Hive tables in the nyctaxidb database"
+    },
+    {
+      "pos": [
+        16660,
+        16755
+      ],
+      "content": "To show the tables in the nyctaxidb database, run the following command in Hadoop Command Line:"
+    },
+    {
+      "pos": [
+        16798,
+        16874
+      ],
+      "content": "We can confirm that the tables are partitioned by issuing the command below:"
+    },
+    {
+      "pos": [
+        16923,
+        16958
+      ],
+      "content": "The expected output is shown below:"
+    },
+    {
+      "pos": [
+        17158,
+        17247
+      ],
+      "content": "Similarly, we can ensure that the fare table is partitioned by issuing the command below:"
+    },
+    {
+      "pos": [
+        17296,
+        17331
+      ],
+      "content": "The expected output is shown below:"
+    },
+    {
+      "pos": [
+        17562,
+        17610
+      ],
+      "content": "Data exploration and feature engineering in Hive"
+    },
+    {
+      "pos": [
+        17613,
+        17670
+      ],
+      "content": "<ph id=\"ph47\">[AZURE.NOTE]</ph><ph id=\"ph48\"/> This is typically a <bpt id=\"p61\">**</bpt>Data Scientist<ept id=\"p61\">**</ept><ph id=\"ph49\"/> task."
+    },
+    {
+      "pos": [
+        17672,
+        17877
+      ],
+      "content": "The data exploration and feature engineering tasks for the data loaded into the Hive tables can be accomplished using Hive queries. Here are examples of such tasks that we walk you through in this section:",
+      "nodes": [
+        {
+          "content": "The data exploration and feature engineering tasks for the data loaded into the Hive tables can be accomplished using Hive queries.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "Here are examples of such tasks that we walk you through in this section:",
+          "pos": [
+            132,
+            205
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17881,
+        17920
+      ],
+      "content": "View the top 10 records in both tables."
+    },
+    {
+      "pos": [
+        17923,
+        17990
+      ],
+      "content": "Explore data distributions of a few fields in varying time windows."
+    },
+    {
+      "pos": [
+        17993,
+        18055
+      ],
+      "content": "Investigate data quality of the longitude and latitude fields."
+    },
+    {
+      "pos": [
+        18058,
+        18140
+      ],
+      "content": "Generate binary and multiclass classification labels based on the <bpt id=\"p62\">**</bpt>tip\\_amount<ept id=\"p62\">**</ept>."
+    },
+    {
+      "pos": [
+        18143,
+        18200
+      ],
+      "content": "Generate features by computing the direct trip distances."
+    },
+    {
+      "pos": [
+        18206,
+        18256
+      ],
+      "content": "Exploration: View the top 10 records in table trip"
+    },
+    {
+      "pos": [
+        18259,
+        18316
+      ],
+      "content": "<ph id=\"ph50\">[AZURE.NOTE]</ph><ph id=\"ph51\"/> This is typically a <bpt id=\"p63\">**</bpt>Data Scientist<ept id=\"p63\">**</ept><ph id=\"ph52\"/> task."
+    },
+    {
+      "pos": [
+        18318,
+        18520
+      ],
+      "content": "To see what the data looks like, we examine 10 records from each table. Run the following two queries separately from the Hive directory prompt in the Hadoop Command Line console to inspect the records.",
+      "nodes": [
+        {
+          "content": "To see what the data looks like, we examine 10 records from each table.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "Run the following two queries separately from the Hive directory prompt in the Hadoop Command Line console to inspect the records.",
+          "pos": [
+            72,
+            202
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18522,
+        18589
+      ],
+      "content": "To get the top 10 records in the table \"trip\" from the first month:"
+    },
+    {
+      "pos": [
+        18659,
+        18726
+      ],
+      "content": "To get the top 10 records in the table \"fare\" from the first month:"
+    },
+    {
+      "pos": [
+        18796,
+        18921
+      ],
+      "content": "It is often useful to save the records to a file for convenient viewing. A small change to the above query accomplishes this:",
+      "nodes": [
+        {
+          "content": "It is often useful to save the records to a file for convenient viewing.",
+          "pos": [
+            0,
+            72
+          ]
+        },
+        {
+          "content": "A small change to the above query accomplishes this:",
+          "pos": [
+            73,
+            125
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19016,
+        19084
+      ],
+      "content": "Exploration: View the number of records in each of the 12 partitions"
+    },
+    {
+      "pos": [
+        19087,
+        19144
+      ],
+      "content": "<ph id=\"ph53\">[AZURE.NOTE]</ph><ph id=\"ph54\"/> This is typically a <bpt id=\"p64\">**</bpt>Data Scientist<ept id=\"p64\">**</ept><ph id=\"ph55\"/> task."
+    },
+    {
+      "pos": [
+        19146,
+        19300
+      ],
+      "content": "Of interest is the how the number of trips varies during the calendar year. Grouping by month allows us to see what this distribution of trips looks like.",
+      "nodes": [
+        {
+          "content": "Of interest is the how the number of trips varies during the calendar year.",
+          "pos": [
+            0,
+            75
+          ]
+        },
+        {
+          "content": "Grouping by month allows us to see what this distribution of trips looks like.",
+          "pos": [
+            76,
+            154
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19376,
+        19402
+      ],
+      "content": "This gives us the output :"
+    },
+    {
+      "pos": [
+        19709,
+        19798
+      ],
+      "content": "Here, the first column is the month and the second is the number of trips for that month."
+    },
+    {
+      "pos": [
+        19800,
+        19929
+      ],
+      "content": "We can also count the total number of records in our trip data set by issuing the following command at the Hive directory prompt."
+    },
+    {
+      "pos": [
+        19983,
+        19995
+      ],
+      "content": "This yields:"
+    },
+    {
+      "pos": [
+        20063,
+        20237
+      ],
+      "content": "Using commands similar to those shown for the trip data set, we can issue Hive queries from the Hive directory prompt for the fare data set to validate the number of records."
+    },
+    {
+      "pos": [
+        20313,
+        20338
+      ],
+      "content": "This gives us the output:"
+    },
+    {
+      "pos": [
+        20645,
+        20803
+      ],
+      "content": "Note that the exact same number of trips per month is returned for both data sets. This provides the first validation that the data has been loaded correctly.",
+      "nodes": [
+        {
+          "content": "Note that the exact same number of trips per month is returned for both data sets.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "This provides the first validation that the data has been loaded correctly.",
+          "pos": [
+            83,
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20805,
+        20930
+      ],
+      "content": "Counting the total number of records in the fare data set can be done using the command below from the Hive directory prompt:"
+    },
+    {
+      "pos": [
+        20984,
+        20997
+      ],
+      "content": "This yields :"
+    },
+    {
+      "pos": [
+        21065,
+        21200
+      ],
+      "content": "The total number of records in both tables is also the same. This provides a second validation that the data has been loaded correctly.",
+      "nodes": [
+        {
+          "content": "The total number of records in both tables is also the same.",
+          "pos": [
+            0,
+            60
+          ]
+        },
+        {
+          "content": "This provides a second validation that the data has been loaded correctly.",
+          "pos": [
+            61,
+            135
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21206,
+        21249
+      ],
+      "content": "Exploration: Trip distribution by medallion"
+    },
+    {
+      "pos": [
+        21252,
+        21309
+      ],
+      "content": "<ph id=\"ph56\">[AZURE.NOTE]</ph><ph id=\"ph57\"/> This is typically a <bpt id=\"p65\">**</bpt>Data Scientist<ept id=\"p65\">**</ept><ph id=\"ph58\"/> task."
+    },
+    {
+      "pos": [
+        21311,
+        21623
+      ],
+      "content": "This example identifies the medallion (taxi numbers) with more than 100 trips within a given time period. The query benefits from the partitioned table access since it is conditioned by the partition variable <bpt id=\"p66\">**</bpt>month<ept id=\"p66\">**</ept>. The query results are written to a local file queryoutput.tsv in <ph id=\"ph59\">`C:\\temp`</ph><ph id=\"ph60\"/> on the head node.",
+      "nodes": [
+        {
+          "content": "This example identifies the medallion (taxi numbers) with more than 100 trips within a given time period.",
+          "pos": [
+            0,
+            105
+          ]
+        },
+        {
+          "content": "The query benefits from the partitioned table access since it is conditioned by the partition variable <bpt id=\"p66\">**</bpt>month<ept id=\"p66\">**</ept>.",
+          "pos": [
+            106,
+            259
+          ]
+        },
+        {
+          "content": "The query results are written to a local file queryoutput.tsv in <ph id=\"ph59\">`C:\\temp`</ph><ph id=\"ph60\"/> on the head node.",
+          "pos": [
+            260,
+            386
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21714,
+        21804
+      ],
+      "content": "Here is the content of <bpt id=\"p67\">*</bpt>sample\\_hive\\_trip\\_count\\_by\\_medallion.hql<ept id=\"p67\">*</ept><ph id=\"ph61\"/> file for inspection."
+    },
+    {
+      "pos": [
+        21973,
+        22336
+      ],
+      "content": "The medallion in the NYC taxi data set identifies a unique cab. We can identify which cabs are \"busy\" by asking which ones made more than a certain number of trips in a particular time period. The following example identifies cabs that made more than a hundred trips in the first three months, and saves the query results to a local file, C:\\temp\\queryoutput.tsv.",
+      "nodes": [
+        {
+          "content": "The medallion in the NYC taxi data set identifies a unique cab.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "We can identify which cabs are \"busy\" by asking which ones made more than a certain number of trips in a particular time period.",
+          "pos": [
+            64,
+            192
+          ]
+        },
+        {
+          "content": "The following example identifies cabs that made more than a hundred trips in the first three months, and saves the query results to a local file, C:\\temp\\queryoutput.tsv.",
+          "pos": [
+            193,
+            363
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22338,
+        22428
+      ],
+      "content": "Here is the content of <bpt id=\"p68\">*</bpt>sample\\_hive\\_trip\\_count\\_by\\_medallion.hql<ept id=\"p68\">*</ept><ph id=\"ph62\"/> file for inspection."
+    },
+    {
+      "pos": [
+        22597,
+        22654
+      ],
+      "content": "From the Hive directory prompt, issue the command below :"
+    },
+    {
+      "pos": [
+        22749,
+        22809
+      ],
+      "content": "Exploration: Trip distribution by medallion and hack_license"
+    },
+    {
+      "pos": [
+        22812,
+        22869
+      ],
+      "content": "<ph id=\"ph63\">[AZURE.NOTE]</ph><ph id=\"ph64\"/> This is typically a <bpt id=\"p69\">**</bpt>Data Scientist<ept id=\"p69\">**</ept><ph id=\"ph65\"/> task."
+    },
+    {
+      "pos": [
+        22871,
+        23047
+      ],
+      "content": "When exploring a dataset, we frequently want to examine the number of co-occurences of groups of values. This section provide an example of how to do this for cabs and drivers.",
+      "nodes": [
+        {
+          "content": "When exploring a dataset, we frequently want to examine the number of co-occurences of groups of values.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "This section provide an example of how to do this for cabs and drivers.",
+          "pos": [
+            105,
+            176
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23049,
+        23236
+      ],
+      "content": "The <bpt id=\"p70\">*</bpt>sample\\_hive\\_trip\\_count\\_by\\_medallion\\_license.hql<ept id=\"p70\">*</ept><ph id=\"ph66\"/> file groups the fare data set on \"medallion\" and \"hack_license\" and returns counts of each combination. Below are its contents.",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p70\">*</bpt>sample\\_hive\\_trip\\_count\\_by\\_medallion\\_license.hql<ept id=\"p70\">*</ept><ph id=\"ph66\"/> file groups the fare data set on \"medallion\" and \"hack_license\" and returns counts of each combination.",
+          "pos": [
+            0,
+            218
+          ]
+        },
+        {
+          "content": "Below are its contents.",
+          "pos": [
+            219,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23435,
+        23531
+      ],
+      "content": "This query returns cab and particular driver combinations ordered by descending number of trips."
+    },
+    {
+      "pos": [
+        23533,
+        23570
+      ],
+      "content": "From the Hive directory prompt, run :"
+    },
+    {
+      "pos": [
+        23669,
+        23739
+      ],
+      "content": "The query results are written to a local file C:\\temp\\queryoutput.tsv."
+    },
+    {
+      "pos": [
+        23745,
+        23831
+      ],
+      "content": "Exploration: Assessing data quality by checking for invalid longitude/latitude records"
+    },
+    {
+      "pos": [
+        23834,
+        23891
+      ],
+      "content": "<ph id=\"ph67\">[AZURE.NOTE]</ph><ph id=\"ph68\"/> This is typically a <bpt id=\"p71\">**</bpt>Data Scientist<ept id=\"p71\">**</ept><ph id=\"ph69\"/> task."
+    },
+    {
+      "pos": [
+        23893,
+        24263
+      ],
+      "content": "A common objective of exploratory data analysis is to weed out invalid or bad records. The example in this section determines whether either the longitude or latitude fields contain a value far outside the NYC area. Since it is likely that such records have an erroneous longitude-latitude values, we want to eliminate them from any data that is to be used for modeling.",
+      "nodes": [
+        {
+          "content": "A common objective of exploratory data analysis is to weed out invalid or bad records.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "The example in this section determines whether either the longitude or latitude fields contain a value far outside the NYC area.",
+          "pos": [
+            87,
+            215
+          ]
+        },
+        {
+          "content": "Since it is likely that such records have an erroneous longitude-latitude values, we want to eliminate them from any data that is to be used for modeling.",
+          "pos": [
+            216,
+            370
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        24265,
+        24348
+      ],
+      "content": "Here is the content of <bpt id=\"p72\">*</bpt>sample\\_hive\\_quality\\_assessment.hql<ept id=\"p72\">*</ept><ph id=\"ph70\"/> file for inspection."
+    },
+    {
+      "pos": [
+        24696,
+        24733
+      ],
+      "content": "From the Hive directory prompt, run :"
+    },
+    {
+      "pos": [
+        24796,
+        24994
+      ],
+      "content": "The <bpt id=\"p73\">*</bpt>-S<ept id=\"p73\">*</ept><ph id=\"ph71\"/> argument included in this command suppresses the status screen printout of the Hive Map/Reduce jobs. This is useful because it makes the screen print of the Hive query output more readable.",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p73\">*</bpt>-S<ept id=\"p73\">*</ept><ph id=\"ph71\"/> argument included in this command suppresses the status screen printout of the Hive Map/Reduce jobs.",
+          "pos": [
+            0,
+            164
+          ]
+        },
+        {
+          "content": "This is useful because it makes the screen print of the Hive query output more readable.",
+          "pos": [
+            165,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25000,
+        25052
+      ],
+      "content": "Exploration: Binary class distributions of trip tips"
+    },
+    {
+      "pos": [
+        25054,
+        25108
+      ],
+      "content": "<bpt id=\"p74\">**</bpt>Note:<ept id=\"p74\">**</ept><ph id=\"ph72\"/> This is typically a <bpt id=\"p75\">**</bpt>Data Scientist<ept id=\"p75\">**</ept><ph id=\"ph73\"/> task."
+    },
+    {
+      "pos": [
+        25110,
+        25360
+      ],
+      "content": "For the binary classification problem outlined in the <bpt id=\"p76\">[</bpt>Examples of prediction tasks<ept id=\"p76\">](machine-learning-data-science-process-hive-walkthrough.md#mltasks)</ept><ph id=\"ph74\"/> section, it is useful to know whether a tip was given or not. This distribution of tips is binary:",
+      "nodes": [
+        {
+          "content": "For the binary classification problem outlined in the <bpt id=\"p76\">[</bpt>Examples of prediction tasks<ept id=\"p76\">](machine-learning-data-science-process-hive-walkthrough.md#mltasks)</ept><ph id=\"ph74\"/> section, it is useful to know whether a tip was given or not.",
+          "pos": [
+            0,
+            268
+          ]
+        },
+        {
+          "content": "This distribution of tips is binary:",
+          "pos": [
+            269,
+            305
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25364,
+        25400
+      ],
+      "content": "tip given(Class 1, tip\\_amount &gt; $0)"
+    },
+    {
+      "pos": [
+        25405,
+        25440
+      ],
+      "content": "no tip (Class 0, tip\\_amount = $0)."
+    },
+    {
+      "pos": [
+        25442,
+        25513
+      ],
+      "content": "The <bpt id=\"p77\">*</bpt>sample\\_hive\\_tipped\\_frequencies.hql<ept id=\"p77\">*</ept><ph id=\"ph75\"/> file shown below does this."
+    },
+    {
+      "pos": [
+        25690,
+        25726
+      ],
+      "content": "From the Hive directory prompt, run:"
+    },
+    {
+      "pos": [
+        25791,
+        25849
+      ],
+      "content": "Exploration: Class distributions in the multiclass setting"
+    },
+    {
+      "pos": [
+        25851,
+        25905
+      ],
+      "content": "<bpt id=\"p78\">**</bpt>Note:<ept id=\"p78\">**</ept><ph id=\"ph76\"/> This is typically a <bpt id=\"p79\">**</bpt>Data Scientist<ept id=\"p79\">**</ept><ph id=\"ph77\"/> task."
+    },
+    {
+      "pos": [
+        25907,
+        26386
+      ],
+      "content": "For the multiclass classification problem outlined in the <bpt id=\"p80\">[</bpt>Examples of prediction tasks<ept id=\"p80\">](machine-learning-data-science-process-hive-walkthrough.md#mltasks)</ept><ph id=\"ph78\"/> section this data set also lends itself to a natural classification where we would like to predict the amount of the tips given. We can use bins to define tip ranges in the query. To get the class distributions for the various tip ranges, we use the <bpt id=\"p81\">*</bpt>sample\\_hive\\_tip\\_range\\_frequencies.hql<ept id=\"p81\">*</ept><ph id=\"ph79\"/> file. Below are its contents.",
+      "nodes": [
+        {
+          "content": "For the multiclass classification problem outlined in the <bpt id=\"p80\">[</bpt>Examples of prediction tasks<ept id=\"p80\">](machine-learning-data-science-process-hive-walkthrough.md#mltasks)</ept><ph id=\"ph78\"/> section this data set also lends itself to a natural classification where we would like to predict the amount of the tips given.",
+          "pos": [
+            0,
+            339
+          ]
+        },
+        {
+          "content": "We can use bins to define tip ranges in the query.",
+          "pos": [
+            340,
+            390
+          ]
+        },
+        {
+          "content": "To get the class distributions for the various tip ranges, we use the <bpt id=\"p81\">*</bpt>sample\\_hive\\_tip\\_range\\_frequencies.hql<ept id=\"p81\">*</ept><ph id=\"ph79\"/> file.",
+          "pos": [
+            391,
+            565
+          ]
+        },
+        {
+          "content": "Below are its contents.",
+          "pos": [
+            566,
+            589
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        26726,
+        26785
+      ],
+      "content": "Run the following command from Hadoop Command Line console:"
+    },
+    {
+      "pos": [
+        26852,
+        26929
+      ],
+      "content": "Exploration: Compute Direct Distance Between Two Longitude-Latitude Locations"
+    },
+    {
+      "pos": [
+        26931,
+        26985
+      ],
+      "content": "<bpt id=\"p82\">**</bpt>Note:<ept id=\"p82\">**</ept><ph id=\"ph80\"/> This is typically a <bpt id=\"p83\">**</bpt>Data Scientist<ept id=\"p83\">**</ept><ph id=\"ph81\"/> task."
+    },
+    {
+      "pos": [
+        26987,
+        27279
+      ],
+      "content": "Having a measure of the direct distance allows us to find out the discrepancy between it and the actual trip distance. We motivate this feature by pointing out that a passenger might be less likely to tip if they figure out that the driver has intentionally taken them by a much longer route.",
+      "nodes": [
+        {
+          "content": "Having a measure of the direct distance allows us to find out the discrepancy between it and the actual trip distance.",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "We motivate this feature by pointing out that a passenger might be less likely to tip if they figure out that the driver has intentionally taken them by a much longer route.",
+          "pos": [
+            119,
+            292
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27281,
+        27542
+      ],
+      "content": "To see the comparison between actual trip distance and the <bpt id=\"p84\">[</bpt>Haversine distance<ept id=\"p84\">](http://en.wikipedia.org/wiki/Haversine_formula)</ept><ph id=\"ph82\"/> between two longitude-latitude points (the \"great circle\" distance), we use the trigonometric functions available within Hive, thus :"
+    },
+    {
+      "pos": [
+        28513,
+        28707
+      ],
+      "content": "In the query above, R is the radius of the Earth in miles, and pi is converted to radians. Note that the longitude-latitude points are \"filtered\" to remove values that are far from the NYC area.",
+      "nodes": [
+        {
+          "content": "In the query above, R is the radius of the Earth in miles, and pi is converted to radians.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "Note that the longitude-latitude points are \"filtered\" to remove values that are far from the NYC area.",
+          "pos": [
+            91,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28709,
+        28889
+      ],
+      "content": "In this case, we write our results to a directory called \"queryoutputdir\". The sequence of commands shown below first creates this output directory, and then runs the Hive command.",
+      "nodes": [
+        {
+          "content": "In this case, we write our results to a directory called \"queryoutputdir\".",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "The sequence of commands shown below first creates this output directory, and then runs the Hive command.",
+          "pos": [
+            75,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28891,
+        28927
+      ],
+      "content": "From the Hive directory prompt, run:"
+    },
+    {
+      "pos": [
+        29034,
+        29197
+      ],
+      "content": "The query results are written to 9 Azure blobs <bpt id=\"p85\">***</bpt><bpt id=\"p86\"/>queryoutputdir/000000\\_0<ept id=\"p86\">***</ept><ept id=\"p85\"/><ph id=\"ph83\"/> to  <bpt id=\"p87\">***</bpt><bpt id=\"p88\"/>queryoutputdir/000008\\_0<ept id=\"p88\">***</ept><ept id=\"p87\"/><ph id=\"ph84\"/> under the default container of the Hadoop cluster."
+    },
+    {
+      "pos": [
+        29199,
+        29301
+      ],
+      "content": "To see the size of the individual blobs, we run the following command from the Hive directory prompt :"
+    },
+    {
+      "pos": [
+        29344,
+        29440
+      ],
+      "content": "To see the contents of a given file, say 000000\\_0, we use Hadoop's <ph id=\"ph85\">`copyToLocal`</ph><ph id=\"ph86\"/> command, thus."
+    },
+    {
+      "pos": [
+        29518,
+        29620
+      ],
+      "content": "<bpt id=\"p89\">**</bpt>Warning:<ept id=\"p89\">**</ept> <ph id=\"ph87\">`copyToLocal`</ph><ph id=\"ph88\"/> can be very slow for large files, and is not recommended for use with them."
+    },
+    {
+      "pos": [
+        29624,
+        29780
+      ],
+      "content": "A key advantage of having this data reside in an Azure blob is that we may explore the data within Azure Machine Learning using the [Reader][reader] module."
+    },
+    {
+      "pos": [
+        29812,
+        29871
+      ],
+      "content": "Down sample data and build models in Azure Machine Learning"
+    },
+    {
+      "pos": [
+        29873,
+        29927
+      ],
+      "content": "<bpt id=\"p90\">**</bpt>Note:<ept id=\"p90\">**</ept><ph id=\"ph89\"/> This is typically a <bpt id=\"p91\">**</bpt>Data Scientist<ept id=\"p91\">**</ept><ph id=\"ph90\"/> task."
+    },
+    {
+      "pos": [
+        29929,
+        30216
+      ],
+      "content": "After the exploratory data analysis phase, we are now ready to down sample the data for building models in Azure Machine Learning. In this section, we show how to use a Hive query to down sample the data, which is then accessed from the [Reader][reader] module in Azure Machine Learning.",
+      "nodes": [
+        {
+          "content": "After the exploratory data analysis phase, we are now ready to down sample the data for building models in Azure Machine Learning.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "In this section, we show how to use a Hive query to down sample the data, which is then accessed from the [Reader][reader] module in Azure Machine Learning.",
+          "pos": [
+            131,
+            287
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30222,
+        30244
+      ],
+      "content": "Down sampling the data"
+    },
+    {
+      "pos": [
+        30246,
+        30566
+      ],
+      "content": "There are two steps in this procedure. First we join the <bpt id=\"p92\">**</bpt>nyctaxidb.trip<ept id=\"p92\">**</ept><ph id=\"ph91\"/> and <bpt id=\"p93\">**</bpt>nyctaxidb.fare<ept id=\"p93\">**</ept><ph id=\"ph92\"/> tables on three keys that are present in all records : \"medallion\", \"hack\\_license\", and \"pickup\\_datetime\". We then generate a binary classification label <bpt id=\"p94\">**</bpt>tipped<ept id=\"p94\">**</ept><ph id=\"ph93\"/> and a multi-class classification label <bpt id=\"p95\">**</bpt>tip\\_class<ept id=\"p95\">**</ept>.",
+      "nodes": [
+        {
+          "content": "There are two steps in this procedure.",
+          "pos": [
+            0,
+            38
+          ]
+        },
+        {
+          "content": "First we join the <bpt id=\"p92\">**</bpt>nyctaxidb.trip<ept id=\"p92\">**</ept><ph id=\"ph91\"/> and <bpt id=\"p93\">**</bpt>nyctaxidb.fare<ept id=\"p93\">**</ept><ph id=\"ph92\"/> tables on three keys that are present in all records : \"medallion\", \"hack\\_license\", and \"pickup\\_datetime\".",
+          "pos": [
+            39,
+            317
+          ]
+        },
+        {
+          "content": "We then generate a binary classification label <bpt id=\"p94\">**</bpt>tipped<ept id=\"p94\">**</ept><ph id=\"ph93\"/> and a multi-class classification label <bpt id=\"p95\">**</bpt>tip\\_class<ept id=\"p95\">**</ept>.",
+          "pos": [
+            318,
+            525
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30568,
+        30874
+      ],
+      "content": "To be able to use the down sampled data directly from the [Reader][reader] module in Azure Machine Learning, it is necessary to store the results of the above query to an internal Hive table. In what follows, we create an internal Hive table and populate its contents with the joined and down sampled data.",
+      "nodes": [
+        {
+          "content": "To be able to use the down sampled data directly from the [Reader][reader] module in Azure Machine Learning, it is necessary to store the results of the above query to an internal Hive table.",
+          "pos": [
+            0,
+            191
+          ]
+        },
+        {
+          "content": "In what follows, we create an internal Hive table and populate its contents with the joined and down sampled data.",
+          "pos": [
+            192,
+            306
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30876,
+        31274
+      ],
+      "content": "The query applies standard Hive functions directly to generate the hour of day, week of year, weekday (1 stands for Monday, and 7 stands for Sunday) from the \"pickup\\_datetime\" field,  and the direct distance between the pickup and dropoff locations. Users can refer to <bpt id=\"p96\">[</bpt>LanguageManual UDF<ept id=\"p96\">](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF)</ept><ph id=\"ph94\"/> for a complete list of such functions.",
+      "nodes": [
+        {
+          "content": "The query applies standard Hive functions directly to generate the hour of day, week of year, weekday (1 stands for Monday, and 7 stands for Sunday) from the \"pickup\\_datetime\" field,  and the direct distance between the pickup and dropoff locations.",
+          "pos": [
+            0,
+            250
+          ]
+        },
+        {
+          "content": "Users can refer to <bpt id=\"p96\">[</bpt>LanguageManual UDF<ept id=\"p96\">](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF)</ept><ph id=\"ph94\"/> for a complete list of such functions.",
+          "pos": [
+            251,
+            453
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        31276,
+        31453
+      ],
+      "content": "The query then down samples the data so that the query results can fit into the Azure Machine Learning Studio. Only about 1% of the original dataset is imported into the Studio.",
+      "nodes": [
+        {
+          "content": "The query then down samples the data so that the query results can fit into the Azure Machine Learning Studio.",
+          "pos": [
+            0,
+            110
+          ]
+        },
+        {
+          "content": "Only about 1% of the original dataset is imported into the Studio.",
+          "pos": [
+            111,
+            177
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        31455,
+        31594
+      ],
+      "content": "Below are the contents of <bpt id=\"p97\">*</bpt>sample\\_hive\\_prepare\\_for\\_aml\\_full.hql<ept id=\"p97\">*</ept><ph id=\"ph95\"/> file that prepares data for model building in Azure Machine Learning."
+    },
+    {
+      "pos": [
+        35405,
+        35456
+      ],
+      "content": "To run this query, from the Hive directory prompt :"
+    },
+    {
+      "pos": [
+        35518,
+        35747
+      ],
+      "content": "We now have an internal table \"nyctaxidb.nyctaxi_downsampled_dataset\" which can be accessed using the [Reader][reader] module from Azure Machine Learning. Furthermore, we may use this dataset for building Machine Learning models.",
+      "nodes": [
+        {
+          "content": "We now have an internal table \"nyctaxidb.nyctaxi_downsampled_dataset\" which can be accessed using the [Reader][reader] module from Azure Machine Learning.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "Furthermore, we may use this dataset for building Machine Learning models.",
+          "pos": [
+            155,
+            229
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        35755,
+        35834
+      ],
+      "content": "Use the Reader module in Azure Machine Learning to access the down sampled data"
+    },
+    {
+      "pos": [
+        35836,
+        36070
+      ],
+      "content": "As prerequisites for issuing Hive queries in the [Reader][reader] module of Azure Machine Learning, we need access to an Azure Machine Learning workspace and access to the credentials of the cluster and its associated storage account."
+    },
+    {
+      "pos": [
+        36072,
+        36145
+      ],
+      "content": "Some details on the [Reader][reader] module and the parameters to input :"
+    },
+    {
+      "pos": [
+        36147,
+        36258
+      ],
+      "content": "<bpt id=\"p98\">**</bpt>HCatalog server URI<ept id=\"p98\">**</ept>: If the cluster name is abc123, then this is simply : https://abc123.azurehdinsight.net"
+    },
+    {
+      "pos": [
+        36260,
+        36365
+      ],
+      "content": "<bpt id=\"p99\">**</bpt>Hadoop user account name<ept id=\"p99\">**</ept><ph id=\"ph96\"/> : The user name chosen for the cluster (<bpt id=\"p100\">**</bpt>not<ept id=\"p100\">**</ept><ph id=\"ph97\"/> the remote access user name)"
+    },
+    {
+      "pos": [
+        36367,
+        36473
+      ],
+      "content": "<bpt id=\"p101\">**</bpt>Hadoop ser account password<ept id=\"p101\">**</ept><ph id=\"ph98\"/> : The password chosen for the cluster (<bpt id=\"p102\">**</bpt>not<ept id=\"p102\">**</ept><ph id=\"ph99\"/> the remote access password)"
+    },
+    {
+      "pos": [
+        36475,
+        36532
+      ],
+      "content": "<bpt id=\"p103\">**</bpt>Location of output data<ept id=\"p103\">**</ept><ph id=\"ph100\"/> : This is chosen to be Azure."
+    },
+    {
+      "pos": [
+        36534,
+        36631
+      ],
+      "content": "<bpt id=\"p104\">**</bpt>Azure storage account name<ept id=\"p104\">**</ept><ph id=\"ph101\"/> : Name of the default storage account associated with the cluster."
+    },
+    {
+      "pos": [
+        36633,
+        36810
+      ],
+      "content": "<bpt id=\"p105\">**</bpt>Azure container name<ept id=\"p105\">**</ept><ph id=\"ph102\"/> : This is the default container name for the cluster, and is typically the same as the cluster name. For a cluster called \"abc123\", this is just abc123.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p105\">**</bpt>Azure container name<ept id=\"p105\">**</ept><ph id=\"ph102\"/> : This is the default container name for the cluster, and is typically the same as the cluster name.",
+          "pos": [
+            0,
+            183
+          ]
+        },
+        {
+          "content": "For a cluster called \"abc123\", this is just abc123.",
+          "pos": [
+            184,
+            235
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        36812,
+        37039
+      ],
+      "content": "<bpt id=\"p106\">**</bpt>Important Note:<ept id=\"p106\">**</ept> <bpt id=\"p107\">**</bpt>Any table we wish to query using the [Reader][reader] module in Azure Machine Learning must be an internal table.<ept id=\"p107\">**</ept><ph id=\"ph103\"/> A tip for determining if a table T in a database D.db is an internal table is as follows."
+    },
+    {
+      "pos": [
+        37041,
+        37092
+      ],
+      "content": "From the Hive directory prompt, issue the command :"
+    },
+    {
+      "pos": [
+        37127,
+        37493
+      ],
+      "content": "If the table is an internal table and it is populated, its contents must show here. Another way to determine whether a table is an internal table is to use the Azure Storage Explorer. Use it to navigate to the default container name of the cluster, and then filter by the table name. If the table and its contents show up, this confirms that it is an internal table.",
+      "nodes": [
+        {
+          "content": "If the table is an internal table and it is populated, its contents must show here.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "Another way to determine whether a table is an internal table is to use the Azure Storage Explorer.",
+          "pos": [
+            84,
+            183
+          ]
+        },
+        {
+          "content": "Use it to navigate to the default container name of the cluster, and then filter by the table name.",
+          "pos": [
+            184,
+            283
+          ]
+        },
+        {
+          "content": "If the table and its contents show up, this confirms that it is an internal table.",
+          "pos": [
+            284,
+            366
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        37495,
+        37564
+      ],
+      "content": "Here is a snapshot of the Hive query and the [Reader][reader] module:"
+    },
+    {
+      "pos": [
+        37647,
+        37854
+      ],
+      "content": "Note that since our down sampled data resides in the default container, the resulting Hive query from Azure Machine Learning is very simple and is just a \"SELECT * FROM nyctaxidb.nyctaxi\\_downsampled\\_data\"."
+    },
+    {
+      "pos": [
+        37856,
+        37943
+      ],
+      "content": "The dataset may now be used as the starting point for building Machine Learning models."
+    },
+    {
+      "pos": [
+        37971,
+        38009
+      ],
+      "content": "Build models in Azure Machine Learning"
+    },
+    {
+      "pos": [
+        38011,
+        38221
+      ],
+      "content": "We are now able to proceed to model building and model deployment in <bpt id=\"p108\">[</bpt>Azure Machine Learning<ept id=\"p108\">](https://studio.azureml.net)</ept>. The data is ready for us to use in addressing the prediction problems identified above:",
+      "nodes": [
+        {
+          "content": "We are now able to proceed to model building and model deployment in <bpt id=\"p108\">[</bpt>Azure Machine Learning<ept id=\"p108\">](https://studio.azureml.net)</ept>.",
+          "pos": [
+            0,
+            164
+          ]
+        },
+        {
+          "content": "The data is ready for us to use in addressing the prediction problems identified above:",
+          "pos": [
+            165,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        38223,
+        38305
+      ],
+      "content": "<bpt id=\"p109\">**</bpt>1. Binary classification<ept id=\"p109\">**</ept>: To predict whether or not a tip was paid for a trip."
+    },
+    {
+      "pos": [
+        38307,
+        38354
+      ],
+      "content": "<bpt id=\"p110\">**</bpt>Learner used:<ept id=\"p110\">**</ept><ph id=\"ph105\"/> Two-class logistic regression"
+    },
+    {
+      "pos": [
+        38356,
+        38763
+      ],
+      "content": "a. For this problem, our target (or class) label is \"tipped\". Our original down-sampled dataset has a few columns that are target leaks for this classification experiment. In particular : tip\\_class, tip\\_amount, and total\\_amount reveal information about the target label that is not available at testing time. We remove these columns from consideration using the [Project Columns][project-columns] module.",
+      "nodes": [
+        {
+          "content": "a.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For this problem, our target (or class) label is \"tipped\".",
+          "pos": [
+            3,
+            61
+          ]
+        },
+        {
+          "content": "Our original down-sampled dataset has a few columns that are target leaks for this classification experiment.",
+          "pos": [
+            62,
+            171
+          ]
+        },
+        {
+          "content": "In particular : tip\\_class, tip\\_amount, and total\\_amount reveal information about the target label that is not available at testing time.",
+          "pos": [
+            172,
+            311
+          ]
+        },
+        {
+          "content": "We remove these columns from consideration using the [Project Columns][project-columns] module.",
+          "pos": [
+            312,
+            407
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        38765,
+        38863
+      ],
+      "content": "The snapshot below shows our experiment to predict whether or not a tip was paid for a given trip."
+    },
+    {
+      "pos": [
+        38946,
+        39018
+      ],
+      "content": "b. For this experiment, our target label distributions were roughly 1:1.",
+      "nodes": [
+        {
+          "content": "b.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For this experiment, our target label distributions were roughly 1:1.",
+          "pos": [
+            3,
+            72
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39020,
+        39120
+      ],
+      "content": "The snapshot below shows the distribution of tip class labels for the binary classification problem."
+    },
+    {
+      "pos": [
+        39203,
+        39271
+      ],
+      "content": "As a result, we obtain an AUC of 0.987 as shown in the figure below."
+    },
+    {
+      "pos": [
+        39354,
+        39480
+      ],
+      "content": "<bpt id=\"p111\">**</bpt>2. Multiclass classification<ept id=\"p111\">**</ept>: To predict the range of tip amounts paid for the trip, using the previously defined classes."
+    },
+    {
+      "pos": [
+        39482,
+        39530
+      ],
+      "content": "<bpt id=\"p112\">**</bpt>Learner used:<ept id=\"p112\">**</ept><ph id=\"ph109\"/> Multiclass logistic regression"
+    },
+    {
+      "pos": [
+        39532,
+        39955
+      ],
+      "content": "a. For this problem, our target (or class) label is \"tip\\_class\" which can take one of five values (0,1,2,3,4). As in the binary classification case, we have a few columns that are target leaks for this experiment. In particular : tipped, tip\\_amount, total\\_amount reveal information about the target label that is not available at testing time. We remove these columns using the [Project Columns][project-columns] module.",
+      "nodes": [
+        {
+          "content": "a.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For this problem, our target (or class) label is \"tip\\_class\" which can take one of five values (0,1,2,3,4).",
+          "pos": [
+            3,
+            111
+          ]
+        },
+        {
+          "content": "As in the binary classification case, we have a few columns that are target leaks for this experiment.",
+          "pos": [
+            112,
+            214
+          ]
+        },
+        {
+          "content": "In particular : tipped, tip\\_amount, total\\_amount reveal information about the target label that is not available at testing time.",
+          "pos": [
+            215,
+            346
+          ]
+        },
+        {
+          "content": "We remove these columns using the [Project Columns][project-columns] module.",
+          "pos": [
+            347,
+            423
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        39957,
+        40191
+      ],
+      "content": "The snapshot below shows our experiment to predict in which bin a tip is likely to fall ( Class 0: tip = $0, class 1 : tip &gt; $0 and tip &lt;= $5, Class 2 : tip &gt; $5 and tip &lt;= $10, Class 3 : tip &gt; $10 and tip &lt;= $20, Class 4 : tip &gt; $20)"
+    },
+    {
+      "pos": [
+        40274,
+        40418
+      ],
+      "content": "We now show what our actual test class distribution looks like. We see that while Class 0 and Class 1 are prevalent, the other classes are rare.",
+      "nodes": [
+        {
+          "content": "We now show what our actual test class distribution looks like.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "We see that while Class 0 and Class 1 are prevalent, the other classes are rare.",
+          "pos": [
+            64,
+            144
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        40501,
+        40609
+      ],
+      "content": "b. For this experiment, we use a confusion matrix to look at our prediction accuracies. This is shown below.",
+      "nodes": [
+        {
+          "content": "b.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For this experiment, we use a confusion matrix to look at our prediction accuracies.",
+          "pos": [
+            3,
+            87
+          ]
+        },
+        {
+          "content": "This is shown below.",
+          "pos": [
+            88,
+            108
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        40692,
+        40837
+      ],
+      "content": "Note that while our class accuracies on the prevalent classes is quite good, the model does not do a good job of \"learning\" on the rarer classes."
+    },
+    {
+      "pos": [
+        40840,
+        40909
+      ],
+      "content": "<bpt id=\"p113\">**</bpt>3. Regression task<ept id=\"p113\">**</ept>: To predict the amount of tip paid for a trip."
+    },
+    {
+      "pos": [
+        40911,
+        40950
+      ],
+      "content": "<bpt id=\"p114\">**</bpt>Learner used:<ept id=\"p114\">**</ept><ph id=\"ph113\"/> Boosted decision tree"
+    },
+    {
+      "pos": [
+        40952,
+        41274
+      ],
+      "content": "a. For this problem, our target (or class) label is \"tip\\_amount\". Our target leaks in this case are : tipped, tip\\_class, total\\_amount ; all these variables reveal information about the tip amount that is typically unavailable at testing time. We remove these columns using the [Project Columns][project-columns] module.",
+      "nodes": [
+        {
+          "content": "a.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For this problem, our target (or class) label is \"tip\\_amount\".",
+          "pos": [
+            3,
+            66
+          ]
+        },
+        {
+          "content": "Our target leaks in this case are : tipped, tip\\_class, total\\_amount ; all these variables reveal information about the tip amount that is typically unavailable at testing time.",
+          "pos": [
+            67,
+            245
+          ]
+        },
+        {
+          "content": "We remove these columns using the [Project Columns][project-columns] module.",
+          "pos": [
+            246,
+            322
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        41276,
+        41356
+      ],
+      "content": "The snapshot belows shows our experiment to predict the amount of the given tip."
+    },
+    {
+      "pos": [
+        41439,
+        41631
+      ],
+      "content": "b. For regression problems, we measure the accuracies of our prediction by looking at the squared error in the predictions, the coefficient of determination, and the like. We show these below.",
+      "nodes": [
+        {
+          "content": "b.",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "content": "For regression problems, we measure the accuracies of our prediction by looking at the squared error in the predictions, the coefficient of determination, and the like.",
+          "pos": [
+            3,
+            171
+          ]
+        },
+        {
+          "content": "We show these below.",
+          "pos": [
+            172,
+            192
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        41714,
+        41849
+      ],
+      "content": "We see that about the coefficient of determination is 0.709, implying about 71% of the variance is explained by our model coefficients."
+    },
+    {
+      "pos": [
+        41851,
+        42342
+      ],
+      "content": "<bpt id=\"p115\">**</bpt>Important note:<ept id=\"p115\">**</ept><ph id=\"ph116\"/> To learn more about Azure Machine Learning and how to access and use it, please refer to <bpt id=\"p116\">[</bpt>What's Machine Learning?<ept id=\"p116\">](machine-learning-what-is-machine-learning.md)</ept>. A very useful resource for playing with a bunch of Machine Learning experiments on Azure Machine Learning is the <bpt id=\"p117\">[</bpt>Cortana Analytics Gallery<ept id=\"p117\">](https://gallery.azureml.net/)</ept>. The Gallery covers a gamut of experiments and provides a thorough introduction into the range of capabilities of Azure Machine Learning.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p115\">**</bpt>Important note:<ept id=\"p115\">**</ept><ph id=\"ph116\"/> To learn more about Azure Machine Learning and how to access and use it, please refer to <bpt id=\"p116\">[</bpt>What's Machine Learning?<ept id=\"p116\">](machine-learning-what-is-machine-learning.md)</ept>.",
+          "pos": [
+            0,
+            282
+          ]
+        },
+        {
+          "content": "A very useful resource for playing with a bunch of Machine Learning experiments on Azure Machine Learning is the <bpt id=\"p117\">[</bpt>Cortana Analytics Gallery<ept id=\"p117\">](https://gallery.azureml.net/)</ept>.",
+          "pos": [
+            283,
+            496
+          ]
+        },
+        {
+          "content": "The Gallery covers a gamut of experiments and provides a thorough introduction into the range of capabilities of Azure Machine Learning.",
+          "pos": [
+            497,
+            633
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        42347,
+        42366
+      ],
+      "content": "License Information"
+    },
+    {
+      "pos": [
+        42368,
+        42568
+      ],
+      "content": "This sample walkthrough and its accompanying scripts are shared by Microsoft under the MIT license. Please check the LICENSE.txt file in in the directory of the sample code on GitHub for more details.",
+      "nodes": [
+        {
+          "content": "This sample walkthrough and its accompanying scripts are shared by Microsoft under the MIT license.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "Please check the LICENSE.txt file in in the directory of the sample code on GitHub for more details.",
+          "pos": [
+            100,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        42573,
+        42583
+      ],
+      "content": "References"
+    },
+    {
+      "pos": [
+        42585,
+        42898
+      ],
+      "content": "•   <bpt id=\"p118\">[</bpt>Andrés Monroy NYC Taxi Trips Download Page<ept id=\"p118\">](http://www.andresmh.com/nyctaxitrips/)</ept><ph id=\"ph117\"/>  \n•   <bpt id=\"p119\">[</bpt>FOILing NYC’s Taxi Trip Data by Chris Whong<ept id=\"p119\">](http://chriswhong.com/open-data/foil_nyc_taxi/)</ept><ph id=\"ph118\"/>   \n•   <bpt id=\"p120\">[</bpt>NYC Taxi and Limousine Commission Research and Statistics<ept id=\"p120\">](https://www1.nyc.gov/html/tlc/html/about/statistics.shtml)</ept>"
+    },
+    {
+      "pos": [
+        43508,
+        43694
+      ],
+      "content": "[project-columns]: https://msdn.microsoft.com/library/azure/1ec722fa-b623-4e26-a44e-a50c6d726223/\n[reader]: https://msdn.microsoft.com/library/azure/4e1b0fe6-aded-4b3f-a36f-39b8862b9004/"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"The Cortana Analytics Process in action: Use Hadoop clusters | Microsoft Azure\"\n    description=\"Using the Advanced Analytics Process and Technology (ADAPT) for an end-to-end scenario employing an HDInsight Hadoop cluster to build and deploy a model using a publicly available dataset.\"\n    services=\"machine-learning,hdinsight\"\n    documentationCenter=\"\"\n    authors=\"bradsev\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\" />\n\n<tags\n    ms.service=\"machine-learning\"\n    ms.workload=\"data-services\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/08/2016\"\n    ms.author=\"hangzh;bradsev\" />\n\n\n# The Cortana Analytics Process in action: using HDInsight Hadoop clusters\n\nIn this walkthrough, you use the Cortana Analytics Process in an end-to-end scenario using an [Azure HDInsight Hadoop cluster](https://azure.microsoft.com/services/hdinsight/) to store, explore and feature engineer data from the publicly available [NYC Taxi Trips](http://www.andresmh.com/nyctaxitrips/) dataset, and to down sample the data. Models of the data are built with Azure Machine Learning to handle binary and multiclass classification and regression predictive tasks.\n\nFor a walkthrough that shows how to handle a larger (1 terabyte) dataset for a similar scenario using HDInsight Hadoop clusters for data processing, see [Cortana Analytics Process - Using Azure HDInsight Hadoop Clusters on a 1 TB dataset](machine-learning-data-science-process-hive-criteo-walkthrough.md).\n\nIt is also possible to use an IPython notebook to accomplish the tasks presented the walkthrough using the 1 TB dataset. Users who would like to try this approach should consult the [Criteo walkthrough using a Hive ODBC connection](https://github.com/Azure/Azure-MachineLearning-DataScience/blob/master/Misc/DataScienceProcess/iPythonNotebooks/machine-Learning-data-science-process-hive-walkthrough-criteo.ipynb) topic.\n\n\n## <a name=\"dataset\"></a>NYC Taxi Trips Dataset description\n\nThe NYC Taxi Trip data is about 20GB of compressed comma-separated values (CSV) files (~48GB uncompressed), comprising more than 173 million individual trips and the fares paid for each trip. Each trip record includes the pickup and drop-off location and time, anonymized hack (driver's) license number and medallion (taxi’s unique id) number. The data covers all trips in the year 2013 and is provided in the following two datasets for each month:\n\n1. The 'trip_data' CSV files contain trip details, such as number of passengers, pickup and dropoff points, trip duration, and trip length. Here are a few sample records:\n\n        medallion,hack_license,vendor_id,rate_code,store_and_fwd_flag,pickup_datetime,dropoff_datetime,passenger_count,trip_time_in_secs,trip_distance,pickup_longitude,pickup_latitude,dropoff_longitude,dropoff_latitude\n        89D227B655E5C82AECF13C3F540D4CF4,BA96DE419E711691B9445D6A6307C170,CMT,1,N,2013-01-01 15:11:48,2013-01-01 15:18:10,4,382,1.00,-73.978165,40.757977,-73.989838,40.751171\n        0BD7C8F5BA12B88E0B67BED28BEA73D8,9FD8F69F0804BDB5549F40E9DA1BE472,CMT,1,N,2013-01-06 00:18:35,2013-01-06 00:22:54,1,259,1.50,-74.006683,40.731781,-73.994499,40.75066\n        0BD7C8F5BA12B88E0B67BED28BEA73D8,9FD8F69F0804BDB5549F40E9DA1BE472,CMT,1,N,2013-01-05 18:49:41,2013-01-05 18:54:23,1,282,1.10,-74.004707,40.73777,-74.009834,40.726002\n        DFD2202EE08F7A8DC9A57B02ACB81FE2,51EE87E3205C985EF8431D850C786310,CMT,1,N,2013-01-07 23:54:15,2013-01-07 23:58:20,2,244,.70,-73.974602,40.759945,-73.984734,40.759388\n        DFD2202EE08F7A8DC9A57B02ACB81FE2,51EE87E3205C985EF8431D850C786310,CMT,1,N,2013-01-07 23:25:03,2013-01-07 23:34:24,1,560,2.10,-73.97625,40.748528,-74.002586,40.747868\n\n2. The 'trip_fare' CSV files contain details of the fare paid for each trip, such as payment type, fare amount, surcharge and taxes, tips and tolls, and the total amount paid. Here are a few sample records:\n\n        medallion, hack_license, vendor_id, pickup_datetime, payment_type, fare_amount, surcharge, mta_tax, tip_amount, tolls_amount, total_amount\n        89D227B655E5C82AECF13C3F540D4CF4,BA96DE419E711691B9445D6A6307C170,CMT,2013-01-01 15:11:48,CSH,6.5,0,0.5,0,0,7\n        0BD7C8F5BA12B88E0B67BED28BEA73D8,9FD8F69F0804BDB5549F40E9DA1BE472,CMT,2013-01-06 00:18:35,CSH,6,0.5,0.5,0,0,7\n        0BD7C8F5BA12B88E0B67BED28BEA73D8,9FD8F69F0804BDB5549F40E9DA1BE472,CMT,2013-01-05 18:49:41,CSH,5.5,1,0.5,0,0,7\n        DFD2202EE08F7A8DC9A57B02ACB81FE2,51EE87E3205C985EF8431D850C786310,CMT,2013-01-07 23:54:15,CSH,5,0.5,0.5,0,0,6\n        DFD2202EE08F7A8DC9A57B02ACB81FE2,51EE87E3205C985EF8431D850C786310,CMT,2013-01-07 23:25:03,CSH,9.5,0.5,0.5,0,0,10.5\n\nThe unique key to join trip\\_data and trip\\_fare is composed of the fields: medallion, hack\\_licence and pickup\\_datetime.\n\nTo get all of the details relevant to a particular trip, it is sufficient to join with three keys: the \"medallion\", \"hack\\_license\" and \"pickup\\_datetime\".\n\nWe describe some more details of the data when we store them into Hive tables shortly.\n\n## <a name=\"mltasks\"></a>Examples of prediction tasks\nWhen approaching data, determining the kind of predictions you want to make based on its analysis helps clarify the tasks that you will need to include in your process.\nHere are three examples of prediction problems that we address in this walkthrough whose formulation is based on the *tip\\_amount*:\n\n1. **Binary classification**: Predict whether or not a tip was paid for a trip, i.e. a *tip\\_amount* that is greater than $0 is a positive example, while a *tip\\_amount* of $0 is a negative example.\n\n        Class 0 : tip_amount = $0\n        Class 1 : tip_amount > $0\n\n2. **Multiclass classification**: To predict the range of tip amounts paid for the trip. We divide the *tip\\_amount* into five bins or classes:\n\n        Class 0 : tip_amount = $0\n        Class 1 : tip_amount > $0 and tip_amount <= $5\n        Class 2 : tip_amount > $5 and tip_amount <= $10\n        Class 3 : tip_amount > $10 and tip_amount <= $20\n        Class 4 : tip_amount > $20\n\n3. **Regression task**: To predict the amount of the tip paid for a trip.  \n\n\n## <a name=\"setup\"></a>Set up an HDInsight Hadoop cluster for advanced analytics\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nYou can set up an Azure environment for advanced analytics that employs an HDInsight cluster in three steps:\n\n1. [Create a storage account](../storage-whatis-account.md): This storage account is used for storing data in Azure Blob Storage. The data used in HDInsight clusters also resides here.\n\n2. [Customize Azure HDInsight Hadoop clusters for the Advanced Analytics Process and Technology](machine-learning-data-science-customize-hadoop-cluster.md). This step creates an Azure HDInsight Hadoop cluster with 64-bit Anaconda Python 2.7 installed on all nodes. There are two important steps to remember while customizing your HDInsight cluster.\n\n    * Remember to link the storage account created in step 1 with your HDInsight cluster when creating it. This storage account is used to access data that is processed within the cluster.\n\n    * After the cluster is created, enable Remote Access to the head node of the cluster. Navigate to the **Configuration** tab and click **Enable Remote**. This step specifies the user credentials used for remote login.\n\n3. [Create an Azure Machine Learning workspace](machine-learning-create-workspace.md): This Azure Machine Learning workspace is used to build machine learning models. This task is addressed after completing an initial data exploration and down sampling using the HDInsight cluster.\n\n## <a name=\"getdata\"></a>Get the data from a public source\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nTo get the [NYC Taxi Trips](http://www.andresmh.com/nyctaxitrips/) dataset from its public location, you may use any of the methods described in [Move Data to and from Azure Blob Storage](machine-learning-data-science-move-azure-blob.md) to copy the data to your machine.\n\nHere we describe how use AzCopy to transfer the files containing data. To download and install AzCopy follow the instructions at [Getting Started with the AzCopy Command-Line Utility](../storage-use-azcopy.md).\n\n1. From a Command Prompt window, issue the following AzCopy commands, replacing *<path_to_data_folder>* with the desired destination:\n\n\n        \"C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\AzCopy\\azcopy\" /Source:https://nyctaxitrips.blob.core.windows.net/data /Dest:<path_to_data_folder> /S\n\n2. When the copy completes, a total of 24 zipped files are in the data folder chosen. Unzip the downloaded files to the same directory on your local machine. Make a note of the folder where the uncompressed files reside. This folder will be referred to as the *<path\\_to\\_unzipped_data\\_files\\>* is what follows.\n\n\n## <a name=\"upload\"></a>Upload the data to the default container of Azure HDInsight Hadoop cluster\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nIn the following AzCopy commands, replace the following parameters with the actual values that you specified when creating the Hadoop cluster and unzipping the data files.\n\n* ***&#60;path_to_data_folder>*** the directory (along with path) on your machine that contain the unzipped data files  \n* ***&#60;storage account name of Hadoop cluster>*** the storage account associated with your HDInsight cluster\n* ***&#60;default container of Hadoop cluster>*** the default container used by your cluster. Note that the name of the default container is usually the same name as the cluster itself. For example, if the cluster is called \"abc123.azurehdinsight.net\", the default container is abc123.\n* ***&#60;storage account key>*** the key for the storage account used by your cluster\n\nFrom a Command Prompt or a Windows PowerShell window in your machine, run the following two AzCopy commands.\n\nThis command uploads the trip data to ***nyctaxitripraw*** directory in the default container of the Hadoop cluster.\n\n        \"C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\AzCopy\\azcopy\" /Source:<path_to_unzipped_data_files> /Dest:https://<storage account name of Hadoop cluster>.blob.core.windows.net/<default container of Hadoop cluster>/nyctaxitripraw /DestKey:<storage account key> /S /Pattern:trip_data_*.csv\n\nThis command uploads the fare data to ***nyctaxifareraw*** directory in the default container of the Hadoop cluster.\n\n        \"C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\AzCopy\\azcopy\" /Source:<path_to_unzipped_data_files> /Dest:https://<storage account name of Hadoop cluster>.blob.core.windows.net/<default container of Hadoop cluster>/nyctaxifareraw /DestKey:<storage account key> /S /Pattern:trip_fare_*.csv\n\nThe data should now in Azure Blob Storage and ready to be consumed within the HDInsight cluster.\n\n## <a name=\"#download-hql-files\"></a>Log into the head node of Hadoop cluster and and prepare for exploratory data analysis\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nTo access the head node of the cluster for exploratory data analysis and down sampling of the data, follow the procedure outlined in [Access the Head Node of Hadoop Cluster](machine-learning-data-science-customize-hadoop-cluster.md#headnode).\n\nIn this walkthrough, we primarily use queries written in [Hive](https://hive.apache.org/), a SQL-like query language, to perform preliminary data explorations. The Hive queries are stored in .hql files. We then down sample this data to be used within Azure Machine Learning for building models.\n\nTo prepare the cluster for exploratory data analysis, we download the .hql files containing the relevant Hive scripts from [github](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts) to a local directory (C:\\temp) on the head node. To do this, open the **Command Prompt** from within the head node of the cluster and issue the following two commands:\n\n    set script='https://raw.githubusercontent.com/Azure/Azure-MachineLearning-DataScience/master/Misc/DataScienceProcess/DataScienceScripts/Download_DataScience_Scripts.ps1'\n\n    @powershell -NoProfile -ExecutionPolicy unrestricted -Command \"iex ((new-object net.webclient).DownloadString(%script%))\"\n\nThese two commands will download all .hql files needed in this walkthrough to the local directory ***C:\\temp&#92;*** in the head node.\n\n## <a name=\"#hive-db-tables\"></a>Create Hive database and tables partitioned by month\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nWe are now ready to create Hive tables for our NYC taxi dataset.\nIn the head node of the Hadoop cluster, open the ***Hadoop Command Line*** on the desktop of the head node, and enter the Hive directory by entering the command\n\n    cd %hive_home%\\bin\n\n>[AZURE.NOTE] **Run all Hive commands in this walkthrough from the above Hive bin/ directory prompt. This will take care of any path issues automatically. We use the terms \"Hive directory prompt\", \"Hive bin/ directory prompt\",  and \"Hadoop Command Line\" interchangeably in this walkthrough.**\n\nFrom the Hive directory prompt, enter the following command in Hadoop Command Line of the head node to submit the Hive query to create Hive database and tables:\n\n    hive -f \"C:\\temp\\sample_hive_create_db_and_tables.hql\"\n\nHere is the content of the ***C:\\temp\\sample\\_hive\\_create\\_db\\_and\\_tables.hql*** file which creates Hive database ***nyctaxidb*** and tables ***trip*** and ***fare***.\n\n    create database if not exists nyctaxidb;\n\n    create external table if not exists nyctaxidb.trip\n    (\n        medallion string,\n        hack_license string,\n        vendor_id string,\n        rate_code string,\n        store_and_fwd_flag string,\n        pickup_datetime string,\n        dropoff_datetime string,\n        passenger_count int,\n        trip_time_in_secs double,\n        trip_distance double,\n        pickup_longitude double,\n        pickup_latitude double,\n        dropoff_longitude double,\n        dropoff_latitude double)  \n    PARTITIONED BY (month int)\n    ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' lines terminated by '\\n'\n    STORED AS TEXTFILE LOCATION 'wasb:///nyctaxidbdata/trip' TBLPROPERTIES('skip.header.line.count'='1');\n\n    create external table if not exists nyctaxidb.fare\n    (\n        medallion string,\n        hack_license string,\n        vendor_id string,\n        pickup_datetime string,\n        payment_type string,\n        fare_amount double,\n        surcharge double,\n        mta_tax double,\n        tip_amount double,\n        tolls_amount double,\n        total_amount double)\n    PARTITIONED BY (month int)\n    ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' lines terminated by '\\n'\n    STORED AS TEXTFILE LOCATION 'wasb:///nyctaxidbdata/fare' TBLPROPERTIES('skip.header.line.count'='1');\n\nThis Hive script creates two tables:\n\n* the \"trip\" table contains trip details of each ride (driver details, pickup time, trip distance and times)\n* the \"fare\" table contains fare details (fare amount, tip amount, tolls and surcharges).\n\nIf you need any additional assistance with these procedures or want to investigate alternative ones, see the section [Submit Hive queries directly from the Hadoop Command Line ](machine-learning-data-science-process-hive-tables.md#submit).\n\n## <a name=\"#load-data\"></a>Load Data to Hive tables by partitions\n\n>[AZURE.NOTE] This is typically an **Admin** task.\n\nThe NYC taxi dataset has a natural partitioning by month, which we use to enable faster processing and query times. The PowerShell commands below (issued from the Hive directory using the **Hadoop Command Line**) load data to the \"trip\" and \"fare\" Hive tables partitioned by month.\n\n    for /L %i IN (1,1,12) DO (hive -hiveconf MONTH=%i -f \"C:\\temp\\sample_hive_load_data_by_partitions.hql\")\n\nThe *sample\\_hive\\_load\\_data\\_by\\_partitions.hql* file contains the following **LOAD** commands.\n\n    LOAD DATA INPATH 'wasb:///nyctaxitripraw/trip_data_${hiveconf:MONTH}.csv' INTO TABLE nyctaxidb.trip PARTITION (month=${hiveconf:MONTH});\n    LOAD DATA INPATH 'wasb:///nyctaxifareraw/trip_fare_${hiveconf:MONTH}.csv' INTO TABLE nyctaxidb.fare PARTITION (month=${hiveconf:MONTH});\n\nNote that a number of Hive queries we use here in the exploration process involve looking at just a single partition or at only a couple of partitions. But these queries could be run across the entire data.\n\n### <a name=\"#show-db\"></a>Show databases in the HDInsight Hadoop cluster\n\nTo show the databases created in HDInsight Hadoop cluster inside the Hadoop Command Line window, run the following command in Hadoop Command Line:\n\n    hive -e \"show databases;\"\n\n### <a name=\"#show-tables\"></a>Show the Hive tables in the nyctaxidb database\n\nTo show the tables in the nyctaxidb database, run the following command in Hadoop Command Line:\n\n    hive -e \"show tables in nyctaxidb;\"\n\nWe can confirm that the tables are partitioned by issuing the command below:\n\n    hive -e \"show partitions nyctaxidb.trip;\"\n\nThe expected output is shown below:\n\n    month=1\n    month=10\n    month=11\n    month=12\n    month=2\n    month=3\n    month=4\n    month=5\n    month=6\n    month=7\n    month=8\n    month=9\n    Time taken: 2.075 seconds, Fetched: 12 row(s)\n\nSimilarly, we can ensure that the fare table is partitioned by issuing the command below:\n\n    hive -e \"show partitions nyctaxidb.fare;\"\n\nThe expected output is shown below:\n\n    month=1\n    month=10\n    month=11\n    month=12\n    month=2\n    month=3\n    month=4\n    month=5\n    month=6\n    month=7\n    month=8\n    month=9\n    Time taken: 1.887 seconds, Fetched: 12 row(s)\n\n## <a name=\"#explore-hive\"></a>Data exploration and feature engineering in Hive\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nThe data exploration and feature engineering tasks for the data loaded into the Hive tables can be accomplished using Hive queries. Here are examples of such tasks that we walk you through in this section:\n\n- View the top 10 records in both tables.\n- Explore data distributions of a few fields in varying time windows.\n- Investigate data quality of the longitude and latitude fields.\n- Generate binary and multiclass classification labels based on the **tip\\_amount**.\n- Generate features by computing the direct trip distances.\n\n### Exploration: View the top 10 records in table trip\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nTo see what the data looks like, we examine 10 records from each table. Run the following two queries separately from the Hive directory prompt in the Hadoop Command Line console to inspect the records.\n\nTo get the top 10 records in the table \"trip\" from the first month:\n\n    hive -e \"select * from nyctaxidb.trip where month=1 limit 10;\"\n\nTo get the top 10 records in the table \"fare\" from the first month:\n\n    hive -e \"select * from nyctaxidb.fare where month=1 limit 10;\"\n\nIt is often useful to save the records to a file for convenient viewing. A small change to the above query accomplishes this:\n\n    hive -e \"select * from nyctaxidb.fare where month=1 limit 10;\" > C:\\temp\\testoutput\n\n### Exploration: View the number of records in each of the 12 partitions\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nOf interest is the how the number of trips varies during the calendar year. Grouping by month allows us to see what this distribution of trips looks like.\n\n    hive -e \"select month, count(*) from nyctaxidb.trip group by month;\"\n\nThis gives us the output :\n\n    1       14776615\n    2       13990176\n    3       15749228\n    4       15100468\n    5       15285049\n    6       14385456\n    7       13823840\n    8       12597109\n    9       14107693\n    10      15004556\n    11      14388451\n    12      13971118\n    Time taken: 283.406 seconds, Fetched: 12 row(s)\n\nHere, the first column is the month and the second is the number of trips for that month.\n\nWe can also count the total number of records in our trip data set by issuing the following command at the Hive directory prompt.\n\n    hive -e \"select count(*) from nyctaxidb.trip;\"\n\nThis yields:\n\n    173179759\n    Time taken: 284.017 seconds, Fetched: 1 row(s)\n\nUsing commands similar to those shown for the trip data set, we can issue Hive queries from the Hive directory prompt for the fare data set to validate the number of records.\n\n    hive -e \"select month, count(*) from nyctaxidb.fare group by month;\"\n\nThis gives us the output:\n\n    1       14776615\n    2       13990176\n    3       15749228\n    4       15100468\n    5       15285049\n    6       14385456\n    7       13823840\n    8       12597109\n    9       14107693\n    10      15004556\n    11      14388451\n    12      13971118\n    Time taken: 253.955 seconds, Fetched: 12 row(s)\n\nNote that the exact same number of trips per month is returned for both data sets. This provides the first validation that the data has been loaded correctly.\n\nCounting the total number of records in the fare data set can be done using the command below from the Hive directory prompt:\n\n    hive -e \"select count(*) from nyctaxidb.fare;\"\n\nThis yields :\n\n    173179759\n    Time taken: 186.683 seconds, Fetched: 1 row(s)\n\nThe total number of records in both tables is also the same. This provides a second validation that the data has been loaded correctly.\n\n### Exploration: Trip distribution by medallion\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nThis example identifies the medallion (taxi numbers) with more than 100 trips within a given time period. The query benefits from the partitioned table access since it is conditioned by the partition variable **month**. The query results are written to a local file queryoutput.tsv in `C:\\temp` on the head node.\n\n    hive -f \"C:\\temp\\sample_hive_trip_count_by_medallion.hql\" > C:\\temp\\queryoutput.tsv\n\nHere is the content of *sample\\_hive\\_trip\\_count\\_by\\_medallion.hql* file for inspection.\n\n    SELECT medallion, COUNT(*) as med_count\n    FROM nyctaxidb.fare\n    WHERE month<=3\n    GROUP BY medallion\n    HAVING med_count > 100\n    ORDER BY med_count desc;\n\nThe medallion in the NYC taxi data set identifies a unique cab. We can identify which cabs are \"busy\" by asking which ones made more than a certain number of trips in a particular time period. The following example identifies cabs that made more than a hundred trips in the first three months, and saves the query results to a local file, C:\\temp\\queryoutput.tsv.\n\nHere is the content of *sample\\_hive\\_trip\\_count\\_by\\_medallion.hql* file for inspection.\n\n    SELECT medallion, COUNT(*) as med_count\n    FROM nyctaxidb.fare\n    WHERE month<=3\n    GROUP BY medallion\n    HAVING med_count > 100\n    ORDER BY med_count desc;\n\nFrom the Hive directory prompt, issue the command below :\n\n    hive -f \"C:\\temp\\sample_hive_trip_count_by_medallion.hql\" > C:\\temp\\queryoutput.tsv\n\n### Exploration: Trip distribution by medallion and hack_license\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nWhen exploring a dataset, we frequently want to examine the number of co-occurences of groups of values. This section provide an example of how to do this for cabs and drivers.\n\nThe *sample\\_hive\\_trip\\_count\\_by\\_medallion\\_license.hql* file groups the fare data set on \"medallion\" and \"hack_license\" and returns counts of each combination. Below are its contents.\n\n    SELECT medallion, hack_license, COUNT(*) as trip_count\n    FROM nyctaxidb.fare\n    WHERE month=1\n    GROUP BY medallion, hack_license\n    HAVING trip_count > 100\n    ORDER BY trip_count desc;\n\nThis query returns cab and particular driver combinations ordered by descending number of trips.\n\nFrom the Hive directory prompt, run :\n\n    hive -f \"C:\\temp\\sample_hive_trip_count_by_medallion_license.hql\" > C:\\temp\\queryoutput.tsv\n\nThe query results are written to a local file C:\\temp\\queryoutput.tsv.\n\n### Exploration: Assessing data quality by checking for invalid longitude/latitude records\n\n>[AZURE.NOTE] This is typically a **Data Scientist** task.\n\nA common objective of exploratory data analysis is to weed out invalid or bad records. The example in this section determines whether either the longitude or latitude fields contain a value far outside the NYC area. Since it is likely that such records have an erroneous longitude-latitude values, we want to eliminate them from any data that is to be used for modeling.\n\nHere is the content of *sample\\_hive\\_quality\\_assessment.hql* file for inspection.\n\n        SELECT COUNT(*) FROM nyctaxidb.trip\n        WHERE month=1\n        AND  (CAST(pickup_longitude AS float) NOT BETWEEN -90 AND -30\n        OR    CAST(pickup_latitude AS float) NOT BETWEEN 30 AND 90\n        OR    CAST(dropoff_longitude AS float) NOT BETWEEN -90 AND -30\n        OR    CAST(dropoff_latitude AS float) NOT BETWEEN 30 AND 90);\n\n\nFrom the Hive directory prompt, run :\n\n    hive -S -f \"C:\\temp\\sample_hive_quality_assessment.hql\"\n\nThe *-S* argument included in this command suppresses the status screen printout of the Hive Map/Reduce jobs. This is useful because it makes the screen print of the Hive query output more readable.\n\n### Exploration: Binary class distributions of trip tips\n\n**Note:** This is typically a **Data Scientist** task.\n\nFor the binary classification problem outlined in the [Examples of prediction tasks](machine-learning-data-science-process-hive-walkthrough.md#mltasks) section, it is useful to know whether a tip was given or not. This distribution of tips is binary:\n\n* tip given(Class 1, tip\\_amount > $0)  \n* no tip (Class 0, tip\\_amount = $0).\n\nThe *sample\\_hive\\_tipped\\_frequencies.hql* file shown below does this.\n\n    SELECT tipped, COUNT(*) AS tip_freq\n    FROM\n    (\n        SELECT if(tip_amount > 0, 1, 0) as tipped, tip_amount\n        FROM nyctaxidb.fare\n    )tc\n    GROUP BY tipped;\n\nFrom the Hive directory prompt, run:\n\n    hive -f \"C:\\temp\\sample_hive_tipped_frequencies.hql\"\n\n\n### Exploration: Class distributions in the multiclass setting\n\n**Note:** This is typically a **Data Scientist** task.\n\nFor the multiclass classification problem outlined in the [Examples of prediction tasks](machine-learning-data-science-process-hive-walkthrough.md#mltasks) section this data set also lends itself to a natural classification where we would like to predict the amount of the tips given. We can use bins to define tip ranges in the query. To get the class distributions for the various tip ranges, we use the *sample\\_hive\\_tip\\_range\\_frequencies.hql* file. Below are its contents.\n\n    SELECT tip_class, COUNT(*) AS tip_freq\n    FROM\n    (\n        SELECT if(tip_amount=0, 0,\n            if(tip_amount>0 and tip_amount<=5, 1,\n            if(tip_amount>5 and tip_amount<=10, 2,\n            if(tip_amount>10 and tip_amount<=20, 3, 4)))) as tip_class, tip_amount\n        FROM nyctaxidb.fare\n    )tc\n    GROUP BY tip_class;\n\nRun the following command from Hadoop Command Line console:\n\n    hive -f \"C:\\temp\\sample_hive_tip_range_frequencies.hql\"\n\n### Exploration: Compute Direct Distance Between Two Longitude-Latitude Locations\n\n**Note:** This is typically a **Data Scientist** task.\n\nHaving a measure of the direct distance allows us to find out the discrepancy between it and the actual trip distance. We motivate this feature by pointing out that a passenger might be less likely to tip if they figure out that the driver has intentionally taken them by a much longer route.\n\nTo see the comparison between actual trip distance and the [Haversine distance](http://en.wikipedia.org/wiki/Haversine_formula) between two longitude-latitude points (the \"great circle\" distance), we use the trigonometric functions available within Hive, thus :\n\n    set R=3959;\n    set pi=radians(180);\n\n    insert overwrite directory 'wasb:///queryoutputdir'\n\n    select pickup_longitude, pickup_latitude, dropoff_longitude, dropoff_latitude, trip_distance, trip_time_in_secs,\n    ${hiveconf:R}*2*2*atan((1-sqrt(1-pow(sin((dropoff_latitude-pickup_latitude)\n     *${hiveconf:pi}/180/2),2)-cos(pickup_latitude*${hiveconf:pi}/180)\n     *cos(dropoff_latitude*${hiveconf:pi}/180)*pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2)))\n     /sqrt(pow(sin((dropoff_latitude-pickup_latitude)*${hiveconf:pi}/180/2),2)\n     +cos(pickup_latitude*${hiveconf:pi}/180)*cos(dropoff_latitude*${hiveconf:pi}/180)*\n     pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2))) as direct_distance\n    from nyctaxidb.trip\n    where month=1\n    and pickup_longitude between -90 and -30\n    and pickup_latitude between 30 and 90\n    and dropoff_longitude between -90 and -30\n    and dropoff_latitude between 30 and 90;\n\nIn the query above, R is the radius of the Earth in miles, and pi is converted to radians. Note that the longitude-latitude points are \"filtered\" to remove values that are far from the NYC area.\n\nIn this case, we write our results to a directory called \"queryoutputdir\". The sequence of commands shown below first creates this output directory, and then runs the Hive command.\n\nFrom the Hive directory prompt, run:\n\n    hdfs dfs -mkdir wasb:///queryoutputdir\n\n    hive -f \"C:\\temp\\sample_hive_trip_direct_distance.hql\"\n\n\nThe query results are written to 9 Azure blobs ***queryoutputdir/000000\\_0*** to  ***queryoutputdir/000008\\_0*** under the default container of the Hadoop cluster.\n\nTo see the size of the individual blobs, we run the following command from the Hive directory prompt :\n\n    hdfs dfs -ls wasb:///queryoutputdir\n\nTo see the contents of a given file, say 000000\\_0, we use Hadoop's `copyToLocal` command, thus.\n\n    hdfs dfs -copyToLocal wasb:///queryoutputdir/000000_0 C:\\temp\\tempfile\n\n**Warning:** `copyToLocal` can be very slow for large files, and is not recommended for use with them.  \n\nA key advantage of having this data reside in an Azure blob is that we may explore the data within Azure Machine Learning using the [Reader][reader] module.\n\n\n## <a name=\"#downsample\"></a>Down sample data and build models in Azure Machine Learning\n\n**Note:** This is typically a **Data Scientist** task.\n\nAfter the exploratory data analysis phase, we are now ready to down sample the data for building models in Azure Machine Learning. In this section, we show how to use a Hive query to down sample the data, which is then accessed from the [Reader][reader] module in Azure Machine Learning.\n\n### Down sampling the data\n\nThere are two steps in this procedure. First we join the **nyctaxidb.trip** and **nyctaxidb.fare** tables on three keys that are present in all records : \"medallion\", \"hack\\_license\", and \"pickup\\_datetime\". We then generate a binary classification label **tipped** and a multi-class classification label **tip\\_class**.\n\nTo be able to use the down sampled data directly from the [Reader][reader] module in Azure Machine Learning, it is necessary to store the results of the above query to an internal Hive table. In what follows, we create an internal Hive table and populate its contents with the joined and down sampled data.\n\nThe query applies standard Hive functions directly to generate the hour of day, week of year, weekday (1 stands for Monday, and 7 stands for Sunday) from the \"pickup\\_datetime\" field,  and the direct distance between the pickup and dropoff locations. Users can refer to [LanguageManual UDF](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF) for a complete list of such functions.\n\nThe query then down samples the data so that the query results can fit into the Azure Machine Learning Studio. Only about 1% of the original dataset is imported into the Studio.\n\nBelow are the contents of *sample\\_hive\\_prepare\\_for\\_aml\\_full.hql* file that prepares data for model building in Azure Machine Learning.\n\n        set R = 3959;\n        set pi=radians(180);\n\n        create table if not exists nyctaxidb.nyctaxi_downsampled_dataset (\n\n        medallion string,\n        hack_license string,\n        vendor_id string,\n        rate_code string,\n        store_and_fwd_flag string,\n        pickup_datetime string,\n        dropoff_datetime string,\n        pickup_hour string,\n        pickup_week string,\n        weekday string,\n        passenger_count int,\n        trip_time_in_secs double,\n        trip_distance double,\n        pickup_longitude double,\n        pickup_latitude double,\n        dropoff_longitude double,\n        dropoff_latitude double,\n        direct_distance double,\n        payment_type string,\n        fare_amount double,\n        surcharge double,\n        mta_tax double,\n        tip_amount double,\n        tolls_amount double,\n        total_amount double,\n        tipped string,\n        tip_class string\n        )\n        row format delimited fields terminated by ','\n        lines terminated by '\\n'\n        stored as textfile;\n\n        --- now insert contents of the join into the above internal table\n\n        insert overwrite table nyctaxidb.nyctaxi_downsampled_dataset\n        select\n        t.medallion,\n        t.hack_license,\n        t.vendor_id,\n        t.rate_code,\n        t.store_and_fwd_flag,\n        t.pickup_datetime,\n        t.dropoff_datetime,\n        hour(t.pickup_datetime) as pickup_hour,\n        weekofyear(t.pickup_datetime) as pickup_week,\n        from_unixtime(unix_timestamp(t.pickup_datetime, 'yyyy-MM-dd HH:mm:ss'),'u') as weekday,\n        t.passenger_count,\n        t.trip_time_in_secs,\n        t.trip_distance,\n        t.pickup_longitude,\n        t.pickup_latitude,\n        t.dropoff_longitude,\n        t.dropoff_latitude,\n        t.direct_distance,\n        f.payment_type,\n        f.fare_amount,\n        f.surcharge,\n        f.mta_tax,\n        f.tip_amount,\n        f.tolls_amount,\n        f.total_amount,\n        if(tip_amount>0,1,0) as tipped,\n        if(tip_amount=0,0,\n        if(tip_amount>0 and tip_amount<=5,1,\n        if(tip_amount>5 and tip_amount<=10,2,\n        if(tip_amount>10 and tip_amount<=20,3,4)))) as tip_class\n\n        from\n        (\n        select\n        medallion,\n        hack_license,\n        vendor_id,\n        rate_code,\n        store_and_fwd_flag,\n        pickup_datetime,\n        dropoff_datetime,\n        passenger_count,\n        trip_time_in_secs,\n        trip_distance,\n        pickup_longitude,\n        pickup_latitude,\n        dropoff_longitude,\n        dropoff_latitude,\n        ${hiveconf:R}*2*2*atan((1-sqrt(1-pow(sin((dropoff_latitude-pickup_latitude)\n        *${hiveconf:pi}/180/2),2)-cos(pickup_latitude*${hiveconf:pi}/180)\n        *cos(dropoff_latitude*${hiveconf:pi}/180)*pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2)))\n        /sqrt(pow(sin((dropoff_latitude-pickup_latitude)*${hiveconf:pi}/180/2),2)\n        +cos(pickup_latitude*${hiveconf:pi}/180)*cos(dropoff_latitude*${hiveconf:pi}/180)*pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2))) as direct_distance,\n        rand() as sample_key\n\n        from nyctaxidb.trip\n        where pickup_latitude between 30 and 90\n            and pickup_longitude between -90 and -30\n            and dropoff_latitude between 30 and 90\n            and dropoff_longitude between -90 and -30\n        )t\n        join\n        (\n        select\n        medallion,\n        hack_license,\n        vendor_id,\n        pickup_datetime,\n        payment_type,\n        fare_amount,\n        surcharge,\n        mta_tax,\n        tip_amount,\n        tolls_amount,\n        total_amount\n        from nyctaxidb.fare\n        )f\n        on t.medallion=f.medallion and t.hack_license=f.hack_license and t.pickup_datetime=f.pickup_datetime\n        where t.sample_key<=0.01\n\nTo run this query, from the Hive directory prompt :\n\n    hive -f \"C:\\temp\\sample_hive_prepare_for_aml_full.hql\"\n\nWe now have an internal table \"nyctaxidb.nyctaxi_downsampled_dataset\" which can be accessed using the [Reader][reader] module from Azure Machine Learning. Furthermore, we may use this dataset for building Machine Learning models.  \n\n### Use the Reader module in Azure Machine Learning to access the down sampled data\n\nAs prerequisites for issuing Hive queries in the [Reader][reader] module of Azure Machine Learning, we need access to an Azure Machine Learning workspace and access to the credentials of the cluster and its associated storage account.\n\nSome details on the [Reader][reader] module and the parameters to input :\n\n**HCatalog server URI**: If the cluster name is abc123, then this is simply : https://abc123.azurehdinsight.net\n\n**Hadoop user account name** : The user name chosen for the cluster (**not** the remote access user name)\n\n**Hadoop ser account password** : The password chosen for the cluster (**not** the remote access password)\n\n**Location of output data** : This is chosen to be Azure.\n\n**Azure storage account name** : Name of the default storage account associated with the cluster.\n\n**Azure container name** : This is the default container name for the cluster, and is typically the same as the cluster name. For a cluster called \"abc123\", this is just abc123.\n\n**Important Note:** **Any table we wish to query using the [Reader][reader] module in Azure Machine Learning must be an internal table.** A tip for determining if a table T in a database D.db is an internal table is as follows.\n\nFrom the Hive directory prompt, issue the command :\n\n    hdfs dfs -ls wasb:///D.db/T\n\nIf the table is an internal table and it is populated, its contents must show here. Another way to determine whether a table is an internal table is to use the Azure Storage Explorer. Use it to navigate to the default container name of the cluster, and then filter by the table name. If the table and its contents show up, this confirms that it is an internal table.\n\nHere is a snapshot of the Hive query and the [Reader][reader] module:\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/1eTYf52.png)\n\nNote that since our down sampled data resides in the default container, the resulting Hive query from Azure Machine Learning is very simple and is just a \"SELECT * FROM nyctaxidb.nyctaxi\\_downsampled\\_data\".\n\nThe dataset may now be used as the starting point for building Machine Learning models.\n\n### <a name=\"mlmodel\"></a>Build models in Azure Machine Learning\n\nWe are now able to proceed to model building and model deployment in [Azure Machine Learning](https://studio.azureml.net). The data is ready for us to use in addressing the prediction problems identified above:\n\n**1. Binary classification**: To predict whether or not a tip was paid for a trip.\n\n**Learner used:** Two-class logistic regression\n\na. For this problem, our target (or class) label is \"tipped\". Our original down-sampled dataset has a few columns that are target leaks for this classification experiment. In particular : tip\\_class, tip\\_amount, and total\\_amount reveal information about the target label that is not available at testing time. We remove these columns from consideration using the [Project Columns][project-columns] module.\n\nThe snapshot below shows our experiment to predict whether or not a tip was paid for a given trip.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/QGxRz5A.png)\n\nb. For this experiment, our target label distributions were roughly 1:1.\n\nThe snapshot below shows the distribution of tip class labels for the binary classification problem.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/9mM4jlD.png)\n\nAs a result, we obtain an AUC of 0.987 as shown in the figure below.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/8JDT0F8.png)\n\n**2. Multiclass classification**: To predict the range of tip amounts paid for the trip, using the previously defined classes.\n\n**Learner used:** Multiclass logistic regression\n\na. For this problem, our target (or class) label is \"tip\\_class\" which can take one of five values (0,1,2,3,4). As in the binary classification case, we have a few columns that are target leaks for this experiment. In particular : tipped, tip\\_amount, total\\_amount reveal information about the target label that is not available at testing time. We remove these columns using the [Project Columns][project-columns] module.\n\nThe snapshot below shows our experiment to predict in which bin a tip is likely to fall ( Class 0: tip = $0, class 1 : tip > $0 and tip <= $5, Class 2 : tip > $5 and tip <= $10, Class 3 : tip > $10 and tip <= $20, Class 4 : tip > $20)\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/5ztv0n0.png)\n\nWe now show what our actual test class distribution looks like. We see that while Class 0 and Class 1 are prevalent, the other classes are rare.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/Vy1FUKa.png)\n\nb. For this experiment, we use a confusion matrix to look at our prediction accuracies. This is shown below.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/cxFmErM.png)\n\nNote that while our class accuracies on the prevalent classes is quite good, the model does not do a good job of \"learning\" on the rarer classes.\n\n\n**3. Regression task**: To predict the amount of tip paid for a trip.\n\n**Learner used:** Boosted decision tree\n\na. For this problem, our target (or class) label is \"tip\\_amount\". Our target leaks in this case are : tipped, tip\\_class, total\\_amount ; all these variables reveal information about the tip amount that is typically unavailable at testing time. We remove these columns using the [Project Columns][project-columns] module.\n\nThe snapshot belows shows our experiment to predict the amount of the given tip.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/11TZWgV.png)\n\nb. For regression problems, we measure the accuracies of our prediction by looking at the squared error in the predictions, the coefficient of determination, and the like. We show these below.\n\n![](./media/machine-learning-data-science-process-hive-walkthrough/Jat9mrz.png)\n\nWe see that about the coefficient of determination is 0.709, implying about 71% of the variance is explained by our model coefficients.\n\n**Important note:** To learn more about Azure Machine Learning and how to access and use it, please refer to [What's Machine Learning?](machine-learning-what-is-machine-learning.md). A very useful resource for playing with a bunch of Machine Learning experiments on Azure Machine Learning is the [Cortana Analytics Gallery](https://gallery.azureml.net/). The Gallery covers a gamut of experiments and provides a thorough introduction into the range of capabilities of Azure Machine Learning.\n\n## License Information\n\nThis sample walkthrough and its accompanying scripts are shared by Microsoft under the MIT license. Please check the LICENSE.txt file in in the directory of the sample code on GitHub for more details.\n\n## References\n\n•   [Andrés Monroy NYC Taxi Trips Download Page](http://www.andresmh.com/nyctaxitrips/)  \n•   [FOILing NYC’s Taxi Trip Data by Chris Whong](http://chriswhong.com/open-data/foil_nyc_taxi/)   \n•   [NYC Taxi and Limousine Commission Research and Statistics](https://www1.nyc.gov/html/tlc/html/about/statistics.shtml)\n\n\n[2]: ./media/machine-learning-data-science-process-hive-walkthrough/output-hive-results-3.png\n[11]: ./media/machine-learning-data-science-process-hive-walkthrough/hive-reader-properties.png\n[12]: ./media/machine-learning-data-science-process-hive-walkthrough/binary-classification-training.png\n[13]: ./media/machine-learning-data-science-process-hive-walkthrough/create-scoring-experiment.png\n[14]: ./media/machine-learning-data-science-process-hive-walkthrough/binary-classification-scoring.png\n[15]: ./media/machine-learning-data-science-process-hive-walkthrough/amlreader.png\n\n<!-- Module References -->\n[project-columns]: https://msdn.microsoft.com/library/azure/1ec722fa-b623-4e26-a44e-a50c6d726223/\n[reader]: https://msdn.microsoft.com/library/azure/4e1b0fe6-aded-4b3f-a36f-39b8862b9004/\n"
+}

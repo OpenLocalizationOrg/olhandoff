@@ -1,0 +1,735 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        95
+      ],
+      "content": "Analyze Twitter data with Apache Hive on HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        114,
+        287
+      ],
+      "content": "Learn how to use Python to store Tweets that contain specific keywords, then use Hive and Hadoop on HDInsight to transform the raw TWitter data into a searchable Hive table."
+    },
+    {
+      "pos": [
+        617,
+        661
+      ],
+      "content": "Analyze Twitter data using Hive in HDInsight"
+    },
+    {
+      "pos": [
+        663,
+        928
+      ],
+      "content": "In this document, you will get tweets by using a Twitter streaming API and then use Apache Hive on a Linux-based HDInsight cluster to process the JSON formatted data. The result will be a list of Twitter users who sent the most tweets that contained a certain word.",
+      "nodes": [
+        {
+          "content": "In this document, you will get tweets by using a Twitter streaming API and then use Apache Hive on a Linux-based HDInsight cluster to process the JSON formatted data.",
+          "pos": [
+            0,
+            166
+          ]
+        },
+        {
+          "content": "The result will be a list of Twitter users who sent the most tweets that contained a certain word.",
+          "pos": [
+            167,
+            265
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        932,
+        1263
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> While individual pieces of this document can be used with Windows-based HDInsight clusters (Python and Hive for example,) many steps are based on using a Linux-based HDInsight cluster. For steps specific to a Windows-based cluster, see <bpt id=\"p1\">[</bpt>Analyze Twitter data using Hive in HDInsight<ept id=\"p1\">](hdinsight-analyze-twitter-data.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> While individual pieces of this document can be used with Windows-based HDInsight clusters (Python and Hive for example,) many steps are based on using a Linux-based HDInsight cluster.",
+          "pos": [
+            0,
+            229
+          ]
+        },
+        {
+          "content": "For steps specific to a Windows-based cluster, see <bpt id=\"p1\">[</bpt>Analyze Twitter data using Hive in HDInsight<ept id=\"p1\">](hdinsight-analyze-twitter-data.md)</ept>.",
+          "pos": [
+            230,
+            401
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1268,
+        1281
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1283,
+        1343
+      ],
+      "content": "Before you begin this tutorial, you must have the following:"
+    },
+    {
+      "pos": [
+        1347,
+        1554
+      ],
+      "content": "A <bpt id=\"p2\">__</bpt>Linux-based Azure HDInsight cluster<ept id=\"p2\">__</ept>. For information on creating a cluster, see <bpt id=\"p3\">[</bpt>Get Started with Linux-based HDInsight<ept id=\"p3\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept><ph id=\"ph4\"/> for steps on creating a cluster.",
+      "nodes": [
+        {
+          "content": "A <bpt id=\"p2\">__</bpt>Linux-based Azure HDInsight cluster<ept id=\"p2\">__</ept>.",
+          "pos": [
+            0,
+            80
+          ]
+        },
+        {
+          "content": "For information on creating a cluster, see <bpt id=\"p3\">[</bpt>Get Started with Linux-based HDInsight<ept id=\"p3\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept><ph id=\"ph4\"/> for steps on creating a cluster.",
+          "pos": [
+            81,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1558,
+        1666
+      ],
+      "content": "An <bpt id=\"p4\">__</bpt>SSH client<ept id=\"p4\">__</ept>. For more information on using SSH with Linux-based HDInsight, see the following articles:",
+      "nodes": [
+        {
+          "content": "An <bpt id=\"p4\">__</bpt>SSH client<ept id=\"p4\">__</ept>.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "For more information on using SSH with Linux-based HDInsight, see the following articles:",
+          "pos": [
+            57,
+            146
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1674,
+        1786
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X<ept id=\"p5\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        1794,
+        1896
+      ],
+      "content": "<bpt id=\"p6\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p6\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept>"
+    },
+    {
+      "pos": [
+        1900,
+        1954
+      ],
+      "content": "<bpt id=\"p7\">__</bpt>Python<ept id=\"p7\">__</ept><ph id=\"ph5\"/> and <bpt id=\"p8\">[</bpt>pip<ept id=\"p8\">](https://pypi.python.org/pypi/pip)</ept>"
+    },
+    {
+      "pos": [
+        1958,
+        2065
+      ],
+      "content": "The <bpt id=\"p9\">__</bpt>Azure CLI<ept id=\"p9\">__</ept>. For more information, see <bpt id=\"p10\">[</bpt>Install and configure the Azure CLI<ept id=\"p10\">](../xplat-cli-install.md)</ept>",
+      "nodes": [
+        {
+          "content": "The <bpt id=\"p9\">__</bpt>Azure CLI<ept id=\"p9\">__</ept>.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p10\">[</bpt>Install and configure the Azure CLI<ept id=\"p10\">](../xplat-cli-install.md)</ept>",
+          "pos": [
+            57,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2069,
+        2087
+      ],
+      "content": "Get a Twitter feed"
+    },
+    {
+      "pos": [
+        2089,
+        2432
+      ],
+      "content": "Twitter allows you to retrieve the <bpt id=\"p11\">[</bpt>data for each tweet<ept id=\"p11\">](https://dev.twitter.com/docs/platform-objects/tweets)</ept><ph id=\"ph6\"/> as a JavaScript Object Notation (JSON) document through a REST API. <bpt id=\"p12\">[</bpt>OAuth<ept id=\"p12\">](http://oauth.net)</ept><ph id=\"ph7\"/> is required for authentication to the API. You must also create a <bpt id=\"p13\">_</bpt>Twitter Application<ept id=\"p13\">_</ept><ph id=\"ph8\"/> that contains the settings used to access the API.",
+      "nodes": [
+        {
+          "content": "Twitter allows you to retrieve the <bpt id=\"p11\">[</bpt>data for each tweet<ept id=\"p11\">](https://dev.twitter.com/docs/platform-objects/tweets)</ept><ph id=\"ph6\"/> as a JavaScript Object Notation (JSON) document through a REST API.",
+          "pos": [
+            0,
+            232
+          ]
+        },
+        {
+          "content": "<bpt id=\"p12\">[</bpt>OAuth<ept id=\"p12\">](http://oauth.net)</ept><ph id=\"ph7\"/> is required for authentication to the API.",
+          "pos": [
+            233,
+            355
+          ]
+        },
+        {
+          "content": "You must also create a <bpt id=\"p13\">_</bpt>Twitter Application<ept id=\"p13\">_</ept><ph id=\"ph8\"/> that contains the settings used to access the API.",
+          "pos": [
+            356,
+            505
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2437,
+        2465
+      ],
+      "content": "Create a Twitter application"
+    },
+    {
+      "pos": [
+        2470,
+        2624
+      ],
+      "content": "From a web browser, sign in to <bpt id=\"p14\">[</bpt>https://apps.twitter.com/<ept id=\"p14\">](https://apps.twitter.com/)</ept>. Click the <bpt id=\"p15\">**</bpt>Sign up now<ept id=\"p15\">**</ept><ph id=\"ph9\"/> link if you don't have a Twitter account.",
+      "nodes": [
+        {
+          "content": "From a web browser, sign in to <bpt id=\"p14\">[</bpt>https://apps.twitter.com/<ept id=\"p14\">](https://apps.twitter.com/)</ept>.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "Click the <bpt id=\"p15\">**</bpt>Sign up now<ept id=\"p15\">**</ept><ph id=\"ph9\"/> link if you don't have a Twitter account.",
+          "pos": [
+            127,
+            248
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2628,
+        2653
+      ],
+      "content": "Click <bpt id=\"p16\">**</bpt>Create New App<ept id=\"p16\">**</ept>."
+    },
+    {
+      "pos": [
+        2657,
+        2804
+      ],
+      "content": "Enter <bpt id=\"p17\">**</bpt>Name<ept id=\"p17\">**</ept>, <bpt id=\"p18\">**</bpt>Description<ept id=\"p18\">**</ept>, <bpt id=\"p19\">**</bpt>Website<ept id=\"p19\">**</ept>. You can make up a URL for the <bpt id=\"p20\">**</bpt>Website<ept id=\"p20\">**</ept><ph id=\"ph10\"/> field. The following table shows some sample values to use:",
+      "nodes": [
+        {
+          "content": "Enter <bpt id=\"p17\">**</bpt>Name<ept id=\"p17\">**</ept>, <bpt id=\"p18\">**</bpt>Description<ept id=\"p18\">**</ept>, <bpt id=\"p19\">**</bpt>Website<ept id=\"p19\">**</ept>.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "You can make up a URL for the <bpt id=\"p20\">**</bpt>Website<ept id=\"p20\">**</ept><ph id=\"ph10\"/> field.",
+          "pos": [
+            166,
+            269
+          ]
+        },
+        {
+          "content": "The following table shows some sample values to use:",
+          "pos": [
+            270,
+            322
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2812,
+        2817
+      ],
+      "content": "Field"
+    },
+    {
+      "pos": [
+        2820,
+        2825
+      ],
+      "content": "Value"
+    },
+    {
+      "pos": [
+        2856,
+        2860
+      ],
+      "content": "Name"
+    },
+    {
+      "pos": [
+        2864,
+        2878
+      ],
+      "content": "MyHDInsightApp"
+    },
+    {
+      "pos": [
+        2887,
+        2898
+      ],
+      "content": "Description"
+    },
+    {
+      "pos": [
+        2901,
+        2915
+      ],
+      "content": "MyHDInsightApp"
+    },
+    {
+      "pos": [
+        2924,
+        2931
+      ],
+      "content": "Website"
+    },
+    {
+      "pos": [
+        2934,
+        2963
+      ],
+      "content": "http://www.myhdinsightapp.com"
+    },
+    {
+      "pos": [
+        2974,
+        3049
+      ],
+      "content": "Check <bpt id=\"p21\">**</bpt>Yes, I agree<ept id=\"p21\">**</ept>, and then click <bpt id=\"p22\">**</bpt>Create your Twitter application<ept id=\"p22\">**</ept>."
+    },
+    {
+      "pos": [
+        3053,
+        3162
+      ],
+      "content": "Click the <bpt id=\"p23\">**</bpt>Permissions<ept id=\"p23\">**</ept><ph id=\"ph11\"/> tab. The default permission is <bpt id=\"p24\">**</bpt>Read only<ept id=\"p24\">**</ept>. This is sufficient for this tutorial.",
+      "nodes": [
+        {
+          "content": "Click the <bpt id=\"p23\">**</bpt>Permissions<ept id=\"p23\">**</ept><ph id=\"ph11\"/> tab.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "The default permission is <bpt id=\"p24\">**</bpt>Read only<ept id=\"p24\">**</ept>.",
+          "pos": [
+            86,
+            166
+          ]
+        },
+        {
+          "content": "This is sufficient for this tutorial.",
+          "pos": [
+            167,
+            204
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3166,
+        3207
+      ],
+      "content": "Click the <bpt id=\"p25\">**</bpt>Keys and Access Tokens<ept id=\"p25\">**</ept><ph id=\"ph12\"/> tab."
+    },
+    {
+      "pos": [
+        3211,
+        3244
+      ],
+      "content": "Click <bpt id=\"p26\">**</bpt>Create my access token<ept id=\"p26\">**</ept>."
+    },
+    {
+      "pos": [
+        3248,
+        3307
+      ],
+      "content": "Click <bpt id=\"p27\">**</bpt>Test OAuth<ept id=\"p27\">**</ept><ph id=\"ph13\"/> in the upper-right corner of the page."
+    },
+    {
+      "pos": [
+        3311,
+        3439
+      ],
+      "content": "Write down <bpt id=\"p28\">**</bpt>consumer key<ept id=\"p28\">**</ept>, <bpt id=\"p29\">**</bpt>Consumer secret<ept id=\"p29\">**</ept>, <bpt id=\"p30\">**</bpt>Access token<ept id=\"p30\">**</ept>, and <bpt id=\"p31\">**</bpt>Access token secret<ept id=\"p31\">**</ept>. You will need the values later.",
+      "nodes": [
+        {
+          "content": "Write down <bpt id=\"p28\">**</bpt>consumer key<ept id=\"p28\">**</ept>, <bpt id=\"p29\">**</bpt>Consumer secret<ept id=\"p29\">**</ept>, <bpt id=\"p30\">**</bpt>Access token<ept id=\"p30\">**</ept>, and <bpt id=\"p31\">**</bpt>Access token secret<ept id=\"p31\">**</ept>.",
+          "pos": [
+            0,
+            256
+          ]
+        },
+        {
+          "content": "You will need the values later.",
+          "pos": [
+            257,
+            288
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3442,
+        3562
+      ],
+      "content": "<ph id=\"ph14\">[AZURE.NOTE]</ph><ph id=\"ph15\"/> When you use the curl command in Windows, use double quotes instead of single quotes for the option values."
+    },
+    {
+      "pos": [
+        3567,
+        3582
+      ],
+      "content": "Download tweets"
+    },
+    {
+      "pos": [
+        3584,
+        3696
+      ],
+      "content": "The following Python code will download 10,000 tweets from Twitter and save them to a file named <bpt id=\"p32\">__</bpt>tweets.txt<ept id=\"p32\">__</ept>."
+    },
+    {
+      "pos": [
+        3700,
+        3807
+      ],
+      "content": "<ph id=\"ph16\">[AZURE.NOTE]</ph><ph id=\"ph17\"/> The following steps are performed on the HDInsight cluster, since Python is already installed."
+    },
+    {
+      "pos": [
+        3812,
+        3855
+      ],
+      "content": "Connect to the HDInsight cluster using SSH:"
+    },
+    {
+      "pos": [
+        3926,
+        4198
+      ],
+      "content": "If you used a password to secure your SSH user account, you will be prompted to enter it. If you used a public key, you may have to use the <ph id=\"ph18\">`-i`</ph><ph id=\"ph19\"/> parameter to specify the matching private key. For example, <ph id=\"ph20\">`ssh -i ~/.ssh/id_rsa USERNAME@CLUSTERNAME-ssh.azurehdinsight.net`</ph>.",
+      "nodes": [
+        {
+          "content": "If you used a password to secure your SSH user account, you will be prompted to enter it.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "If you used a public key, you may have to use the <ph id=\"ph18\">`-i`</ph><ph id=\"ph19\"/> parameter to specify the matching private key.",
+          "pos": [
+            90,
+            225
+          ]
+        },
+        {
+          "content": "For example, <ph id=\"ph20\">`ssh -i ~/.ssh/id_rsa USERNAME@CLUSTERNAME-ssh.azurehdinsight.net`</ph>.",
+          "pos": [
+            226,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4212,
+        4301
+      ],
+      "content": "For more information on using SSH with Linux-based HDInsight, see the following articles:"
+    },
+    {
+      "pos": [
+        4313,
+        4425
+      ],
+      "content": "<bpt id=\"p33\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X<ept id=\"p33\">](hdinsight-hadoop-linux-use-ssh-unix.md)</ept>"
+    },
+    {
+      "pos": [
+        4433,
+        4532
+      ],
+      "content": "<bpt id=\"p34\">[</bpt>Use SSH with Linux-based Hadoop on HDInsight from Windows<ept id=\"p34\">](hdinsight-hadoop-linux-use-ssh-windows)</ept>"
+    },
+    {
+      "pos": [
+        4541,
+        4677
+      ],
+      "content": "By default, the <bpt id=\"p35\">__</bpt>pip<ept id=\"p35\">__</ept><ph id=\"ph21\"/> utility is not installed on the HDInsight head node. Use the following to install, and then update this utility:",
+      "nodes": [
+        {
+          "content": "By default, the <bpt id=\"p35\">__</bpt>pip<ept id=\"p35\">__</ept><ph id=\"ph21\"/> utility is not installed on the HDInsight head node.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "Use the following to install, and then update this utility:",
+          "pos": [
+            132,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4762,
+        4942
+      ],
+      "content": "The code to download tweets relies on <bpt id=\"p36\">[</bpt>Tweepy<ept id=\"p36\">](http://www.tweepy.org/)</ept><ph id=\"ph22\"/> and <bpt id=\"p37\">[</bpt>Progressbar<ept id=\"p37\">](https://pypi.python.org/pypi/progressbar/2.2)</ept>. To install these, use the following command:",
+      "nodes": [
+        {
+          "content": "The code to download tweets relies on <bpt id=\"p36\">[</bpt>Tweepy<ept id=\"p36\">](http://www.tweepy.org/)</ept><ph id=\"ph22\"/> and <bpt id=\"p37\">[</bpt>Progressbar<ept id=\"p37\">](https://pypi.python.org/pypi/progressbar/2.2)</ept>.",
+          "pos": [
+            0,
+            230
+          ]
+        },
+        {
+          "content": "To install these, use the following command:",
+          "pos": [
+            231,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5137,
+        5357
+      ],
+      "content": "<ph id=\"ph23\">[AZURE.NOTE]</ph><ph id=\"ph24\"/> The bits about removing python-openssl, installing python-dev, libffi-dev, libssl-dev, pyOpenSSL and requests[security] is to avoid an InsecurePlatform warning when connecting to Twitter via SSL from Python."
+    },
+    {
+      "pos": [
+        5370,
+        5495
+      ],
+      "content": "Tweepy v3.2.0 is used to avoid <bpt id=\"p38\">[</bpt>an error<ept id=\"p38\">](https://github.com/tweepy/tweepy/issues/576)</ept><ph id=\"ph25\"/> that can occur when processing tweets."
+    },
+    {
+      "pos": [
+        5500,
+        5570
+      ],
+      "content": "Use the following command to create a new file named <bpt id=\"p39\">__</bpt>gettweets.py<ept id=\"p39\">__</ept>:"
+    },
+    {
+      "pos": [
+        5602,
+        5847
+      ],
+      "content": "Use the following as the contents of the <bpt id=\"p40\">__</bpt>gettweets.py<ept id=\"p40\">__</ept><ph id=\"ph26\"/> file. Replace the placeholder information for _<bpt id=\"p41\">_</bpt>consumer/<bpt id=\"p42\">_</bpt>secret<ept id=\"p42\">_</ept><ept id=\"p41\">_</ept>, _<bpt id=\"p43\">_</bpt>consumer/<bpt id=\"p44\">_</bpt>key<ept id=\"p44\">_</ept><ept id=\"p43\">_</ept>, _<bpt id=\"p45\">_</bpt>access/<bpt id=\"p46\">_</bpt>token<ept id=\"p46\">_</ept><ept id=\"p45\">_</ept>, and __access/<bpt id=\"p47\">_</bpt>token/<bpt id=\"p48\">_</bpt>secret<ept id=\"p48\">_</ept><ept id=\"p47\">_</ept><ph id=\"ph27\"/> with the information from your Twitter application.",
+      "nodes": [
+        {
+          "content": "Use the following as the contents of the <bpt id=\"p40\">__</bpt>gettweets.py<ept id=\"p40\">__</ept><ph id=\"ph26\"/> file.",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "Replace the placeholder information for _<bpt id=\"p41\">_</bpt>consumer/<bpt id=\"p42\">_</bpt>secret<ept id=\"p42\">_</ept><ept id=\"p41\">_</ept>, _<bpt id=\"p43\">_</bpt>consumer/<bpt id=\"p44\">_</bpt>key<ept id=\"p44\">_</ept><ept id=\"p43\">_</ept>, _<bpt id=\"p45\">_</bpt>access/<bpt id=\"p46\">_</bpt>token<ept id=\"p46\">_</ept><ept id=\"p45\">_</ept>, and __access/<bpt id=\"p47\">_</bpt>token/<bpt id=\"p48\">_</bpt>secret<ept id=\"p48\">_</ept><ept id=\"p47\">_</ept><ph id=\"ph27\"/> with the information from your Twitter application.",
+          "pos": [
+            119,
+            635
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7908,
+        7954
+      ],
+      "content": "Use <bpt id=\"p49\">__</bpt>Ctrl + X<ept id=\"p49\">__</ept>, then <bpt id=\"p50\">__</bpt>Y<ept id=\"p50\">__</ept><ph id=\"ph28\"/> to save the file."
+    },
+    {
+      "pos": [
+        7959,
+        8021
+      ],
+      "content": "Use the following command to run the file and download tweets:"
+    },
+    {
+      "pos": [
+        8056,
+        8160
+      ],
+      "content": "A progress indicator should appear, and count up to 100% as the tweets are downloaded and saved to file."
+    },
+    {
+      "pos": [
+        8165,
+        8180
+      ],
+      "content": "Upload the data"
+    },
+    {
+      "pos": [
+        8182,
+        8285
+      ],
+      "content": "To upload the data to WASB (the distributed file system used by HDInsight,) use the following commands:"
+    },
+    {
+      "pos": [
+        8399,
+        8475
+      ],
+      "content": "This stores the data in a location that all nodes in the cluster can access."
+    },
+    {
+      "pos": [
+        8479,
+        8497
+      ],
+      "content": "Run the HiveQL job"
+    },
+    {
+      "pos": [
+        8503,
+        8575
+      ],
+      "content": "Use the following command to create a file containing HiveQL statements:"
+    },
+    {
+      "pos": [
+        8611,
+        8657
+      ],
+      "content": "Use the following as the contents of the file:"
+    },
+    {
+      "pos": [
+        13874,
+        13928
+      ],
+      "content": "Press <bpt id=\"p51\">__</bpt>Ctrl + X<ept id=\"p51\">__</ept>, then press <bpt id=\"p52\">__</bpt>Y<ept id=\"p52\">__</ept><ph id=\"ph29\"/> to save the file."
+    },
+    {
+      "pos": [
+        13933,
+        13999
+      ],
+      "content": "Use the following command to run the HiveQL contained in the file:"
+    },
+    {
+      "pos": [
+        14047,
+        14159
+      ],
+      "content": "This will load the Hive shell, run the HiveQL in the <bpt id=\"p53\">__</bpt>twitter.hql<ept id=\"p53\">__</ept><ph id=\"ph30\"/> file, and finally return a <ph id=\"ph31\">`hive &gt;`</ph><ph id=\"ph32\"/> prompt."
+    },
+    {
+      "pos": [
+        14168,
+        14323
+      ],
+      "content": "From the <ph id=\"ph33\">`hive &gt;`</ph><ph id=\"ph34\"/> prompt, use the following to verify that you can select data from the <bpt id=\"p54\">__</bpt>tweets<ept id=\"p54\">__</ept><ph id=\"ph35\"/> table created by the HiveQL in the <bpt id=\"p55\">__</bpt>twitter.hql<ept id=\"p55\">__</ept><ph id=\"ph36\"/> file:"
+    },
+    {
+      "pos": [
+        14526,
+        14618
+      ],
+      "content": "This will return a maximum of 10 tweets that contain the word <bpt id=\"p56\">__</bpt>Azure<ept id=\"p56\">__</ept><ph id=\"ph37\"/> in the message text."
+    },
+    {
+      "pos": [
+        14622,
+        14632
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        14634,
+        14836
+      ],
+      "content": "In this tutorial we have seen how to transform an unstructured JSON dataset into a structured Hive table to query, explore, and analyze data from Twitter by using HDInsight on Azure. To learn more, see:",
+      "nodes": [
+        {
+          "content": "In this tutorial we have seen how to transform an unstructured JSON dataset into a structured Hive table to query, explore, and analyze data from Twitter by using HDInsight on Azure.",
+          "pos": [
+            0,
+            182
+          ]
+        },
+        {
+          "content": "To learn more, see:",
+          "pos": [
+            183,
+            202
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14840,
+        14916
+      ],
+      "content": "<bpt id=\"p57\">[</bpt>Get started with HDInsight<ept id=\"p57\">](hdinsight-hadoop-linux-tutorial-get-started.md)</ept>"
+    },
+    {
+      "pos": [
+        14919,
+        15008
+      ],
+      "content": "<bpt id=\"p58\">[</bpt>Analyze flight delay data using HDInsight<ept id=\"p58\">](hdinsight-analyze-flight-delay-data-linux.md)</ept>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Analyze Twitter data with Apache Hive on HDInsight | Microsoft Azure\"\n    description=\"Learn how to use Python to store Tweets that contain specific keywords, then use Hive and Hadoop on HDInsight to transform the raw TWitter data into a searchable Hive table.\"\n    services=\"hdinsight\"\n    documentationCenter=\"\"\n    authors=\"Blackmist\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n    ms.service=\"hdinsight\"\n    ms.workload=\"big-data\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"larryfr\"/>\n\n# Analyze Twitter data using Hive in HDInsight\n\nIn this document, you will get tweets by using a Twitter streaming API and then use Apache Hive on a Linux-based HDInsight cluster to process the JSON formatted data. The result will be a list of Twitter users who sent the most tweets that contained a certain word.\n\n> [AZURE.NOTE] While individual pieces of this document can be used with Windows-based HDInsight clusters (Python and Hive for example,) many steps are based on using a Linux-based HDInsight cluster. For steps specific to a Windows-based cluster, see [Analyze Twitter data using Hive in HDInsight](hdinsight-analyze-twitter-data.md).\n\n###Prerequisites\n\nBefore you begin this tutorial, you must have the following:\n\n- A __Linux-based Azure HDInsight cluster__. For information on creating a cluster, see [Get Started with Linux-based HDInsight](hdinsight-hadoop-linux-tutorial-get-started.md) for steps on creating a cluster.\n\n- An __SSH client__. For more information on using SSH with Linux-based HDInsight, see the following articles:\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows.md)\n\n- __Python__ and [pip](https://pypi.python.org/pypi/pip)\n\n- The __Azure CLI__. For more information, see [Install and configure the Azure CLI](../xplat-cli-install.md)\n\n##Get a Twitter feed\n\nTwitter allows you to retrieve the [data for each tweet](https://dev.twitter.com/docs/platform-objects/tweets) as a JavaScript Object Notation (JSON) document through a REST API. [OAuth](http://oauth.net) is required for authentication to the API. You must also create a _Twitter Application_ that contains the settings used to access the API.\n\n###Create a Twitter application\n\n1. From a web browser, sign in to [https://apps.twitter.com/](https://apps.twitter.com/). Click the **Sign up now** link if you don't have a Twitter account.\n2. Click **Create New App**.\n3. Enter **Name**, **Description**, **Website**. You can make up a URL for the **Website** field. The following table shows some sample values to use:\n\n    | Field | Value |\n    |:----- |:----- |\n    | Name  | MyHDInsightApp |\n    | Description | MyHDInsightApp |\n    | Website | http://www.myhdinsightapp.com |\n    \n4. Check **Yes, I agree**, and then click **Create your Twitter application**.\n5. Click the **Permissions** tab. The default permission is **Read only**. This is sufficient for this tutorial.\n6. Click the **Keys and Access Tokens** tab.\n7. Click **Create my access token**.\n8. Click **Test OAuth** in the upper-right corner of the page.\n9. Write down **consumer key**, **Consumer secret**, **Access token**, and **Access token secret**. You will need the values later.\n\n>[AZURE.NOTE] When you use the curl command in Windows, use double quotes instead of single quotes for the option values.\n\n###Download tweets\n\nThe following Python code will download 10,000 tweets from Twitter and save them to a file named __tweets.txt__.\n\n> [AZURE.NOTE] The following steps are performed on the HDInsight cluster, since Python is already installed.\n\n1. Connect to the HDInsight cluster using SSH:\n\n        ssh USERNAME@CLUSTERNAME-ssh.azurehdinsight.net\n        \n    If you used a password to secure your SSH user account, you will be prompted to enter it. If you used a public key, you may have to use the `-i` parameter to specify the matching private key. For example, `ssh -i ~/.ssh/id_rsa USERNAME@CLUSTERNAME-ssh.azurehdinsight.net`.\n        \n    For more information on using SSH with Linux-based HDInsight, see the following articles:\n    \n    * [Use SSH with Linux-based Hadoop on HDInsight from Linux, Unix, or OS X](hdinsight-hadoop-linux-use-ssh-unix.md)\n\n    * [Use SSH with Linux-based Hadoop on HDInsight from Windows](hdinsight-hadoop-linux-use-ssh-windows)\n    \n2. By default, the __pip__ utility is not installed on the HDInsight head node. Use the following to install, and then update this utility:\n\n        sudo apt-get install python-pip\n        sudo pip install --upgrade pip\n\n3. The code to download tweets relies on [Tweepy](http://www.tweepy.org/) and [Progressbar](https://pypi.python.org/pypi/progressbar/2.2). To install these, use the following command:\n\n        sudo apt-get install python-dev libffi-dev libssl-dev\n        sudo apt-get remove python-openssl\n        sudo pip install tweepy progressbar pyOpenSSL requests[security]\n        \n    > [AZURE.NOTE] The bits about removing python-openssl, installing python-dev, libffi-dev, libssl-dev, pyOpenSSL and requests[security] is to avoid an InsecurePlatform warning when connecting to Twitter via SSL from Python.\n    >\n    > Tweepy v3.2.0 is used to avoid [an error](https://github.com/tweepy/tweepy/issues/576) that can occur when processing tweets.\n\n4. Use the following command to create a new file named __gettweets.py__:\n\n        nano gettweets.py\n\n5. Use the following as the contents of the __gettweets.py__ file. Replace the placeholder information for __consumer/_secret__, __consumer/_key__, __access/_token__, and __access/_token/_secret__ with the information from your Twitter application.\n\n        #!/usr/bin/python\n\n        from tweepy import Stream, OAuthHandler\n        from tweepy.streaming import StreamListener\n        from progressbar import ProgressBar, Percentage, Bar\n        import json\n        import sys\n\n        #Twitter app information\n        consumer_secret='Your consumer secret'\n        consumer_key='Your consumer key'\n        access_token='Your access token'\n        access_token_secret='Your access token secret'\n\n        #The number of tweets we want to get\n        max_tweets=10000\n\n        #Create the listener class that will receive and save tweets\n        class listener(StreamListener):\n            #On init, set the counter to zero and create a progress bar\n            def __init__(self, api=None):\n                self.num_tweets = 0\n                self.pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=max_tweets).start()\n\n            #When data is received, do this\n            def on_data(self, data):\n                #Append the tweet to the 'tweets.txt' file\n                with open('tweets.txt', 'a') as tweet_file:\n                    tweet_file.write(data)\n                    #Increment the number of tweets\n                    self.num_tweets += 1\n                    #Check to see if we have hit max_tweets and exit if so\n                    if self.num_tweets >= max_tweets:\n                        self.pbar.finish()\n                        sys.exit(0)\n                    else:\n                        #increment the progress bar\n                        self.pbar.update(self.num_tweets)\n                return True\n\n            #Handle any errors that may occur\n            def on_error(self, status):\n                print status\n\n        #Get the OAuth token\n        auth = OAuthHandler(consumer_key, consumer_secret)\n        auth.set_access_token(access_token, access_token_secret)\n        #Use the listener class for stream processing\n        twitterStream = Stream(auth, listener())\n        #Filter for these topics\n        twitterStream.filter(track=[\"azure\",\"cloud\",\"hdinsight\"])\n\n6. Use __Ctrl + X__, then __Y__ to save the file.\n\n7. Use the following command to run the file and download tweets:\n\n        python gettweets.py\n\n    A progress indicator should appear, and count up to 100% as the tweets are downloaded and saved to file.\n\n###Upload the data\n\nTo upload the data to WASB (the distributed file system used by HDInsight,) use the following commands:\n\n    hdfs dfs -mkdir -p /tutorials/twitter/data\n    hdfs dfs -put tweets.txt /tutorials/twitter/data/tweets.txt\n\nThis stores the data in a location that all nodes in the cluster can access.\n\n##Run the HiveQL job\n\n\n1. Use the following command to create a file containing HiveQL statements:\n\n        nano twitter.hql\n    \n    Use the following as the contents of the file:\n\n        set hive.exec.dynamic.partition = true;\n        set hive.exec.dynamic.partition.mode = nonstrict;\n        -- Drop table, if it exists\n        DROP TABLE tweets_raw;\n        -- Create it, pointing toward the tweets logged from Twitter\n        CREATE EXTERNAL TABLE tweets_raw (\n            json_response STRING\n        )\n        STORED AS TEXTFILE LOCATION '/tutorials/twitter/data';\n        -- Drop and recreate the destination table\n        DROP TABLE tweets;\n        CREATE TABLE tweets\n        (\n            id BIGINT,\n            created_at STRING,\n            created_at_date STRING,\n            created_at_year STRING,\n            created_at_month STRING,\n            created_at_day STRING,\n            created_at_time STRING,\n            in_reply_to_user_id_str STRING,\n            text STRING,\n            contributors STRING,\n            retweeted STRING,\n            truncated STRING,\n            coordinates STRING,\n            source STRING,\n            retweet_count INT,\n            url STRING,\n            hashtags array<STRING>,\n            user_mentions array<STRING>,\n            first_hashtag STRING,\n            first_user_mention STRING,\n            screen_name STRING,\n            name STRING,\n            followers_count INT,\n            listed_count INT,\n            friends_count INT,\n            lang STRING,\n            user_location STRING,\n            time_zone STRING,\n            profile_image_url STRING,\n            json_response STRING\n        );\n        -- Select tweets from the imported data, parse the JSON,\n        -- and insert into the tweets table\n        FROM tweets_raw\n        INSERT OVERWRITE TABLE tweets\n        SELECT\n            cast(get_json_object(json_response, '$.id_str') as BIGINT),\n            get_json_object(json_response, '$.created_at'),\n            concat(substr (get_json_object(json_response, '$.created_at'),1,10),' ',\n            substr (get_json_object(json_response, '$.created_at'),27,4)),\n            substr (get_json_object(json_response, '$.created_at'),27,4),\n            case substr (get_json_object(json_response, '$.created_at'),5,3)\n                when \"Jan\" then \"01\"\n                when \"Feb\" then \"02\"\n                when \"Mar\" then \"03\"\n                when \"Apr\" then \"04\"\n                when \"May\" then \"05\"\n                when \"Jun\" then \"06\"\n                when \"Jul\" then \"07\"\n                when \"Aug\" then \"08\"\n                when \"Sep\" then \"09\"\n                when \"Oct\" then \"10\"\n                when \"Nov\" then \"11\"\n                when \"Dec\" then \"12\" end,\n            substr (get_json_object(json_response, '$.created_at'),9,2),\n            substr (get_json_object(json_response, '$.created_at'),12,8),\n            get_json_object(json_response, '$.in_reply_to_user_id_str'),\n            get_json_object(json_response, '$.text'),\n            get_json_object(json_response, '$.contributors'),\n            get_json_object(json_response, '$.retweeted'),\n            get_json_object(json_response, '$.truncated'),\n            get_json_object(json_response, '$.coordinates'),\n            get_json_object(json_response, '$.source'),\n            cast (get_json_object(json_response, '$.retweet_count') as INT),\n            get_json_object(json_response, '$.entities.display_url'),\n            array(\n                trim(lower(get_json_object(json_response, '$.entities.hashtags[0].text'))),\n                trim(lower(get_json_object(json_response, '$.entities.hashtags[1].text'))),\n                trim(lower(get_json_object(json_response, '$.entities.hashtags[2].text'))),\n                trim(lower(get_json_object(json_response, '$.entities.hashtags[3].text'))),\n                trim(lower(get_json_object(json_response, '$.entities.hashtags[4].text')))),\n            array(\n                trim(lower(get_json_object(json_response, '$.entities.user_mentions[0].screen_name'))),\n                trim(lower(get_json_object(json_response, '$.entities.user_mentions[1].screen_name'))),\n                trim(lower(get_json_object(json_response, '$.entities.user_mentions[2].screen_name'))),\n                trim(lower(get_json_object(json_response, '$.entities.user_mentions[3].screen_name'))),\n                trim(lower(get_json_object(json_response, '$.entities.user_mentions[4].screen_name')))),\n            trim(lower(get_json_object(json_response, '$.entities.hashtags[0].text'))),\n            trim(lower(get_json_object(json_response, '$.entities.user_mentions[0].screen_name'))),\n            get_json_object(json_response, '$.user.screen_name'),\n            get_json_object(json_response, '$.user.name'),\n            cast (get_json_object(json_response, '$.user.followers_count') as INT),\n            cast (get_json_object(json_response, '$.user.listed_count') as INT),\n            cast (get_json_object(json_response, '$.user.friends_count') as INT),\n            get_json_object(json_response, '$.user.lang'),\n            get_json_object(json_response, '$.user.location'),\n            get_json_object(json_response, '$.user.time_zone'),\n            get_json_object(json_response, '$.user.profile_image_url'),\n            json_response\n        WHERE (length(json_response) > 500);\n        \n        \n3. Press __Ctrl + X__, then press __Y__ to save the file.\n\n4. Use the following command to run the HiveQL contained in the file:\n\n        hive -i twitter.hql     \n        \n    This will load the Hive shell, run the HiveQL in the __twitter.hql__ file, and finally return a `hive >` prompt.\n    \n5. From the `hive >` prompt, use the following to verify that you can select data from the __tweets__ table created by the HiveQL in the __twitter.hql__ file:\n        \n        SELECT name, screen_name, count(1) as cc\n            FROM tweets\n            WHERE text like \"%Azure%\"\n            GROUP BY name,screen_name\n            ORDER BY cc DESC LIMIT 10;\n\n    This will return a maximum of 10 tweets that contain the word __Azure__ in the message text.\n\n##Next steps\n\nIn this tutorial we have seen how to transform an unstructured JSON dataset into a structured Hive table to query, explore, and analyze data from Twitter by using HDInsight on Azure. To learn more, see:\n\n- [Get started with HDInsight](hdinsight-hadoop-linux-tutorial-get-started.md)\n- [Analyze flight delay data using HDInsight](hdinsight-analyze-flight-delay-data-linux.md)\n\n[curl]: http://curl.haxx.se\n[curl-download]: http://curl.haxx.se/download.html\n\n[apache-hive-tutorial]: https://cwiki.apache.org/confluence/display/Hive/Tutorial\n\n[twitter-streaming-api]: https://dev.twitter.com/docs/streaming-apis\n[twitter-statuses-filter]: https://dev.twitter.com/docs/api/1.1/post/statuses/filter\n"
+}
