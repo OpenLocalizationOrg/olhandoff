@@ -1,0 +1,573 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        102
+      ],
+      "content": "Add Offline Data Sync to your Android Mobile Services app | Microsoft Azure"
+    },
+    {
+      "pos": [
+        121,
+        218
+      ],
+      "content": "Learn how to use Azure Mobile Services to cache and sync offline data in your Android application"
+    },
+    {
+      "pos": [
+        546,
+        603
+      ],
+      "content": "Add Offline Data Sync to your Android Mobile Services app"
+    },
+    {
+      "pos": [
+        708,
+        714
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        823,
+        830
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        832,
+        1334
+      ],
+      "content": "Mobile apps can lose network connectivity when moving to an area without service, or due to network issues. For example, a construction industry app used at a remote construction site might need to enter scheduling data that is synced up to Azure later. With Azure Mobile Services offline sync, you can keep working when network connectivity is lost, which is essential to many mobile apps. With offline sync, you work with a local copy of your Azure SQL Server table, and periodically re-sync the two.",
+      "nodes": [
+        {
+          "content": "Mobile apps can lose network connectivity when moving to an area without service, or due to network issues.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "For example, a construction industry app used at a remote construction site might need to enter scheduling data that is synced up to Azure later.",
+          "pos": [
+            108,
+            253
+          ]
+        },
+        {
+          "content": "With Azure Mobile Services offline sync, you can keep working when network connectivity is lost, which is essential to many mobile apps.",
+          "pos": [
+            254,
+            390
+          ]
+        },
+        {
+          "content": "With offline sync, you work with a local copy of your Azure SQL Server table, and periodically re-sync the two.",
+          "pos": [
+            391,
+            502
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1336,
+        1593
+      ],
+      "content": "In this tutorial, you'll update the app from the <bpt id=\"p1\">[</bpt><ept id=\"p1\">Mobile Services Quick Start tutorial]</ept> to enable offline sync, and then test the app by adding data offline,  syncing those items to the online database, and verifying the changes in the Azure classic portal."
+    },
+    {
+      "pos": [
+        1595,
+        1948
+      ],
+      "content": "Whether you are offline or connected, conflicts can arise any time multiple changes are made to data.  A future tutorial will explore handling sync conflicts, where you choose which version of the changes to accept. In this tutorial, we assume no sync conflicts and any changes you make to existing data will be applied directly to the Azure SQL Server.",
+      "nodes": [
+        {
+          "content": "Whether you are offline or connected, conflicts can arise any time multiple changes are made to data.",
+          "pos": [
+            0,
+            101
+          ]
+        },
+        {
+          "content": "A future tutorial will explore handling sync conflicts, where you choose which version of the changes to accept.",
+          "pos": [
+            103,
+            215
+          ]
+        },
+        {
+          "content": "In this tutorial, we assume no sync conflicts and any changes you make to existing data will be applied directly to the Azure SQL Server.",
+          "pos": [
+            216,
+            353
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1954,
+        1982
+      ],
+      "content": "What you need to get started"
+    },
+    {
+      "pos": [
+        2101,
+        2139
+      ],
+      "content": "Update the app to support offline sync"
+    },
+    {
+      "pos": [
+        2141,
+        2304
+      ],
+      "content": "With offline sync you read to and write from a <bpt id=\"p2\">*</bpt>sync table<ept id=\"p2\">*</ept><ph id=\"ph5\"/> (using the <bpt id=\"p3\">*</bpt>IMobileServiceSyncTable<ept id=\"p3\">*</ept><ph id=\"ph6\"/> interface), which is part of a <bpt id=\"p4\">**</bpt>SQLite<ept id=\"p4\">**</ept><ph id=\"ph7\"/> database on your device."
+    },
+    {
+      "pos": [
+        2306,
+        2530
+      ],
+      "content": "To push and pull changes between the device and Azure Mobile Services, you use a <bpt id=\"p5\">*</bpt>synchronization context<ept id=\"p5\">*</ept><ph id=\"ph8\"/> (<bpt id=\"p6\">*</bpt>MobileServiceClient.SyncContext<ept id=\"p6\">*</ept>), which you initialize with the local database that you use to store data locally."
+    },
+    {
+      "pos": [
+        2535,
+        2638
+      ],
+      "content": "Add permission to check for network connectivity by adding this code to the <bpt id=\"p7\">*</bpt>AndroidManifest.xml<ept id=\"p7\">*</ept><ph id=\"ph9\"/> file:"
+    },
+    {
+      "pos": [
+        2728,
+        2791
+      ],
+      "content": "Add the following <bpt id=\"p8\">**</bpt>import<ept id=\"p8\">**</ept><ph id=\"ph10\"/> statements to <bpt id=\"p9\">*</bpt>ToDoActivity.java<ept id=\"p9\">*</ept>:"
+    },
+    {
+      "pos": [
+        3320,
+        3504
+      ],
+      "content": "Near the top of the <ph id=\"ph11\">`ToDoActivity`</ph><ph id=\"ph12\"/> class, change the declaration of the <ph id=\"ph13\">`mToDoTable`</ph><ph id=\"ph14\"/> variable from a <ph id=\"ph15\">`MobileServiceTable&lt;ToDoItem&gt;`</ph><ph id=\"ph16\"/> class to a <ph id=\"ph17\">`MobileServiceSyncTable&lt;ToDoItem&gt;`</ph><ph id=\"ph18\"/> class."
+    },
+    {
+      "pos": [
+        3573,
+        3613
+      ],
+      "content": "This is where you define the sync table."
+    },
+    {
+      "pos": [
+        3618,
+        3763
+      ],
+      "content": "To handle initialization of the local store, in the <ph id=\"ph19\">`onCreate`</ph><ph id=\"ph20\"/> method, add the following lines after creating the <ph id=\"ph21\">`MobileServiceClient`</ph><ph id=\"ph22\"/> instance:"
+    },
+    {
+      "pos": [
+        4796,
+        4931
+      ],
+      "content": "Following the preceding code, which is inside a <ph id=\"ph23\">`try`</ph><ph id=\"ph24\"/> block, add an additional <ph id=\"ph25\">`catch`</ph><ph id=\"ph26\"/> block following the <ph id=\"ph27\">`MalformedURLException`</ph><ph id=\"ph28\"/> one:"
+    },
+    {
+      "pos": [
+        5200,
+        5247
+      ],
+      "content": "Add this method to verify network connectivity:"
+    },
+    {
+      "pos": [
+        5624,
+        5709
+      ],
+      "content": "Add this method to sync between the local <bpt id=\"p10\">*</bpt>SQL Light<ept id=\"p10\">*</ept><ph id=\"ph29\"/> store and the Azure SQL Server:"
+    },
+    {
+      "pos": [
+        6516,
+        6635
+      ],
+      "content": "In the <ph id=\"ph30\">`onCreate`</ph><ph id=\"ph31\"/> method, add this code as the next-to-the-last line, right before the call to <ph id=\"ph32\">`refreshItemsFromTable`</ph>:"
+    },
+    {
+      "pos": [
+        6667,
+        6804
+      ],
+      "content": "This causes the device on startup to sync with the Azure table. Otherwise you would display the last offline contents of the local store.",
+      "nodes": [
+        {
+          "content": "This causes the device on startup to sync with the Azure table.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "Otherwise you would display the last offline contents of the local store.",
+          "pos": [
+            64,
+            137
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6811,
+        6927
+      ],
+      "content": "Update the code in the <ph id=\"ph33\">`refreshItemsFromTable`</ph><ph id=\"ph34\"/> method to use this query (first line of code inside the <ph id=\"ph35\">`try`</ph><ph id=\"ph36\"/> block):"
+    },
+    {
+      "pos": [
+        7020,
+        7112
+      ],
+      "content": "In the <ph id=\"ph37\">`onOptionsItemSelected`</ph><ph id=\"ph38\"/> method replace the contents of the <ph id=\"ph39\">`if`</ph><ph id=\"ph40\"/> block with this code:"
+    },
+    {
+      "pos": [
+        7181,
+        7635
+      ],
+      "content": "This code runs when you press the <bpt id=\"p11\">**</bpt>Refresh<ept id=\"p11\">**</ept><ph id=\"ph41\"/> button in the upper right corner. This is the main way you sync your local store to Azure, in addition to syncing at startup. This encourages batching of sync changes, and is efficient given that the pull from Azure is a relatively expensive operation. You could also design this app to sync on every change by adding a call to <ph id=\"ph42\">`syncAsync`</ph><ph id=\"ph43\"/> to the <ph id=\"ph44\">`addItem`</ph><ph id=\"ph45\"/> and <ph id=\"ph46\">`checkItem`</ph><ph id=\"ph47\"/> methods, if your app required this.",
+      "nodes": [
+        {
+          "content": "This code runs when you press the <bpt id=\"p11\">**</bpt>Refresh<ept id=\"p11\">**</ept><ph id=\"ph41\"/> button in the upper right corner.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "This is the main way you sync your local store to Azure, in addition to syncing at startup.",
+          "pos": [
+            135,
+            226
+          ]
+        },
+        {
+          "content": "This encourages batching of sync changes, and is efficient given that the pull from Azure is a relatively expensive operation.",
+          "pos": [
+            227,
+            353
+          ]
+        },
+        {
+          "content": "You could also design this app to sync on every change by adding a call to <ph id=\"ph42\">`syncAsync`</ph><ph id=\"ph43\"/> to the <ph id=\"ph44\">`addItem`</ph><ph id=\"ph45\"/> and <ph id=\"ph46\">`checkItem`</ph><ph id=\"ph47\"/> methods, if your app required this.",
+          "pos": [
+            354,
+            611
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7641,
+        7653
+      ],
+      "content": "Test the app"
+    },
+    {
+      "pos": [
+        7655,
+        7766
+      ],
+      "content": "In this section, you will test the behavior with WiFi on, and then turn off WiFi to create an offline scenario."
+    },
+    {
+      "pos": [
+        7768,
+        8074
+      ],
+      "content": "When you add data items, they are held in the local SQL Light store, but not synced to the mobile service until you press the <bpt id=\"p12\">**</bpt>Refresh<ept id=\"p12\">**</ept><ph id=\"ph48\"/> button. Other apps may have different requirements regarding when data needs to be synchronized, but for demo purposes this tutorial has the user explicitly request it.",
+      "nodes": [
+        {
+          "content": "When you add data items, they are held in the local SQL Light store, but not synced to the mobile service until you press the <bpt id=\"p12\">**</bpt>Refresh<ept id=\"p12\">**</ept><ph id=\"ph48\"/> button.",
+          "pos": [
+            0,
+            200
+          ]
+        },
+        {
+          "content": "Other apps may have different requirements regarding when data needs to be synchronized, but for demo purposes this tutorial has the user explicitly request it.",
+          "pos": [
+            201,
+            361
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8076,
+        8292
+      ],
+      "content": "When you press that button, a new background task starts, and first pushes all the changes made to the local store, by using the synchronization context, and then pulls all changed data from Azure to the local table."
+    },
+    {
+      "pos": [
+        8299,
+        8313
+      ],
+      "content": "Online testing"
+    },
+    {
+      "pos": [
+        8315,
+        8349
+      ],
+      "content": "Lets test the following scenarios."
+    },
+    {
+      "pos": [
+        8354,
+        8388
+      ],
+      "content": "Add some new items on your device;"
+    },
+    {
+      "pos": [
+        8392,
+        8434
+      ],
+      "content": "Verify the items don't show in the portal;"
+    },
+    {
+      "pos": [
+        8438,
+        8495
+      ],
+      "content": "next press <bpt id=\"p13\">**</bpt>Refresh<ept id=\"p13\">**</ept><ph id=\"ph49\"/> and verify that they then show up."
+    },
+    {
+      "pos": [
+        8499,
+        8610
+      ],
+      "content": "Change or add an item in the portal, then press <bpt id=\"p14\">**</bpt>Refresh<ept id=\"p14\">**</ept><ph id=\"ph50\"/> and verify that the changes show up on your device."
+    },
+    {
+      "pos": [
+        8616,
+        8631
+      ],
+      "content": "Offline testing"
+    },
+    {
+      "pos": [
+        9019,
+        9488
+      ],
+      "content": "One thing which is important to point out: if there are pending changes in the local store, a pull operation will first push those changes to the server (so that if there are changes in the same row, the push operation will fail and the application has an opportunity to handle the conflicts appropriately). That means that the push call in the code above isn’t necessarily required, but I think it’s always a good practice to be explicit about what the code is doing.\n",
+      "nodes": [
+        {
+          "content": "One thing which is important to point out: if there are pending changes in the local store, a pull operation will first push those changes to the server (so that if there are changes in the same row, the push operation will fail and the application has an opportunity to handle the conflicts appropriately).",
+          "pos": [
+            0,
+            307
+          ]
+        },
+        {
+          "content": "That means that the push call in the code above isn’t necessarily required, but I think it’s always a good practice to be explicit about what the code is doing.",
+          "pos": [
+            308,
+            468
+          ]
+        },
+        {
+          "content": "\n",
+          "pos": [
+            468,
+            469
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9488,
+        9491
+      ],
+      "content": "--&gt;"
+    },
+    {
+      "pos": [
+        9496,
+        9579
+      ],
+      "content": "Place the device or simulator in <bpt id=\"p15\">*</bpt>Airplane Mode<ept id=\"p15\">*</ept>. This creates an offline scenario.",
+      "nodes": [
+        {
+          "content": "Place the device or simulator in <bpt id=\"p15\">*</bpt>Airplane Mode<ept id=\"p15\">*</ept>.",
+          "pos": [
+            0,
+            89
+          ]
+        },
+        {
+          "content": "This creates an offline scenario.",
+          "pos": [
+            90,
+            123
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9584,
+        9819
+      ],
+      "content": "Add some <bpt id=\"p16\">*</bpt>ToDo<ept id=\"p16\">*</ept><ph id=\"ph52\"/> items, or mark some items as complete. Quit the device or simulator (or forcibly close the app) and restart. Verify that your changes have been persisted on the device because they are held in the local SQL Light store.",
+      "nodes": [
+        {
+          "content": "Add some <bpt id=\"p16\">*</bpt>ToDo<ept id=\"p16\">*</ept><ph id=\"ph52\"/> items, or mark some items as complete.",
+          "pos": [
+            0,
+            109
+          ]
+        },
+        {
+          "content": "Quit the device or simulator (or forcibly close the app) and restart.",
+          "pos": [
+            110,
+            179
+          ]
+        },
+        {
+          "content": "Verify that your changes have been persisted on the device because they are held in the local SQL Light store.",
+          "pos": [
+            180,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9824,
+        9936
+      ],
+      "content": "View the contents of the Azure <bpt id=\"p17\">*</bpt>TodoItem<ept id=\"p17\">*</ept><ph id=\"ph53\"/> table. Verify that the new items have <bpt id=\"p18\">_</bpt>not<ept id=\"p18\">_</ept><ph id=\"ph54\"/> been synced to the server:",
+      "nodes": [
+        {
+          "content": "View the contents of the Azure <bpt id=\"p17\">*</bpt>TodoItem<ept id=\"p17\">*</ept><ph id=\"ph53\"/> table.",
+          "pos": [
+            0,
+            103
+          ]
+        },
+        {
+          "content": "Verify that the new items have <bpt id=\"p18\">_</bpt>not<ept id=\"p18\">_</ept><ph id=\"ph54\"/> been synced to the server:",
+          "pos": [
+            104,
+            222
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9943,
+        10071
+      ],
+      "content": "For the JavaScript backend, go to the Azure classic portal, and click the Data tab to view the contents of the <ph id=\"ph55\">`TodoItem`</ph><ph id=\"ph56\"/> table."
+    },
+    {
+      "pos": [
+        10077,
+        10234
+      ],
+      "content": "For the .NET backend, view the table contents either with a SQL tool such as <bpt id=\"p19\">*</bpt>SQL Server Management Studio<ept id=\"p19\">*</ept>, or a REST client such as <bpt id=\"p20\">*</bpt>Fiddler<ept id=\"p20\">*</ept><ph id=\"ph57\"/> or <bpt id=\"p21\">*</bpt>Postman<ept id=\"p21\">*</ept>."
+    },
+    {
+      "pos": [
+        10239,
+        10315
+      ],
+      "content": "Turn on WiFi in the device or simulator. Next, press the <bpt id=\"p22\">**</bpt>Refresh<ept id=\"p22\">**</ept><ph id=\"ph58\"/> button.",
+      "nodes": [
+        {
+          "content": "Turn on WiFi in the device or simulator.",
+          "pos": [
+            0,
+            40
+          ]
+        },
+        {
+          "content": "Next, press the <bpt id=\"p22\">**</bpt>Refresh<ept id=\"p22\">**</ept><ph id=\"ph58\"/> button.",
+          "pos": [
+            41,
+            131
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10320,
+        10426
+      ],
+      "content": "View the TodoItem data again in the Azure classic portal. The new and changed TodoItems should now appear.",
+      "nodes": [
+        {
+          "content": "View the TodoItem data again in the Azure classic portal.",
+          "pos": [
+            0,
+            57
+          ]
+        },
+        {
+          "content": "The new and changed TodoItems should now appear.",
+          "pos": [
+            58,
+            106
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10432,
+        10442
+      ],
+      "content": "Next Steps"
+    },
+    {
+      "pos": [
+        10446,
+        10497
+      ],
+      "content": "<bpt id=\"p23\">[</bpt>Using Soft Delete in Mobile Services<ept id=\"p23\">][Soft Delete]</ept>"
+    },
+    {
+      "pos": [
+        10502,
+        10522
+      ],
+      "content": "Additional Resources"
+    },
+    {
+      "pos": [
+        10582,
+        10724
+      ],
+      "content": "<bpt id=\"p25\">[</bpt><ept id=\"p25\">Azure Friday: Offline-enabled apps in Azure Mobile Services]</ept> \\(note: demos are for Windows, but feature discussion applies to all platforms\\)"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Add Offline Data Sync to your Android Mobile Services app | Microsoft Azure\"\n    description=\"Learn how to use Azure Mobile Services to cache and sync offline data in your Android application\"\n    documentationCenter=\"android\"\n    authors=\"RickSaling\"\n    manager=\"dwrede\"\n    editor=\"\"\n    services=\"mobile-services\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile-android\"\n    ms.devlang=\"java\"\n    ms.topic=\"article\"\n    ms.date=\"02/07/2016\"\n    ms.author=\"ricksal\"/>\n\n# Add Offline Data Sync to your Android Mobile Services app\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n[AZURE.INCLUDE [mobile-services-selector-offline](../../includes/mobile-services-selector-offline.md)]\n\n## Summary\n\nMobile apps can lose network connectivity when moving to an area without service, or due to network issues. For example, a construction industry app used at a remote construction site might need to enter scheduling data that is synced up to Azure later. With Azure Mobile Services offline sync, you can keep working when network connectivity is lost, which is essential to many mobile apps. With offline sync, you work with a local copy of your Azure SQL Server table, and periodically re-sync the two.\n\nIn this tutorial, you'll update the app from the [Mobile Services Quick Start tutorial] to enable offline sync, and then test the app by adding data offline,  syncing those items to the online database, and verifying the changes in the Azure classic portal.\n\nWhether you are offline or connected, conflicts can arise any time multiple changes are made to data.  A future tutorial will explore handling sync conflicts, where you choose which version of the changes to accept. In this tutorial, we assume no sync conflicts and any changes you make to existing data will be applied directly to the Azure SQL Server.\n\n\n## What you need to get started\n\n[AZURE.INCLUDE [mobile-services-android-prerequisites](../../includes/mobile-services-android-prerequisites.md)]\n\n## Update the app to support offline sync\n\nWith offline sync you read to and write from a *sync table* (using the *IMobileServiceSyncTable* interface), which is part of a **SQLite** database on your device.\n\nTo push and pull changes between the device and Azure Mobile Services, you use a *synchronization context* (*MobileServiceClient.SyncContext*), which you initialize with the local database that you use to store data locally.\n\n1. Add permission to check for network connectivity by adding this code to the *AndroidManifest.xml* file:\n\n        <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n\n\n2. Add the following **import** statements to *ToDoActivity.java*:\n\n        import java.util.Map;\n\n        import android.widget.Toast;\n\n        import com.microsoft.windowsazure.mobileservices.table.query.Query;\n        import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncContext;\n        import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;\n        import com.microsoft.windowsazure.mobileservices.table.sync.localstore.ColumnDataType;\n        import com.microsoft.windowsazure.mobileservices.table.sync.localstore.SQLiteLocalStore;\n\n3. Near the top of the `ToDoActivity` class, change the declaration of the `mToDoTable` variable from a `MobileServiceTable<ToDoItem>` class to a `MobileServiceSyncTable<ToDoItem>` class.\n\n         private MobileServiceSyncTable<ToDoItem> mToDoTable;\n\n    This is where you define the sync table.\n\n4. To handle initialization of the local store, in the `onCreate` method, add the following lines after creating the `MobileServiceClient` instance:\n\n            // Saves the query which will be used for pulling data\n            mPullQuery = mClient.getTable(ToDoItem.class).where().field(\"complete\").eq(false);\n\n            SQLiteLocalStore localStore = new SQLiteLocalStore(mClient.getContext(), \"ToDoItem\", null, 1);\n            SimpleSyncHandler handler = new SimpleSyncHandler();\n            MobileServiceSyncContext syncContext = mClient.getSyncContext();\n\n            Map<String, ColumnDataType> tableDefinition = new HashMap<String, ColumnDataType>();\n            tableDefinition.put(\"id\", ColumnDataType.String);\n            tableDefinition.put(\"text\", ColumnDataType.String);\n            tableDefinition.put(\"complete\", ColumnDataType.Boolean);\n            tableDefinition.put(\"__version\", ColumnDataType.String);\n\n            localStore.defineTable(\"ToDoItem\", tableDefinition);\n            syncContext.initialize(localStore, handler).get();\n\n            // Get the Mobile Service Table instance to use\n            mToDoTable = mClient.getSyncTable(ToDoItem.class);\n\n5. Following the preceding code, which is inside a `try` block, add an additional `catch` block following the `MalformedURLException` one:\n\n        } catch (Exception e) {\n            Throwable t = e;\n            while (t.getCause() != null) {\n                    t = t.getCause();\n                }\n            createAndShowDialog(new Exception(\"Unknown error: \" + t.getMessage()), \"Error\");\n        }\n\n6. Add this method to verify network connectivity:\n\n        private boolean isNetworkAvailable() {\n            ConnectivityManager connectivityManager\n                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);\n            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();\n            return activeNetworkInfo != null && activeNetworkInfo.isConnected();\n        }\n\n\n7. Add this method to sync between the local *SQL Light* store and the Azure SQL Server:\n\n        public void syncAsync(){\n            if (isNetworkAvailable()) {\n                new AsyncTask<Void, Void, Void>() {\n\n                    @Override\n                    protected Void doInBackground(Void... params) {\n                        try {\n                            mClient.getSyncContext().push().get();\n                            mToDoTable.pull(mPullQuery).get();\n\n                        } catch (Exception exception) {\n                            createAndShowDialog(exception, \"Error\");\n                        }\n                        return null;\n                    }\n                }.execute();\n            } else {\n                Toast.makeText(this, \"You are not online, re-sync later!\" +\n                        \"\", Toast.LENGTH_LONG).show();\n            }\n        }\n\n\n8. In the `onCreate` method, add this code as the next-to-the-last line, right before the call to `refreshItemsFromTable`:\n\n            syncAsync();\n\n    This causes the device on startup to sync with the Azure table. Otherwise you would display the last offline contents of the local store.\n\n\n\n9. Update the code in the `refreshItemsFromTable` method to use this query (first line of code inside the `try` block):\n\n        final MobileServiceList<ToDoItem> result = mToDoTable.read(mPullQuery).get();\n\n10. In the `onOptionsItemSelected` method replace the contents of the `if` block with this code:\n\n            syncAsync();\n            refreshItemsFromTable();\n\n    This code runs when you press the **Refresh** button in the upper right corner. This is the main way you sync your local store to Azure, in addition to syncing at startup. This encourages batching of sync changes, and is efficient given that the pull from Azure is a relatively expensive operation. You could also design this app to sync on every change by adding a call to `syncAsync` to the `addItem` and `checkItem` methods, if your app required this.\n\n\n## Test the app\n\nIn this section, you will test the behavior with WiFi on, and then turn off WiFi to create an offline scenario.\n\nWhen you add data items, they are held in the local SQL Light store, but not synced to the mobile service until you press the **Refresh** button. Other apps may have different requirements regarding when data needs to be synchronized, but for demo purposes this tutorial has the user explicitly request it.\n\nWhen you press that button, a new background task starts, and first pushes all the changes made to the local store, by using the synchronization context, and then pulls all changed data from Azure to the local table.\n\n\n### Online testing\n\nLets test the following scenarios.\n\n1. Add some new items on your device;\n2. Verify the items don't show in the portal;\n3. next press **Refresh** and verify that they then show up.\n4. Change or add an item in the portal, then press **Refresh** and verify that the changes show up on your device.\n\n### Offline testing\n\n<!-- Now if you run the app and tap the refresh button, you should see all the items from the server. At that point you should be able to turn off the networking from the device by placing it in *Airplane Mode*, and continue making changes – the app will work just fine. When it’s time to sync the changes to the server, turn the network back on, and tap the **Refresh** button again.\n\nOne thing which is important to point out: if there are pending changes in the local store, a pull operation will first push those changes to the server (so that if there are changes in the same row, the push operation will fail and the application has an opportunity to handle the conflicts appropriately). That means that the push call in the code above isn’t necessarily required, but I think it’s always a good practice to be explicit about what the code is doing.\n-->\n\n1. Place the device or simulator in *Airplane Mode*. This creates an offline scenario.\n\n2. Add some *ToDo* items, or mark some items as complete. Quit the device or simulator (or forcibly close the app) and restart. Verify that your changes have been persisted on the device because they are held in the local SQL Light store.\n\n3. View the contents of the Azure *TodoItem* table. Verify that the new items have _not_ been synced to the server:\n\n   - For the JavaScript backend, go to the Azure classic portal, and click the Data tab to view the contents of the `TodoItem` table.\n   - For the .NET backend, view the table contents either with a SQL tool such as *SQL Server Management Studio*, or a REST client such as *Fiddler* or *Postman*.\n\n4. Turn on WiFi in the device or simulator. Next, press the **Refresh** button.\n\n5. View the TodoItem data again in the Azure classic portal. The new and changed TodoItems should now appear.\n\n\n## Next Steps\n\n* [Using Soft Delete in Mobile Services][Soft Delete]\n\n## Additional Resources\n\n* [Cloud Cover: Offline Sync in Azure Mobile Services]\n\n* [Azure Friday: Offline-enabled apps in Azure Mobile Services] \\(note: demos are for Windows, but feature discussion applies to all platforms\\)\n\n\n<!-- URLs. -->\n\n[Get the sample app]: #get-app\n[Review the Core Data model]: #review-core-data\n[Review the Mobile Services sync code]: #review-sync\n[Change the sync behavior of the app]: #setup-sync\n[Test the app]: #test-app\n\n\n[Mobile Services sample repository on GitHub]: https://github.com/Azure/mobile-services-samples\n\n\n[Get started with Mobile Services]: mobile-services-android-get-started.md\n[Handling Conflicts with Offline Support for Mobile Services]:  mobile-services-android-handling-conflicts-offline-data.md\n[Soft Delete]: mobile-services-using-soft-delete.md\n\n[Cloud Cover: Offline Sync in Azure Mobile Services]: http://channel9.msdn.com/Shows/Cloud+Cover/Episode-155-Offline-Storage-with-Donna-Malayeri\n[Azure Friday: Offline-enabled apps in Azure Mobile Services]: http://azure.microsoft.com/documentation/videos/azure-mobile-services-offline-enabled-apps-with-donna-malayeri/\n\n[Mobile Services Quick Start tutorial]: mobile-services-android-get-started.md\n"
+}
