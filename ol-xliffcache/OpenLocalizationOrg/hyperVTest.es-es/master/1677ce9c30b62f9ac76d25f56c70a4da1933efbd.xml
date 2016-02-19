@@ -1,0 +1,882 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        90
+      ],
+      "content": "How to make data model changes to a .NET backend mobile service"
+    },
+    {
+      "pos": [
+        109,
+        222
+      ],
+      "content": "This topic describes data model initializers and how to make data model changes in a .NET backend mobile service."
+    },
+    {
+      "pos": [
+        554,
+        617
+      ],
+      "content": "How to make data model changes to a .NET backend mobile service"
+    },
+    {
+      "pos": [
+        722,
+        728
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        731,
+        1369
+      ],
+      "content": "This topic shows how to use Code First Migrations in Entity Framework to make data model changes to an existing Azure SQL Database to avoid losing existing data. This procedure assumes that you have already published your .NET backend project to Azure, that there is existing data in your database, and that the remote and local data models are still in sync. This topic also describes the default Code First initializers implemented by Azure Mobile Services that are used during development. These initializers let you easily make schema changes without using Code First Migrations when it is not necessary to maintain you existing data.",
+      "nodes": [
+        {
+          "content": "This topic shows how to use Code First Migrations in Entity Framework to make data model changes to an existing Azure SQL Database to avoid losing existing data.",
+          "pos": [
+            0,
+            161
+          ]
+        },
+        {
+          "content": "This procedure assumes that you have already published your .NET backend project to Azure, that there is existing data in your database, and that the remote and local data models are still in sync.",
+          "pos": [
+            162,
+            359
+          ]
+        },
+        {
+          "content": "This topic also describes the default Code First initializers implemented by Azure Mobile Services that are used during development.",
+          "pos": [
+            360,
+            492
+          ]
+        },
+        {
+          "content": "These initializers let you easily make schema changes without using Code First Migrations when it is not necessary to maintain you existing data.",
+          "pos": [
+            493,
+            638
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1372,
+        1758
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph>The schema name that is used to prefix your tables in the SQL Database is defined by the MS_MobileServiceName app setting in the web.config file. When you download the starter project from the portal, this value is already set to the mobile service name. When your schema name matches the mobile service, multiple mobile services can safely share the same database instance.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph>The schema name that is used to prefix your tables in the SQL Database is defined by the MS_MobileServiceName app setting in the web.config file.",
+          "pos": [
+            0,
+            175
+          ]
+        },
+        {
+          "content": "When you download the starter project from the portal, this value is already set to the mobile service name.",
+          "pos": [
+            176,
+            284
+          ]
+        },
+        {
+          "content": "When your schema name matches the mobile service, multiple mobile services can safely share the same database instance.",
+          "pos": [
+            285,
+            404
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1760,
+        1835
+      ],
+      "content": "Note that automatic migrations are not supported in a .NET backend project."
+    },
+    {
+      "pos": [
+        1840,
+        1863
+      ],
+      "content": "Updating the data model"
+    },
+    {
+      "pos": [
+        1865,
+        2431
+      ],
+      "content": "As you add functionality to your .NET backend mobile service, you add new controllers to expose new endpoints in your API. You create a new API as either a custom controller or a table controller. A [TableController<ph id=\"ph4\">&lt;TEntity&gt;</ph>] exposes a data type that inherits from [EntityData]. To enable data to be persisted to the database, this data type must also be added to the data model as a new [DbSet<ph id=\"ph5\">&lt;T&gt;</ph>] in the [DbContext]. To learn more about Code First in the Entity Framework, see <bpt id=\"p1\">[</bpt>Creating a Model with Code First<ept id=\"p1\">](https://msdn.microsoft.com/data/ee712907#codefirst)</ept>.",
+      "nodes": [
+        {
+          "content": "As you add functionality to your .NET backend mobile service, you add new controllers to expose new endpoints in your API.",
+          "pos": [
+            0,
+            122
+          ]
+        },
+        {
+          "content": "You create a new API as either a custom controller or a table controller.",
+          "pos": [
+            123,
+            196
+          ]
+        },
+        {
+          "content": "A [TableController<ph id=\"ph4\">&lt;TEntity&gt;</ph>] exposes a data type that inherits from [EntityData].",
+          "pos": [
+            197,
+            302
+          ]
+        },
+        {
+          "content": "To enable data to be persisted to the database, this data type must also be added to the data model as a new [DbSet<ph id=\"ph5\">&lt;T&gt;</ph>] in the [DbContext].",
+          "pos": [
+            303,
+            466
+          ]
+        },
+        {
+          "content": "To learn more about Code First in the Entity Framework, see <bpt id=\"p1\">[</bpt>Creating a Model with Code First<ept id=\"p1\">](https://msdn.microsoft.com/data/ee712907#codefirst)</ept>.",
+          "pos": [
+            467,
+            652
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2433,
+        2689
+      ],
+      "content": "Visual Studio makes it easy to create a new table controller to expose a new data type to client apps. For more information, see <bpt id=\"p2\">[</bpt>How to use controllers to access data in mobile services<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/xaml/dn614132.aspx)</ept>.",
+      "nodes": [
+        {
+          "content": "Visual Studio makes it easy to create a new table controller to expose a new data type to client apps.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p2\">[</bpt>How to use controllers to access data in mobile services<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/xaml/dn614132.aspx)</ept>.",
+          "pos": [
+            103,
+            294
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2694,
+        2717
+      ],
+      "content": "Data model initializers"
+    },
+    {
+      "pos": [
+        2719,
+        3091
+      ],
+      "content": "Mobile Services provides two data model initializer base classes in a .NET backend mobile service project. Both initializers drop and recreate tables in the database when the Entity Framework detects a data model change in your [DbContext]. These initializers are designed to work both when you mobile service is running on a local computer and when it is hosted in Azure.",
+      "nodes": [
+        {
+          "content": "Mobile Services provides two data model initializer base classes in a .NET backend mobile service project.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "Both initializers drop and recreate tables in the database when the Entity Framework detects a data model change in your [DbContext].",
+          "pos": [
+            107,
+            240
+          ]
+        },
+        {
+          "content": "These initializers are designed to work both when you mobile service is running on a local computer and when it is hosted in Azure.",
+          "pos": [
+            241,
+            372
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3094,
+        3389
+      ],
+      "content": "<ph id=\"ph6\">[AZURE.NOTE]</ph>When you publish a .NET backend mobile service, the initializer is not run until a data access operation occurs. This means that for a newly published service, the data tables used for storage aren't created until a data access operation, such as a query, is requested by the client.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph6\">[AZURE.NOTE]</ph>When you publish a .NET backend mobile service, the initializer is not run until a data access operation occurs.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "This means that for a newly published service, the data tables used for storage aren't created until a data access operation, such as a query, is requested by the client.",
+          "pos": [
+            143,
+            313
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3393,
+        3816
+      ],
+      "content": "You can also execute a data access operation by using the built-in API help functionality, accessed from the <bpt id=\"p3\">**</bpt>Try it out<ept id=\"p3\">**</ept><ph id=\"ph7\"/> link on the start page. For more information on using the API pages to test your mobile service, see the section Test the mobile service project locally in <bpt id=\"p4\">[</bpt>Add Mobile Services to an existing app<ept id=\"p4\">](mobile-services-dotnet-backend-windows-universal-dotnet-get-started-data.md#test-the-service-locally)</ept>.",
+      "nodes": [
+        {
+          "content": "You can also execute a data access operation by using the built-in API help functionality, accessed from the <bpt id=\"p3\">**</bpt>Try it out<ept id=\"p3\">**</ept><ph id=\"ph7\"/> link on the start page.",
+          "pos": [
+            0,
+            199
+          ]
+        },
+        {
+          "content": "For more information on using the API pages to test your mobile service, see the section Test the mobile service project locally in <bpt id=\"p4\">[</bpt>Add Mobile Services to an existing app<ept id=\"p4\">](mobile-services-dotnet-backend-windows-universal-dotnet-get-started-data.md#test-the-service-locally)</ept>.",
+          "pos": [
+            200,
+            513
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3818,
+        3947
+      ],
+      "content": "Both initializers delete from the database all tables, views, functions, and procedures in the schema used by the mobile service."
+    },
+    {
+      "pos": [
+        3951,
+        4202
+      ],
+      "content": "<bpt id=\"p5\">**</bpt>ClearDatabaseSchemaIfModelChanges<ept id=\"p5\">**</ept> <ph id=\"ph8\">&lt;br/&gt;</ph><ph id=\"ph9\"/> Schema objects are deleted only when Code First detects a change in the data model. The default initializer in a .NET backend project downloaded from the [Azure classic portal] inherits from this base class.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p5\">**</bpt>ClearDatabaseSchemaIfModelChanges<ept id=\"p5\">**</ept> <ph id=\"ph8\">&lt;br/&gt;</ph><ph id=\"ph9\"/> Schema objects are deleted only when Code First detects a change in the data model.",
+          "pos": [
+            0,
+            203
+          ]
+        },
+        {
+          "content": "The default initializer in a .NET backend project downloaded from the [Azure classic portal] inherits from this base class.",
+          "pos": [
+            204,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4206,
+        4399
+      ],
+      "content": "<bpt id=\"p6\">**</bpt>ClearDatabaseSchemaAlways<ept id=\"p6\">**</ept>: <ph id=\"ph10\">&lt;br/&gt;</ph><ph id=\"ph11\"/> Schema objects are deleted every time that the data model is accessed. Use this base class to reset the database without having to make a data model change.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p6\">**</bpt>ClearDatabaseSchemaAlways<ept id=\"p6\">**</ept>: <ph id=\"ph10\">&lt;br/&gt;</ph><ph id=\"ph11\"/> Schema objects are deleted every time that the data model is accessed.",
+          "pos": [
+            0,
+            185
+          ]
+        },
+        {
+          "content": "Use this base class to reset the database without having to make a data model change.",
+          "pos": [
+            186,
+            271
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4401,
+        4650
+      ],
+      "content": "You can use other Code First data model initializers when running on a local computer. However, initializers that attempt to drop the database will fail in Azure because the user does not have permissions to drop the database, which is a good thing.",
+      "nodes": [
+        {
+          "content": "You can use other Code First data model initializers when running on a local computer.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "However, initializers that attempt to drop the database will fail in Azure because the user does not have permissions to drop the database, which is a good thing.",
+          "pos": [
+            87,
+            249
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4652,
+        4954
+      ],
+      "content": "You may continue to use initializers during local development of your mobile service, and the .NET backend tutorials assume that you are using initializers. However, for situations where you want to make data model changes and maintain existing data in the database, you must use Code First Migrations.",
+      "nodes": [
+        {
+          "content": "You may continue to use initializers during local development of your mobile service, and the .NET backend tutorials assume that you are using initializers.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "However, for situations where you want to make data model changes and maintain existing data in the database, you must use Code First Migrations.",
+          "pos": [
+            157,
+            302
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4957,
+        5257
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.IMPORTANT]</ph>When developing and testing your mobile service project against live Azure services, you should always use a mobile service instance that is dedicated for testing. You should never develop or test against a mobile service that is currently in production or being used by client apps.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph12\">[AZURE.IMPORTANT]</ph>When developing and testing your mobile service project against live Azure services, you should always use a mobile service instance that is dedicated for testing.",
+          "pos": [
+            0,
+            199
+          ]
+        },
+        {
+          "content": "You should never develop or test against a mobile service that is currently in production or being used by client apps.",
+          "pos": [
+            200,
+            319
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5259,
+        5499
+      ],
+      "content": "In the downloaded quickstart project, the Code First initializer is defined in the WebApiConfig.cs file. Override the <bpt id=\"p7\">**</bpt>Seed<ept id=\"p7\">**</ept><ph id=\"ph13\"/> method to add initial rows of data to new tables. For examples of seeding data, see [Seeding data in migrations].",
+      "nodes": [
+        {
+          "content": "In the downloaded quickstart project, the Code First initializer is defined in the WebApiConfig.cs file.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "Override the <bpt id=\"p7\">**</bpt>Seed<ept id=\"p7\">**</ept><ph id=\"ph13\"/> method to add initial rows of data to new tables.",
+          "pos": [
+            105,
+            229
+          ]
+        },
+        {
+          "content": "For examples of seeding data, see [Seeding data in migrations].",
+          "pos": [
+            230,
+            293
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5529,
+        5557
+      ],
+      "content": "Enable Code First Migrations"
+    },
+    {
+      "pos": [
+        5559,
+        5792
+      ],
+      "content": "Code First Migrations uses a snapshot method to generate code that, when executed, makes schema changes to the database. With Migrations, you can make incremental changes to your data model and maintain existing data in the database.",
+      "nodes": [
+        {
+          "content": "Code First Migrations uses a snapshot method to generate code that, when executed, makes schema changes to the database.",
+          "pos": [
+            0,
+            120
+          ]
+        },
+        {
+          "content": "With Migrations, you can make incremental changes to your data model and maintain existing data in the database.",
+          "pos": [
+            121,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5795,
+        6138
+      ],
+      "content": "<ph id=\"ph14\">[AZURE.NOTE]</ph>If you have already published your .NET backend mobile service project to Azure, and your SQL Database table schema does not match the current data model of your project, you must use an initializer, drop the tables manually, or otherwise get the schema and data model in sync before you try to publish using Code First Migrations."
+    },
+    {
+      "pos": [
+        6140,
+        6257
+      ],
+      "content": "The following steps turn on Migrations and apply data model changes in the project, the local database, and in Azure."
+    },
+    {
+      "pos": [
+        6262,
+        6381
+      ],
+      "content": "In Visual Studio in the Solution Explorer, right-click the mobile service project and click <bpt id=\"p8\">**</bpt>Set as startup project<ept id=\"p8\">**</ept>."
+    },
+    {
+      "pos": [
+        6386,
+        6484
+      ],
+      "content": "From the <bpt id=\"p9\">**</bpt>Tools<ept id=\"p9\">**</ept><ph id=\"ph15\"/> menu, expand <bpt id=\"p10\">**</bpt>NuGet Package Manager<ept id=\"p10\">**</ept>, then click <bpt id=\"p11\">**</bpt>Package Manager Console<ept id=\"p11\">**</ept>."
+    },
+    {
+      "pos": [
+        6490,
+        6589
+      ],
+      "content": "This displays the Package Manager Console, which you will use to manage your Code First Migrations."
+    },
+    {
+      "pos": [
+        6594,
+        6652
+      ],
+      "content": "In the Package Manager Console, run the following command:"
+    },
+    {
+      "pos": [
+        6689,
+        6742
+      ],
+      "content": "This turns on Code First Migrations for your project."
+    },
+    {
+      "pos": [
+        6747,
+        6789
+      ],
+      "content": "In the console, run the following command:"
+    },
+    {
+      "pos": [
+        6830,
+        6934
+      ],
+      "content": "This creates a new migration named <bpt id=\"p12\">*</bpt>Initial<ept id=\"p12\">*</ept>. Migration code is stored in the Migrations project folder.",
+      "nodes": [
+        {
+          "content": "This creates a new migration named <bpt id=\"p12\">*</bpt>Initial<ept id=\"p12\">*</ept>.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "Migration code is stored in the Migrations project folder.",
+          "pos": [
+            86,
+            144
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6939,
+        7049
+      ],
+      "content": "Expand the App_Start folder, open the WebApiConfig.cs project file and add the following <bpt id=\"p13\">**</bpt>using<ept id=\"p13\">**</ept><ph id=\"ph16\"/> statements:"
+    },
+    {
+      "pos": [
+        7143,
+        7335
+      ],
+      "content": "In the above code, you must replace the <bpt id=\"p14\">_</bpt>todolistService<ept id=\"p14\">_</ept><ph id=\"ph17\"/> string with the namespace of your project, which for the downloaded quickstart project is <ph id=\"ph18\">&lt;em&gt;</ph>mobile&amp;#95;service&amp;#95;name<ph id=\"ph19\">&lt;/em&gt;</ph>Service."
+    },
+    {
+      "pos": [
+        7340,
+        7463
+      ],
+      "content": "In this same code file, comment-out the call to the <bpt id=\"p15\">**</bpt>Database.SetInitializer<ept id=\"p15\">**</ept><ph id=\"ph20\"/> method and add the following code after it:"
+    },
+    {
+      "pos": [
+        7557,
+        7983
+      ],
+      "content": "This disables the default Code First database initializer that drops and recreates the database and replaces it with an explicit request to apply the latest migration. At this point, any data model changes will result in an InvalidOperationException when the data is accessed, unless a migration has been created for it. Going forward, your service must use Code First Migrations to migrate data model changes to the database.",
+      "nodes": [
+        {
+          "content": "This disables the default Code First database initializer that drops and recreates the database and replaces it with an explicit request to apply the latest migration.",
+          "pos": [
+            0,
+            167
+          ]
+        },
+        {
+          "content": "At this point, any data model changes will result in an InvalidOperationException when the data is accessed, unless a migration has been created for it.",
+          "pos": [
+            168,
+            320
+          ]
+        },
+        {
+          "content": "Going forward, your service must use Code First Migrations to migrate data model changes to the database.",
+          "pos": [
+            321,
+            426
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7989,
+        8056
+      ],
+      "content": "Press F5 to start the mobile service project on the local computer."
+    },
+    {
+      "pos": [
+        8062,
+        8311
+      ],
+      "content": "At this point, the database is in sync with the data model. If you provided seed data, you can verify it by clicking <bpt id=\"p16\">**</bpt>Try it out<ept id=\"p16\">**</ept>, <bpt id=\"p17\">**</bpt>GET tables/todoitem<ept id=\"p17\">**</ept>, then <bpt id=\"p18\">**</bpt>Try this out<ept id=\"p18\">**</ept><ph id=\"ph21\"/> and <bpt id=\"p19\">**</bpt>Send<ept id=\"p19\">**</ept>. For more information, see [Seeding data in migrations].",
+      "nodes": [
+        {
+          "content": "At this point, the database is in sync with the data model.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "If you provided seed data, you can verify it by clicking <bpt id=\"p16\">**</bpt>Try it out<ept id=\"p16\">**</ept>, <bpt id=\"p17\">**</bpt>GET tables/todoitem<ept id=\"p17\">**</ept>, then <bpt id=\"p18\">**</bpt>Try this out<ept id=\"p18\">**</ept><ph id=\"ph21\"/> and <bpt id=\"p19\">**</bpt>Send<ept id=\"p19\">**</ept>.",
+          "pos": [
+            60,
+            368
+          ]
+        },
+        {
+          "content": "For more information, see [Seeding data in migrations].",
+          "pos": [
+            369,
+            424
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8318,
+        8495
+      ],
+      "content": "Now make a change to your data model, such as adding a new UserId property to the TodoItem type, rebuild the project, and then in the Package Manager, run the following command:"
+    },
+    {
+      "pos": [
+        8505,
+        8532
+      ],
+      "content": "PM&gt; Add-Migration NewUserId"
+    },
+    {
+      "pos": [
+        8672,
+        8747
+      ],
+      "content": "Press F5 again to restart the mobile service project on the local computer."
+    },
+    {
+      "pos": [
+        8753,
+        9038
+      ],
+      "content": "The migration is applied to the database and the database is again in sync with the data model. If you provided seed data, you can verify it by clicking <bpt id=\"p20\">**</bpt>Try it out<ept id=\"p20\">**</ept>, <bpt id=\"p21\">**</bpt>GET tables/todoitem<ept id=\"p21\">**</ept>, then <bpt id=\"p22\">**</bpt>Try this out<ept id=\"p22\">**</ept><ph id=\"ph22\"/> and <bpt id=\"p23\">**</bpt>Send<ept id=\"p23\">**</ept>. For more information, see [Seeding data in migrations].",
+      "nodes": [
+        {
+          "content": "The migration is applied to the database and the database is again in sync with the data model.",
+          "pos": [
+            0,
+            95
+          ]
+        },
+        {
+          "content": "If you provided seed data, you can verify it by clicking <bpt id=\"p20\">**</bpt>Try it out<ept id=\"p20\">**</ept>, <bpt id=\"p21\">**</bpt>GET tables/todoitem<ept id=\"p21\">**</ept>, then <bpt id=\"p22\">**</bpt>Try this out<ept id=\"p22\">**</ept><ph id=\"ph22\"/> and <bpt id=\"p23\">**</bpt>Send<ept id=\"p23\">**</ept>.",
+          "pos": [
+            96,
+            404
+          ]
+        },
+        {
+          "content": "For more information, see [Seeding data in migrations].",
+          "pos": [
+            405,
+            460
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9044,
+        9172
+      ],
+      "content": "Republish the mobile service to Azure, then run the client app to access the data and verify that data loads and no error occur."
+    },
+    {
+      "pos": [
+        9178,
+        9363
+      ],
+      "content": "(Optional) In the [Azure classic portal], select your mobile service, click <bpt id=\"p24\">**</bpt>Configure<ept id=\"p24\">**</ept><ph id=\"ph23\"/> &gt; <bpt id=\"p25\">**</bpt>SQL Database<ept id=\"p25\">**</ept>. This navigates to the SQL Database page for your mobile service's database.",
+      "nodes": [
+        {
+          "content": "(Optional) In the [Azure classic portal], select your mobile service, click <bpt id=\"p24\">**</bpt>Configure<ept id=\"p24\">**</ept><ph id=\"ph23\"/> &gt; <bpt id=\"p25\">**</bpt>SQL Database<ept id=\"p25\">**</ept>.",
+          "pos": [
+            0,
+            207
+          ]
+        },
+        {
+          "content": "This navigates to the SQL Database page for your mobile service's database.",
+          "pos": [
+            208,
+            283
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9369,
+        9515
+      ],
+      "content": "(Optional) Click <bpt id=\"p26\">**</bpt>Manage<ept id=\"p26\">**</ept>, log in to your SQL Database server, then click <bpt id=\"p27\">**</bpt>Design<ept id=\"p27\">**</ept><ph id=\"ph24\"/> and verify that the schema changes have been made in Azure."
+    },
+    {
+      "pos": [
+        9521,
+        9571
+      ],
+      "content": "Using Code First Migrations without an initializer"
+    },
+    {
+      "pos": [
+        9572,
+        10005
+      ],
+      "content": "Before you use Code First Migrations with your .NET backend project, you should run a data model initializer. When you do NOT use an initializer, errors can occur when trying to apply migrations. If you choose not to use one of the pre-defined data model initializers, make sure that migrations is configured to use the EntityTableSqlGenerator as the SqlGenerator in the Migrations\\Configuration.cs file, as in the following example:",
+      "nodes": [
+        {
+          "content": "Before you use Code First Migrations with your .NET backend project, you should run a data model initializer.",
+          "pos": [
+            0,
+            109
+          ]
+        },
+        {
+          "content": "When you do NOT use an initializer, errors can occur when trying to apply migrations.",
+          "pos": [
+            110,
+            195
+          ]
+        },
+        {
+          "content": "If you choose not to use one of the pre-defined data model initializers, make sure that migrations is configured to use the EntityTableSqlGenerator as the SqlGenerator in the Migrations\\Configuration.cs file, as in the following example:",
+          "pos": [
+            196,
+            433
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10172,
+        10174
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        10196,
+        10222
+      ],
+      "content": "Seeding data in migrations"
+    },
+    {
+      "pos": [
+        10224,
+        10661
+      ],
+      "content": "You can have Migrations add seed data to the database when a migration is executed. The <bpt id=\"p28\">**</bpt>Configuration<ept id=\"p28\">**</ept><ph id=\"ph25\"/> class has a <bpt id=\"p29\">**</bpt>Seed<ept id=\"p29\">**</ept><ph id=\"ph26\"/> method that you can override to insert or update data. The Configuration.cs code file is added to the Migrations folder when Migrations are enabled. These examples show how to override the [Seed] method to seed data to the <bpt id=\"p30\">**</bpt>TodoItems<ept id=\"p30\">**</ept><ph id=\"ph27\"/> table. The [Seed] method is called after migrating to the latest version.",
+      "nodes": [
+        {
+          "content": "You can have Migrations add seed data to the database when a migration is executed.",
+          "pos": [
+            0,
+            83
+          ]
+        },
+        {
+          "content": "The <bpt id=\"p28\">**</bpt>Configuration<ept id=\"p28\">**</ept><ph id=\"ph25\"/> class has a <bpt id=\"p29\">**</bpt>Seed<ept id=\"p29\">**</ept><ph id=\"ph26\"/> method that you can override to insert or update data.",
+          "pos": [
+            84,
+            291
+          ]
+        },
+        {
+          "content": "The Configuration.cs code file is added to the Migrations folder when Migrations are enabled.",
+          "pos": [
+            292,
+            385
+          ]
+        },
+        {
+          "content": "These examples show how to override the [Seed] method to seed data to the <bpt id=\"p30\">**</bpt>TodoItems<ept id=\"p30\">**</ept><ph id=\"ph27\"/> table.",
+          "pos": [
+            386,
+            535
+          ]
+        },
+        {
+          "content": "The [Seed] method is called after migrating to the latest version.",
+          "pos": [
+            536,
+            602
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10666,
+        10682
+      ],
+      "content": "Seed a new table"
+    },
+    {
+      "pos": [
+        10684,
+        10755
+      ],
+      "content": "The following code seeds the <bpt id=\"p31\">**</bpt>TodoItems<ept id=\"p31\">**</ept><ph id=\"ph28\"/> table with new rows of data:"
+    },
+    {
+      "pos": [
+        11142,
+        11170
+      ],
+      "content": "Seed a new column in a table"
+    },
+    {
+      "pos": [
+        11172,
+        11220
+      ],
+      "content": "The following code seeds just the UserId column:"
+    },
+    {
+      "pos": [
+        11466,
+        11622
+      ],
+      "content": "This code calls the [AddOrUpdate] helper extension method to add seed data to the new UserId column. By using [AddOrUpdate], duplicate rows are not created.",
+      "nodes": [
+        {
+          "content": "This code calls the [AddOrUpdate] helper extension method to add seed data to the new UserId column.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "By using [AddOrUpdate], duplicate rows are not created.",
+          "pos": [
+            101,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11641,
+        11705
+      ],
+      "content": "[Migrations]: #migrations\n[Seeding data in migrations]: #seeding"
+    },
+    {
+      "pos": [
+        11723,
+        12035
+      ],
+      "content": "[0]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/navagate-to-sql-database.png\n[1]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/manage-sql-database.png\n[2]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/sql-database-drop-tables.png"
+    },
+    {
+      "pos": [
+        12051,
+        12498
+      ],
+      "content": "[DropCreateDatabaseIfModelChanges]: http://msdn.microsoft.com/library/gg679604(v=vs.113).aspx\n[Seed]: http://msdn.microsoft.com/library/hh829453(v=vs.113).aspx\n[Azure classic portal]: https://manage.windowsazure.com/\n[DbContext]: http://msdn.microsoft.com/library/system.data.entity.dbcontext(v=vs.113).aspx\n[AddOrUpdate]: http://msdn.microsoft.com/library/system.data.entity.migrations.idbsetextensions.addorupdate(v=vs.103).aspx\n[TableController"
+    },
+    {
+      "pos": [
+        12507,
+        12680
+      ],
+      "content": "]: https://msdn.microsoft.com/library/azure/dn643359.aspx\n[EntityData]: https://msdn.microsoft.com/library/azure/microsoft.windowsazure.mobile.service.entitydata.aspx\n[DbSet"
+    },
+    {
+      "pos": [
+        12683,
+        12740
+      ],
+      "content": "]: https://msdn.microsoft.com/library/azure/gg696460.aspx"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"How to make data model changes to a .NET backend mobile service\"\n    description=\"This topic describes data model initializers and how to make data model changes in a .NET backend mobile service.\"\n    services=\"mobile-services\"\n    documentationCenter=\"\"\n    authors=\"ggailey777\"\n    writer=\"glenga\"\n    manager=\"dwrede\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"NA\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.date=\"02/07/2016\"\n    ms.author=\"glenga\"/>\n\n# How to make data model changes to a .NET backend mobile service\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\nThis topic shows how to use Code First Migrations in Entity Framework to make data model changes to an existing Azure SQL Database to avoid losing existing data. This procedure assumes that you have already published your .NET backend project to Azure, that there is existing data in your database, and that the remote and local data models are still in sync. This topic also describes the default Code First initializers implemented by Azure Mobile Services that are used during development. These initializers let you easily make schema changes without using Code First Migrations when it is not necessary to maintain you existing data.\n\n>[AZURE.NOTE]The schema name that is used to prefix your tables in the SQL Database is defined by the MS_MobileServiceName app setting in the web.config file. When you download the starter project from the portal, this value is already set to the mobile service name. When your schema name matches the mobile service, multiple mobile services can safely share the same database instance.\n\nNote that automatic migrations are not supported in a .NET backend project.\n\n## Updating the data model\n\nAs you add functionality to your .NET backend mobile service, you add new controllers to expose new endpoints in your API. You create a new API as either a custom controller or a table controller. A [TableController<TEntity>] exposes a data type that inherits from [EntityData]. To enable data to be persisted to the database, this data type must also be added to the data model as a new [DbSet<T>] in the [DbContext]. To learn more about Code First in the Entity Framework, see [Creating a Model with Code First](https://msdn.microsoft.com/data/ee712907#codefirst).\n\nVisual Studio makes it easy to create a new table controller to expose a new data type to client apps. For more information, see [How to use controllers to access data in mobile services](https://msdn.microsoft.com/library/windows/apps/xaml/dn614132.aspx).\n\n## Data model initializers\n\nMobile Services provides two data model initializer base classes in a .NET backend mobile service project. Both initializers drop and recreate tables in the database when the Entity Framework detects a data model change in your [DbContext]. These initializers are designed to work both when you mobile service is running on a local computer and when it is hosted in Azure.\n\n>[AZURE.NOTE]When you publish a .NET backend mobile service, the initializer is not run until a data access operation occurs. This means that for a newly published service, the data tables used for storage aren't created until a data access operation, such as a query, is requested by the client.\n>\n>You can also execute a data access operation by using the built-in API help functionality, accessed from the **Try it out** link on the start page. For more information on using the API pages to test your mobile service, see the section Test the mobile service project locally in [Add Mobile Services to an existing app](mobile-services-dotnet-backend-windows-universal-dotnet-get-started-data.md#test-the-service-locally).\n\nBoth initializers delete from the database all tables, views, functions, and procedures in the schema used by the mobile service.\n\n+ **ClearDatabaseSchemaIfModelChanges** <br/> Schema objects are deleted only when Code First detects a change in the data model. The default initializer in a .NET backend project downloaded from the [Azure classic portal] inherits from this base class.\n\n+ **ClearDatabaseSchemaAlways**: <br/> Schema objects are deleted every time that the data model is accessed. Use this base class to reset the database without having to make a data model change.\n\nYou can use other Code First data model initializers when running on a local computer. However, initializers that attempt to drop the database will fail in Azure because the user does not have permissions to drop the database, which is a good thing.\n\nYou may continue to use initializers during local development of your mobile service, and the .NET backend tutorials assume that you are using initializers. However, for situations where you want to make data model changes and maintain existing data in the database, you must use Code First Migrations.\n\n>[AZURE.IMPORTANT]When developing and testing your mobile service project against live Azure services, you should always use a mobile service instance that is dedicated for testing. You should never develop or test against a mobile service that is currently in production or being used by client apps.\n\nIn the downloaded quickstart project, the Code First initializer is defined in the WebApiConfig.cs file. Override the **Seed** method to add initial rows of data to new tables. For examples of seeding data, see [Seeding data in migrations].\n\n## <a name=\"migrations\"></a>Enable Code First Migrations\n\nCode First Migrations uses a snapshot method to generate code that, when executed, makes schema changes to the database. With Migrations, you can make incremental changes to your data model and maintain existing data in the database.\n\n>[AZURE.NOTE]If you have already published your .NET backend mobile service project to Azure, and your SQL Database table schema does not match the current data model of your project, you must use an initializer, drop the tables manually, or otherwise get the schema and data model in sync before you try to publish using Code First Migrations.\n\nThe following steps turn on Migrations and apply data model changes in the project, the local database, and in Azure.\n\n1. In Visual Studio in the Solution Explorer, right-click the mobile service project and click **Set as startup project**.\n\n2. From the **Tools** menu, expand **NuGet Package Manager**, then click **Package Manager Console**.\n\n    This displays the Package Manager Console, which you will use to manage your Code First Migrations.\n\n3. In the Package Manager Console, run the following command:\n\n        PM> Enable-Migrations\n\n    This turns on Code First Migrations for your project.\n\n4. In the console, run the following command:\n\n        PM> Add-Migration Initial\n\n    This creates a new migration named *Initial*. Migration code is stored in the Migrations project folder.\n\n5. Expand the App_Start folder, open the WebApiConfig.cs project file and add the following **using** statements:\n\n        using System.Data.Entity.Migrations;\n        using todolistService.Migrations;\n\n    In the above code, you must replace the _todolistService_ string with the namespace of your project, which for the downloaded quickstart project is <em>mobile&#95;service&#95;name</em>Service.\n\n6. In this same code file, comment-out the call to the **Database.SetInitializer** method and add the following code after it:\n\n        var migrator = new DbMigrator(new Configuration());\n        migrator.Update();\n\n    This disables the default Code First database initializer that drops and recreates the database and replaces it with an explicit request to apply the latest migration. At this point, any data model changes will result in an InvalidOperationException when the data is accessed, unless a migration has been created for it. Going forward, your service must use Code First Migrations to migrate data model changes to the database.\n\n7.  Press F5 to start the mobile service project on the local computer.\n\n    At this point, the database is in sync with the data model. If you provided seed data, you can verify it by clicking **Try it out**, **GET tables/todoitem**, then **Try this out** and **Send**. For more information, see [Seeding data in migrations].\n\n8.   Now make a change to your data model, such as adding a new UserId property to the TodoItem type, rebuild the project, and then in the Package Manager, run the following command:\n\n        PM> Add-Migration NewUserId\n\n    This creates a new migration named *NewUserId*. A new code file, which implements this change, is added in the Migrations folder\n\n9.  Press F5 again to restart the mobile service project on the local computer.\n\n    The migration is applied to the database and the database is again in sync with the data model. If you provided seed data, you can verify it by clicking **Try it out**, **GET tables/todoitem**, then **Try this out** and **Send**. For more information, see [Seeding data in migrations].\n\n10. Republish the mobile service to Azure, then run the client app to access the data and verify that data loads and no error occur.\n\n13. (Optional) In the [Azure classic portal], select your mobile service, click **Configure** > **SQL Database**. This navigates to the SQL Database page for your mobile service's database.\n\n14. (Optional) Click **Manage**, log in to your SQL Database server, then click **Design** and verify that the schema changes have been made in Azure.\n\n\n## Using Code First Migrations without an initializer\nBefore you use Code First Migrations with your .NET backend project, you should run a data model initializer. When you do NOT use an initializer, errors can occur when trying to apply migrations. If you choose not to use one of the pre-defined data model initializers, make sure that migrations is configured to use the EntityTableSqlGenerator as the SqlGenerator in the Migrations\\Configuration.cs file, as in the following example:\n\n    public Configuration()\n    {\n        AutomaticMigrationsEnabled = false;\n        SetSqlGenerator(\"System.Data.SqlClient\", new EntityTableSqlGenerator());\n    }\n\n##<a name=\"seeding\"></a>Seeding data in migrations\n\nYou can have Migrations add seed data to the database when a migration is executed. The **Configuration** class has a **Seed** method that you can override to insert or update data. The Configuration.cs code file is added to the Migrations folder when Migrations are enabled. These examples show how to override the [Seed] method to seed data to the **TodoItems** table. The [Seed] method is called after migrating to the latest version.\n\n###Seed a new table\n\nThe following code seeds the **TodoItems** table with new rows of data:\n\n        List<TodoItem> todoItems = new List<TodoItem>\n        {\n            new TodoItem { Id = \"1\", Text = \"First item\", Complete = false },\n            new TodoItem { Id = \"2\", Text = \"Second item\", Complete = false },\n        };\n\n        foreach (TodoItem todoItem in todoItems)\n        {\n            context.Set<TodoItem>().Add(todoItem);\n        }\n        base.Seed(context);\n\n###Seed a new column in a table\n\nThe following code seeds just the UserId column:\n\n        context.TodoItems.AddOrUpdate(\n            t => t.UserId,\n                new TodoItem { UserId = 1 },\n                new TodoItem { UserId = 1 },\n                new TodoItem { UserId = 2 }\n            );\n        base.Seed(context);\n\nThis code calls the [AddOrUpdate] helper extension method to add seed data to the new UserId column. By using [AddOrUpdate], duplicate rows are not created.\n\n<!-- Anchors -->\n[Migrations]: #migrations\n[Seeding data in migrations]: #seeding\n\n<!-- Images -->\n[0]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/navagate-to-sql-database.png\n[1]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/manage-sql-database.png\n[2]: ./media/mobile-services-dotnet-backend-how-to-use-code-first-migrations/sql-database-drop-tables.png\n\n<!-- URLs -->\n[DropCreateDatabaseIfModelChanges]: http://msdn.microsoft.com/library/gg679604(v=vs.113).aspx\n[Seed]: http://msdn.microsoft.com/library/hh829453(v=vs.113).aspx\n[Azure classic portal]: https://manage.windowsazure.com/\n[DbContext]: http://msdn.microsoft.com/library/system.data.entity.dbcontext(v=vs.113).aspx\n[AddOrUpdate]: http://msdn.microsoft.com/library/system.data.entity.migrations.idbsetextensions.addorupdate(v=vs.103).aspx\n[TableController<TEntity>]: https://msdn.microsoft.com/library/azure/dn643359.aspx\n[EntityData]: https://msdn.microsoft.com/library/azure/microsoft.windowsazure.mobile.service.entitydata.aspx\n[DbSet<T>]: https://msdn.microsoft.com/library/azure/gg696460.aspx\n"
+}

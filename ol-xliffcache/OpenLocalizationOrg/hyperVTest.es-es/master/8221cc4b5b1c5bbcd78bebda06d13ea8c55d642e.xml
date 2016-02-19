@@ -1,0 +1,2598 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        95
+      ],
+      "content": "Scale mobile services backed by Azure SQL Database | Microsoft Azure"
+    },
+    {
+      "pos": [
+        114,
+        209
+      ],
+      "content": "Learn how to diagnose and fix scalability issues in your mobile services backed by SQL Database"
+    },
+    {
+      "pos": [
+        545,
+        595
+      ],
+      "content": "Scale mobile services backed by Azure SQL Database"
+    },
+    {
+      "pos": [
+        700,
+        706
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        709,
+        1285
+      ],
+      "content": "Azure Mobile Services makes it very easy to get started and build an app that connects to a cloud-hosted backend that stores data in a SQL database. As your app grows, scaling your service instances is as simple as adjusting scale settings in the portal to add more computational and networking capacity. However, scaling the SQL database backing your service requires some proactive planning and monitoring as the service receives more load. This document will walk you through a set of best practices to ensure continued great performance of your SQL-backed mobile services.",
+      "nodes": [
+        {
+          "content": "Azure Mobile Services makes it very easy to get started and build an app that connects to a cloud-hosted backend that stores data in a SQL database.",
+          "pos": [
+            0,
+            148
+          ]
+        },
+        {
+          "content": "As your app grows, scaling your service instances is as simple as adjusting scale settings in the portal to add more computational and networking capacity.",
+          "pos": [
+            149,
+            304
+          ]
+        },
+        {
+          "content": "However, scaling the SQL database backing your service requires some proactive planning and monitoring as the service receives more load.",
+          "pos": [
+            305,
+            442
+          ]
+        },
+        {
+          "content": "This document will walk you through a set of best practices to ensure continued great performance of your SQL-backed mobile services.",
+          "pos": [
+            443,
+            576
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1287,
+        1337
+      ],
+      "content": "This topic walks you through these basic sections:"
+    },
+    {
+      "pos": [
+        1342,
+        1376
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Diagnosing Problems<ept id=\"p1\">](#Diagnosing)</ept>"
+    },
+    {
+      "pos": [
+        1380,
+        1401
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Indexing<ept id=\"p2\">](#Indexing)</ept>"
+    },
+    {
+      "pos": [
+        1405,
+        1429
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Schema Design<ept id=\"p3\">](#Schema)</ept>"
+    },
+    {
+      "pos": [
+        1433,
+        1455
+      ],
+      "content": "<bpt id=\"p4\">[</bpt>Query Design<ept id=\"p4\">](#Query)</ept>"
+    },
+    {
+      "pos": [
+        1459,
+        1496
+      ],
+      "content": "<bpt id=\"p5\">[</bpt>Service Architecture<ept id=\"p5\">](#Architecture)</ept>"
+    },
+    {
+      "pos": [
+        1500,
+        1537
+      ],
+      "content": "<bpt id=\"p6\">[</bpt>Advanced Troubleshooting<ept id=\"p6\">](#Advanced)</ept>"
+    },
+    {
+      "pos": [
+        1568,
+        1587
+      ],
+      "content": "Diagnosing Problems"
+    },
+    {
+      "pos": [
+        1589,
+        1793
+      ],
+      "content": "If you suspect your mobile service is experiencing problems under load, the first place to check is the <bpt id=\"p7\">**</bpt>Dashboard<ept id=\"p7\">**</ept><ph id=\"ph5\"/> tab for your service in the <bpt id=\"p8\">[</bpt><ept id=\"p8\">Azure classic portal]</ept>. Some of the things to verify here:",
+      "nodes": [
+        {
+          "content": "If you suspect your mobile service is experiencing problems under load, the first place to check is the <bpt id=\"p7\">**</bpt>Dashboard<ept id=\"p7\">**</ept><ph id=\"ph5\"/> tab for your service in the <bpt id=\"p8\">[</bpt><ept id=\"p8\">Azure classic portal]</ept>.",
+          "pos": [
+            0,
+            259
+          ]
+        },
+        {
+          "content": "Some of the things to verify here:",
+          "pos": [
+            260,
+            294
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1797,
+        1887
+      ],
+      "content": "Your usage meters including <bpt id=\"p9\">**</bpt>API Calls<ept id=\"p9\">**</ept><ph id=\"ph6\"/> and <bpt id=\"p10\">**</bpt>Active Devices<ept id=\"p10\">**</ept><ph id=\"ph7\"/> meters are not over quota"
+    },
+    {
+      "pos": [
+        1890,
+        2034
+      ],
+      "content": "<bpt id=\"p11\">**</bpt>Endpoint Monitoring<ept id=\"p11\">**</ept><ph id=\"ph8\"/> status indicates service is up (only available if service is using the Standard tier and Endpoint Monitoring is enabled)"
+    },
+    {
+      "pos": [
+        2036,
+        2346
+      ],
+      "content": "If any of the above is not true, consider adjusting your scale settings on the <bpt id=\"p12\">*</bpt>Scale<ept id=\"p12\">*</ept><ph id=\"ph9\"/> tab. If that does not address the issue, you can proceed and investigate whether Azure SQL Database may be the source of the issue. The next few sections cover a few different approaches to diagnose what may be going wrong.",
+      "nodes": [
+        {
+          "content": "If any of the above is not true, consider adjusting your scale settings on the <bpt id=\"p12\">*</bpt>Scale<ept id=\"p12\">*</ept><ph id=\"ph9\"/> tab.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "If that does not address the issue, you can proceed and investigate whether Azure SQL Database may be the source of the issue.",
+          "pos": [
+            146,
+            272
+          ]
+        },
+        {
+          "content": "The next few sections cover a few different approaches to diagnose what may be going wrong.",
+          "pos": [
+            273,
+            364
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2352,
+        2388
+      ],
+      "content": "Choosing the Right SQL Database Tier"
+    },
+    {
+      "pos": [
+        2390,
+        2594
+      ],
+      "content": "It is important to understand the different database tiers you have at your disposal to ensure you've picked the right tier given your app's needs. Azure SQL Database offers three different service tiers:",
+      "nodes": [
+        {
+          "content": "It is important to understand the different database tiers you have at your disposal to ensure you've picked the right tier given your app's needs.",
+          "pos": [
+            0,
+            147
+          ]
+        },
+        {
+          "content": "Azure SQL Database offers three different service tiers:",
+          "pos": [
+            148,
+            204
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2598,
+        2603
+      ],
+      "content": "Basic"
+    },
+    {
+      "pos": [
+        2606,
+        2614
+      ],
+      "content": "Standard"
+    },
+    {
+      "pos": [
+        2617,
+        2624
+      ],
+      "content": "Premium"
+    },
+    {
+      "pos": [
+        2627,
+        2703
+      ],
+      "content": "Here are some recommendations on selecting the right tier for your database:"
+    },
+    {
+      "pos": [
+        2707,
+        2839
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>Basic<ept id=\"p13\">**</ept><ph id=\"ph10\"/> - use at development time or for small production services where you only expect to make a single database query at a time"
+    },
+    {
+      "pos": [
+        2842,
+        2938
+      ],
+      "content": "<bpt id=\"p14\">**</bpt>Standard<ept id=\"p14\">**</ept><ph id=\"ph11\"/> - use for production services where you expect multiple concurrent database queries"
+    },
+    {
+      "pos": [
+        2941,
+        3084
+      ],
+      "content": "<bpt id=\"p15\">**</bpt>Premium<ept id=\"p15\">**</ept><ph id=\"ph12\"/> - use for large scale production services with many concurrent queries, high peak load, and expected low latency for every request."
+    },
+    {
+      "pos": [
+        3086,
+        3175
+      ],
+      "content": "For more information on when to use each tier, see <bpt id=\"p16\">[</bpt><ept id=\"p16\">Reasons to Use the New Service Tiers]</ept>"
+    },
+    {
+      "pos": [
+        3181,
+        3207
+      ],
+      "content": "Analyzing Database Metrics"
+    },
+    {
+      "pos": [
+        3209,
+        3369
+      ],
+      "content": "Once you are familiar with the different database tiers, we can explore database performance metrics to help us reason about scaling within and among the tiers."
+    },
+    {
+      "pos": [
+        3374,
+        3408
+      ],
+      "content": "Launch the <bpt id=\"p17\">[</bpt><ept id=\"p17\">Azure classic portal]</ept>."
+    },
+    {
+      "pos": [
+        3412,
+        3481
+      ],
+      "content": "On the Mobile Services tab, select the service you want to work with."
+    },
+    {
+      "pos": [
+        3485,
+        3514
+      ],
+      "content": "Select the <bpt id=\"p18\">**</bpt>Configure<ept id=\"p18\">**</ept><ph id=\"ph13\"/> tab."
+    },
+    {
+      "pos": [
+        3518,
+        3652
+      ],
+      "content": "Select the <bpt id=\"p19\">**</bpt>SQL Database<ept id=\"p19\">**</ept><ph id=\"ph14\"/> name in the <bpt id=\"p20\">**</bpt>Database Settings<ept id=\"p20\">**</ept><ph id=\"ph15\"/> section. This will navigate to the Azure SQL Database tab in the portal.",
+      "nodes": [
+        {
+          "content": "Select the <bpt id=\"p19\">**</bpt>SQL Database<ept id=\"p19\">**</ept><ph id=\"ph14\"/> name in the <bpt id=\"p20\">**</bpt>Database Settings<ept id=\"p20\">**</ept><ph id=\"ph15\"/> section.",
+          "pos": [
+            0,
+            180
+          ]
+        },
+        {
+          "content": "This will navigate to the Azure SQL Database tab in the portal.",
+          "pos": [
+            181,
+            244
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3656,
+        3687
+      ],
+      "content": "Navigate to the <bpt id=\"p21\">**</bpt>Monitor<ept id=\"p21\">**</ept><ph id=\"ph16\"/> tab"
+    },
+    {
+      "pos": [
+        3691,
+        3791
+      ],
+      "content": "Ensure the relevant metrics are displayed by using the <bpt id=\"p22\">**</bpt>Add Metrics<ept id=\"p22\">**</ept><ph id=\"ph17\"/> button. Include the following",
+      "nodes": [
+        {
+          "content": "Ensure the relevant metrics are displayed by using the <bpt id=\"p22\">**</bpt>Add Metrics<ept id=\"p22\">**</ept><ph id=\"ph17\"/> button.",
+          "pos": [
+            0,
+            133
+          ]
+        },
+        {
+          "content": "Include the following",
+          "pos": [
+            134,
+            155
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3798,
+        3863
+      ],
+      "content": "<bpt id=\"p23\">*</bpt>CPU Percentage<ept id=\"p23\">*</ept><ph id=\"ph18\"/> (available only in Basic/Standard/Premium tiers)"
+    },
+    {
+      "pos": [
+        3871,
+        3940
+      ],
+      "content": "<bpt id=\"p24\">*</bpt>Data IO Percentage<ept id=\"p24\">*</ept><ph id=\"ph19\"/> (available only in Basic/Standard/Premium tiers)"
+    },
+    {
+      "pos": [
+        3948,
+        4016
+      ],
+      "content": "<bpt id=\"p25\">*</bpt>Log IO Percentage<ept id=\"p25\">*</ept><ph id=\"ph20\"/> (available only in Basic/Standard/Premium tiers)"
+    },
+    {
+      "pos": [
+        4023,
+        4032
+      ],
+      "content": "<bpt id=\"p26\">*</bpt>Storage<ept id=\"p26\">*</ept>"
+    },
+    {
+      "pos": [
+        4037,
+        4120
+      ],
+      "content": "Inspect the metrics over the time window when your service was experiencing issues."
+    },
+    {
+      "pos": [
+        4127,
+        4191
+      ],
+      "content": "<ph id=\"ph21\">![</ph>Azure classic portal - SQL Database Metrics<ph id=\"ph22\">][PortalSqlMetrics]</ph>"
+    },
+    {
+      "pos": [
+        4193,
+        4472
+      ],
+      "content": "If any metric exceeds 80% utilization for an extended period of time, this could indicate a performance problem. For more detailed information on understanding database utilization, see <bpt id=\"p27\">[</bpt>Understanding Resource Use<ept id=\"p27\">](http://msdn.microsoft.com/library/azure/dn369873.aspx#Resource)</ept>.",
+      "nodes": [
+        {
+          "content": "If any metric exceeds 80% utilization for an extended period of time, this could indicate a performance problem.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "For more detailed information on understanding database utilization, see <bpt id=\"p27\">[</bpt>Understanding Resource Use<ept id=\"p27\">](http://msdn.microsoft.com/library/azure/dn369873.aspx#Resource)</ept>.",
+          "pos": [
+            113,
+            319
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4474,
+        4848
+      ],
+      "content": "If the metrics indicate your database is incurring high utilization, consider <bpt id=\"p28\">**</bpt>scaling up the database to a higher service tier<ept id=\"p28\">**</ept><ph id=\"ph23\"/> as a first mitigation step. To immediately resolve issues, consider using the <bpt id=\"p29\">**</bpt>Scale<ept id=\"p29\">**</ept><ph id=\"ph24\"/> tab for your database to scale up your database. This will result in an increase in your bill.\n<ph id=\"ph25\">![</ph>Azure classic portal - SQL Database Scale<ph id=\"ph26\">][PortalSqlScale]</ph>",
+      "nodes": [
+        {
+          "content": "If the metrics indicate your database is incurring high utilization, consider <bpt id=\"p28\">**</bpt>scaling up the database to a higher service tier<ept id=\"p28\">**</ept><ph id=\"ph23\"/> as a first mitigation step.",
+          "pos": [
+            0,
+            213
+          ]
+        },
+        {
+          "content": "To immediately resolve issues, consider using the <bpt id=\"p29\">**</bpt>Scale<ept id=\"p29\">**</ept><ph id=\"ph24\"/> tab for your database to scale up your database.",
+          "pos": [
+            214,
+            377
+          ]
+        },
+        {
+          "content": "This will result in an increase in your bill.",
+          "pos": [
+            378,
+            423
+          ]
+        },
+        {
+          "content": "<ph id=\"ph25\">![</ph>Azure classic portal - SQL Database Scale<ph id=\"ph26\">][PortalSqlScale]</ph>",
+          "pos": [
+            424,
+            522
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4850,
+        4914
+      ],
+      "content": "As soon as possible, consider these additional mitigation steps:"
+    },
+    {
+      "pos": [
+        4918,
+        5072
+      ],
+      "leadings": [
+        "",
+        "  "
+      ],
+      "content": "<bpt id=\"p30\">**</bpt>Tune your database.<ept id=\"p30\">**</ept>\nIt is frequently possible to reduce database utilization and avoid having to scale to a higher tier by optimizing your database."
+    },
+    {
+      "pos": [
+        5075,
+        5471
+      ],
+      "leadings": [
+        "",
+        "  "
+      ],
+      "content": "<bpt id=\"p31\">**</bpt>Consider your service architecture.<ept id=\"p31\">**</ept>\nFrequently your service load is not distributed evenly over time but contains \"spikes\" of high demand. Instead of scaling the database up to handle the spikes, and having it go underutilized during periods of low demand, it is frequently possible to adjust the service architecture to avoid such spikes, or to handle them without incurring database hits.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p31\">**</bpt>Consider your service architecture.<ept id=\"p31\">**</ept>\nFrequently your service load is not distributed evenly over time but contains \"spikes\" of high demand.",
+          "pos": [
+            0,
+            182
+          ]
+        },
+        {
+          "content": "Instead of scaling the database up to handle the spikes, and having it go underutilized during periods of low demand, it is frequently possible to adjust the service architecture to avoid such spikes, or to handle them without incurring database hits.",
+          "pos": [
+            183,
+            434
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5473,
+        5583
+      ],
+      "content": "The remaining sections of this document contain tailored guidance to help with implementing these mitigations."
+    },
+    {
+      "pos": [
+        5590,
+        5608
+      ],
+      "content": "Configuring Alerts"
+    },
+    {
+      "pos": [
+        5610,
+        5773
+      ],
+      "content": "It is frequently useful to configure alerts for key database metrics as a proactive step to ensure you have plenty of time to react in case of resource exhaustion."
+    },
+    {
+      "pos": [
+        5778,
+        5859
+      ],
+      "content": "Navigate to the <bpt id=\"p32\">**</bpt>Monitoring<ept id=\"p32\">**</ept><ph id=\"ph27\"/> tab for the database you want to set up alerts for"
+    },
+    {
+      "pos": [
+        5863,
+        5941
+      ],
+      "content": "Ensure the relevant metrics are displayed as described in the previous section"
+    },
+    {
+      "pos": [
+        5945,
+        6015
+      ],
+      "content": "Select the metric you want to set an alert for and select <bpt id=\"p33\">**</bpt>Add Rule<ept id=\"p33\">**</ept>"
+    },
+    {
+      "pos": [
+        6021,
+        6078
+      ],
+      "content": "<ph id=\"ph28\">![</ph>Azure Management Portal - SQL Alert<ph id=\"ph29\">][PortalSqlAddAlert]</ph>"
+    },
+    {
+      "pos": [
+        6083,
+        6211
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "Provide a name and description for the alert\n <ph id=\"ph30\">![</ph>Azure Management Portal - SQL Alert Name and Description<ph id=\"ph31\">][PortalSqlAddAlert2]</ph>"
+    },
+    {
+      "pos": [
+        6216,
+        6388
+      ],
+      "content": "Specify the value to use as the alert threshold. Consider using <bpt id=\"p34\">**</bpt>80%<ept id=\"p34\">**</ept><ph id=\"ph32\"/> to allow for some reaction time. Also be sure to specify an email address that you actively monitor.",
+      "nodes": [
+        {
+          "content": "Specify the value to use as the alert threshold.",
+          "pos": [
+            0,
+            48
+          ]
+        },
+        {
+          "content": "Consider using <bpt id=\"p34\">**</bpt>80%<ept id=\"p34\">**</ept><ph id=\"ph32\"/> to allow for some reaction time.",
+          "pos": [
+            49,
+            159
+          ]
+        },
+        {
+          "content": "Also be sure to specify an email address that you actively monitor.",
+          "pos": [
+            160,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6395,
+        6473
+      ],
+      "content": "<ph id=\"ph33\">![</ph>Azure Management Portal - SQL Alert Threshold and Email<ph id=\"ph34\">][PortalSqlAddAlert3]</ph>"
+    },
+    {
+      "pos": [
+        6476,
+        6602
+      ],
+      "content": "For more information on diagnosing SQL issues, see <bpt id=\"p35\">[</bpt>Advanced Diagnostics<ept id=\"p35\">](#AdvancedDiagnosing)</ept><ph id=\"ph35\"/> at the bottom of this document."
+    },
+    {
+      "pos": [
+        6631,
+        6639
+      ],
+      "content": "Indexing"
+    },
+    {
+      "pos": [
+        6641,
+        6858
+      ],
+      "content": "When you start to see problems with your query performance, the first thing you should investigate is the design of your indexes. Indexes are important because they directly affect how the SQL engine executes a query.",
+      "nodes": [
+        {
+          "content": "When you start to see problems with your query performance, the first thing you should investigate is the design of your indexes.",
+          "pos": [
+            0,
+            129
+          ]
+        },
+        {
+          "content": "Indexes are important because they directly affect how the SQL engine executes a query.",
+          "pos": [
+            130,
+            217
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6861,
+        7172
+      ],
+      "content": "For instance, if you often need to look up an element by a certain field, you should consider adding an index for that column. Otherwise, the SQL engine will be forced to perform a table scan and read each physical record (or at least the query column) and the records could be substantially spread out on disk.",
+      "nodes": [
+        {
+          "content": "For instance, if you often need to look up an element by a certain field, you should consider adding an index for that column.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "Otherwise, the SQL engine will be forced to perform a table scan and read each physical record (or at least the query column) and the records could be substantially spread out on disk.",
+          "pos": [
+            127,
+            311
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7174,
+        7365
+      ],
+      "content": "So, if you are frequently doing WHERE or JOIN statements on particular columns, you should make sure you index them. See the section <bpt id=\"p36\">[</bpt>Creating Indexes<ept id=\"p36\">](#CreatingIndexes)</ept><ph id=\"ph38\"/> for more information.",
+      "nodes": [
+        {
+          "content": "So, if you are frequently doing WHERE or JOIN statements on particular columns, you should make sure you index them.",
+          "pos": [
+            0,
+            116
+          ]
+        },
+        {
+          "content": "See the section <bpt id=\"p36\">[</bpt>Creating Indexes<ept id=\"p36\">](#CreatingIndexes)</ept><ph id=\"ph38\"/> for more information.",
+          "pos": [
+            117,
+            246
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7367,
+        7763
+      ],
+      "content": "If indexes are so great and table scans are so bad, does that mean you should index every column in your table, just to be safe?  The short answer is, \"probably not.\" Indexes take up space and have overhead themselves: every time there is an insert in a table, the index structures for each of the indexed columns need to be updated. See below for guidelines on how to choose your column indexes.",
+      "nodes": [
+        {
+          "content": "If indexes are so great and table scans are so bad, does that mean you should index every column in your table, just to be safe?",
+          "pos": [
+            0,
+            128
+          ]
+        },
+        {
+          "content": "The short answer is, \"probably not.\"",
+          "pos": [
+            130,
+            166
+          ]
+        },
+        {
+          "content": "Indexes take up space and have overhead themselves: every time there is an insert in a table, the index structures for each of the indexed columns need to be updated.",
+          "pos": [
+            167,
+            333
+          ]
+        },
+        {
+          "content": "See below for guidelines on how to choose your column indexes.",
+          "pos": [
+            334,
+            396
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7769,
+        7792
+      ],
+      "content": "Index Design Guidelines"
+    },
+    {
+      "pos": [
+        7794,
+        7961
+      ],
+      "content": "As mentioned above, it's not always better to add more indexes to a table, because indexes themselves can be costly, both in terms of performance and storage overhead."
+    },
+    {
+      "pos": [
+        7968,
+        7988
+      ],
+      "content": "Query considerations"
+    },
+    {
+      "pos": [
+        7992,
+        8159
+      ],
+      "content": "Consider adding indexes to columns that are frequently used in predicates (e.g., WHERE clauses) and join conditions, while balancing the database considerations below."
+    },
+    {
+      "pos": [
+        8162,
+        8404
+      ],
+      "content": "Write queries that insert or modify as many rows as possible in a single statement, instead of using multiple queries to update the same rows. When there is only one statement, the database engine can better optimize how it maintains indexes.",
+      "nodes": [
+        {
+          "content": "Write queries that insert or modify as many rows as possible in a single statement, instead of using multiple queries to update the same rows.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "When there is only one statement, the database engine can better optimize how it maintains indexes.",
+          "pos": [
+            143,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8411,
+        8434
+      ],
+      "content": "Database considerations"
+    },
+    {
+      "pos": [
+        8436,
+        8623
+      ],
+      "content": "Large numbers of indexes on a table affect the performance of INSERT, UPDATE, DELETE, and MERGE statements because all indexes must be adjusted appropriately as data in the table changes."
+    },
+    {
+      "pos": [
+        8627,
+        8698
+      ],
+      "content": "For <bpt id=\"p37\">**</bpt>heavily updated<ept id=\"p37\">**</ept><ph id=\"ph39\"/> tables, avoid indexing heavily updated columns."
+    },
+    {
+      "pos": [
+        8701,
+        8985
+      ],
+      "content": "For tables that are <bpt id=\"p38\">**</bpt>not frequently updated<ept id=\"p38\">**</ept><ph id=\"ph40\"/> but that have large volumes of data, use many indexes. This can improve the performance of queries that do not modify data (such as SELECT statements) because the query optimizer will have more options for finding the best access method.",
+      "nodes": [
+        {
+          "content": "For tables that are <bpt id=\"p38\">**</bpt>not frequently updated<ept id=\"p38\">**</ept><ph id=\"ph40\"/> but that have large volumes of data, use many indexes.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "This can improve the performance of queries that do not modify data (such as SELECT statements) because the query optimizer will have more options for finding the best access method.",
+          "pos": [
+            157,
+            339
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8987,
+        9267
+      ],
+      "content": "Indexing small tables may not be optimal because it can take the query optimizer longer to traverse the index searching for data than to perform a simple table scan. Therefore, indexes on small tables might never be used, but must still be maintained as data in the table changes.",
+      "nodes": [
+        {
+          "content": "Indexing small tables may not be optimal because it can take the query optimizer longer to traverse the index searching for data than to perform a simple table scan.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "Therefore, indexes on small tables might never be used, but must still be maintained as data in the table changes.",
+          "pos": [
+            166,
+            280
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9305,
+        9321
+      ],
+      "content": "Creating Indexes"
+    },
+    {
+      "pos": [
+        9328,
+        9346
+      ],
+      "content": "JavaScript backend"
+    },
+    {
+      "pos": [
+        9348,
+        9422
+      ],
+      "content": "To set the index for a column in the JavaScript backend, do the following:"
+    },
+    {
+      "pos": [
+        9427,
+        9482
+      ],
+      "content": "Open your mobile service in the <bpt id=\"p39\">[</bpt><ept id=\"p39\">Azure classic portal]</ept>."
+    },
+    {
+      "pos": [
+        9486,
+        9509
+      ],
+      "content": "Click the <bpt id=\"p40\">**</bpt>Data<ept id=\"p40\">**</ept><ph id=\"ph43\"/> tab."
+    },
+    {
+      "pos": [
+        9513,
+        9549
+      ],
+      "content": "Select the table you want to modify."
+    },
+    {
+      "pos": [
+        9553,
+        9579
+      ],
+      "content": "Click the <bpt id=\"p41\">**</bpt>Columns<ept id=\"p41\">**</ept><ph id=\"ph44\"/> tab."
+    },
+    {
+      "pos": [
+        9583,
+        9642
+      ],
+      "content": "Select the column. In the command bar, click <bpt id=\"p42\">**</bpt>Set Index<ept id=\"p42\">**</ept>:",
+      "nodes": [
+        {
+          "content": "Select the column.",
+          "pos": [
+            0,
+            18
+          ]
+        },
+        {
+          "content": "In the command bar, click <bpt id=\"p42\">**</bpt>Set Index<ept id=\"p42\">**</ept>:",
+          "pos": [
+            19,
+            99
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9648,
+        9711
+      ],
+      "content": "<ph id=\"ph45\">![</ph>Mobile Services Portal - Set Index<ph id=\"ph46\">][SetIndexJavaScriptPortal]</ph>"
+    },
+    {
+      "pos": [
+        9713,
+        9758
+      ],
+      "content": "You can also remove indexes within this view."
+    },
+    {
+      "pos": [
+        9765,
+        9777
+      ],
+      "content": ".NET backend"
+    },
+    {
+      "pos": [
+        9779,
+        9897
+      ],
+      "content": "To define an index in Entity Framework, use the attribute <ph id=\"ph47\">`[Index]`</ph><ph id=\"ph48\"/> on the fields that you want to index. For example:",
+      "nodes": [
+        {
+          "content": "To define an index in Entity Framework, use the attribute <ph id=\"ph47\">`[Index]`</ph><ph id=\"ph48\"/> on the fields that you want to index.",
+          "pos": [
+            0,
+            139
+          ]
+        },
+        {
+          "content": "For example:",
+          "pos": [
+            140,
+            152
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10052,
+        10246
+      ],
+      "content": "For more information on indexes, see [Index Annotations in Entity Framework][]. For further tips on optimizing indexes, see <bpt id=\"p43\">[</bpt>Advanced Indexing<ept id=\"p43\">](#AdvancedIndexing)</ept><ph id=\"ph49\"/> at the bottom of this document.",
+      "nodes": [
+        {
+          "content": "For more information on indexes, see [Index Annotations in Entity Framework][].",
+          "pos": [
+            0,
+            79
+          ]
+        },
+        {
+          "content": "For further tips on optimizing indexes, see <bpt id=\"p43\">[</bpt>Advanced Indexing<ept id=\"p43\">](#AdvancedIndexing)</ept><ph id=\"ph49\"/> at the bottom of this document.",
+          "pos": [
+            80,
+            249
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10273,
+        10286
+      ],
+      "content": "Schema Design"
+    },
+    {
+      "pos": [
+        10288,
+        10602
+      ],
+      "content": "Here are a few issues to be aware of when picking the data types for your objects, which in turn translates to the schema of your SQL database. Tuning the schema can frequently bring significant performance improvements since SQL has custom optimized ways of handling indexing and storage for different data types:",
+      "nodes": [
+        {
+          "content": "Here are a few issues to be aware of when picking the data types for your objects, which in turn translates to the schema of your SQL database.",
+          "pos": [
+            0,
+            143
+          ]
+        },
+        {
+          "content": "Tuning the schema can frequently bring significant performance improvements since SQL has custom optimized ways of handling indexing and storage for different data types:",
+          "pos": [
+            144,
+            314
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10606,
+        10805
+      ],
+      "content": "<bpt id=\"p44\">**</bpt>Use the provided ID column<ept id=\"p44\">**</ept>. Every mobile service table comes with a default ID column configured as the primary key and has an index set on it. There is no need to create an additional ID column.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p44\">**</bpt>Use the provided ID column<ept id=\"p44\">**</ept>.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "Every mobile service table comes with a default ID column configured as the primary key and has an index set on it.",
+          "pos": [
+            72,
+            187
+          ]
+        },
+        {
+          "content": "There is no need to create an additional ID column.",
+          "pos": [
+            188,
+            239
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10808,
+        11294
+      ],
+      "content": "<bpt id=\"p45\">**</bpt>Use the correct datatypes in your model.<ept id=\"p45\">**</ept><ph id=\"ph52\"/> If you know a certain property of your model will be a numeric or boolean, be sure to define it that way in your model instead of as a string. In the JavaScript backend, use literals such as <ph id=\"ph53\">`true`</ph><ph id=\"ph54\"/> instead of <ph id=\"ph55\">`\"true\"`</ph><ph id=\"ph56\"/> and <ph id=\"ph57\">`5`</ph><ph id=\"ph58\"/> instead of <ph id=\"ph59\">`\"5\"`</ph>. In the .NET backend, use the <ph id=\"ph60\">`int`</ph><ph id=\"ph61\"/> and <ph id=\"ph62\">`bool`</ph><ph id=\"ph63\"/> types when you declare the properties of your model. This enables SQL to create the correct schema for those types, which makes queries more efficient.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p45\">**</bpt>Use the correct datatypes in your model.<ept id=\"p45\">**</ept><ph id=\"ph52\"/> If you know a certain property of your model will be a numeric or boolean, be sure to define it that way in your model instead of as a string.",
+          "pos": [
+            0,
+            242
+          ]
+        },
+        {
+          "content": "In the JavaScript backend, use literals such as <ph id=\"ph53\">`true`</ph><ph id=\"ph54\"/> instead of <ph id=\"ph55\">`\"true\"`</ph><ph id=\"ph56\"/> and <ph id=\"ph57\">`5`</ph><ph id=\"ph58\"/> instead of <ph id=\"ph59\">`\"5\"`</ph>.",
+          "pos": [
+            243,
+            464
+          ]
+        },
+        {
+          "content": "In the .NET backend, use the <ph id=\"ph60\">`int`</ph><ph id=\"ph61\"/> and <ph id=\"ph62\">`bool`</ph><ph id=\"ph63\"/> types when you declare the properties of your model.",
+          "pos": [
+            465,
+            631
+          ]
+        },
+        {
+          "content": "This enables SQL to create the correct schema for those types, which makes queries more efficient.",
+          "pos": [
+            632,
+            730
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11320,
+        11332
+      ],
+      "content": "Query Design"
+    },
+    {
+      "pos": [
+        11334,
+        11398
+      ],
+      "content": "Here are some guidelines to consider when querying the database:"
+    },
+    {
+      "pos": [
+        11402,
+        11923
+      ],
+      "content": "<bpt id=\"p46\">**</bpt>Always execute join operations in the database.<ept id=\"p46\">**</ept><ph id=\"ph66\"/> Frequently you will need to combine records from two or more tables where the records being combined share a common field (also known as a <bpt id=\"p47\">*</bpt>join<ept id=\"p47\">*</ept>). This operation can be inefficient if performed incorrectly since it may involve pulling down all the entities from both tables and then iterating through all of them. This kind of operation is best left to the database itself, but it is sometimes easy to mistakenly perform it on the client or in the mobile service code.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p46\">**</bpt>Always execute join operations in the database.<ept id=\"p46\">**</ept><ph id=\"ph66\"/> Frequently you will need to combine records from two or more tables where the records being combined share a common field (also known as a <bpt id=\"p47\">*</bpt>join<ept id=\"p47\">*</ept>).",
+          "pos": [
+            0,
+            294
+          ]
+        },
+        {
+          "content": "This operation can be inefficient if performed incorrectly since it may involve pulling down all the entities from both tables and then iterating through all of them.",
+          "pos": [
+            295,
+            461
+          ]
+        },
+        {
+          "content": "This kind of operation is best left to the database itself, but it is sometimes easy to mistakenly perform it on the client or in the mobile service code.",
+          "pos": [
+            462,
+            616
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11930,
+        11966
+      ],
+      "content": "Don't perform joins in your app code"
+    },
+    {
+      "pos": [
+        11973,
+        12551
+      ],
+      "content": "Don't perform joins in your mobile service code. When using the JavaScript backend, be aware that the <bpt id=\"p48\">[</bpt>table object<ept id=\"p48\">](http://msdn.microsoft.com/library/windowsazure/jj554210.aspx)</ept><ph id=\"ph67\"/> does not handle joins. Be sure to use the <bpt id=\"p49\">[</bpt>mssql object<ept id=\"p49\">](http://msdn.microsoft.com/library/windowsazure/jj554212.aspx)</ept><ph id=\"ph68\"/> directly to ensure the join happens in the database. For more information, see <bpt id=\"p50\">[</bpt>Join relational tables<ept id=\"p50\">](mobile-services-how-to-use-server-scripts.md#joins)</ept>. If using the .NET backend and querying via LINQ, joins are automatically handled at the database level by Entity Framework.",
+      "nodes": [
+        {
+          "content": "Don't perform joins in your mobile service code.",
+          "pos": [
+            0,
+            48
+          ]
+        },
+        {
+          "content": "When using the JavaScript backend, be aware that the <bpt id=\"p48\">[</bpt>table object<ept id=\"p48\">](http://msdn.microsoft.com/library/windowsazure/jj554210.aspx)</ept><ph id=\"ph67\"/> does not handle joins.",
+          "pos": [
+            49,
+            256
+          ]
+        },
+        {
+          "content": "Be sure to use the <bpt id=\"p49\">[</bpt>mssql object<ept id=\"p49\">](http://msdn.microsoft.com/library/windowsazure/jj554212.aspx)</ept><ph id=\"ph68\"/> directly to ensure the join happens in the database.",
+          "pos": [
+            257,
+            460
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p50\">[</bpt>Join relational tables<ept id=\"p50\">](mobile-services-how-to-use-server-scripts.md#joins)</ept>.",
+          "pos": [
+            461,
+            604
+          ]
+        },
+        {
+          "content": "If using the .NET backend and querying via LINQ, joins are automatically handled at the database level by Entity Framework.",
+          "pos": [
+            605,
+            728
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12554,
+        12755
+      ],
+      "content": "<bpt id=\"p51\">**</bpt>Implement paging.<ept id=\"p51\">**</ept><ph id=\"ph69\"/> Querying the database can sometimes result in a large number of records being returned to the client. To minimize the size and latency of operations, consider implementing paging.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p51\">**</bpt>Implement paging.<ept id=\"p51\">**</ept><ph id=\"ph69\"/> Querying the database can sometimes result in a large number of records being returned to the client.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "To minimize the size and latency of operations, consider implementing paging.",
+          "pos": [
+            179,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12763,
+        13329
+      ],
+      "content": "By default your mobile service will limit any incoming queries to a page size of 50, and you can manually request up to 1,000 records. For more information, see \"Return data in pages\" for <bpt id=\"p52\">[</bpt>Windows Store<ept id=\"p52\">](mobile-services-windows-dotnet-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p53\">[</bpt>iOS<ept id=\"p53\">](mobile-services-ios-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p54\">[</bpt>Android<ept id=\"p54\">](mobile-services-android-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p55\">[</bpt>HTML/JavaScript<ept id=\"p55\">](mobile-services-html-how-to-use-client-library#paging)</ept>, and <bpt id=\"p56\">[</bpt>Xamarin<ept id=\"p56\">](partner-xamarin-mobile-services-how-to-use-client-library.md#paging)</ept>.",
+      "nodes": [
+        {
+          "content": "By default your mobile service will limit any incoming queries to a page size of 50, and you can manually request up to 1,000 records.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "For more information, see \"Return data in pages\" for <bpt id=\"p52\">[</bpt>Windows Store<ept id=\"p52\">](mobile-services-windows-dotnet-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p53\">[</bpt>iOS<ept id=\"p53\">](mobile-services-ios-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p54\">[</bpt>Android<ept id=\"p54\">](mobile-services-android-how-to-use-client-library.md#paging)</ept>, <bpt id=\"p55\">[</bpt>HTML/JavaScript<ept id=\"p55\">](mobile-services-html-how-to-use-client-library#paging)</ept>, and <bpt id=\"p56\">[</bpt>Xamarin<ept id=\"p56\">](partner-xamarin-mobile-services-how-to-use-client-library.md#paging)</ept>.",
+          "pos": [
+            135,
+            766
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13336,
+        13748
+      ],
+      "content": "There is no default page size for queries made from your mobile service code. If your app does not implement paging, or as a defensive measure, consider applying default limits to your queries. In the JavaScript backend, use the <bpt id=\"p57\">**</bpt>take<ept id=\"p57\">**</ept><ph id=\"ph70\"/> operator on the <bpt id=\"p58\">[</bpt>query object<ept id=\"p58\">](http://msdn.microsoft.com/library/azure/jj613353.aspx)</ept>. If using the .NET backend, consider using the <bpt id=\"p59\">[</bpt><ept id=\"p59\">Take method]</ept> as part of your LINQ query.",
+      "nodes": [
+        {
+          "content": "There is no default page size for queries made from your mobile service code.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "If your app does not implement paging, or as a defensive measure, consider applying default limits to your queries.",
+          "pos": [
+            78,
+            193
+          ]
+        },
+        {
+          "content": "In the JavaScript backend, use the <bpt id=\"p57\">**</bpt>take<ept id=\"p57\">**</ept><ph id=\"ph70\"/> operator on the <bpt id=\"p58\">[</bpt>query object<ept id=\"p58\">](http://msdn.microsoft.com/library/azure/jj613353.aspx)</ept>.",
+          "pos": [
+            194,
+            419
+          ]
+        },
+        {
+          "content": "If using the .NET backend, consider using the <bpt id=\"p59\">[</bpt><ept id=\"p59\">Take method]</ept> as part of your LINQ query.",
+          "pos": [
+            420,
+            547
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13753,
+        13914
+      ],
+      "content": "For more information on improving query design, including how to analyze query plans, see <bpt id=\"p60\">[</bpt>Advanced Query Design<ept id=\"p60\">](#AdvancedQuery)</ept><ph id=\"ph71\"/> at the bottom of this document."
+    },
+    {
+      "pos": [
+        13947,
+        13967
+      ],
+      "content": "Service Architecture"
+    },
+    {
+      "pos": [
+        13969,
+        14961
+      ],
+      "content": "Imagine a scenario where you are about to send a push notification to all your customers to check out some new content in your app. As they tap on the notification, the app launches, which possibly triggers a call to your mobile service and a query execution against your SQL database. As potentially millions of customers take this action over the span of just a few minutes, this will generate a surge of SQL load, which may be orders of magnitude higher than your app's steady state load. This could be addressed by scaling your app to a higher SQL tier during the spike and then scaling it back down, however that solution requires manual intervention and comes with increased cost. Frequently slight tweaks in your mobile service architecture can significantly balance out the load clients drive to your SQL database and eliminate problematic spikes in demand. These modifications can often be implemented easily with minimal impact to your customer's experience. Here are some examples:",
+      "nodes": [
+        {
+          "content": "Imagine a scenario where you are about to send a push notification to all your customers to check out some new content in your app.",
+          "pos": [
+            0,
+            131
+          ]
+        },
+        {
+          "content": "As they tap on the notification, the app launches, which possibly triggers a call to your mobile service and a query execution against your SQL database.",
+          "pos": [
+            132,
+            285
+          ]
+        },
+        {
+          "content": "As potentially millions of customers take this action over the span of just a few minutes, this will generate a surge of SQL load, which may be orders of magnitude higher than your app's steady state load.",
+          "pos": [
+            286,
+            491
+          ]
+        },
+        {
+          "content": "This could be addressed by scaling your app to a higher SQL tier during the spike and then scaling it back down, however that solution requires manual intervention and comes with increased cost.",
+          "pos": [
+            492,
+            686
+          ]
+        },
+        {
+          "content": "Frequently slight tweaks in your mobile service architecture can significantly balance out the load clients drive to your SQL database and eliminate problematic spikes in demand.",
+          "pos": [
+            687,
+            865
+          ]
+        },
+        {
+          "content": "These modifications can often be implemented easily with minimal impact to your customer's experience.",
+          "pos": [
+            866,
+            968
+          ]
+        },
+        {
+          "content": "Here are some examples:",
+          "pos": [
+            969,
+            992
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14965,
+        15824
+      ],
+      "content": "<bpt id=\"p61\">**</bpt>Spread out the load over time.<ept id=\"p61\">**</ept><ph id=\"ph74\"/> If you control the timing of certain events (for example, a broadcast push notification), which are expected to generate a spike in demand, and the timing of those events is not critical, consider spreading them out over time. In the example above, perhaps it is acceptable for your app customers to get notified of the new app content in batches over the span of a day instead of nearly simultaneously. Consider batching up your customers into groups which will allow staggered delivery to each batch. If using Notification Hubs, applying an additional tag to track the batch, and then delivering a push notification to that tag provides an easy way to implement this strategy. For more information on tags, see <bpt id=\"p62\">[</bpt>Use Notification Hubs to send breaking news<ept id=\"p62\">](../notification-hubs-windows-store-dotnet-send-breaking-news.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p61\">**</bpt>Spread out the load over time.<ept id=\"p61\">**</ept><ph id=\"ph74\"/> If you control the timing of certain events (for example, a broadcast push notification), which are expected to generate a spike in demand, and the timing of those events is not critical, consider spreading them out over time.",
+          "pos": [
+            0,
+            316
+          ]
+        },
+        {
+          "content": "In the example above, perhaps it is acceptable for your app customers to get notified of the new app content in batches over the span of a day instead of nearly simultaneously.",
+          "pos": [
+            317,
+            493
+          ]
+        },
+        {
+          "content": "Consider batching up your customers into groups which will allow staggered delivery to each batch.",
+          "pos": [
+            494,
+            592
+          ]
+        },
+        {
+          "content": "If using Notification Hubs, applying an additional tag to track the batch, and then delivering a push notification to that tag provides an easy way to implement this strategy.",
+          "pos": [
+            593,
+            768
+          ]
+        },
+        {
+          "content": "For more information on tags, see <bpt id=\"p62\">[</bpt>Use Notification Hubs to send breaking news<ept id=\"p62\">](../notification-hubs-windows-store-dotnet-send-breaking-news.md)</ept>.",
+          "pos": [
+            769,
+            954
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15827,
+        16557
+      ],
+      "content": "<bpt id=\"p63\">**</bpt>Use Blob and Table Storage whenever appropriate.<ept id=\"p63\">**</ept><ph id=\"ph75\"/> Frequently the content that the customers will view during the spike is fairly static and doesn't need to be stored in a SQL database since you are unlikely to need relational querying capabilities over that content. In that case, consider storing the content in Blob or Table Storage. You can access public blobs in Blob Storage directly from the device. To access blobs in a secure way or use Table Storage, you will need to go through a Mobile Services Custom API in order to protect your storage access key. For more information, see <bpt id=\"p64\">[</bpt>Upload images to Azure Storage by using Mobile Services<ept id=\"p64\">](mobile-services-dotnet-backend-windows-store-dotnet-upload-data-blob-storage.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p63\">**</bpt>Use Blob and Table Storage whenever appropriate.<ept id=\"p63\">**</ept><ph id=\"ph75\"/> Frequently the content that the customers will view during the spike is fairly static and doesn't need to be stored in a SQL database since you are unlikely to need relational querying capabilities over that content.",
+          "pos": [
+            0,
+            324
+          ]
+        },
+        {
+          "content": "In that case, consider storing the content in Blob or Table Storage.",
+          "pos": [
+            325,
+            393
+          ]
+        },
+        {
+          "content": "You can access public blobs in Blob Storage directly from the device.",
+          "pos": [
+            394,
+            463
+          ]
+        },
+        {
+          "content": "To access blobs in a secure way or use Table Storage, you will need to go through a Mobile Services Custom API in order to protect your storage access key.",
+          "pos": [
+            464,
+            619
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p64\">[</bpt>Upload images to Azure Storage by using Mobile Services<ept id=\"p64\">](mobile-services-dotnet-backend-windows-store-dotnet-upload-data-blob-storage.md)</ept>.",
+          "pos": [
+            620,
+            825
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16560,
+        16908
+      ],
+      "content": "<bpt id=\"p65\">**</bpt>Use an in-memory cache<ept id=\"p65\">**</ept>. Another alternative is to store data, which would commonly be accessed during a traffic spike, in an in-memory cache such as <bpt id=\"p66\">[</bpt>Azure Cache<ept id=\"p66\">](https://azure.microsoft.com/services/cache/)</ept>. This means incoming requests would be able to fetch the information they need from memory, instead of repeatedly querying the database.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p65\">**</bpt>Use an in-memory cache<ept id=\"p65\">**</ept>.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "Another alternative is to store data, which would commonly be accessed during a traffic spike, in an in-memory cache such as <bpt id=\"p66\">[</bpt>Azure Cache<ept id=\"p66\">](https://azure.microsoft.com/services/cache/)</ept>.",
+          "pos": [
+            68,
+            292
+          ]
+        },
+        {
+          "content": "This means incoming requests would be able to fetch the information they need from memory, instead of repeatedly querying the database.",
+          "pos": [
+            293,
+            428
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16937,
+        16961
+      ],
+      "content": "Advanced Troubleshooting"
+    },
+    {
+      "pos": [
+        16962,
+        17094
+      ],
+      "content": "This section covers some more advanced diagnostic tasks, which may be useful if the steps so far have not addressed the issue fully."
+    },
+    {
+      "pos": [
+        17100,
+        17113
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        17114,
+        17339
+      ],
+      "content": "To perform some of the diagnostic tasks in this section, you need access to a management tool for SQL databases such as <bpt id=\"p67\">**</bpt>SQL Server Management Studio<ept id=\"p67\">**</ept><ph id=\"ph78\"/> or the management functionality built into the <bpt id=\"p68\">**</bpt>Azure classic portal<ept id=\"p68\">**</ept>."
+    },
+    {
+      "pos": [
+        17341,
+        17884
+      ],
+      "content": "SQL Server Management Studio is a free Windows application, which offers the most advanced capabilities. If you do not have access to a Windows machine (for example if you are using a Mac), consider provisioning a Virtual Machine in Azure as shown in <bpt id=\"p69\">[</bpt>Create a Virtual Machine Running Windows Server<ept id=\"p69\">](../virtual-machines-windows-tutorial.md)</ept><ph id=\"ph79\"/> and then connecting remotely to it. If you intend to use the VM primarily for the purpose of running SQL Server Management Studio, a <bpt id=\"p70\">**</bpt>Basic A0<ept id=\"p70\">**</ept><ph id=\"ph80\"/> (formerly \"Extra Small\") instance should be sufficient.",
+      "nodes": [
+        {
+          "content": "SQL Server Management Studio is a free Windows application, which offers the most advanced capabilities.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "If you do not have access to a Windows machine (for example if you are using a Mac), consider provisioning a Virtual Machine in Azure as shown in <bpt id=\"p69\">[</bpt>Create a Virtual Machine Running Windows Server<ept id=\"p69\">](../virtual-machines-windows-tutorial.md)</ept><ph id=\"ph79\"/> and then connecting remotely to it.",
+          "pos": [
+            105,
+            432
+          ]
+        },
+        {
+          "content": "If you intend to use the VM primarily for the purpose of running SQL Server Management Studio, a <bpt id=\"p70\">**</bpt>Basic A0<ept id=\"p70\">**</ept><ph id=\"ph80\"/> (formerly \"Extra Small\") instance should be sufficient.",
+          "pos": [
+            433,
+            653
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17886,
+        18016
+      ],
+      "content": "The Azure classic portal offers a built-in management experience, which is more limited, but is available without a local install."
+    },
+    {
+      "pos": [
+        18018,
+        18237
+      ],
+      "content": "The following steps walk you through obtaining the connection information for the SQL database backing your mobile service and then using either of the two tools to connect to it. You may pick whichever tool you prefer.",
+      "nodes": [
+        {
+          "content": "The following steps walk you through obtaining the connection information for the SQL database backing your mobile service and then using either of the two tools to connect to it.",
+          "pos": [
+            0,
+            179
+          ]
+        },
+        {
+          "content": "You may pick whichever tool you prefer.",
+          "pos": [
+            180,
+            219
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18244,
+        18277
+      ],
+      "content": "Obtain SQL connection information"
+    },
+    {
+      "pos": [
+        18281,
+        18315
+      ],
+      "content": "Launch the <bpt id=\"p71\">[</bpt><ept id=\"p71\">Azure classic portal]</ept>."
+    },
+    {
+      "pos": [
+        18319,
+        18388
+      ],
+      "content": "On the Mobile Services tab, select the service you want to work with."
+    },
+    {
+      "pos": [
+        18392,
+        18421
+      ],
+      "content": "Select the <bpt id=\"p72\">**</bpt>Configure<ept id=\"p72\">**</ept><ph id=\"ph81\"/> tab."
+    },
+    {
+      "pos": [
+        18425,
+        18559
+      ],
+      "content": "Select the <bpt id=\"p73\">**</bpt>SQL Database<ept id=\"p73\">**</ept><ph id=\"ph82\"/> name in the <bpt id=\"p74\">**</bpt>Database Settings<ept id=\"p74\">**</ept><ph id=\"ph83\"/> section. This will navigate to the Azure SQL Database tab in the portal.",
+      "nodes": [
+        {
+          "content": "Select the <bpt id=\"p73\">**</bpt>SQL Database<ept id=\"p73\">**</ept><ph id=\"ph82\"/> name in the <bpt id=\"p74\">**</bpt>Database Settings<ept id=\"p74\">**</ept><ph id=\"ph83\"/> section.",
+          "pos": [
+            0,
+            180
+          ]
+        },
+        {
+          "content": "This will navigate to the Azure SQL Database tab in the portal.",
+          "pos": [
+            181,
+            244
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18563,
+        18622
+      ],
+      "content": "Select <bpt id=\"p75\">**</bpt>Set up Azure firewall rules for this IP address<ept id=\"p75\">**</ept>."
+    },
+    {
+      "pos": [
+        18626,
+        18752
+      ],
+      "content": "Make a note of the server address in the <bpt id=\"p76\">**</bpt>Connect to your database<ept id=\"p76\">**</ept><ph id=\"ph84\"/> section, for example: <bpt id=\"p77\">*</bpt>mcml4otbb9.database.windows.net<ept id=\"p77\">*</ept>."
+    },
+    {
+      "pos": [
+        18759,
+        18787
+      ],
+      "content": "SQL Server Management Studio"
+    },
+    {
+      "pos": [
+        18791,
+        18926
+      ],
+      "content": "Navigate to <bpt id=\"p78\">[</bpt>SQL Server Editions - Express<ept id=\"p78\">](http://www.microsoft.com/server-cloud/products/sql-server-editions/sql-server-express.aspx)</ept>"
+    },
+    {
+      "pos": [
+        18930,
+        19026
+      ],
+      "content": "Find the <bpt id=\"p79\">**</bpt>SQL Server Management Studio<ept id=\"p79\">**</ept><ph id=\"ph85\"/> section and select the <bpt id=\"p80\">**</bpt>Download<ept id=\"p80\">**</ept><ph id=\"ph86\"/> button underneath."
+    },
+    {
+      "pos": [
+        19030,
+        19102
+      ],
+      "content": "Complete the setup steps until you can successfully run the application:"
+    },
+    {
+      "pos": [
+        19108,
+        19145
+      ],
+      "content": "<ph id=\"ph87\">![</ph>SQL Server Management Studio<ph id=\"ph88\">][SSMS]</ph>"
+    },
+    {
+      "pos": [
+        19150,
+        19212
+      ],
+      "content": "In the <bpt id=\"p81\">**</bpt>Connect to Server<ept id=\"p81\">**</ept><ph id=\"ph89\"/> dialog enter the following values"
+    },
+    {
+      "pos": [
+        19219,
+        19269
+      ],
+      "content": "Server name: <bpt id=\"p82\">*</bpt>server address you obtained earlier<ept id=\"p82\">*</ept>"
+    },
+    {
+      "pos": [
+        19276,
+        19319
+      ],
+      "content": "Authentication: <bpt id=\"p83\">*</bpt>SQL Server Authentication<ept id=\"p83\">*</ept>"
+    },
+    {
+      "pos": [
+        19326,
+        19372
+      ],
+      "content": "Login: <bpt id=\"p84\">*</bpt>login you picked when creating server<ept id=\"p84\">*</ept>"
+    },
+    {
+      "pos": [
+        19379,
+        19431
+      ],
+      "content": "Password: <bpt id=\"p85\">*</bpt>password you picked when creating server<ept id=\"p85\">*</ept>"
+    },
+    {
+      "pos": [
+        19435,
+        19463
+      ],
+      "content": "You should now be connected."
+    },
+    {
+      "pos": [
+        19470,
+        19500
+      ],
+      "content": "SQL Database Management Portal"
+    },
+    {
+      "pos": [
+        19504,
+        19577
+      ],
+      "content": "On Azure SQL Database tab for your database, select the <bpt id=\"p86\">**</bpt>Manage<ept id=\"p86\">**</ept><ph id=\"ph90\"/> button"
+    },
+    {
+      "pos": [
+        19581,
+        19631
+      ],
+      "content": "Configure the connection with the following values"
+    },
+    {
+      "pos": [
+        19638,
+        19684
+      ],
+      "content": "Server: <bpt id=\"p87\">*</bpt>should be pre-set to the right value<ept id=\"p87\">*</ept>"
+    },
+    {
+      "pos": [
+        19691,
+        19714
+      ],
+      "content": "Database: <bpt id=\"p88\">*</bpt>leave blank<ept id=\"p88\">*</ept>"
+    },
+    {
+      "pos": [
+        19721,
+        19770
+      ],
+      "content": "Username: <bpt id=\"p89\">*</bpt>login you picked when creating server<ept id=\"p89\">*</ept>"
+    },
+    {
+      "pos": [
+        19777,
+        19829
+      ],
+      "content": "Password: <bpt id=\"p90\">*</bpt>password you picked when creating server<ept id=\"p90\">*</ept>"
+    },
+    {
+      "pos": [
+        19833,
+        19861
+      ],
+      "content": "You should now be connected."
+    },
+    {
+      "pos": [
+        19867,
+        19926
+      ],
+      "content": "<ph id=\"ph91\">![</ph>Azure classic portal - SQL Database<ph id=\"ph92\">][PortalSqlManagement]</ph>"
+    },
+    {
+      "pos": [
+        19964,
+        19984
+      ],
+      "content": "Advanced Diagnostics"
+    },
+    {
+      "pos": [
+        19986,
+        20536
+      ],
+      "content": "A lot of diagnostic tasks can be completed easily right in the <bpt id=\"p91\">**</bpt>Azure classic portal<ept id=\"p91\">**</ept>, however some advanced diagnostic tasks are only possible via <bpt id=\"p92\">**</bpt>SQL Server Management Studio<ept id=\"p92\">**</ept><ph id=\"ph94\"/> or the <bpt id=\"p93\">**</bpt>SQL Database Management Portal<ept id=\"p93\">**</ept>.  We will take advantage of dynamic management views, a set of views populated automatically with diagnostic information about your database. This section provides a set of queries we can run against these views to examine various metrics. For more information, see <bpt id=\"p94\">[</bpt>Monitoring SQL Database Using Dynamic Management Views<ept id=\"p94\">][]</ept>.",
+      "nodes": [
+        {
+          "content": "A lot of diagnostic tasks can be completed easily right in the <bpt id=\"p91\">**</bpt>Azure classic portal<ept id=\"p91\">**</ept>, however some advanced diagnostic tasks are only possible via <bpt id=\"p92\">**</bpt>SQL Server Management Studio<ept id=\"p92\">**</ept><ph id=\"ph94\"/> or the <bpt id=\"p93\">**</bpt>SQL Database Management Portal<ept id=\"p93\">**</ept>.",
+          "pos": [
+            0,
+            360
+          ]
+        },
+        {
+          "content": "We will take advantage of dynamic management views, a set of views populated automatically with diagnostic information about your database.",
+          "pos": [
+            362,
+            501
+          ]
+        },
+        {
+          "content": "This section provides a set of queries we can run against these views to examine various metrics.",
+          "pos": [
+            502,
+            599
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p94\">[</bpt>Monitoring SQL Database Using Dynamic Management Views<ept id=\"p94\">][]</ept>.",
+          "pos": [
+            600,
+            725
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20538,
+        20939
+      ],
+      "content": "After completing the steps in the previous section to connect to your database in SQL Server Management Studio, select your database in <bpt id=\"p95\">**</bpt>Object Explorer<ept id=\"p95\">**</ept>. Expanding <bpt id=\"p96\">**</bpt>Views<ept id=\"p96\">**</ept><ph id=\"ph95\"/> and then <bpt id=\"p97\">**</bpt>System Views<ept id=\"p97\">**</ept><ph id=\"ph96\"/> reveals a list of the management views. To execute the queries below, select <bpt id=\"p98\">**</bpt>New Query<ept id=\"p98\">**</ept>, while you have selected your database in <bpt id=\"p99\">**</bpt>Object Explorer<ept id=\"p99\">**</ept>, then paste the query and select <bpt id=\"p100\">**</bpt>Execute<ept id=\"p100\">**</ept>.",
+      "nodes": [
+        {
+          "content": "After completing the steps in the previous section to connect to your database in SQL Server Management Studio, select your database in <bpt id=\"p95\">**</bpt>Object Explorer<ept id=\"p95\">**</ept>.",
+          "pos": [
+            0,
+            196
+          ]
+        },
+        {
+          "content": "Expanding <bpt id=\"p96\">**</bpt>Views<ept id=\"p96\">**</ept><ph id=\"ph95\"/> and then <bpt id=\"p97\">**</bpt>System Views<ept id=\"p97\">**</ept><ph id=\"ph96\"/> reveals a list of the management views.",
+          "pos": [
+            197,
+            392
+          ]
+        },
+        {
+          "content": "To execute the queries below, select <bpt id=\"p98\">**</bpt>New Query<ept id=\"p98\">**</ept>, while you have selected your database in <bpt id=\"p99\">**</bpt>Object Explorer<ept id=\"p99\">**</ept>, then paste the query and select <bpt id=\"p100\">**</bpt>Execute<ept id=\"p100\">**</ept>.",
+          "pos": [
+            393,
+            673
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20941,
+        21009
+      ],
+      "content": "<ph id=\"ph97\">![</ph>SQL Server management Studio - dynamic management views<ph id=\"ph98\">][SSMSDMVs]</ph>"
+    },
+    {
+      "pos": [
+        21011,
+        21133
+      ],
+      "content": "Alternatively if you are using the SQL Database Management Portal, first select your database and then pick <bpt id=\"p101\">**</bpt>New Query<ept id=\"p101\">**</ept>."
+    },
+    {
+      "pos": [
+        21135,
+        21209
+      ],
+      "content": "<ph id=\"ph99\">![</ph>SQL Database Management Portal - new query<ph id=\"ph100\">][PortalSqlManagementNewQuery]</ph>"
+    },
+    {
+      "pos": [
+        21211,
+        21292
+      ],
+      "content": "To execute any of the queries below, paste it into the window and select <bpt id=\"p102\">**</bpt>Run<ept id=\"p102\">**</ept>."
+    },
+    {
+      "pos": [
+        21294,
+        21368
+      ],
+      "content": "<ph id=\"ph101\">![</ph>SQL Database Management Portal - run query<ph id=\"ph102\">][PortalSqlManagementRunQuery]</ph>"
+    },
+    {
+      "pos": [
+        21375,
+        21391
+      ],
+      "content": "Advanced Metrics"
+    },
+    {
+      "pos": [
+        21394,
+        21719
+      ],
+      "content": "The management portal makes certain metrics readily available if using the Basic, Standard, and Premium tiers. It is easy to obtain these and other metrics using the <bpt id=\"p103\">**</bpt><bpt id=\"p104\">[</bpt>sys.resource\\_stats<ept id=\"p104\">](http://msdn.microsoft.com/library/dn269979.aspx)</ept><ept id=\"p103\">**</ept><ph id=\"ph103\"/> management view, regardless of what tier you're using. Consider the following query:",
+      "nodes": [
+        {
+          "content": "The management portal makes certain metrics readily available if using the Basic, Standard, and Premium tiers.",
+          "pos": [
+            0,
+            110
+          ]
+        },
+        {
+          "content": "It is easy to obtain these and other metrics using the <bpt id=\"p103\">**</bpt><bpt id=\"p104\">[</bpt>sys.resource\\_stats<ept id=\"p104\">](http://msdn.microsoft.com/library/dn269979.aspx)</ept><ept id=\"p103\">**</ept><ph id=\"ph103\"/> management view, regardless of what tier you're using.",
+          "pos": [
+            111,
+            395
+          ]
+        },
+        {
+          "content": "Consider the following query:",
+          "pos": [
+            396,
+            425
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21841,
+        21991
+      ],
+      "leadings": [
+        "",
+        "> "
+      ],
+      "content": "<ph id=\"ph104\">[AZURE.NOTE]</ph>\nPlease execute this query on the <bpt id=\"p105\">**</bpt>master<ept id=\"p105\">**</ept><ph id=\"ph105\"/> database on your server, the <bpt id=\"p106\">**</bpt>sys.resource\\_stats<ept id=\"p106\">**</ept><ph id=\"ph106\"/> view is only present on that database."
+    },
+    {
+      "pos": [
+        21993,
+        22219
+      ],
+      "content": "The result will contain the following useful metrics: CPU (% of tier limit), Storage (megabytes), Physical Data Reads (% of tier limit), Log Writes (% of tier limit), Memory (% of tier limit), Worker Count, Session Count, etc."
+    },
+    {
+      "pos": [
+        22226,
+        22249
+      ],
+      "content": "SQL connectivity events"
+    },
+    {
+      "pos": [
+        22251,
+        22388
+      ],
+      "content": "The <bpt id=\"p107\">**</bpt><bpt id=\"p108\">[</bpt>sys.event\\_log<ept id=\"p108\">](http://msdn.microsoft.com/library/azure/jj819229.aspx)</ept><ept id=\"p107\">**</ept><ph id=\"ph107\"/> view contains the details of connectivity-related events."
+    },
+    {
+      "pos": [
+        22532,
+        22677
+      ],
+      "leadings": [
+        "",
+        "> "
+      ],
+      "content": "<ph id=\"ph108\">[AZURE.NOTE]</ph>\nPlease execute this query on the <bpt id=\"p109\">**</bpt>master<ept id=\"p109\">**</ept><ph id=\"ph109\"/> database on your server, the <bpt id=\"p110\">**</bpt>sys.event\\_log<ept id=\"p110\">**</ept><ph id=\"ph110\"/> view is only present on that database."
+    },
+    {
+      "pos": [
+        22716,
+        22733
+      ],
+      "content": "Advanced Indexing"
+    },
+    {
+      "pos": [
+        22735,
+        22794
+      ],
+      "content": "A table or view can contain the following types of indexes:"
+    },
+    {
+      "pos": [
+        22798,
+        22999
+      ],
+      "content": "<bpt id=\"p111\">**</bpt>Clustered<ept id=\"p111\">**</ept>. A clustered index specifies how records are physically stored on disk. There must be only one clustered index per table, because the data rows themselves can be sorted in only one order.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p111\">**</bpt>Clustered<ept id=\"p111\">**</ept>.",
+          "pos": [
+            0,
+            56
+          ]
+        },
+        {
+          "content": "A clustered index specifies how records are physically stored on disk.",
+          "pos": [
+            57,
+            127
+          ]
+        },
+        {
+          "content": "There must be only one clustered index per table, because the data rows themselves can be sorted in only one order.",
+          "pos": [
+            128,
+            243
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23003,
+        23227
+      ],
+      "content": "<bpt id=\"p112\">**</bpt>Nonclustered<ept id=\"p112\">**</ept>. Nonclustered indexes are stored separately from data rows and are used to do a lookup based on the index value. All nonclustered indexes on a table use the key values from the clustered index as lookup key.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p112\">**</bpt>Nonclustered<ept id=\"p112\">**</ept>.",
+          "pos": [
+            0,
+            59
+          ]
+        },
+        {
+          "content": "Nonclustered indexes are stored separately from data rows and are used to do a lookup based on the index value.",
+          "pos": [
+            60,
+            171
+          ]
+        },
+        {
+          "content": "All nonclustered indexes on a table use the key values from the clustered index as lookup key.",
+          "pos": [
+            172,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23229,
+        23527
+      ],
+      "content": "To provide a real-world analogy: consider a book or a technical manual. The contents of each page are a record, the page number is the clustered index, and the topic index in the back of the book is a nonclustered index. Each entry in the topic index points to the clustered index, the page number.",
+      "nodes": [
+        {
+          "content": "To provide a real-world analogy: consider a book or a technical manual.",
+          "pos": [
+            0,
+            71
+          ]
+        },
+        {
+          "content": "The contents of each page are a record, the page number is the clustered index, and the topic index in the back of the book is a nonclustered index.",
+          "pos": [
+            72,
+            220
+          ]
+        },
+        {
+          "content": "Each entry in the topic index points to the clustered index, the page number.",
+          "pos": [
+            221,
+            298
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23531,
+        23942
+      ],
+      "leadings": [
+        "",
+        "> "
+      ],
+      "content": "<ph id=\"ph113\">[AZURE.NOTE]</ph>\nBy default, the JavaScript backend of Azure Mobile Services sets <bpt id=\"p113\">**</bpt>\\_createdAt<ept id=\"p113\">**</ept><ph id=\"ph114\"/> as the clustered index. If you remove this column, or if you want a different clustered index, be sure to follow the <bpt id=\"p114\">[</bpt>clustered index design guidelines<ept id=\"p114\">](#ClusteredIndexes)</ept><ph id=\"ph115\"/> below. In the .NET backend, the class <ph id=\"ph116\">`EntityData`</ph><ph id=\"ph117\"/> defines <ph id=\"ph118\">`CreatedAt`</ph><ph id=\"ph119\"/> as a clustered index using the annotation <ph id=\"ph120\">`[Index(IsClustered = true)]`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph113\">[AZURE.NOTE]</ph>\nBy default, the JavaScript backend of Azure Mobile Services sets <bpt id=\"p113\">**</bpt>\\_createdAt<ept id=\"p113\">**</ept><ph id=\"ph114\"/> as the clustered index.",
+          "pos": [
+            0,
+            195
+          ]
+        },
+        {
+          "content": "If you remove this column, or if you want a different clustered index, be sure to follow the <bpt id=\"p114\">[</bpt>clustered index design guidelines<ept id=\"p114\">](#ClusteredIndexes)</ept><ph id=\"ph115\"/> below.",
+          "pos": [
+            196,
+            408
+          ]
+        },
+        {
+          "content": "In the .NET backend, the class <ph id=\"ph116\">`EntityData`</ph><ph id=\"ph117\"/> defines <ph id=\"ph118\">`CreatedAt`</ph><ph id=\"ph119\"/> as a clustered index using the annotation <ph id=\"ph120\">`[Index(IsClustered = true)]`</ph>.",
+          "pos": [
+            409,
+            637
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23981,
+        24014
+      ],
+      "content": "Clustered index design guidelines"
+    },
+    {
+      "pos": [
+        24016,
+        24147
+      ],
+      "content": "Every table should have a clustered index on the column (or columns, in the case of a composite key) with the following properties:"
+    },
+    {
+      "pos": [
+        24151,
+        24279
+      ],
+      "content": "Narrow - uses a small datatype, or is a <bpt id=\"p115\">[</bpt>composite key<ept id=\"p115\">][Primary and Foreign Key Constraints]</ept><ph id=\"ph123\"/> of a small number of narrow columns"
+    },
+    {
+      "pos": [
+        24282,
+        24306
+      ],
+      "content": "Unique, or mostly unique"
+    },
+    {
+      "pos": [
+        24309,
+        24349
+      ],
+      "content": "Static - value is not frequently changed"
+    },
+    {
+      "pos": [
+        24352,
+        24367
+      ],
+      "content": "Ever-increasing"
+    },
+    {
+      "pos": [
+        24370,
+        24392
+      ],
+      "content": "(Optional) Fixed-width"
+    },
+    {
+      "pos": [
+        24395,
+        24413
+      ],
+      "content": "(Optional) nonnull"
+    },
+    {
+      "pos": [
+        24415,
+        24847
+      ],
+      "content": "The reason for the <bpt id=\"p116\">**</bpt>narrow<ept id=\"p116\">**</ept><ph id=\"ph124\"/> property is that all other indexes on a table use the key values from the clustered index as lookup keys. In the example of a topic index at the back of a book, the clustered index is a page number and is a small number. If the chapter title were instead included in the clustered index, then the topic index would itself be much longer, because the key value would then be (chapter name, page number).",
+      "nodes": [
+        {
+          "content": "The reason for the <bpt id=\"p116\">**</bpt>narrow<ept id=\"p116\">**</ept><ph id=\"ph124\"/> property is that all other indexes on a table use the key values from the clustered index as lookup keys.",
+          "pos": [
+            0,
+            193
+          ]
+        },
+        {
+          "content": "In the example of a topic index at the back of a book, the clustered index is a page number and is a small number.",
+          "pos": [
+            194,
+            308
+          ]
+        },
+        {
+          "content": "If the chapter title were instead included in the clustered index, then the topic index would itself be much longer, because the key value would then be (chapter name, page number).",
+          "pos": [
+            309,
+            490
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        24849,
+        25102
+      ],
+      "content": "The key should be <bpt id=\"p117\">**</bpt>static<ept id=\"p117\">**</ept><ph id=\"ph125\"/> and <bpt id=\"p118\">**</bpt>ever-increasing<ept id=\"p118\">**</ept><ph id=\"ph126\"/> to avoid having to maintain the physical location of the records (which means either moving records physically, or potentially fragmenting storage by splitting the pages where the records are stored)."
+    },
+    {
+      "pos": [
+        25104,
+        25180
+      ],
+      "content": "The clustered index will be most valuable for queries that do the following:"
+    },
+    {
+      "pos": [
+        25184,
+        25262
+      ],
+      "content": "Return a range of values by using operators such as BETWEEN, &gt;, &gt;=, &lt;, and &lt;=."
+    },
+    {
+      "pos": [
+        25269,
+        25420
+      ],
+      "content": "After the row with the first value is found by using the clustered index, rows with subsequent indexed values are guaranteed to be physically adjacent."
+    },
+    {
+      "pos": [
+        25423,
+        25481
+      ],
+      "content": "Use JOIN clauses; typically these are foreign key columns."
+    },
+    {
+      "pos": [
+        25484,
+        25518
+      ],
+      "content": "Use ORDER BY, or GROUP BY clauses."
+    },
+    {
+      "pos": [
+        25525,
+        25725
+      ],
+      "content": "An index on the columns specified in the ORDER BY or GROUP BY clause may remove the need for the Database Engine to sort the data, because the rows are already sorted. This improves query performance.",
+      "nodes": [
+        {
+          "content": "An index on the columns specified in the ORDER BY or GROUP BY clause may remove the need for the Database Engine to sort the data, because the rows are already sorted.",
+          "pos": [
+            0,
+            167
+          ]
+        },
+        {
+          "content": "This improves query performance.",
+          "pos": [
+            168,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        25732,
+        25778
+      ],
+      "content": "Creating clustered indexes in Entity Framework"
+    },
+    {
+      "pos": [
+        25780,
+        26006
+      ],
+      "content": "To set the clustered index in the .NET backend using Entity Framework, set the <ph id=\"ph127\">`IsClustered`</ph><ph id=\"ph128\"/> property of the annotation. For example, this is the definition of <ph id=\"ph129\">`CreatedAt`</ph><ph id=\"ph130\"/> in <ph id=\"ph131\">`Microsoft.WindowsAzure.Mobile.Service.EntityData`</ph>:",
+      "nodes": [
+        {
+          "content": "To set the clustered index in the .NET backend using Entity Framework, set the <ph id=\"ph127\">`IsClustered`</ph><ph id=\"ph128\"/> property of the annotation.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "For example, this is the definition of <ph id=\"ph129\">`CreatedAt`</ph><ph id=\"ph130\"/> in <ph id=\"ph131\">`Microsoft.WindowsAzure.Mobile.Service.EntityData`</ph>:",
+          "pos": [
+            157,
+            318
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        26209,
+        26248
+      ],
+      "content": "Creating indexes in the database schema"
+    },
+    {
+      "pos": [
+        26250,
+        26448
+      ],
+      "content": "For the JavaScript backend, you can only modify the clustered index of a table by changing the database schema directly, either through SQL Server Management Studio or the Azure SQL Database Portal."
+    },
+    {
+      "pos": [
+        26450,
+        26567
+      ],
+      "content": "The following guides describe how to set a clustered or nonclustered index by modifying the database schema directly:"
+    },
+    {
+      "pos": [
+        26571,
+        26621
+      ],
+      "content": "[Creating and Modifying PRIMARY KEY Constraints][]"
+    },
+    {
+      "pos": [
+        26624,
+        26655
+      ],
+      "content": "[Create Nonclustered Indexes][]"
+    },
+    {
+      "pos": [
+        26658,
+        26686
+      ],
+      "content": "[Create Clustered Indexes][]"
+    },
+    {
+      "pos": [
+        26689,
+        26714
+      ],
+      "content": "[Create Unique Indexes][]"
+    },
+    {
+      "pos": [
+        26721,
+        26747
+      ],
+      "content": "Find top N missing indexes"
+    },
+    {
+      "pos": [
+        26748,
+        27097
+      ],
+      "content": "You can write SQL queries on dynamic management views that will tell you more detailed information about the resource usage of individual queries or give you heuristics on what indexes to add. The following query determines which 10 missing indexes would produce the highest anticipated cumulative improvement, in descending order, for user queries.",
+      "nodes": [
+        {
+          "content": "You can write SQL queries on dynamic management views that will tell you more detailed information about the resource usage of individual queries or give you heuristics on what indexes to add.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "The following query determines which 10 missing indexes would produce the highest anticipated cumulative improvement, in descending order, for user queries.",
+          "pos": [
+            193,
+            349
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27254,
+        27474
+      ],
+      "content": "The following example query runs a join across these tables to get a list of the columns that should be part of each missing index and calculates an 'index advantage' to determine if the given index should be considered:"
+    },
+    {
+      "pos": [
+        27974,
+        28106
+      ],
+      "content": "For more information, see <bpt id=\"p119\">[</bpt>Monitoring SQL Database Using Dynamic Management Views<ept id=\"p119\">][]</ept><ph id=\"ph132\"/> and <bpt id=\"p120\">[</bpt>Missing Index Dynamic Management Views<ept id=\"p120\">][]</ept>."
+    },
+    {
+      "pos": [
+        28142,
+        28163
+      ],
+      "content": "Advanced Query Design"
+    },
+    {
+      "pos": [
+        28166,
+        28253
+      ],
+      "content": "Frequently it's difficult to diagnose what queries are most expensive for the database."
+    },
+    {
+      "pos": [
+        28262,
+        28283
+      ],
+      "content": "Finding top N queries"
+    },
+    {
+      "pos": [
+        28285,
+        28539
+      ],
+      "content": "The following example returns information about the top five queries ranked by average CPU time. This example aggregates the queries according to their query hash, so that logically equivalent queries are grouped by their cumulative resource consumption.",
+      "nodes": [
+        {
+          "content": "The following example returns information about the top five queries ranked by average CPU time.",
+          "pos": [
+            0,
+            96
+          ]
+        },
+        {
+          "content": "This example aggregates the queries according to their query hash, so that logically equivalent queries are grouped by their cumulative resource consumption.",
+          "pos": [
+            97,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29226,
+        29515
+      ],
+      "content": "For more information, see <bpt id=\"p121\">[</bpt>Monitoring SQL Database Using Dynamic Management Views<ept id=\"p121\">][]</ept>. In addition to executing the query, the <bpt id=\"p122\">**</bpt>SQL Database Management Portal<ept id=\"p122\">**</ept><ph id=\"ph135\"/> gives you a nice shortcut to see this data, by selecting <bpt id=\"p123\">**</bpt>Summary<ept id=\"p123\">**</ept><ph id=\"ph136\"/> for your database and then selecting <bpt id=\"p124\">**</bpt>Query Performance<ept id=\"p124\">**</ept>:",
+      "nodes": [
+        {
+          "content": "For more information, see <bpt id=\"p121\">[</bpt>Monitoring SQL Database Using Dynamic Management Views<ept id=\"p121\">][]</ept>.",
+          "pos": [
+            0,
+            127
+          ]
+        },
+        {
+          "content": "In addition to executing the query, the <bpt id=\"p122\">**</bpt>SQL Database Management Portal<ept id=\"p122\">**</ept><ph id=\"ph135\"/> gives you a nice shortcut to see this data, by selecting <bpt id=\"p123\">**</bpt>Summary<ept id=\"p123\">**</ept><ph id=\"ph136\"/> for your database and then selecting <bpt id=\"p124\">**</bpt>Query Performance<ept id=\"p124\">**</ept>:",
+          "pos": [
+            128,
+            489
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29517,
+        29607
+      ],
+      "content": "<ph id=\"ph137\">![</ph>SQL Database Management Portal - query performance<ph id=\"ph138\">][PortalSqlManagementQueryPerformance]</ph>"
+    },
+    {
+      "pos": [
+        29614,
+        29638
+      ],
+      "content": "Analyzing the query plan"
+    },
+    {
+      "pos": [
+        29640,
+        30081
+      ],
+      "content": "Once you have identified expensive queries or if you are about to deploy code using new queries and you would like to investigate their performance, the tooling offers great support for analyzing the <bpt id=\"p125\">**</bpt>query plan<ept id=\"p125\">**</ept>. The query plan enables you to see what operations take up the builk of CPU time and IO resources when a given SQL query runs. To analyze the query plan in <bpt id=\"p126\">**</bpt>SQL Server Management Studio<ept id=\"p126\">**</ept>, use the highlighted toolbar buttons.",
+      "nodes": [
+        {
+          "content": "Once you have identified expensive queries or if you are about to deploy code using new queries and you would like to investigate their performance, the tooling offers great support for analyzing the <bpt id=\"p125\">**</bpt>query plan<ept id=\"p125\">**</ept>.",
+          "pos": [
+            0,
+            257
+          ]
+        },
+        {
+          "content": "The query plan enables you to see what operations take up the builk of CPU time and IO resources when a given SQL query runs.",
+          "pos": [
+            258,
+            383
+          ]
+        },
+        {
+          "content": "To analyze the query plan in <bpt id=\"p126\">**</bpt>SQL Server Management Studio<ept id=\"p126\">**</ept>, use the highlighted toolbar buttons.",
+          "pos": [
+            384,
+            525
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30083,
+        30142
+      ],
+      "content": "<ph id=\"ph139\">![</ph>SQL Server Management Studio - query plan<ph id=\"ph140\">][SSMSQueryPlan]</ph>"
+    },
+    {
+      "pos": [
+        30144,
+        30249
+      ],
+      "content": "To analyze the query plan in the <bpt id=\"p127\">**</bpt>SQL Database Management Portal<ept id=\"p127\">**</ept>, use the highlighted toolbar buttons."
+    },
+    {
+      "pos": [
+        30251,
+        30327
+      ],
+      "content": "<ph id=\"ph141\">![</ph>SQL Database Management Portal - query plan<ph id=\"ph142\">][PortalSqlManagementQueryPlan]</ph>"
+    },
+    {
+      "pos": [
+        30332,
+        30340
+      ],
+      "content": "See Also"
+    },
+    {
+      "pos": [
+        30344,
+        30380
+      ],
+      "content": "<bpt id=\"p128\">[</bpt>Azure SQL Database Documentation<ept id=\"p128\">][]</ept>"
+    },
+    {
+      "pos": [
+        30383,
+        30429
+      ],
+      "content": "<bpt id=\"p129\">[</bpt>Azure SQL Database performance and scaling<ept id=\"p129\">][]</ept>"
+    },
+    {
+      "pos": [
+        30432,
+        30470
+      ],
+      "content": "<bpt id=\"p130\">[</bpt>Troubleshooting Azure SQL Database<ept id=\"p130\">][]</ept>"
+    },
+    {
+      "pos": [
+        30476,
+        30484
+      ],
+      "content": "Indexing"
+    },
+    {
+      "pos": [
+        30488,
+        30504
+      ],
+      "content": "<bpt id=\"p131\">[</bpt>Index Basics<ept id=\"p131\">][]</ept>"
+    },
+    {
+      "pos": [
+        30507,
+        30542
+      ],
+      "content": "<bpt id=\"p132\">[</bpt>General Index Design Guidelines<ept id=\"p132\">][]</ept>"
+    },
+    {
+      "pos": [
+        30545,
+        30579
+      ],
+      "content": "<bpt id=\"p133\">[</bpt>Unique Index Design Guidelines<ept id=\"p133\">][]</ept>"
+    },
+    {
+      "pos": [
+        30582,
+        30619
+      ],
+      "content": "<bpt id=\"p134\">[</bpt>Clustered Index Design Guidelines<ept id=\"p134\">][]</ept>"
+    },
+    {
+      "pos": [
+        30622,
+        30661
+      ],
+      "content": "<bpt id=\"p135\">[</bpt>Primary and Foreign Key Constraints<ept id=\"p135\">][]</ept>"
+    },
+    {
+      "pos": [
+        30664,
+        30696
+      ],
+      "content": "[How much does that key cost?][]"
+    },
+    {
+      "pos": [
+        30702,
+        30718
+      ],
+      "content": "Entity Framework"
+    },
+    {
+      "pos": [
+        30721,
+        30774
+      ],
+      "content": "[Performance Considerations for Entity Framework 5][]"
+    },
+    {
+      "pos": [
+        30777,
+        30808
+      ],
+      "content": "[Code First Data Annotations][]"
+    },
+    {
+      "pos": [
+        32665,
+        33024
+      ],
+      "content": "[Creating and Modifying PRIMARY KEY Constraints]: http://technet.microsoft.com/library/ms181043(v=sql.105).aspx\n[Create Clustered Indexes]: http://technet.microsoft.com/library/ms186342(v=sql.120).aspx\n[Create Unique Indexes]: http://technet.microsoft.com/library/ms187019.aspx\n[Create Nonclustered Indexes]: http://technet.microsoft.com/library/ms189280.aspx"
+    },
+    {
+      "pos": [
+        33601,
+        33860
+      ],
+      "content": "[Performance Considerations for Entity Framework 5]: http://msdn.microsoft.com/data/hh949853\n[Code First Data Annotations]: http://msdn.microsoft.com/data/jj591583.aspx\n[Index Annotations in Entity Framework]:http://msdn.microsoft.com/data/jj591583.aspx#Index"
+    },
+    {
+      "pos": [
+        33882,
+        34001
+      ],
+      "content": "[How much does that key cost?]: http://www.sqlskills.com/blogs/kimberly/how-much-does-that-key-cost-plus-sp_helpindex9/"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Scale mobile services backed by Azure SQL Database | Microsoft Azure\"\n    description=\"Learn how to diagnose and fix scalability issues in your mobile services backed by SQL Database\"\n    services=\"mobile-services\"\n    documentationCenter=\"\"\n    authors=\"lindydonna\"\n    manager=\"dwrede\"\n    editor=\"mollybos\"/>\n\n\n<tags \n    ms.service=\"mobile-services\" \n    ms.workload=\"mobile\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"multiple\" \n    ms.topic=\"article\" \n    ms.date=\"12/01/2015\" \n    ms.author=\"donnam;ricksal\"/>\n\n# Scale mobile services backed by Azure SQL Database\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\nAzure Mobile Services makes it very easy to get started and build an app that connects to a cloud-hosted backend that stores data in a SQL database. As your app grows, scaling your service instances is as simple as adjusting scale settings in the portal to add more computational and networking capacity. However, scaling the SQL database backing your service requires some proactive planning and monitoring as the service receives more load. This document will walk you through a set of best practices to ensure continued great performance of your SQL-backed mobile services.\n\nThis topic walks you through these basic sections:\n\n1. [Diagnosing Problems](#Diagnosing)\n2. [Indexing](#Indexing)\n3. [Schema Design](#Schema)\n4. [Query Design](#Query)\n5. [Service Architecture](#Architecture)\n6. [Advanced Troubleshooting](#Advanced)\n\n<a name=\"Diagnosing\"></a>\n## Diagnosing Problems\n\nIf you suspect your mobile service is experiencing problems under load, the first place to check is the **Dashboard** tab for your service in the [Azure classic portal]. Some of the things to verify here:\n\n- Your usage meters including **API Calls** and **Active Devices** meters are not over quota\n- **Endpoint Monitoring** status indicates service is up (only available if service is using the Standard tier and Endpoint Monitoring is enabled)\n\nIf any of the above is not true, consider adjusting your scale settings on the *Scale* tab. If that does not address the issue, you can proceed and investigate whether Azure SQL Database may be the source of the issue. The next few sections cover a few different approaches to diagnose what may be going wrong.\n\n### Choosing the Right SQL Database Tier\n\nIt is important to understand the different database tiers you have at your disposal to ensure you've picked the right tier given your app's needs. Azure SQL Database offers three different service tiers:\n\n- Basic\n- Standard\n- Premium\n\n\nHere are some recommendations on selecting the right tier for your database:\n\n- **Basic** - use at development time or for small production services where you only expect to make a single database query at a time\n- **Standard** - use for production services where you expect multiple concurrent database queries\n- **Premium** - use for large scale production services with many concurrent queries, high peak load, and expected low latency for every request.\n\nFor more information on when to use each tier, see [Reasons to Use the New Service Tiers]\n\n### Analyzing Database Metrics\n\nOnce you are familiar with the different database tiers, we can explore database performance metrics to help us reason about scaling within and among the tiers.\n\n1. Launch the [Azure classic portal].\n2. On the Mobile Services tab, select the service you want to work with.\n3. Select the **Configure** tab.\n4. Select the **SQL Database** name in the **Database Settings** section. This will navigate to the Azure SQL Database tab in the portal.\n5. Navigate to the **Monitor** tab\n6. Ensure the relevant metrics are displayed by using the **Add Metrics** button. Include the following\n    - *CPU Percentage* (available only in Basic/Standard/Premium tiers)\n\n    - *Data IO Percentage* (available only in Basic/Standard/Premium tiers) \n    - *Log IO Percentage* (available only in Basic/Standard/Premium tiers)\n    - *Storage* \n7. Inspect the metrics over the time window when your service was experiencing issues. \n\n    ![Azure classic portal - SQL Database Metrics][PortalSqlMetrics]\n\nIf any metric exceeds 80% utilization for an extended period of time, this could indicate a performance problem. For more detailed information on understanding database utilization, see [Understanding Resource Use](http://msdn.microsoft.com/library/azure/dn369873.aspx#Resource).\n\nIf the metrics indicate your database is incurring high utilization, consider **scaling up the database to a higher service tier** as a first mitigation step. To immediately resolve issues, consider using the **Scale** tab for your database to scale up your database. This will result in an increase in your bill.\n![Azure classic portal - SQL Database Scale][PortalSqlScale]\n\nAs soon as possible, consider these additional mitigation steps:\n\n- **Tune your database.**\n  It is frequently possible to reduce database utilization and avoid having to scale to a higher tier by optimizing your database.\n- **Consider your service architecture.**\n  Frequently your service load is not distributed evenly over time but contains \"spikes\" of high demand. Instead of scaling the database up to handle the spikes, and having it go underutilized during periods of low demand, it is frequently possible to adjust the service architecture to avoid such spikes, or to handle them without incurring database hits.\n\nThe remaining sections of this document contain tailored guidance to help with implementing these mitigations.\n\n\n### Configuring Alerts\n\nIt is frequently useful to configure alerts for key database metrics as a proactive step to ensure you have plenty of time to react in case of resource exhaustion.\n\n1. Navigate to the **Monitoring** tab for the database you want to set up alerts for\n2. Ensure the relevant metrics are displayed as described in the previous section\n3. Select the metric you want to set an alert for and select **Add Rule**\n\n    ![Azure Management Portal - SQL Alert][PortalSqlAddAlert]\n\n4. Provide a name and description for the alert\n    ![Azure Management Portal - SQL Alert Name and Description][PortalSqlAddAlert2]\n\n5. Specify the value to use as the alert threshold. Consider using **80%** to allow for some reaction time. Also be sure to specify an email address that you actively monitor.\n \n    ![Azure Management Portal - SQL Alert Threshold and Email][PortalSqlAddAlert3]\n\n\nFor more information on diagnosing SQL issues, see [Advanced Diagnostics](#AdvancedDiagnosing) at the bottom of this document.\n\n<a name=\"Indexing\"></a>\n## Indexing\n\nWhen you start to see problems with your query performance, the first thing you should investigate is the design of your indexes. Indexes are important because they directly affect how the SQL engine executes a query. \n\nFor instance, if you often need to look up an element by a certain field, you should consider adding an index for that column. Otherwise, the SQL engine will be forced to perform a table scan and read each physical record (or at least the query column) and the records could be substantially spread out on disk.\n\nSo, if you are frequently doing WHERE or JOIN statements on particular columns, you should make sure you index them. See the section [Creating Indexes](#CreatingIndexes) for more information.\n\nIf indexes are so great and table scans are so bad, does that mean you should index every column in your table, just to be safe?  The short answer is, \"probably not.\" Indexes take up space and have overhead themselves: every time there is an insert in a table, the index structures for each of the indexed columns need to be updated. See below for guidelines on how to choose your column indexes.\n\n### Index Design Guidelines\n\nAs mentioned above, it's not always better to add more indexes to a table, because indexes themselves can be costly, both in terms of performance and storage overhead.\n\n#### Query considerations\n\n- Consider adding indexes to columns that are frequently used in predicates (e.g., WHERE clauses) and join conditions, while balancing the database considerations below.\n- Write queries that insert or modify as many rows as possible in a single statement, instead of using multiple queries to update the same rows. When there is only one statement, the database engine can better optimize how it maintains indexes.\n\n#### Database considerations\n\nLarge numbers of indexes on a table affect the performance of INSERT, UPDATE, DELETE, and MERGE statements because all indexes must be adjusted appropriately as data in the table changes.\n\n- For **heavily updated** tables, avoid indexing heavily updated columns.\n- For tables that are **not frequently updated** but that have large volumes of data, use many indexes. This can improve the performance of queries that do not modify data (such as SELECT statements) because the query optimizer will have more options for finding the best access method.\n\nIndexing small tables may not be optimal because it can take the query optimizer longer to traverse the index searching for data than to perform a simple table scan. Therefore, indexes on small tables might never be used, but must still be maintained as data in the table changes.\n\n\n<a name=\"CreatingIndexes\"></a>\n### Creating Indexes\n\n#### JavaScript backend\n\nTo set the index for a column in the JavaScript backend, do the following:\n\n1. Open your mobile service in the [Azure classic portal].\n2. Click the **Data** tab.\n3. Select the table you want to modify.\n4. Click the **Columns** tab.\n5. Select the column. In the command bar, click **Set Index**:\n\n    ![Mobile Services Portal - Set Index][SetIndexJavaScriptPortal]\n\nYou can also remove indexes within this view.\n\n#### .NET backend\n\nTo define an index in Entity Framework, use the attribute `[Index]` on the fields that you want to index. For example:\n\n    public class TodoItem : EntityData\n    {\n        public string Text { get; set; }\n\n        [Index]\n        public bool Complete { get; set; }\n    }\n\nFor more information on indexes, see [Index Annotations in Entity Framework][]. For further tips on optimizing indexes, see [Advanced Indexing](#AdvancedIndexing) at the bottom of this document.\n\n<a name=\"Schema\"></a>\n## Schema Design\n\nHere are a few issues to be aware of when picking the data types for your objects, which in turn translates to the schema of your SQL database. Tuning the schema can frequently bring significant performance improvements since SQL has custom optimized ways of handling indexing and storage for different data types:\n\n- **Use the provided ID column**. Every mobile service table comes with a default ID column configured as the primary key and has an index set on it. There is no need to create an additional ID column.\n- **Use the correct datatypes in your model.** If you know a certain property of your model will be a numeric or boolean, be sure to define it that way in your model instead of as a string. In the JavaScript backend, use literals such as `true` instead of `\"true\"` and `5` instead of `\"5\"`. In the .NET backend, use the `int` and `bool` types when you declare the properties of your model. This enables SQL to create the correct schema for those types, which makes queries more efficient.\n\n<a name=\"Query\"></a>\n## Query Design\n\nHere are some guidelines to consider when querying the database:\n\n- **Always execute join operations in the database.** Frequently you will need to combine records from two or more tables where the records being combined share a common field (also known as a *join*). This operation can be inefficient if performed incorrectly since it may involve pulling down all the entities from both tables and then iterating through all of them. This kind of operation is best left to the database itself, but it is sometimes easy to mistakenly perform it on the client or in the mobile service code.\n    - Don't perform joins in your app code\n    - Don't perform joins in your mobile service code. When using the JavaScript backend, be aware that the [table object](http://msdn.microsoft.com/library/windowsazure/jj554210.aspx) does not handle joins. Be sure to use the [mssql object](http://msdn.microsoft.com/library/windowsazure/jj554212.aspx) directly to ensure the join happens in the database. For more information, see [Join relational tables](mobile-services-how-to-use-server-scripts.md#joins). If using the .NET backend and querying via LINQ, joins are automatically handled at the database level by Entity Framework.\n- **Implement paging.** Querying the database can sometimes result in a large number of records being returned to the client. To minimize the size and latency of operations, consider implementing paging.\n\n    - By default your mobile service will limit any incoming queries to a page size of 50, and you can manually request up to 1,000 records. For more information, see \"Return data in pages\" for [Windows Store](mobile-services-windows-dotnet-how-to-use-client-library.md#paging), [iOS](mobile-services-ios-how-to-use-client-library.md#paging), [Android](mobile-services-android-how-to-use-client-library.md#paging), [HTML/JavaScript](mobile-services-html-how-to-use-client-library#paging), and [Xamarin](partner-xamarin-mobile-services-how-to-use-client-library.md#paging).\n    - There is no default page size for queries made from your mobile service code. If your app does not implement paging, or as a defensive measure, consider applying default limits to your queries. In the JavaScript backend, use the **take** operator on the [query object](http://msdn.microsoft.com/library/azure/jj613353.aspx). If using the .NET backend, consider using the [Take method] as part of your LINQ query.  \n\n\nFor more information on improving query design, including how to analyze query plans, see [Advanced Query Design](#AdvancedQuery) at the bottom of this document.\n\n<a name=\"Architecture\"></a>\n## Service Architecture\n\nImagine a scenario where you are about to send a push notification to all your customers to check out some new content in your app. As they tap on the notification, the app launches, which possibly triggers a call to your mobile service and a query execution against your SQL database. As potentially millions of customers take this action over the span of just a few minutes, this will generate a surge of SQL load, which may be orders of magnitude higher than your app's steady state load. This could be addressed by scaling your app to a higher SQL tier during the spike and then scaling it back down, however that solution requires manual intervention and comes with increased cost. Frequently slight tweaks in your mobile service architecture can significantly balance out the load clients drive to your SQL database and eliminate problematic spikes in demand. These modifications can often be implemented easily with minimal impact to your customer's experience. Here are some examples:\n\n- **Spread out the load over time.** If you control the timing of certain events (for example, a broadcast push notification), which are expected to generate a spike in demand, and the timing of those events is not critical, consider spreading them out over time. In the example above, perhaps it is acceptable for your app customers to get notified of the new app content in batches over the span of a day instead of nearly simultaneously. Consider batching up your customers into groups which will allow staggered delivery to each batch. If using Notification Hubs, applying an additional tag to track the batch, and then delivering a push notification to that tag provides an easy way to implement this strategy. For more information on tags, see [Use Notification Hubs to send breaking news](../notification-hubs-windows-store-dotnet-send-breaking-news.md).\n- **Use Blob and Table Storage whenever appropriate.** Frequently the content that the customers will view during the spike is fairly static and doesn't need to be stored in a SQL database since you are unlikely to need relational querying capabilities over that content. In that case, consider storing the content in Blob or Table Storage. You can access public blobs in Blob Storage directly from the device. To access blobs in a secure way or use Table Storage, you will need to go through a Mobile Services Custom API in order to protect your storage access key. For more information, see [Upload images to Azure Storage by using Mobile Services](mobile-services-dotnet-backend-windows-store-dotnet-upload-data-blob-storage.md).\n- **Use an in-memory cache**. Another alternative is to store data, which would commonly be accessed during a traffic spike, in an in-memory cache such as [Azure Cache](https://azure.microsoft.com/services/cache/). This means incoming requests would be able to fetch the information they need from memory, instead of repeatedly querying the database.\n\n<a name=\"Advanced\"></a>\n## Advanced Troubleshooting\nThis section covers some more advanced diagnostic tasks, which may be useful if the steps so far have not addressed the issue fully.\n\n### Prerequisites\nTo perform some of the diagnostic tasks in this section, you need access to a management tool for SQL databases such as **SQL Server Management Studio** or the management functionality built into the **Azure classic portal**.\n\nSQL Server Management Studio is a free Windows application, which offers the most advanced capabilities. If you do not have access to a Windows machine (for example if you are using a Mac), consider provisioning a Virtual Machine in Azure as shown in [Create a Virtual Machine Running Windows Server](../virtual-machines-windows-tutorial.md) and then connecting remotely to it. If you intend to use the VM primarily for the purpose of running SQL Server Management Studio, a **Basic A0** (formerly \"Extra Small\") instance should be sufficient.\n\nThe Azure classic portal offers a built-in management experience, which is more limited, but is available without a local install.\n\nThe following steps walk you through obtaining the connection information for the SQL database backing your mobile service and then using either of the two tools to connect to it. You may pick whichever tool you prefer.\n\n#### Obtain SQL connection information\n1. Launch the [Azure classic portal].\n2. On the Mobile Services tab, select the service you want to work with.\n3. Select the **Configure** tab.\n4. Select the **SQL Database** name in the **Database Settings** section. This will navigate to the Azure SQL Database tab in the portal.\n5. Select **Set up Azure firewall rules for this IP address**.\n6. Make a note of the server address in the **Connect to your database** section, for example: *mcml4otbb9.database.windows.net*.\n\n#### SQL Server Management Studio\n1. Navigate to [SQL Server Editions - Express](http://www.microsoft.com/server-cloud/products/sql-server-editions/sql-server-express.aspx)\n2. Find the **SQL Server Management Studio** section and select the **Download** button underneath.\n3. Complete the setup steps until you can successfully run the application:\n\n    ![SQL Server Management Studio][SSMS]\n\n4. In the **Connect to Server** dialog enter the following values\n    - Server name: *server address you obtained earlier*\n    - Authentication: *SQL Server Authentication*\n    - Login: *login you picked when creating server*\n    - Password: *password you picked when creating server*\n5. You should now be connected.\n\n#### SQL Database Management Portal\n1. On Azure SQL Database tab for your database, select the **Manage** button\n2. Configure the connection with the following values\n    - Server: *should be pre-set to the right value*\n    - Database: *leave blank*\n    - Username: *login you picked when creating server*\n    - Password: *password you picked when creating server*\n3. You should now be connected.\n\n    ![Azure classic portal - SQL Database][PortalSqlManagement]\n\n<a name=\"AdvancedDiagnosing\" />\n### Advanced Diagnostics\n\nA lot of diagnostic tasks can be completed easily right in the **Azure classic portal**, however some advanced diagnostic tasks are only possible via **SQL Server Management Studio** or the **SQL Database Management Portal**.  We will take advantage of dynamic management views, a set of views populated automatically with diagnostic information about your database. This section provides a set of queries we can run against these views to examine various metrics. For more information, see [Monitoring SQL Database Using Dynamic Management Views][].\n\nAfter completing the steps in the previous section to connect to your database in SQL Server Management Studio, select your database in **Object Explorer**. Expanding **Views** and then **System Views** reveals a list of the management views. To execute the queries below, select **New Query**, while you have selected your database in **Object Explorer**, then paste the query and select **Execute**.\n\n![SQL Server management Studio - dynamic management views][SSMSDMVs]\n\nAlternatively if you are using the SQL Database Management Portal, first select your database and then pick **New Query**.\n\n![SQL Database Management Portal - new query][PortalSqlManagementNewQuery]\n\nTo execute any of the queries below, paste it into the window and select **Run**.\n\n![SQL Database Management Portal - run query][PortalSqlManagementRunQuery]\n\n#### Advanced Metrics\n\n\nThe management portal makes certain metrics readily available if using the Basic, Standard, and Premium tiers. It is easy to obtain these and other metrics using the **[sys.resource\\_stats](http://msdn.microsoft.com/library/dn269979.aspx)** management view, regardless of what tier you're using. Consider the following query:\n\n    SELECT TOP 10 *\n    FROM sys.resource_stats\n    WHERE database_name = 'todoitem_db'\n    ORDER BY start_time DESC\n\n> [AZURE.NOTE]\n> Please execute this query on the **master** database on your server, the **sys.resource\\_stats** view is only present on that database.\n\nThe result will contain the following useful metrics: CPU (% of tier limit), Storage (megabytes), Physical Data Reads (% of tier limit), Log Writes (% of tier limit), Memory (% of tier limit), Worker Count, Session Count, etc.\n\n#### SQL connectivity events\n\nThe **[sys.event\\_log](http://msdn.microsoft.com/library/azure/jj819229.aspx)** view contains the details of connectivity-related events.\n\n    select * from sys.event_log\n    where database_name = 'todoitem_db'\n    and event_type like 'throttling%'\n    order by start_time desc\n\n> [AZURE.NOTE]\n> Please execute this query on the **master** database on your server, the **sys.event\\_log** view is only present on that database.\n\n<a name=\"AdvancedIndexing\" ></a>\n### Advanced Indexing\n\nA table or view can contain the following types of indexes:\n\n- **Clustered**. A clustered index specifies how records are physically stored on disk. There must be only one clustered index per table, because the data rows themselves can be sorted in only one order.\n\n- **Nonclustered**. Nonclustered indexes are stored separately from data rows and are used to do a lookup based on the index value. All nonclustered indexes on a table use the key values from the clustered index as lookup key.\n\nTo provide a real-world analogy: consider a book or a technical manual. The contents of each page are a record, the page number is the clustered index, and the topic index in the back of the book is a nonclustered index. Each entry in the topic index points to the clustered index, the page number.\n\n> [AZURE.NOTE]\n> By default, the JavaScript backend of Azure Mobile Services sets **\\_createdAt** as the clustered index. If you remove this column, or if you want a different clustered index, be sure to follow the [clustered index design guidelines](#ClusteredIndexes) below. In the .NET backend, the class `EntityData` defines `CreatedAt` as a clustered index using the annotation `[Index(IsClustered = true)]`.\n\n<a name=\"ClusteredIndexes\"></a>\n#### Clustered index design guidelines\n\nEvery table should have a clustered index on the column (or columns, in the case of a composite key) with the following properties:\n\n- Narrow - uses a small datatype, or is a [composite key][Primary and Foreign Key Constraints] of a small number of narrow columns\n- Unique, or mostly unique\n- Static - value is not frequently changed\n- Ever-increasing\n- (Optional) Fixed-width\n- (Optional) nonnull\n\nThe reason for the **narrow** property is that all other indexes on a table use the key values from the clustered index as lookup keys. In the example of a topic index at the back of a book, the clustered index is a page number and is a small number. If the chapter title were instead included in the clustered index, then the topic index would itself be much longer, because the key value would then be (chapter name, page number).\n\nThe key should be **static** and **ever-increasing** to avoid having to maintain the physical location of the records (which means either moving records physically, or potentially fragmenting storage by splitting the pages where the records are stored).\n\nThe clustered index will be most valuable for queries that do the following:\n\n- Return a range of values by using operators such as BETWEEN, >, >=, <, and <=.\n    - After the row with the first value is found by using the clustered index, rows with subsequent indexed values are guaranteed to be physically adjacent.\n- Use JOIN clauses; typically these are foreign key columns.\n- Use ORDER BY, or GROUP BY clauses.\n    - An index on the columns specified in the ORDER BY or GROUP BY clause may remove the need for the Database Engine to sort the data, because the rows are already sorted. This improves query performance.\n\n#### Creating clustered indexes in Entity Framework\n\nTo set the clustered index in the .NET backend using Entity Framework, set the `IsClustered` property of the annotation. For example, this is the definition of `CreatedAt` in `Microsoft.WindowsAzure.Mobile.Service.EntityData`:\n\n    [Index(IsClustered = true)]\n    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]\n    [TableColumnAttribute(TableColumnType.CreatedAt)]\n    public DateTimeOffset? CreatedAt { get; set; }\n\n#### Creating indexes in the database schema\n\nFor the JavaScript backend, you can only modify the clustered index of a table by changing the database schema directly, either through SQL Server Management Studio or the Azure SQL Database Portal.\n\nThe following guides describe how to set a clustered or nonclustered index by modifying the database schema directly:\n\n- [Creating and Modifying PRIMARY KEY Constraints][]\n- [Create Nonclustered Indexes][]\n- [Create Clustered Indexes][]\n- [Create Unique Indexes][]\n\n#### Find top N missing indexes\nYou can write SQL queries on dynamic management views that will tell you more detailed information about the resource usage of individual queries or give you heuristics on what indexes to add. The following query determines which 10 missing indexes would produce the highest anticipated cumulative improvement, in descending order, for user queries.\n\n    SELECT TOP 10 *\n    FROM sys.dm_db_missing_index_group_stats\n    ORDER BY avg_total_user_cost * avg_user_impact * (user_seeks + user_scans)\n    DESC;\n\nThe following example query runs a join across these tables to get a list of the columns that should be part of each missing index and calculates an 'index advantage' to determine if the given index should be considered:\n\n    SELECT * from\n    (\n        SELECT\n        (user_seeks+user_scans) * avg_total_user_cost * (avg_user_impact * 0.01) AS index_advantage, migs.*\n        FROM sys.dm_db_missing_index_group_stats migs\n    ) AS migs_adv,\n      sys.dm_db_missing_index_groups mig,\n      sys.dm_db_missing_index_details mid\n    WHERE\n      migs_adv.group_handle = mig.index_group_handle and\n      mig.index_handle = mid.index_handle\n      AND migs_adv.index_advantage > 10\n    ORDER BY migs_adv.index_advantage DESC;\n\nFor more information, see [Monitoring SQL Database Using Dynamic Management Views][] and [Missing Index Dynamic Management Views][].\n\n<a name=\"AdvancedQuery\" ></a>\n### Advanced Query Design \n\nFrequently it's difficult to diagnose what queries are most expensive for the database. \n\n\n#### Finding top N queries\n\nThe following example returns information about the top five queries ranked by average CPU time. This example aggregates the queries according to their query hash, so that logically equivalent queries are grouped by their cumulative resource consumption.\n\n    SELECT TOP 5 query_stats.query_hash AS \"Query Hash\",\n        SUM(query_stats.total_worker_time) / SUM(query_stats.execution_count) AS \"Avg CPU Time\",\n        MIN(query_stats.statement_text) AS \"Statement Text\"\n    FROM\n        (SELECT QS.*,\n        SUBSTRING(ST.text, (QS.statement_start_offset/2) + 1,\n        ((CASE statement_end_offset\n            WHEN -1 THEN DATALENGTH(st.text)\n            ELSE QS.statement_end_offset END\n                - QS.statement_start_offset)/2) + 1) AS statement_text\n         FROM sys.dm_exec_query_stats AS QS\n         CROSS APPLY sys.dm_exec_sql_text(QS.sql_handle) as ST) as query_stats\n    GROUP BY query_stats.query_hash\n    ORDER BY 2 DESC;\n\nFor more information, see [Monitoring SQL Database Using Dynamic Management Views][]. In addition to executing the query, the **SQL Database Management Portal** gives you a nice shortcut to see this data, by selecting **Summary** for your database and then selecting **Query Performance**:\n\n![SQL Database Management Portal - query performance][PortalSqlManagementQueryPerformance]\n\n#### Analyzing the query plan\n\nOnce you have identified expensive queries or if you are about to deploy code using new queries and you would like to investigate their performance, the tooling offers great support for analyzing the **query plan**. The query plan enables you to see what operations take up the builk of CPU time and IO resources when a given SQL query runs. To analyze the query plan in **SQL Server Management Studio**, use the highlighted toolbar buttons.\n\n![SQL Server Management Studio - query plan][SSMSQueryPlan]\n\nTo analyze the query plan in the **SQL Database Management Portal**, use the highlighted toolbar buttons.\n\n![SQL Database Management Portal - query plan][PortalSqlManagementQueryPlan]\n\n## See Also\n\n- [Azure SQL Database Documentation][]\n- [Azure SQL Database performance and scaling][]\n- [Troubleshooting Azure SQL Database][]\n\n### Indexing\n\n- [Index Basics][]\n- [General Index Design Guidelines][]\n- [Unique Index Design Guidelines][]\n- [Clustered Index Design Guidelines][]\n- [Primary and Foreign Key Constraints][]\n- [How much does that key cost?][]\n\n### Entity Framework\n- [Performance Considerations for Entity Framework 5][]\n- [Code First Data Annotations][]\n\n<!-- IMAGES -->\n\n[SSMS]: ./media/mobile-services-sql-scale-guidance/1.png\n[PortalSqlManagement]: ./media/mobile-services-sql-scale-guidance/2.png\n[PortalSqlMetrics]: ./media/mobile-services-sql-scale-guidance/3.png\n[PortalSqlScale]: ./media/mobile-services-sql-scale-guidance/4.png\n[PortalSqlAddAlert]: ./media/mobile-services-sql-scale-guidance/5.png\n[PortalSqlAddAlert2]: ./media/mobile-services-sql-scale-guidance/6.png\n[PortalSqlAddAlert3]: ./media/mobile-services-sql-scale-guidance/7.png\n[SetIndexJavaScriptPortal]: ./media/mobile-services-sql-scale-guidance/set-index-portal-ui.png\n[SSMSDMVs]: ./media/mobile-services-sql-scale-guidance/8.png\n[PortalSqlManagementNewQuery]: ./media/mobile-services-sql-scale-guidance/9.png\n[PortalSqlManagementRunQuery]: ./media/mobile-services-sql-scale-guidance/10.png\n[PortalSqlManagementQueryPerformance]: ./media/mobile-services-sql-scale-guidance/11.png\n[SSMSQueryPlan]: ./media/mobile-services-sql-scale-guidance/12.png\n[PortalSqlManagementQueryPlan]: ./media/mobile-services-sql-scale-guidance/13.png\n\n<!-- LINKS -->\n\n[Azure classic portal]: http://manage.windowsazure.com\n\n[Azure SQL Database Documentation]: http://azure.microsoft.com/documentation/services/sql-database/\n[Managing SQL Database using SQL Server Management Studio]: http://go.microsoft.com/fwlink/p/?linkid=309723&clcid=0x409\n[Monitoring SQL Database Using Dynamic Management Views]: http://go.microsoft.com/fwlink/p/?linkid=309725&clcid=0x409\n[Azure SQL Database performance and scaling]: http://go.microsoft.com/fwlink/p/?linkid=397217&clcid=0x409\n[Troubleshooting Azure SQL Database]: http://msdn.microsoft.com/library/azure/ee730906.aspx\n[Reasons to Use the New Service Tiers]:http://msdn.microsoft.com/library/azure/dn369873.aspx#Reasons\n\n[Take method]:http://msdn.microsoft.com/library/vstudio/bb503062(v=vs.110).aspx\n\n<!-- MSDN -->\n[Creating and Modifying PRIMARY KEY Constraints]: http://technet.microsoft.com/library/ms181043(v=sql.105).aspx\n[Create Clustered Indexes]: http://technet.microsoft.com/library/ms186342(v=sql.120).aspx\n[Create Unique Indexes]: http://technet.microsoft.com/library/ms187019.aspx\n[Create Nonclustered Indexes]: http://technet.microsoft.com/library/ms189280.aspx\n\n[Primary and Foreign Key Constraints]: http://msdn.microsoft.com/library/ms179610(v=sql.120).aspx\n[Index Basics]: http://technet.microsoft.com/library/ms190457(v=sql.105).aspx\n[General Index Design Guidelines]: http://technet.microsoft.com/library/ms191195(v=sql.105).aspx\n[Unique Index Design Guidelines]: http://technet.microsoft.com/library/ms187019(v=sql.105).aspx\n[Clustered Index Design Guidelines]: http://technet.microsoft.com/library/ms190639(v=sql.105).aspx\n\n[Missing Index Dynamic Management Views]: http://technet.microsoft.com/library/ms345421.aspx\n\n<!-- EF -->\n[Performance Considerations for Entity Framework 5]: http://msdn.microsoft.com/data/hh949853\n[Code First Data Annotations]: http://msdn.microsoft.com/data/jj591583.aspx\n[Index Annotations in Entity Framework]:http://msdn.microsoft.com/data/jj591583.aspx#Index\n\n<!-- BLOG LINKS -->\n[How much does that key cost?]: http://www.sqlskills.com/blogs/kimberly/how-much-does-that-key-cost-plus-sp_helpindex9/\n\n"
+}
