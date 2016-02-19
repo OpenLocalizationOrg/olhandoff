@@ -1,0 +1,418 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        120
+      ],
+      "content": "Handle database write conflicts with optimistic concurrency (Windows Store) | Microsoft Azure"
+    },
+    {
+      "pos": [
+        139,
+        241
+      ],
+      "content": "Learn how to handle database write conflicts on both the server and in your Windows Store application."
+    },
+    {
+      "pos": [
+        568,
+        601
+      ],
+      "content": "Handling database write conflicts"
+    },
+    {
+      "pos": [
+        706,
+        712
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        719,
+        727
+      ],
+      "content": "Overview"
+    },
+    {
+      "pos": [
+        729,
+        1337
+      ],
+      "content": "This tutorial is intended to help you better understand how to handle conflicts that occur when two or more clients write to the same database record in a Windows Store app. Two or more clients may write changes to the same item, at the same time, in some scenarios. Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result. Azure Mobile Services provides support for detecting and resolving these conflicts. This topic walks you through the steps that allow you to handle database write conflicts on both the server and in your application.",
+      "nodes": [
+        {
+          "content": "This tutorial is intended to help you better understand how to handle conflicts that occur when two or more clients write to the same database record in a Windows Store app.",
+          "pos": [
+            0,
+            173
+          ]
+        },
+        {
+          "content": "Two or more clients may write changes to the same item, at the same time, in some scenarios.",
+          "pos": [
+            174,
+            266
+          ]
+        },
+        {
+          "content": "Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result.",
+          "pos": [
+            267,
+            391
+          ]
+        },
+        {
+          "content": "Azure Mobile Services provides support for detecting and resolving these conflicts.",
+          "pos": [
+            392,
+            475
+          ]
+        },
+        {
+          "content": "This topic walks you through the steps that allow you to handle database write conflicts on both the server and in your application.",
+          "pos": [
+            476,
+            608
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1339,
+        1478
+      ],
+      "content": "In this tutorial you will add functionality to the quickstart app to handle contentions that can occur when updating the TodoItem database."
+    },
+    {
+      "pos": [
+        1483,
+        1496
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1498,
+        1534
+      ],
+      "content": "This tutorial requires the following"
+    },
+    {
+      "pos": [
+        1538,
+        1576
+      ],
+      "content": "Microsoft Visual Studio 2013 or later."
+    },
+    {
+      "pos": [
+        1579,
+        1728
+      ],
+      "content": "This tutorial is based on the Mobile Services quickstart. Before you start this tutorial, you must first complete [Get started with Mobile Services].",
+      "nodes": [
+        {
+          "content": "This tutorial is based on the Mobile Services quickstart.",
+          "pos": [
+            0,
+            57
+          ]
+        },
+        {
+          "content": "Before you start this tutorial, you must first complete [Get started with Mobile Services].",
+          "pos": [
+            58,
+            149
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1731,
+        1746
+      ],
+      "content": "[Azure Account]"
+    },
+    {
+      "pos": [
+        1749,
+        1853
+      ],
+      "content": "Azure Mobile Services NuGet Package 1.1.0 or later. To get the latest version, follow these steps below:",
+      "nodes": [
+        {
+          "content": "Azure Mobile Services NuGet Package 1.1.0 or later.",
+          "pos": [
+            0,
+            51
+          ]
+        },
+        {
+          "content": "To get the latest version, follow these steps below:",
+          "pos": [
+            52,
+            104
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1861,
+        1982
+      ],
+      "content": "In Visual Studio, open the project and right-click the project in Solution Explorer then click <bpt id=\"p1\">**</bpt>Manage Nuget Packages<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        1992,
+        1999
+      ],
+      "content": "![][19]"
+    },
+    {
+      "pos": [
+        2008,
+        2181
+      ],
+      "content": "Expand <bpt id=\"p2\">**</bpt>Online<ept id=\"p2\">**</ept><ph id=\"ph3\"/> and click <bpt id=\"p3\">**</bpt>Microsoft and .NET<ept id=\"p3\">**</ept>. In the search text box enter <bpt id=\"p4\">**</bpt>Azure Mobile Services<ept id=\"p4\">**</ept>. Click <bpt id=\"p5\">**</bpt>Install<ept id=\"p5\">**</ept><ph id=\"ph4\"/> on the <bpt id=\"p6\">**</bpt>Azure Mobile Services<ept id=\"p6\">**</ept><ph id=\"ph5\"/> NuGet Package.",
+      "nodes": [
+        {
+          "content": "Expand <bpt id=\"p2\">**</bpt>Online<ept id=\"p2\">**</ept><ph id=\"ph3\"/> and click <bpt id=\"p3\">**</bpt>Microsoft and .NET<ept id=\"p3\">**</ept>.",
+          "pos": [
+            0,
+            141
+          ]
+        },
+        {
+          "content": "In the search text box enter <bpt id=\"p4\">**</bpt>Azure Mobile Services<ept id=\"p4\">**</ept>.",
+          "pos": [
+            142,
+            235
+          ]
+        },
+        {
+          "content": "Click <bpt id=\"p5\">**</bpt>Install<ept id=\"p5\">**</ept><ph id=\"ph4\"/> on the <bpt id=\"p6\">**</bpt>Azure Mobile Services<ept id=\"p6\">**</ept><ph id=\"ph5\"/> NuGet Package.",
+          "pos": [
+            236,
+            405
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2191,
+        2198
+      ],
+      "content": "![][20]"
+    },
+    {
+      "pos": [
+        2205,
+        2244
+      ],
+      "content": "Update the application to allow updates"
+    },
+    {
+      "pos": [
+        2246,
+        2623
+      ],
+      "content": "In this section you will update the TodoList user interface to allow updating the text of each item in a ListBox control. The ListBox will contain a CheckBox and TextBox control for each item in the database table. You will be able to update the text field of the TodoItem. The application will handle the <ph id=\"ph6\">`LostFocus`</ph><ph id=\"ph7\"/> event from that TextBox to update the item in the database.",
+      "nodes": [
+        {
+          "content": "In this section you will update the TodoList user interface to allow updating the text of each item in a ListBox control.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "The ListBox will contain a CheckBox and TextBox control for each item in the database table.",
+          "pos": [
+            122,
+            214
+          ]
+        },
+        {
+          "content": "You will be able to update the text field of the TodoItem.",
+          "pos": [
+            215,
+            273
+          ]
+        },
+        {
+          "content": "The application will handle the <ph id=\"ph6\">`LostFocus`</ph><ph id=\"ph7\"/> event from that TextBox to update the item in the database.",
+          "pos": [
+            274,
+            409
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2629,
+        2739
+      ],
+      "content": "In Visual Studio, open the TodoList project you downloaded in the [Get started with Mobile Services] tutorial."
+    },
+    {
+      "pos": [
+        2743,
+        2892
+      ],
+      "content": "In the Visual Studio Solution Explorer, open MainPage.xaml and replace the <ph id=\"ph8\">`ListView`</ph><ph id=\"ph9\"/> definition with the <ph id=\"ph10\">`ListView`</ph><ph id=\"ph11\"/> shown below and save the change."
+    },
+    {
+      "pos": [
+        3572,
+        3739
+      ],
+      "content": "In the Visual Studio Solution Explorer, open MainPage.cs in the shared project. Add the event handler to the MainPage for the TextBox <ph id=\"ph12\">`LostFocus`</ph><ph id=\"ph13\"/> event as shown below.",
+      "nodes": [
+        {
+          "content": "In the Visual Studio Solution Explorer, open MainPage.cs in the shared project.",
+          "pos": [
+            0,
+            79
+          ]
+        },
+        {
+          "content": "Add the event handler to the MainPage for the TextBox <ph id=\"ph12\">`LostFocus`</ph><ph id=\"ph13\"/> event as shown below.",
+          "pos": [
+            80,
+            201
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4135,
+        4283
+      ],
+      "content": "In MainPage.cs for the shared project, add the definition for the MainPage <ph id=\"ph14\">`UpdateToDoItem()`</ph><ph id=\"ph15\"/> method referenced in the event handler as shown below."
+    },
+    {
+      "pos": [
+        4788,
+        4895
+      ],
+      "content": "The application now writes the text changes to each item back to the database when the TextBox loses focus."
+    },
+    {
+      "pos": [
+        4899,
+        4944
+      ],
+      "content": "Enable Conflict Detection in your application"
+    },
+    {
+      "pos": [
+        4946,
+        6153
+      ],
+      "content": "Two or more clients may write changes to the same item, at the same time, in some scenarios. Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result. [Optimistic Concurrency Control] assumes that each transaction can commit and therefore does not use any resource locking. Before committing a transaction, optimistic concurrency control verifies that no other transaction has modified the data. If the data has been modified, the committing transaction is rolled back. Azure Mobile Services supports optimistic concurrency control by tracking changes to each item using the <ph id=\"ph16\">`__version`</ph><ph id=\"ph17\"/> system property column that is added to each table. In this section, we will enable the application to detect these write conflicts through the <ph id=\"ph18\">`__version`</ph><ph id=\"ph19\"/> system property. The application will be notified by a <ph id=\"ph20\">`MobileServicePreconditionFailedException`</ph><ph id=\"ph21\"/> during an update attempt if the record has changed since the last query. It will then be able to make a choice of whether to commit its change to the database or leave the last change to the database intact. For more information on the System Properties for Mobile Services, see [System Properties].",
+      "nodes": [
+        {
+          "content": "Two or more clients may write changes to the same item, at the same time, in some scenarios.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result.",
+          "pos": [
+            93,
+            217
+          ]
+        },
+        {
+          "content": "[Optimistic Concurrency Control] assumes that each transaction can commit and therefore does not use any resource locking.",
+          "pos": [
+            218,
+            340
+          ]
+        },
+        {
+          "content": "Before committing a transaction, optimistic concurrency control verifies that no other transaction has modified the data.",
+          "pos": [
+            341,
+            462
+          ]
+        },
+        {
+          "content": "If the data has been modified, the committing transaction is rolled back.",
+          "pos": [
+            463,
+            536
+          ]
+        },
+        {
+          "content": "Azure Mobile Services supports optimistic concurrency control by tracking changes to each item using the <ph id=\"ph16\">`__version`</ph><ph id=\"ph17\"/> system property column that is added to each table.",
+          "pos": [
+            537,
+            739
+          ]
+        },
+        {
+          "content": "In this section, we will enable the application to detect these write conflicts through the <ph id=\"ph18\">`__version`</ph><ph id=\"ph19\"/> system property.",
+          "pos": [
+            740,
+            894
+          ]
+        },
+        {
+          "content": "The application will be notified by a <ph id=\"ph20\">`MobileServicePreconditionFailedException`</ph><ph id=\"ph21\"/> during an update attempt if the record has changed since the last query.",
+          "pos": [
+            895,
+            1082
+          ]
+        },
+        {
+          "content": "It will then be able to make a choice of whether to commit its change to the database or leave the last change to the database intact.",
+          "pos": [
+            1083,
+            1217
+          ]
+        },
+        {
+          "content": "For more information on the System Properties for Mobile Services, see [System Properties].",
+          "pos": [
+            1218,
+            1309
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6158,
+        6353
+      ],
+      "content": "Open TodoItem.cs in the shared project and update the <ph id=\"ph22\">`TodoItem`</ph><ph id=\"ph23\"/> class definition with the following code to include the <ph id=\"ph24\">`__version`</ph><ph id=\"ph25\"/> system property enabling support for write conflict detection."
+    },
+    {
+      "pos": [
+        6754,
+        6888
+      ],
+      "content": "<ph id=\"ph26\">[AZURE.NOTE]</ph><ph id=\"ph27\"/> When using untyped tables, enable optimistic concurrency by adding the Version flag to the SystemProperties of the table."
+    },
+    {
+      "pos": [
+        6910,
+        7034
+      ],
+      "content": "//Enable optimistic concurrency by retrieving __version\ntodoTable.SystemProperties |= MobileServiceSystemProperties.Version;"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Handle database write conflicts with optimistic concurrency (Windows Store) | Microsoft Azure\"\n    description=\"Learn how to handle database write conflicts on both the server and in your Windows Store application.\"\n    documentationCenter=\"windows\"\n    authors=\"wesmc7777\"\n    manager=\"dwrede\"\n    editor=\"\"\n    services=\"mobile-services\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile-windows\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.date=\"01/21/2016\"\n    ms.author=\"wesmc\"/>\n\n# Handling database write conflicts\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\n\n\n##Overview\n\nThis tutorial is intended to help you better understand how to handle conflicts that occur when two or more clients write to the same database record in a Windows Store app. Two or more clients may write changes to the same item, at the same time, in some scenarios. Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result. Azure Mobile Services provides support for detecting and resolving these conflicts. This topic walks you through the steps that allow you to handle database write conflicts on both the server and in your application.\n\nIn this tutorial you will add functionality to the quickstart app to handle contentions that can occur when updating the TodoItem database.\n\n\n##Prerequisites\n\nThis tutorial requires the following\n\n+ Microsoft Visual Studio 2013 or later.\n+ This tutorial is based on the Mobile Services quickstart. Before you start this tutorial, you must first complete [Get started with Mobile Services].\n+ [Azure Account]\n+ Azure Mobile Services NuGet Package 1.1.0 or later. To get the latest version, follow these steps below:\n    1. In Visual Studio, open the project and right-click the project in Solution Explorer then click **Manage Nuget Packages**.\n\n        ![][19]\n\n    2. Expand **Online** and click **Microsoft and .NET**. In the search text box enter **Azure Mobile Services**. Click **Install** on the **Azure Mobile Services** NuGet Package.\n\n        ![][20]\n\n\n\n\n##Update the application to allow updates\n\nIn this section you will update the TodoList user interface to allow updating the text of each item in a ListBox control. The ListBox will contain a CheckBox and TextBox control for each item in the database table. You will be able to update the text field of the TodoItem. The application will handle the `LostFocus` event from that TextBox to update the item in the database.\n\n\n1. In Visual Studio, open the TodoList project you downloaded in the [Get started with Mobile Services] tutorial.\n2. In the Visual Studio Solution Explorer, open MainPage.xaml and replace the `ListView` definition with the `ListView` shown below and save the change.\n\n        <ListView Name=\"ListItems\" Margin=\"62,10,0,0\" Grid.Row=\"1\">\n            <ListView.ItemTemplate>\n                <DataTemplate>\n                    <StackPanel Orientation=\"Horizontal\">\n                        <CheckBox Name=\"CheckBoxComplete\" IsChecked=\"{Binding Complete, Mode=TwoWay}\" Checked=\"CheckBoxComplete_Checked\" Margin=\"10,5\" VerticalAlignment=\"Center\"/>\n                        <TextBox x:Name=\"ToDoText\" Height=\"25\" Width=\"300\" Margin=\"10\" Text=\"{Binding Text, Mode=TwoWay}\" AcceptsReturn=\"False\" LostFocus=\"ToDoText_LostFocus\"/>\n                    </StackPanel>\n                </DataTemplate>\n            </ListView.ItemTemplate>\n        </ListView>\n\n\n4. In the Visual Studio Solution Explorer, open MainPage.cs in the shared project. Add the event handler to the MainPage for the TextBox `LostFocus` event as shown below.\n\n\n        private async void ToDoText_LostFocus(object sender, RoutedEventArgs e)\n        {\n            TextBox tb = (TextBox)sender;\n            TodoItem item = tb.DataContext as TodoItem;\n            //let's see if the text changed\n            if (item.Text != tb.Text)\n            {\n                item.Text = tb.Text;\n                await UpdateToDoItem(item);\n            }\n        }\n\n4. In MainPage.cs for the shared project, add the definition for the MainPage `UpdateToDoItem()` method referenced in the event handler as shown below.\n\n        private async Task UpdateToDoItem(TodoItem item)\n        {\n            Exception exception = null;\n            try\n            {\n                //update at the remote table\n                await todoTable.UpdateAsync(item);\n            }\n            catch (Exception ex)\n            {\n                exception = ex;\n            }\n            if (exception != null)\n            {\n                await new MessageDialog(exception.Message, \"Update Failed\").ShowAsync();\n            }\n        }\n\nThe application now writes the text changes to each item back to the database when the TextBox loses focus.\n\n##Enable Conflict Detection in your application\n\nTwo or more clients may write changes to the same item, at the same time, in some scenarios. Without any conflict detection, the last write would overwrite any previous updates even if this was not the desired result. [Optimistic Concurrency Control] assumes that each transaction can commit and therefore does not use any resource locking. Before committing a transaction, optimistic concurrency control verifies that no other transaction has modified the data. If the data has been modified, the committing transaction is rolled back. Azure Mobile Services supports optimistic concurrency control by tracking changes to each item using the `__version` system property column that is added to each table. In this section, we will enable the application to detect these write conflicts through the `__version` system property. The application will be notified by a `MobileServicePreconditionFailedException` during an update attempt if the record has changed since the last query. It will then be able to make a choice of whether to commit its change to the database or leave the last change to the database intact. For more information on the System Properties for Mobile Services, see [System Properties].\n\n1. Open TodoItem.cs in the shared project and update the `TodoItem` class definition with the following code to include the `__version` system property enabling support for write conflict detection.\n\n        public class TodoItem\n        {\n            public string Id { get; set; }\n            [JsonProperty(PropertyName = \"text\")]\n            public string Text { get; set; }\n            [JsonProperty(PropertyName = \"complete\")]\n            public bool Complete { get; set; }\n            [JsonProperty(PropertyName = \"__version\")]\n            public string Version { set; get; }\n        }\n\n    > [AZURE.NOTE] When using untyped tables, enable optimistic concurrency by adding the Version flag to the SystemProperties of the table.\n    >\n    >`````\n    //Enable optimistic concurrency by retrieving __version\ntodoTable.SystemProperties |= MobileServiceSystemProperties.Version;\n`````\n\n\n2. By adding the `Version` property to the `TodoItem` class, the application will be notified with a `MobileServicePreconditionFailedException` exception during an update if the record has changed since the last query. This exception includes the latest version of the item from the server. In MainPage.cs for the shared project, add the following code to handle the exception in the `UpdateToDoItem()` method.\n\n        private async Task UpdateToDoItem(TodoItem item)\n        {\n            Exception exception = null;\n            try\n            {\n                //update at the remote table\n                await todoTable.UpdateAsync(item);\n            }\n            catch (MobileServicePreconditionFailedException<TodoItem> writeException)\n            {\n                exception = writeException;\n            }\n            catch (Exception ex)\n            {\n                exception = ex;\n            }\n            if (exception != null)\n            {\n                if (exception is MobileServicePreconditionFailedException)\n                {\n                    //Conflict detected, the item has changed since the last query\n                    //Resolve the conflict between the local and server item\n                    await ResolveConflict(item, ((MobileServicePreconditionFailedException<TodoItem>) exception).Item);\n                }\n                else\n                {\n                    await new MessageDialog(exception.Message, \"Update Failed\").ShowAsync();\n                }\n            }\n        }\n\n\n3. In MainPage.cs, add the definition for the `ResolveConflict()` method referenced in `UpdateToDoItem()`. Notice that in order to resolve the conflict, you set the local item's version to the updated version from the server before committing the user's decision. Otherwise, you will continually encounter the conflict.\n\n\n        private async Task ResolveConflict(TodoItem localItem, TodoItem serverItem)\n        {\n            //Ask user to choose the resolution between versions\n            MessageDialog msgDialog = new MessageDialog(String.Format(\"Server Text: \\\"{0}\\\" \\nLocal Text: \\\"{1}\\\"\\n\",\n                                                        serverItem.Text, localItem.Text),\n                                                        \"CONFLICT DETECTED - Select a resolution:\");\n            UICommand localBtn = new UICommand(\"Commit Local Text\");\n            UICommand ServerBtn = new UICommand(\"Leave Server Text\");\n            msgDialog.Commands.Add(localBtn);\n            msgDialog.Commands.Add(ServerBtn);\n            localBtn.Invoked = async (IUICommand command) =>\n            {\n                // To resolve the conflict, update the version of the\n                // item being committed. Otherwise, you will keep\n                // catching a MobileServicePreConditionFailedException.\n                localItem.Version = serverItem.Version;\n                // Updating recursively here just in case another\n                // change happened while the user was making a decision\n                await UpdateToDoItem(localItem);\n            };\n            ServerBtn.Invoked = async (IUICommand command) =>\n            {\n                RefreshTodoItems();\n            };\n            await msgDialog.ShowAsync();\n        }\n\n\n\n##Test database write conflicts in the application\n\nIn this section you will build a Windows Store app package to install the app on a second machine or virtual machine. Then you will run the app on both machines generating a write conflict to test the code. Both instances of the app will attempt to update the same item's `text` property requiring the user to resolve the conflict.\n\n\n1. Create a Windows Store app package to install on second machine or virtual machine. To do this, click **Project**->**Store**->**Create App Packages** in Visual Studio.\n\n    ![][0]\n\n2. On the Create Your Packages screen, click **No** as this package will not be uploaded to the Windows Store. Then click **Next**.\n\n    ![][1]\n\n3. On the Select and Configure Packages screen, accept the defaults and click **Create**.\n\n    ![][10]\n\n4. On the Package Creation Completed screen, click the **Output location** link to open the package location.\n\n    ![][11]\n\n5. Copy the package folder, \"todolist_1.0.0.0_AnyCPU_Debug_Test\", to the second machine. On that machine, open the package folder and right click on the **Add-AppDevPackage.ps1** PowerShell script and click **Run with PowerShell** as shown below. Follow the prompts to install the app.\n\n    ![][12]\n\n5. Run instance 1 of the app in Visual Studio by clicking **Debug**->**Start Debugging**. On the Start screen of the second machine, click the down arrow to see \"Apps by name\". Then click the **todolist** app to run instance 2 of the app.\n\n    App Instance 1\n    ![][2]\n\n    App Instance 2\n    ![][2]\n\n\n6. In instance 1 of the app, update the text of the last item to **Test Write 1**, then click another text box so that the `LostFocus` event handler updates the database. The screenshot below shows an example.\n\n    App Instance 1\n    ![][3]\n\n    App Instance 2\n    ![][2]\n\n7. At this point the corresponding item in instance 2 of the app has an old version of the item. In that instance of the app, enter **Test Write 2** for the `text` property. Then click another text box so the `LostFocus` event handler attempts to update the database with the old `_version` property.\n\n    App Instance 1\n    ![][4]\n\n    App Instance 2\n    ![][5]\n\n8. Since the `__version` value used with the update attempt didn't match the server `__version` value, the Mobile Services SDK throws a `MobileServicePreconditionFailedException` allowing the app to resolve this conflict. To resolve the conflict, you can click **Commit Local Text** to commit the values from instance 2. Alternatively, click **Leave Server Text** to discard the values in instance 2, leaving the values from instance 1 of the app committed.\n\n    App Instance 1\n    ![][4]\n\n    App Instance 2\n    ![][6]\n\n\n\n##Automatically handling conflict resolution in server scripts\n\nYou can detect and resolve write conflicts in server scripts. This is a good idea when you can use scripted logic instead of user interaction to resolve the conflict. In this section, you will add a server side script to the TodoItem table for the application. The logic this script will use to resolve conflicts is as follows:\n\n+  If the TodoItem's ` complete` field is set to true, then it is considered completed and `text` can no longer be changed.\n+  If the TodoItem's ` complete` field is still false, then attempts to update `text` will be comitted.\n\nThe following steps walk you through adding the server update script and testing it.\n\n1. Log into the [Azure classic portal], click **Mobile Services**, and then click your app.\n\n    ![][7]\n\n2. Click the **Data** tab, then click the **TodoItem** table.\n\n    ![][8]\n\n3. Click **Script**, then select the **Update** operation.\n\n    ![][9]\n\n4. Replace the existing script with the following function, and then click **Save**.\n\n        function update(item, user, request) {\n            request.execute({\n                conflict: function (serverRecord) {\n                    // Only committing changes if the item is not completed.\n                    if (serverRecord.complete === false) {\n                        //write the updated item to the table\n                        request.execute();\n                    }\n                    else\n                    {\n                        request.respond(statusCodes.FORBIDDEN, 'The item is already completed.');\n                    }\n                }\n            });\n        }\n5. Run the **todolist** app on both machines. Change the TodoItem `text` for the last item in instance 2. Then click another text box so the `LostFocus` event handler updates the database.\n\n    App Instance 1\n    ![][4]\n\n    App Instance 2\n    ![][5]\n\n6. In instance 1 of the app, enter a different value for the last text property. Then click another text box so the `LostFocus` event handler attempts to update the database with an incorrect `__version` property.\n\n    App Instance 1\n    ![][13]\n\n    App Instance 2\n    ![][14]\n\n7. Notice that no exception was encountered in the app since the server script resolved the conflict allowing the update since the item is not marked complete. To see that the update was truly successful, click **Refresh** in instance 2 to re-query the database.\n\n    App Instance 1\n    ![][15]\n\n    App Instance 2\n    ![][15]\n\n8. In instance 1, click the check box to complete the last Todo item.\n\n    App Instance 1\n    ![][16]\n\n    App Instance 2\n    ![][15]\n\n9. In instance 2, try to update the last TodoItem's text and trigger the `LostFocus` event. In response to the conflict, the script resolved it by refusing the update because the item was already completed.\n\n    App Instance 1\n    ![][17]\n\n    App Instance 2\n    ![][18]\n\n##Next steps\n\nThis tutorial demonstrated how to enable a Windows Store app to handle write conflicts when working with data in Mobile Services. Next, consider completing one of the following Windows Store tutorials:\n\n* [Add authentication to your app]\n  <br/>Learn how to authenticate users of your app.\n\n* [Add push notifications to your app]\n  <br/>Learn how to send a very basic push notification to your app with Mobile Services.\n\n\n\n<!-- Images. -->\n[0]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-create-app-package1.png\n[1]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-create-app-package2.png\n[2]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app1.png\n[3]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app1-write1.png\n[4]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app1-write2.png\n[5]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app2-write2.png\n[6]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app2-write2-conflict.png\n[7]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/mobile-services-selection.png\n[8]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/mobile-portal-data-tables.png\n[9]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/mobile-insert-script-users.png\n[10]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-create-app-package3.png\n[11]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-create-app-package4.png\n[12]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-install-app-package.png\n[13]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app1-write3.png\n[14]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-app2-write3.png\n[15]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-write3.png\n[16]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-checkbox.png\n[17]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-2-items.png\n[18]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/Mobile-oc-store-already-complete.png\n[19]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/mobile-manage-nuget-packages-VS.png\n[20]: ./media/mobile-services-windows-store-dotnet-handle-database-conflicts/mobile-manage-nuget-packages-dialog.png\n\n<!-- URLs. -->\n[Optimistic Concurrency Control]: http://go.microsoft.com/fwlink/?LinkId=330935\n[Get started with Mobile Services]: /develop/mobile/tutorials/get-started/#create-new-service\n[Azure Account]: http://www.windowsazure.com/pricing/free-trial/\n[Validate and modify data with scripts]: /develop/mobile/tutorials/validate-modify-and-augment-data-dotnet\n[Refine queries with paging]: /develop/mobile/tutorials/add-paging-to-data-dotnet\n[Get started with Mobile Services]: /develop/mobile/tutorials/get-started\n[Get started with data]: /develop/mobile/tutorials/get-started-with-data-dotnet\n[Add authentication to your app]: /develop/mobile/tutorials/get-started-with-users-dotnet\n[Add push notifications to your app]: /develop/mobile/tutorials/get-started-with-push-dotnet\n\n[Azure classic portal]: https://manage.windowsazure.com/\n[Windows Phone 8 SDK]: http://go.microsoft.com/fwlink/p/?LinkID=268374\n[Mobile Services SDK]: http://go.microsoft.com/fwlink/p/?LinkID=268375\n[Developer Code Samples site]:  http://go.microsoft.com/fwlink/p/?LinkId=271146\n[System Properties]: http://go.microsoft.com/fwlink/?LinkId=331143\n"
+}
