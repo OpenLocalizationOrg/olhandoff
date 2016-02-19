@@ -1,0 +1,619 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        88
+      ],
+      "content": "Develop Python MapReduce jobs with HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        106,
+        190
+      ],
+      "content": "Learn how to create and run Python MapReduce jobs on Linux-based HDInsight clusters."
+    },
+    {
+      "pos": [
+        507,
+        554
+      ],
+      "content": "Develop Python streaming programs for HDInsight"
+    },
+    {
+      "pos": [
+        556,
+        765
+      ],
+      "content": "Hadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java. In this article, you will learn how to use Python to perform MapReduce operations.",
+      "nodes": [
+        {
+          "content": "Hadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "In this article, you will learn how to use Python to perform MapReduce operations.",
+          "pos": [
+            127,
+            209
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        769,
+        937
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> While the Python code in this document can be used with a Windows-based HDInsight cluster, the steps in this document are specific to Linux-based clusters."
+    },
+    {
+      "pos": [
+        939,
+        1152
+      ],
+      "content": "This article is based on information and examples published by Michael Noll at <bpt id=\"p1\">[</bpt>Writing an Hadoop MapReduce Program in Python<ept id=\"p1\">](http://www.michael-noll.com/tutorials/writing-an-hadoop-mapreduce-program-in-python/)</ept>."
+    },
+    {
+      "pos": [
+        1156,
+        1169
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1171,
+        1238
+      ],
+      "content": "To complete the steps in this article, you will need the following:"
+    },
+    {
+      "pos": [
+        1242,
+        1283
+      ],
+      "content": "A Linux-based Hadoop on HDInsight cluster"
+    },
+    {
+      "pos": [
+        1287,
+        1300
+      ],
+      "content": "A text editor"
+    },
+    {
+      "pos": [
+        1304,
+        1494
+      ],
+      "content": "For Windows clients, PuTTY and PSCP. These utilities are available from the <ph id=\"ph4\">&lt;a href=\"http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html\" target=\"_blank\"&gt;</ph>PuTTY Download Page<ph id=\"ph5\">&lt;/a&gt;</ph>.",
+      "nodes": [
+        {
+          "content": "For Windows clients, PuTTY and PSCP.",
+          "pos": [
+            0,
+            36
+          ]
+        },
+        {
+          "content": "These utilities are available from the <ph id=\"ph4\">&lt;a href=\"http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html\" target=\"_blank\"&gt;</ph>PuTTY Download Page<ph id=\"ph5\">&lt;/a&gt;</ph>.",
+          "pos": [
+            37,
+            238
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1498,
+        1508
+      ],
+      "content": "Word count"
+    },
+    {
+      "pos": [
+        1510,
+        1718
+      ],
+      "content": "For this example, you will implement a basic word count by using a mapper and reducer. The mapper breaks sentences into individual words, and the reducer aggregates the words and counts to produce the output.",
+      "nodes": [
+        {
+          "content": "For this example, you will implement a basic word count by using a mapper and reducer.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "The mapper breaks sentences into individual words, and the reducer aggregates the words and counts to produce the output.",
+          "pos": [
+            87,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1720,
+        1802
+      ],
+      "content": "The following flowchart illustrates what happens during the map and reduce phases."
+    },
+    {
+      "pos": [
+        1804,
+        1901
+      ],
+      "content": "<ph id=\"ph6\">![</ph>illustration of map reduce<ph id=\"ph7\">](./media/hdinsight-hadoop-streaming-python/HDI.WordCountDiagram.png)</ph>"
+    },
+    {
+      "pos": [
+        1905,
+        1916
+      ],
+      "content": "Why Python?"
+    },
+    {
+      "pos": [
+        1918,
+        2261
+      ],
+      "content": "Python is a general-purpose, high-level programming language that allows you to express concepts in fewer lines of code than many other languages. It has recently became popular with data scientists as a prototyping language because its interpreted nature, dynamic typing, and elegant syntax make it suitable for rapid application development.",
+      "nodes": [
+        {
+          "content": "Python is a general-purpose, high-level programming language that allows you to express concepts in fewer lines of code than many other languages.",
+          "pos": [
+            0,
+            146
+          ]
+        },
+        {
+          "content": "It has recently became popular with data scientists as a prototyping language because its interpreted nature, dynamic typing, and elegant syntax make it suitable for rapid application development.",
+          "pos": [
+            147,
+            343
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2263,
+        2309
+      ],
+      "content": "Python is installed on all HDInsight clusters."
+    },
+    {
+      "pos": [
+        2313,
+        2332
+      ],
+      "content": "Streaming MapReduce"
+    },
+    {
+      "pos": [
+        2334,
+        2491
+      ],
+      "content": "Hadoop allows you to specify a file that contains the map and reduce logic that is used by a job. The specific requirements for the map and reduce logic are:",
+      "nodes": [
+        {
+          "content": "Hadoop allows you to specify a file that contains the map and reduce logic that is used by a job.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "The specific requirements for the map and reduce logic are:",
+          "pos": [
+            98,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2495,
+        2568
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>Input<ept id=\"p2\">**</ept>: The map and reduce components must read input data from STDIN."
+    },
+    {
+      "pos": [
+        2572,
+        2647
+      ],
+      "content": "<bpt id=\"p3\">**</bpt>Output<ept id=\"p3\">**</ept>: The map and reduce components must write output data to STDOUT."
+    },
+    {
+      "pos": [
+        2651,
+        2754
+      ],
+      "content": "<bpt id=\"p4\">**</bpt>Data format<ept id=\"p4\">**</ept>: The data consumed and produced must be a key/value pair, separated by a tab character."
+    },
+    {
+      "pos": [
+        2756,
+        2990
+      ],
+      "content": "Python can easily handle these requirements by using the <bpt id=\"p5\">**</bpt>sys<ept id=\"p5\">**</ept><ph id=\"ph8\"/> module to read from STDIN and using <bpt id=\"p6\">**</bpt>print<ept id=\"p6\">**</ept><ph id=\"ph9\"/> to print to STDOUT. The remaining task is simply formatting the data with a tab (<ph id=\"ph10\">`\\t`</ph>) character between the key and value.",
+      "nodes": [
+        {
+          "content": "Python can easily handle these requirements by using the <bpt id=\"p5\">**</bpt>sys<ept id=\"p5\">**</ept><ph id=\"ph8\"/> module to read from STDIN and using <bpt id=\"p6\">**</bpt>print<ept id=\"p6\">**</ept><ph id=\"ph9\"/> to print to STDOUT.",
+          "pos": [
+            0,
+            234
+          ]
+        },
+        {
+          "content": "The remaining task is simply formatting the data with a tab (<ph id=\"ph10\">`\\t`</ph>) character between the key and value.",
+          "pos": [
+            235,
+            357
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2994,
+        3023
+      ],
+      "content": "Create the mapper and reducer"
+    },
+    {
+      "pos": [
+        3025,
+        3202
+      ],
+      "content": "The mapper and reducer are text files, in this case <bpt id=\"p7\">**</bpt>mapper.py<ept id=\"p7\">**</ept><ph id=\"ph11\"/> and <bpt id=\"p8\">**</bpt>reducer.py<ept id=\"p8\">**</ept><ph id=\"ph12\"/> (to make it clear which does what). You can create these by using the editor of your choice.",
+      "nodes": [
+        {
+          "content": "The mapper and reducer are text files, in this case <bpt id=\"p7\">**</bpt>mapper.py<ept id=\"p7\">**</ept><ph id=\"ph11\"/> and <bpt id=\"p8\">**</bpt>reducer.py<ept id=\"p8\">**</ept><ph id=\"ph12\"/> (to make it clear which does what).",
+          "pos": [
+            0,
+            226
+          ]
+        },
+        {
+          "content": "You can create these by using the editor of your choice.",
+          "pos": [
+            227,
+            283
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3207,
+        3216
+      ],
+      "content": "Mapper.py"
+    },
+    {
+      "pos": [
+        3218,
+        3298
+      ],
+      "content": "Create a new file named <bpt id=\"p9\">**</bpt>mapper.py<ept id=\"p9\">**</ept><ph id=\"ph13\"/> and use the following code as the content:"
+    },
+    {
+      "pos": [
+        3912,
+        3986
+      ],
+      "content": "Take a moment to read through the code so you can understand what it does."
+    },
+    {
+      "pos": [
+        3991,
+        4001
+      ],
+      "content": "Reducer.py"
+    },
+    {
+      "pos": [
+        4003,
+        4084
+      ],
+      "content": "Create a new file named <bpt id=\"p10\">**</bpt>reducer.py<ept id=\"p10\">**</ept><ph id=\"ph14\"/> and use the following code as the content:"
+    },
+    {
+      "pos": [
+        5394,
+        5410
+      ],
+      "content": "Upload the files"
+    },
+    {
+      "pos": [
+        5412,
+        5608
+      ],
+      "content": "Both <bpt id=\"p11\">**</bpt>mapper.py<ept id=\"p11\">**</ept><ph id=\"ph15\"/> and <bpt id=\"p12\">**</bpt>reducer.py<ept id=\"p12\">**</ept><ph id=\"ph16\"/> must be on the head node of the cluster before we can run them. The easiest way to upload them is to use <bpt id=\"p13\">**</bpt>scp<ept id=\"p13\">**</ept><ph id=\"ph17\"/> (<bpt id=\"p14\">**</bpt>pscp<ept id=\"p14\">**</ept><ph id=\"ph18\"/> if you are using a Windows client).",
+      "nodes": [
+        {
+          "content": "Both <bpt id=\"p11\">**</bpt>mapper.py<ept id=\"p11\">**</ept><ph id=\"ph15\"/> and <bpt id=\"p12\">**</bpt>reducer.py<ept id=\"p12\">**</ept><ph id=\"ph16\"/> must be on the head node of the cluster before we can run them.",
+          "pos": [
+            0,
+            211
+          ]
+        },
+        {
+          "content": "The easiest way to upload them is to use <bpt id=\"p13\">**</bpt>scp<ept id=\"p13\">**</ept><ph id=\"ph17\"/> (<bpt id=\"p14\">**</bpt>pscp<ept id=\"p14\">**</ept><ph id=\"ph18\"/> if you are using a Windows client).",
+          "pos": [
+            212,
+            416
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5610,
+        5802
+      ],
+      "content": "From the client, in the same directory as <bpt id=\"p15\">**</bpt>mapper.py<ept id=\"p15\">**</ept><ph id=\"ph19\"/> and <bpt id=\"p16\">**</bpt>reducer.py<ept id=\"p16\">**</ept>, use the following command. Replace <bpt id=\"p17\">**</bpt>username<ept id=\"p17\">**</ept><ph id=\"ph20\"/> with an SSH user, and <bpt id=\"p18\">**</bpt>clustername<ept id=\"p18\">**</ept><ph id=\"ph21\"/> with the name of your cluster.",
+      "nodes": [
+        {
+          "content": "From the client, in the same directory as <bpt id=\"p15\">**</bpt>mapper.py<ept id=\"p15\">**</ept><ph id=\"ph19\"/> and <bpt id=\"p16\">**</bpt>reducer.py<ept id=\"p16\">**</ept>, use the following command.",
+          "pos": [
+            0,
+            197
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p17\">**</bpt>username<ept id=\"p17\">**</ept><ph id=\"ph20\"/> with an SSH user, and <bpt id=\"p18\">**</bpt>clustername<ept id=\"p18\">**</ept><ph id=\"ph21\"/> with the name of your cluster.",
+          "pos": [
+            198,
+            397
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5879,
+        5940
+      ],
+      "content": "This copies the files from the local system to the head node."
+    },
+    {
+      "pos": [
+        5944,
+        6252
+      ],
+      "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the <ph id=\"ph24\">`-i`</ph><ph id=\"ph25\"/> parameter and the path to the private key, for example, <ph id=\"ph26\">`scp -i /path/to/private/key mapper.py reducer.py username@clustername-ssh.azurehdinsight.net:`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> If you used a password to secure your SSH account, you will be prompted for the password.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "If you used an SSH key, you may have to use the <ph id=\"ph24\">`-i`</ph><ph id=\"ph25\"/> parameter and the path to the private key, for example, <ph id=\"ph26\">`scp -i /path/to/private/key mapper.py reducer.py username@clustername-ssh.azurehdinsight.net:`</ph>.",
+          "pos": [
+            137,
+            395
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6256,
+        6269
+      ],
+      "content": "Run MapReduce"
+    },
+    {
+      "pos": [
+        6274,
+        6310
+      ],
+      "content": "Connect to the cluster by using SSH:"
+    },
+    {
+      "pos": [
+        6375,
+        6661
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the <ph id=\"ph29\">`-i`</ph><ph id=\"ph30\"/> parameter and the path to the private key, for example, <ph id=\"ph31\">`ssh -i /path/to/private/key username@clustername-ssh.azurehdinsight.net`</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> If you used a password to secure your SSH account, you will be prompted for the password.",
+          "pos": [
+            0,
+            136
+          ]
+        },
+        {
+          "content": "If you used an SSH key, you may have to use the <ph id=\"ph29\">`-i`</ph><ph id=\"ph30\"/> parameter and the path to the private key, for example, <ph id=\"ph31\">`ssh -i /path/to/private/key username@clustername-ssh.azurehdinsight.net`</ph>.",
+          "pos": [
+            137,
+            373
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6666,
+        6719
+      ],
+      "content": "Use the following command to start the MapReduce job."
+    },
+    {
+      "pos": [
+        6958,
+        6995
+      ],
+      "content": "This command has the following parts:"
+    },
+    {
+      "pos": [
+        7003,
+        7148
+      ],
+      "content": "<bpt id=\"p19\">**</bpt>hadoop-streaming.jar<ept id=\"p19\">**</ept>: Used when performing streaming MapReduce operations. It interfaces Hadoop with the external MapReduce code you provide.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p19\">**</bpt>hadoop-streaming.jar<ept id=\"p19\">**</ept>: Used when performing streaming MapReduce operations.",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "It interfaces Hadoop with the external MapReduce code you provide.",
+          "pos": [
+            119,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7156,
+        7291
+      ],
+      "content": "<bpt id=\"p20\">**</bpt>-files<ept id=\"p20\">**</ept>: Tells Hadoop that the specified files are needed for this MapReduce job, and they should be copied to all the worker nodes."
+    },
+    {
+      "pos": [
+        7299,
+        7357
+      ],
+      "content": "<bpt id=\"p21\">**</bpt>-mapper<ept id=\"p21\">**</ept>: Tells Hadoop which file to use as the mapper."
+    },
+    {
+      "pos": [
+        7365,
+        7425
+      ],
+      "content": "<bpt id=\"p22\">**</bpt>-reducer<ept id=\"p22\">**</ept>: Tells Hadoop which file to use as the reducer."
+    },
+    {
+      "pos": [
+        7433,
+        7492
+      ],
+      "content": "<bpt id=\"p23\">**</bpt>-input<ept id=\"p23\">**</ept>: The input file that we should count words from."
+    },
+    {
+      "pos": [
+        7500,
+        7562
+      ],
+      "content": "<bpt id=\"p24\">**</bpt>-output<ept id=\"p24\">**</ept>: The directory that the output will be written to."
+    },
+    {
+      "pos": [
+        7574,
+        7629
+      ],
+      "content": "<ph id=\"ph32\">[AZURE.NOTE]</ph><ph id=\"ph33\"/> This directory will be created by the job."
+    },
+    {
+      "pos": [
+        7631,
+        7774
+      ],
+      "content": "You should see a bunch of <bpt id=\"p25\">**</bpt>INFO<ept id=\"p25\">**</ept><ph id=\"ph34\"/> statements as the job starts, and finally see the <bpt id=\"p26\">**</bpt>map<ept id=\"p26\">**</ept><ph id=\"ph35\"/> and <bpt id=\"p27\">**</bpt>reduce<ept id=\"p27\">**</ept><ph id=\"ph36\"/> operation displayed as percentages."
+    },
+    {
+      "pos": [
+        7963,
+        8031
+      ],
+      "content": "You will receive status information about the job when it completes."
+    },
+    {
+      "pos": [
+        8035,
+        8050
+      ],
+      "content": "View the output"
+    },
+    {
+      "pos": [
+        8052,
+        8123
+      ],
+      "content": "When the job is complete, use the following command to view the output:"
+    },
+    {
+      "pos": [
+        8178,
+        8298
+      ],
+      "content": "This should display a list of words and how many times the word occurred. The following is an sample of the output data:",
+      "nodes": [
+        {
+          "content": "This should display a list of words and how many times the word occurred.",
+          "pos": [
+            0,
+            73
+          ]
+        },
+        {
+          "content": "The following is an sample of the output data:",
+          "pos": [
+            74,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8435,
+        8445
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        8447,
+        8600
+      ],
+      "content": "Now that you have learned how to use streaming MapRedcue jobs with HDInsight, use the following links to explore other ways to work with Azure HDInsight."
+    },
+    {
+      "pos": [
+        8604,
+        8652
+      ],
+      "content": "<bpt id=\"p28\">[</bpt>Use Hive with HDInsight<ept id=\"p28\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        8655,
+        8701
+      ],
+      "content": "<bpt id=\"p29\">[</bpt>Use Pig with HDInsight<ept id=\"p29\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        8704,
+        8767
+      ],
+      "content": "<bpt id=\"p30\">[</bpt>Use MapReduce jobs with HDInsight<ept id=\"p30\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Develop Python MapReduce jobs with HDInsight | Microsoft Azure\"\n   description=\"Learn how to create and run Python MapReduce jobs on Linux-based HDInsight clusters.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"02/05/2016\"\n   ms.author=\"larryfr\"/>\n\n#Develop Python streaming programs for HDInsight\n\nHadoop provides a streaming API for MapReduce that enables you to write map and reduce functions in languages other than Java. In this article, you will learn how to use Python to perform MapReduce operations.\n\n> [AZURE.NOTE] While the Python code in this document can be used with a Windows-based HDInsight cluster, the steps in this document are specific to Linux-based clusters.\n\nThis article is based on information and examples published by Michael Noll at [Writing an Hadoop MapReduce Program in Python](http://www.michael-noll.com/tutorials/writing-an-hadoop-mapreduce-program-in-python/).\n\n##Prerequisites\n\nTo complete the steps in this article, you will need the following:\n\n* A Linux-based Hadoop on HDInsight cluster\n\n* A text editor\n\n* For Windows clients, PuTTY and PSCP. These utilities are available from the <a href=\"http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html\" target=\"_blank\">PuTTY Download Page</a>.\n\n##Word count\n\nFor this example, you will implement a basic word count by using a mapper and reducer. The mapper breaks sentences into individual words, and the reducer aggregates the words and counts to produce the output.\n\nThe following flowchart illustrates what happens during the map and reduce phases.\n\n![illustration of map reduce](./media/hdinsight-hadoop-streaming-python/HDI.WordCountDiagram.png)\n\n##Why Python?\n\nPython is a general-purpose, high-level programming language that allows you to express concepts in fewer lines of code than many other languages. It has recently became popular with data scientists as a prototyping language because its interpreted nature, dynamic typing, and elegant syntax make it suitable for rapid application development.\n\nPython is installed on all HDInsight clusters.\n\n##Streaming MapReduce\n\nHadoop allows you to specify a file that contains the map and reduce logic that is used by a job. The specific requirements for the map and reduce logic are:\n\n* **Input**: The map and reduce components must read input data from STDIN.\n\n* **Output**: The map and reduce components must write output data to STDOUT.\n\n* **Data format**: The data consumed and produced must be a key/value pair, separated by a tab character.\n\nPython can easily handle these requirements by using the **sys** module to read from STDIN and using **print** to print to STDOUT. The remaining task is simply formatting the data with a tab (`\\t`) character between the key and value.\n\n##Create the mapper and reducer\n\nThe mapper and reducer are text files, in this case **mapper.py** and **reducer.py** (to make it clear which does what). You can create these by using the editor of your choice.\n\n###Mapper.py\n\nCreate a new file named **mapper.py** and use the following code as the content:\n\n    #!/usr/bin/env python\n\n    # Use the sys module\n    import sys\n\n    # 'file' in this case is STDIN\n    def read_input(file):\n        # Split each line into words\n        for line in file:\n            yield line.split()\n\n    def main(separator='\\t'):\n        # Read the data using read_input\n        data = read_input(sys.stdin)\n        # Process each words returned from read_input\n        for words in data:\n            # Process each word\n            for word in words:\n                # Write to STDOUT\n                print '%s%s%d' % (word, separator, 1)\n\n    if __name__ == \"__main__\":\n        main()\n\nTake a moment to read through the code so you can understand what it does.\n\n###Reducer.py\n\nCreate a new file named **reducer.py** and use the following code as the content:\n\n    #!/usr/bin/env python\n\n    # import modules\n    from itertools import groupby\n    from operator import itemgetter\n    import sys\n\n    # 'file' in this case is STDIN\n    def read_mapper_output(file, separator='\\t'):\n        # Go through each line\n        for line in file:\n            # Strip out the separator character\n            yield line.rstrip().split(separator, 1)\n\n    def main(separator='\\t'):\n        # Read the data using read_mapper_output\n        data = read_mapper_output(sys.stdin, separator=separator)\n        # Group words and counts into 'group'\n        #   Since MapReduce is a distributed process, each word\n        #   may have multiple counts. 'group' will have all counts\n        #   which can be retrieved using the word as the key.\n        for current_word, group in groupby(data, itemgetter(0)):\n            try:\n                # For each word, pull the count(s) for the word\n                #   from 'group' and create a total count\n                total_count = sum(int(count) for current_word, count in group)\n                # Write to stdout\n                print \"%s%s%d\" % (current_word, separator, total_count)\n            except ValueError:\n                # Count was not a number, so do nothing\n                pass\n\n    if __name__ == \"__main__\":\n        main()\n\n##Upload the files\n\nBoth **mapper.py** and **reducer.py** must be on the head node of the cluster before we can run them. The easiest way to upload them is to use **scp** (**pscp** if you are using a Windows client).\n\nFrom the client, in the same directory as **mapper.py** and **reducer.py**, use the following command. Replace **username** with an SSH user, and **clustername** with the name of your cluster.\n\n    scp mapper.py reducer.py username@clustername-ssh.azurehdinsight.net:\n\nThis copies the files from the local system to the head node.\n\n> [AZURE.NOTE] If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the `-i` parameter and the path to the private key, for example, `scp -i /path/to/private/key mapper.py reducer.py username@clustername-ssh.azurehdinsight.net:`.\n\n##Run MapReduce\n\n1. Connect to the cluster by using SSH:\n\n        ssh username@clustername-ssh.azurehdinsight.net\n\n    > [AZURE.NOTE] If you used a password to secure your SSH account, you will be prompted for the password. If you used an SSH key, you may have to use the `-i` parameter and the path to the private key, for example, `ssh -i /path/to/private/key username@clustername-ssh.azurehdinsight.net`.\n\n2. Use the following command to start the MapReduce job.\n\n        yarn jar /usr/hdp/current/hadoop-mapreduce-client/hadoop-streaming.jar -files mapper.py,reducer.py -mapper mapper.py -reducer reducer.py -input wasb:///example/data/gutenberg/davinci.txt -output wasb:///example/wordcountout\n\n    This command has the following parts:\n\n    * **hadoop-streaming.jar**: Used when performing streaming MapReduce operations. It interfaces Hadoop with the external MapReduce code you provide.\n\n    * **-files**: Tells Hadoop that the specified files are needed for this MapReduce job, and they should be copied to all the worker nodes.\n\n    * **-mapper**: Tells Hadoop which file to use as the mapper.\n\n    * **-reducer**: Tells Hadoop which file to use as the reducer.\n\n    * **-input**: The input file that we should count words from.\n\n    * **-output**: The directory that the output will be written to.\n\n        > [AZURE.NOTE] This directory will be created by the job.\n\nYou should see a bunch of **INFO** statements as the job starts, and finally see the **map** and **reduce** operation displayed as percentages.\n\n    15/02/05 19:01:04 INFO mapreduce.Job:  map 0% reduce 0%\n    15/02/05 19:01:16 INFO mapreduce.Job:  map 100% reduce 0%\n    15/02/05 19:01:27 INFO mapreduce.Job:  map 100% reduce 100%\n\nYou will receive status information about the job when it completes.\n\n##View the output\n\nWhen the job is complete, use the following command to view the output:\n\n    hdfs dfs -text /example/wordcountout/part-00000\n\nThis should display a list of words and how many times the word occurred. The following is an sample of the output data:\n\n    wrenching       1\n    wretched        6\n    wriggling       1\n    wrinkled,       1\n    wrinkles        2\n    wrinkling       2\n\n##Next steps\n\nNow that you have learned how to use streaming MapRedcue jobs with HDInsight, use the following links to explore other ways to work with Azure HDInsight.\n\n* [Use Hive with HDInsight](hdinsight-use-hive.md)\n* [Use Pig with HDInsight](hdinsight-use-pig.md)\n* [Use MapReduce jobs with HDInsight](hdinsight-use-mapreduce.md)\n"
+}

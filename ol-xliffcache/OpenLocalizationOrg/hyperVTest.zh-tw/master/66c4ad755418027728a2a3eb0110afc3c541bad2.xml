@@ -1,0 +1,890 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        109
+      ],
+      "content": "Create features for data in an Hadoop cluster using Hive queries | Microsoft Azure"
+    },
+    {
+      "pos": [
+        128,
+        228
+      ],
+      "content": "Examples of Hive queries that generate features in data stored in an Azure HDInsight Hadoop cluster."
+    },
+    {
+      "pos": [
+        561,
+        625
+      ],
+      "content": "Create features for data in an Hadoop cluster using Hive queries"
+    },
+    {
+      "pos": [
+        630,
+        642
+      ],
+      "content": "Introduction"
+    },
+    {
+      "pos": [
+        643,
+        861
+      ],
+      "content": "Examples of Hive queries that generate features in data stored in an Azure HDInsight Hadoop cluster are presented. These Hive queries use embedded Hive User Defined Functions (UDFs), the scripts for which are provided.",
+      "nodes": [
+        {
+          "content": "Examples of Hive queries that generate features in data stored in an Azure HDInsight Hadoop cluster are presented.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "These Hive queries use embedded Hive User Defined Functions (UDFs), the scripts for which are provided.",
+          "pos": [
+            115,
+            218
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        863,
+        1226
+      ],
+      "content": "Examples of queries that are specific to <bpt id=\"p1\">[</bpt>NYC Taxi Trip Data<ept id=\"p1\">](http://chriswhong.com/open-data/foil_nyc_taxi/)</ept><ph id=\"ph2\"/> scenarios are also provided in <bpt id=\"p2\">[</bpt>Github repository<ept id=\"p2\">](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts)</ept>. These queries already have data schema specified and are ready to be submitted to run.",
+      "nodes": [
+        {
+          "content": "Examples of queries that are specific to <bpt id=\"p1\">[</bpt>NYC Taxi Trip Data<ept id=\"p1\">](http://chriswhong.com/open-data/foil_nyc_taxi/)</ept><ph id=\"ph2\"/> scenarios are also provided in <bpt id=\"p2\">[</bpt>Github repository<ept id=\"p2\">](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts)</ept>.",
+          "pos": [
+            0,
+            366
+          ]
+        },
+        {
+          "content": "These queries already have data schema specified and are ready to be submitted to run.",
+          "pos": [
+            367,
+            453
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1228,
+        1351
+      ],
+      "content": "In the final section, parameters that users can tune so that the performance of Hive queries can be improved are discussed."
+    },
+    {
+      "pos": [
+        1353,
+        1700
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.INCLUDE [cap-create-features-data-selector](../../includes/cap-create-features-selector.md)]</ph>\nThis <bpt id=\"p3\">**</bpt>menu<ept id=\"p3\">**</ept><ph id=\"ph4\"/> links to topics that describe how to create features for data in various environments. This task is a step in the <bpt id=\"p4\">[</bpt>Cortana Analytics Process (CAP)<ept id=\"p4\">](https://azure.microsoft.com/documentation/learning-paths/cortana-analytics-process/)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.INCLUDE [cap-create-features-data-selector](../../includes/cap-create-features-selector.md)]</ph>\nThis <bpt id=\"p3\">**</bpt>menu<ept id=\"p3\">**</ept><ph id=\"ph4\"/> links to topics that describe how to create features for data in various environments.",
+          "pos": [
+            0,
+            270
+          ]
+        },
+        {
+          "content": "This task is a step in the <bpt id=\"p4\">[</bpt>Cortana Analytics Process (CAP)<ept id=\"p4\">](https://azure.microsoft.com/documentation/learning-paths/cortana-analytics-process/)</ept>.",
+          "pos": [
+            271,
+            455
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1706,
+        1719
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1720,
+        1755
+      ],
+      "content": "This article assumes that you have:"
+    },
+    {
+      "pos": [
+        1759,
+        1893
+      ],
+      "content": "Created an Azure storage account. If you need instructions, see <bpt id=\"p5\">[</bpt>Create an Azure Storage account<ept id=\"p5\">](../hdinsight-get-started.md#storage)</ept>",
+      "nodes": [
+        {
+          "content": "Created an Azure storage account.",
+          "pos": [
+            0,
+            33
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p5\">[</bpt>Create an Azure Storage account<ept id=\"p5\">](../hdinsight-get-started.md#storage)</ept>",
+          "pos": [
+            34,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1896,
+        2121
+      ],
+      "content": "Provisioned a customized Hadoop cluster with the HDInsight service.  If you need instructions, see <bpt id=\"p6\">[</bpt>Customize Azure HDInsight Hadoop Clusters for Advanced Analytics<ept id=\"p6\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>.",
+      "nodes": [
+        {
+          "content": "Provisioned a customized Hadoop cluster with the HDInsight service.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p6\">[</bpt>Customize Azure HDInsight Hadoop Clusters for Advanced Analytics<ept id=\"p6\">](machine-learning-data-science-customize-hadoop-cluster.md)</ept>.",
+          "pos": [
+            69,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2124,
+        2356
+      ],
+      "content": "The data has been uploaded to Hive tables in Azure HDInsight Hadoop clusters. If it has not, please follow <bpt id=\"p7\">[</bpt>Create and load data to Hive tables<ept id=\"p7\">](machine-learning-data-science-move-hive-tables.md)</ept><ph id=\"ph5\"/> to upload data to Hive tables first.",
+      "nodes": [
+        {
+          "content": "The data has been uploaded to Hive tables in Azure HDInsight Hadoop clusters.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "If it has not, please follow <bpt id=\"p7\">[</bpt>Create and load data to Hive tables<ept id=\"p7\">](machine-learning-data-science-move-hive-tables.md)</ept><ph id=\"ph5\"/> to upload data to Hive tables first.",
+          "pos": [
+            78,
+            284
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2359,
+        2536
+      ],
+      "content": "Enabled remote access to the cluster. If you need instructions, see <bpt id=\"p8\">[</bpt>Access the Head Node of Hadoop Cluster<ept id=\"p8\">](machine-learning-data-science-customize-hadoop-cluster.md#headnode)</ept>.",
+      "nodes": [
+        {
+          "content": "Enabled remote access to the cluster.",
+          "pos": [
+            0,
+            37
+          ]
+        },
+        {
+          "content": "If you need instructions, see <bpt id=\"p8\">[</bpt>Access the Head Node of Hadoop Cluster<ept id=\"p8\">](machine-learning-data-science-customize-hadoop-cluster.md#headnode)</ept>.",
+          "pos": [
+            38,
+            215
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2539,
+        2541
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        2579,
+        2597
+      ],
+      "content": "Feature Generation"
+    },
+    {
+      "pos": [
+        2599,
+        2967
+      ],
+      "content": "In this section, several examples of the ways in which features can be generating using Hive queries are described. Once you have generated additional features, you can either add them as columns to the existing table or create a new table with the additional features and primary key, which can then be joined with the original table. Here are the examples presented:",
+      "nodes": [
+        {
+          "content": "In this section, several examples of the ways in which features can be generating using Hive queries are described.",
+          "pos": [
+            0,
+            115
+          ]
+        },
+        {
+          "content": "Once you have generated additional features, you can either add them as columns to the existing table or create a new table with the additional features and primary key, which can then be joined with the original table.",
+          "pos": [
+            116,
+            335
+          ]
+        },
+        {
+          "content": "Here are the examples presented:",
+          "pos": [
+            336,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2972,
+        3032
+      ],
+      "content": "<bpt id=\"p9\">[</bpt>Frequency based Feature Generation<ept id=\"p9\">](#hive-frequencyfeature)</ept>"
+    },
+    {
+      "pos": [
+        3036,
+        3112
+      ],
+      "content": "<bpt id=\"p10\">[</bpt>Risks of Categorical Variables in Binary Classification<ept id=\"p10\">](#hive-riskfeature)</ept>"
+    },
+    {
+      "pos": [
+        3116,
+        3174
+      ],
+      "content": "<bpt id=\"p11\">[</bpt>Extract features from Datetime Field<ept id=\"p11\">](#hive-datefeatures)</ept>"
+    },
+    {
+      "pos": [
+        3178,
+        3232
+      ],
+      "content": "<bpt id=\"p12\">[</bpt>Extract features from Text Field<ept id=\"p12\">](#hive-textfeatures)</ept>"
+    },
+    {
+      "pos": [
+        3236,
+        3299
+      ],
+      "content": "<bpt id=\"p13\">[</bpt>Calculate distance between GPS coordinates<ept id=\"p13\">](#hive-gpsdistance)</ept>"
+    },
+    {
+      "pos": [
+        3301,
+        3304
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        3340,
+        3374
+      ],
+      "content": "Frequency based Feature Generation"
+    },
+    {
+      "pos": [
+        3376,
+        3621
+      ],
+      "content": "It is often useful to calculate the frequencies of the levels of a categorical variable, or the frequencies of certain combinations of levels from multiple categorical variables. Users can use the following script to calculate these frequencies:",
+      "nodes": [
+        {
+          "content": "It is often useful to calculate the frequencies of the levels of a categorical variable, or the frequencies of certain combinations of levels from multiple categorical variables.",
+          "pos": [
+            0,
+            178
+          ]
+        },
+        {
+          "content": "Users can use the following script to calculate these frequencies:",
+          "pos": [
+            179,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3977,
+        3980
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        4011,
+        4066
+      ],
+      "content": "Risks of Categorical Variables in Binary Classification"
+    },
+    {
+      "pos": [
+        4068,
+        4413
+      ],
+      "content": "In binary classification, we need to convert non-numeric categorical variables into numeric features when the models being used only take numeric features. This is done by replacing each non-numeric level with a numeric risk. In this section, we show some generic Hive queries that calculate the risk values (log odds) of a categorical variable.",
+      "nodes": [
+        {
+          "content": "In binary classification, we need to convert non-numeric categorical variables into numeric features when the models being used only take numeric features.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "This is done by replacing each non-numeric level with a numeric risk.",
+          "pos": [
+            156,
+            225
+          ]
+        },
+        {
+          "content": "In this section, we show some generic Hive queries that calculate the risk values (log odds) of a categorical variable.",
+          "pos": [
+            226,
+            345
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5110,
+        5367
+      ],
+      "content": "In this example, variables <ph id=\"ph6\">`smooth_param1`</ph><ph id=\"ph7\"/> and <ph id=\"ph8\">`smooth_param2`</ph><ph id=\"ph9\"/> are set to smooth the risk values calculated from the data. Risks have a range between -Inf and Inf. A risks &gt; 0 indicates that the probability that the target is equal to 1 is greater than 0.5.",
+      "nodes": [
+        {
+          "content": "In this example, variables <ph id=\"ph6\">`smooth_param1`</ph><ph id=\"ph7\"/> and <ph id=\"ph8\">`smooth_param2`</ph><ph id=\"ph9\"/> are set to smooth the risk values calculated from the data. Ri",
+          "pos": [
+            0,
+            189
+          ]
+        },
+        {
+          "content": "sks have a range between -Inf and Inf. A",
+          "pos": [
+            189,
+            229
+          ]
+        },
+        {
+          "content": "risks &gt; 0 indicates that the probability that the target is equal to 1 is greater than 0.5.",
+          "pos": [
+            230,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5369,
+        5536
+      ],
+      "content": "After the risk table is calculated, users can assign risk values to a table by joining it with the risk table. The Hive joining query was provided in previous section.",
+      "nodes": [
+        {
+          "content": "After the risk table is calculated, users can assign risk values to a table by joining it with the risk table.",
+          "pos": [
+            0,
+            110
+          ]
+        },
+        {
+          "content": "The Hive joining query was provided in previous section.",
+          "pos": [
+            111,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5538,
+        5541
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        5573,
+        5610
+      ],
+      "content": "Extract features from Datetime Fields"
+    },
+    {
+      "pos": [
+        5612,
+        6004
+      ],
+      "content": "Hive comes with a set of UDFs for processing datetime fields. In Hive, the default datetime format is 'yyyy-MM-dd 00:00:00' ('1970-01-01 12:21:32' for example). In this section, we show examples that extract the day of a month, the month from a datetime field, and other examples that convert a datetime string in a format other than the default format to a datetime string in default format.",
+      "nodes": [
+        {
+          "content": "Hive comes with a set of UDFs for processing datetime fields.",
+          "pos": [
+            0,
+            61
+          ]
+        },
+        {
+          "content": "In Hive, the default datetime format is 'yyyy-MM-dd 00:00:00' ('1970-01-01 12:21:32' for example).",
+          "pos": [
+            62,
+            160
+          ]
+        },
+        {
+          "content": "In this section, we show examples that extract the day of a month, the month from a datetime field, and other examples that convert a datetime string in a format other than the default format to a datetime string in default format.",
+          "pos": [
+            161,
+            392
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6110,
+        6200
+      ],
+      "content": "This Hive query assumes that the <bpt id=\"p14\">*</bpt>&amp;#60;datetime field&gt;<ept id=\"p14\">*</ept><ph id=\"ph10\"/> is in the default datetime format."
+    },
+    {
+      "pos": [
+        6202,
+        6511
+      ],
+      "content": "If a datetime field is not in the default format, you need to convert the datetime field into Unix time stamp first, and then convert the Unix time stamp to a datetime string that is in the default format. When the datetime is in default format, users can apply the embedded datetime UDFs to extract features.",
+      "nodes": [
+        {
+          "content": "If a datetime field is not in the default format, you need to convert the datetime field into Unix time stamp first, and then convert the Unix time stamp to a datetime string that is in the default format.",
+          "pos": [
+            0,
+            205
+          ]
+        },
+        {
+          "content": "When the datetime is in default format, users can apply the embedded datetime UDFs to extract features.",
+          "pos": [
+            206,
+            309
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6652,
+        6845
+      ],
+      "content": "In this query, if the <bpt id=\"p15\">*</bpt>&amp;#60;datetime field&gt;<ept id=\"p15\">*</ept><ph id=\"ph11\"/> has the pattern like <bpt id=\"p16\">*</bpt>03/26/2015 12:04:39<ept id=\"p16\">*</ept>, the <bpt id=\"p17\">*</bpt>'&amp;#60;pattern of the datetime field&gt;'<ept id=\"p17\">*</ept><ph id=\"ph12\"/> should be <ph id=\"ph13\">`'MM/dd/yyyy HH:mm:ss'`</ph>. To test it, users can run",
+      "nodes": [
+        {
+          "content": "In this query, if the <bpt id=\"p15\">*</bpt>&amp;#60;datetime field&gt;<ept id=\"p15\">*</ept><ph id=\"ph11\"/> has the pattern like <bpt id=\"p16\">*</bpt>03/26/2015 12:04:39<ept id=\"p16\">*</ept>, the <bpt id=\"p17\">*</bpt>'&amp;#60;pattern of the datetime field&gt;'<ept id=\"p17\">*</ept><ph id=\"ph12\"/> should be <ph id=\"ph13\">`'MM/dd/yyyy HH:mm:ss'`</ph>.",
+          "pos": [
+            0,
+            350
+          ]
+        },
+        {
+          "content": "To test it, users can run",
+          "pos": [
+            351,
+            376
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6976,
+        7115
+      ],
+      "content": "The <bpt id=\"p18\">*</bpt>hivesampletable<ept id=\"p18\">*</ept><ph id=\"ph14\"/> in this query comes preinstalled on all Azure HDInsight Hadoop clusters by default when the clusters are provisioned."
+    },
+    {
+      "pos": [
+        7118,
+        7121
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        7153,
+        7186
+      ],
+      "content": "Extract features from Text Fields"
+    },
+    {
+      "pos": [
+        7188,
+        7380
+      ],
+      "content": "When the Hive table has a text field that contains a string of words that are delimited by spaces, the following query extracts the length of the string, and the number of words in the string."
+    },
+    {
+      "pos": [
+        7514,
+        7517
+      ],
+      "content": "###"
+    },
+    {
+      "pos": [
+        7548,
+        7599
+      ],
+      "content": "Calculate distances between sets of GPS coordinates"
+    },
+    {
+      "pos": [
+        7601,
+        7798
+      ],
+      "content": "The query given in this section can be directly applied to the NYC Taxi Trip Data. The purpose of this query is to show how to apply an embedded mathematical functions in Hive to generate features.",
+      "nodes": [
+        {
+          "content": "The query given in this section can be directly applied to the NYC Taxi Trip Data.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "The purpose of this query is to show how to apply an embedded mathematical functions in Hive to generate features.",
+          "pos": [
+            83,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7800,
+        8084
+      ],
+      "content": "The fields that are used in this query are the GPS coordinates of pickup and dropoff locations, named <bpt id=\"p19\">*</bpt>pickup\\_longitude<ept id=\"p19\">*</ept>, <bpt id=\"p20\">*</bpt>pickup\\_latitude<ept id=\"p20\">*</ept>, <bpt id=\"p21\">*</bpt>dropoff\\_longitude<ept id=\"p21\">*</ept>, and <bpt id=\"p22\">*</bpt>dropoff\\_latitude<ept id=\"p22\">*</ept>. The queries that calculate the direct distance between the pickup and dropoff coordinates are:",
+      "nodes": [
+        {
+          "content": "The fields that are used in this query are the GPS coordinates of pickup and dropoff locations, named <bpt id=\"p19\">*</bpt>pickup\\_longitude<ept id=\"p19\">*</ept>, <bpt id=\"p20\">*</bpt>pickup\\_latitude<ept id=\"p20\">*</ept>, <bpt id=\"p21\">*</bpt>dropoff\\_longitude<ept id=\"p21\">*</ept>, and <bpt id=\"p22\">*</bpt>dropoff\\_latitude<ept id=\"p22\">*</ept>.",
+          "pos": [
+            0,
+            349
+          ]
+        },
+        {
+          "content": "The queries that calculate the direct distance between the pickup and dropoff coordinates are:",
+          "pos": [
+            350,
+            444
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9033,
+        9696
+      ],
+      "content": "The mathematical equations that calculate the distance between two GPS coordinates can be found on the <ph id=\"ph15\">&lt;a href=\"http://www.movable-type.co.uk/scripts/latlong.html\" target=\"_blank\"&gt;</ph>Movable Type Scripts<ph id=\"ph16\">&lt;/a&gt;</ph><ph id=\"ph17\"/> site, authored by Peter Lapisu. In his Javascript, the function <ph id=\"ph18\">`toRad()`</ph><ph id=\"ph19\"/> is just <bpt id=\"p23\">*</bpt>lat_or_lon<ept id=\"p23\">*</ept>pi/180*, which converts degrees to radians. Here, <bpt id=\"p24\">*</bpt>lat_or_lon<ept id=\"p24\">*</ept><ph id=\"ph20\"/> is the latitude or longitude. Since Hive does not provide the function <ph id=\"ph21\">`atan2`</ph>, but provides the function <ph id=\"ph22\">`atan`</ph>, the <ph id=\"ph23\">`atan2`</ph><ph id=\"ph24\"/> function is implemented by <ph id=\"ph25\">`atan`</ph><ph id=\"ph26\"/> function in the above Hive query using the definition provided in <ph id=\"ph27\">&lt;a href=\"http://en.wikipedia.org/wiki/Atan2\" target=\"_blank\"&gt;</ph>Wikipedia<ph id=\"ph28\">&lt;/a&gt;</ph>.",
+      "nodes": [
+        {
+          "content": "The mathematical equations that calculate the distance between two GPS coordinates can be found on the <ph id=\"ph15\">&lt;a href=\"http://www.movable-type.co.uk/scripts/latlong.html\" target=\"_blank\"&gt;</ph>Movable Type Scripts<ph id=\"ph16\">&lt;/a&gt;</ph><ph id=\"ph17\"/> site, authored by Peter Lapisu.",
+          "pos": [
+            0,
+            301
+          ]
+        },
+        {
+          "content": "In his Javascript, the function <ph id=\"ph18\">`toRad()`</ph><ph id=\"ph19\"/> is just <bpt id=\"p23\">*</bpt>lat_or_lon<ept id=\"p23\">*</ept>pi/180*, which converts degrees to radians.",
+          "pos": [
+            302,
+            481
+          ]
+        },
+        {
+          "content": "Here, <bpt id=\"p24\">*</bpt>lat_or_lon<ept id=\"p24\">*</ept><ph id=\"ph20\"/> is the latitude or longitude.",
+          "pos": [
+            482,
+            585
+          ]
+        },
+        {
+          "content": "Since Hive does not provide the function <ph id=\"ph21\">`atan2`</ph>, but provides the function <ph id=\"ph22\">`atan`</ph>, the <ph id=\"ph23\">`atan2`</ph><ph id=\"ph24\"/> function is implemented by <ph id=\"ph25\">`atan`</ph><ph id=\"ph26\"/> function in the above Hive query using the definition provided in <ph id=\"ph27\">&lt;a href=\"http://en.wikipedia.org/wiki/Atan2\" target=\"_blank\"&gt;</ph>Wikipedia<ph id=\"ph28\">&lt;/a&gt;</ph>.",
+          "pos": [
+            586,
+            1013
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9698,
+        9720
+      ],
+      "content": "<ph id=\"ph29\">![</ph>Create workspace<ph id=\"ph30\">][1]</ph>"
+    },
+    {
+      "pos": [
+        9722,
+        9970
+      ],
+      "content": "A full list of Hive embedded UDFs can be found in the <bpt id=\"p25\">**</bpt>Built-in Functions<ept id=\"p25\">**</ept><ph id=\"ph31\"/> section on the <ph id=\"ph32\">&lt;a href=\"https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions\" target=\"_blank\"&gt;</ph>Apache Hive wiki<ph id=\"ph33\">&lt;/a&gt;</ph>)."
+    },
+    {
+      "pos": [
+        9999,
+        10059
+      ],
+      "content": "Advanced topics: Tune Hive Parameters to Improve Query Speed"
+    },
+    {
+      "pos": [
+        10061,
+        10392
+      ],
+      "content": "The default parameter settings of Hive cluster might not be suitable for the Hive queries and the data that the queries are processing. In this section, we discuss some parameters that users can tune that improve the performance of Hive queries. Users need to add the parameter tuning queries before the queries of processing data.",
+      "nodes": [
+        {
+          "content": "The default parameter settings of Hive cluster might not be suitable for the Hive queries and the data that the queries are processing.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "In this section, we discuss some parameters that users can tune that improve the performance of Hive queries.",
+          "pos": [
+            136,
+            245
+          ]
+        },
+        {
+          "content": "Users need to add the parameter tuning queries before the queries of processing data.",
+          "pos": [
+            246,
+            331
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10397,
+        10686
+      ],
+      "content": "<bpt id=\"p26\">**</bpt>Java heap space<ept id=\"p26\">**</ept>: For queries involving joining large datasets, or processing long records, <bpt id=\"p27\">**</bpt>running out of heap space<ept id=\"p27\">**</ept><ph id=\"ph34\"/> is one of the common error. This can be tuned by setting parameters <bpt id=\"p28\">*</bpt>mapreduce.map.java.opts<ept id=\"p28\">*</ept><ph id=\"ph35\"/> and <bpt id=\"p29\">*</bpt>mapreduce.task.io.sort.mb<ept id=\"p29\">*</ept><ph id=\"ph36\"/> to desired values. Here is an example:",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p26\">**</bpt>Java heap space<ept id=\"p26\">**</ept>: For queries involving joining large datasets, or processing long records, <bpt id=\"p27\">**</bpt>running out of heap space<ept id=\"p27\">**</ept><ph id=\"ph34\"/> is one of the common error.",
+          "pos": [
+            0,
+            247
+          ]
+        },
+        {
+          "content": "This can be tuned by setting parameters <bpt id=\"p28\">*</bpt>mapreduce.map.java.opts<ept id=\"p28\">*</ept><ph id=\"ph35\"/> and <bpt id=\"p29\">*</bpt>mapreduce.task.io.sort.mb<ept id=\"p29\">*</ept><ph id=\"ph36\"/> to desired values.",
+          "pos": [
+            248,
+            474
+          ]
+        },
+        {
+          "content": "Here is an example:",
+          "pos": [
+            475,
+            494
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10790,
+        11024
+      ],
+      "content": "This parameter allocates 4GB memory to Java heap space and also makes sorting more efficient by allocating more memory for it. It is a good idea to play with these allocations if there are any job failure errors related to heap space.",
+      "nodes": [
+        {
+          "content": "This parameter allocates 4GB memory to Java heap space and also makes sorting more efficient by allocating more memory for it.",
+          "pos": [
+            0,
+            126
+          ]
+        },
+        {
+          "content": "It is a good idea to play with these allocations if there are any job failure errors related to heap space.",
+          "pos": [
+            127,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11029,
+        11554
+      ],
+      "content": "<bpt id=\"p30\">**</bpt>DFS block size<ept id=\"p30\">**</ept><ph id=\"ph37\"/> : This parameter sets the smallest unit of data that the file system stores. As an example, if the DFS block size is 128MB, then any data of size less than and up to 128MB is stored in a single block, while data that is larger than 128MB is allotted extra blocks. Choosing a very small block size causes large overheads in Hadoop since the name node has to process many more requests to find the relevant block pertaining to the file. A recommended setting when dealing with gigabytes (or larger) data is :",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p30\">**</bpt>DFS block size<ept id=\"p30\">**</ept><ph id=\"ph37\"/> : This parameter sets the smallest unit of data that the file system stores.",
+          "pos": [
+            0,
+            150
+          ]
+        },
+        {
+          "content": "As an example, if the DFS block size is 128MB, then any data of size less than and up to 128MB is stored in a single block, while data that is larger than 128MB is allotted extra blocks.",
+          "pos": [
+            151,
+            337
+          ]
+        },
+        {
+          "content": "Choosing a very small block size causes large overheads in Hadoop since the name node has to process many more requests to find the relevant block pertaining to the file.",
+          "pos": [
+            338,
+            508
+          ]
+        },
+        {
+          "content": "A recommended setting when dealing with gigabytes (or larger) data is :",
+          "pos": [
+            509,
+            580
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11593,
+        11887
+      ],
+      "content": "<bpt id=\"p31\">**</bpt>Optimizing join operation in Hive<ept id=\"p31\">**</ept><ph id=\"ph38\"/> : While join operations in the map/reduce framework typically take place in the reduce phase, sometimes, enormous gains can be achieved by scheduling joins in the map phase (also called \"mapjoins\"). To direct Hive to do this whenever possible, we can set :",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p31\">**</bpt>Optimizing join operation in Hive<ept id=\"p31\">**</ept><ph id=\"ph38\"/> : While join operations in the map/reduce framework typically take place in the reduce phase, sometimes, enormous gains can be achieved by scheduling joins in the map phase (also called \"mapjoins\").",
+          "pos": [
+            0,
+            291
+          ]
+        },
+        {
+          "content": "To direct Hive to do this whenever possible, we can set :",
+          "pos": [
+            292,
+            349
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11934,
+        12292
+      ],
+      "content": "<bpt id=\"p32\">**</bpt>Specifying the number of mappers to Hive<ept id=\"p32\">**</ept><ph id=\"ph39\"/> : While Hadoop allows the user to set the number of reducers, the number of mappers is typically not be set by the user. A trick that allows some degree of control on this number is to choose the Hadoop variables, <bpt id=\"p33\">*</bpt>mapred.min.split.size<ept id=\"p33\">*</ept><ph id=\"ph40\"/> and <bpt id=\"p34\">*</bpt>mapred.max.split.size<ept id=\"p34\">*</ept><ph id=\"ph41\"/> as the size of each map task is determined by :",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p32\">**</bpt>Specifying the number of mappers to Hive<ept id=\"p32\">**</ept><ph id=\"ph39\"/> : While Hadoop allows the user to set the number of reducers, the number of mappers is typically not be set by the user.",
+          "pos": [
+            0,
+            220
+          ]
+        },
+        {
+          "content": "A trick that allows some degree of control on this number is to choose the Hadoop variables, <bpt id=\"p33\">*</bpt>mapred.min.split.size<ept id=\"p33\">*</ept><ph id=\"ph40\"/> and <bpt id=\"p34\">*</bpt>mapred.max.split.size<ept id=\"p34\">*</ept><ph id=\"ph41\"/> as the size of each map task is determined by :",
+          "pos": [
+            221,
+            523
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12389,
+        12660
+      ],
+      "content": "Typically, the default value of <bpt id=\"p35\">*</bpt>mapred.min.split.size<ept id=\"p35\">*</ept><ph id=\"ph42\"/> is 0, that of <bpt id=\"p36\">*</bpt>mapred.max.split.size<ept id=\"p36\">*</ept><ph id=\"ph43\"/> is <bpt id=\"p37\">**</bpt>Long.MAX<ept id=\"p37\">**</ept><ph id=\"ph44\"/> and that of <bpt id=\"p38\">*</bpt>dfs.block.size<ept id=\"p38\">*</ept><ph id=\"ph45\"/> is 64MB. As we can see, given the data size, tuning these parameters by \"setting\" them allows us to tune the number of mappers used.",
+      "nodes": [
+        {
+          "content": "Typically, the default value of <bpt id=\"p35\">*</bpt>mapred.min.split.size<ept id=\"p35\">*</ept><ph id=\"ph42\"/> is 0, that of <bpt id=\"p36\">*</bpt>mapred.max.split.size<ept id=\"p36\">*</ept><ph id=\"ph43\"/> is <bpt id=\"p37\">**</bpt>Long.MAX<ept id=\"p37\">**</ept><ph id=\"ph44\"/> and that of <bpt id=\"p38\">*</bpt>dfs.block.size<ept id=\"p38\">*</ept><ph id=\"ph45\"/> is 64MB.",
+          "pos": [
+            0,
+            367
+          ]
+        },
+        {
+          "content": "As we can see, given the data size, tuning these parameters by \"setting\" them allows us to tune the number of mappers used.",
+          "pos": [
+            368,
+            491
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12665,
+        13016
+      ],
+      "content": "A few other more <bpt id=\"p39\">**</bpt>advanced options<ept id=\"p39\">**</ept><ph id=\"ph46\"/> for optimizing Hive performance are mentioned below. These allow you to set the memory allocated to map and reduce tasks, and can be useful in tweaking performance. Please keep in mind that the <bpt id=\"p40\">*</bpt>mapreduce.reduce.memory.mb<ept id=\"p40\">*</ept><ph id=\"ph47\"/> cannot be greater than the physical memory size of each worker node in the Hadoop cluster.",
+      "nodes": [
+        {
+          "content": "A few other more <bpt id=\"p39\">**</bpt>advanced options<ept id=\"p39\">**</ept><ph id=\"ph46\"/> for optimizing Hive performance are mentioned below.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "These allow you to set the memory allocated to map and reduce tasks, and can be useful in tweaking performance.",
+          "pos": [
+            146,
+            257
+          ]
+        },
+        {
+          "content": "Please keep in mind that the <bpt id=\"p40\">*</bpt>mapreduce.reduce.memory.mb<ept id=\"p40\">*</ept><ph id=\"ph47\"/> cannot be greater than the physical memory size of each worker node in the Hadoop cluster.",
+          "pos": [
+            258,
+            461
+          ]
+        }
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Create features for data in an Hadoop cluster using Hive queries | Microsoft Azure\"\n    description=\"Examples of Hive queries that generate features in data stored in an Azure HDInsight Hadoop cluster.\"\n    services=\"machine-learning\"\n    documentationCenter=\"\"\n    authors=\"bradsev\"\n    manager=\"paulettm\" \n    editor=\"cgronlun\"  />\n\n<tags\n    ms.service=\"machine-learning\"\n    ms.workload=\"data-services\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/05/2016\"\n    ms.author=\"hangzh;bradsev\" />\n\n#Create features for data in an Hadoop cluster using Hive queries\n\n## Introduction\nExamples of Hive queries that generate features in data stored in an Azure HDInsight Hadoop cluster are presented. These Hive queries use embedded Hive User Defined Functions (UDFs), the scripts for which are provided.\n\nExamples of queries that are specific to [NYC Taxi Trip Data](http://chriswhong.com/open-data/foil_nyc_taxi/) scenarios are also provided in [Github repository](https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Misc/DataScienceProcess/DataScienceScripts). These queries already have data schema specified and are ready to be submitted to run.\n\nIn the final section, parameters that users can tune so that the performance of Hive queries can be improved are discussed.\n\n[AZURE.INCLUDE [cap-create-features-data-selector](../../includes/cap-create-features-selector.md)]\nThis **menu** links to topics that describe how to create features for data in various environments. This task is a step in the [Cortana Analytics Process (CAP)](https://azure.microsoft.com/documentation/learning-paths/cortana-analytics-process/).\n\n\n## Prerequisites\nThis article assumes that you have:\n\n* Created an Azure storage account. If you need instructions, see [Create an Azure Storage account](../hdinsight-get-started.md#storage)\n* Provisioned a customized Hadoop cluster with the HDInsight service.  If you need instructions, see [Customize Azure HDInsight Hadoop Clusters for Advanced Analytics](machine-learning-data-science-customize-hadoop-cluster.md).\n* The data has been uploaded to Hive tables in Azure HDInsight Hadoop clusters. If it has not, please follow [Create and load data to Hive tables](machine-learning-data-science-move-hive-tables.md) to upload data to Hive tables first.\n* Enabled remote access to the cluster. If you need instructions, see [Access the Head Node of Hadoop Cluster](machine-learning-data-science-customize-hadoop-cluster.md#headnode).\n\n\n##<a name=\"hive-featureengineering\"></a>Feature Generation\n\nIn this section, several examples of the ways in which features can be generating using Hive queries are described. Once you have generated additional features, you can either add them as columns to the existing table or create a new table with the additional features and primary key, which can then be joined with the original table. Here are the examples presented:\n\n1. [Frequency based Feature Generation](#hive-frequencyfeature)\n2. [Risks of Categorical Variables in Binary Classification](#hive-riskfeature)\n3. [Extract features from Datetime Field](#hive-datefeatures)\n4. [Extract features from Text Field](#hive-textfeatures)\n5. [Calculate distance between GPS coordinates](#hive-gpsdistance)\n\n###<a name=\"hive-frequencyfeature\"></a>Frequency based Feature Generation\n\nIt is often useful to calculate the frequencies of the levels of a categorical variable, or the frequencies of certain combinations of levels from multiple categorical variables. Users can use the following script to calculate these frequencies:\n\n        select\n            a.<column_name1>, a.<column_name2>, a.sub_count/sum(a.sub_count) over () as frequency\n        from\n        (\n            select\n                <column_name1>,<column_name2>, count(*) as sub_count\n            from <databasename>.<tablename> group by <column_name1>, <column_name2>\n        )a\n        order by frequency desc;\n\n\n###<a name=\"hive-riskfeature\"></a>Risks of Categorical Variables in Binary Classification\n\nIn binary classification, we need to convert non-numeric categorical variables into numeric features when the models being used only take numeric features. This is done by replacing each non-numeric level with a numeric risk. In this section, we show some generic Hive queries that calculate the risk values (log odds) of a categorical variable.\n\n\n        set smooth_param1=1;\n        set smooth_param2=20;\n        select\n            <column_name1>,<column_name2>,\n            ln((sum_target+${hiveconf:smooth_param1})/(record_count-sum_target+${hiveconf:smooth_param2}-${hiveconf:smooth_param1})) as risk\n        from\n            (\n            select\n                <column_nam1>, <column_name2>, sum(binary_target) as sum_target, sum(1) as record_count\n            from\n                (\n                select\n                    <column_name1>, <column_name2>, if(target_column>0,1,0) as binary_target\n                from <databasename>.<tablename>\n                )a\n            group by <column_name1>, <column_name2>\n            )b\n\nIn this example, variables `smooth_param1` and `smooth_param2` are set to smooth the risk values calculated from the data. Risks have a range between -Inf and Inf. A risks > 0 indicates that the probability that the target is equal to 1 is greater than 0.5.\n\nAfter the risk table is calculated, users can assign risk values to a table by joining it with the risk table. The Hive joining query was provided in previous section.\n\n###<a name=\"hive-datefeatures\"></a>Extract features from Datetime Fields\n\nHive comes with a set of UDFs for processing datetime fields. In Hive, the default datetime format is 'yyyy-MM-dd 00:00:00' ('1970-01-01 12:21:32' for example). In this section, we show examples that extract the day of a month, the month from a datetime field, and other examples that convert a datetime string in a format other than the default format to a datetime string in default format.\n\n        select day(<datetime field>), month(<datetime field>)\n        from <databasename>.<tablename>;\n\nThis Hive query assumes that the *&#60;datetime field>* is in the default datetime format.\n\nIf a datetime field is not in the default format, you need to convert the datetime field into Unix time stamp first, and then convert the Unix time stamp to a datetime string that is in the default format. When the datetime is in default format, users can apply the embedded datetime UDFs to extract features.\n\n        select from_unixtime(unix_timestamp(<datetime field>,'<pattern of the datetime field>'))\n        from <databasename>.<tablename>;\n\nIn this query, if the *&#60;datetime field>* has the pattern like *03/26/2015 12:04:39*, the *'&#60;pattern of the datetime field>'* should be `'MM/dd/yyyy HH:mm:ss'`. To test it, users can run\n\n        select from_unixtime(unix_timestamp('05/15/2015 09:32:10','MM/dd/yyyy HH:mm:ss'))\n        from hivesampletable limit 1;\n\nThe *hivesampletable* in this query comes preinstalled on all Azure HDInsight Hadoop clusters by default when the clusters are provisioned.\n\n\n###<a name=\"hive-textfeatures\"></a>Extract features from Text Fields\n\nWhen the Hive table has a text field that contains a string of words that are delimited by spaces, the following query extracts the length of the string, and the number of words in the string.\n\n        select length(<text field>) as str_len, size(split(<text field>,' ')) as word_num\n        from <databasename>.<tablename>;\n\n###<a name=\"hive-gpsdistance\"></a>Calculate distances between sets of GPS coordinates\n\nThe query given in this section can be directly applied to the NYC Taxi Trip Data. The purpose of this query is to show how to apply an embedded mathematical functions in Hive to generate features.\n\nThe fields that are used in this query are the GPS coordinates of pickup and dropoff locations, named *pickup\\_longitude*, *pickup\\_latitude*, *dropoff\\_longitude*, and *dropoff\\_latitude*. The queries that calculate the direct distance between the pickup and dropoff coordinates are:\n\n        set R=3959;\n        set pi=radians(180);\n        select pickup_longitude, pickup_latitude, dropoff_longitude, dropoff_latitude,\n            ${hiveconf:R}*2*2*atan((1-sqrt(1-pow(sin((dropoff_latitude-pickup_latitude)\n            *${hiveconf:pi}/180/2),2)-cos(pickup_latitude*${hiveconf:pi}/180)\n            *cos(dropoff_latitude*${hiveconf:pi}/180)*pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2)))\n            /sqrt(pow(sin((dropoff_latitude-pickup_latitude)*${hiveconf:pi}/180/2),2)\n            +cos(pickup_latitude*${hiveconf:pi}/180)*cos(dropoff_latitude*${hiveconf:pi}/180)*\n            pow(sin((dropoff_longitude-pickup_longitude)*${hiveconf:pi}/180/2),2))) as direct_distance\n        from nyctaxi.trip\n        where pickup_longitude between -90 and 0\n        and pickup_latitude between 30 and 90\n        and dropoff_longitude between -90 and 0\n        and dropoff_latitude between 30 and 90\n        limit 10;\n\nThe mathematical equations that calculate the distance between two GPS coordinates can be found on the <a href=\"http://www.movable-type.co.uk/scripts/latlong.html\" target=\"_blank\">Movable Type Scripts</a> site, authored by Peter Lapisu. In his Javascript, the function `toRad()` is just *lat_or_lon*pi/180*, which converts degrees to radians. Here, *lat_or_lon* is the latitude or longitude. Since Hive does not provide the function `atan2`, but provides the function `atan`, the `atan2` function is implemented by `atan` function in the above Hive query using the definition provided in <a href=\"http://en.wikipedia.org/wiki/Atan2\" target=\"_blank\">Wikipedia</a>.\n\n![Create workspace][1]\n\nA full list of Hive embedded UDFs can be found in the **Built-in Functions** section on the <a href=\"https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions\" target=\"_blank\">Apache Hive wiki</a>).  \n\n## <a name=\"tuning\"></a> Advanced topics: Tune Hive Parameters to Improve Query Speed\n\nThe default parameter settings of Hive cluster might not be suitable for the Hive queries and the data that the queries are processing. In this section, we discuss some parameters that users can tune that improve the performance of Hive queries. Users need to add the parameter tuning queries before the queries of processing data.\n\n1. **Java heap space**: For queries involving joining large datasets, or processing long records, **running out of heap space** is one of the common error. This can be tuned by setting parameters *mapreduce.map.java.opts* and *mapreduce.task.io.sort.mb* to desired values. Here is an example:\n\n        set mapreduce.map.java.opts=-Xmx4096m;\n        set mapreduce.task.io.sort.mb=-Xmx1024m;\n\n\n    This parameter allocates 4GB memory to Java heap space and also makes sorting more efficient by allocating more memory for it. It is a good idea to play with these allocations if there are any job failure errors related to heap space.\n\n2. **DFS block size** : This parameter sets the smallest unit of data that the file system stores. As an example, if the DFS block size is 128MB, then any data of size less than and up to 128MB is stored in a single block, while data that is larger than 128MB is allotted extra blocks. Choosing a very small block size causes large overheads in Hadoop since the name node has to process many more requests to find the relevant block pertaining to the file. A recommended setting when dealing with gigabytes (or larger) data is :\n\n        set dfs.block.size=128m;\n\n3. **Optimizing join operation in Hive** : While join operations in the map/reduce framework typically take place in the reduce phase, sometimes, enormous gains can be achieved by scheduling joins in the map phase (also called \"mapjoins\"). To direct Hive to do this whenever possible, we can set :\n\n        set hive.auto.convert.join=true;\n\n4. **Specifying the number of mappers to Hive** : While Hadoop allows the user to set the number of reducers, the number of mappers is typically not be set by the user. A trick that allows some degree of control on this number is to choose the Hadoop variables, *mapred.min.split.size* and *mapred.max.split.size* as the size of each map task is determined by :\n\n        num_maps = max(mapred.min.split.size, min(mapred.max.split.size, dfs.block.size))\n\n    Typically, the default value of *mapred.min.split.size* is 0, that of *mapred.max.split.size* is **Long.MAX** and that of *dfs.block.size* is 64MB. As we can see, given the data size, tuning these parameters by \"setting\" them allows us to tune the number of mappers used.\n\n5. A few other more **advanced options** for optimizing Hive performance are mentioned below. These allow you to set the memory allocated to map and reduce tasks, and can be useful in tweaking performance. Please keep in mind that the *mapreduce.reduce.memory.mb* cannot be greater than the physical memory size of each worker node in the Hadoop cluster.\n\n        set mapreduce.map.memory.mb = 2048;\n        set mapreduce.reduce.memory.mb=6144;\n        set mapreduce.reduce.java.opts=-Xmx8192m;\n        set mapred.reduce.tasks=128;\n        set mapred.tasktracker.reduce.tasks.maximum=128;\n\n[1]: ./media/machine-learning-data-science-process-hive-tables/atan2new.png\n[10]: ./media/machine-learning-data-science-process-hive-tables/run-hive-queries-1.png\n[11]: ./media/machine-learning-data-science-process-hive-tables/run-hive-queries-2.png\n[12]: ./media/machine-learning-data-science-process-hive-tables/output-hive-results-1.png\n[13]: ./media/machine-learning-data-science-process-hive-tables/output-hive-results-2.png\n[14]: ./media/machine-learning-data-science-process-hive-tables/output-hive-results-3.png\n[15]: ./media/machine-learning-data-science-process-hive-tables/run-hive-queries-3.png\n \n"
+}

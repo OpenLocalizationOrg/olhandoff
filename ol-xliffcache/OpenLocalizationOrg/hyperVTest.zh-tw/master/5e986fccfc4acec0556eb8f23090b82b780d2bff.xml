@@ -1,0 +1,652 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        93
+      ],
+      "content": "Retrain Machine Learning models programmatically | Microsoft Azure"
+    },
+    {
+      "pos": [
+        112,
+        242
+      ],
+      "content": "Learn how to programmatically retrain a model and update the web service to use the newly trained model in Azure Machine Learning."
+    },
+    {
+      "pos": [
+        581,
+        629
+      ],
+      "content": "Retrain Machine Learning models programmatically"
+    },
+    {
+      "pos": [
+        633,
+        897
+      ],
+      "content": "As part of the process of operationalization of machine learning models in Azure Machine Learning, a model needs to be trained and saved, then used to create a predicative web service. The web service can then be consumed in web sites, dashboards, and mobile apps.",
+      "nodes": [
+        {
+          "content": "As part of the process of operationalization of machine learning models in Azure Machine Learning, a model needs to be trained and saved, then used to create a predicative web service.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "The web service can then be consumed in web sites, dashboards, and mobile apps.",
+          "pos": [
+            185,
+            264
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        901,
+        1244
+      ],
+      "content": "Frequently, you need to retrain the model created in the first step with new data. Previously, this was only possible through the Azure ML UI, but with the introduction of the Programmatic Retraining API feature, you now can retrain the model and update the Web Service with the newly trained model, programmatically using the Retraining APIs.",
+      "nodes": [
+        {
+          "content": "Frequently, you need to retrain the model created in the first step with new data.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "Previously, this was only possible through the Azure ML UI, but with the introduction of the Programmatic Retraining API feature, you now can retrain the model and update the Web Service with the newly trained model, programmatically using the Retraining APIs.",
+          "pos": [
+            83,
+            343
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1248,
+        1332
+      ],
+      "content": "This document describes the above process, and shows how to use the Retraining APIs."
+    },
+    {
+      "pos": [
+        1431,
+        1785
+      ],
+      "content": "##Why retrain: defining the problem  \n<ph id=\"ph3\"/>As part of the ML training process, a model is trained using a set of data. The models needs to be retrained in scenarios where new data becomes available, or when the consumer of the API has their own data to train the model, or when the data needs to be filtered and the model trained with the subset of data, etc.",
+      "nodes": [
+        {
+          "content": "Why retrain: defining the problem  \n<ph id=\"ph3\"/>As part of the ML training process, a model is trained using a set of data.",
+          "pos": [
+            2,
+            127
+          ]
+        },
+        {
+          "content": "The models needs to be retrained in scenarios where new data becomes available, or when the consumer of the API has their own data to train the model, or when the data needs to be filtered and the model trained with the subset of data, etc.",
+          "pos": [
+            128,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1789,
+        2109
+      ],
+      "content": "In these scenarios, a programmatic API provides a convenient way to allow you or the consumer of your APIs to create a client that can, on a one-time or regular basis, retrain the model using their own data. They can then evaluate the results of retraining, and update the Web Service API to use the newly trained model.",
+      "nodes": [
+        {
+          "content": "In these scenarios, a programmatic API provides a convenient way to allow you or the consumer of your APIs to create a client that can, on a one-time or regular basis, retrain the model using their own data.",
+          "pos": [
+            0,
+            207
+          ]
+        },
+        {
+          "content": "They can then evaluate the results of retraining, and update the Web Service API to use the newly trained model.",
+          "pos": [
+            208,
+            320
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2113,
+        2555
+      ],
+      "content": "##How to retrain: the end to end process  \n<ph id=\"ph4\"/>To start, the process involves the following components: a Training Experiment and a Predicative Experiment published as a Web Service. To enable retraining of a trained model, the Training Experiment has to also be published as a Web Service with the output of a trained model. This enables API access to the model for retraining. The process for setting up retraining involves the following steps:",
+      "nodes": [
+        {
+          "content": "How to retrain: the end to end process  \n<ph id=\"ph4\"/>To start, the process involves the following components: a Training Experiment and a Predicative Experiment published as a Web Service.",
+          "pos": [
+            2,
+            192
+          ]
+        },
+        {
+          "content": "To enable retraining of a trained model, the Training Experiment has to also be published as a Web Service with the output of a trained model.",
+          "pos": [
+            193,
+            335
+          ]
+        },
+        {
+          "content": "This enables API access to the model for retraining.",
+          "pos": [
+            336,
+            388
+          ]
+        },
+        {
+          "content": "The process for setting up retraining involves the following steps:",
+          "pos": [
+            389,
+            456
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2567,
+        2605
+      ],
+      "content": "Diagram 1: Retraining process overview"
+    },
+    {
+      "pos": [
+        2612,
+        2934
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "<bpt id=\"p1\">*</bpt>Create a Training Experiment<ept id=\"p1\">*</ept><ph id=\"ph6\"/>  \n We will be using experiment “Sample 5 (Train, Test, Evaluate for Binary Classification: Adult Dataset)” from the Azure ML sample experiments for this example. As you will see below, I have simplified the sample by removing some modules. I have also named the experiment “Census Model”.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p1\">*</bpt>Create a Training Experiment<ept id=\"p1\">*</ept><ph id=\"ph6\"/>  \n We will be using experiment “Sample 5 (Train, Test, Evaluate for Binary Classification: Adult Dataset)” from the Azure ML sample experiments for this example.",
+          "pos": [
+            0,
+            244
+          ]
+        },
+        {
+          "content": "As you will see below, I have simplified the sample by removing some modules.",
+          "pos": [
+            245,
+            322
+          ]
+        },
+        {
+          "content": "I have also named the experiment “Census Model”.",
+          "pos": [
+            323,
+            371
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2952,
+        3052
+      ],
+      "content": "With these pieces in place, we can now click Run on the bottom of the screen to run this experiment."
+    },
+    {
+      "pos": [
+        3058,
+        3116
+      ],
+      "content": "<bpt id=\"p2\">*</bpt>Create a Scoring Experiment and publish as a Web Service<ept id=\"p2\">*</ept>"
+    },
+    {
+      "pos": [
+        3136,
+        3369
+      ],
+      "content": "After experiment run is completed, we click on Create Predicative Experiment. This creates a Predicative Experiment, saves the model as a Trained Model and adds Web Service Input and Output modules as shown below. Next, we click Run.",
+      "nodes": [
+        {
+          "content": "After experiment run is completed, we click on Create Predicative Experiment.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "This creates a Predicative Experiment, saves the model as a Trained Model and adds Web Service Input and Output modules as shown below.",
+          "pos": [
+            78,
+            213
+          ]
+        },
+        {
+          "content": "Next, we click Run.",
+          "pos": [
+            214,
+            233
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3377,
+        3663
+      ],
+      "content": "After experiment run is completed, clicking on “Publish Web Service” will publish the Predicative Experiment as a Web Service and create a default endpoint. The trained model in this webservice is updatable, as shown below. The details for this endpoint will then show up on the screen.",
+      "nodes": [
+        {
+          "content": "After experiment run is completed, clicking on “Publish Web Service” will publish the Predicative Experiment as a Web Service and create a default endpoint.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "The trained model in this webservice is updatable, as shown below.",
+          "pos": [
+            157,
+            223
+          ]
+        },
+        {
+          "content": "The details for this endpoint will then show up on the screen.",
+          "pos": [
+            224,
+            286
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3669,
+        4127
+      ],
+      "leadings": [
+        "",
+        "   ",
+        ""
+      ],
+      "content": "<bpt id=\"p3\">*</bpt>Publish the Training Experiment as a Web Service<ept id=\"p3\">*</ept><ph id=\"ph9\"/>\n To re-train the trained model, we need to publish the Training Experiment we created in step 1 above as a Web Service. This Web Service will need a Web Service Output module connected to the [Train Model][train-model] module, to be able to produce new trained models.\nClick on the Experiments icon in the left pane, then click on the experiment called Census Model to go back to the training experiment.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p3\">*</bpt>Publish the Training Experiment as a Web Service<ept id=\"p3\">*</ept><ph id=\"ph9\"/>\n To re-train the trained model, we need to publish the Training Experiment we created in step 1 above as a Web Service.",
+          "pos": [
+            0,
+            222
+          ]
+        },
+        {
+          "content": "This Web Service will need a Web Service Output module connected to the [Train Model][train-model] module, to be able to produce new trained models.",
+          "pos": [
+            223,
+            371
+          ]
+        },
+        {
+          "content": "Click on the Experiments icon in the left pane, then click on the experiment called Census Model to go back to the training experiment.",
+          "pos": [
+            372,
+            507
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4135,
+        4382
+      ],
+      "content": "We then add one Web Service Input and two Web Service Output modules to the workflow. The Web Service output for Train Model will give us the new trained model. The output attached to Evaluate Model will return that module’s Evaluate Model output.",
+      "nodes": [
+        {
+          "content": "We then add one Web Service Input and two Web Service Output modules to the workflow.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "The Web Service output for Train Model will give us the new trained model.",
+          "pos": [
+            86,
+            160
+          ]
+        },
+        {
+          "content": "The output attached to Evaluate Model will return that module’s Evaluate Model output.",
+          "pos": [
+            161,
+            247
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4388,
+        4494
+      ],
+      "content": "We can now click Run. After experiment has completed running, the resulting workflow should look as below:",
+      "nodes": [
+        {
+          "content": "We can now click Run.",
+          "pos": [
+            0,
+            21
+          ]
+        },
+        {
+          "content": "After experiment has completed running, the resulting workflow should look as below:",
+          "pos": [
+            22,
+            106
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4512,
+        4880
+      ],
+      "content": "We next click on the Deploy Web Service button, then click Yes. This will deploy the Training Experiment as a Web Service that produces a trained model and model evaluation results. The Web Service Dashboard will be displayed with the API Key and the API help page for Batch Execution. Note that only the Batch Execution method can be used for creating Trained Models.",
+      "nodes": [
+        {
+          "content": "We next click on the Deploy Web Service button, then click Yes.",
+          "pos": [
+            0,
+            63
+          ]
+        },
+        {
+          "content": "This will deploy the Training Experiment as a Web Service that produces a trained model and model evaluation results.",
+          "pos": [
+            64,
+            181
+          ]
+        },
+        {
+          "content": "The Web Service Dashboard will be displayed with the API Key and the API help page for Batch Execution.",
+          "pos": [
+            182,
+            285
+          ]
+        },
+        {
+          "content": "Note that only the Batch Execution method can be used for creating Trained Models.",
+          "pos": [
+            286,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4886,
+        5315
+      ],
+      "leadings": [
+        "",
+        "   ",
+        ""
+      ],
+      "content": "<bpt id=\"p4\">*</bpt>Add a new Endpoint<ept id=\"p4\">*</ept><ph id=\"ph11\"/>  \n The Predicative Web Service we published in Step 2 above was created with a default endpoint. The default endpoints are kept in sync with the original training and scoring experiments, and therefore a default endpoint's trained model cannot be replaced.\nTo create an updatable endpoint visit the Azure Classic Portal and click on Add Endpoint (more details <bpt id=\"p5\">[</bpt>here<ept id=\"p5\">](machine-learning-create-endpoint.md)</ept>).",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p4\">*</bpt>Add a new Endpoint<ept id=\"p4\">*</ept><ph id=\"ph11\"/>  \n The Predicative Web Service we published in Step 2 above was created with a default endpoint.",
+          "pos": [
+            0,
+            170
+          ]
+        },
+        {
+          "content": "The default endpoints are kept in sync with the original training and scoring experiments, and therefore a default endpoint's trained model cannot be replaced.",
+          "pos": [
+            171,
+            330
+          ]
+        },
+        {
+          "content": "To create an updatable endpoint visit the Azure Classic Portal and click on Add Endpoint (more details <bpt id=\"p5\">[</bpt>here<ept id=\"p5\">](machine-learning-create-endpoint.md)</ept>).",
+          "pos": [
+            331,
+            517
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5320,
+        5506
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "<bpt id=\"p6\">*</bpt>Retrain the model with new data and BES<ept id=\"p6\">*</ept><ph id=\"ph12\"/>  \n To call the Retraining APIs, we create a new C# Console Application in Visual Studio (New-&gt;Project-&gt;Windows Desktop-&gt;Console Application)."
+    },
+    {
+      "pos": [
+        5514,
+        5718
+      ],
+      "content": "We then copy the sample C# code from the Training Web Service's API help page for batch execution (created in Step 3 above) and paste it into the Program.cs file, making sure the namespace remains intact."
+    },
+    {
+      "pos": [
+        5726,
+        5974
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "Note that sample code has comments which indicate parts of the code that need updates.\n <ph id=\"ph13\"/>Also, when specifiying the \"output1\" location in the Reqeust Payload, the file extention of the \"RelativeLocation\" has to be changed to an \".ilearner\" as in:",
+      "nodes": [
+        {
+          "content": "Note that sample code has comments which indicate parts of the code that need updates.",
+          "pos": [
+            0,
+            86
+          ]
+        },
+        {
+          "content": "<ph id=\"ph13\"/>Also, when specifiying the \"output1\" location in the Reqeust Payload, the file extention of the \"RelativeLocation\" has to be changed to an \".ilearner\" as in:",
+          "pos": [
+            88,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6403,
+        6600
+      ],
+      "content": "Provide Azure Storage info\nThe sample code for BES will upload a file from a local drive (e.g. “C:\\temp\\CensusIpnput.csv”) to Azure Storage, process it, and write the results back to Azure Storage."
+    },
+    {
+      "pos": [
+        6612,
+        6887
+      ],
+      "content": "To accomplish that, you need to retrieve the Storage account name, key, and container information from the Azure Classic Portal for your Storage account and the update the code here. You also need to ensure the input file is available at the location you specify in the code.",
+      "nodes": [
+        {
+          "content": "To accomplish that, you need to retrieve the Storage account name, key, and container information from the Azure Classic Portal for your Storage account and the update the code here.",
+          "pos": [
+            0,
+            182
+          ]
+        },
+        {
+          "content": "You also need to ensure the input file is available at the location you specify in the code.",
+          "pos": [
+            183,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6899,
+        7243
+      ],
+      "content": "We had set up this Training Experiment with two outputs, so the results will include storage location information for both of them, as seen below. “output1” is the output of the Trained Model, “output2” the output of Evaluate Model.  Also note that the file extention of the Output for the Trained Model (Output1) is \".ilearner\" and not \".csv\".",
+      "nodes": [
+        {
+          "content": "We had set up this Training Experiment with two outputs, so the results will include storage location information for both of them, as seen below.",
+          "pos": [
+            0,
+            146
+          ]
+        },
+        {
+          "content": "“output1” is the output of the Trained Model, “output2” the output of Evaluate Model.",
+          "pos": [
+            147,
+            232
+          ]
+        },
+        {
+          "content": "Also note that the file extention of the Output for the Trained Model (Output1) is \".ilearner\" and not \".csv\".",
+          "pos": [
+            234,
+            344
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7264,
+        7538
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "<bpt id=\"p7\">*</bpt>Evaluate the Retraining Results<ept id=\"p7\">*</ept><ph id=\"ph15\"/>  \n Using the combination of the BaseLocation, RelativeLocation and SasBlobToken from the above output results for “output2” we can see the performance results of the retrained model by pasting the complete URL in the browser address bar."
+    },
+    {
+      "pos": [
+        7546,
+        7640
+      ],
+      "content": "This will tell us if the newly trained model performs well enough to replace the existing one."
+    },
+    {
+      "pos": [
+        7645,
+        7811
+      ],
+      "leadings": [
+        "",
+        "   "
+      ],
+      "content": "<bpt id=\"p8\">*</bpt>Update the added endpoint’s Trained Model<ept id=\"p8\">*</ept><ph id=\"ph16\"/>  \n To complete the process, we need to update the trained model of the predicative endpoint we created in Step 4 above."
+    },
+    {
+      "pos": [
+        7819,
+        8007
+      ],
+      "content": "(If you added the new endpoint using the Azure Portal, you can click on the new endpoint's name, then the UpdateResource link to get the URL you would need to update the endpoint's model.)"
+    },
+    {
+      "pos": [
+        8013,
+        8275
+      ],
+      "content": "The BES output above shows the information for the result of retraining for “output1” which contains the retrained model location information. We now need to take this trained model and update the scoring endpoint (created  in step 4 above). Sample code follows:",
+      "nodes": [
+        {
+          "content": "The BES output above shows the information for the result of retraining for “output1” which contains the retrained model location information.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "We now need to take this trained model and update the scoring endpoint (created  in step 4 above).",
+          "pos": [
+            143,
+            241
+          ]
+        },
+        {
+          "content": "Sample code follows:",
+          "pos": [
+            242,
+            262
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9933,
+        10133
+      ],
+      "content": "The “apiKey” and the “endpointUrl” for this call are visible on the endpoint dashboard. The \"Name\" parameter in Resources should match the name of the Saved Trained Model in the Predictive Experiment.",
+      "nodes": [
+        {
+          "content": "The “apiKey” and the “endpointUrl” for this call are visible on the endpoint dashboard.",
+          "pos": [
+            0,
+            87
+          ]
+        },
+        {
+          "content": "The \"Name\" parameter in Resources should match the name of the Saved Trained Model in the Predictive Experiment.",
+          "pos": [
+            88,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10139,
+        10254
+      ],
+      "content": "With the success of this call, the new endpoint will start using a retrained model approximately within 15 seconds."
+    },
+    {
+      "pos": [
+        10260,
+        10532
+      ],
+      "content": "Summary  \n<ph id=\"ph17\"/>Using the Retraining APIs, we can update the trained model of a predictive Web Service enabling scenarios such as periodic model retraining with new data or distribution of models to customers with the goal of letting them retrain the model using their own data."
+    },
+    {
+      "pos": [
+        11303,
+        11396
+      ],
+      "content": "[train-model]: https://msdn.microsoft.com/library/azure/5cc7053e-aa30-450d-96c0-dae4be720977/"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Retrain Machine Learning models programmatically | Microsoft Azure\"\n    description=\"Learn how to programmatically retrain a model and update the web service to use the newly trained model in Azure Machine Learning.\"\n    services=\"machine-learning\"\n    documentationCenter=\"\"\n    authors=\"raymondlaghaeian\"\n    manager=\"paulettm\"\n    editor=\"cgronlun\"/>\n\n<tags\n    ms.service=\"machine-learning\"\n    ms.workload=\"data-services\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"02/12/2016\"\n    ms.author=\"raymondl;garye\"/>\n\n\n#Retrain Machine Learning models programmatically  \n\nAs part of the process of operationalization of machine learning models in Azure Machine Learning, a model needs to be trained and saved, then used to create a predicative web service. The web service can then be consumed in web sites, dashboards, and mobile apps.  \n\nFrequently, you need to retrain the model created in the first step with new data. Previously, this was only possible through the Azure ML UI, but with the introduction of the Programmatic Retraining API feature, you now can retrain the model and update the Web Service with the newly trained model, programmatically using the Retraining APIs.  \n\nThis document describes the above process, and shows how to use the Retraining APIs.\n\n[AZURE.INCLUDE [machine-learning-free-trial](../../includes/machine-learning-free-trial.md)]  \n\n\n##Why retrain: defining the problem  \nAs part of the ML training process, a model is trained using a set of data. The models needs to be retrained in scenarios where new data becomes available, or when the consumer of the API has their own data to train the model, or when the data needs to be filtered and the model trained with the subset of data, etc.  \n\nIn these scenarios, a programmatic API provides a convenient way to allow you or the consumer of your APIs to create a client that can, on a one-time or regular basis, retrain the model using their own data. They can then evaluate the results of retraining, and update the Web Service API to use the newly trained model.  \n\n##How to retrain: the end to end process  \nTo start, the process involves the following components: a Training Experiment and a Predicative Experiment published as a Web Service. To enable retraining of a trained model, the Training Experiment has to also be published as a Web Service with the output of a trained model. This enables API access to the model for retraining. The process for setting up retraining involves the following steps:  \n\n![][1]\n\nDiagram 1: Retraining process overview  \n\n1. *Create a Training Experiment*  \n    We will be using experiment “Sample 5 (Train, Test, Evaluate for Binary Classification: Adult Dataset)” from the Azure ML sample experiments for this example. As you will see below, I have simplified the sample by removing some modules. I have also named the experiment “Census Model”.\n\n    ![][2]\n\n    With these pieces in place, we can now click Run on the bottom of the screen to run this experiment.  \n2. *Create a Scoring Experiment and publish as a Web Service*  \n\n    ![][3]\n\n    After experiment run is completed, we click on Create Predicative Experiment. This creates a Predicative Experiment, saves the model as a Trained Model and adds Web Service Input and Output modules as shown below. Next, we click Run.  \n\n    After experiment run is completed, clicking on “Publish Web Service” will publish the Predicative Experiment as a Web Service and create a default endpoint. The trained model in this webservice is updatable, as shown below. The details for this endpoint will then show up on the screen.  \n3. *Publish the Training Experiment as a Web Service*\n    To re-train the trained model, we need to publish the Training Experiment we created in step 1 above as a Web Service. This Web Service will need a Web Service Output module connected to the [Train Model][train-model] module, to be able to produce new trained models.\nClick on the Experiments icon in the left pane, then click on the experiment called Census Model to go back to the training experiment.  \n\n    We then add one Web Service Input and two Web Service Output modules to the workflow. The Web Service output for Train Model will give us the new trained model. The output attached to Evaluate Model will return that module’s Evaluate Model output.\n\n    We can now click Run. After experiment has completed running, the resulting workflow should look as below:\n\n    ![][4]\n\n    We next click on the Deploy Web Service button, then click Yes. This will deploy the Training Experiment as a Web Service that produces a trained model and model evaluation results. The Web Service Dashboard will be displayed with the API Key and the API help page for Batch Execution. Note that only the Batch Execution method can be used for creating Trained Models.  \n4. *Add a new Endpoint*  \n    The Predicative Web Service we published in Step 2 above was created with a default endpoint. The default endpoints are kept in sync with the original training and scoring experiments, and therefore a default endpoint's trained model cannot be replaced.\nTo create an updatable endpoint visit the Azure Classic Portal and click on Add Endpoint (more details [here](machine-learning-create-endpoint.md)).\n\n5. *Retrain the model with new data and BES*  \n    To call the Retraining APIs, we create a new C# Console Application in Visual Studio (New->Project->Windows Desktop->Console Application).  \n\n    We then copy the sample C# code from the Training Web Service's API help page for batch execution (created in Step 3 above) and paste it into the Program.cs file, making sure the namespace remains intact.  \n\n    Note that sample code has comments which indicate parts of the code that need updates.\n    Also, when specifiying the \"output1\" location in the Reqeust Payload, the file extention of the \"RelativeLocation\" has to be changed to an \".ilearner\" as in:\n\n    ```c#\n    Outputs = new Dictionary<string, AzureBlobDataReference>()\n    {\n        {\n            \"output1\",\n            new AzureBlobDataReference()\n            {\n                ConnectionString = \"DefaultEndpointsProtocol=https;AccountName=mystorageacct;AccountKey=Dx9WbMIThAvXRQWap/aLnxT9LV5txxw==\",\n                RelativeLocation = \"mycontainer/output1results.ilearner\"\n            }\n        },\n    },\n    ```\n    1. Provide Azure Storage info\nThe sample code for BES will upload a file from a local drive (e.g. “C:\\temp\\CensusIpnput.csv”) to Azure Storage, process it, and write the results back to Azure Storage.  \n\n        To accomplish that, you need to retrieve the Storage account name, key, and container information from the Azure Classic Portal for your Storage account and the update the code here. You also need to ensure the input file is available at the location you specify in the code.  \n\n        We had set up this Training Experiment with two outputs, so the results will include storage location information for both of them, as seen below. “output1” is the output of the Trained Model, “output2” the output of Evaluate Model.  Also note that the file extention of the Output for the Trained Model (Output1) is \".ilearner\" and not \".csv\".\n\n        ![][6]\n\n6. *Evaluate the Retraining Results*  \n    Using the combination of the BaseLocation, RelativeLocation and SasBlobToken from the above output results for “output2” we can see the performance results of the retrained model by pasting the complete URL in the browser address bar.  \n\n    This will tell us if the newly trained model performs well enough to replace the existing one.\n\n7. *Update the added endpoint’s Trained Model*  \n    To complete the process, we need to update the trained model of the predicative endpoint we created in Step 4 above.  \n\n    (If you added the new endpoint using the Azure Portal, you can click on the new endpoint's name, then the UpdateResource link to get the URL you would need to update the endpoint's model.)\n\n    The BES output above shows the information for the result of retraining for “output1” which contains the retrained model location information. We now need to take this trained model and update the scoring endpoint (created  in step 4 above). Sample code follows:\n\n    ```C#\n    private async Task OverwriteModel()\n    {\n        var resourceLocations = new\n        {\n            Resources = new[]\n            {\n                new\n                {\n                    Name = \"Census Model [trained model]\",\n                    Location = new AzureBlobDataReference()\n                    {\n                        BaseLocation = \"https://esintussouthsus.blob.core.windows.net/\",\n                        RelativeLocation = \"your endpoint relative location\", //from the output, for example: “experimentoutput/8946abfd-79d6-4438-89a9-3e5d109183/8946abfd-79d6-4438-89a9-3e5d109183.ilearner”\n                        SasBlobToken = \"your endpoint SAS blob token\" //from the output, for example: “?sv=2013-08-15&sr=c&sig=37lTTfngRwxCcf94%3D&st=2015-01-30T22%3A53%3A06Z&se=2015-01-31T22%3A58%3A06Z&sp=rl”\n                    }\n                }\n            }\n        };\n\n        using (var client = new HttpClient())\n        {\n            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", apiKey);\n\n            using (var request = new HttpRequestMessage(new HttpMethod(\"PATCH\"), endpointUrl))\n            {\n                request.Content = new StringContent(JsonConvert.SerializeObject(resourceLocations), System.Text.Encoding.UTF8, \"application/json\");\n                HttpResponseMessage response = await client.SendAsync(request);\n\n                if (!response.IsSuccessStatusCode)\n                {\n                    await WriteFailedResponse(response);\n                }\n\n                // Do what you want with a successful response here.\n            }\n        }\n    }\n    ```\n\n    The “apiKey” and the “endpointUrl” for this call are visible on the endpoint dashboard. The \"Name\" parameter in Resources should match the name of the Saved Trained Model in the Predictive Experiment.\n\n    With the success of this call, the new endpoint will start using a retrained model approximately within 15 seconds.  \n\n##Summary  \nUsing the Retraining APIs, we can update the trained model of a predictive Web Service enabling scenarios such as periodic model retraining with new data or distribution of models to customers with the goal of letting them retrain the model using their own data.  \n\n[1]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE01.png\n[2]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE02.png\n[3]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE03.png\n[4]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE04.png\n[5]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE05.png\n[6]: ./media/machine-learning-retrain-models-programmatically/machine-learning-retrain-models-programmatically-IMAGE06.png\n\n\n<!-- Module References -->\n[train-model]: https://msdn.microsoft.com/library/azure/5cc7053e-aa30-450d-96c0-dae4be720977/\n"
+}

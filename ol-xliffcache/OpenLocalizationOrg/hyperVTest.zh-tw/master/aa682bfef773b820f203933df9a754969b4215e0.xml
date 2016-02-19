@@ -1,0 +1,536 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        81
+      ],
+      "content": "Use Hadoop Pig with Curl in HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        99,
+        182
+      ],
+      "content": "Learn how to use Curl to run Pig Latin jobs on a Hadoop cluster in Azure HDInsight."
+    },
+    {
+      "pos": [
+        499,
+        550
+      ],
+      "content": "Run Pig jobs with Hadoop on HDInsight by using Curl"
+    },
+    {
+      "pos": [
+        630,
+        871
+      ],
+      "content": "In this document, you will learn how to use Curl to run Pig Latin jobs on an Azure HDInsight cluster. The Pig Latin programming language allows you to describe transformations that are applied to the input data to produce the desired output.",
+      "nodes": [
+        {
+          "content": "In this document, you will learn how to use Curl to run Pig Latin jobs on an Azure HDInsight cluster.",
+          "pos": [
+            0,
+            101
+          ]
+        },
+        {
+          "content": "The Pig Latin programming language allows you to describe transformations that are applied to the input data to produce the desired output.",
+          "pos": [
+            102,
+            241
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        873,
+        1133
+      ],
+      "content": "Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Pig jobs. This works by using the WebHCat REST API (formerly known as Templeton) that is provided by your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "Curl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Pig jobs.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "This works by using the WebHCat REST API (formerly known as Templeton) that is provided by your HDInsight cluster.",
+          "pos": [
+            146,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1137,
+        1315
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph><ph id=\"ph4\"/> If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see <bpt id=\"p1\">[</bpt>Linux-based HDInsight Tips<ept id=\"p1\">](hdinsight-hadoop-linux-information.md)</ept>."
+    },
+    {
+      "pos": [
+        1317,
+        1319
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1338,
+        1351
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1353,
+        1420
+      ],
+      "content": "To complete the steps in this article, you will need the following:"
+    },
+    {
+      "pos": [
+        1424,
+        1503
+      ],
+      "content": "An Azure HDInsight (Hadoop on HDInsight) cluster (Linux-based or Windows-based)"
+    },
+    {
+      "pos": [
+        1507,
+        1535
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Curl<ept id=\"p2\">](http://curl.haxx.se/)</ept>"
+    },
+    {
+      "pos": [
+        1539,
+        1574
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>jq<ept id=\"p3\">](http://stedolan.github.io/jq/)</ept>"
+    },
+    {
+      "pos": [
+        1576,
+        1578
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1595,
+        1621
+      ],
+      "content": "Run Pig jobs by using Curl"
+    },
+    {
+      "pos": [
+        1625,
+        1948
+      ],
+      "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the administrator user name and password for the HDInsight cluster. You must also use the cluster name as part of the Uniform Resource Identifier (URI) that is used to send the requests to the server.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph5\">[AZURE.NOTE]</ph><ph id=\"ph6\"/> When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the administrator user name and password for the HDInsight cluster.",
+          "pos": [
+            0,
+            222
+          ]
+        },
+        {
+          "content": "You must also use the cluster name as part of the Uniform Resource Identifier (URI) that is used to send the requests to the server.",
+          "pos": [
+            223,
+            355
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1953,
+        2173
+      ],
+      "content": "For the commands in this section, replace <bpt id=\"p4\">**</bpt>USERNAME<ept id=\"p4\">**</ept><ph id=\"ph7\"/> with the user to authenticate to the cluster, and replace <bpt id=\"p5\">**</bpt>PASSWORD<ept id=\"p5\">**</ept><ph id=\"ph8\"/> with the password for the user account. Replace <bpt id=\"p6\">**</bpt>CLUSTERNAME<ept id=\"p6\">**</ept><ph id=\"ph9\"/> with the name of your cluster.",
+      "nodes": [
+        {
+          "content": "For the commands in this section, replace <bpt id=\"p4\">**</bpt>USERNAME<ept id=\"p4\">**</ept><ph id=\"ph7\"/> with the user to authenticate to the cluster, and replace <bpt id=\"p5\">**</bpt>PASSWORD<ept id=\"p5\">**</ept><ph id=\"ph8\"/> with the password for the user account.",
+          "pos": [
+            0,
+            269
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p6\">**</bpt>CLUSTERNAME<ept id=\"p6\">**</ept><ph id=\"ph9\"/> with the name of your cluster.",
+          "pos": [
+            270,
+            376
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2178,
+        2425
+      ],
+      "content": "The REST API is secured via <bpt id=\"p7\">[</bpt>basic access authentication<ept id=\"p7\">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>. You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.",
+      "nodes": [
+        {
+          "content": "The REST API is secured via <bpt id=\"p7\">[</bpt>basic access authentication<ept id=\"p7\">](http://en.wikipedia.org/wiki/Basic_access_authentication)</ept>.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.",
+          "pos": [
+            155,
+            285
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2430,
+        2534
+      ],
+      "content": "From a command line, use the following command to verify that you can connect to your HDInsight cluster:"
+    },
+    {
+      "pos": [
+        2637,
+        2692
+      ],
+      "content": "You should receive a response similar to the following:"
+    },
+    {
+      "pos": [
+        2738,
+        2789
+      ],
+      "content": "The parameters used in this command are as follows:"
+    },
+    {
+      "pos": [
+        2797,
+        2864
+      ],
+      "content": "<bpt id=\"p8\">**</bpt>-u<ept id=\"p8\">**</ept>: The user name and password used to authenticate the request"
+    },
+    {
+      "pos": [
+        2871,
+        2915
+      ],
+      "content": "<bpt id=\"p9\">**</bpt>-G<ept id=\"p9\">**</ept>: Indicates that this is a GET request"
+    },
+    {
+      "pos": [
+        2921,
+        3165
+      ],
+      "content": "The beginning of the URL, <bpt id=\"p10\">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id=\"p10\">**</ept>, will be the same for all requests. The path, <bpt id=\"p11\">**</bpt>/status<ept id=\"p11\">**</ept>, indicates that the request is to return the status of WebHCat (also known as Templeton) for the server.",
+      "nodes": [
+        {
+          "content": "The beginning of the URL, <bpt id=\"p10\">**</bpt>https://CLUSTERNAME.azurehdinsight.net/templeton/v1<ept id=\"p10\">**</ept>, will be the same for all requests.",
+          "pos": [
+            0,
+            157
+          ]
+        },
+        {
+          "content": "The path, <bpt id=\"p11\">**</bpt>/status<ept id=\"p11\">**</ept>, indicates that the request is to return the status of WebHCat (also known as Templeton) for the server.",
+          "pos": [
+            158,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3170,
+        3234
+      ],
+      "content": "Use the following code to submit a Pig Latin job to the cluster:"
+    },
+    {
+      "pos": [
+        3801,
+        3852
+      ],
+      "content": "The parameters used in this command are as follows:"
+    },
+    {
+      "pos": [
+        3860,
+        3997
+      ],
+      "content": "<bpt id=\"p12\">**</bpt>-d<ept id=\"p12\">**</ept>: Because <ph id=\"ph10\">`-G`</ph><ph id=\"ph11\"/> is not used, the request defaults to the POST method. <ph id=\"ph12\">`-d`</ph><ph id=\"ph13\"/> specifies the data values that are sent with the request.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p12\">**</bpt>-d<ept id=\"p12\">**</ept>: Because <ph id=\"ph10\">`-G`</ph><ph id=\"ph11\"/> is not used, the request defaults to the POST method.",
+          "pos": [
+            0,
+            148
+          ]
+        },
+        {
+          "content": "<ph id=\"ph12\">`-d`</ph><ph id=\"ph13\"/> specifies the data values that are sent with the request.",
+          "pos": [
+            149,
+            245
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4009,
+        4059
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>user.name<ept id=\"p13\">**</ept>: The user who is running the command"
+    },
+    {
+      "pos": [
+        4070,
+        4118
+      ],
+      "content": "<bpt id=\"p14\">**</bpt>execute<ept id=\"p14\">**</ept>: The Pig Latin statements to execute"
+    },
+    {
+      "pos": [
+        4129,
+        4205
+      ],
+      "content": "<bpt id=\"p15\">**</bpt>statusdir<ept id=\"p15\">**</ept>: The directory that the status for this job will be written to"
+    },
+    {
+      "pos": [
+        4213,
+        4327
+      ],
+      "content": "<ph id=\"ph14\">[AZURE.NOTE]</ph><ph id=\"ph15\"/> Notice that the spaces in Pig Latin statements are replaced by the <ph id=\"ph16\">`+`</ph><ph id=\"ph17\"/> character when used with Curl."
+    },
+    {
+      "pos": [
+        4333,
+        4430
+      ],
+      "content": "This command should return a job ID that can be used to check the status of the job, for example:"
+    },
+    {
+      "pos": [
+        4476,
+        4720
+      ],
+      "content": "To check the status of the job, use the following command. Replace <bpt id=\"p16\">**</bpt>JOBID<ept id=\"p16\">**</ept><ph id=\"ph18\"/> with the value returned in the previous step. For example, if the return value was <ph id=\"ph19\">`{\"id\":\"job_1415651640909_0026\"}`</ph>, then <bpt id=\"p17\">**</bpt>JOBID<ept id=\"p17\">**</ept><ph id=\"ph20\"/> would be <ph id=\"ph21\">`job_1415651640909_0026`</ph>.",
+      "nodes": [
+        {
+          "content": "To check the status of the job, use the following command.",
+          "pos": [
+            0,
+            58
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p16\">**</bpt>JOBID<ept id=\"p16\">**</ept><ph id=\"ph18\"/> with the value returned in the previous step.",
+          "pos": [
+            59,
+            177
+          ]
+        },
+        {
+          "content": "For example, if the return value was <ph id=\"ph19\">`{\"id\":\"job_1415651640909_0026\"}`</ph>, then <bpt id=\"p17\">**</bpt>JOBID<ept id=\"p17\">**</ept><ph id=\"ph20\"/> would be <ph id=\"ph21\">`job_1415651640909_0026`</ph>.",
+          "pos": [
+            178,
+            392
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4868,
+        4925
+      ],
+      "content": "If the job has finished, the state will be <bpt id=\"p18\">**</bpt>SUCCEEDED<ept id=\"p18\">**</ept>."
+    },
+    {
+      "pos": [
+        4933,
+        5097
+      ],
+      "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> This Curl request returns a JavaScript Object Notation (JSON) document with information about the job, and jq is used to retrieve only the state value."
+    },
+    {
+      "pos": [
+        5099,
+        5101
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        5121,
+        5133
+      ],
+      "content": "View results"
+    },
+    {
+      "pos": [
+        5135,
+        5532
+      ],
+      "content": "When the state of the job has changed to <bpt id=\"p19\">**</bpt>SUCCEEDED<ept id=\"p19\">**</ept>, you can retrieve the results of the job from Azure Blob storage. The <ph id=\"ph24\">`statusdir`</ph><ph id=\"ph25\"/> parameter passed with the query contains the location of the output file; in this case, <bpt id=\"p20\">**</bpt>wasb:///example/pigcurl<ept id=\"p20\">**</ept>. This address stores the output of the job in the <bpt id=\"p21\">**</bpt>example/pigcurl<ept id=\"p21\">**</ept><ph id=\"ph26\"/> directory in the default storage container used by your HDInsight cluster.",
+      "nodes": [
+        {
+          "content": "When the state of the job has changed to <bpt id=\"p19\">**</bpt>SUCCEEDED<ept id=\"p19\">**</ept>, you can retrieve the results of the job from Azure Blob storage.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "The <ph id=\"ph24\">`statusdir`</ph><ph id=\"ph25\"/> parameter passed with the query contains the location of the output file; in this case, <bpt id=\"p20\">**</bpt>wasb:///example/pigcurl<ept id=\"p20\">**</ept>.",
+          "pos": [
+            161,
+            367
+          ]
+        },
+        {
+          "content": "This address stores the output of the job in the <bpt id=\"p21\">**</bpt>example/pigcurl<ept id=\"p21\">**</ept><ph id=\"ph26\"/> directory in the default storage container used by your HDInsight cluster.",
+          "pos": [
+            368,
+            566
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5534,
+        5727
+      ],
+      "content": "You can list and download these files by using the <bpt id=\"p22\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p22\">](../xplat-cli-install.md)</ept>. For example, to list files in <bpt id=\"p23\">**</bpt>example/pigcurl<ept id=\"p23\">**</ept>, use the following command:",
+      "nodes": [
+        {
+          "content": "You can list and download these files by using the <bpt id=\"p22\">[</bpt>Azure CLI for Mac, Linux and Windows<ept id=\"p22\">](../xplat-cli-install.md)</ept>.",
+          "pos": [
+            0,
+            155
+          ]
+        },
+        {
+          "content": "For example, to list files in <bpt id=\"p23\">**</bpt>example/pigcurl<ept id=\"p23\">**</ept>, use the following command:",
+          "pos": [
+            156,
+            273
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5791,
+        5829
+      ],
+      "content": "To download a file, use the following:"
+    },
+    {
+      "pos": [
+        5914,
+        6128
+      ],
+      "content": "<ph id=\"ph27\">[AZURE.NOTE]</ph><ph id=\"ph28\"/> You must specify the storage account name that contains the blob by using the <ph id=\"ph29\">`-a`</ph><ph id=\"ph30\"/> and <ph id=\"ph31\">`-k`</ph><ph id=\"ph32\"/> parameters, or set the <bpt id=\"p24\">**</bpt>AZURE\\_STORAGE\\_ACCOUNT<ept id=\"p24\">**</ept><ph id=\"ph33\"/> and <bpt id=\"p25\">**</bpt>AZURE\\_STORAGE\\_ACCESS\\_KEY<ept id=\"p25\">**</ept><ph id=\"ph34\"/> environment variables."
+    },
+    {
+      "pos": [
+        6130,
+        6132
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        6152,
+        6159
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        6161,
+        6302
+      ],
+      "content": "As demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Pig jobs on your HDInsight cluster."
+    },
+    {
+      "pos": [
+        6304,
+        6468
+      ],
+      "content": "For more information about the REST interface used in this article, see the <bpt id=\"p26\">[</bpt>WebHCat Reference<ept id=\"p26\">](https://cwiki.apache.org/confluence/display/Hive/WebHCat+Reference)</ept>."
+    },
+    {
+      "pos": [
+        6470,
+        6472
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        6494,
+        6504
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        6506,
+        6553
+      ],
+      "content": "For general information about Pig on HDInsight:"
+    },
+    {
+      "pos": [
+        6557,
+        6613
+      ],
+      "content": "<bpt id=\"p27\">[</bpt>Use Pig with Hadoop on HDInsight<ept id=\"p27\">](hdinsight-use-pig.md)</ept>"
+    },
+    {
+      "pos": [
+        6615,
+        6686
+      ],
+      "content": "For information about other ways you can work with Hadoop on HDInsight:"
+    },
+    {
+      "pos": [
+        6690,
+        6748
+      ],
+      "content": "<bpt id=\"p28\">[</bpt>Use Hive with Hadoop on HDInsight<ept id=\"p28\">](hdinsight-use-hive.md)</ept>"
+    },
+    {
+      "pos": [
+        6752,
+        6820
+      ],
+      "content": "<bpt id=\"p29\">[</bpt>Use MapReduce with Hadoop on HDInsight<ept id=\"p29\">](hdinsight-use-mapreduce.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Use Hadoop Pig with Curl in HDInsight | Microsoft Azure\"\n   description=\"Learn how to use Curl to run Pig Latin jobs on a Hadoop cluster in Azure HDInsight.\"\n   services=\"hdinsight\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"\n    tags=\"azure-portal\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"01/08/2016\"\n   ms.author=\"larryfr\"/>\n\n#Run Pig jobs with Hadoop on HDInsight by using Curl\n\n[AZURE.INCLUDE [pig-selector](../../includes/hdinsight-selector-use-pig.md)]\n\nIn this document, you will learn how to use Curl to run Pig Latin jobs on an Azure HDInsight cluster. The Pig Latin programming language allows you to describe transformations that are applied to the input data to produce the desired output.\n\nCurl is used to demonstrate how you can interact with HDInsight by using raw HTTP requests to run, monitor, and retrieve the results of Pig jobs. This works by using the WebHCat REST API (formerly known as Templeton) that is provided by your HDInsight cluster.\n\n> [AZURE.NOTE] If you are already familiar with using Linux-based Hadoop servers, but are new to HDInsight, see [Linux-based HDInsight Tips](hdinsight-hadoop-linux-information.md).\n\n##<a id=\"prereq\"></a>Prerequisites\n\nTo complete the steps in this article, you will need the following:\n\n* An Azure HDInsight (Hadoop on HDInsight) cluster (Linux-based or Windows-based)\n\n* [Curl](http://curl.haxx.se/)\n\n* [jq](http://stedolan.github.io/jq/)\n\n##<a id=\"curl\"></a>Run Pig jobs by using Curl\n\n> [AZURE.NOTE] When using Curl or any other REST communication with WebHCat, you must authenticate the requests by providing the administrator user name and password for the HDInsight cluster. You must also use the cluster name as part of the Uniform Resource Identifier (URI) that is used to send the requests to the server.\n>\n> For the commands in this section, replace **USERNAME** with the user to authenticate to the cluster, and replace **PASSWORD** with the password for the user account. Replace **CLUSTERNAME** with the name of your cluster.\n>\n> The REST API is secured via [basic access authentication](http://en.wikipedia.org/wiki/Basic_access_authentication). You should always make requests by using Secure HTTP (HTTPS) to help ensure that your credentials are securely sent to the server.\n\n1. From a command line, use the following command to verify that you can connect to your HDInsight cluster:\n\n        curl -u USERNAME:PASSWORD -G https://CLUSTERNAME.azurehdinsight.net/templeton/v1/status\n\n    You should receive a response similar to the following:\n\n        {\"status\":\"ok\",\"version\":\"v1\"}\n\n    The parameters used in this command are as follows:\n\n    * **-u**: The user name and password used to authenticate the request\n    * **-G**: Indicates that this is a GET request\n\n    The beginning of the URL, **https://CLUSTERNAME.azurehdinsight.net/templeton/v1**, will be the same for all requests. The path, **/status**, indicates that the request is to return the status of WebHCat (also known as Templeton) for the server.\n\n2. Use the following code to submit a Pig Latin job to the cluster:\n\n        curl -u USERNAME:PASSWORD -d user.name=USERNAME -d execute=\"LOGS=LOAD+'wasb:///example/data/sample.log';LEVELS=foreach+LOGS+generate+REGEX_EXTRACT($0,'(TRACE|DEBUG|INFO|WARN|ERROR|FATAL)',1)+as+LOGLEVEL;FILTEREDLEVELS=FILTER+LEVELS+by+LOGLEVEL+is+not+null;GROUPEDLEVELS=GROUP+FILTEREDLEVELS+by+LOGLEVEL;FREQUENCIES=foreach+GROUPEDLEVELS+generate+group+as+LOGLEVEL,COUNT(FILTEREDLEVELS.LOGLEVEL)+as+count;RESULT=order+FREQUENCIES+by+COUNT+desc;DUMP+RESULT;\" -d statusdir=\"wasb:///example/pigcurl\" https://CLUSTERNAME.azurehdinsight.net/templeton/v1/pig\n\n    The parameters used in this command are as follows:\n\n    * **-d**: Because `-G` is not used, the request defaults to the POST method. `-d` specifies the data values that are sent with the request.\n\n        * **user.name**: The user who is running the command\n        * **execute**: The Pig Latin statements to execute\n        * **statusdir**: The directory that the status for this job will be written to\n\n    > [AZURE.NOTE] Notice that the spaces in Pig Latin statements are replaced by the `+` character when used with Curl.\n\n    This command should return a job ID that can be used to check the status of the job, for example:\n\n        {\"id\":\"job_1415651640909_0026\"}\n\n3. To check the status of the job, use the following command. Replace **JOBID** with the value returned in the previous step. For example, if the return value was `{\"id\":\"job_1415651640909_0026\"}`, then **JOBID** would be `job_1415651640909_0026`.\n\n        curl -G -u USERNAME:PASSWORD -d user.name=USERNAME https://CLUSTERNAME.azurehdinsight.net/templeton/v1/jobs/JOBID | jq .status.state\n\n    If the job has finished, the state will be **SUCCEEDED**.\n\n    > [AZURE.NOTE] This Curl request returns a JavaScript Object Notation (JSON) document with information about the job, and jq is used to retrieve only the state value.\n\n##<a id=\"results\"></a>View results\n\nWhen the state of the job has changed to **SUCCEEDED**, you can retrieve the results of the job from Azure Blob storage. The `statusdir` parameter passed with the query contains the location of the output file; in this case, **wasb:///example/pigcurl**. This address stores the output of the job in the **example/pigcurl** directory in the default storage container used by your HDInsight cluster.\n\nYou can list and download these files by using the [Azure CLI for Mac, Linux and Windows](../xplat-cli-install.md). For example, to list files in **example/pigcurl**, use the following command:\n\n    azure storage blob list <container-name> example/pigcurl\n\nTo download a file, use the following:\n\n    azure storage blob download <container-name> <blob-name> <destination-file>\n\n> [AZURE.NOTE] You must specify the storage account name that contains the blob by using the `-a` and `-k` parameters, or set the **AZURE\\_STORAGE\\_ACCOUNT** and **AZURE\\_STORAGE\\_ACCESS\\_KEY** environment variables.\n\n##<a id=\"summary\"></a>Summary\n\nAs demonstrated in this document, you can use a raw HTTP request to run, monitor, and view the results of Pig jobs on your HDInsight cluster.\n\nFor more information about the REST interface used in this article, see the [WebHCat Reference](https://cwiki.apache.org/confluence/display/Hive/WebHCat+Reference).\n\n##<a id=\"nextsteps\"></a>Next steps\n\nFor general information about Pig on HDInsight:\n\n* [Use Pig with Hadoop on HDInsight](hdinsight-use-pig.md)\n\nFor information about other ways you can work with Hadoop on HDInsight:\n\n* [Use Hive with Hadoop on HDInsight](hdinsight-use-hive.md)\n\n* [Use MapReduce with Hadoop on HDInsight](hdinsight-use-mapreduce.md)\n"
+}

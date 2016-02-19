@@ -1,0 +1,2178 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        26,
+        98
+      ],
+      "content": "Process events from Event Hubs with Storm on HDInsight | Microsoft Azure"
+    },
+    {
+      "pos": [
+        116,
+        247
+      ],
+      "content": "Learn how to process Event Hubs data with a C# Storm topology created in Visual Studio using the HDInsight Tools for Visual Studio."
+    },
+    {
+      "pos": [
+        563,
+        628
+      ],
+      "content": "Process events from Azure Event Hubs with Storm on HDInsight (C#)"
+    },
+    {
+      "pos": [
+        630,
+        908
+      ],
+      "content": "Azure Event Hubs allows you to process massive amounts of data from websites, apps, and devices. The Event Hubs spout makes it easy to use Apache Storm on HDInsight to analyze this data in real time. You can also write data to Event Hubs from Storm by using the Event Hubs bolt.",
+      "nodes": [
+        {
+          "content": "Azure Event Hubs allows you to process massive amounts of data from websites, apps, and devices.",
+          "pos": [
+            0,
+            96
+          ]
+        },
+        {
+          "content": "The Event Hubs spout makes it easy to use Apache Storm on HDInsight to analyze this data in real time.",
+          "pos": [
+            97,
+            199
+          ]
+        },
+        {
+          "content": "You can also write data to Event Hubs from Storm by using the Event Hubs bolt.",
+          "pos": [
+            200,
+            278
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        910,
+        1066
+      ],
+      "content": "In this tutorial, you will learn how to use the HDInsight Tools for Visual Studio and the Event Hubs spout and bolt to create two hybrid C#/Java topologies:"
+    },
+    {
+      "pos": [
+        1070,
+        1141
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>EventHubWriter<ept id=\"p1\">**</ept>: Randomly generates data and writes it to Event Hubs"
+    },
+    {
+      "pos": [
+        1145,
+        1228
+      ],
+      "content": "<bpt id=\"p2\">**</bpt>EventHubReader<ept id=\"p2\">**</ept>: Reads data from Event Hubs and stores it in Azure Table storage"
+    },
+    {
+      "pos": [
+        1230,
+        1550
+      ],
+      "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document only work with a Windows-based HDInsight cluster. For a Java version of this project, which will work with either a Linux-based or Windows-based cluster, see <bpt id=\"p3\">[</bpt>Process events from Azure Event Hubs with Storm on HDInsight (Java)<ept id=\"p3\">](hdinsight-storm-develop-java-event-hub-topology.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph2\">[AZURE.NOTE]</ph><ph id=\"ph3\"/> The steps in this document only work with a Windows-based HDInsight cluster.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "For a Java version of this project, which will work with either a Linux-based or Windows-based cluster, see <bpt id=\"p3\">[</bpt>Process events from Azure Event Hubs with Storm on HDInsight (Java)<ept id=\"p3\">](hdinsight-storm-develop-java-event-hub-topology.md)</ept>.",
+          "pos": [
+            122,
+            390
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1555,
+        1568
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1572,
+        1658
+      ],
+      "content": "An <bpt id=\"p4\">[</bpt>Apache Storm on HDInsight cluster<ept id=\"p4\">](hdinsight-apache-storm-tutorial-get-started.md)</ept>"
+    },
+    {
+      "pos": [
+        1662,
+        1735
+      ],
+      "content": "An <bpt id=\"p5\">[</bpt>Azure Event Hub<ept id=\"p5\">](../event-hubs/event-hubs-csharp-ephcs-getstarted.md)</ept>"
+    },
+    {
+      "pos": [
+        1739,
+        1798
+      ],
+      "content": "The <bpt id=\"p6\">[</bpt>Azure .NET SDK<ept id=\"p6\">](http://azure.microsoft.com/downloads/)</ept>"
+    },
+    {
+      "pos": [
+        1802,
+        1894
+      ],
+      "content": "The <bpt id=\"p7\">[</bpt>HDInsight Tools for Visual Studio<ept id=\"p7\">](hdinsight-hadoop-visual-studio-tools-get-started.md)</ept>"
+    },
+    {
+      "pos": [
+        1899,
+        1916
+      ],
+      "content": "Completed project"
+    },
+    {
+      "pos": [
+        1918,
+        2182
+      ],
+      "content": "You can download a complete version of the project created in this tutorial from GitHub: <bpt id=\"p8\">[</bpt>eventhub-storm-hybrid<ept id=\"p8\">](https://github.com/Blackmist/eventhub-storm-hybrid)</ept>. However, you still need to provide configuration settings by following the steps in this tutorial.",
+      "nodes": [
+        {
+          "content": "You can download a complete version of the project created in this tutorial from GitHub: <bpt id=\"p8\">[</bpt>eventhub-storm-hybrid<ept id=\"p8\">](https://github.com/Blackmist/eventhub-storm-hybrid)</ept>.",
+          "pos": [
+            0,
+            203
+          ]
+        },
+        {
+          "content": "However, you still need to provide configuration settings by following the steps in this tutorial.",
+          "pos": [
+            204,
+            302
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2186,
+        2337
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> When you use the completed project, you must use the <bpt id=\"p9\">**</bpt>NuGet Package Manager<ept id=\"p9\">**</ept><ph id=\"ph6\"/> to restore the packages that are required by this solution."
+    },
+    {
+      "pos": [
+        2342,
+        2367
+      ],
+      "content": "Event Hubs spout and bolt"
+    },
+    {
+      "pos": [
+        2369,
+        2639
+      ],
+      "content": "The Event Hubs spout and bolt are Java components that allow you to easily work with Event Hubs from Apache Storm. Although these components are written in Java, the HDInsight Tools for Visual Studio allow you to create hybrid topologies that mix C# and Java components.",
+      "nodes": [
+        {
+          "content": "The Event Hubs spout and bolt are Java components that allow you to easily work with Event Hubs from Apache Storm.",
+          "pos": [
+            0,
+            114
+          ]
+        },
+        {
+          "content": "Although these components are written in Java, the HDInsight Tools for Visual Studio allow you to create hybrid topologies that mix C# and Java components.",
+          "pos": [
+            115,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2641,
+        2775
+      ],
+      "content": "The spout and bolt are distributed as a single Java archive (.jar) file named <bpt id=\"p10\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p10\">**</ept>."
+    },
+    {
+      "pos": [
+        2781,
+        2803
+      ],
+      "content": "Download the .jar file"
+    },
+    {
+      "pos": [
+        2805,
+        3114
+      ],
+      "content": "The most recent version of the <bpt id=\"p11\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p11\">**</ept><ph id=\"ph7\"/> file is included in the <ph id=\"ph8\">&lt;a href=\"https://github.com/hdinsight/hdinsight-storm-examples\" target=\"_blank\"&gt;</ph>HDInsight Storm examples<ph id=\"ph9\">&lt;/a&gt;</ph><ph id=\"ph10\"/> project under the <bpt id=\"p12\">**</bpt>lib<ept id=\"p12\">**</ept><ph id=\"ph11\"/> folder. To download the file, use one of the following methods.",
+      "nodes": [
+        {
+          "content": "The most recent version of the <bpt id=\"p11\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p11\">**</ept><ph id=\"ph7\"/> file is included in the <ph id=\"ph8\">&lt;a href=\"https://github.com/hdinsight/hdinsight-storm-examples\" target=\"_blank\"&gt;</ph>HDInsight Storm examples<ph id=\"ph9\">&lt;/a&gt;</ph><ph id=\"ph10\"/> project under the <bpt id=\"p12\">**</bpt>lib<ept id=\"p12\">**</ept><ph id=\"ph11\"/> folder.",
+          "pos": [
+            0,
+            425
+          ]
+        },
+        {
+          "content": "To download the file, use one of the following methods.",
+          "pos": [
+            426,
+            481
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3118,
+        3359
+      ],
+      "content": "<ph id=\"ph12\">[AZURE.NOTE]</ph><ph id=\"ph13\"/> The spout and bolt have been submitted for inclusion in the Apache Storm project. For more information, see <ph id=\"ph14\">&lt;a href=\"https://github.com/apache/storm/pull/336/files\"&gt;</ph>STORM-583: Initial check-in for storm-event hubs<ph id=\"ph15\">&lt;/a&gt;</ph><ph id=\"ph16\"/> in GitHub.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph12\">[AZURE.NOTE]</ph><ph id=\"ph13\"/> The spout and bolt have been submitted for inclusion in the Apache Storm project.",
+          "pos": [
+            0,
+            128
+          ]
+        },
+        {
+          "content": "For more information, see <ph id=\"ph14\">&lt;a href=\"https://github.com/apache/storm/pull/336/files\"&gt;</ph>STORM-583: Initial check-in for storm-event hubs<ph id=\"ph15\">&lt;/a&gt;</ph><ph id=\"ph16\"/> in GitHub.",
+          "pos": [
+            129,
+            340
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3363,
+        3604
+      ],
+      "content": "<bpt id=\"p13\">**</bpt>Download a ZIP file<ept id=\"p13\">**</ept>: From the <ph id=\"ph17\">&lt;a href=\"https://github.com/hdinsight/hdinsight-storm-examples\" target=\"_blank\"&gt;</ph>HDInsight Storm examples<ph id=\"ph18\">&lt;/a&gt;</ph><ph id=\"ph19\"/> site, select <bpt id=\"p14\">**</bpt>Download ZIP<ept id=\"p14\">**</ept><ph id=\"ph20\"/> in the right pane to download a .zip file that contains the project."
+    },
+    {
+      "pos": [
+        3610,
+        3704
+      ],
+      "content": "<ph id=\"ph21\">![</ph>download zip button<ph id=\"ph22\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/download.png)</ph>"
+    },
+    {
+      "pos": [
+        3710,
+        3815
+      ],
+      "content": "After the file is downloaded, you can extract the archive, and the file will be in the <bpt id=\"p15\">**</bpt>lib<ept id=\"p15\">**</ept><ph id=\"ph23\"/> directory."
+    },
+    {
+      "pos": [
+        3819,
+        4022
+      ],
+      "content": "<bpt id=\"p16\">**</bpt>Clone the project<ept id=\"p16\">**</ept>: If you have <ph id=\"ph24\">&lt;a href=\"http://git-scm.com/\" target=\"_blank\"&gt;</ph>Git<ph id=\"ph25\">&lt;/a&gt;</ph><ph id=\"ph26\"/> installed, use the following command to clone the repository locally, then find the file in the <bpt id=\"p17\">**</bpt>lib<ept id=\"p17\">**</ept><ph id=\"ph27\"/> directory."
+    },
+    {
+      "pos": [
+        4100,
+        4119
+      ],
+      "content": "Configure Event Hub"
+    },
+    {
+      "pos": [
+        4121,
+        4219
+      ],
+      "content": "Event Hubs is the data source for this example. Use the following steps to create a new Event Hub.",
+      "nodes": [
+        {
+          "content": "Event Hubs is the data source for this example.",
+          "pos": [
+            0,
+            47
+          ]
+        },
+        {
+          "content": "Use the following steps to create a new Event Hub.",
+          "pos": [
+            48,
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4224,
+        4359
+      ],
+      "content": "From the <bpt id=\"p18\">[</bpt>Azure Classic Portal<ept id=\"p18\">](https://manage.windowsazure.com)</ept>, select <bpt id=\"p19\">**</bpt>NEW<ept id=\"p19\">**</ept><ph id=\"ph28\"/> &gt; <bpt id=\"p20\">**</bpt>Service Bus<ept id=\"p20\">**</ept><ph id=\"ph29\"/> &gt; <bpt id=\"p21\">**</bpt>Event Hub<ept id=\"p21\">**</ept><ph id=\"ph30\"/> &gt; <bpt id=\"p22\">**</bpt>Custom Create<ept id=\"p22\">**</ept>."
+    },
+    {
+      "pos": [
+        4364,
+        4562
+      ],
+      "content": "On the <bpt id=\"p23\">**</bpt>Add a new Event Hub<ept id=\"p23\">**</ept><ph id=\"ph31\"/> screen, enter an <bpt id=\"p24\">**</bpt>Event Hub Name<ept id=\"p24\">**</ept>, select the <bpt id=\"p25\">**</bpt>Region<ept id=\"p25\">**</ept><ph id=\"ph32\"/> to create the hub in, and create a new namespace or select an existing one. Click the <bpt id=\"p26\">**</bpt>Arrow<ept id=\"p26\">**</ept><ph id=\"ph33\"/> to continue.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p23\">**</bpt>Add a new Event Hub<ept id=\"p23\">**</ept><ph id=\"ph31\"/> screen, enter an <bpt id=\"p24\">**</bpt>Event Hub Name<ept id=\"p24\">**</ept>, select the <bpt id=\"p25\">**</bpt>Region<ept id=\"p25\">**</ept><ph id=\"ph32\"/> to create the hub in, and create a new namespace or select an existing one.",
+          "pos": [
+            0,
+            315
+          ]
+        },
+        {
+          "content": "Click the <bpt id=\"p26\">**</bpt>Arrow<ept id=\"p26\">**</ept><ph id=\"ph33\"/> to continue.",
+          "pos": [
+            316,
+            403
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4568,
+        4652
+      ],
+      "content": "<ph id=\"ph34\">![</ph>wizard page 1<ph id=\"ph35\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/wiz1.png)</ph>"
+    },
+    {
+      "pos": [
+        4660,
+        4775
+      ],
+      "content": "<ph id=\"ph36\">[AZURE.NOTE]</ph><ph id=\"ph37\"/> You should select the same <bpt id=\"p27\">**</bpt>Location<ept id=\"p27\">**</ept><ph id=\"ph38\"/> as your Storm on HDInsight server to reduce latency and costs."
+    },
+    {
+      "pos": [
+        4780,
+        5023
+      ],
+      "content": "On the <bpt id=\"p28\">**</bpt>Configure Event Hub<ept id=\"p28\">**</ept><ph id=\"ph39\"/> screen, enter the <bpt id=\"p29\">**</bpt>Partition count<ept id=\"p29\">**</ept><ph id=\"ph40\"/> and <bpt id=\"p30\">**</bpt>Message Retention<ept id=\"p30\">**</ept><ph id=\"ph41\"/> values. For this example, use a partition count of 10 and a message retention of 1. Note the partition count because you will need this value later.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p28\">**</bpt>Configure Event Hub<ept id=\"p28\">**</ept><ph id=\"ph39\"/> screen, enter the <bpt id=\"p29\">**</bpt>Partition count<ept id=\"p29\">**</ept><ph id=\"ph40\"/> and <bpt id=\"p30\">**</bpt>Message Retention<ept id=\"p30\">**</ept><ph id=\"ph41\"/> values.",
+          "pos": [
+            0,
+            267
+          ]
+        },
+        {
+          "content": "For this example, use a partition count of 10 and a message retention of 1.",
+          "pos": [
+            268,
+            343
+          ]
+        },
+        {
+          "content": "Note the partition count because you will need this value later.",
+          "pos": [
+            344,
+            408
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5029,
+        5113
+      ],
+      "content": "<ph id=\"ph42\">![</ph>wizard page 2<ph id=\"ph43\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/wiz2.png)</ph>"
+    },
+    {
+      "pos": [
+        5118,
+        5256
+      ],
+      "content": "After the event hub has been created, select the namespace, select <bpt id=\"p31\">**</bpt>Event Hubs<ept id=\"p31\">**</ept>, and then select the event hub that you created earlier."
+    },
+    {
+      "pos": [
+        5261,
+        5354
+      ],
+      "content": "Select <bpt id=\"p32\">**</bpt>Configure<ept id=\"p32\">**</ept>, then create two new access policies by using the following information."
+    },
+    {
+      "pos": [
+        5360,
+        5513
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph44\">&lt;table&gt;</ph><ph id=\"ph45\">\n &lt;tr&gt;</ph><ph id=\"ph46\">&lt;th&gt;</ph>Name<ph id=\"ph47\">&lt;/th&gt;</ph><ph id=\"ph48\">&lt;th&gt;</ph>Permissions<ph id=\"ph49\">&lt;/th&gt;</ph><ph id=\"ph50\">&lt;/tr&gt;</ph><ph id=\"ph51\">\n &lt;tr&gt;</ph><ph id=\"ph52\">&lt;td&gt;</ph>Writer<ph id=\"ph53\">&lt;/td&gt;</ph><ph id=\"ph54\">&lt;td&gt;</ph>Send<ph id=\"ph55\">&lt;/td&gt;</ph><ph id=\"ph56\">&lt;/tr&gt;</ph><ph id=\"ph57\">\n &lt;tr&gt;</ph><ph id=\"ph58\">&lt;td&gt;</ph>Reader<ph id=\"ph59\">&lt;/td&gt;</ph><ph id=\"ph60\">&lt;td&gt;</ph>Listen<ph id=\"ph61\">&lt;/td&gt;</ph><ph id=\"ph62\">&lt;/tr&gt;</ph><ph id=\"ph63\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        5519,
+        5718
+      ],
+      "content": "After You create the permissions, select the <bpt id=\"p33\">**</bpt>Save<ept id=\"p33\">**</ept><ph id=\"ph64\"/> icon at the bottom of the page. This creates the shared access policies that will be used to send (writer) and listen (reader) to this Event Hub.",
+      "nodes": [
+        {
+          "content": "After You create the permissions, select the <bpt id=\"p33\">**</bpt>Save<ept id=\"p33\">**</ept><ph id=\"ph64\"/> icon at the bottom of the page.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "This creates the shared access policies that will be used to send (writer) and listen (reader) to this Event Hub.",
+          "pos": [
+            141,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5724,
+        5805
+      ],
+      "content": "<ph id=\"ph65\">![</ph>policies<ph id=\"ph66\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/policy.png)</ph>"
+    },
+    {
+      "pos": [
+        5810,
+        6012
+      ],
+      "content": "After you save the policies, use the <bpt id=\"p34\">**</bpt>Shared access key generator<ept id=\"p34\">**</ept><ph id=\"ph67\"/> at the bottom of the page to retrieve the key for the <bpt id=\"p35\">**</bpt>writer<ept id=\"p35\">**</ept><ph id=\"ph68\"/> and <bpt id=\"p36\">**</bpt>reader<ept id=\"p36\">**</ept><ph id=\"ph69\"/> policies. Save these because they will be used later.",
+      "nodes": [
+        {
+          "content": "After you save the policies, use the <bpt id=\"p34\">**</bpt>Shared access key generator<ept id=\"p34\">**</ept><ph id=\"ph67\"/> at the bottom of the page to retrieve the key for the <bpt id=\"p35\">**</bpt>writer<ept id=\"p35\">**</ept><ph id=\"ph68\"/> and <bpt id=\"p36\">**</bpt>reader<ept id=\"p36\">**</ept><ph id=\"ph69\"/> policies.",
+          "pos": [
+            0,
+            323
+          ]
+        },
+        {
+          "content": "Save these because they will be used later.",
+          "pos": [
+            324,
+            367
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6017,
+        6040
+      ],
+      "content": "Configure Table storage"
+    },
+    {
+      "pos": [
+        6042,
+        6267
+      ],
+      "content": "Table storage will be used to hold the values that are read from Event Hubs because you can easily view Table storage from inside Visual Studio through <bpt id=\"p37\">**</bpt>Server Explorer<ept id=\"p37\">**</ept>. Use the following steps to create new Table storage:",
+      "nodes": [
+        {
+          "content": "Table storage will be used to hold the values that are read from Event Hubs because you can easily view Table storage from inside Visual Studio through <bpt id=\"p37\">**</bpt>Server Explorer<ept id=\"p37\">**</ept>.",
+          "pos": [
+            0,
+            212
+          ]
+        },
+        {
+          "content": "Use the following steps to create new Table storage:",
+          "pos": [
+            213,
+            265
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6272,
+        6406
+      ],
+      "content": "From the <bpt id=\"p38\">[</bpt>Azure Classic Portal<ept id=\"p38\">](https://manage.windowsazure.com)</ept>, select <bpt id=\"p39\">**</bpt>NEW<ept id=\"p39\">**</ept><ph id=\"ph70\"/> &gt; <bpt id=\"p40\">**</bpt>Data Services<ept id=\"p40\">**</ept><ph id=\"ph71\"/> &gt; <bpt id=\"p41\">**</bpt>Storage<ept id=\"p41\">**</ept><ph id=\"ph72\"/> &gt; <bpt id=\"p42\">**</bpt>Quick Create<ept id=\"p42\">**</ept>."
+    },
+    {
+      "pos": [
+        6412,
+        6512
+      ],
+      "content": "<ph id=\"ph73\">![</ph>quick create storage<ph id=\"ph74\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/storagecreate.png)</ph>"
+    },
+    {
+      "pos": [
+        6517,
+        6646
+      ],
+      "content": "Enter a <bpt id=\"p43\">**</bpt>Name<ept id=\"p43\">**</ept><ph id=\"ph75\"/> for the storage account, select a <bpt id=\"p44\">**</bpt>Location<ept id=\"p44\">**</ept>, and then click the <bpt id=\"p45\">**</bpt>check mark<ept id=\"p45\">**</ept><ph id=\"ph76\"/> to create the storage account."
+    },
+    {
+      "pos": [
+        6654,
+        6784
+      ],
+      "content": "<ph id=\"ph77\">[AZURE.NOTE]</ph><ph id=\"ph78\"/> You should select the same <bpt id=\"p46\">**</bpt>Location<ept id=\"p46\">**</ept><ph id=\"ph79\"/> as your Event Hubs and Storm on HDInsight server to reduce latency and costs."
+    },
+    {
+      "pos": [
+        6789,
+        7045
+      ],
+      "content": "When the new storage account is provisioned, select the account and then use the <bpt id=\"p47\">**</bpt>Manage Access Keys<ept id=\"p47\">**</ept><ph id=\"ph80\"/> link at the bottom of the page to retrieve the <bpt id=\"p48\">**</bpt>Storage Account Name<ept id=\"p48\">**</ept><ph id=\"ph81\"/> and <bpt id=\"p49\">**</bpt>Primary Access Key<ept id=\"p49\">**</ept>. Save this information because it will be used later.",
+      "nodes": [
+        {
+          "content": "When the new storage account is provisioned, select the account and then use the <bpt id=\"p47\">**</bpt>Manage Access Keys<ept id=\"p47\">**</ept><ph id=\"ph80\"/> link at the bottom of the page to retrieve the <bpt id=\"p48\">**</bpt>Storage Account Name<ept id=\"p48\">**</ept><ph id=\"ph81\"/> and <bpt id=\"p49\">**</bpt>Primary Access Key<ept id=\"p49\">**</ept>.",
+          "pos": [
+            0,
+            353
+          ]
+        },
+        {
+          "content": "Save this information because it will be used later.",
+          "pos": [
+            354,
+            406
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7051,
+        7139
+      ],
+      "content": "<ph id=\"ph82\">![</ph>access keys<ph id=\"ph83\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/managekeys.png)</ph>"
+    },
+    {
+      "pos": [
+        7144,
+        7165
+      ],
+      "content": "Create EventHubWriter"
+    },
+    {
+      "pos": [
+        7167,
+        7271
+      ],
+      "content": "In this section, you will create a topology that writes data to Event Hubs by using the Event Hubs bolt."
+    },
+    {
+      "pos": [
+        7276,
+        7510
+      ],
+      "content": "If you have not already installed the latest version of the HDInsight Tools for Visual Studio, see <ph id=\"ph84\">&lt;a href=\"../hdinsight-hadoop-visual-studio-tools-get-started/\" target=\"_blank\"&gt;</ph>Get started using HDInsight Tools for Visual Studio<ph id=\"ph85\">&lt;/a&gt;</ph>."
+    },
+    {
+      "pos": [
+        7515,
+        7582
+      ],
+      "content": "Open Visual Studio, select <bpt id=\"p50\">**</bpt>File<ept id=\"p50\">**</ept><ph id=\"ph86\"/> &gt; <bpt id=\"p51\">**</bpt>New<ept id=\"p51\">**</ept><ph id=\"ph87\"/> and then <bpt id=\"p52\">**</bpt>Project<ept id=\"p52\">**</ept>."
+    },
+    {
+      "pos": [
+        7587,
+        7827
+      ],
+      "content": "From the <bpt id=\"p53\">**</bpt>New Project<ept id=\"p53\">**</ept><ph id=\"ph88\"/> screen, expand <bpt id=\"p54\">**</bpt>Installed<ept id=\"p54\">**</ept><ph id=\"ph89\"/> &gt; <bpt id=\"p55\">**</bpt>Templates<ept id=\"p55\">**</ept>, and select <bpt id=\"p56\">**</bpt>HDInsight<ept id=\"p56\">**</ept>. From the list of templates, select <bpt id=\"p57\">**</bpt>Storm Application<ept id=\"p57\">**</ept>. At the bottom of the screen, enter <bpt id=\"p58\">**</bpt>EventHubWriter<ept id=\"p58\">**</ept><ph id=\"ph90\"/> as the name of the application.",
+      "nodes": [
+        {
+          "content": "From the <bpt id=\"p53\">**</bpt>New Project<ept id=\"p53\">**</ept><ph id=\"ph88\"/> screen, expand <bpt id=\"p54\">**</bpt>Installed<ept id=\"p54\">**</ept><ph id=\"ph89\"/> &gt; <bpt id=\"p55\">**</bpt>Templates<ept id=\"p55\">**</ept>, and select <bpt id=\"p56\">**</bpt>HDInsight<ept id=\"p56\">**</ept>.",
+          "pos": [
+            0,
+            289
+          ]
+        },
+        {
+          "content": "From the list of templates, select <bpt id=\"p57\">**</bpt>Storm Application<ept id=\"p57\">**</ept>.",
+          "pos": [
+            290,
+            387
+          ]
+        },
+        {
+          "content": "At the bottom of the screen, enter <bpt id=\"p58\">**</bpt>EventHubWriter<ept id=\"p58\">**</ept><ph id=\"ph90\"/> as the name of the application.",
+          "pos": [
+            388,
+            528
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7833,
+        7915
+      ],
+      "content": "<ph id=\"ph91\">![</ph>image<ph id=\"ph92\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/newproject.png)</ph>"
+    },
+    {
+      "pos": [
+        7920,
+        7986
+      ],
+      "content": "After the project is created, you should have the following files:"
+    },
+    {
+      "pos": [
+        7994,
+        8145
+      ],
+      "content": "<bpt id=\"p59\">**</bpt>Program.cs<ept id=\"p59\">**</ept>: This defines the topology for your project. Note that a default topology that consists of one spout and one bolt is created by default.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p59\">**</bpt>Program.cs<ept id=\"p59\">**</ept>: This defines the topology for your project.",
+          "pos": [
+            0,
+            99
+          ]
+        },
+        {
+          "content": "Note that a default topology that consists of one spout and one bolt is created by default.",
+          "pos": [
+            100,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8153,
+        8184
+      ],
+      "content": "<bpt id=\"p60\">**</bpt>Spout.cs<ept id=\"p60\">**</ept>: An example spout."
+    },
+    {
+      "pos": [
+        8192,
+        8306
+      ],
+      "content": "<bpt id=\"p61\">**</bpt>Bolt.cs<ept id=\"p61\">**</ept>: An example bolt. This will be deleted because you will use the Event Hubs bolt to write to Event Hub.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p61\">**</bpt>Bolt.cs<ept id=\"p61\">**</ept>: An example bolt.",
+          "pos": [
+            0,
+            69
+          ]
+        },
+        {
+          "content": "This will be deleted because you will use the Event Hubs bolt to write to Event Hub.",
+          "pos": [
+            70,
+            154
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8312,
+        8325
+      ],
+      "content": "Configuration"
+    },
+    {
+      "pos": [
+        8330,
+        8419
+      ],
+      "content": "In <bpt id=\"p62\">**</bpt>Solution Explorer<ept id=\"p62\">**</ept>, right-click <bpt id=\"p63\">**</bpt>EventHubWriter<ept id=\"p63\">**</ept>, and then select <bpt id=\"p64\">**</bpt>Properties<ept id=\"p64\">**</ept>."
+    },
+    {
+      "pos": [
+        8424,
+        8572
+      ],
+      "content": "In the project properties, select <bpt id=\"p65\">**</bpt>Settings<ept id=\"p65\">**</ept>, and then select <bpt id=\"p66\">**</bpt>This project does not contain a default settings file. Click here to create one.<ept id=\"p66\">**</ept>"
+    },
+    {
+      "pos": [
+        8577,
+        8689
+      ],
+      "content": "Enter the following settings. Use the information for the Event Hub you created earlier in the <bpt id=\"p67\">**</bpt>Value<ept id=\"p67\">**</ept><ph id=\"ph93\"/> column.",
+      "nodes": [
+        {
+          "content": "Enter the following settings.",
+          "pos": [
+            0,
+            29
+          ]
+        },
+        {
+          "content": "Use the information for the Event Hub you created earlier in the <bpt id=\"p67\">**</bpt>Value<ept id=\"p67\">**</ept><ph id=\"ph93\"/> column.",
+          "pos": [
+            30,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8695,
+        9574
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph94\">&lt;table&gt;</ph><ph id=\"ph95\">\n &lt;tr&gt;</ph><ph id=\"ph96\">&lt;th style=\"text-align:left\"&gt;</ph>Name<ph id=\"ph97\">&lt;/th&gt;</ph><ph id=\"ph98\">&lt;th style=\"text-align:left\"&gt;</ph>Type<ph id=\"ph99\">&lt;/th&gt;</ph><ph id=\"ph100\">&lt;th style=\"text-align:left\"&gt;</ph>Scope<ph id=\"ph101\">&lt;/th&gt;</ph><ph id=\"ph102\">&lt;/tr&gt;</ph><ph id=\"ph103\">\n &lt;tr&gt;</ph><ph id=\"ph104\">&lt;td style=\"text-align:left\"&gt;</ph>EventHubPolicyName<ph id=\"ph105\">&lt;/td&gt;</ph><ph id=\"ph106\">&lt;td style=\"text-align:left\"&gt;</ph>string<ph id=\"ph107\">&lt;/td&gt;</ph><ph id=\"ph108\">&lt;td style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph109\">&lt;/td&gt;</ph><ph id=\"ph110\">&lt;/tr&gt;</ph><ph id=\"ph111\">\n &lt;tr&gt;</ph><ph id=\"ph112\">&lt;td style=\"text-align:left\"&gt;</ph>EventHubPolicyKey<ph id=\"ph113\">&lt;/td&gt;</ph><ph id=\"ph114\">&lt;td style=\"text-align:left\"&gt;</ph>string<ph id=\"ph115\">&lt;/td&gt;</ph><ph id=\"ph116\">&lt;td style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph117\">&lt;/td&gt;</ph><ph id=\"ph118\">&lt;/tr&gt;</ph><ph id=\"ph119\">\n &lt;tr&gt;</ph><ph id=\"ph120\">&lt;td style=\"text-align:left\"&gt;</ph>EventHubNamespace<ph id=\"ph121\">&lt;/td&gt;</ph><ph id=\"ph122\">&lt;td style=\"text-align:left\"&gt;</ph>string<ph id=\"ph123\">&lt;/td&gt;</ph><ph id=\"ph124\">&lt;td style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph125\">&lt;/td&gt;</ph><ph id=\"ph126\">&lt;/tr&gt;</ph><ph id=\"ph127\">\n &lt;tr&gt;</ph><ph id=\"ph128\">&lt;td style=\"text-align:left\"&gt;</ph>EventHubName<ph id=\"ph129\">&lt;/td&gt;</ph><ph id=\"ph130\">&lt;td style=\"text-align:left\"&gt;</ph>string<ph id=\"ph131\">&lt;/td&gt;</ph><ph id=\"ph132\">&lt;td style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph133\">&lt;/td&gt;</ph><ph id=\"ph134\">&lt;/tr&gt;</ph><ph id=\"ph135\">\n &lt;tr&gt;</ph><ph id=\"ph136\">&lt;td style=\"text-align:left\"&gt;</ph>EventHubPartitionCount<ph id=\"ph137\">&lt;/td&gt;</ph><ph id=\"ph138\">&lt;td style=\"text-align:left\"&gt;</ph>int<ph id=\"ph139\">&lt;/td&gt;</ph><ph id=\"ph140\">&lt;td style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph141\">&lt;/td&gt;</ph><ph id=\"ph142\">&lt;/tr&gt;</ph><ph id=\"ph143\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        9579,
+        9618
+      ],
+      "content": "Save and close the <bpt id=\"p68\">**</bpt>Properties<ept id=\"p68\">**</ept><ph id=\"ph144\"/> page."
+    },
+    {
+      "pos": [
+        9624,
+        9643
+      ],
+      "content": "Define the topology"
+    },
+    {
+      "pos": [
+        9648,
+        9791
+      ],
+      "content": "In <bpt id=\"p69\">**</bpt>Solution Explorer<ept id=\"p69\">**</ept>, right-click <bpt id=\"p70\">**</bpt>Bolt.cs<ept id=\"p70\">**</ept>, and select <bpt id=\"p71\">**</bpt>Delete<ept id=\"p71\">**</ept>. You are using the Java Event Hubs bolt, so you do not need this file.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p69\">**</bpt>Solution Explorer<ept id=\"p69\">**</ept>, right-click <bpt id=\"p70\">**</bpt>Bolt.cs<ept id=\"p70\">**</ept>, and select <bpt id=\"p71\">**</bpt>Delete<ept id=\"p71\">**</ept>.",
+          "pos": [
+            0,
+            193
+          ]
+        },
+        {
+          "content": "You are using the Java Event Hubs bolt, so you do not need this file.",
+          "pos": [
+            194,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9796,
+        9954
+      ],
+      "content": "Open the <bpt id=\"p72\">**</bpt>Program.cs<ept id=\"p72\">**</ept><ph id=\"ph145\"/> file and add the following code immediately after the <ph id=\"ph146\">`TopologyBuilder topologyBuilder = new TopologyBuilder(\"EventHubWriter\");`</ph><ph id=\"ph147\"/> line."
+    },
+    {
+      "pos": [
+        10208,
+        10456
+      ],
+      "content": "The first line reads the partition count from the properties defined earlier. The second line defines a deserializer that is used to deseralize JSON data produced by the spout, into a <ph id=\"ph148\">`java.lang.String`</ph><ph id=\"ph149\"/> so that Java components can consume the data.",
+      "nodes": [
+        {
+          "content": "The first line reads the partition count from the properties defined earlier.",
+          "pos": [
+            0,
+            77
+          ]
+        },
+        {
+          "content": "The second line defines a deserializer that is used to deseralize JSON data produced by the spout, into a <ph id=\"ph148\">`java.lang.String`</ph><ph id=\"ph149\"/> so that Java components can consume the data.",
+          "pos": [
+            78,
+            284
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10461,
+        10485
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        10741,
+        10771
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        11109,
+        11277
+      ],
+      "content": "This creates a spout and uses the Event Hubs partition count as the parallelism hint for this component. This should create an instance of the spout for each partition.",
+      "nodes": [
+        {
+          "content": "This creates a spout and uses the Event Hubs partition count as the parallelism hint for this component.",
+          "pos": [
+            0,
+            104
+          ]
+        },
+        {
+          "content": "This should create an instance of the spout for each partition.",
+          "pos": [
+            105,
+            168
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11283,
+        11482
+      ],
+      "content": "This also associates the deserializer created previously with the output stream from this component. This allows the downstream EventHubSpout component to consume the data produced from the C# spout.",
+      "nodes": [
+        {
+          "content": "This also associates the deserializer created previously with the output stream from this component.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "This allows the downstream EventHubSpout component to consume the data produced from the C# spout.",
+          "pos": [
+            101,
+            199
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11487,
+        11542
+      ],
+      "content": "Immediately after the previous code, add the following:"
+    },
+    {
+      "pos": [
+        12165,
+        12597
+      ],
+      "content": "This creates a new constructor for the Java bolt, which is used at run time to configure a new instance of the bolt. In this case, you are using the <ph id=\"ph150\">&lt;a href=\"http://storm.apache.org/documentation/Clojure-DSL.html\" target=\"_blank\"&gt;</ph>Apache Storm Clojure DSL<ph id=\"ph151\">&lt;/a&gt;</ph><ph id=\"ph152\"/> to configure the spout with the Event Hubs configuration information you added previously. More specifically, this code is used by HDInsight at run time to do the following:",
+      "nodes": [
+        {
+          "content": "This creates a new constructor for the Java bolt, which is used at run time to configure a new instance of the bolt.",
+          "pos": [
+            0,
+            116
+          ]
+        },
+        {
+          "content": "In this case, you are using the <ph id=\"ph150\">&lt;a href=\"http://storm.apache.org/documentation/Clojure-DSL.html\" target=\"_blank\"&gt;</ph>Apache Storm Clojure DSL<ph id=\"ph151\">&lt;/a&gt;</ph><ph id=\"ph152\"/> to configure the spout with the Event Hubs configuration information you added previously.",
+          "pos": [
+            117,
+            417
+          ]
+        },
+        {
+          "content": "More specifically, this code is used by HDInsight at run time to do the following:",
+          "pos": [
+            418,
+            500
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12605,
+        12727
+      ],
+      "content": "Create a new instance of <bpt id=\"p73\">**</bpt>com.microsoft.eventhubs.bolt.EventHubBoltConfig<ept id=\"p73\">**</ept><ph id=\"ph153\"/> using the Event Hubs information you provide."
+    },
+    {
+      "pos": [
+        12734,
+        12853
+      ],
+      "content": "Create a new instance of <bpt id=\"p74\">**</bpt>com.microsoft.eventhubs.bolt.EventHubBolt<ept id=\"p74\">**</ept>, passing in the <bpt id=\"p75\">**</bpt>EventHubBoltConfig<ept id=\"p75\">**</ept><ph id=\"ph154\"/> instance."
+    },
+    {
+      "pos": [
+        12858,
+        12882
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        13057,
+        13087
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        13251,
+        13578
+      ],
+      "content": "This instructs the topology to use the <bpt id=\"p76\">**</bpt>JavaComponentConstructor<ept id=\"p76\">**</ept><ph id=\"ph155\"/> from the previous step as the bolt. The component can be referred to in this topology by the friendly name of \"EventHubBolt.\" The parallelism hint is set to the number of partitions for the Event Hub, and it subscribes to data produced by the spout (\"Spout\").",
+      "nodes": [
+        {
+          "content": "This instructs the topology to use the <bpt id=\"p76\">**</bpt>JavaComponentConstructor<ept id=\"p76\">**</ept><ph id=\"ph155\"/> from the previous step as the bolt.",
+          "pos": [
+            0,
+            159
+          ]
+        },
+        {
+          "content": "The component can be referred to in this topology by the friendly name of \"EventHubBolt.\"",
+          "pos": [
+            160,
+            249
+          ]
+        },
+        {
+          "content": "The parallelism hint is set to the number of partitions for the Event Hub, and it subscribes to data produced by the spout (\"Spout\").",
+          "pos": [
+            250,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13580,
+        13771
+      ],
+      "content": "At this point, you are done with the <bpt id=\"p77\">**</bpt>Program.cs<ept id=\"p77\">**</ept>. The topology has been defined, but now you must modify <bpt id=\"p78\">**</bpt>Spout.cs<ept id=\"p78\">**</ept><ph id=\"ph156\"/> so that it produces data in a format that the Event Hubs bolt can use.",
+      "nodes": [
+        {
+          "content": "At this point, you are done with the <bpt id=\"p77\">**</bpt>Program.cs<ept id=\"p77\">**</ept>.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "The topology has been defined, but now you must modify <bpt id=\"p78\">**</bpt>Spout.cs<ept id=\"p78\">**</ept><ph id=\"ph156\"/> so that it produces data in a format that the Event Hubs bolt can use.",
+          "pos": [
+            93,
+            287
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13775,
+        14005
+      ],
+      "content": "<ph id=\"ph157\">[AZURE.NOTE]</ph><ph id=\"ph158\"/> This topology will default to creating one worker process, which is sufficient for example purposes. If you are adapting this for a production cluster, you should can add the following to change the number of workers:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph157\">[AZURE.NOTE]</ph><ph id=\"ph158\"/> This topology will default to creating one worker process, which is sufficient for example purposes.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "If you are adapting this for a production cluster, you should can add the following to change the number of workers:",
+          "pos": [
+            150,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14133,
+        14149
+      ],
+      "content": "Modify the spout"
+    },
+    {
+      "pos": [
+        14151,
+        14333
+      ],
+      "content": "The Event Hubs bolt expects a single string value, which it will route to Event Hub. In the following example, you will modify the default <bpt id=\"p79\">**</bpt>Spout.cs<ept id=\"p79\">**</ept><ph id=\"ph159\"/> file to produce a JSON string.",
+      "nodes": [
+        {
+          "content": "The Event Hubs bolt expects a single string value, which it will route to Event Hub.",
+          "pos": [
+            0,
+            84
+          ]
+        },
+        {
+          "content": "In the following example, you will modify the default <bpt id=\"p79\">**</bpt>Spout.cs<ept id=\"p79\">**</ept><ph id=\"ph159\"/> file to produce a JSON string.",
+          "pos": [
+            85,
+            238
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14338,
+        14427
+      ],
+      "content": "In <bpt id=\"p80\">**</bpt>Solution Explorer<ept id=\"p80\">**</ept>, open <bpt id=\"p81\">**</bpt>Spout.cs<ept id=\"p81\">**</ept><ph id=\"ph160\"/> and add the following at the top of the file:"
+    },
+    {
+      "pos": [
+        14501,
+        14552
+      ],
+      "content": "This allows you to more easily work with JSON data."
+    },
+    {
+      "pos": [
+        14564,
+        14699
+      ],
+      "content": "<ph id=\"ph161\">[AZURE.NOTE]</ph><ph id=\"ph162\"/> The JSON.NET package should already be installed, as it is required by the SCP.NET framework used for C# Storm topologies."
+    },
+    {
+      "pos": [
+        14704,
+        14728
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        14986,
+        15016
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        15362,
+        15540
+      ],
+      "content": "This changes the definition of the data created by the spout to use <bpt id=\"p82\">**</bpt>string<ept id=\"p82\">**</ept><ph id=\"ph163\"/> data, and the <bpt id=\"p83\">**</bpt>CustomizedInteropJSONSerializer<ept id=\"p83\">**</ept><ph id=\"ph164\"/> declared eariler in the topology (in program.cs)."
+    },
+    {
+      "pos": [
+        15545,
+        15597
+      ],
+      "content": "Replace the <bpt id=\"p84\">**</bpt>NextTuple<ept id=\"p84\">**</ept><ph id=\"ph165\"/> method with the following:"
+    },
+    {
+      "pos": [
+        15909,
+        16019
+      ],
+      "content": "This randomly generates a device ID, a value, and then uses Json.NET to emit a JSON object using these values."
+    },
+    {
+      "pos": [
+        16024,
+        16051
+      ],
+      "content": "Save the <bpt id=\"p85\">**</bpt>Spout.cs<ept id=\"p85\">**</ept><ph id=\"ph166\"/> file."
+    },
+    {
+      "pos": [
+        16053,
+        16215
+      ],
+      "content": "At this point, you have a basic topology that will generate random data and store it in Event Hubs by using the Event Hubs bolt. Next, you will create the reader.",
+      "nodes": [
+        {
+          "content": "At this point, you have a basic topology that will generate random data and store it in Event Hubs by using the Event Hubs bolt.",
+          "pos": [
+            0,
+            128
+          ]
+        },
+        {
+          "content": "Next, you will create the reader.",
+          "pos": [
+            129,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16220,
+        16241
+      ],
+      "content": "Create EventHubReader"
+    },
+    {
+      "pos": [
+        16243,
+        16349
+      ],
+      "content": "In this section, you will create a topology that reads data from Event Hubs by using the Event Hubs spout."
+    },
+    {
+      "pos": [
+        16354,
+        16414
+      ],
+      "content": "Open Visual Studio, select <bpt id=\"p86\">**</bpt>File<ept id=\"p86\">**</ept><ph id=\"ph167\"/> &gt; <bpt id=\"p87\">**</bpt>New<ept id=\"p87\">**</ept><ph id=\"ph168\"/> &gt; <bpt id=\"p88\">**</bpt>Project<ept id=\"p88\">**</ept>."
+    },
+    {
+      "pos": [
+        16419,
+        16659
+      ],
+      "content": "From the <bpt id=\"p89\">**</bpt>New Project<ept id=\"p89\">**</ept><ph id=\"ph169\"/> screen, expand <bpt id=\"p90\">**</bpt>Installed<ept id=\"p90\">**</ept><ph id=\"ph170\"/> &gt; <bpt id=\"p91\">**</bpt>Templates<ept id=\"p91\">**</ept>, and select <bpt id=\"p92\">**</bpt>HDInsight<ept id=\"p92\">**</ept>. From the list of templates, select <bpt id=\"p93\">**</bpt>Storm Application<ept id=\"p93\">**</ept>. At the bottom of the screen, enter <bpt id=\"p94\">**</bpt>EventHubReader<ept id=\"p94\">**</ept><ph id=\"ph171\"/> as the name of the application.",
+      "nodes": [
+        {
+          "content": "From the <bpt id=\"p89\">**</bpt>New Project<ept id=\"p89\">**</ept><ph id=\"ph169\"/> screen, expand <bpt id=\"p90\">**</bpt>Installed<ept id=\"p90\">**</ept><ph id=\"ph170\"/> &gt; <bpt id=\"p91\">**</bpt>Templates<ept id=\"p91\">**</ept>, and select <bpt id=\"p92\">**</bpt>HDInsight<ept id=\"p92\">**</ept>.",
+          "pos": [
+            0,
+            291
+          ]
+        },
+        {
+          "content": "From the list of templates, select <bpt id=\"p93\">**</bpt>Storm Application<ept id=\"p93\">**</ept>.",
+          "pos": [
+            292,
+            389
+          ]
+        },
+        {
+          "content": "At the bottom of the screen, enter <bpt id=\"p94\">**</bpt>EventHubReader<ept id=\"p94\">**</ept><ph id=\"ph171\"/> as the name of the application.",
+          "pos": [
+            390,
+            531
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        16665,
+        16678
+      ],
+      "content": "Configuration"
+    },
+    {
+      "pos": [
+        16683,
+        16771
+      ],
+      "content": "In <bpt id=\"p95\">**</bpt>Solution Explorer<ept id=\"p95\">**</ept>, right-click <bpt id=\"p96\">**</bpt>EventHubReader<ept id=\"p96\">**</ept><ph id=\"ph172\"/> and then select <bpt id=\"p97\">**</bpt>Properties<ept id=\"p97\">**</ept>."
+    },
+    {
+      "pos": [
+        16776,
+        16924
+      ],
+      "content": "In the project properties, select <bpt id=\"p98\">**</bpt>Settings<ept id=\"p98\">**</ept>, and then select <bpt id=\"p99\">**</bpt>This project does not contain a default settings file. Click here to create one.<ept id=\"p99\">**</ept>"
+    },
+    {
+      "pos": [
+        16929,
+        17061
+      ],
+      "content": "Enter the following settings. Use the information for the Event Hub and storage account you created earlier in the <bpt id=\"p100\">**</bpt>Value<ept id=\"p100\">**</ept><ph id=\"ph173\"/> column.",
+      "nodes": [
+        {
+          "content": "Enter the following settings.",
+          "pos": [
+            0,
+            29
+          ]
+        },
+        {
+          "content": "Use the information for the Event Hub and storage account you created earlier in the <bpt id=\"p100\">**</bpt>Value<ept id=\"p100\">**</ept><ph id=\"ph173\"/> column.",
+          "pos": [
+            30,
+            190
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        17067,
+        18245
+      ],
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "content": "<ph id=\"ph174\">&lt;table&gt;</ph><ph id=\"ph175\">\n &lt;tr&gt;</ph><ph id=\"ph176\">&lt;th style=\"text-align:left\"&gt;</ph>Name<ph id=\"ph177\">&lt;/th&gt;</ph><ph id=\"ph178\">&lt;th style=\"text-align:left\"&gt;</ph>Type<ph id=\"ph179\">&lt;/th&gt;</ph><ph id=\"ph180\">&lt;th style=\"text-align:left\"&gt;</ph>Scope<ph id=\"ph181\">&lt;/th&gt;</ph><ph id=\"ph182\">&lt;/tr&gt;</ph><ph id=\"ph183\">\n &lt;tr&gt;</ph><ph id=\"ph184\">&lt;th style=\"text-align:left\"&gt;</ph>EventHubPolicyName<ph id=\"ph185\">&lt;/th&gt;</ph><ph id=\"ph186\">&lt;th style=\"text-align:left\"&gt;</ph>string<ph id=\"ph187\">&lt;/th&gt;</ph><ph id=\"ph188\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph189\">&lt;/th&gt;</ph><ph id=\"ph190\">&lt;/tr&gt;</ph><ph id=\"ph191\">\n &lt;tr&gt;</ph><ph id=\"ph192\">&lt;th style=\"text-align:left\"&gt;</ph>EventHubPolicyKey<ph id=\"ph193\">&lt;/th&gt;</ph><ph id=\"ph194\">&lt;th style=\"text-align:left\"&gt;</ph>string<ph id=\"ph195\">&lt;/th&gt;</ph><ph id=\"ph196\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph197\">&lt;/th&gt;</ph><ph id=\"ph198\">&lt;/tr&gt;</ph><ph id=\"ph199\">\n &lt;tr&gt;</ph><ph id=\"ph200\">&lt;th style=\"text-align:left\"&gt;</ph>EventHubNamespace<ph id=\"ph201\">&lt;/th&gt;</ph><ph id=\"ph202\">&lt;th style=\"text-align:left\"&gt;</ph>string<ph id=\"ph203\">&lt;/th&gt;</ph><ph id=\"ph204\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph205\">&lt;/th&gt;</ph><ph id=\"ph206\">&lt;/tr&gt;</ph><ph id=\"ph207\">\n &lt;tr&gt;</ph><ph id=\"ph208\">&lt;th style=\"text-align:left\"&gt;</ph>EventHubName<ph id=\"ph209\">&lt;/th&gt;</ph><ph id=\"ph210\">&lt;th style=\"text-align:left\"&gt;</ph>string<ph id=\"ph211\">&lt;/th&gt;</ph><ph id=\"ph212\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph213\">&lt;/th&gt;</ph><ph id=\"ph214\">&lt;/tr&gt;</ph><ph id=\"ph215\">\n &lt;tr&gt;</ph><ph id=\"ph216\">&lt;th style=\"text-align:left\"&gt;</ph>EventHubPartitionCount<ph id=\"ph217\">&lt;/th&gt;</ph><ph id=\"ph218\">&lt;th style=\"text-align:left\"&gt;</ph>int<ph id=\"ph219\">&lt;/th&gt;</ph><ph id=\"ph220\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph221\">&lt;/th&gt;</ph><ph id=\"ph222\">&lt;/tr&gt;</ph><ph id=\"ph223\">\n &lt;tr&gt;</ph><ph id=\"ph224\">&lt;th style=\"text-align:left\"&gt;</ph>StorageConnection<ph id=\"ph225\">&lt;/th&gt;</ph><ph id=\"ph226\">&lt;th style=\"text-align:left\"&gt;</ph>(Connection String)<ph id=\"ph227\">&lt;/th&gt;</ph><ph id=\"ph228\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph229\">&lt;/th&gt;</ph><ph id=\"ph230\">&lt;/tr&gt;</ph><ph id=\"ph231\">\n &lt;tr&gt;</ph><ph id=\"ph232\">&lt;th style=\"text-align:left\"&gt;</ph>TableName<ph id=\"ph233\">&lt;/th&gt;</ph><ph id=\"ph234\">&lt;th style=\"text-align:left\"&gt;</ph>string<ph id=\"ph235\">&lt;/th&gt;</ph><ph id=\"ph236\">&lt;th style=\"text-align:left\"&gt;</ph>Application<ph id=\"ph237\">&lt;/th&gt;</ph><ph id=\"ph238\">&lt;/tr&gt;</ph><ph id=\"ph239\">\n &lt;/table&gt;</ph>"
+    },
+    {
+      "pos": [
+        18251,
+        18335
+      ],
+      "content": "For <bpt id=\"p101\">**</bpt>TableName<ept id=\"p101\">**</ept>, enter the name of the table that you want events to be stored in."
+    },
+    {
+      "pos": [
+        18341,
+        18550
+      ],
+      "content": "For <bpt id=\"p102\">**</bpt>StorageConnection<ept id=\"p102\">**</ept>, enter a value of <ph id=\"ph240\">`DefaultEndpointsProtocol=https;AccountName=myAccount;AccountKey=myKey;`</ph>. Replace <bpt id=\"p103\">**</bpt>myAccount<ept id=\"p103\">**</ept><ph id=\"ph241\"/> and <bpt id=\"p104\">**</bpt>myKey<ept id=\"p104\">**</ept><ph id=\"ph242\"/> with the storage account name and key obtained earlier.",
+      "nodes": [
+        {
+          "content": "For <bpt id=\"p102\">**</bpt>StorageConnection<ept id=\"p102\">**</ept>, enter a value of <ph id=\"ph240\">`DefaultEndpointsProtocol=https;AccountName=myAccount;AccountKey=myKey;`</ph>.",
+          "pos": [
+            0,
+            179
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p103\">**</bpt>myAccount<ept id=\"p103\">**</ept><ph id=\"ph241\"/> and <bpt id=\"p104\">**</bpt>myKey<ept id=\"p104\">**</ept><ph id=\"ph242\"/> with the storage account name and key obtained earlier.",
+          "pos": [
+            180,
+            387
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18556,
+        18647
+      ],
+      "content": "These values will be used by the topology to communicate with Event Hubs and Table Storage."
+    },
+    {
+      "pos": [
+        18652,
+        18691
+      ],
+      "content": "Save and close the <bpt id=\"p105\">**</bpt>Properties<ept id=\"p105\">**</ept><ph id=\"ph243\"/> page."
+    },
+    {
+      "pos": [
+        18697,
+        18716
+      ],
+      "content": "Define the topology"
+    },
+    {
+      "pos": [
+        18721,
+        18865
+      ],
+      "content": "In <bpt id=\"p106\">**</bpt>Solution Explorer<ept id=\"p106\">**</ept>, right-click <bpt id=\"p107\">**</bpt>Spout.cs<ept id=\"p107\">**</ept><ph id=\"ph244\"/> and select <bpt id=\"p108\">**</bpt>Delete<ept id=\"p108\">**</ept>. You are using the Java Event Hubs spout, so you do not need this file.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p106\">**</bpt>Solution Explorer<ept id=\"p106\">**</ept>, right-click <bpt id=\"p107\">**</bpt>Spout.cs<ept id=\"p107\">**</ept><ph id=\"ph244\"/> and select <bpt id=\"p108\">**</bpt>Delete<ept id=\"p108\">**</ept>.",
+          "pos": [
+            0,
+            215
+          ]
+        },
+        {
+          "content": "You are using the Java Event Hubs spout, so you do not need this file.",
+          "pos": [
+            216,
+            286
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        18870,
+        19028
+      ],
+      "content": "Open the <bpt id=\"p109\">**</bpt>Program.cs<ept id=\"p109\">**</ept><ph id=\"ph245\"/> file and add the following code immediately after the <ph id=\"ph246\">`TopologyBuilder topologyBuilder = new TopologyBuilder(\"EventHubReader\");`</ph><ph id=\"ph247\"/> line:"
+    },
+    {
+      "pos": [
+        19461,
+        19554
+      ],
+      "content": "The partition count is read and assigned to a local variable. It will be used multiple times.",
+      "nodes": [
+        {
+          "content": "The partition count is read and assigned to a local variable.",
+          "pos": [
+            0,
+            61
+          ]
+        },
+        {
+          "content": "It will be used multiple times.",
+          "pos": [
+            62,
+            93
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19560,
+        19889
+      ],
+      "content": "The <ph id=\"ph248\">`EventHubSpoutConfig`</ph><ph id=\"ph249\"/> defines the configuration for the Event Hub spout. In this case, the Event Hubs configuration information you added previously. Behind the scenes this uses the Java Event Hub spout, and will create a new instance of <bpt id=\"p110\">**</bpt>com.microsoft.eventhubs.spout.EventHubSpoutConfig<ept id=\"p110\">**</ept><ph id=\"ph250\"/> using the Event Hubs information.",
+      "nodes": [
+        {
+          "content": "The <ph id=\"ph248\">`EventHubSpoutConfig`</ph><ph id=\"ph249\"/> defines the configuration for the Event Hub spout.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "In this case, the Event Hubs configuration information you added previously.",
+          "pos": [
+            113,
+            189
+          ]
+        },
+        {
+          "content": "Behind the scenes this uses the Java Event Hub spout, and will create a new instance of <bpt id=\"p110\">**</bpt>com.microsoft.eventhubs.spout.EventHubSpoutConfig<ept id=\"p110\">**</ept><ph id=\"ph250\"/> using the Event Hubs information.",
+          "pos": [
+            190,
+            423
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        19894,
+        19918
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        20174,
+        20204
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        20336,
+        20743
+      ],
+      "content": "This instructs the topology to create a new Event Hub spout and use the <ph id=\"ph251\">`EventHubSpoutConfig`</ph><ph id=\"ph252\"/> from the previous step as the configuration. \"EventHubSpout\" sets the friendly name of the spout, and <ph id=\"ph253\">`partitionCount`</ph><ph id=\"ph254\"/> is used to set the parallelism hint. Behind the scenes this creates a new instance of <bpt id=\"p111\">**</bpt>com.microsoft.eventhubs.spout.EventHubSpout<ept id=\"p111\">**</ept><ph id=\"ph255\"/> Java component using the provided configuration information.",
+      "nodes": [
+        {
+          "content": "This instructs the topology to create a new Event Hub spout and use the <ph id=\"ph251\">`EventHubSpoutConfig`</ph><ph id=\"ph252\"/> from the previous step as the configuration.",
+          "pos": [
+            0,
+            174
+          ]
+        },
+        {
+          "content": "\"EventHubSpout\" sets the friendly name of the spout, and <ph id=\"ph253\">`partitionCount`</ph><ph id=\"ph254\"/> is used to set the parallelism hint.",
+          "pos": [
+            175,
+            321
+          ]
+        },
+        {
+          "content": "Behind the scenes this creates a new instance of <bpt id=\"p111\">**</bpt>com.microsoft.eventhubs.spout.EventHubSpout<ept id=\"p111\">**</ept><ph id=\"ph255\"/> Java component using the provided configuration information.",
+          "pos": [
+            322,
+            537
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        20748,
+        20802
+      ],
+      "content": "Add the following immediately after the previous code:"
+    },
+    {
+      "pos": [
+        20940,
+        21135
+      ],
+      "content": "This creates a custom serializer, which will be used to serialize information produced by the Java components (such as the EventHubSpout) into a JSON format that downstream C# components can use."
+    },
+    {
+      "pos": [
+        21140,
+        21164
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        21339,
+        21369
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        21661,
+        21886
+      ],
+      "content": "This code instructs the topology to use a bolt (defined in Bolt.cs). The custom serializer defined earlier is used here so that this bolt can consume data produced by upstream Java components. In this case, the EventHubSpout.",
+      "nodes": [
+        {
+          "content": "This code instructs the topology to use a bolt (defined in Bolt.cs).",
+          "pos": [
+            0,
+            68
+          ]
+        },
+        {
+          "content": "The custom serializer defined earlier is used here so that this bolt can consume data produced by upstream Java components.",
+          "pos": [
+            69,
+            192
+          ]
+        },
+        {
+          "content": "In this case, the EventHubSpout.",
+          "pos": [
+            193,
+            225
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        21894,
+        22218
+      ],
+      "content": "<ph id=\"ph256\">[AZURE.IMPORTANT]</ph><ph id=\"ph257\"/> The last parameter for SetBolt, (with a value of <ph id=\"ph258\">`true`</ph>,) enables ACK functionality for this bolt. This is required, as the EventHubSpout component expects an ACK for data that it emits. If ACKs are not returned by downstream components, the spout will stop receiving after processing around 1000 messages.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph256\">[AZURE.IMPORTANT]</ph><ph id=\"ph257\"/> The last parameter for SetBolt, (with a value of <ph id=\"ph258\">`true`</ph>,) enables ACK functionality for this bolt.",
+          "pos": [
+            0,
+            172
+          ]
+        },
+        {
+          "content": "This is required, as the EventHubSpout component expects an ACK for data that it emits.",
+          "pos": [
+            173,
+            260
+          ]
+        },
+        {
+          "content": "If ACKs are not returned by downstream components, the spout will stop receiving after processing around 1000 messages.",
+          "pos": [
+            261,
+            380
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22220,
+        22461
+      ],
+      "content": "At this point, you are done with <bpt id=\"p112\">**</bpt>Program.cs<ept id=\"p112\">**</ept>. The topology has been defined, but now you must create a helper class to write data to Table storage, then you must modify <bpt id=\"p113\">**</bpt>Bolt.cs<ept id=\"p113\">**</ept><ph id=\"ph259\"/> so that it can understand the data produced by the spout.",
+      "nodes": [
+        {
+          "content": "At this point, you are done with <bpt id=\"p112\">**</bpt>Program.cs<ept id=\"p112\">**</ept>.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "The topology has been defined, but now you must create a helper class to write data to Table storage, then you must modify <bpt id=\"p113\">**</bpt>Bolt.cs<ept id=\"p113\">**</ept><ph id=\"ph259\"/> so that it can understand the data produced by the spout.",
+          "pos": [
+            91,
+            341
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22465,
+        22695
+      ],
+      "content": "<ph id=\"ph260\">[AZURE.NOTE]</ph><ph id=\"ph261\"/> This topology will default to creating one worker process, which is sufficient for example purposes. If you are adapting this for a production cluster, you should can add the following to change the number of workers:",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph260\">[AZURE.NOTE]</ph><ph id=\"ph261\"/> This topology will default to creating one worker process, which is sufficient for example purposes.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "If you are adapting this for a production cluster, you should can add the following to change the number of workers:",
+          "pos": [
+            150,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        22823,
+        22844
+      ],
+      "content": "Create a helper class"
+    },
+    {
+      "pos": [
+        22846,
+        22951
+      ],
+      "content": "When writing data to Table storage, you must create a class that describes the data that will be written."
+    },
+    {
+      "pos": [
+        22956,
+        23100
+      ],
+      "content": "In <bpt id=\"p114\">**</bpt>Solution Explorer<ept id=\"p114\">**</ept>, right-click the <bpt id=\"p115\">**</bpt>EventHubReader<ept id=\"p115\">**</ept><ph id=\"ph262\"/> project, and select <bpt id=\"p116\">**</bpt>Add<ept id=\"p116\">**</ept>, then <bpt id=\"p117\">**</bpt>New Class<ept id=\"p117\">**</ept>. Name the new class <bpt id=\"p118\">**</bpt>Devices.cs<ept id=\"p118\">**</ept>.",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p114\">**</bpt>Solution Explorer<ept id=\"p114\">**</ept>, right-click the <bpt id=\"p115\">**</bpt>EventHubReader<ept id=\"p115\">**</ept><ph id=\"ph262\"/> project, and select <bpt id=\"p116\">**</bpt>Add<ept id=\"p116\">**</ept>, then <bpt id=\"p117\">**</bpt>New Class<ept id=\"p117\">**</ept>.",
+          "pos": [
+            0,
+            293
+          ]
+        },
+        {
+          "content": "Name the new class <bpt id=\"p118\">**</bpt>Devices.cs<ept id=\"p118\">**</ept>.",
+          "pos": [
+            294,
+            370
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        23105,
+        23173
+      ],
+      "content": "Open <bpt id=\"p119\">**</bpt>Devices.cs<ept id=\"p119\">**</ept><ph id=\"ph263\"/> and replace the default code with the following:"
+    },
+    {
+      "pos": [
+        23790,
+        24095
+      ],
+      "content": "This creates entities in Table storage that consist of a partition key (which will be set to the device ID read from Event Hub,) a unique row key, and a value that is read from Event Hub. Each entity will also have a timestamp, which will be created automatically when the entity is inserted in the table.",
+      "nodes": [
+        {
+          "content": "This creates entities in Table storage that consist of a partition key (which will be set to the device ID read from Event Hub,) a unique row key, and a value that is read from Event Hub.",
+          "pos": [
+            0,
+            187
+          ]
+        },
+        {
+          "content": "Each entity will also have a timestamp, which will be created automatically when the entity is inserted in the table.",
+          "pos": [
+            188,
+            305
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        24101,
+        24116
+      ],
+      "content": "Modify the bolt"
+    },
+    {
+      "pos": [
+        24121,
+        24257
+      ],
+      "content": "In <bpt id=\"p120\">**</bpt>Solution Explorer<ept id=\"p120\">**</ept>, expand the <bpt id=\"p121\">**</bpt>EventHubReader<ept id=\"p121\">**</ept><ph id=\"ph264\"/> project and open the <bpt id=\"p122\">**</bpt>Bolt.cs<ept id=\"p122\">**</ept><ph id=\"ph265\"/> file. Add the following at the top of the file:",
+      "nodes": [
+        {
+          "content": "In <bpt id=\"p120\">**</bpt>Solution Explorer<ept id=\"p120\">**</ept>, expand the <bpt id=\"p121\">**</bpt>EventHubReader<ept id=\"p121\">**</ept><ph id=\"ph264\"/> project and open the <bpt id=\"p122\">**</bpt>Bolt.cs<ept id=\"p122\">**</ept><ph id=\"ph265\"/> file.",
+          "pos": [
+            0,
+            252
+          ]
+        },
+        {
+          "content": "Add the following at the top of the file:",
+          "pos": [
+            253,
+            294
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        24398,
+        24495
+      ],
+      "content": "This allows you to more easily work with JSON data from the bolt and write data to Table storage."
+    },
+    {
+      "pos": [
+        24500,
+        24574
+      ],
+      "content": "Find the <ph id=\"ph266\">`private int count;`</ph><ph id=\"ph267\"/> statement and replace it with the following:"
+    },
+    {
+      "pos": [
+        24615,
+        24662
+      ],
+      "content": "This will be used when connecting to the table."
+    },
+    {
+      "pos": [
+        24667,
+        24691
+      ],
+      "content": "Find the following code:"
+    },
+    {
+      "pos": [
+        24946,
+        24976
+      ],
+      "content": "Replace it with the following:"
+    },
+    {
+      "pos": [
+        25323,
+        25570
+      ],
+      "content": "This instructs the bolt that it will be receiving a <bpt id=\"p123\">**</bpt>string<ept id=\"p123\">**</ept><ph id=\"ph268\"/> value instead of an <bpt id=\"p124\">**</bpt>int<ept id=\"p124\">**</ept>, and that the data should be deserialized using the <bpt id=\"p125\">**</bpt>CustomizedInteropJSONDeserialzer<ept id=\"p125\">**</ept><ph id=\"ph269\"/> that was declared in the topology earlier (in the program.cs file)."
+    },
+    {
+      "pos": [
+        25575,
+        25630
+      ],
+      "content": "Immediately after the previous code, add the following:"
+    },
+    {
+      "pos": [
+        25957,
+        26090
+      ],
+      "content": "This connects to the <bpt id=\"p126\">**</bpt>events<ept id=\"p126\">**</ept><ph id=\"ph270\"/> table by using the connection string configured previously. If it does not exist, it will be created.",
+      "nodes": [
+        {
+          "content": "This connects to the <bpt id=\"p126\">**</bpt>events<ept id=\"p126\">**</ept><ph id=\"ph270\"/> table by using the connection string configured previously.",
+          "pos": [
+            0,
+            149
+          ]
+        },
+        {
+          "content": "If it does not exist, it will be created.",
+          "pos": [
+            150,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        26095,
+        26157
+      ],
+      "content": "Find the <bpt id=\"p127\">**</bpt>Execute<ept id=\"p127\">**</ept><ph id=\"ph271\"/> method and replace it with the following:"
+    },
+    {
+      "pos": [
+        26770,
+        27116
+      ],
+      "content": "This uses Json.NET to parse the JSON data from the spout, and then picks out the <bpt id=\"p128\">**</bpt>deviceId<ept id=\"p128\">**</ept><ph id=\"ph272\"/> and <bpt id=\"p129\">**</bpt>deviceValue<ept id=\"p129\">**</ept><ph id=\"ph273\"/> fields. A new <bpt id=\"p130\">**</bpt>Device<ept id=\"p130\">**</ept><ph id=\"ph274\"/> object is then created by using the <bpt id=\"p131\">**</bpt>deviceId<ept id=\"p131\">**</ept><ph id=\"ph275\"/> during initialization to set the partition key for the table. The value is then set to the <bpt id=\"p132\">**</bpt>deviceValue<ept id=\"p132\">**</ept>, and finally the entity is inserted into the table.",
+      "nodes": [
+        {
+          "content": "This uses Json.NET to parse the JSON data from the spout, and then picks out the <bpt id=\"p128\">**</bpt>deviceId<ept id=\"p128\">**</ept><ph id=\"ph272\"/> and <bpt id=\"p129\">**</bpt>deviceValue<ept id=\"p129\">**</ept><ph id=\"ph273\"/> fields.",
+          "pos": [
+            0,
+            237
+          ]
+        },
+        {
+          "content": "A new <bpt id=\"p130\">**</bpt>Device<ept id=\"p130\">**</ept><ph id=\"ph274\"/> object is then created by using the <bpt id=\"p131\">**</bpt>deviceId<ept id=\"p131\">**</ept><ph id=\"ph275\"/> during initialization to set the partition key for the table.",
+          "pos": [
+            238,
+            481
+          ]
+        },
+        {
+          "content": "The value is then set to the <bpt id=\"p132\">**</bpt>deviceValue<ept id=\"p132\">**</ept>, and finally the entity is inserted into the table.",
+          "pos": [
+            482,
+            620
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27122,
+        27265
+      ],
+      "content": "After the entity is inserted into the table, <ph id=\"ph276\">`Ack()`</ph><ph id=\"ph277\"/> is called for the tuple, to inform the spout that we have successfully processed the data."
+    },
+    {
+      "pos": [
+        27273,
+        27487
+      ],
+      "content": "<ph id=\"ph278\">[AZURE.IMPORTANT]</ph><ph id=\"ph279\"/> The EventHubSpout component expects an ACK for each tuple from downstream components such as this bolt. If ACKS are not received, the EventHubSpout will assume processing for the tuple has failed.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph278\">[AZURE.IMPORTANT]</ph><ph id=\"ph279\"/> The EventHubSpout component expects an ACK for each tuple from downstream components such as this bolt.",
+          "pos": [
+            0,
+            157
+          ]
+        },
+        {
+          "content": "If ACKS are not received, the EventHubSpout will assume processing for the tuple has failed.",
+          "pos": [
+            158,
+            250
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        27489,
+        27627
+      ],
+      "content": "At this point, you have a complete topology that will read data from Event Hub, and store it in Table Storage in a table named <bpt id=\"p133\">**</bpt>events<ept id=\"p133\">**</ept>."
+    },
+    {
+      "pos": [
+        27632,
+        27653
+      ],
+      "content": "Deploy the topologies"
+    },
+    {
+      "pos": [
+        27658,
+        27773
+      ],
+      "content": "From <bpt id=\"p134\">**</bpt>Solution Explorer<ept id=\"p134\">**</ept>, right-click the <bpt id=\"p135\">**</bpt>EventHubReader<ept id=\"p135\">**</ept><ph id=\"ph280\"/> project and select <bpt id=\"p136\">**</bpt>Submit to Storm on HDInsight<ept id=\"p136\">**</ept>."
+    },
+    {
+      "pos": [
+        27779,
+        27874
+      ],
+      "content": "<ph id=\"ph281\">![</ph>submit to storm<ph id=\"ph282\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/submittostorm.png)</ph>"
+    },
+    {
+      "pos": [
+        27879,
+        28185
+      ],
+      "content": "On the <bpt id=\"p137\">**</bpt>Submit Topology<ept id=\"p137\">**</ept><ph id=\"ph283\"/> screen, select your <bpt id=\"p138\">**</bpt>Storm Cluster<ept id=\"p138\">**</ept>. Expand <bpt id=\"p139\">**</bpt>Additional Configurations<ept id=\"p139\">**</ept>, select <bpt id=\"p140\">**</bpt>Java File Paths<ept id=\"p140\">**</ept>, select <bpt id=\"p141\">**</bpt>...<ept id=\"p141\">**</ept><ph id=\"ph284\"/> and select the directory that contains the <bpt id=\"p142\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p142\">**</ept><ph id=\"ph285\"/> file that you downloaded earlier. Finally, click <bpt id=\"p143\">**</bpt>Submit<ept id=\"p143\">**</ept>.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p137\">**</bpt>Submit Topology<ept id=\"p137\">**</ept><ph id=\"ph283\"/> screen, select your <bpt id=\"p138\">**</bpt>Storm Cluster<ept id=\"p138\">**</ept>.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "Expand <bpt id=\"p139\">**</bpt>Additional Configurations<ept id=\"p139\">**</ept>, select <bpt id=\"p140\">**</bpt>Java File Paths<ept id=\"p140\">**</ept>, select <bpt id=\"p141\">**</bpt>...<ept id=\"p141\">**</ept><ph id=\"ph284\"/> and select the directory that contains the <bpt id=\"p142\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p142\">**</ept><ph id=\"ph285\"/> file that you downloaded earlier.",
+          "pos": [
+            166,
+            579
+          ]
+        },
+        {
+          "content": "Finally, click <bpt id=\"p143\">**</bpt>Submit<ept id=\"p143\">**</ept>.",
+          "pos": [
+            580,
+            648
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28191,
+        28290
+      ],
+      "content": "<ph id=\"ph286\">![</ph>Image of submission dialog<ph id=\"ph287\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/submit.png)</ph>"
+    },
+    {
+      "pos": [
+        28295,
+        28564
+      ],
+      "content": "When the topology has been submitted, the <bpt id=\"p144\">**</bpt>Storm Topologies Viewer<ept id=\"p144\">**</ept><ph id=\"ph288\"/> will appear. Select the <bpt id=\"p145\">**</bpt>EventHubReader<ept id=\"p145\">**</ept><ph id=\"ph289\"/> topology in the left pane to view statistics for the topology. Currently, nothing should be happening because no events have been written to Event Hubs yet.",
+      "nodes": [
+        {
+          "content": "When the topology has been submitted, the <bpt id=\"p144\">**</bpt>Storm Topologies Viewer<ept id=\"p144\">**</ept><ph id=\"ph288\"/> will appear.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "Select the <bpt id=\"p145\">**</bpt>EventHubReader<ept id=\"p145\">**</ept><ph id=\"ph289\"/> topology in the left pane to view statistics for the topology.",
+          "pos": [
+            141,
+            291
+          ]
+        },
+        {
+          "content": "Currently, nothing should be happening because no events have been written to Event Hubs yet.",
+          "pos": [
+            292,
+            385
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        28570,
+        28671
+      ],
+      "content": "<ph id=\"ph290\">![</ph>example storage view<ph id=\"ph291\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/topologyviewer.png)</ph>"
+    },
+    {
+      "pos": [
+        28676,
+        28791
+      ],
+      "content": "From <bpt id=\"p146\">**</bpt>Solution Explorer<ept id=\"p146\">**</ept>, right-click the <bpt id=\"p147\">**</bpt>EventHubWriter<ept id=\"p147\">**</ept><ph id=\"ph292\"/> project and select <bpt id=\"p148\">**</bpt>Submit to Storm on HDInsight<ept id=\"p148\">**</ept>."
+    },
+    {
+      "pos": [
+        28796,
+        29097
+      ],
+      "content": "On the <bpt id=\"p149\">**</bpt>Submit Topology<ept id=\"p149\">**</ept><ph id=\"ph293\"/> screen, select your <bpt id=\"p150\">**</bpt>Storm Cluster<ept id=\"p150\">**</ept>. Expand <bpt id=\"p151\">**</bpt>Additional Configurations<ept id=\"p151\">**</ept>, select <bpt id=\"p152\">**</bpt>Java File Paths<ept id=\"p152\">**</ept>, select <bpt id=\"p153\">**</bpt>...<ept id=\"p153\">**</ept><ph id=\"ph294\"/> and select the directory that contains the <bpt id=\"p154\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p154\">**</ept><ph id=\"ph295\"/> file you downloaded earlier. Finally, click <bpt id=\"p155\">**</bpt>Submit<ept id=\"p155\">**</ept>.",
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p149\">**</bpt>Submit Topology<ept id=\"p149\">**</ept><ph id=\"ph293\"/> screen, select your <bpt id=\"p150\">**</bpt>Storm Cluster<ept id=\"p150\">**</ept>.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "Expand <bpt id=\"p151\">**</bpt>Additional Configurations<ept id=\"p151\">**</ept>, select <bpt id=\"p152\">**</bpt>Java File Paths<ept id=\"p152\">**</ept>, select <bpt id=\"p153\">**</bpt>...<ept id=\"p153\">**</ept><ph id=\"ph294\"/> and select the directory that contains the <bpt id=\"p154\">**</bpt>eventhubs-storm-spout-0.9-jar-with-dependencies.jar<ept id=\"p154\">**</ept><ph id=\"ph295\"/> file you downloaded earlier.",
+          "pos": [
+            166,
+            574
+          ]
+        },
+        {
+          "content": "Finally, click <bpt id=\"p155\">**</bpt>Submit<ept id=\"p155\">**</ept>.",
+          "pos": [
+            575,
+            643
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29102,
+        29259
+      ],
+      "content": "When the topology has been submitted, refresh the topology list in the <bpt id=\"p156\">**</bpt>Storm Topologies Viewer<ept id=\"p156\">**</ept><ph id=\"ph296\"/> to verify that both topologies are running on the cluster."
+    },
+    {
+      "pos": [
+        29264,
+        29614
+      ],
+      "content": "When both topologies are running, select <bpt id=\"p157\">**</bpt>Server Explorer<ept id=\"p157\">**</ept>, then expand <bpt id=\"p158\">**</bpt>Azure<ept id=\"p158\">**</ept><ph id=\"ph297\"/> &gt; <bpt id=\"p159\">**</bpt>Storage<ept id=\"p159\">**</ept>, and select the Storage Account you created earlier. Under the Storage Account, expand <bpt id=\"p160\">**</bpt>Tables<ept id=\"p160\">**</ept>. Finally, double-click the <bpt id=\"p161\">**</bpt>events<ept id=\"p161\">**</ept><ph id=\"ph298\"/> table to open the table. You should see data that has been stored in the table from the <bpt id=\"p162\">**</bpt>EventHubReader<ept id=\"p162\">**</ept><ph id=\"ph299\"/> topology.",
+      "nodes": [
+        {
+          "content": "When both topologies are running, select <bpt id=\"p157\">**</bpt>Server Explorer<ept id=\"p157\">**</ept>, then expand <bpt id=\"p158\">**</bpt>Azure<ept id=\"p158\">**</ept><ph id=\"ph297\"/> &gt; <bpt id=\"p159\">**</bpt>Storage<ept id=\"p159\">**</ept>, and select the Storage Account you created earlier.",
+          "pos": [
+            0,
+            295
+          ]
+        },
+        {
+          "content": "Under the Storage Account, expand <bpt id=\"p160\">**</bpt>Tables<ept id=\"p160\">**</ept>.",
+          "pos": [
+            296,
+            383
+          ]
+        },
+        {
+          "content": "Finally, double-click the <bpt id=\"p161\">**</bpt>events<ept id=\"p161\">**</ept><ph id=\"ph298\"/> table to open the table.",
+          "pos": [
+            384,
+            503
+          ]
+        },
+        {
+          "content": "You should see data that has been stored in the table from the <bpt id=\"p162\">**</bpt>EventHubReader<ept id=\"p162\">**</ept><ph id=\"ph299\"/> topology.",
+          "pos": [
+            504,
+            653
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        29622,
+        29720
+      ],
+      "content": "The events are being generated by the <bpt id=\"p163\">**</bpt>EventHubWriter<ept id=\"p163\">**</ept><ph id=\"ph300\"/> topology, which writes them to Event Hub."
+    },
+    {
+      "pos": [
+        29728,
+        29846
+      ],
+      "content": "The <bpt id=\"p164\">**</bpt>EventHubReader<ept id=\"p164\">**</ept><ph id=\"ph301\"/> then reads the events from Event Hubs and stores them in Table storage in the <bpt id=\"p165\">**</bpt>events<ept id=\"p165\">**</ept><ph id=\"ph302\"/> table."
+    },
+    {
+      "pos": [
+        29851,
+        29870
+      ],
+      "content": "Stop the topologies"
+    },
+    {
+      "pos": [
+        29872,
+        29971
+      ],
+      "content": "To stop the topologies, select each topology in the <bpt id=\"p166\">**</bpt>Storm Topology Viewer<ept id=\"p166\">**</ept>, then click <bpt id=\"p167\">**</bpt>Kill<ept id=\"p167\">**</ept>."
+    },
+    {
+      "pos": [
+        29973,
+        30079
+      ],
+      "content": "<ph id=\"ph303\">![</ph>image of killing a topology<ph id=\"ph304\">](./media/hdinsight-storm-develop-csharp-event-hub-topology/killtopology.png)</ph>"
+    },
+    {
+      "pos": [
+        30084,
+        30089
+      ],
+      "content": "Notes"
+    },
+    {
+      "pos": [
+        30095,
+        30108
+      ],
+      "content": "Checkpointing"
+    },
+    {
+      "pos": [
+        30110,
+        30352
+      ],
+      "content": "The EventHubSpout periodically checkpoints its state to the Zookeeper node, which saves the current offset for messages read from the queue. This allows the component to start receiving messages at the saved offset in the following scenarios:",
+      "nodes": [
+        {
+          "content": "The EventHubSpout periodically checkpoints its state to the Zookeeper node, which saves the current offset for messages read from the queue.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "This allows the component to start receiving messages at the saved offset in the following scenarios:",
+          "pos": [
+            141,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        30356,
+        30402
+      ],
+      "content": "The component instance fails and is restarted."
+    },
+    {
+      "pos": [
+        30406,
+        30465
+      ],
+      "content": "You grow or shrink the cluster by adding or removing nodes."
+    },
+    {
+      "pos": [
+        30469,
+        30529
+      ],
+      "content": "The topology is killed and restarted <bpt id=\"p168\">**</bpt>with the same name<ept id=\"p168\">**</ept>."
+    },
+    {
+      "pos": [
+        30531,
+        30782
+      ],
+      "content": "You can also export and import the persisted checkpoints to WASB (the Azure Storage used by your HDInsight cluster.) The scripts to do this are located on the Storm on HDInsight cluster, at <bpt id=\"p169\">**</bpt>c:\\apps\\dist\\storm-0.9.3.2.2.1.0-2340\\zkdatatool-1.0\\bin<ept id=\"p169\">**</ept>."
+    },
+    {
+      "pos": [
+        30785,
+        30921
+      ],
+      "content": "<ph id=\"ph305\">[AZURE.NOTE]</ph><ph id=\"ph306\"/> The version number in the path may be different, as the version of Storm installed on the cluster may change in the future."
+    },
+    {
+      "pos": [
+        30923,
+        30957
+      ],
+      "content": "The scripts in this directory are:"
+    },
+    {
+      "pos": [
+        30961,
+        31071
+      ],
+      "content": "<bpt id=\"p170\">**</bpt>stormmeta_import.cmd<ept id=\"p170\">**</ept>: Import all Storm metadata from the cluster default storage container into Zookeeper."
+    },
+    {
+      "pos": [
+        31075,
+        31183
+      ],
+      "content": "<bpt id=\"p171\">**</bpt>stormmeta_export.cmd<ept id=\"p171\">**</ept>: Export all Storm metadata from Zookeeper to the cluster default storage container."
+    },
+    {
+      "pos": [
+        31187,
+        31254
+      ],
+      "content": "<bpt id=\"p172\">**</bpt>stormmeta_delete.cmd<ept id=\"p172\">**</ept>: Delete all Storm metadata from Zookeeper."
+    },
+    {
+      "pos": [
+        31256,
+        31454
+      ],
+      "content": "Export an import allows you to persist checkpoint data when you need to delete the cluster, but want to resume processing from the current offset in the hub when you bring a new cluster back online."
+    },
+    {
+      "pos": [
+        31458,
+        31625
+      ],
+      "content": "<ph id=\"ph307\">[AZURE.NOTE]</ph><ph id=\"ph308\"/> Since the data is persisted to the default storage container, the new cluster <bpt id=\"p173\">**</bpt>must<ept id=\"p173\">**</ept><ph id=\"ph309\"/> use the same storage account and container as the previous cluster."
+    },
+    {
+      "pos": [
+        31630,
+        31637
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        31639,
+        31839
+      ],
+      "content": "In this document, you have learned how to use the Java Event Hubs Spout and Bolt from a C# topology to work with data in Azure Event Hub. To learn more about creating C# topologies, see the following.",
+      "nodes": [
+        {
+          "content": "In this document, you have learned how to use the Java Event Hubs Spout and Bolt from a C# topology to work with data in Azure Event Hub.",
+          "pos": [
+            0,
+            137
+          ]
+        },
+        {
+          "content": "To learn more about creating C# topologies, see the following.",
+          "pos": [
+            138,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        31843,
+        31974
+      ],
+      "content": "<bpt id=\"p174\">[</bpt>Develop C# topologies for Apache Storm on HDInsight using Visual Studio<ept id=\"p174\">](hdinsight-storm-develop-csharp-visual-studio-topology.md)</ept>"
+    },
+    {
+      "pos": [
+        31978,
+        32058
+      ],
+      "content": "<bpt id=\"p175\">[</bpt>Example topologies for Storm on HDInsight<ept id=\"p175\">](hdinsight-storm-example-topology.md)</ept>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Process events from Event Hubs with Storm on HDInsight | Microsoft Azure\"\n   description=\"Learn how to process Event Hubs data with a C# Storm topology created in Visual Studio using the HDInsight Tools for Visual Studio.\"\n   services=\"hdinsight,notification hubs\"\n   documentationCenter=\"\"\n   authors=\"Blackmist\"\n   manager=\"paulettm\"\n   editor=\"cgronlun\"/>\n\n<tags\n   ms.service=\"hdinsight\"\n   ms.devlang=\"dotnet\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"big-data\"\n   ms.date=\"01/28/2016\"\n   ms.author=\"larryfr\"/>\n\n# Process events from Azure Event Hubs with Storm on HDInsight (C#)\n\nAzure Event Hubs allows you to process massive amounts of data from websites, apps, and devices. The Event Hubs spout makes it easy to use Apache Storm on HDInsight to analyze this data in real time. You can also write data to Event Hubs from Storm by using the Event Hubs bolt.\n\nIn this tutorial, you will learn how to use the HDInsight Tools for Visual Studio and the Event Hubs spout and bolt to create two hybrid C#/Java topologies:\n\n* **EventHubWriter**: Randomly generates data and writes it to Event Hubs\n\n* **EventHubReader**: Reads data from Event Hubs and stores it in Azure Table storage\n\n[AZURE.NOTE] The steps in this document only work with a Windows-based HDInsight cluster. For a Java version of this project, which will work with either a Linux-based or Windows-based cluster, see [Process events from Azure Event Hubs with Storm on HDInsight (Java)](hdinsight-storm-develop-java-event-hub-topology.md).\n\n## Prerequisites\n\n* An [Apache Storm on HDInsight cluster](hdinsight-apache-storm-tutorial-get-started.md)\n\n* An [Azure Event Hub](../event-hubs/event-hubs-csharp-ephcs-getstarted.md)\n\n* The [Azure .NET SDK](http://azure.microsoft.com/downloads/)\n\n* The [HDInsight Tools for Visual Studio](hdinsight-hadoop-visual-studio-tools-get-started.md)\n\n## Completed project\n\nYou can download a complete version of the project created in this tutorial from GitHub: [eventhub-storm-hybrid](https://github.com/Blackmist/eventhub-storm-hybrid). However, you still need to provide configuration settings by following the steps in this tutorial.\n\n> [AZURE.NOTE] When you use the completed project, you must use the **NuGet Package Manager** to restore the packages that are required by this solution.\n\n## Event Hubs spout and bolt\n\nThe Event Hubs spout and bolt are Java components that allow you to easily work with Event Hubs from Apache Storm. Although these components are written in Java, the HDInsight Tools for Visual Studio allow you to create hybrid topologies that mix C# and Java components.\n\nThe spout and bolt are distributed as a single Java archive (.jar) file named **eventhubs-storm-spout-0.9-jar-with-dependencies.jar**.\n\n### Download the .jar file\n\nThe most recent version of the **eventhubs-storm-spout-0.9-jar-with-dependencies.jar** file is included in the <a href=\"https://github.com/hdinsight/hdinsight-storm-examples\" target=\"_blank\">HDInsight Storm examples</a> project under the **lib** folder. To download the file, use one of the following methods.\n\n> [AZURE.NOTE] The spout and bolt have been submitted for inclusion in the Apache Storm project. For more information, see <a href=\"https://github.com/apache/storm/pull/336/files\">STORM-583: Initial check-in for storm-event hubs</a> in GitHub.\n\n* **Download a ZIP file**: From the <a href=\"https://github.com/hdinsight/hdinsight-storm-examples\" target=\"_blank\">HDInsight Storm examples</a> site, select **Download ZIP** in the right pane to download a .zip file that contains the project.\n\n    ![download zip button](./media/hdinsight-storm-develop-csharp-event-hub-topology/download.png)\n\n    After the file is downloaded, you can extract the archive, and the file will be in the **lib** directory.\n\n* **Clone the project**: If you have <a href=\"http://git-scm.com/\" target=\"_blank\">Git</a> installed, use the following command to clone the repository locally, then find the file in the **lib** directory.\n\n        git clone https://github.com/hdinsight/hdinsight-storm-examples\n\n## Configure Event Hub\n\nEvent Hubs is the data source for this example. Use the following steps to create a new Event Hub.\n\n1. From the [Azure Classic Portal](https://manage.windowsazure.com), select **NEW** > **Service Bus** > **Event Hub** > **Custom Create**.\n\n2. On the **Add a new Event Hub** screen, enter an **Event Hub Name**, select the **Region** to create the hub in, and create a new namespace or select an existing one. Click the **Arrow** to continue.\n\n    ![wizard page 1](./media/hdinsight-storm-develop-csharp-event-hub-topology/wiz1.png)\n\n    > [AZURE.NOTE] You should select the same **Location** as your Storm on HDInsight server to reduce latency and costs.\n\n2. On the **Configure Event Hub** screen, enter the **Partition count** and **Message Retention** values. For this example, use a partition count of 10 and a message retention of 1. Note the partition count because you will need this value later.\n\n    ![wizard page 2](./media/hdinsight-storm-develop-csharp-event-hub-topology/wiz2.png)\n\n3. After the event hub has been created, select the namespace, select **Event Hubs**, and then select the event hub that you created earlier.\n\n4. Select **Configure**, then create two new access policies by using the following information.\n\n    <table>\n    <tr><th>Name</th><th>Permissions</th></tr>\n    <tr><td>Writer</td><td>Send</td></tr>\n    <tr><td>Reader</td><td>Listen</td></tr>\n    </table>\n\n    After You create the permissions, select the **Save** icon at the bottom of the page. This creates the shared access policies that will be used to send (writer) and listen (reader) to this Event Hub.\n\n    ![policies](./media/hdinsight-storm-develop-csharp-event-hub-topology/policy.png)\n\n5. After you save the policies, use the **Shared access key generator** at the bottom of the page to retrieve the key for the **writer** and **reader** policies. Save these because they will be used later.\n\n## Configure Table storage\n\nTable storage will be used to hold the values that are read from Event Hubs because you can easily view Table storage from inside Visual Studio through **Server Explorer**. Use the following steps to create new Table storage:\n\n1. From the [Azure Classic Portal](https://manage.windowsazure.com), select **NEW** > **Data Services** > **Storage** > **Quick Create**.\n\n    ![quick create storage](./media/hdinsight-storm-develop-csharp-event-hub-topology/storagecreate.png)\n\n2. Enter a **Name** for the storage account, select a **Location**, and then click the **check mark** to create the storage account.\n\n    > [AZURE.NOTE] You should select the same **Location** as your Event Hubs and Storm on HDInsight server to reduce latency and costs.\n\n3. When the new storage account is provisioned, select the account and then use the **Manage Access Keys** link at the bottom of the page to retrieve the **Storage Account Name** and **Primary Access Key**. Save this information because it will be used later.\n\n    ![access keys](./media/hdinsight-storm-develop-csharp-event-hub-topology/managekeys.png)\n\n## Create EventHubWriter\n\nIn this section, you will create a topology that writes data to Event Hubs by using the Event Hubs bolt.\n\n1. If you have not already installed the latest version of the HDInsight Tools for Visual Studio, see <a href=\"../hdinsight-hadoop-visual-studio-tools-get-started/\" target=\"_blank\">Get started using HDInsight Tools for Visual Studio</a>.\n\n2. Open Visual Studio, select **File** > **New** and then **Project**.\n\n3. From the **New Project** screen, expand **Installed** > **Templates**, and select **HDInsight**. From the list of templates, select **Storm Application**. At the bottom of the screen, enter **EventHubWriter** as the name of the application.\n\n    ![image](./media/hdinsight-storm-develop-csharp-event-hub-topology/newproject.png)\n\n4. After the project is created, you should have the following files:\n\n    * **Program.cs**: This defines the topology for your project. Note that a default topology that consists of one spout and one bolt is created by default.\n\n    * **Spout.cs**: An example spout.\n\n    * **Bolt.cs**: An example bolt. This will be deleted because you will use the Event Hubs bolt to write to Event Hub.\n\n### Configuration\n\n1. In **Solution Explorer**, right-click **EventHubWriter**, and then select **Properties**.\n\n2. In the project properties, select **Settings**, and then select **This project does not contain a default settings file. Click here to create one.**\n\n3. Enter the following settings. Use the information for the Event Hub you created earlier in the **Value** column.\n\n    <table>\n    <tr><th style=\"text-align:left\">Name</th><th style=\"text-align:left\">Type</th><th style=\"text-align:left\">Scope</th></tr>\n    <tr><td style=\"text-align:left\">EventHubPolicyName</td><td style=\"text-align:left\">string</td><td style=\"text-align:left\">Application</td></tr>\n    <tr><td style=\"text-align:left\">EventHubPolicyKey</td><td style=\"text-align:left\">string</td><td style=\"text-align:left\">Application</td></tr>\n    <tr><td style=\"text-align:left\">EventHubNamespace</td><td style=\"text-align:left\">string</td><td style=\"text-align:left\">Application</td></tr>\n    <tr><td style=\"text-align:left\">EventHubName</td><td style=\"text-align:left\">string</td><td style=\"text-align:left\">Application</td></tr>\n    <tr><td style=\"text-align:left\">EventHubPartitionCount</td><td style=\"text-align:left\">int</td><td style=\"text-align:left\">Application</td></tr>\n    </table>\n\n4. Save and close the **Properties** page.\n\n### Define the topology\n\n1. In **Solution Explorer**, right-click **Bolt.cs**, and select **Delete**. You are using the Java Event Hubs bolt, so you do not need this file.\n\n2. Open the **Program.cs** file and add the following code immediately after the `TopologyBuilder topologyBuilder = new TopologyBuilder(\"EventHubWriter\");` line.\n\n        int partitionCount = Properties.Settings.Default.EventHubPartitionCount;\n        List<string> javaDeserializerInfo =\n            new List<string>() { \"microsoft.scp.storm.multilang.CustomizedInteropJSONDeserializer\", \"java.lang.String\" };\n\n    The first line reads the partition count from the properties defined earlier. The second line defines a deserializer that is used to deseralize JSON data produced by the spout, into a `java.lang.String` so that Java components can consume the data.\n\n4. Find the following code:\n\n        topologyBuilder.SetSpout(\n            \"Spout\",\n            Spout.Get,\n            new Dictionary<string, List<string>>()\n            {\n                {Constants.DEFAULT_STREAM_ID, new List<string>(){\"count\"}}\n            },\n            1);\n\n    Replace it with the following:\n\n        topologyBuilder.SetSpout(\n            \"Spout\",\n            Spout.Get,\n            new Dictionary<string, List<string>>()\n            {\n                {Constants.DEFAULT_STREAM_ID, new List<string>(){\"Event\"}}\n            },\n            partitionCount).\n            DeclareCustomizedJavaDeserializer(javaDeserializerInfo);\n\n    This creates a spout and uses the Event Hubs partition count as the parallelism hint for this component. This should create an instance of the spout for each partition.\n\n    This also associates the deserializer created previously with the output stream from this component. This allows the downstream EventHubSpout component to consume the data produced from the C# spout.\n\n5. Immediately after the previous code, add the following:\n\n        JavaComponentConstructor constructor =\n            JavaComponentConstructor.CreateFromClojureExpr(\n            String.Format(@\"(com.microsoft.eventhubs.bolt.EventHubBolt. (com.microsoft.eventhubs.bolt.EventHubBoltConfig. \" +\n            @\"\"\"{0}\"\" \"\"{1}\"\" \"\"{2}\"\" \"\"{3}\"\" \"\"{4}\"\" {5}))\",\n            Properties.Settings.Default.EventHubPolicyName,\n            Properties.Settings.Default.EventHubPolicyKey,\n            Properties.Settings.Default.EventHubNamespace,\n            \"servicebus.windows.net\", //suffix for servicebus fqdn\n            Properties.Settings.Default.EventHubName,\n            \"true\"));\n\n    This creates a new constructor for the Java bolt, which is used at run time to configure a new instance of the bolt. In this case, you are using the <a href=\"http://storm.apache.org/documentation/Clojure-DSL.html\" target=\"_blank\">Apache Storm Clojure DSL</a> to configure the spout with the Event Hubs configuration information you added previously. More specifically, this code is used by HDInsight at run time to do the following:\n\n    * Create a new instance of **com.microsoft.eventhubs.bolt.EventHubBoltConfig** using the Event Hubs information you provide.\n    * Create a new instance of **com.microsoft.eventhubs.bolt.EventHubBolt**, passing in the **EventHubBoltConfig** instance.\n\n6. Find the following code:\n\n        topologyBuilder.SetBolt(\n            \"Bolt\",\n            Bolt.Get,\n            new Dictionary<string, List<string>>(),\n            1).shuffleGrouping(\"Spout\");\n\n    Replace it with the following:\n\n        topologyBuilder.SetJavaBolt(\n            \"EventHubBolt\",\n            constructor,\n            partitionCount).\n            shuffleGrouping(\"Spout\");\n\n    This instructs the topology to use the **JavaComponentConstructor** from the previous step as the bolt. The component can be referred to in this topology by the friendly name of \"EventHubBolt.\" The parallelism hint is set to the number of partitions for the Event Hub, and it subscribes to data produced by the spout (\"Spout\").\n\nAt this point, you are done with the **Program.cs**. The topology has been defined, but now you must modify **Spout.cs** so that it produces data in a format that the Event Hubs bolt can use.\n\n> [AZURE.NOTE] This topology will default to creating one worker process, which is sufficient for example purposes. If you are adapting this for a production cluster, you should can add the following to change the number of workers:\n\n    StormConfig config = new StormConfig();\n    config.setNumWorkers(1);\n    topologyBuilder.SetTopologyConfig(config);\n\n\n### Modify the spout\n\nThe Event Hubs bolt expects a single string value, which it will route to Event Hub. In the following example, you will modify the default **Spout.cs** file to produce a JSON string.\n\n1. In **Solution Explorer**, open **Spout.cs** and add the following at the top of the file:\n\n        using Newtonsoft.Json;\n        using Newtonsoft.Json.Linq;\n\n    This allows you to more easily work with JSON data.\n    \n    > [AZURE.NOTE] The JSON.NET package should already be installed, as it is required by the SCP.NET framework used for C# Storm topologies.\n\n3. Find the following code:\n\n        Dictionary<string, List<Type>> outputSchema = new Dictionary<string, List<Type>>();\n        outputSchema.Add(\"default\", new List<Type>() { typeof(int) });\n        this.ctx.DeclareComponentSchema(new ComponentStreamSchema(null, outputSchema));\n\n    Replace it with the following:\n\n        Dictionary<string, List<Type>> outputSchema = new Dictionary<string, List<Type>>();\n        outputSchema.Add(\"default\", new List<Type>() { typeof(string) });\n        this.ctx.DeclareComponentSchema(new ComponentStreamSchema(null, outputSchema));\n        this.ctx.DeclareCustomizedSerializer(new CustomizedInteropJSONSerializer());\n\n    This changes the definition of the data created by the spout to use **string** data, and the **CustomizedInteropJSONSerializer** declared eariler in the topology (in program.cs).\n\n2. Replace the **NextTuple** method with the following:\n\n        public void NextTuple(Dictionary<string, Object> parms)\n        {\n            JObject eventData = new JObject();\n            eventData.Add(\"deviceId\", r.Next(10));\n            eventData.Add(\"deviceValue\", r.Next());\n            ctx.Emit(new Values(eventData.ToString(Formatting.None)));\n        }\n\n    This randomly generates a device ID, a value, and then uses Json.NET to emit a JSON object using these values.\n\n3. Save the **Spout.cs** file.\n\nAt this point, you have a basic topology that will generate random data and store it in Event Hubs by using the Event Hubs bolt. Next, you will create the reader.\n\n## Create EventHubReader\n\nIn this section, you will create a topology that reads data from Event Hubs by using the Event Hubs spout.\n\n2. Open Visual Studio, select **File** > **New** > **Project**.\n\n3. From the **New Project** screen, expand **Installed** > **Templates**, and select **HDInsight**. From the list of templates, select **Storm Application**. At the bottom of the screen, enter **EventHubReader** as the name of the application.\n\n### Configuration\n\n1. In **Solution Explorer**, right-click **EventHubReader** and then select **Properties**.\n\n2. In the project properties, select **Settings**, and then select **This project does not contain a default settings file. Click here to create one.**\n\n3. Enter the following settings. Use the information for the Event Hub and storage account you created earlier in the **Value** column.\n\n    <table>\n    <tr><th style=\"text-align:left\">Name</th><th style=\"text-align:left\">Type</th><th style=\"text-align:left\">Scope</th></tr>\n    <tr><th style=\"text-align:left\">EventHubPolicyName</th><th style=\"text-align:left\">string</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">EventHubPolicyKey</th><th style=\"text-align:left\">string</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">EventHubNamespace</th><th style=\"text-align:left\">string</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">EventHubName</th><th style=\"text-align:left\">string</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">EventHubPartitionCount</th><th style=\"text-align:left\">int</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">StorageConnection</th><th style=\"text-align:left\">(Connection String)</th><th style=\"text-align:left\">Application</th></tr>\n    <tr><th style=\"text-align:left\">TableName</th><th style=\"text-align:left\">string</th><th style=\"text-align:left\">Application</th></tr>\n    </table>\n\n    For **TableName**, enter the name of the table that you want events to be stored in.\n\n    For **StorageConnection**, enter a value of `DefaultEndpointsProtocol=https;AccountName=myAccount;AccountKey=myKey;`. Replace **myAccount** and **myKey** with the storage account name and key obtained earlier.\n\n    These values will be used by the topology to communicate with Event Hubs and Table Storage.\n\n4. Save and close the **Properties** page.\n\n### Define the topology\n\n1. In **Solution Explorer**, right-click **Spout.cs** and select **Delete**. You are using the Java Event Hubs spout, so you do not need this file.\n\n2. Open the **Program.cs** file and add the following code immediately after the `TopologyBuilder topologyBuilder = new TopologyBuilder(\"EventHubReader\");` line:\n\n        int partitionCount = Properties.Settings.Default.EventHubPartitionCount;\n        EventHubSpoutConfig ehConfig = new EventHubSpoutConfig(\n                Properties.Settings.Default.EventHubPolicyName,\n                Properties.Settings.Default.EventHubPolicyKey,\n                Properties.Settings.Default.EventHubNamespace,\n                Properties.Settings.Default.EventHubName,\n                partitionCount);\n\n    The partition count is read and assigned to a local variable. It will be used multiple times.\n\n    The `EventHubSpoutConfig` defines the configuration for the Event Hub spout. In this case, the Event Hubs configuration information you added previously. Behind the scenes this uses the Java Event Hub spout, and will create a new instance of **com.microsoft.eventhubs.spout.EventHubSpoutConfig** using the Event Hubs information.\n\n5. Find the following code:\n\n        topologyBuilder.SetSpout(\n            \"Spout\",\n            Spout.Get,\n            new Dictionary<string, List<string>>()\n            {\n                {Constants.DEFAULT_STREAM_ID, new List<string>(){\"count\"}}\n            },\n            1);\n\n    Replace it with the following:\n\n        topologyBuilder.SetEventHubSpout(\n            \"EventHubSpout\", \n            ehConfig, \n            partitionCount); \n\n    This instructs the topology to create a new Event Hub spout and use the `EventHubSpoutConfig` from the previous step as the configuration. \"EventHubSpout\" sets the friendly name of the spout, and `partitionCount` is used to set the parallelism hint. Behind the scenes this creates a new instance of **com.microsoft.eventhubs.spout.EventHubSpout** Java component using the provided configuration information.\n\n2. Add the following immediately after the previous code:\n\n         List<string> javaSerializerInfo = new List<string>() { \"microsoft.scp.storm.multilang.CustomizedInteropJSONSerializer\" };\n\n    This creates a custom serializer, which will be used to serialize information produced by the Java components (such as the EventHubSpout) into a JSON format that downstream C# components can use.\n\n3. Find the following code:\n\n        topologyBuilder.SetBolt(\n            \"Bolt\",\n            Bolt.Get,\n            new Dictionary<string, List<string>>(),\n            1).shuffleGrouping(\"Spout\");\n\n    Replace it with the following:\n\n        topologyBuilder.SetBolt(\n            \"Bolt\",\n            Bolt.Get,\n            new Dictionary<string, List<string>>(),\n            partitionCount,\n            true).\n            DeclareCustomizedJavaSerializer(javaSerializerInfo).\n            shuffleGrouping(\"EventHubSpout\");\n\n    This code instructs the topology to use a bolt (defined in Bolt.cs). The custom serializer defined earlier is used here so that this bolt can consume data produced by upstream Java components. In this case, the EventHubSpout.\n\n    > [AZURE.IMPORTANT] The last parameter for SetBolt, (with a value of `true`,) enables ACK functionality for this bolt. This is required, as the EventHubSpout component expects an ACK for data that it emits. If ACKs are not returned by downstream components, the spout will stop receiving after processing around 1000 messages.\n\nAt this point, you are done with **Program.cs**. The topology has been defined, but now you must create a helper class to write data to Table storage, then you must modify **Bolt.cs** so that it can understand the data produced by the spout.\n\n> [AZURE.NOTE] This topology will default to creating one worker process, which is sufficient for example purposes. If you are adapting this for a production cluster, you should can add the following to change the number of workers:\n\n    StormConfig config = new StormConfig();\n    config.setNumWorkers(1);\n    topologyBuilder.SetTopologyConfig(config);\n\n\n### Create a helper class\n\nWhen writing data to Table storage, you must create a class that describes the data that will be written.\n\n1. In **Solution Explorer**, right-click the **EventHubReader** project, and select **Add**, then **New Class**. Name the new class **Devices.cs**.\n\n2. Open **Devices.cs** and replace the default code with the following:\n\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Text;\n        using System.Threading.Tasks;\n        using Microsoft.WindowsAzure.Storage.Table;\n\n        namespace EventHubReader\n        {\n            class Device : TableEntity\n            {\n                public int value { get; set; }\n\n                public Device() { }\n                public Device(int id)\n                {\n                    this.PartitionKey = id.ToString();\n                    this.RowKey = System.Guid.NewGuid().ToString();\n                }\n            }\n        }\n\n    This creates entities in Table storage that consist of a partition key (which will be set to the device ID read from Event Hub,) a unique row key, and a value that is read from Event Hub. Each entity will also have a timestamp, which will be created automatically when the entity is inserted in the table.\n\n### Modify the bolt\n\n1. In **Solution Explorer**, expand the **EventHubReader** project and open the **Bolt.cs** file. Add the following at the top of the file:\n\n        using Newtonsoft.Json.Linq;\n        using Microsoft.WindowsAzure.Storage;\n        using Microsoft.WindowsAzure.Storage.Table;\n\n    This allows you to more easily work with JSON data from the bolt and write data to Table storage.\n\n2. Find the `private int count;` statement and replace it with the following:\n\n        private CloudTable table;\n\n    This will be used when connecting to the table.\n\n4. Find the following code:\n\n        Dictionary<string, List<Type>> inputSchema = new Dictionary<string, List<Type>>();\n        inputSchema.Add(\"default\", new List<Type>() { typeof(int) });\n        this.ctx.DeclareComponentSchema(new ComponentStreamSchema(inputSchema, null));\n\n    Replace it with the following:\n\n        Dictionary<string, List<Type>> inputSchema = new Dictionary<string, List<Type>>();\n        inputSchema.Add(\"default\", new List<Type>() { typeof(string) });\n        this.ctx.DeclareComponentSchema(new ComponentStreamSchema(inputSchema, null));\n        this.ctx.DeclareCustomizedDeserializer(new CustomizedInteropJSONDeserializer());\n\n    This instructs the bolt that it will be receiving a **string** value instead of an **int**, and that the data should be deserialized using the **CustomizedInteropJSONDeserialzer** that was declared in the topology earlier (in the program.cs file).\n\n3. Immediately after the previous code, add the following:\n\n        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Properties.Settings.Default.StorageConnection);\n        CloudTableClient tableClient = storageAccount.CreateCloudTableClient();\n        table = tableClient.GetTableReference(Properties.Settings.Default.TableName);\n        table.CreateIfNotExists();\n\n    This connects to the **events** table by using the connection string configured previously. If it does not exist, it will be created.\n\n2. Find the **Execute** method and replace it with the following:\n\n        public void Execute(SCPTuple tuple)\n        {\n            Context.Logger.Info(\"Processing events\");\n            string eventValue = (string)tuple.GetValue(0);\n            if (eventValue != null)\n            {\n                JObject eventData = JObject.Parse(eventValue);\n\n                Device device = new Device((int)eventData[\"deviceId\"]);\n                device.value = (int)eventData[\"deviceValue\"];\n\n                TableOperation insertOperation = TableOperation.Insert(device);\n\n                table.Execute(insertOperation);\n                this.ctx.Ack(tuple);\n            }\n        }\n\n    This uses Json.NET to parse the JSON data from the spout, and then picks out the **deviceId** and **deviceValue** fields. A new **Device** object is then created by using the **deviceId** during initialization to set the partition key for the table. The value is then set to the **deviceValue**, and finally the entity is inserted into the table.\n\n    After the entity is inserted into the table, `Ack()` is called for the tuple, to inform the spout that we have successfully processed the data.\n\n    > [AZURE.IMPORTANT] The EventHubSpout component expects an ACK for each tuple from downstream components such as this bolt. If ACKS are not received, the EventHubSpout will assume processing for the tuple has failed.\n\nAt this point, you have a complete topology that will read data from Event Hub, and store it in Table Storage in a table named **events**.\n\n## Deploy the topologies\n\n1. From **Solution Explorer**, right-click the **EventHubReader** project and select **Submit to Storm on HDInsight**.\n\n    ![submit to storm](./media/hdinsight-storm-develop-csharp-event-hub-topology/submittostorm.png)\n\n2. On the **Submit Topology** screen, select your **Storm Cluster**. Expand **Additional Configurations**, select **Java File Paths**, select **...** and select the directory that contains the **eventhubs-storm-spout-0.9-jar-with-dependencies.jar** file that you downloaded earlier. Finally, click **Submit**.\n\n    ![Image of submission dialog](./media/hdinsight-storm-develop-csharp-event-hub-topology/submit.png)\n\n3. When the topology has been submitted, the **Storm Topologies Viewer** will appear. Select the **EventHubReader** topology in the left pane to view statistics for the topology. Currently, nothing should be happening because no events have been written to Event Hubs yet.\n\n    ![example storage view](./media/hdinsight-storm-develop-csharp-event-hub-topology/topologyviewer.png)\n\n4. From **Solution Explorer**, right-click the **EventHubWriter** project and select **Submit to Storm on HDInsight**.\n\n2. On the **Submit Topology** screen, select your **Storm Cluster**. Expand **Additional Configurations**, select **Java File Paths**, select **...** and select the directory that contains the **eventhubs-storm-spout-0.9-jar-with-dependencies.jar** file you downloaded earlier. Finally, click **Submit**.\n\n5. When the topology has been submitted, refresh the topology list in the **Storm Topologies Viewer** to verify that both topologies are running on the cluster.\n\n6. When both topologies are running, select **Server Explorer**, then expand **Azure** > **Storage**, and select the Storage Account you created earlier. Under the Storage Account, expand **Tables**. Finally, double-click the **events** table to open the table. You should see data that has been stored in the table from the **EventHubReader** topology.\n\n    * The events are being generated by the **EventHubWriter** topology, which writes them to Event Hub.\n\n    * The **EventHubReader** then reads the events from Event Hubs and stores them in Table storage in the **events** table.\n\n## Stop the topologies\n\nTo stop the topologies, select each topology in the **Storm Topology Viewer**, then click **Kill**.\n\n![image of killing a topology](./media/hdinsight-storm-develop-csharp-event-hub-topology/killtopology.png)\n\n## Notes\n\n### Checkpointing\n\nThe EventHubSpout periodically checkpoints its state to the Zookeeper node, which saves the current offset for messages read from the queue. This allows the component to start receiving messages at the saved offset in the following scenarios:\n\n* The component instance fails and is restarted.\n\n* You grow or shrink the cluster by adding or removing nodes.\n\n* The topology is killed and restarted **with the same name**.\n\nYou can also export and import the persisted checkpoints to WASB (the Azure Storage used by your HDInsight cluster.) The scripts to do this are located on the Storm on HDInsight cluster, at **c:\\apps\\dist\\storm-0.9.3.2.2.1.0-2340\\zkdatatool-1.0\\bin**.\n\n>[AZURE.NOTE] The version number in the path may be different, as the version of Storm installed on the cluster may change in the future.\n\nThe scripts in this directory are:\n\n* **stormmeta_import.cmd**: Import all Storm metadata from the cluster default storage container into Zookeeper.\n\n* **stormmeta_export.cmd**: Export all Storm metadata from Zookeeper to the cluster default storage container.\n\n* **stormmeta_delete.cmd**: Delete all Storm metadata from Zookeeper.\n\nExport an import allows you to persist checkpoint data when you need to delete the cluster, but want to resume processing from the current offset in the hub when you bring a new cluster back online.\n\n> [AZURE.NOTE] Since the data is persisted to the default storage container, the new cluster **must** use the same storage account and container as the previous cluster.\n\n## Summary\n\nIn this document, you have learned how to use the Java Event Hubs Spout and Bolt from a C# topology to work with data in Azure Event Hub. To learn more about creating C# topologies, see the following.\n\n* [Develop C# topologies for Apache Storm on HDInsight using Visual Studio](hdinsight-storm-develop-csharp-visual-studio-topology.md)\n\n* [Example topologies for Storm on HDInsight](hdinsight-storm-example-topology.md)\n \n"
+}

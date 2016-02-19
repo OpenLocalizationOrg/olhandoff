@@ -1,0 +1,970 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        23,
+        85
+      ],
+      "content": "Use Azure Data Lake Store with Apache Storm on Azure HDInsight"
+    },
+    {
+      "pos": [
+        100,
+        315
+      ],
+      "content": "Learn how to write data to Azure Data Lake Store from an Apache Storm topology on HDInsight. This document, and the associated example, demonstrate how the HdfsBolt component can be used to write to Data Lake Store.",
+      "nodes": [
+        {
+          "content": "Learn how to write data to Azure Data Lake Store from an Apache Storm topology on HDInsight.",
+          "pos": [
+            0,
+            92
+          ]
+        },
+        {
+          "content": "This document, and the associated example, demonstrate how the HdfsBolt component can be used to write to Data Lake Store.",
+          "pos": [
+            93,
+            215
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        574,
+        632
+      ],
+      "content": "Use Azure Data Lake Store with Apache Storm with HDInsight"
+    },
+    {
+      "pos": [
+        634,
+        1055
+      ],
+      "content": "Azure Data Lake Store is an HDFS compatible cloud storage service that provides high throughput, availability, durability, and reliability for your data. In this document, you will learn how to use a Java-based Storm topology to write data to Azure Data Lake Store using the <bpt id=\"p1\">[</bpt>HdfsBolt<ept id=\"p1\">](http://storm.apache.org/javadoc/apidocs/org/apache/storm/hdfs/bolt/HdfsBolt.html)</ept><ph id=\"ph2\"/> component, which is provided as part of Apache Storm.",
+      "nodes": [
+        {
+          "content": "Azure Data Lake Store is an HDFS compatible cloud storage service that provides high throughput, availability, durability, and reliability for your data.",
+          "pos": [
+            0,
+            153
+          ]
+        },
+        {
+          "content": "In this document, you will learn how to use a Java-based Storm topology to write data to Azure Data Lake Store using the <bpt id=\"p1\">[</bpt>HdfsBolt<ept id=\"p1\">](http://storm.apache.org/javadoc/apidocs/org/apache/storm/hdfs/bolt/HdfsBolt.html)</ept><ph id=\"ph2\"/> component, which is provided as part of Apache Storm.",
+          "pos": [
+            154,
+            473
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1059,
+        1300
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.IMPORTANT]</ph><ph id=\"ph4\"/> The example topology used in this document relies on components that are included with Storm on HDInsight clusters, and may require modification to work with Azure Data Lake Store when used with other Apache Storm clusters."
+    },
+    {
+      "pos": [
+        1304,
+        1317
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1321,
+        1431
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Java JDK 1.7<ept id=\"p2\">](https://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)</ept><ph id=\"ph5\"/> or higher"
+    },
+    {
+      "pos": [
+        1434,
+        1484
+      ],
+      "content": "<bpt id=\"p3\">[</bpt>Maven 3.x<ept id=\"p3\">](https://maven.apache.org/download.cgi)</ept>"
+    },
+    {
+      "pos": [
+        1487,
+        1508
+      ],
+      "content": "An Azure subscription"
+    },
+    {
+      "pos": [
+        1511,
+        1640
+      ],
+      "content": "A Storm on HDInsight cluster. Information on creating a cluster that can use Azure Data Lake Store are included in this document.",
+      "nodes": [
+        {
+          "content": "A Storm on HDInsight cluster.",
+          "pos": [
+            0,
+            29
+          ]
+        },
+        {
+          "content": "Information on creating a cluster that can use Azure Data Lake Store are included in this document.",
+          "pos": [
+            30,
+            129
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1645,
+        1676
+      ],
+      "content": "Configure environment variables"
+    },
+    {
+      "pos": [
+        1678,
+        1891
+      ],
+      "content": "The following environment variables may be set when you install Java and the JDK on your development workstation. However, you should check that they exist and that they contain the correct values for your system.",
+      "nodes": [
+        {
+          "content": "The following environment variables may be set when you install Java and the JDK on your development workstation.",
+          "pos": [
+            0,
+            113
+          ]
+        },
+        {
+          "content": "However, you should check that they exist and that they contain the correct values for your system.",
+          "pos": [
+            114,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1895,
+        2188
+      ],
+      "content": "<bpt id=\"p4\">__</bpt>JAVA_HOME<ept id=\"p4\">__</ept><ph id=\"ph6\"/> - should point to the directory where the Java runtime environment (JRE) is installed. For example, in a Unix or Linux distribution, it should have a value similar to <ph id=\"ph7\">`/usr/lib/jvm/java-7-oracle`</ph>. In Windows, it would have a value similar to <ph id=\"ph8\">`c:\\Program Files (x86)\\Java\\jre1.7`</ph>.",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p4\">__</bpt>JAVA_HOME<ept id=\"p4\">__</ept><ph id=\"ph6\"/> - should point to the directory where the Java runtime environment (JRE) is installed.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "For example, in a Unix or Linux distribution, it should have a value similar to <ph id=\"ph7\">`/usr/lib/jvm/java-7-oracle`</ph>.",
+          "pos": [
+            153,
+            280
+          ]
+        },
+        {
+          "content": "In Windows, it would have a value similar to <ph id=\"ph8\">`c:\\Program Files (x86)\\Java\\jre1.7`</ph>.",
+          "pos": [
+            281,
+            381
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2192,
+        2238
+      ],
+      "content": "<bpt id=\"p5\">__</bpt>PATH<ept id=\"p5\">__</ept><ph id=\"ph9\"/> - should contain the following paths:"
+    },
+    {
+      "pos": [
+        2246,
+        2285
+      ],
+      "content": "<bpt id=\"p6\">__</bpt>JAVA\\_HOME<ept id=\"p6\">__</ept><ph id=\"ph10\"/> (or the equivalent path)"
+    },
+    {
+      "pos": [
+        2297,
+        2340
+      ],
+      "content": "<bpt id=\"p7\">__</bpt>JAVA\\_HOME\\bin<ept id=\"p7\">__</ept><ph id=\"ph11\"/> (or the equivalent path)"
+    },
+    {
+      "pos": [
+        2352,
+        2390
+      ],
+      "content": "The directory where Maven is installed"
+    },
+    {
+      "pos": [
+        2394,
+        2417
+      ],
+      "content": "Topology implementation"
+    },
+    {
+      "pos": [
+        2419,
+        2507
+      ],
+      "content": "The example used in this document is written in Java, and uses the following components:"
+    },
+    {
+      "pos": [
+        2511,
+        2586
+      ],
+      "content": "<bpt id=\"p8\">__</bpt>TickSpout<ept id=\"p8\">__</ept>: Generates the data used by other components in the topology."
+    },
+    {
+      "pos": [
+        2590,
+        2645
+      ],
+      "content": "<bpt id=\"p9\">__</bpt>PartialCount<ept id=\"p9\">__</ept>: Counts events generated by TickSpout."
+    },
+    {
+      "pos": [
+        2649,
+        2705
+      ],
+      "content": "<bpt id=\"p10\">__</bpt>FinalCount<ept id=\"p10\">__</ept>: Aggregates count data from PartialCount."
+    },
+    {
+      "pos": [
+        2709,
+        2877
+      ],
+      "content": "<bpt id=\"p11\">__</bpt>ADLStoreBolt<ept id=\"p11\">__</ept>: Writes data to Azure Data Lake Store using the <bpt id=\"p12\">[</bpt>HdfsBolt<ept id=\"p12\">](http://storm.apache.org/javadoc/apidocs/org/apache/storm/hdfs/bolt/HdfsBolt.html)</ept><ph id=\"ph12\"/> component."
+    },
+    {
+      "pos": [
+        2879,
+        3093
+      ],
+      "content": "The project containing this topology is available as a download from <bpt id=\"p13\">[</bpt>https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store<ept id=\"p13\">](https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store)</ept>."
+    },
+    {
+      "pos": [
+        3098,
+        3124
+      ],
+      "content": "Understanding ADLStoreBolt"
+    },
+    {
+      "pos": [
+        3126,
+        3454
+      ],
+      "content": "The ADLStoreBolt is the name used for the HdfsBolt instance in the topology that writes to Azure Data Lake. This is not a special version of HdfsBolt created by Microsoft; however it does rely on core-site configuration values, as well as Hadoop components that are included with Azure HDInsight to communication with Data Lake.",
+      "nodes": [
+        {
+          "content": "The ADLStoreBolt is the name used for the HdfsBolt instance in the topology that writes to Azure Data Lake.",
+          "pos": [
+            0,
+            107
+          ]
+        },
+        {
+          "content": "This is not a special version of HdfsBolt created by Microsoft; however it does rely on core-site configuration values, as well as Hadoop components that are included with Azure HDInsight to communication with Data Lake.",
+          "pos": [
+            108,
+            328
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3456,
+        3745
+      ],
+      "content": "Specifically, when you create an HDInsight cluster, you can associate it with an Azure Data Lake Store. This writes entries into core-site for the Data Lake Store you selected, which are used by components such as hadoop-client and hadoop-hdfs to enable communication with Data Lake Store.",
+      "nodes": [
+        {
+          "content": "Specifically, when you create an HDInsight cluster, you can associate it with an Azure Data Lake Store.",
+          "pos": [
+            0,
+            103
+          ]
+        },
+        {
+          "content": "This writes entries into core-site for the Data Lake Store you selected, which are used by components such as hadoop-client and hadoop-hdfs to enable communication with Data Lake Store.",
+          "pos": [
+            104,
+            289
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3749,
+        4005
+      ],
+      "content": "<ph id=\"ph13\">[AZURE.NOTE]</ph><ph id=\"ph14\"/> Microsoft has contributed code to the Apache Hadoop and Storm projects that enables communication with Azure Data Lake Store and Azure Blob storage, but this functionality may not be included by default in other Hadoop and Storm distributions."
+    },
+    {
+      "pos": [
+        4007,
+        4068
+      ],
+      "content": "The configuration for HdfsBolt in the topology is as follows:"
+    },
+    {
+      "pos": [
+        5423,
+        5615
+      ],
+      "content": "If you are familiar with using HdfsBolt, you will notice that this is all pretty standard configuration except for the URL. The URL provides the path to the root of your Azure Data Lake Store.",
+      "nodes": [
+        {
+          "content": "If you are familiar with using HdfsBolt, you will notice that this is all pretty standard configuration except for the URL.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "The URL provides the path to the root of your Azure Data Lake Store.",
+          "pos": [
+            124,
+            192
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5617,
+        5834
+      ],
+      "content": "Since writing to Data Lake Store uses HdfsBolt, and is just a URL change, you should be able to take any existing topology that writes to HDFS or WASB using HdfsBolt, and easily change it to use Azure Data Lake Store."
+    },
+    {
+      "pos": [
+        5838,
+        5885
+      ],
+      "content": "Create an HDInsight cluster and Data Lake Store"
+    },
+    {
+      "pos": [
+        5887,
+        6184
+      ],
+      "content": "Create a new Storm on HDInsight cluster using the steps in the <bpt id=\"p14\">[</bpt>Use HDInsight with Data Lake Store using Azure<ept id=\"p14\">](../data-lake-store/data-lake-store-hdinsight-hadoop-use-portal.md)</ept><ph id=\"ph15\"/> document. The steps in this document will walk you through creating a new HDInsight cluster and Azure Data Lake Store.",
+      "nodes": [
+        {
+          "content": "Create a new Storm on HDInsight cluster using the steps in the <bpt id=\"p14\">[</bpt>Use HDInsight with Data Lake Store using Azure<ept id=\"p14\">](../data-lake-store/data-lake-store-hdinsight-hadoop-use-portal.md)</ept><ph id=\"ph15\"/> document.",
+          "pos": [
+            0,
+            243
+          ]
+        },
+        {
+          "content": "The steps in this document will walk you through creating a new HDInsight cluster and Azure Data Lake Store.",
+          "pos": [
+            244,
+            352
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6188,
+        6330
+      ],
+      "content": "<ph id=\"ph16\">[AZURE.IMPORTANT]</ph><ph id=\"ph17\"/> When you create the HDInsight cluster, you must select <bpt id=\"p15\">__</bpt>Storm<ept id=\"p15\">__</ept><ph id=\"ph18\"/> as the cluster type. The OS can be either Windows or Linux.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph16\">[AZURE.IMPORTANT]</ph><ph id=\"ph17\"/> When you create the HDInsight cluster, you must select <bpt id=\"p15\">__</bpt>Storm<ept id=\"p15\">__</ept><ph id=\"ph18\"/> as the cluster type.",
+          "pos": [
+            0,
+            192
+          ]
+        },
+        {
+          "content": "The OS can be either Windows or Linux.",
+          "pos": [
+            193,
+            231
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6334,
+        6364
+      ],
+      "content": "Build and package the topology"
+    },
+    {
+      "pos": [
+        6369,
+        6582
+      ],
+      "content": "Download the example project from <bpt id=\"p16\">[</bpt>https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store\n<ept id=\"p16\">](https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store\n)</ept><ph id=\"ph19\"/> to your development environment."
+    },
+    {
+      "pos": [
+        6587,
+        6892
+      ],
+      "content": "Open the <ph id=\"ph20\">`StormToDataLake\\src\\main\\java\\com\\microsoft\\example\\StormToDataLakeStore.java`</ph><ph id=\"ph21\"/> file in an editor and find the line that contains <ph id=\"ph22\">`.withFsUrl(\"adl://MYDATALAKE.azuredatalakestore.net/\")`</ph>. Change <bpt id=\"p17\">__</bpt>MYDATALAKE<ept id=\"p17\">__</ept><ph id=\"ph23\"/> to the name of the Azure Data Lake Store you used when creating your HDInsight server.",
+      "nodes": [
+        {
+          "content": "Open the <ph id=\"ph20\">`StormToDataLake\\src\\main\\java\\com\\microsoft\\example\\StormToDataLakeStore.java`</ph><ph id=\"ph21\"/> file in an editor and find the line that contains <ph id=\"ph22\">`.withFsUrl(\"adl://MYDATALAKE.azuredatalakestore.net/\")`</ph>.",
+          "pos": [
+            0,
+            249
+          ]
+        },
+        {
+          "content": "Change <bpt id=\"p17\">__</bpt>MYDATALAKE<ept id=\"p17\">__</ept><ph id=\"ph23\"/> to the name of the Azure Data Lake Store you used when creating your HDInsight server.",
+          "pos": [
+            250,
+            413
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6897,
+        7071
+      ],
+      "content": "From a command prompt, terminal, or shell session, change directories to the root of the downloaded project, and run the following commands to build and package the topology."
+    },
+    {
+      "pos": [
+        7122,
+        7312
+      ],
+      "content": "Once the build and packaging completes, there will be a new directory named <ph id=\"ph24\">`target`</ph>, that contains a file named <ph id=\"ph25\">`StormToDataLakeStore-1.0-SNAPSHOT.jar`</ph>. This contains the compiled topology.",
+      "nodes": [
+        {
+          "content": "Once the build and packaging completes, there will be a new directory named <ph id=\"ph24\">`target`</ph>, that contains a file named <ph id=\"ph25\">`StormToDataLakeStore-1.0-SNAPSHOT.jar`</ph>.",
+          "pos": [
+            0,
+            191
+          ]
+        },
+        {
+          "content": "This contains the compiled topology.",
+          "pos": [
+            192,
+            228
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7316,
+        7355
+      ],
+      "content": "Deploy and run on Linux-based HDInsight"
+    },
+    {
+      "pos": [
+        7357,
+        7465
+      ],
+      "content": "If you created a Linux-based Storm on HDInsight cluster, use the steps below to deploy and run the topology."
+    },
+    {
+      "pos": [
+        7470,
+        7672
+      ],
+      "content": "Use the following command to copy the topology to the HDInsight cluster. Replace <bpt id=\"p18\">__</bpt>USER<ept id=\"p18\">__</ept><ph id=\"ph26\"/> with the SSH user name you used when creating the cluster. Replace <bpt id=\"p19\">__</bpt>CLUSTERNAME<ept id=\"p19\">__</ept><ph id=\"ph27\"/> with the name of the cluster.",
+      "nodes": [
+        {
+          "content": "Use the following command to copy the topology to the HDInsight cluster.",
+          "pos": [
+            0,
+            72
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p18\">__</bpt>USER<ept id=\"p18\">__</ept><ph id=\"ph26\"/> with the SSH user name you used when creating the cluster.",
+          "pos": [
+            73,
+            203
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p19\">__</bpt>CLUSTERNAME<ept id=\"p19\">__</ept><ph id=\"ph27\"/> with the name of the cluster.",
+          "pos": [
+            204,
+            312
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7818,
+        8036
+      ],
+      "content": "When prompted, enter the password used when creating the SSH user for the cluster. If you used a public key instead of a password, you may need to use the <ph id=\"ph28\">`-i`</ph><ph id=\"ph29\"/> parameter to specify the path to the matching private key.",
+      "nodes": [
+        {
+          "content": "When prompted, enter the password used when creating the SSH user for the cluster.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "If you used a public key instead of a password, you may need to use the <ph id=\"ph28\">`-i`</ph><ph id=\"ph29\"/> parameter to specify the path to the matching private key.",
+          "pos": [
+            83,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8048,
+        8329
+      ],
+      "content": "<ph id=\"ph30\">[AZURE.NOTE]</ph><ph id=\"ph31\"/> If you are using a Windows client for development, you may not have an <ph id=\"ph32\">`scp`</ph><ph id=\"ph33\"/> command. If so, you can use <ph id=\"ph34\">`pscp`</ph>, which is available from <bpt id=\"p20\">[</bpt>http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html<ept id=\"p20\">](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph30\">[AZURE.NOTE]</ph><ph id=\"ph31\"/> If you are using a Windows client for development, you may not have an <ph id=\"ph32\">`scp`</ph><ph id=\"ph33\"/> command.",
+          "pos": [
+            0,
+            166
+          ]
+        },
+        {
+          "content": "If so, you can use <ph id=\"ph34\">`pscp`</ph>, which is available from <bpt id=\"p20\">[</bpt>http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html<ept id=\"p20\">](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)</ept>.",
+          "pos": [
+            167,
+            408
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8334,
+        8555
+      ],
+      "content": "Once the upload completes, use the following to connect to the HDInsight cluster using SSH. Replace <bpt id=\"p21\">__</bpt>USER<ept id=\"p21\">__</ept><ph id=\"ph35\"/> with the SSH user name you used when creating the cluster. Replace <bpt id=\"p22\">__</bpt>CLUSTERNAME<ept id=\"p22\">__</ept><ph id=\"ph36\"/> with the name of the cluster.",
+      "nodes": [
+        {
+          "content": "Once the upload completes, use the following to connect to the HDInsight cluster using SSH.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p21\">__</bpt>USER<ept id=\"p21\">__</ept><ph id=\"ph35\"/> with the SSH user name you used when creating the cluster.",
+          "pos": [
+            92,
+            222
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p22\">__</bpt>CLUSTERNAME<ept id=\"p22\">__</ept><ph id=\"ph36\"/> with the name of the cluster.",
+          "pos": [
+            223,
+            331
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8614,
+        8832
+      ],
+      "content": "When prompted, enter the password used when creating the SSH user for the cluster. If you used a public key instead of a password, you may need to use the <ph id=\"ph37\">`-i`</ph><ph id=\"ph38\"/> parameter to specify the path to the matching private key.",
+      "nodes": [
+        {
+          "content": "When prompted, enter the password used when creating the SSH user for the cluster.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "If you used a public key instead of a password, you may need to use the <ph id=\"ph37\">`-i`</ph><ph id=\"ph38\"/> parameter to specify the path to the matching private key.",
+          "pos": [
+            83,
+            252
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8844,
+        9102
+      ],
+      "content": "<ph id=\"ph39\">[AZURE.NOTE]</ph><ph id=\"ph40\"/> If you are using a Windows client for development, follow the information in <bpt id=\"p23\">[</bpt>Connect to Linux-based HDInsight with SSH from Windows<ept id=\"p23\">](hdinsight-hadoop-linux-use-ssh-windows.md)</ept><ph id=\"ph41\"/> for information on using the PuTTY client to connect to the cluster."
+    },
+    {
+      "pos": [
+        9111,
+        9167
+      ],
+      "content": "Once connected, use the following to start the topology:"
+    },
+    {
+      "pos": [
+        9292,
+        9362
+      ],
+      "content": "This will start the topology with a friendly name of <ph id=\"ph42\">`datalakewriter`</ph>."
+    },
+    {
+      "pos": [
+        9366,
+        9407
+      ],
+      "content": "Deploy and run on Windows-based HDInsight"
+    },
+    {
+      "pos": [
+        9412,
+        9672
+      ],
+      "content": "Open a web browser and go to HTTPS://CLUSTERNAME.azurehdinsight.net, where <bpt id=\"p24\">__</bpt>CLUSTERNAME<ept id=\"p24\">__</ept><ph id=\"ph43\"/> is the name of your HDInsight cluster. When prompted, provide the admin user name (<ph id=\"ph44\">`admin`</ph>) and the password that you used for this account when the cluster was created.",
+      "nodes": [
+        {
+          "content": "Open a web browser and go to HTTPS://CLUSTERNAME.azurehdinsight.net, where <bpt id=\"p24\">__</bpt>CLUSTERNAME<ept id=\"p24\">__</ept><ph id=\"ph43\"/> is the name of your HDInsight cluster.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "When prompted, provide the admin user name (<ph id=\"ph44\">`admin`</ph>) and the password that you used for this account when the cluster was created.",
+          "pos": [
+            185,
+            334
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9677,
+        9901
+      ],
+      "content": "From the Storm Dashboard, select <bpt id=\"p25\">__</bpt>Browse<ept id=\"p25\">__</ept><ph id=\"ph45\"/> from the <bpt id=\"p26\">__</bpt>Jar File<ept id=\"p26\">__</ept><ph id=\"ph46\"/> drop-down, then select the StormToDataLakeStore-1.0-SNAPSHOT.jar file from the <ph id=\"ph47\">`target`</ph><ph id=\"ph48\"/> directory. Use the following values for the other entries on the form:",
+      "nodes": [
+        {
+          "content": "From the Storm Dashboard, select <bpt id=\"p25\">__</bpt>Browse<ept id=\"p25\">__</ept><ph id=\"ph45\"/> from the <bpt id=\"p26\">__</bpt>Jar File<ept id=\"p26\">__</ept><ph id=\"ph46\"/> drop-down, then select the StormToDataLakeStore-1.0-SNAPSHOT.jar file from the <ph id=\"ph47\">`target`</ph><ph id=\"ph48\"/> directory.",
+          "pos": [
+            0,
+            308
+          ]
+        },
+        {
+          "content": "Use the following values for the other entries on the form:",
+          "pos": [
+            309,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9909,
+        9963
+      ],
+      "content": "Class Name: com.microsoft.example.StormToDataLakeStore"
+    },
+    {
+      "pos": [
+        9970,
+        10007
+      ],
+      "content": "Additional Parameters: datalakewriter"
+    },
+    {
+      "pos": [
+        10017,
+        10102
+      ],
+      "content": "<ph id=\"ph49\">![</ph>image of storm dashboard<ph id=\"ph50\">](./media/hdinsight-storm-write-data-lake-store/submit.png)</ph>"
+    },
+    {
+      "pos": [
+        10107,
+        10297
+      ],
+      "content": "Select the <bpt id=\"p27\">__</bpt>Submit<ept id=\"p27\">__</ept><ph id=\"ph51\"/> button to upload and start the topology. The result field below the <bpt id=\"p28\">__</bpt>Submit<ept id=\"p28\">__</ept><ph id=\"ph52\"/> button should display information similar to the following once the topology has started:",
+      "nodes": [
+        {
+          "content": "Select the <bpt id=\"p27\">__</bpt>Submit<ept id=\"p27\">__</ept><ph id=\"ph51\"/> button to upload and start the topology.",
+          "pos": [
+            0,
+            117
+          ]
+        },
+        {
+          "content": "The result field below the <bpt id=\"p28\">__</bpt>Submit<ept id=\"p28\">__</ept><ph id=\"ph52\"/> button should display information similar to the following once the topology has started:",
+          "pos": [
+            118,
+            300
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10596,
+        10612
+      ],
+      "content": "View output data"
+    },
+    {
+      "pos": [
+        10614,
+        10735
+      ],
+      "content": "There are several ways to view the data. In this section we use the Azure Portal and the <ph id=\"ph53\">`hdfs`</ph><ph id=\"ph54\"/> command to view the data.",
+      "nodes": [
+        {
+          "content": "There are several ways to view the data.",
+          "pos": [
+            0,
+            40
+          ]
+        },
+        {
+          "content": "In this section we use the Azure Portal and the <ph id=\"ph53\">`hdfs`</ph><ph id=\"ph54\"/> command to view the data.",
+          "pos": [
+            41,
+            155
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10739,
+        10916
+      ],
+      "content": "<ph id=\"ph55\">[AZURE.NOTE]</ph><ph id=\"ph56\"/> You should allow the topologies to run for several minutes before checking the output data, so that data has been synched to several files on Azure Data Lake Store."
+    },
+    {
+      "pos": [
+        10920,
+        11052
+      ],
+      "content": "<bpt id=\"p29\">__</bpt>From the <bpt id=\"p30\">[</bpt>Azure Portal<ept id=\"p30\">](https://portal.azure.com)</ept><ept id=\"p29\">__</ept>: In the portal, select the Azure Data Lake Store that you used with HDInsight."
+    },
+    {
+      "pos": [
+        11060,
+        11280
+      ],
+      "content": "<ph id=\"ph57\">[AZURE.NOTE]</ph><ph id=\"ph58\"/> If you did not pin the Data Lake Store to the Azure portal dashboard, you can find it by selecting <bpt id=\"p31\">__</bpt>Browse<ept id=\"p31\">__</ept><ph id=\"ph59\"/> at the bottom of the list on the left, then <bpt id=\"p32\">__</bpt>Data Lake Store<ept id=\"p32\">__</ept>, and finally selecting the store."
+    },
+    {
+      "pos": [
+        11290,
+        11365
+      ],
+      "content": "From the icons at the top of the Data Lake Store, select <bpt id=\"p33\">__</bpt>Data Explorer<ept id=\"p33\">__</ept>."
+    },
+    {
+      "pos": [
+        11375,
+        11459
+      ],
+      "content": "<ph id=\"ph60\">![</ph>data explore icon<ph id=\"ph61\">](./media/hdinsight-storm-write-data-lake-store/dataexplorer.png)</ph>"
+    },
+    {
+      "pos": [
+        11469,
+        11549
+      ],
+      "content": "Next, select the <bpt id=\"p34\">__</bpt>stormdata<ept id=\"p34\">__</ept><ph id=\"ph62\"/> folder. A list of text files should be displayed.",
+      "nodes": [
+        {
+          "content": "Next, select the <bpt id=\"p34\">__</bpt>stormdata<ept id=\"p34\">__</ept><ph id=\"ph62\"/> folder.",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "A list of text files should be displayed.",
+          "pos": [
+            94,
+            135
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11559,
+        11635
+      ],
+      "content": "<ph id=\"ph63\">![</ph>text files<ph id=\"ph64\">](./media/hdinsight-storm-write-data-lake-store/stormoutput.png)</ph>"
+    },
+    {
+      "pos": [
+        11645,
+        11690
+      ],
+      "content": "Select one of the files to view its contents."
+    },
+    {
+      "pos": [
+        11694,
+        11929
+      ],
+      "content": "<bpt id=\"p35\">__</bpt>From the cluster<ept id=\"p35\">__</ept>: If you have connected to the HDInsight cluster using SSH (Linux cluster,) or Remote Desktop (Windows cluster,) you can use the following to view the data. Replace <bpt id=\"p36\">__</bpt>DATALAKE<ept id=\"p36\">__</ept><ph id=\"ph65\"/> with the name of your Data Lake Store",
+      "nodes": [
+        {
+          "content": "<bpt id=\"p35\">__</bpt>From the cluster<ept id=\"p35\">__</ept>: If you have connected to the HDInsight cluster using SSH (Linux cluster,) or Remote Desktop (Windows cluster,) you can use the following to view the data.",
+          "pos": [
+            0,
+            216
+          ]
+        },
+        {
+          "content": "Replace <bpt id=\"p36\">__</bpt>DATALAKE<ept id=\"p36\">__</ept><ph id=\"ph65\"/> with the name of your Data Lake Store",
+          "pos": [
+            217,
+            330
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12012,
+        12123
+      ],
+      "content": "This will concatenate the text files stored in the directory, and display information similar to the following:"
+    },
+    {
+      "pos": [
+        12320,
+        12337
+      ],
+      "content": "Stop the topology"
+    },
+    {
+      "pos": [
+        12339,
+        12461
+      ],
+      "content": "Storm topologies will run until stopped, or the cluster is deleted. To stop the topologies, use the following information.",
+      "nodes": [
+        {
+          "content": "Storm topologies will run until stopped, or the cluster is deleted.",
+          "pos": [
+            0,
+            67
+          ]
+        },
+        {
+          "content": "To stop the topologies, use the following information.",
+          "pos": [
+            68,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12463,
+        12493
+      ],
+      "content": "<bpt id=\"p37\">__</bpt>For Linux-based HDInsight<ept id=\"p37\">__</ept>:"
+    },
+    {
+      "pos": [
+        12495,
+        12557
+      ],
+      "content": "From an SSH session to the cluster, use the following command:"
+    },
+    {
+      "pos": [
+        12590,
+        12622
+      ],
+      "content": "<bpt id=\"p38\">__</bpt>For Windows-based HDInsight<ept id=\"p38\">__</ept>:"
+    },
+    {
+      "pos": [
+        12627,
+        12746
+      ],
+      "content": "From the Storm Dashboard (https://CLUSTERNAME.azurehdinsight.net,) select the <bpt id=\"p39\">__</bpt>Storm UI<ept id=\"p39\">__</ept><ph id=\"ph66\"/> link at the top of the page."
+    },
+    {
+      "pos": [
+        12751,
+        12811
+      ],
+      "content": "Once the Storm UI loads, select the <bpt id=\"p40\">__</bpt>datalakewriter<ept id=\"p40\">__</ept><ph id=\"ph67\"/> link."
+    },
+    {
+      "pos": [
+        12817,
+        12908
+      ],
+      "content": "<ph id=\"ph68\">![</ph>link to datalakewriter<ph id=\"ph69\">](./media/hdinsight-storm-write-data-lake-store/selecttopology.png)</ph>"
+    },
+    {
+      "pos": [
+        12913,
+        13016
+      ],
+      "content": "In the <bpt id=\"p41\">__</bpt>Topology Actions<ept id=\"p41\">__</ept><ph id=\"ph70\"/> section, select <bpt id=\"p42\">__</bpt>Kill<ept id=\"p42\">__</ept><ph id=\"ph71\"/> and then select OK on the dialog box that appears."
+    },
+    {
+      "pos": [
+        13022,
+        13108
+      ],
+      "content": "<ph id=\"ph72\">![</ph>topology actions<ph id=\"ph73\">](./media/hdinsight-storm-write-data-lake-store/topologyactions.png)</ph>"
+    },
+    {
+      "pos": [
+        13112,
+        13122
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        13124,
+        13285
+      ],
+      "content": "Now that you have learned how to use Storm to write to Azure Data Lake Store, discover other <bpt id=\"p43\">[</bpt>Storm examples for HDInsight<ept id=\"p43\">](hdinsight-storm-example-topology.md)</ept>."
+    }
+  ],
+  "content": "<properties\npageTitle=\"Use Azure Data Lake Store with Apache Storm on Azure HDInsight\"\ndescription=\"Learn how to write data to Azure Data Lake Store from an Apache Storm topology on HDInsight. This document, and the associated example, demonstrate how the HdfsBolt component can be used to write to Data Lake Store.\"\nservices=\"hdinsight\"\ndocumentationCenter=\"na\"\nauthors=\"Blackmist\"\nmanager=\"paulettm\"\neditor=\"cgronlun\"/>\n\n<tags\nms.service=\"hdinsight\"\nms.devlang=\"na\"\nms.topic=\"article\"\nms.tgt_pltfrm=\"na\"\nms.workload=\"big-data\"\nms.date=\"01/28/2016\"\nms.author=\"larryfr\"/>\n\n#Use Azure Data Lake Store with Apache Storm with HDInsight\n\nAzure Data Lake Store is an HDFS compatible cloud storage service that provides high throughput, availability, durability, and reliability for your data. In this document, you will learn how to use a Java-based Storm topology to write data to Azure Data Lake Store using the [HdfsBolt](http://storm.apache.org/javadoc/apidocs/org/apache/storm/hdfs/bolt/HdfsBolt.html) component, which is provided as part of Apache Storm.\n\n> [AZURE.IMPORTANT] The example topology used in this document relies on components that are included with Storm on HDInsight clusters, and may require modification to work with Azure Data Lake Store when used with other Apache Storm clusters.\n\n##Prerequisites\n\n* [Java JDK 1.7](https://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) or higher\n* [Maven 3.x](https://maven.apache.org/download.cgi)\n* An Azure subscription\n* A Storm on HDInsight cluster. Information on creating a cluster that can use Azure Data Lake Store are included in this document.\n\n###Configure environment variables\n\nThe following environment variables may be set when you install Java and the JDK on your development workstation. However, you should check that they exist and that they contain the correct values for your system.\n\n* __JAVA_HOME__ - should point to the directory where the Java runtime environment (JRE) is installed. For example, in a Unix or Linux distribution, it should have a value similar to `/usr/lib/jvm/java-7-oracle`. In Windows, it would have a value similar to `c:\\Program Files (x86)\\Java\\jre1.7`.\n\n* __PATH__ - should contain the following paths:\n\n    * __JAVA\\_HOME__ (or the equivalent path)\n    \n    * __JAVA\\_HOME\\bin__ (or the equivalent path)\n    \n    * The directory where Maven is installed\n\n##Topology implementation\n\nThe example used in this document is written in Java, and uses the following components:\n\n* __TickSpout__: Generates the data used by other components in the topology.\n\n* __PartialCount__: Counts events generated by TickSpout.\n\n* __FinalCount__: Aggregates count data from PartialCount.\n\n* __ADLStoreBolt__: Writes data to Azure Data Lake Store using the [HdfsBolt](http://storm.apache.org/javadoc/apidocs/org/apache/storm/hdfs/bolt/HdfsBolt.html) component.\n\nThe project containing this topology is available as a download from [https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store](https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store).\n\n###Understanding ADLStoreBolt\n\nThe ADLStoreBolt is the name used for the HdfsBolt instance in the topology that writes to Azure Data Lake. This is not a special version of HdfsBolt created by Microsoft; however it does rely on core-site configuration values, as well as Hadoop components that are included with Azure HDInsight to communication with Data Lake.\n\nSpecifically, when you create an HDInsight cluster, you can associate it with an Azure Data Lake Store. This writes entries into core-site for the Data Lake Store you selected, which are used by components such as hadoop-client and hadoop-hdfs to enable communication with Data Lake Store.\n\n> [AZURE.NOTE] Microsoft has contributed code to the Apache Hadoop and Storm projects that enables communication with Azure Data Lake Store and Azure Blob storage, but this functionality may not be included by default in other Hadoop and Storm distributions.\n\nThe configuration for HdfsBolt in the topology is as follows:\n\n    // 1. Create sync and rotation policies to control when data is synched\n    //    (written) to the file system and when to roll over into a new file.\n    SyncPolicy syncPolicy = new CountSyncPolicy(1000);\n    FileRotationPolicy rotationPolicy = new FileSizeRotationPolicy(0.5f, Units.KB);\n    // 2. Set the format. In this case, comma delimited\n    RecordFormat recordFormat = new DelimitedRecordFormat().withFieldDelimiter(\",\");\n    // 3. Set the directory name. In this case, '/stormdata/'\n    FileNameFormat fileNameFormat = new DefaultFileNameFormat().withPath(\"/stormdata/\");\n    // 4. Create the bolt using the previously created settings,\n    //    and also tell it the base URL to your Data Lake Store.\n    // NOTE! Replace 'MYDATALAKE' below with the name of your data lake store.\n    HdfsBolt adlsBolt = new HdfsBolt()\n        .withFsUrl(\"adl://MYDATALAKE.azuredatalakestore.net/\")\n        .withRecordFormat(recordFormat)\n        .withFileNameFormat(fileNameFormat)\n        .withRotationPolicy(rotationPolicy)\n        .withSyncPolicy(syncPolicy);\n    // 4. Give it a name and wire it up to the bolt it accepts data\n    //    from. NOTE: The name used here is also used as part of the\n    //    file name for the files written to Data Lake Store.\n    builder.setBolt(\"ADLStoreBolt\", adlsBolt, 1)\n      .globalGrouping(\"finalcount\");\n      \nIf you are familiar with using HdfsBolt, you will notice that this is all pretty standard configuration except for the URL. The URL provides the path to the root of your Azure Data Lake Store.\n\nSince writing to Data Lake Store uses HdfsBolt, and is just a URL change, you should be able to take any existing topology that writes to HDFS or WASB using HdfsBolt, and easily change it to use Azure Data Lake Store.\n\n##Create an HDInsight cluster and Data Lake Store\n\nCreate a new Storm on HDInsight cluster using the steps in the [Use HDInsight with Data Lake Store using Azure](../data-lake-store/data-lake-store-hdinsight-hadoop-use-portal.md) document. The steps in this document will walk you through creating a new HDInsight cluster and Azure Data Lake Store.\n\n> [AZURE.IMPORTANT] When you create the HDInsight cluster, you must select __Storm__ as the cluster type. The OS can be either Windows or Linux.\n\n##Build and package the topology\n\n1. Download the example project from [https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store\n](https://github.com/Azure-Samples/hdinsight-storm-azure-data-lake-store\n) to your development environment.\n\n2. Open the `StormToDataLake\\src\\main\\java\\com\\microsoft\\example\\StormToDataLakeStore.java` file in an editor and find the line that contains `.withFsUrl(\"adl://MYDATALAKE.azuredatalakestore.net/\")`. Change __MYDATALAKE__ to the name of the Azure Data Lake Store you used when creating your HDInsight server.\n\n3. From a command prompt, terminal, or shell session, change directories to the root of the downloaded project, and run the following commands to build and package the topology.\n\n        mvn compile\n        mvn package\n    \n    Once the build and packaging completes, there will be a new directory named `target`, that contains a file named `StormToDataLakeStore-1.0-SNAPSHOT.jar`. This contains the compiled topology.\n\n##Deploy and run on Linux-based HDInsight\n\nIf you created a Linux-based Storm on HDInsight cluster, use the steps below to deploy and run the topology.\n\n1. Use the following command to copy the topology to the HDInsight cluster. Replace __USER__ with the SSH user name you used when creating the cluster. Replace __CLUSTERNAME__ with the name of the cluster.\n\n        scp target\\StormToDataLakeStore-1.0-SNAPSHOT.jar USER@CLUSTERNAME-ssh.azurehdinsight.net:StormToDataLakeStore-1.0-SNAPSHOT.jar\n    \n    When prompted, enter the password used when creating the SSH user for the cluster. If you used a public key instead of a password, you may need to use the `-i` parameter to specify the path to the matching private key.\n    \n    > [AZURE.NOTE] If you are using a Windows client for development, you may not have an `scp` command. If so, you can use `pscp`, which is available from [http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html).\n\n2. Once the upload completes, use the following to connect to the HDInsight cluster using SSH. Replace __USER__ with the SSH user name you used when creating the cluster. Replace __CLUSTERNAME__ with the name of the cluster.\n\n        ssh USER@CLUSTERNAME-ssh.azurehdinsight.net\n\n    When prompted, enter the password used when creating the SSH user for the cluster. If you used a public key instead of a password, you may need to use the `-i` parameter to specify the path to the matching private key.\n    \n    > [AZURE.NOTE] If you are using a Windows client for development, follow the information in [Connect to Linux-based HDInsight with SSH from Windows](hdinsight-hadoop-linux-use-ssh-windows.md) for information on using the PuTTY client to connect to the cluster.\n    \n3. Once connected, use the following to start the topology:\n\n        storm jar StormToDataLakeStore-1.0-SNAPSHOT.jar com.microsoft.example.StormToDataLakeStore datalakewriter\n    \n    This will start the topology with a friendly name of `datalakewriter`.\n\n##Deploy and run on Windows-based HDInsight\n\n1. Open a web browser and go to HTTPS://CLUSTERNAME.azurehdinsight.net, where __CLUSTERNAME__ is the name of your HDInsight cluster. When prompted, provide the admin user name (`admin`) and the password that you used for this account when the cluster was created.\n\n2. From the Storm Dashboard, select __Browse__ from the __Jar File__ drop-down, then select the StormToDataLakeStore-1.0-SNAPSHOT.jar file from the `target` directory. Use the following values for the other entries on the form:\n\n    * Class Name: com.microsoft.example.StormToDataLakeStore\n    * Additional Parameters: datalakewriter\n    \n    ![image of storm dashboard](./media/hdinsight-storm-write-data-lake-store/submit.png)\n\n3. Select the __Submit__ button to upload and start the topology. The result field below the __Submit__ button should display information similar to the following once the topology has started:\n\n        Process exit code: 0\n        Currently running topologies:\n        Topology_name        Status     Num_tasks  Num_workers  Uptime_secs\n        -------------------------------------------------------------------\n        datalakewriter       ACTIVE     68         8            10        \n\n##View output data\n\nThere are several ways to view the data. In this section we use the Azure Portal and the `hdfs` command to view the data.\n\n> [AZURE.NOTE] You should allow the topologies to run for several minutes before checking the output data, so that data has been synched to several files on Azure Data Lake Store.\n\n* __From the [Azure Portal](https://portal.azure.com)__: In the portal, select the Azure Data Lake Store that you used with HDInsight.\n\n    > [AZURE.NOTE] If you did not pin the Data Lake Store to the Azure portal dashboard, you can find it by selecting __Browse__ at the bottom of the list on the left, then __Data Lake Store__, and finally selecting the store.\n    \n    From the icons at the top of the Data Lake Store, select __Data Explorer__.\n    \n    ![data explore icon](./media/hdinsight-storm-write-data-lake-store/dataexplorer.png)\n    \n    Next, select the __stormdata__ folder. A list of text files should be displayed.\n    \n    ![text files](./media/hdinsight-storm-write-data-lake-store/stormoutput.png)\n    \n    Select one of the files to view its contents.\n\n* __From the cluster__: If you have connected to the HDInsight cluster using SSH (Linux cluster,) or Remote Desktop (Windows cluster,) you can use the following to view the data. Replace __DATALAKE__ with the name of your Data Lake Store\n\n        hdfs dfs -cat adl://DATALAKE.azuredatalakestore.net/stormdata/*.txt\n\n    This will concatenate the text files stored in the directory, and display information similar to the following:\n    \n        406000000\n        407000000\n        408000000\n        409000000\n        410000000\n        411000000\n        412000000\n        413000000\n        414000000\n        415000000\n        \n##Stop the topology\n\nStorm topologies will run until stopped, or the cluster is deleted. To stop the topologies, use the following information.\n\n__For Linux-based HDInsight__:\n\nFrom an SSH session to the cluster, use the following command:\n\n    storm kill datalakewriter\n\n__For Windows-based HDInsight__:\n\n1. From the Storm Dashboard (https://CLUSTERNAME.azurehdinsight.net,) select the __Storm UI__ link at the top of the page.\n\n2. Once the Storm UI loads, select the __datalakewriter__ link.\n\n    ![link to datalakewriter](./media/hdinsight-storm-write-data-lake-store/selecttopology.png)\n\n3. In the __Topology Actions__ section, select __Kill__ and then select OK on the dialog box that appears.\n\n    ![topology actions](./media/hdinsight-storm-write-data-lake-store/topologyactions.png)\n\n##Next steps\n\nNow that you have learned how to use Storm to write to Azure Data Lake Store, discover other [Storm examples for HDInsight](hdinsight-storm-example-topology.md)."
+}
