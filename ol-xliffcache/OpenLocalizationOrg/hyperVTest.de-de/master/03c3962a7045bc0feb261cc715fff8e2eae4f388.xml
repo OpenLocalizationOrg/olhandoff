@@ -1,0 +1,625 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        147
+      ],
+      "content": "Role Based Access Control in Mobile Services using .NET and the Azure Active Directory (Windows Store) | Microsoft Azure"
+    },
+    {
+      "pos": [
+        166,
+        309
+      ],
+      "content": "Learn how to control access based on Azure Active Directory roles in your Windows Store application using a Mobile Service with a .NET backend."
+    },
+    {
+      "pos": [
+        637,
+        729
+      ],
+      "content": "Role Based Access Control in Mobile Services using JavaScript and the Azure Active Directory"
+    },
+    {
+      "pos": [
+        834,
+        840
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        943,
+        951
+      ],
+      "content": "Overview"
+    },
+    {
+      "pos": [
+        953,
+        1227
+      ],
+      "content": "Roles-based access control (RBAC) is the practice of assigning permissions to roles that your users can hold. It nicely defines boundaries on what certain classes of users can and cannot do. This tutorial will walk you through how to add basic RBAC to Azure Mobile Services.",
+      "nodes": [
+        {
+          "content": "Roles-based access control (RBAC) is the practice of assigning permissions to roles that your users can hold.",
+          "pos": [
+            0,
+            109
+          ]
+        },
+        {
+          "content": "It nicely defines boundaries on what certain classes of users can and cannot do.",
+          "pos": [
+            110,
+            190
+          ]
+        },
+        {
+          "content": "This tutorial will walk you through how to add basic RBAC to Azure Mobile Services.",
+          "pos": [
+            191,
+            274
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1229,
+        1574
+      ],
+      "content": "This tutorial will demonstrate role based access control, checking each user's membership to a Sales group defined in the Azure Active Directory (AAD). The access check will be done with .NET Mobile Service backend using the [Graph REST API] for Azure Active Directory. Only users who belong to the Sales group will be allowed to query the data.",
+      "nodes": [
+        {
+          "content": "This tutorial will demonstrate role based access control, checking each user's membership to a Sales group defined in the Azure Active Directory (AAD).",
+          "pos": [
+            0,
+            151
+          ]
+        },
+        {
+          "content": "The access check will be done with .NET Mobile Service backend using the [Graph REST API] for Azure Active Directory.",
+          "pos": [
+            152,
+            269
+          ]
+        },
+        {
+          "content": "Only users who belong to the Sales group will be allowed to query the data.",
+          "pos": [
+            270,
+            345
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1578,
+        1957
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> The intent of this tutorial is to extend your knowledge of authentication to include authorization practices. It is expected that you first complete the [Add Authentication to your app] tutorial using the Azure Active Directory authentication provider. This tutorial continues to update the TodoItem application used in the [Add Authentication to your app] tutorial.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> The intent of this tutorial is to extend your knowledge of authentication to include authorization practices.",
+          "pos": [
+            0,
+            154
+          ]
+        },
+        {
+          "content": "It is expected that you first complete the [Add Authentication to your app] tutorial using the Azure Active Directory authentication provider.",
+          "pos": [
+            155,
+            297
+          ]
+        },
+        {
+          "content": "This tutorial continues to update the TodoItem application used in the [Add Authentication to your app] tutorial.",
+          "pos": [
+            298,
+            411
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1961,
+        1974
+      ],
+      "content": "Prerequisites"
+    },
+    {
+      "pos": [
+        1976,
+        2013
+      ],
+      "content": "This tutorial requires the following:"
+    },
+    {
+      "pos": [
+        2017,
+        2059
+      ],
+      "content": "Visual Studio 2013 running on Windows 8.1."
+    },
+    {
+      "pos": [
+        2062,
+        2179
+      ],
+      "content": "Completion of the [Add Authentication to your app] tutorial using the Azure Active Directory authentication provider."
+    },
+    {
+      "pos": [
+        2186,
+        2231
+      ],
+      "content": "Generate a key for the Integrated Application"
+    },
+    {
+      "pos": [
+        2234,
+        2551
+      ],
+      "content": "During the [Add Authentication to your app] tutorial, you created a registration for the integrated application when you completed the [Register to use an Azure Active Directory Login] step. In this section you generate a key to be used when reading directory information with that integrated application's client ID.",
+      "nodes": [
+        {
+          "content": "During the [Add Authentication to your app] tutorial, you created a registration for the integrated application when you completed the [Register to use an Azure Active Directory Login] step.",
+          "pos": [
+            0,
+            190
+          ]
+        },
+        {
+          "content": "In this section you generate a key to be used when reading directory information with that integrated application's client ID.",
+          "pos": [
+            191,
+            317
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2709,
+        2745
+      ],
+      "content": "Create a Sales group with membership"
+    },
+    {
+      "pos": [
+        2877,
+        2938
+      ],
+      "content": "Create a custom authorization attribute on the mobile service"
+    },
+    {
+      "pos": [
+        2940,
+        3239
+      ],
+      "content": "In this section you will create a new custom authorization attribute that can be used to perform access checks on mobile service operations. The attribute will look up an Active Directory group based on the role name passed to it. It will then perform access checks based on that group's membership.",
+      "nodes": [
+        {
+          "content": "In this section you will create a new custom authorization attribute that can be used to perform access checks on mobile service operations.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "The attribute will look up an Active Directory group based on the role name passed to it.",
+          "pos": [
+            141,
+            230
+          ]
+        },
+        {
+          "content": "It will then perform access checks based on that group's membership.",
+          "pos": [
+            231,
+            299
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3244,
+        3346
+      ],
+      "content": "In Visual Studio, right click mobile service .NET backend project and click <bpt id=\"p1\">**</bpt>Manage NuGet Packages<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        3351,
+        3628
+      ],
+      "content": "In the NuGet Package Manager dialog, enter <bpt id=\"p2\">**</bpt>ADAL<ept id=\"p2\">**</ept><ph id=\"ph8\"/> in the search criteria to find and install the <bpt id=\"p3\">**</bpt>Active Directory Authentication Library<ept id=\"p3\">**</ept><ph id=\"ph9\"/> for your mobile service. This tutorial was most recently tested with the 3.3.205061641-alpha (Prerelease) version of the ADAL package.",
+      "nodes": [
+        {
+          "content": "In the NuGet Package Manager dialog, enter <bpt id=\"p2\">**</bpt>ADAL<ept id=\"p2\">**</ept><ph id=\"ph8\"/> in the search criteria to find and install the <bpt id=\"p3\">**</bpt>Active Directory Authentication Library<ept id=\"p3\">**</ept><ph id=\"ph9\"/> for your mobile service.",
+          "pos": [
+            0,
+            271
+          ]
+        },
+        {
+          "content": "This tutorial was most recently tested with the 3.3.205061641-alpha (Prerelease) version of the ADAL package.",
+          "pos": [
+            272,
+            381
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3633,
+        3764
+      ],
+      "content": "In Visual Studio, right click your mobile service project and click <bpt id=\"p4\">**</bpt>Add<ept id=\"p4\">**</ept><ph id=\"ph10\"/> then <bpt id=\"p5\">**</bpt>New Folder<ept id=\"p5\">**</ept>. Name the new folder <bpt id=\"p6\">**</bpt>Utilities<ept id=\"p6\">**</ept>.",
+      "nodes": [
+        {
+          "content": "In Visual Studio, right click your mobile service project and click <bpt id=\"p4\">**</bpt>Add<ept id=\"p4\">**</ept><ph id=\"ph10\"/> then <bpt id=\"p5\">**</bpt>New Folder<ept id=\"p5\">**</ept>.",
+          "pos": [
+            0,
+            187
+          ]
+        },
+        {
+          "content": "Name the new folder <bpt id=\"p6\">**</bpt>Utilities<ept id=\"p6\">**</ept>.",
+          "pos": [
+            188,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3769,
+        3883
+      ],
+      "content": "In Visual Studio, right click the new <bpt id=\"p7\">**</bpt>Utilities<ept id=\"p7\">**</ept><ph id=\"ph11\"/> folder and add a new class file named <bpt id=\"p8\">**</bpt>AuthorizeAadRole.cs<ept id=\"p8\">**</ept>."
+    },
+    {
+      "pos": [
+        3889,
+        3895
+      ],
+      "content": "![][0]"
+    },
+    {
+      "pos": [
+        3900,
+        3993
+      ],
+      "content": "In the AuthorizeAadRole.cs file, add the following <ph id=\"ph12\">`using`</ph><ph id=\"ph13\"/> statements at the top of the file."
+    },
+    {
+      "pos": [
+        4439,
+        4632
+      ],
+      "content": "In AuthorizeAadRole.cs, add the following enumerated type to the Utilities namespace. In this example we only deal with the <bpt id=\"p9\">**</bpt>Sales<ept id=\"p9\">**</ept><ph id=\"ph14\"/> role. The others are just examples of groups you might use.",
+      "nodes": [
+        {
+          "content": "In AuthorizeAadRole.cs, add the following enumerated type to the Utilities namespace.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "In this example we only deal with the <bpt id=\"p9\">**</bpt>Sales<ept id=\"p9\">**</ept><ph id=\"ph14\"/> role.",
+          "pos": [
+            86,
+            192
+          ]
+        },
+        {
+          "content": "The others are just examples of groups you might use.",
+          "pos": [
+            193,
+            246
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4754,
+        4859
+      ],
+      "content": "In AuthorizeAadRole.cs, add the following <ph id=\"ph15\">`AuthorizeAadRole`</ph><ph id=\"ph16\"/> class definition to the Utilities namespace."
+    },
+    {
+      "pos": [
+        6912,
+        7084
+      ],
+      "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph17\">`InitGroupIds`</ph><ph id=\"ph18\"/> method on the <ph id=\"ph19\">`AuthorizeAadRole`</ph><ph id=\"ph20\"/> class as follows. This method creates a dictionary mapping of the group ids to each role.",
+      "nodes": [
+        {
+          "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph17\">`InitGroupIds`</ph><ph id=\"ph18\"/> method on the <ph id=\"ph19\">`AuthorizeAadRole`</ph><ph id=\"ph20\"/> class as follows.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "This method creates a dictionary mapping of the group ids to each role.",
+          "pos": [
+            169,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7615,
+        7811
+      ],
+      "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph21\">`GetAADToken`</ph><ph id=\"ph22\"/> method on the <ph id=\"ph23\">`AuthorizeAadRole`</ph><ph id=\"ph24\"/> class. This method uses the app settings stored in the Mobile Service to get an access token to the AAD from ADAL.",
+      "nodes": [
+        {
+          "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph21\">`GetAADToken`</ph><ph id=\"ph22\"/> method on the <ph id=\"ph23\">`AuthorizeAadRole`</ph><ph id=\"ph24\"/> class.",
+          "pos": [
+            0,
+            156
+          ]
+        },
+        {
+          "content": "This method uses the app settings stored in the Mobile Service to get an access token to the AAD from ADAL.",
+          "pos": [
+            157,
+            264
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7818,
+        8084
+      ],
+      "content": "<ph id=\"ph25\">[AZURE.NOTE]</ph><ph id=\"ph26\"/> ADAL for .NET includes an in-memory token cache by default to help alleviate extra network traffic against your Active Directory. However, you can write your own cache implementation or disable caching entirely. For more information see [ADAL for .NET].",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph25\">[AZURE.NOTE]</ph><ph id=\"ph26\"/> ADAL for .NET includes an in-memory token cache by default to help alleviate extra network traffic against your Active Directory.",
+          "pos": [
+            0,
+            176
+          ]
+        },
+        {
+          "content": "However, you can write your own cache implementation or disable caching entirely.",
+          "pos": [
+            177,
+            258
+          ]
+        },
+        {
+          "content": "For more information see [ADAL for .NET].",
+          "pos": [
+            259,
+            300
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9361,
+        9660
+      ],
+      "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph27\">`CheckMembership`</ph><ph id=\"ph28\"/> method on the <ph id=\"ph29\">`AuthorizeAadRole`</ph><ph id=\"ph30\"/> class. This method receives a user's object id. It then uses the AAD Graph REST API to check that object id to see if it is a member id for the group associated to the role selected on the <ph id=\"ph31\">`AuthorizeAadRole`</ph><ph id=\"ph32\"/> class",
+      "nodes": [
+        {
+          "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph27\">`CheckMembership`</ph><ph id=\"ph28\"/> method on the <ph id=\"ph29\">`AuthorizeAadRole`</ph><ph id=\"ph30\"/> class.",
+          "pos": [
+            0,
+            160
+          ]
+        },
+        {
+          "content": "This method receives a user's object id.",
+          "pos": [
+            161,
+            201
+          ]
+        },
+        {
+          "content": "It then uses the AAD Graph REST API to check that object id to see if it is a member id for the group associated to the role selected on the <ph id=\"ph31\">`AuthorizeAadRole`</ph><ph id=\"ph32\"/> class",
+          "pos": [
+            202,
+            401
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11164,
+        11500
+      ],
+      "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph33\">`OnAuthorization`</ph><ph id=\"ph34\"/> method in the <ph id=\"ph35\">`AuthorizeAadRole`</ph><ph id=\"ph36\"/> class with the following code. This code expects that the user calling into the Mobiile Service has authenticated with the AAD.  It then gets the user's AAD object id and checks membership with the Active Directory group that corresponds to the role.",
+      "nodes": [
+        {
+          "content": "In AuthorizeAadRole.cs, update the <ph id=\"ph33\">`OnAuthorization`</ph><ph id=\"ph34\"/> method in the <ph id=\"ph35\">`AuthorizeAadRole`</ph><ph id=\"ph36\"/> class with the following code.",
+          "pos": [
+            0,
+            184
+          ]
+        },
+        {
+          "content": "This code expects that the user calling into the Mobiile Service has authenticated with the AAD.",
+          "pos": [
+            185,
+            281
+          ]
+        },
+        {
+          "content": "It then gets the user's AAD object id and checks membership with the Active Directory group that corresponds to the role.",
+          "pos": [
+            283,
+            404
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11507,
+        11758
+      ],
+      "content": "<ph id=\"ph37\">[AZURE.NOTE]</ph><ph id=\"ph38\"/> You could look up the Active Directory group by name. However, in many cases it's a better practice to store the group id as a mobile service app setting. This is because the group name is more likely to change but, the id stays the same.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph37\">[AZURE.NOTE]</ph><ph id=\"ph38\"/> You could look up the Active Directory group by name.",
+          "pos": [
+            0,
+            100
+          ]
+        },
+        {
+          "content": "However, in many cases it's a better practice to store the group id as a mobile service app setting.",
+          "pos": [
+            101,
+            201
+          ]
+        },
+        {
+          "content": "This is because the group name is more likely to change but, the id stays the same.",
+          "pos": [
+            202,
+            285
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14920,
+        14961
+      ],
+      "content": "Save your changes to AuthorizeAadRole.cs."
+    },
+    {
+      "pos": [
+        14965,
+        15022
+      ],
+      "content": "Add role based access checking to the database operations"
+    },
+    {
+      "pos": [
+        15027,
+        15140
+      ],
+      "content": "In Visual Studio, expand the <bpt id=\"p10\">**</bpt>Controllers<ept id=\"p10\">**</ept><ph id=\"ph39\"/> folder under the mobile service project. Open TodoItemController.cs.",
+      "nodes": [
+        {
+          "content": "In Visual Studio, expand the <bpt id=\"p10\">**</bpt>Controllers<ept id=\"p10\">**</ept><ph id=\"ph39\"/> folder under the mobile service project.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "Open TodoItemController.cs.",
+          "pos": [
+            141,
+            168
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15145,
+        15273
+      ],
+      "content": "In TodoItemController.cs, add a <ph id=\"ph40\">`using`</ph><ph id=\"ph41\"/> statement for your utilities namespace that contains the custom authorization attribute."
+    },
+    {
+      "pos": [
+        15320,
+        15644
+      ],
+      "content": "In TodoItemController.cs, you can add the attribute to your controller class or individual methods depending on how you want access checked. If you want all controller operations to check access based on the same role, just add the attribute to the class. Add the attribute to the class as follows for testing this tutorial.",
+      "nodes": [
+        {
+          "content": "In TodoItemController.cs, you can add the attribute to your controller class or individual methods depending on how you want access checked.",
+          "pos": [
+            0,
+            140
+          ]
+        },
+        {
+          "content": "If you want all controller operations to check access based on the same role, just add the attribute to the class.",
+          "pos": [
+            141,
+            255
+          ]
+        },
+        {
+          "content": "Add the attribute to the class as follows for testing this tutorial.",
+          "pos": [
+            256,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        15763,
+        15898
+      ],
+      "content": "If you only wanted to access check insert, update, and delete operations, you would set the attribute only on those methods as follows."
+    },
+    {
+      "pos": [
+        16609,
+        16692
+      ],
+      "content": "Save TodoItemController.cs and build the mobile service to verify no syntax errors."
+    },
+    {
+      "pos": [
+        16696,
+        16745
+      ],
+      "content": "Publish the mobile service to your Azure account."
+    },
+    {
+      "pos": [
+        16750,
+        16774
+      ],
+      "content": "Test the client's access"
+    },
+    {
+      "pos": [
+        16904,
+        17010
+      ],
+      "content": "[0]: ./media/mobile-services-dotnet-backend-windows-store-dotnet-aad-rbac/add-authorize-aad-role-class.png"
+    },
+    {
+      "pos": [
+        17027,
+        17739
+      ],
+      "content": "[Add Authentication to your app]: mobile-services-dotnet-backend-windows-universal-dotnet-get-started-users.md\n[How to Register with the Azure Active Directory]: mobile-services-how-to-register-active-directory-authentication.md\n[Directory Sync Scenarios]: http://msdn.microsoft.com/library/azure/jj573653.aspx\n[Store Server Scripts]: mobile-services-store-scripts-source-control.md\n[Register to use an Azure Active Directory Login]: mobile-services-how-to-register-active-directory-authentication.md\n[Graph REST API]: http://msdn.microsoft.com/library/azure/hh974478.aspx\n[IsMemberOf]: http://msdn.microsoft.com/library/azure/dn151601.aspx\n[ADAL for .NET]: https://msdn.microsoft.com/library/azure/jj573266.aspx"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Role Based Access Control in Mobile Services using .NET and the Azure Active Directory (Windows Store) | Microsoft Azure\"\n    description=\"Learn how to control access based on Azure Active Directory roles in your Windows Store application using a Mobile Service with a .NET backend.\"\n    documentationCenter=\"windows\"\n    authors=\"wesmc7777\"\n    manager=\"dwrede\"\n    editor=\"\"\n    services=\"mobile-services\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile-multiple\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.date=\"12/07/2015\"\n    ms.author=\"wesmc\"/>\n\n# Role Based Access Control in Mobile Services using JavaScript and the Azure Active Directory\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\n[AZURE.INCLUDE [mobile-services-selector-rbac](../../includes/mobile-services-selector-rbac.md)]\n\n##Overview\n\nRoles-based access control (RBAC) is the practice of assigning permissions to roles that your users can hold. It nicely defines boundaries on what certain classes of users can and cannot do. This tutorial will walk you through how to add basic RBAC to Azure Mobile Services.\n\nThis tutorial will demonstrate role based access control, checking each user's membership to a Sales group defined in the Azure Active Directory (AAD). The access check will be done with .NET Mobile Service backend using the [Graph REST API] for Azure Active Directory. Only users who belong to the Sales group will be allowed to query the data.\n\n\n>[AZURE.NOTE] The intent of this tutorial is to extend your knowledge of authentication to include authorization practices. It is expected that you first complete the [Add Authentication to your app] tutorial using the Azure Active Directory authentication provider. This tutorial continues to update the TodoItem application used in the [Add Authentication to your app] tutorial.\n\n##Prerequisites\n\nThis tutorial requires the following:\n\n* Visual Studio 2013 running on Windows 8.1.\n* Completion of the [Add Authentication to your app] tutorial using the Azure Active Directory authentication provider.\n\n\n\n\n##Generate a key for the Integrated Application\n\n\nDuring the [Add Authentication to your app] tutorial, you created a registration for the integrated application when you completed the [Register to use an Azure Active Directory Login] step. In this section you generate a key to be used when reading directory information with that integrated application's client ID.\n\n[AZURE.INCLUDE [mobile-services-generate-aad-app-registration-access-key](../../includes/mobile-services-generate-aad-app-registration-access-key.md)]\n\n\n\n##Create a Sales group with membership\n\n[AZURE.INCLUDE [mobile-services-aad-rbac-create-sales-group](../../includes/mobile-services-aad-rbac-create-sales-group.md)]\n\n\n\n##Create a custom authorization attribute on the mobile service\n\nIn this section you will create a new custom authorization attribute that can be used to perform access checks on mobile service operations. The attribute will look up an Active Directory group based on the role name passed to it. It will then perform access checks based on that group's membership.\n\n1. In Visual Studio, right click mobile service .NET backend project and click **Manage NuGet Packages**.\n\n2. In the NuGet Package Manager dialog, enter **ADAL** in the search criteria to find and install the **Active Directory Authentication Library** for your mobile service. This tutorial was most recently tested with the 3.3.205061641-alpha (Prerelease) version of the ADAL package.\n\n3. In Visual Studio, right click your mobile service project and click **Add** then **New Folder**. Name the new folder **Utilities**.\n\n4. In Visual Studio, right click the new **Utilities** folder and add a new class file named **AuthorizeAadRole.cs**.\n\n    ![][0]\n\n5. In the AuthorizeAadRole.cs file, add the following `using` statements at the top of the file.\n\n        using System.Net;\n        using System.Net.Http;\n        using System.Web.Http;\n        using System.Web.Http.Controllers;\n        using System.Web.Http.Filters;\n        using Newtonsoft.Json;\n        using Microsoft.WindowsAzure.Mobile.Service.Security;\n        using Microsoft.WindowsAzure.Mobile.Service;\n        using Microsoft.IdentityModel.Clients.ActiveDirectory;\n        using System.Globalization;\n        using System.IO;\n\n6. In AuthorizeAadRole.cs, add the following enumerated type to the Utilities namespace. In this example we only deal with the **Sales** role. The others are just examples of groups you might use.\n\n        public enum AadRoles\n        {\n            Sales,\n            Management,\n            Development\n        }\n\n7. In AuthorizeAadRole.cs, add the following `AuthorizeAadRole` class definition to the Utilities namespace.\n\n        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]\n        public class AuthorizeAadRole : AuthorizationFilterAttribute\n        {\n            private bool isInitialized;\n            private bool isHosted;\n            private ApiServices services = null;\n\n            // Constants used with ADAL and the Graph REST API for AAD\n            private const string AadInstance = \"https://login.windows.net/{0}\";\n            private const string GraphResourceId = \"https://graph.windows.net/\";\n            private const string APIVersion = \"?api-version=2013-04-05\";\n\n            // App settings pulled from the Mobile Service\n            private string tenantdomain;\n            private string clientid;\n            private string clientkey;\n            private Dictionary<int, string> groupIds = new Dictionary<int, string>();\n\n            private string token = null;\n\n            public AuthorizeAadRole(AadRoles role)\n            {\n                this.Role = role;\n            }\n\n            // private class used to serialize the Graph REST API web response\n            private class MembershipResponse\n            {\n                public bool value;\n            }\n\n            public AadRoles Role { get; private set; }\n\n            // Generate a local dictionary for the role group ids configured as\n            // Mobile Service app settings\n            private void InitGroupIds()\n            {\n            }\n\n            // Use ADAL and the authentication app settings from the Mobile Service to\n            // get an AAD access token\n            private string GetAADToken()\n            {\n            }\n\n            // Given an AAD user id, check membership against the group associated with the role.\n            private bool CheckMembership(string memberId)\n            {\n            }\n\n            // Called when the user is attempting authorization\n            public override void OnAuthorization(HttpActionContext actionContext)\n            {\n            }\n        }\n\n\n\n8. In AuthorizeAadRole.cs, update the `InitGroupIds` method on the `AuthorizeAadRole` class as follows. This method creates a dictionary mapping of the group ids to each role.\n\n        private void InitGroupIds()\n        {\n            string groupId;\n\n            if (services == null)\n                return;\n\n            if (!groupIds.ContainsKey((int)AadRoles.Sales))\n            {\n                if (services.Settings.TryGetValue(\"AAD_SALES_GROUP_ID\", out groupId))\n                {\n                    groupIds.Add((int)AadRoles.Sales, groupId);\n                }\n                else\n                    services.Log.Error(\"AAD_SALES_GROUP_ID app setting not found.\");\n            }\n        }\n\n\n9. In AuthorizeAadRole.cs, update the `GetAADToken` method on the `AuthorizeAadRole` class. This method uses the app settings stored in the Mobile Service to get an access token to the AAD from ADAL.\n\n    >[AZURE.NOTE] ADAL for .NET includes an in-memory token cache by default to help alleviate extra network traffic against your Active Directory. However, you can write your own cache implementation or disable caching entirely. For more information see [ADAL for .NET].\n\n        // Use ADAL and the authentication app settings from the Mobile Service to get an AAD access token\n        private async Task<string> GetAADToken()\n        {\n            // Try to get the required AAD authentication app settings from the mobile service.\n            if (!(services.Settings.TryGetValue(\"AAD_CLIENT_ID\", out clientid) &\n                  services.Settings.TryGetValue(\"AAD_CLIENT_KEY\", out clientkey) &\n                  services.Settings.TryGetValue(\"AAD_TENANT_DOMAIN\", out tenantdomain)))\n            {\n                services.Log.Error(\"GetAADToken() : Could not retrieve mobile service app settings.\");\n                return null;\n            }\n\n            ClientCredential clientCred = new ClientCredential(clientid, clientkey);\n            string authority = String.Format(CultureInfo.InvariantCulture, AadInstance, tenantdomain);\n            AuthenticationContext authContext = new AuthenticationContext(authority);\n\n            AuthenticationResult result = await authContext.AcquireTokenAsync(GraphResourceId, clientCred);\n            if (result != null)\n                token = result.AccessToken;\n            else\n                services.Log.Error(\"GetAADToken() : Failed to return a token.\");\n\n            return token;\n        }\n\n10. In AuthorizeAadRole.cs, update the `CheckMembership` method on the `AuthorizeAadRole` class. This method receives a user's object id. It then uses the AAD Graph REST API to check that object id to see if it is a member id for the group associated to the role selected on the `AuthorizeAadRole` class\n\n        private bool CheckMembership(string memberId)\n        {\n            bool membership = false;\n            string url = GraphResourceId + tenantdomain + \"/isMemberOf\" + APIVersion;\n            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);\n\n            // Use the Graph REST API to check group membership in the AAD\n            try\n            {\n                request.Method = \"POST\";\n                request.ContentType = \"application/json\";\n                request.Headers.Add(\"Authorization\", token);\n                using (var sw = new StreamWriter(request.GetRequestStream()))\n                {\n                    // Request body must have the group id and a member id to check for membership\n                    string body = String.Format(\"\\\"groupId\\\":\\\"{0}\\\",\\\"memberId\\\":\\\"{1}\\\"\",\n                        groupIds[(int)Role], memberId);\n                    sw.Write(\"{\" + body + \"}\");\n                }\n\n                WebResponse response = request.GetResponse();\n                StreamReader sr = new StreamReader(response.GetResponseStream());\n                string json = sr.ReadToEnd();\n                MembershipResponse membershipResponse = JsonConvert.DeserializeObject<MembershipResponse>(json);\n                membership = membershipResponse.value;\n            }\n            catch (Exception e)\n            {\n                services.Log.Error(\"OnAuthorization() exception : \" + e.Message);\n            }\n\n            return membership;\n        }\n\n\n11. In AuthorizeAadRole.cs, update the `OnAuthorization` method in the `AuthorizeAadRole` class with the following code. This code expects that the user calling into the Mobiile Service has authenticated with the AAD.  It then gets the user's AAD object id and checks membership with the Active Directory group that corresponds to the role.\n\n    >[AZURE.NOTE] You could look up the Active Directory group by name. However, in many cases it's a better practice to store the group id as a mobile service app setting. This is because the group name is more likely to change but, the id stays the same.\n\n        public override void OnAuthorization(HttpActionContext actionContext)\n        {\n            if (actionContext == null)\n            {\n                throw new ArgumentNullException(\"actionContext\");\n            }\n\n            services = new ApiServices(actionContext.ControllerContext.Configuration);\n\n            // Check whether we are running in a mode where local host access is allowed\n            // through without authentication.\n            if (!this.isInitialized)\n            {\n                HttpConfiguration config = actionContext.ControllerContext.Configuration;\n                this.isHosted = config.GetIsHosted();\n                this.isInitialized = true;\n            }\n\n            // No security when hosted locally\n            if (!this.isHosted && actionContext.RequestContext.IsLocal)\n            {\n                services.Log.Warn(\"AuthorizeAadRole: Local Hosting.\");\n                return;\n            }\n\n            ApiController controller = actionContext.ControllerContext.Controller as ApiController;\n            if (controller == null)\n            {\n                services.Log.Error(\"AuthorizeAadRole: No ApiController.\");\n            }\n\n            bool isAuthorized = false;\n            try\n            {\n                // Initialize a mapping for the group id to our enumerated type\n                InitGroupIds();\n\n                // Retrieve a AAD token from ADAL\n                GetAADToken();\n                if (token == null)\n                {\n                    services.Log.Error(\"AuthorizeAadRole: Failed to get an AAD access token.\");\n                }\n                else\n                {\n                    // Check group membership to see if the user is part of the group that corresponds to the role\n                    if (!string.IsNullOrEmpty(groupIds[(int)Role]))\n                    {\n                        ServiceUser serviceUser = controller.User as ServiceUser;\n                        if (serviceUser != null && serviceUser.Level == AuthorizationLevel.User)\n                        {\n                            var idents = serviceUser.GetIdentitiesAsync().Result;\n                            AzureActiveDirectoryCredentials clientAadCredentials =\n                                idents.OfType<AzureActiveDirectoryCredentials>().FirstOrDefault();\n                            if (clientAadCredentials != null)\n                            {\n                                isAuthorized = CheckMembership(clientAadCredentials.ObjectId);\n                            }\n                        }\n                    }\n                }\n            }\n            catch (Exception e)\n            {\n                services.Log.Error(e.Message);\n            }\n            finally\n            {\n                if (isAuthorized == false)\n                {\n                    services.Log.Error(\"Denying access\");\n\n                    actionContext.Response = actionContext.Request\n                        .CreateErrorResponse(HttpStatusCode.Forbidden,\n                            \"User is not logged in or not a member of the required group\");\n                }\n            }\n        }\n\n12. Save your changes to AuthorizeAadRole.cs.\n\n##Add role based access checking to the database operations\n\n1. In Visual Studio, expand the **Controllers** folder under the mobile service project. Open TodoItemController.cs.\n\n2. In TodoItemController.cs, add a `using` statement for your utilities namespace that contains the custom authorization attribute.\n\n        using todolistService.Utilities;\n\n3. In TodoItemController.cs, you can add the attribute to your controller class or individual methods depending on how you want access checked. If you want all controller operations to check access based on the same role, just add the attribute to the class. Add the attribute to the class as follows for testing this tutorial.\n\n        [AuthorizeAadRole(AadGroups.Sales)]\n        public class TodoItemController : TableController<TodoItem>\n\n    If you only wanted to access check insert, update, and delete operations, you would set the attribute only on those methods as follows.\n\n        // PATCH tables/TodoItem\n        [AuthorizeAadRole(AadGroups.Sales)]\n        public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)\n        {\n            return UpdateAsync(id, patch);\n        }\n\n        // POST tables/TodoItem\n        [AuthorizeAadRole(AadGroups.Sales)]\n        public async Task<IHttpActionResult> PostTodoItem(TodoItem item)\n        {\n            TodoItem current = await InsertAsync(item);\n            return CreatedAtRoute(\"Tables\", new { id = current.Id }, current);\n        }\n\n        // DELETE tables/TodoItem\n        [AuthorizeAadRole(AadGroups.Sales)]\n        public Task DeleteTodoItem(string id)\n        {\n            return DeleteAsync(id);\n        }\n\n\n4. Save TodoItemController.cs and build the mobile service to verify no syntax errors.\n5. Publish the mobile service to your Azure account.\n\n\n##Test the client's access\n\n[AZURE.INCLUDE [mobile-services-aad-rbac-test-app](../../includes/mobile-services-aad-rbac-test-app.md)]\n\n\n\n\n\n\n\n<!-- Images -->\n[0]: ./media/mobile-services-dotnet-backend-windows-store-dotnet-aad-rbac/add-authorize-aad-role-class.png\n\n<!-- URLs. -->\n[Add Authentication to your app]: mobile-services-dotnet-backend-windows-universal-dotnet-get-started-users.md\n[How to Register with the Azure Active Directory]: mobile-services-how-to-register-active-directory-authentication.md\n[Directory Sync Scenarios]: http://msdn.microsoft.com/library/azure/jj573653.aspx\n[Store Server Scripts]: mobile-services-store-scripts-source-control.md\n[Register to use an Azure Active Directory Login]: mobile-services-how-to-register-active-directory-authentication.md\n[Graph REST API]: http://msdn.microsoft.com/library/azure/hh974478.aspx\n[IsMemberOf]: http://msdn.microsoft.com/library/azure/dn151601.aspx\n[ADAL for .NET]: https://msdn.microsoft.com/library/azure/jj573266.aspx\n"
+}
