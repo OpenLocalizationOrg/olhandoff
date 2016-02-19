@@ -1,0 +1,985 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        96
+      ],
+      "content": "Using offline data in Mobile Services (Xamarin iOS) | Microsoft Azure"
+    },
+    {
+      "pos": [
+        115,
+        216
+      ],
+      "content": "Learn how to use Azure Mobile Services to cache and sync offline data in your Xamarin iOS application"
+    },
+    {
+      "pos": [
+        538,
+        580
+      ],
+      "content": "Using offline data sync in Mobile Services"
+    },
+    {
+      "pos": [
+        685,
+        691
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        798,
+        1018
+      ],
+      "content": "This topic walks through the offline sync capabilities of Azure Mobile Services in the todo list quickstart app. Offline sync allows you to easily create apps that are usable even when the end user has no network access.",
+      "nodes": [
+        {
+          "content": "This topic walks through the offline sync capabilities of Azure Mobile Services in the todo list quickstart app.",
+          "pos": [
+            0,
+            112
+          ]
+        },
+        {
+          "content": "Offline sync allows you to easily create apps that are usable even when the end user has no network access.",
+          "pos": [
+            113,
+            220
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1020,
+        1060
+      ],
+      "content": "Offline sync has several potential uses:"
+    },
+    {
+      "pos": [
+        1064,
+        1135
+      ],
+      "content": "Improve app responsiveness by caching server data locally on the device"
+    },
+    {
+      "pos": [
+        1138,
+        1199
+      ],
+      "content": "Make apps resilient against intermittent network connectivity"
+    },
+    {
+      "pos": [
+        1202,
+        1333
+      ],
+      "content": "Allow end-users to create and modify data even when there is no network access, supporting scenarios with little or no connectivity"
+    },
+    {
+      "pos": [
+        1336,
+        1438
+      ],
+      "content": "Sync data across multiple devices and detect conflicts when the same record is modified by two devices"
+    },
+    {
+      "pos": [
+        1441,
+        1793
+      ],
+      "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> To complete this tutorial, you need a Azure account. If you don't have an account, you can sign up for an Azure trial and get up to 10 free mobile services that you can keep using even after your trial ends. For details, see <ph id=\"ph6\">&lt;a href=\"http://www.windowsazure.com/pricing/free-trial/?WT.mc_id=AE564AB28\" target=\"_blank\"&gt;</ph>Azure Free Trial<ph id=\"ph7\">&lt;/a&gt;</ph>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph4\">[AZURE.NOTE]</ph><ph id=\"ph5\"/> To complete this tutorial, you need a Azure account.",
+          "pos": [
+            0,
+            97
+          ]
+        },
+        {
+          "content": "If you don't have an account, you can sign up for an Azure trial and get up to 10 free mobile services that you can keep using even after your trial ends.",
+          "pos": [
+            98,
+            252
+          ]
+        },
+        {
+          "content": "For details, see <ph id=\"ph6\">&lt;a href=\"http://www.windowsazure.com/pricing/free-trial/?WT.mc_id=AE564AB28\" target=\"_blank\"&gt;</ph>Azure Free Trial<ph id=\"ph7\">&lt;/a&gt;</ph>.",
+          "pos": [
+            253,
+            432
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1798,
+        1914
+      ],
+      "content": "If this is your first experience with Mobile Services, you should first complete [Get started with Mobile Services]."
+    },
+    {
+      "pos": [
+        1916,
+        1966
+      ],
+      "content": "This tutorial walks you through these basic steps:"
+    },
+    {
+      "pos": [
+        1971,
+        2009
+      ],
+      "content": "[Review the Mobile Services sync code]"
+    },
+    {
+      "pos": [
+        2013,
+        2050
+      ],
+      "content": "[Update the sync behavior of the app]"
+    },
+    {
+      "pos": [
+        2054,
+        2103
+      ],
+      "content": "[Update the app to reconnect your mobile service]"
+    },
+    {
+      "pos": [
+        2105,
+        2142
+      ],
+      "content": "This tutorial requires the following:"
+    },
+    {
+      "pos": [
+        2146,
+        2220
+      ],
+      "content": "Visual Studio with the <bpt id=\"p1\">[</bpt><ept id=\"p1\">Xamarin extension] </ept><bpt id=\"p2\">**</bpt>or<ept id=\"p2\">**</ept> <bpt id=\"p3\">[</bpt><ept id=\"p3\">Xamarin Studio]</ept> on OS X"
+    },
+    {
+      "pos": [
+        2223,
+        2264
+      ],
+      "content": "XCode 4.5 and iOS 6.0 (or later versions)"
+    },
+    {
+      "pos": [
+        2267,
+        2328
+      ],
+      "content": "Completion of the [Get started with Mobile Services] tutorial"
+    },
+    {
+      "pos": [
+        2362,
+        2398
+      ],
+      "content": "Review the Mobile Services sync code"
+    },
+    {
+      "pos": [
+        2400,
+        2778
+      ],
+      "content": "Azure Mobile Services offline sync allows end users to interact with a local database when the network is not accessible. To use these features in your app, you initialize <ph id=\"ph8\">`MobileServiceClient.SyncContext`</ph><ph id=\"ph9\"/> to a local store. Then reference your table through the <ph id=\"ph10\">`IMobileServiceSyncTable`</ph><ph id=\"ph11\"/> interface.\nThis section walks through the offline sync related code in <ph id=\"ph12\">`QSTodoService.cs`</ph>.",
+      "nodes": [
+        {
+          "content": "Azure Mobile Services offline sync allows end users to interact with a local database when the network is not accessible.",
+          "pos": [
+            0,
+            121
+          ]
+        },
+        {
+          "content": "To use these features in your app, you initialize <ph id=\"ph8\">`MobileServiceClient.SyncContext`</ph><ph id=\"ph9\"/> to a local store.",
+          "pos": [
+            122,
+            255
+          ]
+        },
+        {
+          "content": "Then reference your table through the <ph id=\"ph10\">`IMobileServiceSyncTable`</ph><ph id=\"ph11\"/> interface.",
+          "pos": [
+            256,
+            364
+          ]
+        },
+        {
+          "content": "This section walks through the offline sync related code in <ph id=\"ph12\">`QSTodoService.cs`</ph>.",
+          "pos": [
+            365,
+            463
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2783,
+        2922
+      ],
+      "content": "In Visual Studio, open the project that you completed in the [Get started with Mobile Services] tutorial. Open the file <ph id=\"ph13\">`QSTodoService.cs`</ph>.",
+      "nodes": [
+        {
+          "content": "In Visual Studio, open the project that you completed in the [Get started with Mobile Services] tutorial.",
+          "pos": [
+            0,
+            105
+          ]
+        },
+        {
+          "content": "Open the file <ph id=\"ph13\">`QSTodoService.cs`</ph>.",
+          "pos": [
+            106,
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2927,
+        3230
+      ],
+      "content": "Notice the type of the member <ph id=\"ph14\">`todoTable`</ph><ph id=\"ph15\"/> is <ph id=\"ph16\">`IMobileServiceSyncTable`</ph>. Offline sync uses this sync table interface instead of <ph id=\"ph17\">`IMobileServiceTable`</ph>. When a sync table is used, all operations go to the local store and are only synchronized with the remote service with explicit push and pull operations.",
+      "nodes": [
+        {
+          "content": "Notice the type of the member <ph id=\"ph14\">`todoTable`</ph><ph id=\"ph15\"/> is <ph id=\"ph16\">`IMobileServiceSyncTable`</ph>.",
+          "pos": [
+            0,
+            124
+          ]
+        },
+        {
+          "content": "Offline sync uses this sync table interface instead of <ph id=\"ph17\">`IMobileServiceTable`</ph>.",
+          "pos": [
+            125,
+            221
+          ]
+        },
+        {
+          "content": "When a sync table is used, all operations go to the local store and are only synchronized with the remote service with explicit push and pull operations.",
+          "pos": [
+            222,
+            375
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3236,
+        3386
+      ],
+      "content": "To get a reference to a sync table, the method <ph id=\"ph18\">`GetSyncTable()`</ph><ph id=\"ph19\"/> is used. To remove the offline sync functionality, you would instead use <ph id=\"ph20\">`GetTable()`</ph>.",
+      "nodes": [
+        {
+          "content": "To get a reference to a sync table, the method <ph id=\"ph18\">`GetSyncTable()`</ph><ph id=\"ph19\"/> is used.",
+          "pos": [
+            0,
+            106
+          ]
+        },
+        {
+          "content": "To remove the offline sync functionality, you would instead use <ph id=\"ph20\">`GetTable()`</ph>.",
+          "pos": [
+            107,
+            203
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3391,
+        3524
+      ],
+      "content": "Before any table operations can be performed, the local store must be initialized. This is done in the <ph id=\"ph21\">`InitializeStoreAsync`</ph><ph id=\"ph22\"/> method:",
+      "nodes": [
+        {
+          "content": "Before any table operations can be performed, the local store must be initialized.",
+          "pos": [
+            0,
+            82
+          ]
+        },
+        {
+          "content": "This is done in the <ph id=\"ph21\">`InitializeStoreAsync`</ph><ph id=\"ph22\"/> method:",
+          "pos": [
+            83,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3846,
+        4066
+      ],
+      "content": "This creates a local store using the class <ph id=\"ph23\">`MobileServiceSQLiteStore`</ph>, which is provided in the Mobile Services SDK. You can also provide a different local store implementation by implementing <ph id=\"ph24\">`IMobileServiceLocalStore`</ph>.",
+      "nodes": [
+        {
+          "content": "This creates a local store using the class <ph id=\"ph23\">`MobileServiceSQLiteStore`</ph>, which is provided in the Mobile Services SDK.",
+          "pos": [
+            0,
+            135
+          ]
+        },
+        {
+          "content": "You can also provide a different local store implementation by implementing <ph id=\"ph24\">`IMobileServiceLocalStore`</ph>.",
+          "pos": [
+            136,
+            258
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4072,
+        4337
+      ],
+      "content": "The <ph id=\"ph25\">`DefineTable`</ph><ph id=\"ph26\"/> method creates a table in the local store that matches the fields in the provided type, <ph id=\"ph27\">`ToDoItem`</ph><ph id=\"ph28\"/> in this case. The type doesn't have to include all of the columns that are in the remote database--it is possible to store just a subset of columns.",
+      "nodes": [
+        {
+          "content": "The <ph id=\"ph25\">`DefineTable`</ph><ph id=\"ph26\"/> method creates a table in the local store that matches the fields in the provided type, <ph id=\"ph27\">`ToDoItem`</ph><ph id=\"ph28\"/> in this case.",
+          "pos": [
+            0,
+            198
+          ]
+        },
+        {
+          "content": "The type doesn't have to include all of the columns that are in the remote database--it is possible to store just a subset of columns.",
+          "pos": [
+            199,
+            333
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4343,
+        4572
+      ],
+      "content": "This overload of <ph id=\"ph29\">`InitializeAsync`</ph><ph id=\"ph30\"/> uses the default conflict handler, which fails whenever there is a conflict. To provide a custom conflict handler, see the tutorial [Handling conflicts with offline support for Mobile Services].",
+      "nodes": [
+        {
+          "content": "This overload of <ph id=\"ph29\">`InitializeAsync`</ph><ph id=\"ph30\"/> uses the default conflict handler, which fails whenever there is a conflict.",
+          "pos": [
+            0,
+            145
+          ]
+        },
+        {
+          "content": "To provide a custom conflict handler, see the tutorial [Handling conflicts with offline support for Mobile Services].",
+          "pos": [
+            146,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4577,
+        4635
+      ],
+      "content": "The method <ph id=\"ph31\">`SyncAsync`</ph><ph id=\"ph32\"/> triggers the actual sync operation:"
+    },
+    {
+      "pos": [
+        5086,
+        5392
+      ],
+      "content": "First, there is a call to <ph id=\"ph33\">`IMobileServiceSyncContext.PushAsync()`</ph>. This method is a member of <ph id=\"ph34\">`IMobileServicesSyncContext`</ph><ph id=\"ph35\"/> instead of the sync table because it will push changes across all tables. Only records that have been modified in some way locally (through CUD operations) will be sent to the server.",
+      "nodes": [
+        {
+          "content": "First, there is a call to <ph id=\"ph33\">`IMobileServiceSyncContext.PushAsync()`</ph>.",
+          "pos": [
+            0,
+            85
+          ]
+        },
+        {
+          "content": "This method is a member of <ph id=\"ph34\">`IMobileServicesSyncContext`</ph><ph id=\"ph35\"/> instead of the sync table because it will push changes across all tables.",
+          "pos": [
+            86,
+            249
+          ]
+        },
+        {
+          "content": "Only records that have been modified in some way locally (through CUD operations) will be sent to the server.",
+          "pos": [
+            250,
+            359
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5398,
+        5744
+      ],
+      "content": "Next, the method calls <ph id=\"ph36\">`IMobileServiceSyncTable.PullAsync()`</ph><ph id=\"ph37\"/> to pull data from a table on the server to the app. Note that if there are any changes pending in the sync context, a pull always issues a push first. This is to ensure all tables in the local store along with relationships are consistent. In this case, we have called push explicitly.",
+      "nodes": [
+        {
+          "content": "Next, the method calls <ph id=\"ph36\">`IMobileServiceSyncTable.PullAsync()`</ph><ph id=\"ph37\"/> to pull data from a table on the server to the app.",
+          "pos": [
+            0,
+            146
+          ]
+        },
+        {
+          "content": "Note that if there are any changes pending in the sync context, a pull always issues a push first.",
+          "pos": [
+            147,
+            245
+          ]
+        },
+        {
+          "content": "This is to ensure all tables in the local store along with relationships are consistent.",
+          "pos": [
+            246,
+            334
+          ]
+        },
+        {
+          "content": "In this case, we have called push explicitly.",
+          "pos": [
+            335,
+            380
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5750,
+        6308
+      ],
+      "content": "In this example, we retrieve all records in the remote <ph id=\"ph38\">`TodoItem`</ph><ph id=\"ph39\"/> table, but it is also possible to filter records by passing a query. The first parameter to <ph id=\"ph40\">`PullAsync()`</ph><ph id=\"ph41\"/> is a query ID that is used for incremental sync, which uses the <ph id=\"ph42\">`UpdatedAt`</ph><ph id=\"ph43\"/> timestamp to get only those records modified since the last sync. The query ID should be a descriptive string that is unique for each logical query in your app. To opt-out of incremental sync, pass <ph id=\"ph44\">`null`</ph><ph id=\"ph45\"/> as the query ID. This will retrieve all records on each pull operation, which is potentially inefficient.",
+      "nodes": [
+        {
+          "content": "In this example, we retrieve all records in the remote <ph id=\"ph38\">`TodoItem`</ph><ph id=\"ph39\"/> table, but it is also possible to filter records by passing a query.",
+          "pos": [
+            0,
+            168
+          ]
+        },
+        {
+          "content": "The first parameter to <ph id=\"ph40\">`PullAsync()`</ph><ph id=\"ph41\"/> is a query ID that is used for incremental sync, which uses the <ph id=\"ph42\">`UpdatedAt`</ph><ph id=\"ph43\"/> timestamp to get only those records modified since the last sync.",
+          "pos": [
+            169,
+            415
+          ]
+        },
+        {
+          "content": "The query ID should be a descriptive string that is unique for each logical query in your app.",
+          "pos": [
+            416,
+            510
+          ]
+        },
+        {
+          "content": "To opt-out of incremental sync, pass <ph id=\"ph44\">`null`</ph><ph id=\"ph45\"/> as the query ID.",
+          "pos": [
+            511,
+            605
+          ]
+        },
+        {
+          "content": "This will retrieve all records on each pull operation, which is potentially inefficient.",
+          "pos": [
+            606,
+            694
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6315,
+        6577
+      ],
+      "content": "<ph id=\"ph46\">[AZURE.NOTE]</ph><ph id=\"ph47\"/> To remove records from the device local store when they have been deleted in your mobile service database, you should enable [Soft Delete]. Otherwise, your app should periodically call <ph id=\"ph48\">`IMobileServiceSyncTable.PurgeAsync()`</ph><ph id=\"ph49\"/> to purge the local store.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph46\">[AZURE.NOTE]</ph><ph id=\"ph47\"/> To remove records from the device local store when they have been deleted in your mobile service database, you should enable [Soft Delete].",
+          "pos": [
+            0,
+            186
+          ]
+        },
+        {
+          "content": "Otherwise, your app should periodically call <ph id=\"ph48\">`IMobileServiceSyncTable.PurgeAsync()`</ph><ph id=\"ph49\"/> to purge the local store.",
+          "pos": [
+            187,
+            330
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6583,
+        6812
+      ],
+      "content": "Note that the <ph id=\"ph50\">`MobileServicePushFailedException`</ph><ph id=\"ph51\"/> can occur for both a push and a pull operation. The next tutorial, [Handling conflicts with offline support for Mobile Services], shows how to handle these sync related exceptions.",
+      "nodes": [
+        {
+          "content": "Note that the <ph id=\"ph50\">`MobileServicePushFailedException`</ph><ph id=\"ph51\"/> can occur for both a push and a pull operation.",
+          "pos": [
+            0,
+            130
+          ]
+        },
+        {
+          "content": "The next tutorial, [Handling conflicts with offline support for Mobile Services], shows how to handle these sync related exceptions.",
+          "pos": [
+            131,
+            263
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6817,
+        7210
+      ],
+      "content": "In the class <ph id=\"ph52\">`QSTodoService`</ph>, the method <ph id=\"ph53\">`SyncAsync()`</ph><ph id=\"ph54\"/> is called after the operations that modify data, <ph id=\"ph55\">`InsertTodoItemAsync()`</ph><ph id=\"ph56\"/> and <ph id=\"ph57\">`CompleteItemAsync`</ph>. It is also called from <ph id=\"ph58\">`RefreshDataAsync()`</ph>, so that the user gets the latest data whenever they perform the refresh gesture. The app also performs a sync on launch, since <ph id=\"ph59\">`QSTodoListViewController.ViewDidLoad()`</ph><ph id=\"ph60\"/> calls <ph id=\"ph61\">`RefreshDataAsync()`</ph>.",
+      "nodes": [
+        {
+          "content": "In the class <ph id=\"ph52\">`QSTodoService`</ph>, the method <ph id=\"ph53\">`SyncAsync()`</ph><ph id=\"ph54\"/> is called after the operations that modify data, <ph id=\"ph55\">`InsertTodoItemAsync()`</ph><ph id=\"ph56\"/> and <ph id=\"ph57\">`CompleteItemAsync`</ph>.",
+          "pos": [
+            0,
+            258
+          ]
+        },
+        {
+          "content": "It is also called from <ph id=\"ph58\">`RefreshDataAsync()`</ph>, so that the user gets the latest data whenever they perform the refresh gesture.",
+          "pos": [
+            259,
+            403
+          ]
+        },
+        {
+          "content": "The app also performs a sync on launch, since <ph id=\"ph59\">`QSTodoListViewController.ViewDidLoad()`</ph><ph id=\"ph60\"/> calls <ph id=\"ph61\">`RefreshDataAsync()`</ph>.",
+          "pos": [
+            404,
+            571
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7216,
+        7442
+      ],
+      "content": "Because <ph id=\"ph62\">`SyncAsync()`</ph><ph id=\"ph63\"/> is called whenever data is modified, this app assumes that the user is online whenever they are editing data. In the next section, we will update the app so that users can edit even when they are offline.",
+      "nodes": [
+        {
+          "content": "Because <ph id=\"ph62\">`SyncAsync()`</ph><ph id=\"ph63\"/> is called whenever data is modified, this app assumes that the user is online whenever they are editing data.",
+          "pos": [
+            0,
+            165
+          ]
+        },
+        {
+          "content": "In the next section, we will update the app so that users can edit even when they are offline.",
+          "pos": [
+            166,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7473,
+        7508
+      ],
+      "content": "Update the sync behavior of the app"
+    },
+    {
+      "pos": [
+        7510,
+        7887
+      ],
+      "content": "In this section, you will modify the app so that it does not sync on app launch or on the insert and update operations, but only when the refresh gesture is performed. Then, you will break the app connection with the mobile service to simulate an offline scenario. When you add data items, they will be held in the local store, but not immediately synced to the mobile service.",
+      "nodes": [
+        {
+          "content": "In this section, you will modify the app so that it does not sync on app launch or on the insert and update operations, but only when the refresh gesture is performed.",
+          "pos": [
+            0,
+            167
+          ]
+        },
+        {
+          "content": "Then, you will break the app connection with the mobile service to simulate an offline scenario.",
+          "pos": [
+            168,
+            264
+          ]
+        },
+        {
+          "content": "When you add data items, they will be held in the local store, but not immediately synced to the mobile service.",
+          "pos": [
+            265,
+            377
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        7892,
+        7981
+      ],
+      "content": "Open <ph id=\"ph64\">`QSTodoService.cs`</ph>. Comment out the calls to <ph id=\"ph65\">`SyncAsync()`</ph><ph id=\"ph66\"/> in the following methods:",
+      "nodes": [
+        {
+          "content": "Open <ph id=\"ph64\">`QSTodoService.cs`</ph>.",
+          "pos": [
+            0,
+            43
+          ]
+        },
+        {
+          "content": "Comment out the calls to <ph id=\"ph65\">`SyncAsync()`</ph><ph id=\"ph66\"/> in the following methods:",
+          "pos": [
+            44,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8067,
+        8171
+      ],
+      "content": "Now, <ph id=\"ph70\">`RefreshAsync()`</ph><ph id=\"ph71\"/> will only load data from the local store, but will not connect to the app backend."
+    },
+    {
+      "pos": [
+        8176,
+        8352
+      ],
+      "content": "In <ph id=\"ph72\">`QSTodoService.cs`</ph>, comment out the definitions of the members <ph id=\"ph73\">`applicationURL`</ph><ph id=\"ph74\"/> and <ph id=\"ph75\">`applicationKey`</ph>. Add the following lines, which reference an invalid mobile service URL:",
+      "nodes": [
+        {
+          "content": "In <ph id=\"ph72\">`QSTodoService.cs`</ph>, comment out the definitions of the members <ph id=\"ph73\">`applicationURL`</ph><ph id=\"ph74\"/> and <ph id=\"ph75\">`applicationKey`</ph>.",
+          "pos": [
+            0,
+            176
+          ]
+        },
+        {
+          "content": "Add the following lines, which reference an invalid mobile service URL:",
+          "pos": [
+            177,
+            248
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8495,
+        8697
+      ],
+      "content": "To ensure that data is synchronized when the refresh gesture is performed, edit the method <ph id=\"ph76\">`QSTodoListViewController.RefreshAsync()`</ph>. Add a call to <ph id=\"ph77\">`SyncAsync()`</ph><ph id=\"ph78\"/> before the call to <ph id=\"ph79\">`RefreshDataAsync()`</ph>:",
+      "nodes": [
+        {
+          "content": "To ensure that data is synchronized when the refresh gesture is performed, edit the method <ph id=\"ph76\">`QSTodoListViewController.RefreshAsync()`</ph>.",
+          "pos": [
+            0,
+            152
+          ]
+        },
+        {
+          "content": "Add a call to <ph id=\"ph77\">`SyncAsync()`</ph><ph id=\"ph78\"/> before the call to <ph id=\"ph79\">`RefreshDataAsync()`</ph>:",
+          "pos": [
+            153,
+            274
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9009,
+        9277
+      ],
+      "content": "Build and run the app. Add some new todo items. These new items exist only in the local store until they can be pushed to the mobile service. The client app behaves as if is connected to the mobile service supporting all create, read, update, delete (CRUD) operations.",
+      "nodes": [
+        {
+          "content": "Build and run the app.",
+          "pos": [
+            0,
+            22
+          ]
+        },
+        {
+          "content": "Add some new todo items.",
+          "pos": [
+            23,
+            47
+          ]
+        },
+        {
+          "content": "These new items exist only in the local store until they can be pushed to the mobile service.",
+          "pos": [
+            48,
+            141
+          ]
+        },
+        {
+          "content": "The client app behaves as if is connected to the mobile service supporting all create, read, update, delete (CRUD) operations.",
+          "pos": [
+            142,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9282,
+        9385
+      ],
+      "content": "Close the app and restart it to verify that the new items you created are persisted to the local store."
+    },
+    {
+      "pos": [
+        9422,
+        9469
+      ],
+      "content": "Update the app to reconnect your mobile service"
+    },
+    {
+      "pos": [
+        9471,
+        9714
+      ],
+      "content": "In this section you will reconnect the app to the mobile service. This simulates the app moving from an offline state to an online state with the mobile service. When you perform the refresh gesture, data will be synced to your mobile service.",
+      "nodes": [
+        {
+          "content": "In this section you will reconnect the app to the mobile service.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "This simulates the app moving from an offline state to an online state with the mobile service.",
+          "pos": [
+            66,
+            161
+          ]
+        },
+        {
+          "content": "When you perform the refresh gesture, data will be synced to your mobile service.",
+          "pos": [
+            162,
+            243
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9719,
+        9823
+      ],
+      "content": "Open <ph id=\"ph80\">`QSTodoService.cs`</ph>. Remove the invalid mobile service URL and add back the correct URL and app key.",
+      "nodes": [
+        {
+          "content": "Open <ph id=\"ph80\">`QSTodoService.cs`</ph>.",
+          "pos": [
+            0,
+            43
+          ]
+        },
+        {
+          "content": "Remove the invalid mobile service URL and add back the correct URL and app key.",
+          "pos": [
+            44,
+            123
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        9828,
+        10075
+      ],
+      "content": "Rebuild and run the app. Notice that the data looks the same as the offline scenario even though the app is now connected to the mobile service. This is because this app always uses the <ph id=\"ph81\">`IMobileServiceSyncTable`</ph><ph id=\"ph82\"/> that is pointed to the local store.",
+      "nodes": [
+        {
+          "content": "Rebuild and run the app.",
+          "pos": [
+            0,
+            24
+          ]
+        },
+        {
+          "content": "Notice that the data looks the same as the offline scenario even though the app is now connected to the mobile service.",
+          "pos": [
+            25,
+            144
+          ]
+        },
+        {
+          "content": "This is because this app always uses the <ph id=\"ph81\">`IMobileServiceSyncTable`</ph><ph id=\"ph82\"/> that is pointed to the local store.",
+          "pos": [
+            145,
+            281
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10080,
+        10279
+      ],
+      "content": "Log into the <bpt id=\"p4\">[</bpt><ept id=\"p4\">Azure classic portal]</ept> and look at the database for your mobile service. If your service uses the JavaScript backend, you can browse the data from the <bpt id=\"p5\">**</bpt>Data<ept id=\"p5\">**</ept><ph id=\"ph83\"/> tab of the mobile service.",
+      "nodes": [
+        {
+          "content": "Log into the <bpt id=\"p4\">[</bpt><ept id=\"p4\">Azure classic portal]</ept> and look at the database for your mobile service.",
+          "pos": [
+            0,
+            123
+          ]
+        },
+        {
+          "content": "If your service uses the JavaScript backend, you can browse the data from the <bpt id=\"p5\">**</bpt>Data<ept id=\"p5\">**</ept><ph id=\"ph83\"/> tab of the mobile service.",
+          "pos": [
+            124,
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10285,
+        10496
+      ],
+      "content": "If you are using the .NET backend for your mobile service, in Visual Studio go to <bpt id=\"p6\">**</bpt>Server Explorer<ept id=\"p6\">**</ept><ph id=\"ph84\"/> &gt; <bpt id=\"p7\">**</bpt>Azure<ept id=\"p7\">**</ept><ph id=\"ph85\"/> &gt; <bpt id=\"p8\">**</bpt>SQL Databases<ept id=\"p8\">**</ept>. Right click your database and select <bpt id=\"p9\">**</bpt>Open in SQL Server Object Explorer<ept id=\"p9\">**</ept>.",
+      "nodes": [
+        {
+          "content": "If you are using the .NET backend for your mobile service, in Visual Studio go to <bpt id=\"p6\">**</bpt>Server Explorer<ept id=\"p6\">**</ept><ph id=\"ph84\"/> &gt; <bpt id=\"p7\">**</bpt>Azure<ept id=\"p7\">**</ept><ph id=\"ph85\"/> &gt; <bpt id=\"p8\">**</bpt>SQL Databases<ept id=\"p8\">**</ept>.",
+          "pos": [
+            0,
+            284
+          ]
+        },
+        {
+          "content": "Right click your database and select <bpt id=\"p9\">**</bpt>Open in SQL Server Object Explorer<ept id=\"p9\">**</ept>.",
+          "pos": [
+            285,
+            399
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10502,
+        10587
+      ],
+      "content": "Notice the data has <bpt id=\"p10\">*</bpt>not<ept id=\"p10\">*</ept><ph id=\"ph86\"/> been synchronized between the database and the local store."
+    },
+    {
+      "pos": [
+        10592,
+        10901
+      ],
+      "content": "In the app, perform the refresh gesture by pulling down the list of items. This causes the app to call <ph id=\"ph87\">`RefreshDataAsync()`</ph>, which in turn calls <ph id=\"ph88\">`SyncAsync()`</ph>. This will perform the push and pull operations, first sending the local store items to the mobile service, then retrieving new data from the service.",
+      "nodes": [
+        {
+          "content": "In the app, perform the refresh gesture by pulling down the list of items.",
+          "pos": [
+            0,
+            74
+          ]
+        },
+        {
+          "content": "This causes the app to call <ph id=\"ph87\">`RefreshDataAsync()`</ph>, which in turn calls <ph id=\"ph88\">`SyncAsync()`</ph>.",
+          "pos": [
+            75,
+            197
+          ]
+        },
+        {
+          "content": "This will perform the push and pull operations, first sending the local store items to the mobile service, then retrieving new data from the service.",
+          "pos": [
+            198,
+            347
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        10906,
+        10996
+      ],
+      "content": "Check the database for your mobile service to confirm that changes have been synchronized."
+    },
+    {
+      "pos": [
+        11000,
+        11007
+      ],
+      "content": "Summary"
+    },
+    {
+      "pos": [
+        11128,
+        11138
+      ],
+      "content": "Next steps"
+    },
+    {
+      "pos": [
+        11142,
+        11209
+      ],
+      "content": "[How to use the Xamarin Component client for Azure Mobile Services]"
+    },
+    {
+      "pos": [
+        11229,
+        11406
+      ],
+      "content": "[Review the Mobile Services sync code]: #review-offline\n[Update the sync behavior of the app]: #update-sync\n[Update the app to reconnect your mobile service]: #update-online-app"
+    },
+    {
+      "pos": [
+        11440,
+        11818
+      ],
+      "content": "[Handling conflicts with offline support for Mobile Services]: mobile-services-xamarin-ios-handling-conflicts-offline-data.md\n[Get started with Mobile Services]: mobile-services-ios-get-started.md\n[How to use the Xamarin Component client for Azure Mobile Services]: partner-xamarin-mobile-services-how-to-use-client-library.md\n[Soft Delete]: mobile-services-using-soft-delete.md"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Using offline data in Mobile Services (Xamarin iOS) | Microsoft Azure\"\n    description=\"Learn how to use Azure Mobile Services to cache and sync offline data in your Xamarin iOS application\"\n    documentationCenter=\"xamarin\"\n    authors=\"lindydonna\"\n    editor=\"wesmc\"\n    manager=\"dwrede\"\n    services=\"mobile-services\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.date=\"01/21/2016\"\n    ms.author=\"donnam\"/>\n\n# Using offline data sync in Mobile Services\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\n[AZURE.INCLUDE [mobile-services-selector-offline](../../includes/mobile-services-selector-offline.md)]\n\nThis topic walks through the offline sync capabilities of Azure Mobile Services in the todo list quickstart app. Offline sync allows you to easily create apps that are usable even when the end user has no network access.\n\nOffline sync has several potential uses:\n\n* Improve app responsiveness by caching server data locally on the device\n* Make apps resilient against intermittent network connectivity\n* Allow end-users to create and modify data even when there is no network access, supporting scenarios with little or no connectivity\n* Sync data across multiple devices and detect conflicts when the same record is modified by two devices\n\n>[AZURE.NOTE] To complete this tutorial, you need a Azure account. If you don't have an account, you can sign up for an Azure trial and get up to 10 free mobile services that you can keep using even after your trial ends. For details, see <a href=\"http://www.windowsazure.com/pricing/free-trial/?WT.mc_id=AE564AB28\" target=\"_blank\">Azure Free Trial</a>.\n>\n> If this is your first experience with Mobile Services, you should first complete [Get started with Mobile Services].\n\nThis tutorial walks you through these basic steps:\n\n1. [Review the Mobile Services sync code]\n2. [Update the sync behavior of the app]\n3. [Update the app to reconnect your mobile service]\n\nThis tutorial requires the following:\n\n* Visual Studio with the [Xamarin extension] **or** [Xamarin Studio] on OS X\n* XCode 4.5 and iOS 6.0 (or later versions)\n* Completion of the [Get started with Mobile Services] tutorial\n\n## <a name=\"review-offline\"></a>Review the Mobile Services sync code\n\nAzure Mobile Services offline sync allows end users to interact with a local database when the network is not accessible. To use these features in your app, you initialize `MobileServiceClient.SyncContext` to a local store. Then reference your table through the `IMobileServiceSyncTable` interface.\nThis section walks through the offline sync related code in `QSTodoService.cs`.\n\n1. In Visual Studio, open the project that you completed in the [Get started with Mobile Services] tutorial. Open the file `QSTodoService.cs`.\n\n2. Notice the type of the member `todoTable` is `IMobileServiceSyncTable`. Offline sync uses this sync table interface instead of `IMobileServiceTable`. When a sync table is used, all operations go to the local store and are only synchronized with the remote service with explicit push and pull operations.\n\n    To get a reference to a sync table, the method `GetSyncTable()` is used. To remove the offline sync functionality, you would instead use `GetTable()`.\n\n3. Before any table operations can be performed, the local store must be initialized. This is done in the `InitializeStoreAsync` method:\n\n        public async Task InitializeStoreAsync()\n        {\n            var store = new MobileServiceSQLiteStore(localDbPath);\n            store.DefineTable<ToDoItem>();\n\n            // Uses the default conflict handler, which fails on conflict\n            await client.SyncContext.InitializeAsync(store);\n        }\n\n    This creates a local store using the class `MobileServiceSQLiteStore`, which is provided in the Mobile Services SDK. You can also provide a different local store implementation by implementing `IMobileServiceLocalStore`.\n\n    The `DefineTable` method creates a table in the local store that matches the fields in the provided type, `ToDoItem` in this case. The type doesn't have to include all of the columns that are in the remote database--it is possible to store just a subset of columns.\n\n    This overload of `InitializeAsync` uses the default conflict handler, which fails whenever there is a conflict. To provide a custom conflict handler, see the tutorial [Handling conflicts with offline support for Mobile Services].\n\n4. The method `SyncAsync` triggers the actual sync operation:\n\n        public async Task SyncAsync()\n        {\n            try\n            {\n                await client.SyncContext.PushAsync();\n                await todoTable.PullAsync(\"allTodoItems\", todoTable.CreateQuery()); // query ID is used for incremental sync\n            }\n\n            catch (MobileServiceInvalidOperationException e)\n            {\n                Console.Error.WriteLine(@\"Sync Failed: {0}\", e.Message);\n            }\n        }\n\n    First, there is a call to `IMobileServiceSyncContext.PushAsync()`. This method is a member of `IMobileServicesSyncContext` instead of the sync table because it will push changes across all tables. Only records that have been modified in some way locally (through CUD operations) will be sent to the server.\n\n    Next, the method calls `IMobileServiceSyncTable.PullAsync()` to pull data from a table on the server to the app. Note that if there are any changes pending in the sync context, a pull always issues a push first. This is to ensure all tables in the local store along with relationships are consistent. In this case, we have called push explicitly.\n\n    In this example, we retrieve all records in the remote `TodoItem` table, but it is also possible to filter records by passing a query. The first parameter to `PullAsync()` is a query ID that is used for incremental sync, which uses the `UpdatedAt` timestamp to get only those records modified since the last sync. The query ID should be a descriptive string that is unique for each logical query in your app. To opt-out of incremental sync, pass `null` as the query ID. This will retrieve all records on each pull operation, which is potentially inefficient.\n\n    >[AZURE.NOTE] To remove records from the device local store when they have been deleted in your mobile service database, you should enable [Soft Delete]. Otherwise, your app should periodically call `IMobileServiceSyncTable.PurgeAsync()` to purge the local store.\n\n    Note that the `MobileServicePushFailedException` can occur for both a push and a pull operation. The next tutorial, [Handling conflicts with offline support for Mobile Services], shows how to handle these sync related exceptions.\n\n5. In the class `QSTodoService`, the method `SyncAsync()` is called after the operations that modify data, `InsertTodoItemAsync()` and `CompleteItemAsync`. It is also called from `RefreshDataAsync()`, so that the user gets the latest data whenever they perform the refresh gesture. The app also performs a sync on launch, since `QSTodoListViewController.ViewDidLoad()` calls `RefreshDataAsync()`.\n\n    Because `SyncAsync()` is called whenever data is modified, this app assumes that the user is online whenever they are editing data. In the next section, we will update the app so that users can edit even when they are offline.\n\n## <a name=\"update-sync\"></a>Update the sync behavior of the app\n\nIn this section, you will modify the app so that it does not sync on app launch or on the insert and update operations, but only when the refresh gesture is performed. Then, you will break the app connection with the mobile service to simulate an offline scenario. When you add data items, they will be held in the local store, but not immediately synced to the mobile service.\n\n1. Open `QSTodoService.cs`. Comment out the calls to `SyncAsync()` in the following methods:\n\n    - `InsertTodoItemAsync`\n    - `CompleteItemAsync`\n    - `RefreshDataAsync`\n\n    Now, `RefreshAsync()` will only load data from the local store, but will not connect to the app backend.\n\n2. In `QSTodoService.cs`, comment out the definitions of the members `applicationURL` and `applicationKey`. Add the following lines, which reference an invalid mobile service URL:\n\n        const string applicationURL = @\"https://your-mobile-service.azure-mobile.xxx/\";\n        const string applicationKey = @\"AppKey\";\n\n3. To ensure that data is synchronized when the refresh gesture is performed, edit the method `QSTodoListViewController.RefreshAsync()`. Add a call to `SyncAsync()` before the call to `RefreshDataAsync()`:\n\n        private async Task RefreshAsync ()\n        {\n            RefreshControl.BeginRefreshing ();\n\n            await todoService.SyncAsync();\n            await todoService.RefreshDataAsync (); // add this line\n\n            RefreshControl.EndRefreshing ();\n\n            TableView.ReloadData ();\n        }\n\n4. Build and run the app. Add some new todo items. These new items exist only in the local store until they can be pushed to the mobile service. The client app behaves as if is connected to the mobile service supporting all create, read, update, delete (CRUD) operations.\n\n5. Close the app and restart it to verify that the new items you created are persisted to the local store.\n\n## <a name=\"update-online-app\"></a>Update the app to reconnect your mobile service\n\nIn this section you will reconnect the app to the mobile service. This simulates the app moving from an offline state to an online state with the mobile service. When you perform the refresh gesture, data will be synced to your mobile service.\n\n1. Open `QSTodoService.cs`. Remove the invalid mobile service URL and add back the correct URL and app key.\n\n2. Rebuild and run the app. Notice that the data looks the same as the offline scenario even though the app is now connected to the mobile service. This is because this app always uses the `IMobileServiceSyncTable` that is pointed to the local store.\n\n3. Log into the [Azure classic portal] and look at the database for your mobile service. If your service uses the JavaScript backend, you can browse the data from the **Data** tab of the mobile service.\n\n    If you are using the .NET backend for your mobile service, in Visual Studio go to **Server Explorer** > **Azure** > **SQL Databases**. Right click your database and select **Open in SQL Server Object Explorer**.\n\n    Notice the data has *not* been synchronized between the database and the local store.\n\n4. In the app, perform the refresh gesture by pulling down the list of items. This causes the app to call `RefreshDataAsync()`, which in turn calls `SyncAsync()`. This will perform the push and pull operations, first sending the local store items to the mobile service, then retrieving new data from the service.\n\n5. Check the database for your mobile service to confirm that changes have been synchronized.\n\n##Summary\n\n[AZURE.INCLUDE [mobile-services-offline-summary-csharp](../../includes/mobile-services-offline-summary-csharp.md)]\n\n## Next steps\n\n* [How to use the Xamarin Component client for Azure Mobile Services]\n\n<!-- Anchors. -->\n[Review the Mobile Services sync code]: #review-offline\n[Update the sync behavior of the app]: #update-sync\n[Update the app to reconnect your mobile service]: #update-online-app\n\n<!-- Images -->\n\n<!-- URLs. -->\n[Handling conflicts with offline support for Mobile Services]: mobile-services-xamarin-ios-handling-conflicts-offline-data.md\n[Get started with Mobile Services]: mobile-services-ios-get-started.md\n[How to use the Xamarin Component client for Azure Mobile Services]: partner-xamarin-mobile-services-how-to-use-client-library.md\n[Soft Delete]: mobile-services-using-soft-delete.md\n\n[Xamarin Studio]: http://xamarin.com/download\n[Xamarin extension]: http://xamarin.com/visual-studio\n[Azure classic portal]: https://manage.windowsazure.com\n"
+}
