@@ -1,0 +1,794 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        27,
+        100
+      ],
+      "content": "Schedule backend tasks in a .NET backend mobile service | Microsoft Azure"
+    },
+    {
+      "pos": [
+        119,
+        213
+      ],
+      "content": "Use the scheduler in Azure Mobile Services to define .NET backend jobs that run on a schedule."
+    },
+    {
+      "pos": [
+        538,
+        580
+      ],
+      "content": "Schedule recurring jobs in Mobile Services"
+    },
+    {
+      "pos": [
+        685,
+        691
+      ],
+      "content": "&amp;nbsp;"
+    },
+    {
+      "pos": [
+        696,
+        712
+      ],
+      "content": "[AZURE.SELECTOR]"
+    },
+    {
+      "pos": [
+        715,
+        789
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>.NET backend<ept id=\"p1\">](mobile-services-dotnet-backend-schedule-recurring-tasks.md)</ept>"
+    },
+    {
+      "pos": [
+        792,
+        857
+      ],
+      "content": "<bpt id=\"p2\">[</bpt>Javascript backend<ept id=\"p2\">](mobile-services-schedule-recurring-tasks.md)</ept>"
+    },
+    {
+      "pos": [
+        859,
+        1218
+      ],
+      "content": "This topic shows you how to use the job scheduler functionality in the Azure classic portal to define server script code that is executed based on a schedule that you define. In this case, the script periodically check with a remote service, in this case Twitter, and stores the results in a new table. Some other periodic tasks that can be scheduled include:",
+      "nodes": [
+        {
+          "content": "This topic shows you how to use the job scheduler functionality in the Azure classic portal to define server script code that is executed based on a schedule that you define.",
+          "pos": [
+            0,
+            174
+          ]
+        },
+        {
+          "content": "In this case, the script periodically check with a remote service, in this case Twitter, and stores the results in a new table.",
+          "pos": [
+            175,
+            302
+          ]
+        },
+        {
+          "content": "Some other periodic tasks that can be scheduled include:",
+          "pos": [
+            303,
+            359
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1222,
+        1262
+      ],
+      "content": "Archiving old or duplicate data records."
+    },
+    {
+      "pos": [
+        1265,
+        1357
+      ],
+      "content": "Requesting and storing external data, such as tweets, RSS entries, and location information."
+    },
+    {
+      "pos": [
+        1360,
+        1397
+      ],
+      "content": "Processing or resizing stored images."
+    },
+    {
+      "pos": [
+        1399,
+        1569
+      ],
+      "content": "This tutorial walks you through how to use the job scheduler to create a scheduled job that requests tweet data from Twitter and stores the tweets in a new Updates table."
+    },
+    {
+      "pos": [
+        1572,
+        1851
+      ],
+      "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph>This tutorial uses the third-party LINQ to Twitter library to simplify OAuth 2.0 access to Twitter v1.1. APIs. You must download and install the LINQ to Twitter NuGet package to complete this tutorial. For more information, see the [LINQ to Twitter CodePlex project].",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph3\">[AZURE.NOTE]</ph>This tutorial uses the third-party LINQ to Twitter library to simplify OAuth 2.0 access to Twitter v1.1.",
+          "pos": [
+            0,
+            134
+          ]
+        },
+        {
+          "content": "APIs.",
+          "pos": [
+            135,
+            140
+          ]
+        },
+        {
+          "content": "You must download and install the LINQ to Twitter NuGet package to complete this tutorial.",
+          "pos": [
+            141,
+            231
+          ]
+        },
+        {
+          "content": "For more information, see the [LINQ to Twitter CodePlex project].",
+          "pos": [
+            232,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1853,
+        1855
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        1891,
+        1953
+      ],
+      "content": "Register for access to Twitter v1.1 APIs and store credentials"
+    },
+    {
+      "pos": [
+        2073,
+        2380
+      ],
+      "content": "&amp;nbsp;&amp;nbsp;7. In Solution Explorer in Visual Studio, open the web.config file for the mobile service project, locate the <ph id=\"ph5\">`MS_TwitterConsumerKey`</ph><ph id=\"ph6\"/> and <ph id=\"ph7\">`MS_TwitterConsumerSecret`</ph><ph id=\"ph8\"/> app settings and replace the values of these keys with Twitter consumer key and consumer secret values that you set in the portal.",
+      "nodes": [
+        {
+          "content": "&amp;nbsp;&amp;nbsp;7.",
+          "pos": [
+            0,
+            22
+          ]
+        },
+        {
+          "content": "In Solution Explorer in Visual Studio, open the web.config file for the mobile service project, locate the <ph id=\"ph5\">`MS_TwitterConsumerKey`</ph><ph id=\"ph6\"/> and <ph id=\"ph7\">`MS_TwitterConsumerSecret`</ph><ph id=\"ph8\"/> app settings and replace the values of these keys with Twitter consumer key and consumer secret values that you set in the portal.",
+          "pos": [
+            23,
+            379
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2382,
+        2585
+      ],
+      "content": "&amp;nbsp;&amp;nbsp;8. In the same section, add the following new app settings, replacing the placeholders with the Twitter access token and access token secret values that you set as app settings in the portal:",
+      "nodes": [
+        {
+          "content": "&amp;nbsp;&amp;nbsp;8.",
+          "pos": [
+            0,
+            22
+          ]
+        },
+        {
+          "content": "In the same section, add the following new app settings, replacing the placeholders with the Twitter access token and access token secret values that you set as app settings in the portal:",
+          "pos": [
+            23,
+            211
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        2740,
+        2998
+      ],
+      "content": "The mobile service uses these stored settings when it runs on the local computer, which lets you test the scheduled job before you publish it. When running in Azure, the mobile service instead uses values set in the portal and ignores these project settings.",
+      "nodes": [
+        {
+          "content": "The mobile service uses these stored settings when it runs on the local computer, which lets you test the scheduled job before you publish it.",
+          "pos": [
+            0,
+            142
+          ]
+        },
+        {
+          "content": "When running in Azure, the mobile service instead uses values set in the portal and ignores these project settings.",
+          "pos": [
+            143,
+            258
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        3000,
+        3002
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        3037,
+        3085
+      ],
+      "content": "Download and install the LINQ to Twitter library"
+    },
+    {
+      "pos": [
+        3090,
+        3205
+      ],
+      "content": "In <bpt id=\"p3\">**</bpt>Solution Explorer<ept id=\"p3\">**</ept><ph id=\"ph9\"/> in Visual Studio, right-click the project name, and then select <bpt id=\"p4\">**</bpt>Manage NuGet Packages<ept id=\"p4\">**</ept>."
+    },
+    {
+      "pos": [
+        3210,
+        3383
+      ],
+      "content": "In the left pane, select the <bpt id=\"p5\">**</bpt>Online<ept id=\"p5\">**</ept><ph id=\"ph10\"/> category, search for <ph id=\"ph11\">`linq2twitter`</ph>, click <bpt id=\"p6\">**</bpt>Install<ept id=\"p6\">**</ept><ph id=\"ph12\"/> on the <bpt id=\"p7\">**</bpt>linqtotwitter<ept id=\"p7\">**</ept><ph id=\"ph13\"/> package, then read and accept the license agreements."
+    },
+    {
+      "pos": [
+        3389,
+        3395
+      ],
+      "content": "![][1]"
+    },
+    {
+      "pos": [
+        3401,
+        3470
+      ],
+      "content": "This adds the Linq to Twitter library to your mobile service project."
+    },
+    {
+      "pos": [
+        3472,
+        3534
+      ],
+      "content": "Next, you need to create a new table in which to store tweets."
+    },
+    {
+      "pos": [
+        3536,
+        3538
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        3565,
+        3593
+      ],
+      "content": "Create the new Updates table"
+    },
+    {
+      "pos": [
+        3598,
+        3760
+      ],
+      "content": "In the Solution Explorer in Visual Studio, right-click the DataObjects folder, expand <bpt id=\"p8\">**</bpt>Add<ept id=\"p8\">**</ept>, click <bpt id=\"p9\">**</bpt>Class<ept id=\"p9\">**</ept>,   type <ph id=\"ph14\">`Updates`</ph><ph id=\"ph15\"/> for <bpt id=\"p10\">**</bpt>Name<ept id=\"p10\">**</ept>, then click <bpt id=\"p11\">**</bpt>Add<ept id=\"p11\">**</ept>."
+    },
+    {
+      "pos": [
+        3766,
+        3820
+      ],
+      "content": "This creates a new project file for the Updates class."
+    },
+    {
+      "pos": [
+        3825,
+        3983
+      ],
+      "content": "Right-click <bpt id=\"p12\">**</bpt>References<ept id=\"p12\">**</ept><ph id=\"ph16\"/> &gt; <bpt id=\"p13\">**</bpt>Add Reference...<ept id=\"p13\">**</ept><ph id=\"ph17\"/> &gt; <bpt id=\"p14\">**</bpt>Framework<ept id=\"p14\">**</ept><ph id=\"ph18\"/> under <bpt id=\"p15\">**</bpt>Assemblies<ept id=\"p15\">**</ept>, then check <bpt id=\"p16\">**</bpt>System.ComponentModel.DataAnnotations<ept id=\"p16\">**</ept><ph id=\"ph19\"/> and click <bpt id=\"p17\">**</bpt>OK<ept id=\"p17\">**</ept>."
+    },
+    {
+      "pos": [
+        3989,
+        3995
+      ],
+      "content": "![][7]"
+    },
+    {
+      "pos": [
+        4001,
+        4036
+      ],
+      "content": "This adds a new assembly reference."
+    },
+    {
+      "pos": [
+        4041,
+        4099
+      ],
+      "content": "In this new class, add the following <bpt id=\"p18\">**</bpt>using<ept id=\"p18\">**</ept><ph id=\"ph20\"/> statements:"
+    },
+    {
+      "pos": [
+        4211,
+        4276
+      ],
+      "content": "Replace the <bpt id=\"p19\">**</bpt>Updates<ept id=\"p19\">**</ept><ph id=\"ph21\"/> class definition with the following code:"
+    },
+    {
+      "pos": [
+        4580,
+        4734
+      ],
+      "content": "Expand the Models folder, open the data model context file (named <bpt id=\"p20\">*</bpt>service_name<ept id=\"p20\">*</ept>Context.cs) and add the following property that returns a typed <bpt id=\"p21\">**</bpt>DbSet<ept id=\"p21\">**</ept>:"
+    },
+    {
+      "pos": [
+        4793,
+        4922
+      ],
+      "content": "The Updates table, which is created in the database when the DbSet is first accessed, is used by the service to store tweet data."
+    },
+    {
+      "pos": [
+        4929,
+        5446
+      ],
+      "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> When using the default database initializer, Entity Framework will drop and recreate the database whenever it detects a data model change in the Code First model definition. To make this data model change and maintain existing data in the database, you must use Code First Migrations. The default initializer cannot be used against a SQL Database in Azure. For more information, see <bpt id=\"p22\">[</bpt>How to Use Code First Migrations to Update the Data Model<ept id=\"p22\">](mobile-services-dotnet-backend-use-code-first-migrations.md)</ept>.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph22\">[AZURE.NOTE]</ph><ph id=\"ph23\"/> When using the default database initializer, Entity Framework will drop and recreate the database whenever it detects a data model change in the Code First model definition.",
+          "pos": [
+            0,
+            220
+          ]
+        },
+        {
+          "content": "To make this data model change and maintain existing data in the database, you must use Code First Migrations.",
+          "pos": [
+            221,
+            331
+          ]
+        },
+        {
+          "content": "The default initializer cannot be used against a SQL Database in Azure.",
+          "pos": [
+            332,
+            403
+          ]
+        },
+        {
+          "content": "For more information, see <bpt id=\"p22\">[</bpt>How to Use Code First Migrations to Update the Data Model<ept id=\"p22\">](mobile-services-dotnet-backend-use-code-first-migrations.md)</ept>.",
+          "pos": [
+            404,
+            591
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        5448,
+        5552
+      ],
+      "content": "Next, you create the scheduled job that accesses Twitter and stores tweet data in the new Updates table."
+    },
+    {
+      "pos": [
+        5554,
+        5556
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        5578,
+        5604
+      ],
+      "content": "Create a new scheduled job"
+    },
+    {
+      "pos": [
+        5609,
+        5680
+      ],
+      "content": "Expand the ScheduledJobs folder and open the SampleJob.cs project file."
+    },
+    {
+      "pos": [
+        5686,
+        5845
+      ],
+      "content": "This class, which inherits from <bpt id=\"p23\">**</bpt>ScheduledJob<ept id=\"p23\">**</ept>, represents a job that can be scheduled, in the Azure classic portal, to run on a fixed schedule or on demand."
+    },
+    {
+      "pos": [
+        5850,
+        5911
+      ],
+      "content": "Replace the contents of SampleJob.cs with the following code:"
+    },
+    {
+      "pos": [
+        10838,
+        11087
+      ],
+      "content": "In the above code, you must replace the strings <bpt id=\"p24\">_</bpt>todolistService<ept id=\"p24\">_</ept><ph id=\"ph24\"/> and <bpt id=\"p25\">_</bpt>todolistContext<ept id=\"p25\">_</ept><ph id=\"ph25\"/> with the namespace and DbContext of your downloaded project, which are <bpt id=\"p26\">*</bpt>mobile&amp;#95;service&amp;#95;name<ept id=\"p26\">*</ept>Service and <bpt id=\"p27\">*</bpt>mobile&amp;#95;service&amp;#95;name<ept id=\"p27\">*</ept>Context, respective."
+    },
+    {
+      "pos": [
+        11093,
+        11365
+      ],
+      "content": "In the above code, the <bpt id=\"p28\">**</bpt>ExecuteAsync<ept id=\"p28\">**</ept><ph id=\"ph26\"/> override method calls the Twitter query API using stored credentials to request recent tweets that contain the hashtag <ph id=\"ph27\">`#mobileservices`</ph>. Duplicate tweets and replies are removed from the results before they are stored in the table.",
+      "nodes": [
+        {
+          "content": "In the above code, the <bpt id=\"p28\">**</bpt>ExecuteAsync<ept id=\"p28\">**</ept><ph id=\"ph26\"/> override method calls the Twitter query API using stored credentials to request recent tweets that contain the hashtag <ph id=\"ph27\">`#mobileservices`</ph>.",
+          "pos": [
+            0,
+            251
+          ]
+        },
+        {
+          "content": "Duplicate tweets and replies are removed from the results before they are stored in the table.",
+          "pos": [
+            252,
+            346
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        11367,
+        11369
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        11399,
+        11429
+      ],
+      "content": "Test the scheduled job locally"
+    },
+    {
+      "pos": [
+        11431,
+        11528
+      ],
+      "content": "Schedule jobs can be tested locally before being published to Azure and registered in the portal."
+    },
+    {
+      "pos": [
+        11533,
+        11620
+      ],
+      "content": "In Visual Studio, with the mobile service project set as the startup project, press F5."
+    },
+    {
+      "pos": [
+        11626,
+        11721
+      ],
+      "content": "This starts the mobile service project and displays a new browser window with the welcome page."
+    },
+    {
+      "pos": [
+        11726,
+        11783
+      ],
+      "content": "Click <bpt id=\"p29\">**</bpt>try it out<ept id=\"p29\">**</ept>, then click <bpt id=\"p30\">**</bpt>POST jobs/{jobName}<ept id=\"p30\">**</ept>."
+    },
+    {
+      "pos": [
+        11789,
+        11795
+      ],
+      "content": "![][8]"
+    },
+    {
+      "pos": [
+        11800,
+        11896
+      ],
+      "content": "Click <bpt id=\"p31\">**</bpt>try this out<ept id=\"p31\">**</ept>, type <ph id=\"ph28\">`Sample`</ph><ph id=\"ph29\"/> as the <bpt id=\"p32\">**</bpt>{jobName}<ept id=\"p32\">**</ept><ph id=\"ph30\"/> parameter value, then click <bpt id=\"p33\">**</bpt>Send<ept id=\"p33\">**</ept>."
+    },
+    {
+      "pos": [
+        11902,
+        11908
+      ],
+      "content": "![][9]"
+    },
+    {
+      "pos": [
+        11914,
+        12093
+      ],
+      "content": "This sends a new POST request to the Sample job endpoint. In the local service, the <bpt id=\"p34\">**</bpt>ExecuteAsync<ept id=\"p34\">**</ept><ph id=\"ph31\"/> method is started. You can set a break point in this method to debug the code.",
+      "nodes": [
+        {
+          "content": "This sends a new POST request to the Sample job endpoint.",
+          "pos": [
+            0,
+            57
+          ]
+        },
+        {
+          "content": "In the local service, the <bpt id=\"p34\">**</bpt>ExecuteAsync<ept id=\"p34\">**</ept><ph id=\"ph31\"/> method is started.",
+          "pos": [
+            58,
+            174
+          ]
+        },
+        {
+          "content": "You can set a break point in this method to debug the code.",
+          "pos": [
+            175,
+            234
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12098,
+        12246
+      ],
+      "content": "In Server Explorer, expand <bpt id=\"p35\">**</bpt>Data Connections<ept id=\"p35\">**</ept>, <bpt id=\"p36\">**</bpt>MSTableConnectionString<ept id=\"p36\">**</ept>, and <bpt id=\"p37\">**</bpt>tables<ept id=\"p37\">**</ept>; right-click <bpt id=\"p38\">**</bpt>Updates<ept id=\"p38\">**</ept><ph id=\"ph32\"/> and click <bpt id=\"p39\">**</bpt>Show Table Data<ept id=\"p39\">**</ept>."
+    },
+    {
+      "pos": [
+        12252,
+        12305
+      ],
+      "content": "The new tweets are entered as rows in the data table."
+    },
+    {
+      "pos": [
+        12307,
+        12309
+      ],
+      "content": "##"
+    },
+    {
+      "pos": [
+        12336,
+        12380
+      ],
+      "content": "Publish the service and register the new job"
+    },
+    {
+      "pos": [
+        12382,
+        12501
+      ],
+      "content": "The job must be registered in the <bpt id=\"p40\">**</bpt>Scheduler<ept id=\"p40\">**</ept><ph id=\"ph33\"/> tab so that Mobile Services can run it on the schedule that you define."
+    },
+    {
+      "pos": [
+        12506,
+        12552
+      ],
+      "content": "Republish the mobile service project to Azure."
+    },
+    {
+      "pos": [
+        12557,
+        12635
+      ],
+      "content": "In the [Azure classic portal], click Mobile Services, and then click your app."
+    },
+    {
+      "pos": [
+        12640,
+        12692
+      ],
+      "content": "Click the <bpt id=\"p41\">**</bpt>Scheduler<ept id=\"p41\">**</ept><ph id=\"ph34\"/> tab, then click <bpt id=\"p42\">**</bpt>+Create<ept id=\"p42\">**</ept>."
+    },
+    {
+      "pos": [
+        12699,
+        12883
+      ],
+      "content": "<ph id=\"ph35\">[AZURE.NOTE]</ph>When you run your mobile service in <ph id=\"ph36\">&lt;em&gt;</ph>Free<ph id=\"ph37\">&lt;/em&gt;</ph><ph id=\"ph38\"/> tier, you are only able to run one scheduled job at a time. In paid tiers, you can run up to ten scheduled jobs at a time.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph35\">[AZURE.NOTE]</ph>When you run your mobile service in <ph id=\"ph36\">&lt;em&gt;</ph>Free<ph id=\"ph37\">&lt;/em&gt;</ph><ph id=\"ph38\"/> tier, you are only able to run one scheduled job at a time.",
+          "pos": [
+            0,
+            205
+          ]
+        },
+        {
+          "content": "In paid tiers, you can run up to ten scheduled jobs at a time.",
+          "pos": [
+            206,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12888,
+        13015
+      ],
+      "content": "In the scheduler dialog, enter <bpt id=\"p43\">_</bpt>Sample<ept id=\"p43\">_</ept><ph id=\"ph39\"/> for the <bpt id=\"p44\">**</bpt>Job Name<ept id=\"p44\">**</ept>, set the schedule interval and units, then click the check button."
+    },
+    {
+      "pos": [
+        13021,
+        13027
+      ],
+      "content": "![][4]"
+    },
+    {
+      "pos": [
+        13033,
+        13073
+      ],
+      "content": "This creates a new job named <bpt id=\"p45\">**</bpt>Sample<ept id=\"p45\">**</ept>."
+    },
+    {
+      "pos": [
+        13078,
+        13157
+      ],
+      "content": "Click the new job you just created, then click <bpt id=\"p46\">**</bpt>Run Once<ept id=\"p46\">**</ept><ph id=\"ph40\"/> to test the script."
+    },
+    {
+      "pos": [
+        13163,
+        13304
+      ],
+      "content": "This executes the job while it remains disabled in the scheduler. From this page, you can enable the job and change its schedule at any time.",
+      "nodes": [
+        {
+          "content": "This executes the job while it remains disabled in the scheduler.",
+          "pos": [
+            0,
+            65
+          ]
+        },
+        {
+          "content": "From this page, you can enable the job and change its schedule at any time.",
+          "pos": [
+            66,
+            141
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13311,
+        13505
+      ],
+      "content": "<ph id=\"ph41\">[AZURE.NOTE]</ph>A POST request can still be used to start the scheduled job. However, the authorization defaults to user, which means that the request must include the application key in the header.",
+      "nodes": [
+        {
+          "content": "<ph id=\"ph41\">[AZURE.NOTE]</ph>A POST request can still be used to start the scheduled job.",
+          "pos": [
+            0,
+            91
+          ]
+        },
+        {
+          "content": "However, the authorization defaults to user, which means that the request must include the application key in the header.",
+          "pos": [
+            92,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13510,
+        13618
+      ],
+      "content": "(Optional) In the [Azure classic portal], click manage for the database associated with your mobile service."
+    },
+    {
+      "pos": [
+        13624,
+        13630
+      ],
+      "content": "![][6]"
+    },
+    {
+      "pos": [
+        13635,
+        13837
+      ],
+      "content": "In the Azure classic portal, execute a query to view the changes made by the app. Your query will be similar to the following query but use your mobile service name as schema name instead of <ph id=\"ph42\">`todolist`</ph>.",
+      "nodes": [
+        {
+          "content": "In the Azure classic portal, execute a query to view the changes made by the app.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "Your query will be similar to the following query but use your mobile service name as schema name instead of <ph id=\"ph42\">`todolist`</ph>.",
+          "pos": [
+            82,
+            221
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        13883,
+        14044
+      ],
+      "content": "Congratulations, you have successfully created a new scheduled job in your mobile service. This job will be executed as scheduled until you disable or modify it.",
+      "nodes": [
+        {
+          "content": "Congratulations, you have successfully created a new scheduled job in your mobile service.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "This job will be executed as scheduled until you disable or modify it.",
+          "pos": [
+            91,
+            161
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        14064,
+        14433
+      ],
+      "content": "[Register for Twitter access and store credentials]: #get-oauth-credentials\n[Download and install the LINQ to Twitter library]: #install-linq2twitter\n[Create the new Updates table]: #create-table\n[Create a new scheduled job]: #add-job\n[Test the scheduled job locally]: #run-job-locally\n[Publish the service and register the job]: #register-job\n[Next steps]: #next-steps"
+    },
+    {
+      "pos": [
+        14452,
+        15338
+      ],
+      "content": "[1]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/add-linq2twitter-nuget-package.png\n[2]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-services-selection.png\n[3]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-schedule-new-job-cli.png\n[4]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/create-new-job.png\n[5]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/sample-job-run-once.png\n[6]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/manage-sql-azure-database.png\n[7]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/add-component-model-reference.png\n[8]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-service-start-page.png\n[9]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-service-try-this-out.png"
+    },
+    {
+      "pos": [
+        15355,
+        15771
+      ],
+      "content": "[Azure classic portal]: https://manage.windowsazure.com/\n[Register your apps for Twitter login with Mobile Services]: mobile-services-how-to-register-twitter-authentication.md\n[Twitter Developers]: http://go.microsoft.com/fwlink/p/?LinkId=268300\n[App settings]: http://msdn.microsoft.com/library/windowsazure/b6bb7d2d-35ae-47eb-a03f-6ee393e170f7\n[LINQ to Twitter CodePlex project]: http://linqtotwitter.codeplex.com/"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Schedule backend tasks in a .NET backend mobile service | Microsoft Azure\"\n    description=\"Use the scheduler in Azure Mobile Services to define .NET backend jobs that run on a schedule.\"\n    services=\"mobile-services\"\n    documentationCenter=\"\"\n    authors=\"ggailey777\"\n    manager=\"dwrede\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"mobile-services\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile-multiple\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.date=\"02/07/2016\"\n    ms.author=\"glenga\"/>\n\n# Schedule recurring jobs in Mobile Services\n\n[AZURE.INCLUDE [mobile-service-note-mobile-apps](../../includes/mobile-services-note-mobile-apps.md)]\n\n&nbsp;\n\n\n> [AZURE.SELECTOR]\n- [.NET backend](mobile-services-dotnet-backend-schedule-recurring-tasks.md)\n- [Javascript backend](mobile-services-schedule-recurring-tasks.md)\n\nThis topic shows you how to use the job scheduler functionality in the Azure classic portal to define server script code that is executed based on a schedule that you define. In this case, the script periodically check with a remote service, in this case Twitter, and stores the results in a new table. Some other periodic tasks that can be scheduled include:\n\n+ Archiving old or duplicate data records.\n+ Requesting and storing external data, such as tweets, RSS entries, and location information.\n+ Processing or resizing stored images.\n\nThis tutorial walks you through how to use the job scheduler to create a scheduled job that requests tweet data from Twitter and stores the tweets in a new Updates table.\n\n>[AZURE.NOTE]This tutorial uses the third-party LINQ to Twitter library to simplify OAuth 2.0 access to Twitter v1.1. APIs. You must download and install the LINQ to Twitter NuGet package to complete this tutorial. For more information, see the [LINQ to Twitter CodePlex project].\n\n##<a name=\"get-oauth-credentials\"></a>Register for access to Twitter v1.1 APIs and store credentials\n\n[AZURE.INCLUDE [mobile-services-register-twitter-access](../../includes/mobile-services-register-twitter-access.md)]\n\n&nbsp;&nbsp;7. In Solution Explorer in Visual Studio, open the web.config file for the mobile service project, locate the `MS_TwitterConsumerKey` and `MS_TwitterConsumerSecret` app settings and replace the values of these keys with Twitter consumer key and consumer secret values that you set in the portal.\n\n&nbsp;&nbsp;8. In the same section, add the following new app settings, replacing the placeholders with the Twitter access token and access token secret values that you set as app settings in the portal:\n\n    <add key=\"TWITTER_ACCESS_TOKEN\" value=\"**your_access_token**\" />\n    <add key=\"TWITTER_ACCESS_TOKEN_SECRET\" value=\"**your_access_token_secret**\" />\n\nThe mobile service uses these stored settings when it runs on the local computer, which lets you test the scheduled job before you publish it. When running in Azure, the mobile service instead uses values set in the portal and ignores these project settings.\n\n##<a name=\"install-linq2twitter\"></a>Download and install the LINQ to Twitter library\n\n1. In **Solution Explorer** in Visual Studio, right-click the project name, and then select **Manage NuGet Packages**.\n\n2. In the left pane, select the **Online** category, search for `linq2twitter`, click **Install** on the **linqtotwitter** package, then read and accept the license agreements.\n\n    ![][1]\n\n    This adds the Linq to Twitter library to your mobile service project.\n\nNext, you need to create a new table in which to store tweets.\n\n##<a name=\"create-table\"></a>Create the new Updates table\n\n1. In the Solution Explorer in Visual Studio, right-click the DataObjects folder, expand **Add**, click **Class**,   type `Updates` for **Name**, then click **Add**.\n\n    This creates a new project file for the Updates class.\n\n2. Right-click **References** > **Add Reference...** > **Framework** under **Assemblies**, then check **System.ComponentModel.DataAnnotations** and click **OK**.\n\n    ![][7]\n\n    This adds a new assembly reference.\n\n2. In this new class, add the following **using** statements:\n\n        using Microsoft.WindowsAzure.Mobile.Service;\n        using System.ComponentModel.DataAnnotations;\n\n3. Replace the **Updates** class definition with the following code:\n\n        public class Updates\n        {\n            [Key]\n            public int UpdateId { get; set; }\n            public long TweetId { get; set; }\n            public string Text { get; set; }\n            public string Author { get; set; }\n            public DateTime Date { get; set; }\n        }\n\n4. Expand the Models folder, open the data model context file (named *service_name*Context.cs) and add the following property that returns a typed **DbSet**:\n\n        public DbSet<Updates> Updates { get; set; }\n\n    The Updates table, which is created in the database when the DbSet is first accessed, is used by the service to store tweet data.\n\n    >[AZURE.NOTE] When using the default database initializer, Entity Framework will drop and recreate the database whenever it detects a data model change in the Code First model definition. To make this data model change and maintain existing data in the database, you must use Code First Migrations. The default initializer cannot be used against a SQL Database in Azure. For more information, see [How to Use Code First Migrations to Update the Data Model](mobile-services-dotnet-backend-use-code-first-migrations.md).\n\nNext, you create the scheduled job that accesses Twitter and stores tweet data in the new Updates table.\n\n##<a name=\"add-job\"></a>Create a new scheduled job\n\n1. Expand the ScheduledJobs folder and open the SampleJob.cs project file.\n\n    This class, which inherits from **ScheduledJob**, represents a job that can be scheduled, in the Azure classic portal, to run on a fixed schedule or on demand.\n\n2. Replace the contents of SampleJob.cs with the following code:\n\n        using System;\n        using System.Linq;\n        using System.Threading;\n        using System.Threading.Tasks;\n        using System.Web.Http;\n        using Microsoft.WindowsAzure.Mobile.Service;\n        using Microsoft.WindowsAzure.Mobile.Service.ScheduledJobs;\n        using LinqToTwitter;\n        using todolistService.Models;\n        using todolistService.DataObjects;\n\n        namespace todolistService\n        {\n            // A simple scheduled job which can be invoked manually by submitting an HTTP\n            // POST request to the path \"/jobs/sample\".\n            public class SampleJob : ScheduledJob\n            {\n                private todolistContext context;\n                private string accessToken;\n                private string accessTokenSecret;\n\n                protected override void Initialize(ScheduledJobDescriptor scheduledJobDescriptor,\n                    CancellationToken cancellationToken)\n                {\n                    base.Initialize(scheduledJobDescriptor, cancellationToken);\n\n                    // Create a new context with the supplied schema name.\n                    context = new todolistContext();\n                }\n\n                public async override Task ExecuteAsync()\n                {\n                    // Try to get the stored Twitter access token from app settings.\n                    if (!(Services.Settings.TryGetValue(\"TWITTER_ACCESS_TOKEN\", out accessToken) |\n                    Services.Settings.TryGetValue(\"TWITTER_ACCESS_TOKEN_SECRET\", out accessTokenSecret)))\n                    {\n                        Services.Log.Error(\"Could not retrieve Twitter access credentials.\");\n                    }\n\n                    // Create a new authorizer to access Twitter v1.1 APIs\n                    // using single-user OAUth 2.0 credentials.\n                    MvcAuthorizer auth = new MvcAuthorizer();\n                    SingleUserInMemoryCredentialStore store =\n                        new SingleUserInMemoryCredentialStore()\n                    {\n                        ConsumerKey = Services.Settings.TwitterConsumerKey,\n                        ConsumerSecret = Services.Settings.TwitterConsumerSecret,\n                        OAuthToken = accessToken,\n                        OAuthTokenSecret = accessTokenSecret\n                    };\n\n                    // Set the credentials for the authorizer.\n                    auth.CredentialStore = store;\n\n                    // Create a new LINQ to Twitter context.\n                    TwitterContext twitter = new TwitterContext(auth);\n\n                    // Get the ID of the most recent stored tweet.\n                    long lastTweetId = 0;\n                    if (context.Updates.Count() > 0)\n                    {\n                        lastTweetId = (from u in context.Updates\n                                       orderby u.TweetId descending\n                                       select u).Take(1).SingleOrDefault()\n                                                    .TweetId;\n                    }\n\n                    // Execute a search that returns a filtered result.\n                    var response = await (from s in twitter.Search\n                                          where s.Type == SearchType.Search\n                                          && s.Query == \"%23mobileservices\"\n                                          && s.SinceID == Convert.ToUInt64(lastTweetId + 1)\n                                          && s.ResultType == ResultType.Recent\n                                          select s).SingleOrDefaultAsync();\n\n                    // Remove retweets and replies and log the number of tweets.\n                    var filteredTweets = response.Statuses\n                        .Where(t => !t.Text.StartsWith(\"RT\") && t.InReplyToUserID == 0);\n                    Services.Log.Info(\"Fetched \" + filteredTweets.Count()\n                        + \" new tweets from Twitter.\");\n\n                    // Store new tweets in the Updates table.\n                    foreach (Status tweet in filteredTweets)\n                    {\n                        Updates newTweet =\n                            new Updates\n                            {\n                                TweetId = Convert.ToInt64(tweet.StatusID),\n                                Text = tweet.Text,\n                                Author = tweet.User.Name,\n                                Date = tweet.CreatedAt\n                            };\n\n                        context.Updates.Add(newTweet);\n                    }\n\n                    await context.SaveChangesAsync();\n                }\n                protected override void Dispose(bool disposing)\n                {\n                    base.Dispose(disposing);\n                    if (disposing)\n                    {\n                        context.Dispose();\n                    }\n                }\n            }\n        }\n\n    In the above code, you must replace the strings _todolistService_ and _todolistContext_ with the namespace and DbContext of your downloaded project, which are *mobile&#95;service&#95;name*Service and *mobile&#95;service&#95;name*Context, respective.\n\n    In the above code, the **ExecuteAsync** override method calls the Twitter query API using stored credentials to request recent tweets that contain the hashtag `#mobileservices`. Duplicate tweets and replies are removed from the results before they are stored in the table.\n\n##<a name=\"run-job-locally\"></a>Test the scheduled job locally\n\nSchedule jobs can be tested locally before being published to Azure and registered in the portal.\n\n1. In Visual Studio, with the mobile service project set as the startup project, press F5.\n\n    This starts the mobile service project and displays a new browser window with the welcome page.\n\n2. Click **try it out**, then click **POST jobs/{jobName}**.\n\n    ![][8]\n\n4. Click **try this out**, type `Sample` as the **{jobName}** parameter value, then click **Send**.\n\n    ![][9]\n\n    This sends a new POST request to the Sample job endpoint. In the local service, the **ExecuteAsync** method is started. You can set a break point in this method to debug the code.\n\n3. In Server Explorer, expand **Data Connections**, **MSTableConnectionString**, and **tables**; right-click **Updates** and click **Show Table Data**.\n\n    The new tweets are entered as rows in the data table.\n\n##<a name=\"register-job\"></a>Publish the service and register the new job\n\nThe job must be registered in the **Scheduler** tab so that Mobile Services can run it on the schedule that you define.\n\n3. Republish the mobile service project to Azure.\n\n4. In the [Azure classic portal], click Mobile Services, and then click your app.\n\n2. Click the **Scheduler** tab, then click **+Create**.\n\n    >[AZURE.NOTE]When you run your mobile service in <em>Free</em> tier, you are only able to run one scheduled job at a time. In paid tiers, you can run up to ten scheduled jobs at a time.\n\n3. In the scheduler dialog, enter _Sample_ for the **Job Name**, set the schedule interval and units, then click the check button.\n\n    ![][4]\n\n    This creates a new job named **Sample**.\n\n4. Click the new job you just created, then click **Run Once** to test the script.\n\n    This executes the job while it remains disabled in the scheduler. From this page, you can enable the job and change its schedule at any time.\n\n    >[AZURE.NOTE]A POST request can still be used to start the scheduled job. However, the authorization defaults to user, which means that the request must include the application key in the header.\n\n4. (Optional) In the [Azure classic portal], click manage for the database associated with your mobile service.\n\n    ![][6]\n\n5. In the Azure classic portal, execute a query to view the changes made by the app. Your query will be similar to the following query but use your mobile service name as schema name instead of `todolist`.\n\n        SELECT * FROM [todolist].[Updates]\n\nCongratulations, you have successfully created a new scheduled job in your mobile service. This job will be executed as scheduled until you disable or modify it.\n\n<!-- Anchors. -->\n[Register for Twitter access and store credentials]: #get-oauth-credentials\n[Download and install the LINQ to Twitter library]: #install-linq2twitter\n[Create the new Updates table]: #create-table\n[Create a new scheduled job]: #add-job\n[Test the scheduled job locally]: #run-job-locally\n[Publish the service and register the job]: #register-job\n[Next steps]: #next-steps\n\n<!-- Images. -->\n[1]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/add-linq2twitter-nuget-package.png\n[2]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-services-selection.png\n[3]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-schedule-new-job-cli.png\n[4]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/create-new-job.png\n[5]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/sample-job-run-once.png\n[6]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/manage-sql-azure-database.png\n[7]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/add-component-model-reference.png\n[8]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-service-start-page.png\n[9]: ./media/mobile-services-dotnet-backend-schedule-recurring-tasks/mobile-service-try-this-out.png\n\n<!-- URLs. -->\n[Azure classic portal]: https://manage.windowsazure.com/\n[Register your apps for Twitter login with Mobile Services]: mobile-services-how-to-register-twitter-authentication.md\n[Twitter Developers]: http://go.microsoft.com/fwlink/p/?LinkId=268300\n[App settings]: http://msdn.microsoft.com/library/windowsazure/b6bb7d2d-35ae-47eb-a03f-6ee393e170f7\n[LINQ to Twitter CodePlex project]: http://linqtotwitter.codeplex.com/"
+}
