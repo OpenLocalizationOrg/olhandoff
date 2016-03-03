@@ -1,0 +1,740 @@
+{
+  "nodes": [
+    {
+      "content": "Make your own integration services",
+      "pos": [
+        2,
+        36
+      ]
+    },
+    {
+      "content": "2-March update: Starting in Windows 10, anyone can make a service very similar to the in-box Hyper-V integration services using a new socket-based communication channel between the Hyper-V host and the virtual machines running on it.",
+      "pos": [
+        38,
+        271
+      ]
+    },
+    {
+      "content": "Using these Hyper-V sockets, services can run independently of the networking stack and all data stays on the same physical memory.",
+      "pos": [
+        273,
+        404
+      ]
+    },
+    {
+      "content": "This document walks through creating a simple application built on Hyper-V sockets and how to get started using them.",
+      "pos": [
+        406,
+        523
+      ]
+    },
+    {
+      "pos": [
+        525,
+        688
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>PowerShell Direct<ept id=\"p1\">](../user_guide/vmsession.md)</ept> is an example of an application (in this case an in-box Windows service) which uses Hyper-V sockets to communicate."
+    },
+    {
+      "content": "Supported Host OS",
+      "pos": [
+        692,
+        709
+      ]
+    },
+    {
+      "content": "Windows 10",
+      "pos": [
+        714,
+        724
+      ]
+    },
+    {
+      "content": "Windows Server Technical Preview 3 and later",
+      "pos": [
+        727,
+        771
+      ]
+    },
+    {
+      "content": "Future releases (Server 2016 +)",
+      "pos": [
+        774,
+        805
+      ]
+    },
+    {
+      "content": "Supported Guest OS",
+      "pos": [
+        809,
+        827
+      ]
+    },
+    {
+      "content": "Windows 10",
+      "pos": [
+        832,
+        842
+      ]
+    },
+    {
+      "content": "Windows Server Technical Preview 3 and later",
+      "pos": [
+        845,
+        889
+      ]
+    },
+    {
+      "content": "Future releases (Server 2016 +)",
+      "pos": [
+        892,
+        923
+      ]
+    },
+    {
+      "content": "Capabilities and Limitations",
+      "pos": [
+        927,
+        955
+      ]
+    },
+    {
+      "content": "Supports kernel mode or user mode actions",
+      "pos": [
+        962,
+        1003
+      ]
+    },
+    {
+      "content": "Data stream only",
+      "pos": [
+        1008,
+        1024
+      ]
+    },
+    {
+      "content": "No block memory (not the best for backup/video)",
+      "pos": [
+        1033,
+        1080
+      ]
+    },
+    {
+      "content": "Getting started",
+      "pos": [
+        1104,
+        1119
+      ]
+    },
+    {
+      "content": "Right now, Hyper-V sockets are available in native code (C/C++).",
+      "pos": [
+        1120,
+        1184
+      ]
+    },
+    {
+      "content": "To write a simple application, you'll need:",
+      "pos": [
+        1188,
+        1231
+      ]
+    },
+    {
+      "content": "C compiler.",
+      "pos": [
+        1234,
+        1245
+      ]
+    },
+    {
+      "content": "If you don't have one, checkout <bpt id=\"p1\">[</bpt>Visual Studio Code<ept id=\"p1\">](https://aka.ms/vs)</ept>",
+      "pos": [
+        1247,
+        1318
+      ]
+    },
+    {
+      "content": "A computer running Hyper-V with and a virtual machine.",
+      "pos": [
+        1321,
+        1375
+      ]
+    },
+    {
+      "content": "Host and guest (VM) OS must be Windows 10, Windows Server Technical Preview 3, or later.",
+      "pos": [
+        1382,
+        1470
+      ]
+    },
+    {
+      "content": "Windows SDK -- We're in the process of publishing this.",
+      "pos": [
+        1473,
+        1528
+      ]
+    },
+    {
+      "content": "Register a new application",
+      "pos": [
+        1533,
+        1559
+      ]
+    },
+    {
+      "content": "In order to use Hyper-V sockets, the application must be registered with the Hyper-V Host's registry.",
+      "pos": [
+        1560,
+        1661
+      ]
+    },
+    {
+      "content": "By registering the service in the registry, you get:",
+      "pos": [
+        1663,
+        1715
+      ]
+    },
+    {
+      "content": "WMI management for enable, disable, and listing available services",
+      "pos": [
+        1719,
+        1785
+      ]
+    },
+    {
+      "content": "Permission to communicate with virtual machines directly",
+      "pos": [
+        1789,
+        1845
+      ]
+    },
+    {
+      "content": "The following PowerShell will register a new application named \"HV Socket Demo\".",
+      "pos": [
+        1847,
+        1927
+      ]
+    },
+    {
+      "content": "This must be run as administrator.",
+      "pos": [
+        1929,
+        1963
+      ]
+    },
+    {
+      "content": "Manual instructions below.",
+      "pos": [
+        1965,
+        1991
+      ]
+    },
+    {
+      "content": "** Registry location and information **",
+      "pos": [
+        2402,
+        2441
+      ]
+    },
+    {
+      "content": "In this registry location, you'll see several GUIDs.",
+      "pos": [
+        2563,
+        2615
+      ]
+    },
+    {
+      "content": "Those are our in-box services.",
+      "pos": [
+        2617,
+        2647
+      ]
+    },
+    {
+      "content": "Information in the registry per service:",
+      "pos": [
+        2649,
+        2689
+      ]
+    },
+    {
+      "pos": [
+        2716,
+        2777
+      ],
+      "content": "<ph id=\"ph1\">`ElementName (REG_SZ)`</ph> -- this is the service's friendly name"
+    },
+    {
+      "content": "To register your own service, create a new registry key using your own GUID and friendly name.",
+      "pos": [
+        2779,
+        2873
+      ]
+    },
+    {
+      "content": "The friendly name will be associated with your new application.",
+      "pos": [
+        2875,
+        2938
+      ]
+    },
+    {
+      "content": "It will appear in performance counters and other places where a GUID isn't appropriate.",
+      "pos": [
+        2940,
+        3027
+      ]
+    },
+    {
+      "content": "The registry entry will look like this:",
+      "pos": [
+        3029,
+        3068
+      ]
+    },
+    {
+      "content": "** Tip: **  To generate a GUID in PowerShell and copy it to the clipboard, run:",
+      "pos": [
+        3345,
+        3424
+      ]
+    },
+    {
+      "content": "Creating a Hyper-V socket",
+      "pos": [
+        3477,
+        3502
+      ]
+    },
+    {
+      "content": "In the most basic case, defining a socket requires an address family, connection type, and protocol.",
+      "pos": [
+        3504,
+        3604
+      ]
+    },
+    {
+      "pos": [
+        3606,
+        3725
+      ],
+      "content": "Here is a simple <bpt id=\"p1\">[</bpt>socket definition<ept id=\"p1\">](\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ms740506(v=vs.85).aspx\n)</ept>"
+    },
+    {
+      "content": "For a Hyper-V socket:",
+      "pos": [
+        3816,
+        3837
+      ]
+    },
+    {
+      "pos": [
+        3840,
+        3868
+      ],
+      "content": "Address family - <ph id=\"ph1\">`AF_HYPERV`</ph>"
+    },
+    {
+      "pos": [
+        3871,
+        3891
+      ],
+      "content": "type - <ph id=\"ph1\">`SOCK_STREAM`</ph>"
+    },
+    {
+      "pos": [
+        3894,
+        3922
+      ],
+      "content": "protocol - <ph id=\"ph1\">`HV_PROTOCOL_RAW`</ph>"
+    },
+    {
+      "content": "Here is an example declaration/instantiation:",
+      "pos": [
+        3925,
+        3970
+      ]
+    },
+    {
+      "content": "Binding to a Hyper-V socket",
+      "pos": [
+        4051,
+        4078
+      ]
+    },
+    {
+      "content": "Bind associates a socket with connection information.",
+      "pos": [
+        4080,
+        4133
+      ]
+    },
+    {
+      "pos": [
+        4135,
+        4292
+      ],
+      "content": "The function definition is copied below for convinience, read more about bind <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](https://msdn.microsoft.com/en-us/library/windows/desktop/ms737550.aspx)</ept>."
+    },
+    {
+      "pos": [
+        4423,
+        4736
+      ],
+      "content": "In contrast to the socket address (sockaddr) for a standard Internet Protocol address family (<ph id=\"ph1\">`AF_INET`</ph>) which consists of the host machine's IP address and a port number on that host, the socket address for <ph id=\"ph2\">`AF_HYPERV`</ph> uses the virtual machine's ID and the application ID defined above to establish a connection."
+    },
+    {
+      "content": "Since Hyper-V sockets do not depend on a networking stack, TCP/IP, DNS, etc. the socket endpoint needed a non-IP, not hostname, format that still unambiguously describes the connection.",
+      "pos": [
+        4739,
+        4924
+      ]
+    },
+    {
+      "content": "Here is the definition for a Hyper-V socket's socket address:",
+      "pos": [
+        4926,
+        4987
+      ]
+    },
+    {
+      "content": "In lieu of an IP or hostname, AF_HYPERV endpoints rely heavily on two GUIDs:",
+      "pos": [
+        5111,
+        5187
+      ]
+    },
+    {
+      "content": "VM ID – this is the unique ID assigned per VM.",
+      "pos": [
+        5192,
+        5238
+      ]
+    },
+    {
+      "content": "A VM’s ID can be found using the following PowerShell snippet.",
+      "pos": [
+        5240,
+        5302
+      ]
+    },
+    {
+      "pos": [
+        5357,
+        5491
+      ],
+      "content": "Service ID – GUID, <bpt id=\"p1\">[</bpt>described above<ept id=\"p1\">](#RegisterANewApplication)</ept>, with which the application is registered in the Hyper-V host registry."
+    },
+    {
+      "content": "There is also a set of VMID wildcards available when a connection isn't to a specific virtual machine.",
+      "pos": [
+        5493,
+        5595
+      ]
+    },
+    {
+      "content": "VMID Wildcards",
+      "pos": [
+        5602,
+        5616
+      ]
+    },
+    {
+      "content": "Name",
+      "pos": [
+        5620,
+        5624
+      ]
+    },
+    {
+      "content": "GUID",
+      "pos": [
+        5627,
+        5631
+      ]
+    },
+    {
+      "content": "Description",
+      "pos": [
+        5634,
+        5645
+      ]
+    },
+    {
+      "content": "HV_GUID_ZERO",
+      "pos": [
+        5673,
+        5685
+      ]
+    },
+    {
+      "content": "00000000-0000-0000-0000-000000000000",
+      "pos": [
+        5688,
+        5724
+      ]
+    },
+    {
+      "content": "Listeners should bind to this VmId to accept connection from all partitions.",
+      "pos": [
+        5727,
+        5803
+      ]
+    },
+    {
+      "content": "HV_GUID_WILDCARD",
+      "pos": [
+        5808,
+        5824
+      ]
+    },
+    {
+      "content": "00000000-0000-0000-0000-000000000000",
+      "pos": [
+        5827,
+        5863
+      ]
+    },
+    {
+      "content": "Listeners should bind to this VmId to accept connection from all partitions.",
+      "pos": [
+        5866,
+        5942
+      ]
+    },
+    {
+      "content": "HV_GUID_BROADCAST",
+      "pos": [
+        5947,
+        5964
+      ]
+    },
+    {
+      "content": "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF",
+      "pos": [
+        5967,
+        6003
+      ]
+    },
+    {
+      "content": "HV_GUID_CHILDREN",
+      "pos": [
+        6012,
+        6028
+      ]
+    },
+    {
+      "content": "90db8b89-0d35-4f79-8ce9-49ea0ac8b7cd",
+      "pos": [
+        6031,
+        6067
+      ]
+    },
+    {
+      "content": "Wildcard address for children.",
+      "pos": [
+        6070,
+        6100
+      ]
+    },
+    {
+      "content": "Listeners should bind to this VmId to accept connection from its children.",
+      "pos": [
+        6101,
+        6175
+      ]
+    },
+    {
+      "content": "HV_GUID_LOOPBACK",
+      "pos": [
+        6180,
+        6196
+      ]
+    },
+    {
+      "content": "e0e16197-dd56-4a10-9195-5ee7a155a838",
+      "pos": [
+        6199,
+        6235
+      ]
+    },
+    {
+      "content": "Loopback address.",
+      "pos": [
+        6238,
+        6255
+      ]
+    },
+    {
+      "content": "Using this VmId connects to the same partition as the connector.",
+      "pos": [
+        6256,
+        6320
+      ]
+    },
+    {
+      "content": "HV_GUID_PARENT",
+      "pos": [
+        6325,
+        6339
+      ]
+    },
+    {
+      "content": "a42e7cda-d03f-480c-9cc2-a4de20abb878",
+      "pos": [
+        6342,
+        6378
+      ]
+    },
+    {
+      "content": "Parent address.",
+      "pos": [
+        6381,
+        6396
+      ]
+    },
+    {
+      "content": "Using this VmId connects to the parent partition of the connector.*",
+      "pos": [
+        6397,
+        6464
+      ]
+    },
+    {
+      "content": "*<bpt id=\"p1\">**</bpt>HV_GUID_PARENT<ept id=\"p1\">**</ept>",
+      "pos": [
+        6469,
+        6488
+      ]
+    },
+    {
+      "content": "The parent of a virtual machine is its host.",
+      "pos": [
+        6491,
+        6535
+      ]
+    },
+    {
+      "content": "The parent of a container is the container's host.",
+      "pos": [
+        6537,
+        6587
+      ]
+    },
+    {
+      "content": "Connecting from a container running in a virtual machine will connect to the VM hosting the container.",
+      "pos": [
+        6590,
+        6692
+      ]
+    },
+    {
+      "content": "Listening on this VmId accepts connection from:",
+      "pos": [
+        6695,
+        6742
+      ]
+    },
+    {
+      "content": "(Inside containers): Container host.",
+      "pos": [
+        6745,
+        6781
+      ]
+    },
+    {
+      "content": "(Inside VM: Container host/ no container): VM host.",
+      "pos": [
+        6784,
+        6835
+      ]
+    },
+    {
+      "content": "(Not inside VM: Container host/ no container): Not supported.",
+      "pos": [
+        6838,
+        6899
+      ]
+    },
+    {
+      "content": "Supported socket commands",
+      "pos": [
+        6904,
+        6929
+      ]
+    },
+    {
+      "content": "Socket()",
+      "pos": [
+        6931,
+        6939
+      ]
+    },
+    {
+      "content": "Bind()",
+      "pos": [
+        6940,
+        6946
+      ]
+    },
+    {
+      "content": "Connect()",
+      "pos": [
+        6947,
+        6956
+      ]
+    },
+    {
+      "content": "Send()",
+      "pos": [
+        6957,
+        6963
+      ]
+    },
+    {
+      "content": "Listen()",
+      "pos": [
+        6964,
+        6972
+      ]
+    },
+    {
+      "content": "Accept()",
+      "pos": [
+        6973,
+        6981
+      ]
+    },
+    {
+      "content": "Complete WinSock API",
+      "pos": [
+        6984,
+        7004
+      ]
+    },
+    {
+      "content": "Work in progress",
+      "pos": [
+        7082,
+        7098
+      ]
+    },
+    {
+      "content": "Graceful disconnect",
+      "pos": [
+        7099,
+        7118
+      ]
+    },
+    {
+      "content": "select",
+      "pos": [
+        7119,
+        7125
+      ]
+    }
+  ],
+  "content": "# Make your own integration services\n\n2-March update: Starting in Windows 10, anyone can make a service very similar to the in-box Hyper-V integration services using a new socket-based communication channel between the Hyper-V host and the virtual machines running on it.  Using these Hyper-V sockets, services can run independently of the networking stack and all data stays on the same physical memory.\n\nThis document walks through creating a simple application built on Hyper-V sockets and how to get started using them.\n\n[PowerShell Direct](../user_guide/vmsession.md) is an example of an application (in this case an in-box Windows service) which uses Hyper-V sockets to communicate.\n\n**Supported Host OS**\n* Windows 10\n* Windows Server Technical Preview 3 and later\n* Future releases (Server 2016 +)\n\n**Supported Guest OS**\n* Windows 10\n* Windows Server Technical Preview 3 and later\n* Future releases (Server 2016 +)\n\n**Capabilities and Limitations**  \n* Supports kernel mode or user mode actions  \n* Data stream only      \n* No block memory (not the best for backup/video)   \n\n--------------\n\n## Getting started\nRight now, Hyper-V sockets are available in native code (C/C++).  \n\nTo write a simple application, you'll need:\n* C compiler.  If you don't have one, checkout [Visual Studio Code](https://aka.ms/vs)\n* A computer running Hyper-V with and a virtual machine.  \n  * Host and guest (VM) OS must be Windows 10, Windows Server Technical Preview 3, or later.\n* Windows SDK -- We're in the process of publishing this.\n\n## Register a new application\nIn order to use Hyper-V sockets, the application must be registered with the Hyper-V Host's registry.\n\nBy registering the service in the registry, you get:\n*  WMI management for enable, disable, and listing available services\n*  Permission to communicate with virtual machines directly\n\nThe following PowerShell will register a new application named \"HV Socket Demo\".  This must be run as administrator.  Manual instructions below.\n\n``` PowerShell\n$friendlyName = \"HV Socket Demo\"\n\n# Create a new random GUID and add it to the services list then add the name as a value\n\n$service = New-Item -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\GuestCommunicationServices\" -Name ((New-Guid).Guid)\n\n$service.SetValue(\"ElementName\", $friendlyName)\n\n# Copy GUID to clipboard for later use\n$service.PSChildName | clip.exe\n```\n\n** Registry location and information **  \n\n``` \nHKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\GuestCommunicationServices\\\n```  \nIn this registry location, you'll see several GUIDs.  Those are our in-box services.\n\nInformation in the registry per service:\n* `Service GUID`   \n    * `ElementName (REG_SZ)` -- this is the service's friendly name\n\nTo register your own service, create a new registry key using your own GUID and friendly name.\n\nThe friendly name will be associated with your new application.  It will appear in performance counters and other places where a GUID isn't appropriate.\n\nThe registry entry will look like this:\n```\nHKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\GuestCommunicationServices\\\n    999E53D4-3D5C-4C3E-8779-BED06EC056E1\\\n        ElementName REG_SZ  VM Session Service\n    YourGUID\\\n        ElementName REG_SZ  Your Service Friendly Name\n```\n\n> ** Tip: **  To generate a GUID in PowerShell and copy it to the clipboard, run:  \n``` PowerShell\n(New-Guid).Guid | clip.exe\n```\n\n## Creating a Hyper-V socket\n\nIn the most basic case, defining a socket requires an address family, connection type, and protocol.\n\nHere is a simple [socket definition](\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ms740506(v=vs.85).aspx\n)\n\n``` C\nSOCKET WSAAPI socket(\n  _In_ int af,\n  _In_ int type,\n  _In_ int protocol\n);\n``` \n\nFor a Hyper-V socket:\n* Address family - `AF_HYPERV`\n* type - `SOCK_STREAM`\n* protocol - `HV_PROTOCOL_RAW`\n\n\nHere is an example declaration/instantiation:  \n``` C\nSOCKET sock = socket(AF_HYPERV, SOCK_STREAM, HV_PROTOCOL_RAW);\n```\n\n\n## Binding to a Hyper-V socket\n\nBind associates a socket with connection information.\n\nThe function definition is copied below for convinience, read more about bind [here](https://msdn.microsoft.com/en-us/library/windows/desktop/ms737550.aspx).\n\n``` C\nint bind(\n  _In_ SOCKET                s,\n  _In_ const struct sockaddr *name,\n  _In_ int                   namelen\n);\n```\n\nIn contrast to the socket address (sockaddr) for a standard Internet Protocol address family (`AF_INET`) which consists of the host machine's IP address and a port number on that host, the socket address for `AF_HYPERV` uses the virtual machine's ID and the application ID defined above to establish a connection. \n\nSince Hyper-V sockets do not depend on a networking stack, TCP/IP, DNS, etc. the socket endpoint needed a non-IP, not hostname, format that still unambiguously describes the connection.\n\nHere is the definition for a Hyper-V socket's socket address:\n\n``` C\nstruct SOCKADDR_HV\n{\n     ADDRESS_FAMILY Family;\n     USHORT Reserved;\n     GUID VmId;\n     GUID ServiceId;\n};\n```\n\nIn lieu of an IP or hostname, AF_HYPERV endpoints rely heavily on two GUIDs:  \n* VM ID – this is the unique ID assigned per VM.  A VM’s ID can be found using the following PowerShell snippet.  \n  ```PowerShell\n  (Get-VM -Name $VMName).Id\n  ```\n* Service ID – GUID, [described above](#RegisterANewApplication), with which the application is registered in the Hyper-V host registry.\n\nThere is also a set of VMID wildcards available when a connection isn't to a specific virtual machine.\n \n### VMID Wildcards\n\n| Name | GUID | Description |\n|:-----|:-----|:-----|\n| HV_GUID_ZERO | 00000000-0000-0000-0000-000000000000 | Listeners should bind to this VmId to accept connection from all partitions. |\n| HV_GUID_WILDCARD | 00000000-0000-0000-0000-000000000000 | Listeners should bind to this VmId to accept connection from all partitions. |\n| HV_GUID_BROADCAST | FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF | |  \n| HV_GUID_CHILDREN | 90db8b89-0d35-4f79-8ce9-49ea0ac8b7cd | Wildcard address for children. Listeners should bind to this VmId to accept connection from its children. |\n| HV_GUID_LOOPBACK | e0e16197-dd56-4a10-9195-5ee7a155a838 | Loopback address. Using this VmId connects to the same partition as the connector. |\n| HV_GUID_PARENT | a42e7cda-d03f-480c-9cc2-a4de20abb878 | Parent address. Using this VmId connects to the parent partition of the connector.* |\n\n\n***HV_GUID_PARENT**  \nThe parent of a virtual machine is its host.  The parent of a container is the container's host.  \nConnecting from a container running in a virtual machine will connect to the VM hosting the container.  \nListening on this VmId accepts connection from:  \n(Inside containers): Container host.  \n(Inside VM: Container host/ no container): VM host.  \n(Not inside VM: Container host/ no container): Not supported.\n\n## Supported socket commands\n\nSocket()\nBind()\nConnect()\nSend()\nListen()\nAccept()\n\n[Complete WinSock API](https://msdn.microsoft.com/en-us/library/windows/desktop/ms741394.aspx)\n\n## Work in progress\nGraceful disconnect\nselect\n\n"
+}
