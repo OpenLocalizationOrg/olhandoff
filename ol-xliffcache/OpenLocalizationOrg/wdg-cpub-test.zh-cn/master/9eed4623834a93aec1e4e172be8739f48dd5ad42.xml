@@ -1,0 +1,537 @@
+{
+  "nodes": [
+    {
+      "content": "ms.assetid: 42A06423-670F-4CCC-88B7-3DCEEDDEBA57",
+      "pos": [
+        4,
+        52
+      ]
+    },
+    {
+      "content": "description: This article discusses how to use camera profiles to discover and manage the capabilities of different video capture devices.",
+      "pos": [
+        53,
+        191
+      ]
+    },
+    {
+      "content": "title: Camera profiles",
+      "pos": [
+        192,
+        214
+      ]
+    },
+    {
+      "content": "Camera profiles",
+      "pos": [
+        222,
+        237
+      ]
+    },
+    {
+      "content": "\\[ Updated for UWP apps on Windows 10.",
+      "pos": [
+        239,
+        277
+      ]
+    },
+    {
+      "content": "For Windows 8.x articles, see the <bpt id=\"p1\">[</bpt>archive<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?linkid=619132)</ept> \\]",
+      "pos": [
+        278,
+        373
+      ]
+    },
+    {
+      "content": "This article discusses how to use camera profiles to discover and manage the capabilities of different video capture devices.",
+      "pos": [
+        376,
+        501
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>",
+      "pos": [
+        503,
+        511
+      ]
+    },
+    {
+      "content": "This article builds on concepts and code discussed in <bpt id=\"p1\">[</bpt>Capture Photos and Video with MediaCapture<ept id=\"p1\">](capture-photos-and-video-with-mediacapture.md)</ept>, which describes the steps for implementing basic photo and video capture.",
+      "pos": [
+        514,
+        734
+      ]
+    },
+    {
+      "content": "It is recommended that you familiarize yourself with the basic media capture pattern in that article before moving on to more advanced capture scenarios.",
+      "pos": [
+        735,
+        888
+      ]
+    },
+    {
+      "content": "The code in this article assumes that your app already has an instance of MediaCapture that has been properly initialized.",
+      "pos": [
+        889,
+        1011
+      ]
+    },
+    {
+      "content": "About camera profiles",
+      "pos": [
+        1019,
+        1040
+      ]
+    },
+    {
+      "content": "Cameras on different devices support different capabilities including the set of supported capture resolutions, frame rate for video captures, and whether HDR or variable frame rate captures are supported.",
+      "pos": [
+        1042,
+        1247
+      ]
+    },
+    {
+      "content": "The Universal Windows Platform (UWP) media capture framework stores this set of capabilities in a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCaptureVideoProfileMediaDescription<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926695)</ept>.",
+      "pos": [
+        1248,
+        1451
+      ]
+    },
+    {
+      "content": "A camera profile, represented by a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCaptureVideoProfile<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926694)</ept> object, has three collections of media descriptions; one for photo capture, one for video capture, and another for video preview.",
+      "pos": [
+        1452,
+        1705
+      ]
+    },
+    {
+      "content": "Before initializing your <bpt id=\"p1\">[</bpt>MediaCapture<ept id=\"p1\">](capture-photos-and-video-with-mediacapture.md)</ept> object, you can query the capture devices on the current device to see what profiles are supported.",
+      "pos": [
+        1707,
+        1893
+      ]
+    },
+    {
+      "content": "When you select a supported profile, you know that the capture device supports all of the capabilities in the profile's media descriptions.",
+      "pos": [
+        1894,
+        2033
+      ]
+    },
+    {
+      "content": "This eliminates the need for a trial and error approach to determining which combinations of capabilities are supported on a particular device.",
+      "pos": [
+        2034,
+        2177
+      ]
+    },
+    {
+      "pos": [
+        2179,
+        2559
+      ],
+      "content": "In the article on basic media capture, <bpt id=\"p1\">[</bpt>Capture Photos and Video with MediaCapture<ept id=\"p1\">](capture-photos-and-video-with-mediacapture.md)</ept>, the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br226573)</ept> used to initialize the media capture is created with only the capture device's ID string, the minimum amount of data required for initialization."
+    },
+    {
+      "pos": [
+        2561,
+        2664
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>BasicInitExample<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetBasicInitExample)</ept>]"
+    },
+    {
+      "content": "The code examples in this article replace this minimal initialization with the discovery of camera profiles supporting various capabilities, which are then used to initialize the media capture device.",
+      "pos": [
+        2666,
+        2866
+      ]
+    },
+    {
+      "content": "Find a video device that supports camera profiles",
+      "pos": [
+        2871,
+        2920
+      ]
+    },
+    {
+      "content": "Before searching for supported camera profiles, you should find a capture device that supports the use of camera profiles.",
+      "pos": [
+        2922,
+        3044
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>GetVideoProfileSupportedDeviceIdAsync<ept id=\"p1\">**</ept> helper method defined in the example below uses the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>DeviceInformaion.FindAllAsync<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br225432)</ept> method to retrieve a list of all available video capture devices.",
+      "pos": [
+        3045,
+        3302
+      ]
+    },
+    {
+      "content": "It loops through all of the devices in the list, calling the static method, <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>IsVideoProfileSupported<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926714)</ept>, for each device to see if it supports video profiles.",
+      "pos": [
+        3303,
+        3521
+      ]
+    },
+    {
+      "content": "Also, the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>EnclosureLocation.Panel<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br229906)</ept> property for each device, allowing you to specify wether you want a camera on the front or back of the device.",
+      "pos": [
+        3522,
+        3730
+      ]
+    },
+    {
+      "pos": [
+        3732,
+        3932
+      ],
+      "content": "If a device that supports camera profiles is found on the specified panel, the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Id<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br225437)</ept> value, containing the device's ID string, is returned."
+    },
+    {
+      "pos": [
+        3934,
+        4079
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>GetVideoProfileSupportedDeviceIdAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetVideoProfileSupportedDeviceIdAsync)</ept>]"
+    },
+    {
+      "content": "If the device ID returned from the <bpt id=\"p1\">**</bpt>GetVideoProfileSupportedDeviceIdAsync<ept id=\"p1\">**</ept> helper method is null or an empty string, there is no device on the specified panel that supports camera profiles.",
+      "pos": [
+        4081,
+        4272
+      ]
+    },
+    {
+      "content": "In this case, you should initialize your media capture device without using profiles.",
+      "pos": [
+        4273,
+        4358
+      ]
+    },
+    {
+      "pos": [
+        4360,
+        4485
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>GetDeviceWithProfileSupport<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetDeviceWithProfileSupport)</ept>]"
+    },
+    {
+      "content": "Select a profile based on supported resolution and frame rate",
+      "pos": [
+        4490,
+        4551
+      ]
+    },
+    {
+      "content": "To select a profile with particular capabilities, such as with the ability to achieve a particular resolution and frame rate, you should first call the helper method defined above to get the ID of a capture device that supports using camera profiles.",
+      "pos": [
+        4553,
+        4803
+      ]
+    },
+    {
+      "content": "Create a new <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226573)</ept> object, passing in the selected device ID.",
+      "pos": [
+        4805,
+        4959
+      ]
+    },
+    {
+      "content": "Next, call the static method <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.FindAllVideoProfiles<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926708)</ept> to get a list of all camera profiles supported by the device.",
+      "pos": [
+        4960,
+        5148
+      ]
+    },
+    {
+      "content": "This example uses a Linq query method, included in the using <bpt id=\"p1\">**</bpt>System.Linq<ept id=\"p1\">**</ept> namespace, to select a profile that contains a <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>SupportedRecordMediaDescription<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn926705)</ept> object where the <bpt id=\"p4\">[</bpt><bpt id=\"p5\">**</bpt>Width<ept id=\"p5\">**</ept><ept id=\"p4\">](https://msdn.microsoft.com/library/windows/apps/dn926700)</ept>, <bpt id=\"p6\">[</bpt><bpt id=\"p7\">**</bpt>Height<ept id=\"p7\">**</ept><ept id=\"p6\">](https://msdn.microsoft.com/library/windows/apps/dn926697)</ept>, and <bpt id=\"p8\">[</bpt><bpt id=\"p9\">**</bpt>FrameRate<ept id=\"p9\">**</ept><ept id=\"p8\">](https://msdn.microsoft.com/library/windows/apps/dn926696)</ept> properties match the requested values.",
+      "pos": [
+        5150,
+        5646
+      ]
+    },
+    {
+      "content": "If a match is found, <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>VideoProfile<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926679)</ept> and <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>RecordMediaDescription<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn926678)</ept> of the <bpt id=\"p5\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p5\">**</ept> are set to the values from the anonymous type returned from the Linq query.",
+      "pos": [
+        5647,
+        5957
+      ]
+    },
+    {
+      "content": "If no match is found, the default profile is used.",
+      "pos": [
+        5958,
+        6008
+      ]
+    },
+    {
+      "pos": [
+        6010,
+        6121
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FindWVGA30FPSProfile<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindWVGA30FPSProfile)</ept>]"
+    },
+    {
+      "pos": [
+        6123,
+        6383
+      ],
+      "content": "Once you populated the <bpt id=\"p1\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p1\">**</ept> with your desired camera profile, you simply call <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>InitializeAsync<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br226598)</ept> on your media capture object to configure it to the desired profile."
+    },
+    {
+      "pos": [
+        6385,
+        6500
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>InitCaptureWithProfile<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitCaptureWithProfile)</ept>]"
+    },
+    {
+      "content": "Select a profile that supports concurrence",
+      "pos": [
+        6505,
+        6547
+      ]
+    },
+    {
+      "content": "You can use camera profiles to determine if a device supports video capture from multiple cameras concurrently.",
+      "pos": [
+        6549,
+        6660
+      ]
+    },
+    {
+      "content": "For this scenario, you will need to create two sets of capture objects, one for the front camera and one for the back.",
+      "pos": [
+        6661,
+        6779
+      ]
+    },
+    {
+      "content": "For each camera, create a <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept>, a <bpt id=\"p2\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p2\">**</ept>, and a string to hold the capture device ID.",
+      "pos": [
+        6780,
+        6909
+      ]
+    },
+    {
+      "content": "Also, add a boolean variable that will track whether concurrence is supported.",
+      "pos": [
+        6910,
+        6988
+      ]
+    },
+    {
+      "pos": [
+        6990,
+        7093
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ConcurrencySetup<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConcurrencySetup)</ept>]"
+    },
+    {
+      "content": "The static method <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.FindConcurrentProfiles<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926709)</ept> returns a list of the camera profiles that are supported by the specified capture device that can also supports concurrence.",
+      "pos": [
+        7095,
+        7337
+      ]
+    },
+    {
+      "content": "Use a Linq query to find a profile that supports concurrence and that is supported by both the front and back camera.",
+      "pos": [
+        7338,
+        7455
+      ]
+    },
+    {
+      "content": "If a profile that meets theses requirements is found, set the profile on each of the <bpt id=\"p1\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p1\">**</ept> objects and set the boolean concurrence tracking variable to true.",
+      "pos": [
+        7456,
+        7646
+      ]
+    },
+    {
+      "pos": [
+        7648,
+        7763
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FindConcurrencyDevices<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindConcurrencyDevices)</ept>]"
+    },
+    {
+      "content": "Call <bpt id=\"p1\">**</bpt>MediaCapture.InitializeAsync<ept id=\"p1\">**</ept> for the primary camera for your app scenario.",
+      "pos": [
+        7765,
+        7848
+      ]
+    },
+    {
+      "content": "If concurrence is supported, initialize the second camera as well.",
+      "pos": [
+        7849,
+        7915
+      ]
+    },
+    {
+      "pos": [
+        7917,
+        8042
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>InitConcurrentMediaCaptures<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitConcurrentMediaCaptures)</ept>]"
+    },
+    {
+      "content": "Use known profiles to find a profile that supports HDR video",
+      "pos": [
+        8047,
+        8107
+      ]
+    },
+    {
+      "content": "Selecting a profile that supports HDR begins like the other scenarios.",
+      "pos": [
+        8109,
+        8179
+      ]
+    },
+    {
+      "content": "Create a a <bpt id=\"p1\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p1\">**</ept> and a string to hold the capture device ID.",
+      "pos": [
+        8180,
+        8273
+      ]
+    },
+    {
+      "content": "Add a boolean variable that will track whether HDR video is supported.",
+      "pos": [
+        8274,
+        8344
+      ]
+    },
+    {
+      "pos": [
+        8346,
+        8453
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>GetHdrProfileSetup<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetHdrProfileSetup)</ept>]"
+    },
+    {
+      "pos": [
+        8455,
+        8605
+      ],
+      "content": "Use the <bpt id=\"p1\">**</bpt>GetVideoProfileSupportedDeviceIdAsync<ept id=\"p1\">**</ept> helper method defined above to get the device ID for a capture device that supports camera profiles."
+    },
+    {
+      "pos": [
+        8607,
+        8704
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FindDeviceHDR<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindDeviceHDR)</ept>]"
+    },
+    {
+      "content": "The static method <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.FindKnownVideoProfiles<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926710)</ept> returns the camera profiles supported by the specified device that is categorized by the specified <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>KnownVideoProfile<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn948843)</ept> value.",
+      "pos": [
+        8706,
+        9011
+      ]
+    },
+    {
+      "content": "For this scenario, the <bpt id=\"p1\">**</bpt>VideoRecording<ept id=\"p1\">**</ept> value is specified to limit the returned camera profiles to ones that support video recording.",
+      "pos": [
+        9012,
+        9148
+      ]
+    },
+    {
+      "content": "Loop through the returned list of camera profiles.",
+      "pos": [
+        9150,
+        9200
+      ]
+    },
+    {
+      "content": "For each camera profile, loop through each <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>VideoProfileMediaDescription<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926695)</ept> in the profile checking to see if the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>IsHdrVideoSupported<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn926698)</ept> property is true.",
+      "pos": [
+        9201,
+        9476
+      ]
+    },
+    {
+      "content": "Once a suitable media description is found, break out of the loop and assign the profile and description objects to the <bpt id=\"p1\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p1\">**</ept> object.",
+      "pos": [
+        9477,
+        9643
+      ]
+    },
+    {
+      "pos": [
+        9645,
+        9744
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FindHDRProfile<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindHDRProfile)</ept>]"
+    },
+    {
+      "content": "Determine if a device supports simultaneous photo and video capture",
+      "pos": [
+        9749,
+        9816
+      ]
+    },
+    {
+      "content": "Many devices support capturing photos and video simultaneously.",
+      "pos": [
+        9818,
+        9881
+      ]
+    },
+    {
+      "content": "To determine if a capture device supports this, call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.FindAllVideoProfiles<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926708)</ept> to get all of the camera profiles supported by the device.",
+      "pos": [
+        9882,
+        10091
+      ]
+    },
+    {
+      "content": "Use a link query to find a profile that has at least one entry for both <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SupportedPhotoMediaDescription<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926703)</ept> and <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SupportedRecordMediaDescription<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn926705)</ept> which means that the profile supports simultaneous capture.",
+      "pos": [
+        10092,
+        10418
+      ]
+    },
+    {
+      "pos": [
+        10420,
+        10537
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>GetPhotoAndVideoSupport<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetPhotoAndVideoSupport)</ept>]"
+    },
+    {
+      "content": "You can refine this query to look for profiles that support specific resolutions or other capabilities in addition to simultaneous video record.",
+      "pos": [
+        10539,
+        10683
+      ]
+    },
+    {
+      "content": "You can also use the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.FindKnownVideoProfiles<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926710)</ept> and specify the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>BalancedVideoAndPhoto<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn948843)</ept> value to retrieve profiles that support simultaneous capture, but querying all profiles will provide more complete results.",
+      "pos": [
+        10684,
+        11030
+      ]
+    },
+    {
+      "content": "Related topics",
+      "pos": [
+        11035,
+        11049
+      ]
+    },
+    {
+      "content": "Capture photos and video with MediaCapture",
+      "pos": [
+        11054,
+        11096
+      ]
+    }
+  ],
+  "content": "---\nms.assetid: 42A06423-670F-4CCC-88B7-3DCEEDDEBA57\ndescription: This article discusses how to use camera profiles to discover and manage the capabilities of different video capture devices.\ntitle: Camera profiles\n---\n\n# Camera profiles\n\n\\[ Updated for UWP apps on Windows 10. For Windows 8.x articles, see the [archive](http://go.microsoft.com/fwlink/p/?linkid=619132) \\]\n\n\nThis article discusses how to use camera profiles to discover and manage the capabilities of different video capture devices.\n\n**Note**  \nThis article builds on concepts and code discussed in [Capture Photos and Video with MediaCapture](capture-photos-and-video-with-mediacapture.md), which describes the steps for implementing basic photo and video capture. It is recommended that you familiarize yourself with the basic media capture pattern in that article before moving on to more advanced capture scenarios. The code in this article assumes that your app already has an instance of MediaCapture that has been properly initialized.\n\n \n\n## About camera profiles\n\nCameras on different devices support different capabilities including the set of supported capture resolutions, frame rate for video captures, and whether HDR or variable frame rate captures are supported. The Universal Windows Platform (UWP) media capture framework stores this set of capabilities in a [**MediaCaptureVideoProfileMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926695). A camera profile, represented by a [**MediaCaptureVideoProfile**](https://msdn.microsoft.com/library/windows/apps/dn926694) object, has three collections of media descriptions; one for photo capture, one for video capture, and another for video preview.\n\nBefore initializing your [MediaCapture](capture-photos-and-video-with-mediacapture.md) object, you can query the capture devices on the current device to see what profiles are supported. When you select a supported profile, you know that the capture device supports all of the capabilities in the profile's media descriptions. This eliminates the need for a trial and error approach to determining which combinations of capabilities are supported on a particular device.\n\nIn the article on basic media capture, [Capture Photos and Video with MediaCapture](capture-photos-and-video-with-mediacapture.md), the [**MediaCaptureInitializationSettings**](https://msdn.microsoft.com/library/windows/apps/br226573) used to initialize the media capture is created with only the capture device's ID string, the minimum amount of data required for initialization.\n\n[!code-cs[BasicInitExample](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetBasicInitExample)]\n\nThe code examples in this article replace this minimal initialization with the discovery of camera profiles supporting various capabilities, which are then used to initialize the media capture device.\n\n## Find a video device that supports camera profiles\n\nBefore searching for supported camera profiles, you should find a capture device that supports the use of camera profiles. The **GetVideoProfileSupportedDeviceIdAsync** helper method defined in the example below uses the [**DeviceInformaion.FindAllAsync**](https://msdn.microsoft.com/library/windows/apps/br225432) method to retrieve a list of all available video capture devices. It loops through all of the devices in the list, calling the static method, [**IsVideoProfileSupported**](https://msdn.microsoft.com/library/windows/apps/dn926714), for each device to see if it supports video profiles. Also, the [**EnclosureLocation.Panel**](https://msdn.microsoft.com/library/windows/apps/br229906) property for each device, allowing you to specify wether you want a camera on the front or back of the device.\n\nIf a device that supports camera profiles is found on the specified panel, the [**Id**](https://msdn.microsoft.com/library/windows/apps/br225437) value, containing the device's ID string, is returned.\n\n[!code-cs[GetVideoProfileSupportedDeviceIdAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetVideoProfileSupportedDeviceIdAsync)]\n\nIf the device ID returned from the **GetVideoProfileSupportedDeviceIdAsync** helper method is null or an empty string, there is no device on the specified panel that supports camera profiles. In this case, you should initialize your media capture device without using profiles.\n\n[!code-cs[GetDeviceWithProfileSupport](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetDeviceWithProfileSupport)]\n\n## Select a profile based on supported resolution and frame rate\n\nTo select a profile with particular capabilities, such as with the ability to achieve a particular resolution and frame rate, you should first call the helper method defined above to get the ID of a capture device that supports using camera profiles.\n\nCreate a new [**MediaCaptureInitializationSettings**](https://msdn.microsoft.com/library/windows/apps/br226573) object, passing in the selected device ID. Next, call the static method [**MediaCapture.FindAllVideoProfiles**](https://msdn.microsoft.com/library/windows/apps/dn926708) to get a list of all camera profiles supported by the device.\n\nThis example uses a Linq query method, included in the using **System.Linq** namespace, to select a profile that contains a [**SupportedRecordMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926705) object where the [**Width**](https://msdn.microsoft.com/library/windows/apps/dn926700), [**Height**](https://msdn.microsoft.com/library/windows/apps/dn926697), and [**FrameRate**](https://msdn.microsoft.com/library/windows/apps/dn926696) properties match the requested values. If a match is found, [**VideoProfile**](https://msdn.microsoft.com/library/windows/apps/dn926679) and [**RecordMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926678) of the **MediaCaptureInitializationSettings** are set to the values from the anonymous type returned from the Linq query. If no match is found, the default profile is used.\n\n[!code-cs[FindWVGA30FPSProfile](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindWVGA30FPSProfile)]\n\nOnce you populated the **MediaCaptureInitializationSettings** with your desired camera profile, you simply call [**InitializeAsync**](https://msdn.microsoft.com/library/windows/apps/br226598) on your media capture object to configure it to the desired profile.\n\n[!code-cs[InitCaptureWithProfile](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitCaptureWithProfile)]\n\n## Select a profile that supports concurrence\n\nYou can use camera profiles to determine if a device supports video capture from multiple cameras concurrently. For this scenario, you will need to create two sets of capture objects, one for the front camera and one for the back. For each camera, create a **MediaCapture**, a **MediaCaptureInitializationSettings**, and a string to hold the capture device ID. Also, add a boolean variable that will track whether concurrence is supported.\n\n[!code-cs[ConcurrencySetup](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConcurrencySetup)]\n\nThe static method [**MediaCapture.FindConcurrentProfiles**](https://msdn.microsoft.com/library/windows/apps/dn926709) returns a list of the camera profiles that are supported by the specified capture device that can also supports concurrence. Use a Linq query to find a profile that supports concurrence and that is supported by both the front and back camera. If a profile that meets theses requirements is found, set the profile on each of the **MediaCaptureInitializationSettings** objects and set the boolean concurrence tracking variable to true.\n\n[!code-cs[FindConcurrencyDevices](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindConcurrencyDevices)]\n\nCall **MediaCapture.InitializeAsync** for the primary camera for your app scenario. If concurrence is supported, initialize the second camera as well.\n\n[!code-cs[InitConcurrentMediaCaptures](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitConcurrentMediaCaptures)]\n\n## Use known profiles to find a profile that supports HDR video\n\nSelecting a profile that supports HDR begins like the other scenarios. Create a a **MediaCaptureInitializationSettings** and a string to hold the capture device ID. Add a boolean variable that will track whether HDR video is supported.\n\n[!code-cs[GetHdrProfileSetup](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetHdrProfileSetup)]\n\nUse the **GetVideoProfileSupportedDeviceIdAsync** helper method defined above to get the device ID for a capture device that supports camera profiles.\n\n[!code-cs[FindDeviceHDR](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindDeviceHDR)]\n\nThe static method [**MediaCapture.FindKnownVideoProfiles**](https://msdn.microsoft.com/library/windows/apps/dn926710) returns the camera profiles supported by the specified device that is categorized by the specified [**KnownVideoProfile**](https://msdn.microsoft.com/library/windows/apps/dn948843) value. For this scenario, the **VideoRecording** value is specified to limit the returned camera profiles to ones that support video recording.\n\nLoop through the returned list of camera profiles. For each camera profile, loop through each [**VideoProfileMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926695) in the profile checking to see if the [**IsHdrVideoSupported**](https://msdn.microsoft.com/library/windows/apps/dn926698) property is true. Once a suitable media description is found, break out of the loop and assign the profile and description objects to the **MediaCaptureInitializationSettings** object.\n\n[!code-cs[FindHDRProfile](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetFindHDRProfile)]\n\n## Determine if a device supports simultaneous photo and video capture\n\nMany devices support capturing photos and video simultaneously. To determine if a capture device supports this, call [**MediaCapture.FindAllVideoProfiles**](https://msdn.microsoft.com/library/windows/apps/dn926708) to get all of the camera profiles supported by the device. Use a link query to find a profile that has at least one entry for both [**SupportedPhotoMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926703) and [**SupportedRecordMediaDescription**](https://msdn.microsoft.com/library/windows/apps/dn926705) which means that the profile supports simultaneous capture.\n\n[!code-cs[GetPhotoAndVideoSupport](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetPhotoAndVideoSupport)]\n\nYou can refine this query to look for profiles that support specific resolutions or other capabilities in addition to simultaneous video record. You can also use the [**MediaCapture.FindKnownVideoProfiles**](https://msdn.microsoft.com/library/windows/apps/dn926710) and specify the [**BalancedVideoAndPhoto**](https://msdn.microsoft.com/library/windows/apps/dn948843) value to retrieve profiles that support simultaneous capture, but querying all profiles will provide more complete results.\n\n## Related topics\n\n* [Capture photos and video with MediaCapture](capture-photos-and-video-with-mediacapture.md)\n \n\n \n\n\n\n\n"
+}
