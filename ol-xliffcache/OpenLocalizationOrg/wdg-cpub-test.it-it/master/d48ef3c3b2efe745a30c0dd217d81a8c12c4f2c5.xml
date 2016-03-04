@@ -1,0 +1,1951 @@
+{
+  "nodes": [
+    {
+      "content": "ms.assetid: 1361E82A-202F-40F7-9239-56F00DFCA54B",
+      "pos": [
+        4,
+        52
+      ]
+    },
+    {
+      "content": "description: This article describes the steps for capturing photos and video using the MediaCapture API, including initializing and shutting down the MediaCapture and handling changes in device orientation.",
+      "pos": [
+        53,
+        259
+      ]
+    },
+    {
+      "content": "title: Capture photos and video with MediaCapture",
+      "pos": [
+        260,
+        309
+      ]
+    },
+    {
+      "content": "Capture photos and video with MediaCapture",
+      "pos": [
+        317,
+        359
+      ]
+    },
+    {
+      "content": "\\[ Updated for UWP apps on Windows 10.",
+      "pos": [
+        361,
+        399
+      ]
+    },
+    {
+      "content": "For Windows 8.x articles, see the <bpt id=\"p1\">[</bpt>archive<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?linkid=619132)</ept> \\]",
+      "pos": [
+        400,
+        495
+      ]
+    },
+    {
+      "pos": [
+        498,
+        759
+      ],
+      "content": "This article describes the steps for capturing photos and video using the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241124)</ept> API, including initializing and shutting down the <bpt id=\"p3\">**</bpt>MediaCapture<ept id=\"p3\">**</ept> and handling changes in device orientation."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> is provided to support apps that require low-level control of the media capture process and that implement scenarios that require advanced capture capabilities.",
+      "pos": [
+        761,
+        938
+      ]
+    },
+    {
+      "content": "Using <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> also requires you to provide your own capture UI.",
+      "pos": [
+        939,
+        1011
+      ]
+    },
+    {
+      "content": "If your app only needs to capture a photo or video and is unconcerned with advanced capture techniques, the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CameraCaptureUI<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241030)</ept> makes it easy to capture a photo or video with only a few lines of code.",
+      "pos": [
+        1012,
+        1272
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Capture photos and video with CameraCaptureUI<ept id=\"p1\">](capture-photos-and-video-with-cameracaptureui.md)</ept>.",
+      "pos": [
+        1273,
+        1397
+      ]
+    },
+    {
+      "content": "The code in this article was adapted from the <bpt id=\"p1\">[</bpt>CameraStarterKit sample<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=619479)</ept>.",
+      "pos": [
+        1399,
+        1518
+      ]
+    },
+    {
+      "content": "You can download the sample to see the code used in context or to use the sample as a starting point for your own app.",
+      "pos": [
+        1519,
+        1637
+      ]
+    },
+    {
+      "content": "Configure your project",
+      "pos": [
+        1642,
+        1664
+      ]
+    },
+    {
+      "content": "Add capability declarations to the app manifest",
+      "pos": [
+        1670,
+        1717
+      ]
+    },
+    {
+      "content": "In order for your app to access a device's camera, you must declare that your app uses the <bpt id=\"p1\">*</bpt>webcam<ept id=\"p1\">*</ept> and <bpt id=\"p2\">*</bpt>microphone<ept id=\"p2\">*</ept> device capabilities.",
+      "pos": [
+        1719,
+        1856
+      ]
+    },
+    {
+      "content": "If you want to save captured photos and videos to the users's Pictures or Videos library, you must also declare the <bpt id=\"p1\">*</bpt>picturesLibrary<ept id=\"p1\">*</ept> and <bpt id=\"p2\">*</bpt>videosLibrary<ept id=\"p2\">*</ept> capability.",
+      "pos": [
+        1857,
+        2022
+      ]
+    },
+    {
+      "content": "Add capabilities to the app manifest",
+      "pos": [
+        2026,
+        2062
+      ]
+    },
+    {
+      "pos": [
+        2070,
+        2224
+      ],
+      "content": "In Microsoft Visual Studio, in <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, open the designer for the application manifest by double-clicking the <bpt id=\"p2\">**</bpt>package.appxmanifest<ept id=\"p2\">**</ept> item."
+    },
+    {
+      "pos": [
+        2229,
+        2261
+      ],
+      "content": "Select the <bpt id=\"p1\">**</bpt>Capabilities<ept id=\"p1\">**</ept> tab."
+    },
+    {
+      "pos": [
+        2266,
+        2326
+      ],
+      "content": "Check the box for <bpt id=\"p1\">**</bpt>Webcam<ept id=\"p1\">**</ept> and the box for <bpt id=\"p2\">**</bpt>Microphone<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        2331,
+        2453
+      ],
+      "content": "For access to the Pictures and Videos library check the boxes for <bpt id=\"p1\">**</bpt>Pictures Library<ept id=\"p1\">**</ept> and the box for <bpt id=\"p2\">**</bpt>Videos Library<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Add using directives for media capture-related APIs",
+      "pos": [
+        2459,
+        2510
+      ]
+    },
+    {
+      "content": "The following code listing shows the namespaces that are referenced by the sample code in this article and describes what functionality each namespace provides.",
+      "pos": [
+        2512,
+        2672
+      ]
+    },
+    {
+      "pos": [
+        2674,
+        2755
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>Using<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUsing)</ept>]"
+    },
+    {
+      "content": "Initialize the MediaCapture object",
+      "pos": [
+        2760,
+        2794
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241124)</ept> class in the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>Windows.Media.Capture<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br226738)</ept> namespace is the fundamental interface for all media capture operations.",
+      "pos": [
+        2796,
+        3048
+      ]
+    },
+    {
+      "content": "Apps typically declare a variable of this type scoped to a single page.",
+      "pos": [
+        3049,
+        3120
+      ]
+    },
+    {
+      "content": "Your app needs to track the current state of the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept>, so you should declare boolean variables for the initialization, previewing, and recording state of the object.",
+      "pos": [
+        3121,
+        3298
+      ]
+    },
+    {
+      "pos": [
+        3300,
+        3413
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>MediaCaptureVariables<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetMediaCaptureVariables)</ept>]"
+    },
+    {
+      "content": "To help orient the preview video correctly, create member variables to track whether the camera is external and whether the app is currently mirroring the preview stream.",
+      "pos": [
+        3415,
+        3585
+      ]
+    },
+    {
+      "content": "Your app should mirror the preview stream when you think the video feed is capturing the user because that is a more natural user experience.",
+      "pos": [
+        3586,
+        3727
+      ]
+    },
+    {
+      "pos": [
+        3729,
+        3832
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>PreviewVariables<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPreviewVariables)</ept>]"
+    },
+    {
+      "content": "The following example method initializes the media capture object.",
+      "pos": [
+        3834,
+        3900
+      ]
+    },
+    {
+      "content": "First, the code searches for a video capture device that can be used for media capture.",
+      "pos": [
+        3901,
+        3988
+      ]
+    },
+    {
+      "content": "Once found, the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> object is initialized and handlers for its events are registered.",
+      "pos": [
+        3989,
+        4087
+      ]
+    },
+    {
+      "content": "Next a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/desktop/hh802710)</ept> object is created using the ID of the video capture device.",
+      "pos": [
+        4088,
+        4256
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> is then initialized with a call to <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>InitializeAsync<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br226598)</ept>.",
+      "pos": [
+        4257,
+        4393
+      ]
+    },
+    {
+      "pos": [
+        4395,
+        4508
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>InitializeCameraAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitializeCameraAsync)</ept>]"
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DeviceInformation.FindAllAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br225432)</ept> method can be used to find all devices of a specified type.",
+      "pos": [
+        4514,
+        4672
+      ]
+    },
+    {
+      "content": "In this example, the <bpt id=\"p1\">**</bpt>DeviceClass.VideoCapture<ept id=\"p1\">**</ept> enumeration value is passed in to indicate that only video capture devices should be returned.",
+      "pos": [
+        4673,
+        4817
+      ]
+    },
+    {
+      "content": "Note that a video capture device is used for capturing both photos and videos.",
+      "pos": [
+        4818,
+        4896
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>FindAllAsync<ept id=\"p1\">**</ept> returns a <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>DeviceInformationCollection<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br225395)</ept> object that contains a <bpt id=\"p4\">[</bpt><bpt id=\"p5\">**</bpt>DeviceInformation<ept id=\"p5\">**</ept><ept id=\"p4\">](https://msdn.microsoft.com/library/windows/apps/br225393)</ept> object for each found device of the requested type.",
+      "pos": [
+        4902,
+        5177
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>FirstOrDefault<ept id=\"p1\">**</ept> extension method from the <bpt id=\"p2\">**</bpt>System.Linq<ept id=\"p2\">**</ept> namespace provides an easy syntax for selecting an item from a list based on specified conditions.",
+      "pos": [
+        5178,
+        5341
+      ]
+    },
+    {
+      "content": "The first call attempts to select the first <bpt id=\"p1\">**</bpt>DeviceInformation<ept id=\"p1\">**</ept> in the list that has an <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>EnclosureLocation.Panel<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br229906)</ept> value of <bpt id=\"p4\">**</bpt>Panel.Back<ept id=\"p4\">**</ept>, indicating that the camera is on the back panel of the device's enclosure.",
+      "pos": [
+        5342,
+        5619
+      ]
+    },
+    {
+      "content": "If the device does not have a camera on the back panel, the first available camera is used.",
+      "pos": [
+        5620,
+        5711
+      ]
+    },
+    {
+      "pos": [
+        5717,
+        5947
+      ],
+      "content": "If you do not specify a device ID when you initialize the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCaptureInitializationSettings<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226573)</ept>, the system will choose the first device in its internal list of devices."
+    },
+    {
+      "content": "The call to <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.InitializeAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226598)</ept> initializes the object to use the specified capture device.",
+      "pos": [
+        5953,
+        6117
+      ]
+    },
+    {
+      "content": "This call is made inside a <bpt id=\"p1\">**</bpt>try<ept id=\"p1\">**</ept> block because it will throw an <bpt id=\"p2\">**</bpt>UnauthorizedAccessException<ept id=\"p2\">**</ept> if the user has denied the calling app access to the camera.",
+      "pos": [
+        6118,
+        6276
+      ]
+    },
+    {
+      "content": "If the call succeeds, the <bpt id=\"p1\">**</bpt>\\_isInitialized<ept id=\"p1\">**</ept> variable is set to true so that subsequent method calls can determine if the capture device has been initialized.",
+      "pos": [
+        6277,
+        6436
+      ]
+    },
+    {
+      "content": "If the initialization of the capture device is successful, variables are set to reflect whether the capture device is external, or if it is on the front panel of the device.",
+      "pos": [
+        6442,
+        6615
+      ]
+    },
+    {
+      "content": "These values will be used to orient the capture preview correctly for the user.",
+      "pos": [
+        6616,
+        6695
+      ]
+    },
+    {
+      "content": "Finally, the UI is updated to reflect that capture is available and the preview stream from the capture device is started.",
+      "pos": [
+        6696,
+        6818
+      ]
+    },
+    {
+      "content": "All of these tasks are performed in helper methods that will be described later in this article.",
+      "pos": [
+        6819,
+        6915
+      ]
+    },
+    {
+      "content": "Start the capture preview",
+      "pos": [
+        6920,
+        6945
+      ]
+    },
+    {
+      "content": "For the user to be able to see what they are capturing, you need to provide a preview of what the video capture device is currently seeing in your UI.",
+      "pos": [
+        6947,
+        7097
+      ]
+    },
+    {
+      "pos": [
+        7099,
+        7240
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Important<ept id=\"p1\">**</ept> You must start the capture preview in order for the capture device to enable auto focus, auto exposure, and auto white balance."
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CaptureElement<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br209278)</ept> control is provided to enable capture preview.",
+      "pos": [
+        7242,
+        7371
+      ]
+    },
+    {
+      "content": "The following shows example XAML code that defines the capture element.",
+      "pos": [
+        7372,
+        7443
+      ]
+    },
+    {
+      "pos": [
+        7445,
+        7542
+      ],
+      "content": "[!code-xml<bpt id=\"p1\">[</bpt>CaptureElement<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml#SnippetCaptureElement)</ept>]"
+    },
+    {
+      "content": "Users expect that the screen will stay on while they are previewing the video capture screen and not turn off due to inactivity.",
+      "pos": [
+        7544,
+        7672
+      ]
+    },
+    {
+      "content": "To enable this, you must create a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayRequest<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241816)</ept> object.",
+      "pos": [
+        7673,
+        7793
+      ]
+    },
+    {
+      "content": "Declare this variable with page scope so that it persists throughout the capture session.",
+      "pos": [
+        7794,
+        7883
+      ]
+    },
+    {
+      "pos": [
+        7885,
+        7984
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DisplayRequest<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayRequest)</ept>]"
+    },
+    {
+      "content": "The following method starts up the media capture preview.",
+      "pos": [
+        7986,
+        8043
+      ]
+    },
+    {
+      "content": "First, it requests that the display remain active by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RequestActive<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241818)</ept> on the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>DisplayRequest<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br241816)</ept>.",
+      "pos": [
+        8044,
+        8269
+      ]
+    },
+    {
+      "content": "Next, the preview is started by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StartPreviewAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226613)</ept>.",
+      "pos": [
+        8270,
+        8392
+      ]
+    },
+    {
+      "pos": [
+        8394,
+        8499
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>StartPreviewAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStartPreviewAsync)</ept>]"
+    },
+    {
+      "pos": [
+        8505,
+        8684
+      ],
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RequestActive<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241818)</ept> method is called on the <bpt id=\"p3\">**</bpt>DisplayRequest<ept id=\"p3\">**</ept> object to request that the system leave the screen on."
+    },
+    {
+      "pos": [
+        8690,
+        8880
+      ],
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Source<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227419)</ept> property of the <bpt id=\"p3\">**</bpt>CaptureElement<ept id=\"p3\">**</ept> is set to the app's <bpt id=\"p4\">**</bpt>MediaCapture<ept id=\"p4\">**</ept> object to define the source of the preview."
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>FlowDirection<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br208716)</ept> property is provided by the XAML framework to support bi-directional user interfaces.",
+      "pos": [
+        8886,
+        9053
+      ]
+    },
+    {
+      "content": "Setting the flow direction of the <bpt id=\"p1\">**</bpt>CaptureElement<ept id=\"p1\">**</ept> to <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>FlowDirection.RightToLeft<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br242397)</ept> causes the preview video to be flipped horizontally.",
+      "pos": [
+        9054,
+        9252
+      ]
+    },
+    {
+      "content": "This is used when the capture device is on the front panel of the device so that the preview in the correct direction from the user's perspective.",
+      "pos": [
+        9253,
+        9399
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StartPreviewAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226613)</ept> method starts the display of the preview stream within the <bpt id=\"p3\">**</bpt>CaptureElement<ept id=\"p3\">**</ept>.",
+      "pos": [
+        9405,
+        9569
+      ]
+    },
+    {
+      "content": "If the preview is started successfully, the <bpt id=\"p1\">**</bpt>\\_isPreviewing<ept id=\"p1\">**</ept> variable is set to allow other parts of the app to know that the app is currently previewing, and the helper method for setting the preview rotation is called.",
+      "pos": [
+        9570,
+        9792
+      ]
+    },
+    {
+      "content": "This method is defined in the next section.",
+      "pos": [
+        9793,
+        9836
+      ]
+    },
+    {
+      "content": "Detect screen and device orientation",
+      "pos": [
+        9841,
+        9877
+      ]
+    },
+    {
+      "content": "There are several areas of a media capture app that, when running on a mobile device like a phone or a tablet, are impacted by the current orientation of the device.",
+      "pos": [
+        9879,
+        10044
+      ]
+    },
+    {
+      "content": "These areas include properly rotating the preview stream from the camera and properly encoding captured images and videos so that, when viewed by the user, they are correctly oriented.",
+      "pos": [
+        10045,
+        10229
+      ]
+    },
+    {
+      "content": "The term \"display orientation\" refers to the way the system rotates the XAML page on the device to keep it upright for the user.",
+      "pos": [
+        10231,
+        10359
+      ]
+    },
+    {
+      "content": "\"Device orientation\" refers to the orientation of the device in world space and, therefore, the orientation of the physical camera device in world space.",
+      "pos": [
+        10360,
+        10513
+      ]
+    },
+    {
+      "content": "Both kinds of orientation a relevant to a media capture app.",
+      "pos": [
+        10514,
+        10574
+      ]
+    },
+    {
+      "content": "To handle display orientation, declare and initialize a page-scoped variable for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayInformation<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn264258)</ept> class.",
+      "pos": [
+        10575,
+        10749
+      ]
+    },
+    {
+      "content": "Declare another variable of type <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayOrientations<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226142)</ept> to track the current orientation of the display.",
+      "pos": [
+        10750,
+        10915
+      ]
+    },
+    {
+      "content": "Declare a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SimpleOrientationSensor<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br206400)</ept> variable and a <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SimpleOrientation<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br206399)</ept> variable to track device orientation.",
+      "pos": [
+        10916,
+        11148
+      ]
+    },
+    {
+      "pos": [
+        11150,
+        11285
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DisplayInformationAndOrientation<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayInformationAndOrientation)</ept>]"
+    },
+    {
+      "content": "The following helper methods register and unregister event handlers for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayInformation.OrientationChanged<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn264268)</ept> and <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SimpleOrientationSensor.OrientationChanged<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br206407)</ept> events and initialize the tracking variables with the current orientation.",
+      "pos": [
+        11287,
+        11650
+      ]
+    },
+    {
+      "content": "Note that not all devices have a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SimpleOrientationSensor<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br206400)</ept>, so you should check before registering the handler or attempting to get the current orientation.",
+      "pos": [
+        11651,
+        11869
+      ]
+    },
+    {
+      "pos": [
+        11871,
+        12006
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RegisterOrientationEventHandlers<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterOrientationEventHandlers)</ept>]"
+    },
+    {
+      "pos": [
+        12008,
+        12147
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>UnregisterOrientationEventHandlers<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUnregisterOrientationEventHandlers)</ept>]"
+    },
+    {
+      "content": "In the event handler for the <bpt id=\"p1\">**</bpt>SimpleOrientationSensor.OrientationChanged<ept id=\"p1\">**</ept> event, update the device orientation variable with the current orientation.",
+      "pos": [
+        12149,
+        12300
+      ]
+    },
+    {
+      "content": "You should not update the orientation if the device is facing up or down.",
+      "pos": [
+        12301,
+        12374
+      ]
+    },
+    {
+      "pos": [
+        12376,
+        12495
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SimpleOrientationChanged<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSimpleOrientationChanged)</ept>]"
+    },
+    {
+      "content": "In the event handler for the <bpt id=\"p1\">**</bpt>DisplayInformation.OrientationChanged<ept id=\"p1\">**</ept> event, update the display orientation variable with the current orientation.",
+      "pos": [
+        12497,
+        12644
+      ]
+    },
+    {
+      "content": "If the video preview of the capture device is currently being displayed, update the rotation of the preview video stream.",
+      "pos": [
+        12645,
+        12766
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>SetPreviewRotationAsync<ept id=\"p1\">**</ept> helper method is described in the following section.",
+      "pos": [
+        12767,
+        12851
+      ]
+    },
+    {
+      "pos": [
+        12853,
+        12974
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DisplayOrientationChanged<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayOrientationChanged)</ept>]"
+    },
+    {
+      "content": "Set the media capture preview rotation",
+      "pos": [
+        12979,
+        13017
+      ]
+    },
+    {
+      "content": "Users expect for UI controls to rotate when the orientation of their mobile device changes, so that the text in the UI is vertically aligned and readable.",
+      "pos": [
+        13019,
+        13173
+      ]
+    },
+    {
+      "content": "For the <bpt id=\"p1\">**</bpt>CaptureElement<ept id=\"p1\">**</ept> control, however, users typically do not want the orientation of the video preview to rotate when the device does.",
+      "pos": [
+        13174,
+        13315
+      ]
+    },
+    {
+      "content": "In order to provide the expected user experience, you should rotate the preview stream to match the orientation of the device.",
+      "pos": [
+        13316,
+        13442
+      ]
+    },
+    {
+      "content": "The preview stream orientation must be expressed in degrees.",
+      "pos": [
+        13444,
+        13504
+      ]
+    },
+    {
+      "content": "The following helper method to converts the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayOrientations<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226142)</ept> enumeration values into degrees.",
+      "pos": [
+        13505,
+        13665
+      ]
+    },
+    {
+      "pos": [
+        13667,
+        13806
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ConvertDisplayOrientationToDegrees<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertDisplayOrientationToDegrees)</ept>]"
+    },
+    {
+      "pos": [
+        13808,
+        14104
+      ],
+      "content": "And this helper method converts a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SimpleOrientation<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br206399)</ept> enumeration value, which is used by the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SimpleOrientationSensor<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br206400)</ept> to express the rotation of the device, into degrees."
+    },
+    {
+      "pos": [
+        14106,
+        14243
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ConvertDeviceOrientationToDegrees<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertDeviceOrientationToDegrees)</ept>]"
+    },
+    {
+      "content": "At a low-level, the rotation of a stream is actually performed by the Microsoft Media Foundation framework.",
+      "pos": [
+        14245,
+        14352
+      ]
+    },
+    {
+      "content": "The rotation is specified using the <bpt id=\"p1\">[</bpt>MF\\_MT\\_VIDEO\\_ROTATION<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/desktop/hh162880)</ept> attribute.",
+      "pos": [
+        14353,
+        14486
+      ]
+    },
+    {
+      "content": "Since this is a Windows Runtime app, the rotation is specified using the GUID for the attribute, rather than the attribute name.",
+      "pos": [
+        14487,
+        14615
+      ]
+    },
+    {
+      "content": "Define the following GUID to identify the video rotation attribute.",
+      "pos": [
+        14616,
+        14683
+      ]
+    },
+    {
+      "pos": [
+        14685,
+        14778
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RotationKey<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRotationKey)</ept>]"
+    },
+    {
+      "content": "The following method sets the rotation of the preview stream.",
+      "pos": [
+        14780,
+        14841
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>GetMediaStreamProperties<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br211995)</ept> method of the media capture's <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>VideoDeviceController<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br226825)</ept> returns a property set made up of key/value pairs.",
+      "pos": [
+        14842,
+        15101
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaStreamType.VideoPreview<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226640)</ept> is specified to indicate that we want the properties for the video preview stream, as opposed to the video recording stream or the audio stream.",
+      "pos": [
+        15102,
+        15339
+      ]
+    },
+    {
+      "content": "The property set is a general purpose interface for setting stream properties, but for this task the video rotation GUID defined above is added as the property key and the desired orientation of the video stream, in degrees, is specified as the value.",
+      "pos": [
+        15340,
+        15591
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SetEncodingPropertiesAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn297781)</ept> updates the encoding properties with the new values.",
+      "pos": [
+        15592,
+        15735
+      ]
+    },
+    {
+      "content": "Once again, <bpt id=\"p1\">**</bpt>MediaStreamType.VideoPreview<ept id=\"p1\">**</ept> is specified to indicate that the properies being set are for the video preview stream.",
+      "pos": [
+        15736,
+        15868
+      ]
+    },
+    {
+      "pos": [
+        15870,
+        15977
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SetPreviewRotation<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSetPreviewRotation)</ept>]"
+    },
+    {
+      "content": "For devices with external cameras, the user does not expect for the camera stream to be rotated when the device rotates.",
+      "pos": [
+        15983,
+        16103
+      ]
+    },
+    {
+      "content": "If the preview is being mirrored for a camera on the front panel, the rotation direction must be inverted to match the rotation of the device.",
+      "pos": [
+        16109,
+        16251
+      ]
+    },
+    {
+      "content": "Some devices, typically phones, support setting <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayInformation.AutoRotationPreferences<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn264259)</ept> to an orientation value such as <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>DisplayOrientations.Landscape<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br226142)</ept> to force the display to rotate with the device.",
+      "pos": [
+        16257,
+        16585
+      ]
+    },
+    {
+      "content": "You should set this value because it provides a good experience on devices that support it, but you should still implement the above pattern in your app to support devices that don't support auto-rotation preferences.",
+      "pos": [
+        16586,
+        16803
+      ]
+    },
+    {
+      "content": "In previous releases, the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SetPreviewRotation<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226611)</ept> method was the only way to rotate the preview stream.",
+      "pos": [
+        16809,
+        16971
+      ]
+    },
+    {
+      "content": "This method is still present in the API surface to support existing apps, but this method inefficient and should not be used for new apps.",
+      "pos": [
+        16972,
+        17110
+      ]
+    },
+    {
+      "content": "Capture a photo",
+      "pos": [
+        17115,
+        17130
+      ]
+    },
+    {
+      "content": "The following method captures a photo using the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CapturePhotoToStreamAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh700840)</ept> method and passing in the requested encoding properties and an <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>InMemoryRandomAccessStream<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br241720)</ept> object that will contain the output of the capture operation.",
+      "pos": [
+        17132,
+        17485
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ImageEncodingProperties<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh700993)</ept> class provides helper methods, like <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CreateJpeg<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/hh700994)</ept>, to generate encoding properties for the file types supported by media capture.",
+      "pos": [
+        17486,
+        17768
+      ]
+    },
+    {
+      "pos": [
+        17770,
+        17869
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>TakePhotoAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetTakePhotoAsync)</ept>]"
+    },
+    {
+      "content": "Before saving the photo to a file, you need to determine the correct orientation of the photo.",
+      "pos": [
+        17871,
+        17965
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> object doesn't know about the device's orientation and so it encodes the captured photo data as if the capture device is in its default orientation.",
+      "pos": [
+        17966,
+        18135
+      ]
+    },
+    {
+      "content": "This can result in a negative user experience when the user is viewing the captured photo, as the photo will be oriented incorrectly.",
+      "pos": [
+        18136,
+        18269
+      ]
+    },
+    {
+      "content": "The following helper methods determine the correct photo orientation and then save the file with the correct orientation.",
+      "pos": [
+        18270,
+        18391
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>GetCameraOrientation<ept id=\"p1\">**</ept> helper method starts with the current device orientation and then rotates that value depending on the native orientation of the device and the location of the camera on the device.",
+      "pos": [
+        18393,
+        18602
+      ]
+    },
+    {
+      "content": "If the camera is mounted on the front panel of the device, as indicated in this example by the <bpt id=\"p1\">**</bpt>\\_mirroringPreview<ept id=\"p1\">**</ept> variable, then the camera orientation should be inverted.",
+      "pos": [
+        18603,
+        18778
+      ]
+    },
+    {
+      "pos": [
+        18780,
+        18891
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>GetCameraOrientation<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetCameraOrientation)</ept>]"
+    },
+    {
+      "pos": [
+        18893,
+        19252
+      ],
+      "content": "The following helper method simply converts values from the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SimpleOrientation<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br206399)</ept> enumeration values used by the orientation sensor to the equivalent <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>PhotoOrientation<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/hh965476)</ept> value used by the bitmap encoder that will be used to save the file."
+    },
+    {
+      "pos": [
+        19254,
+        19397
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ConvertOrientationToPhotoOrientation<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertOrientationToPhotoOrientation)</ept>]"
+    },
+    {
+      "content": "Finally, the captured photo can be encoded and saved.",
+      "pos": [
+        19399,
+        19452
+      ]
+    },
+    {
+      "content": "Create a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>BitmapDecoder<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226176)</ept> object from the input stream containing the captured photo data.",
+      "pos": [
+        19453,
+        19604
+      ]
+    },
+    {
+      "content": "Create a new <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StorageFile<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227171)</ept> and open it for reading and writing.",
+      "pos": [
+        19605,
+        19730
+      ]
+    },
+    {
+      "content": "Create a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>BitmapEncoder<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226206)</ept> object, passing in the output file and the decoder containing the image data.",
+      "pos": [
+        19731,
+        19895
+      ]
+    },
+    {
+      "content": "Create a new <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>BitmapPropertySet<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh974338)</ept> and add a new property.",
+      "pos": [
+        19896,
+        20014
+      ]
+    },
+    {
+      "content": "The key for the property, \"System.Photo.Orientation\" specifies that the property represents the orientation of the photo.",
+      "pos": [
+        20015,
+        20136
+      ]
+    },
+    {
+      "content": "The value is the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>PhotoOrientation<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh965476)</ept> value that was previously calculated.",
+      "pos": [
+        20137,
+        20272
+      ]
+    },
+    {
+      "content": "Call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SetPropertiesAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226252)</ept> to update the properties on the encoder and then call <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>FlushAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/dn237883)</ept> to write the photo to the storage file.",
+      "pos": [
+        20273,
+        20516
+      ]
+    },
+    {
+      "pos": [
+        20518,
+        20639
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ReencodeAndSavePhotoAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetReencodeAndSavePhotoAsync)</ept>]"
+    },
+    {
+      "content": "Setting the \"System.Photo.Orientation\" bitmap property encodes the orientation of the photo into the metadata of the file.",
+      "pos": [
+        20645,
+        20767
+      ]
+    },
+    {
+      "content": "It does not cause the actual image data to be encoded differently.",
+      "pos": [
+        20768,
+        20834
+      ]
+    },
+    {
+      "content": "For more information about embedding metadata into image files, see <bpt id=\"p1\">[</bpt>Image metadata<ept id=\"p1\">](image-metadata.md)</ept>.",
+      "pos": [
+        20835,
+        20939
+      ]
+    },
+    {
+      "pos": [
+        20945,
+        21059
+      ],
+      "content": "For more information about working with images, including encoding and decoding images, see <bpt id=\"p1\">[</bpt>Imaging<ept id=\"p1\">](imaging.md)</ept>."
+    },
+    {
+      "content": "Capture a video",
+      "pos": [
+        21064,
+        21079
+      ]
+    },
+    {
+      "content": "To start capturing video, first create a storage file to which the video will be recorded.",
+      "pos": [
+        21081,
+        21171
+      ]
+    },
+    {
+      "content": "Next create the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaEncodingProfile<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh701026)</ept> that the <bpt id=\"p3\">**</bpt>MediaCapture<ept id=\"p3\">**</ept> will use to encode the video to the file.",
+      "pos": [
+        21172,
+        21340
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>MediaEncodingProfile<ept id=\"p1\">**</ept> class provides methods, like <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>CreateMp4<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/hh701078)</ept>, that create encoding profiles for the supported video formats.",
+      "pos": [
+        21341,
+        21536
+      ]
+    },
+    {
+      "content": "Use the helper methods discussed previously to get the correct rotation for the video, in degrees.",
+      "pos": [
+        21537,
+        21635
+      ]
+    },
+    {
+      "content": "Unlike the photo scenario, the video rotation information is encoded into the stream by the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept>.",
+      "pos": [
+        21636,
+        21745
+      ]
+    },
+    {
+      "content": "Add the rotation information to the encoding profile by adding it to the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>VideoEncodingProperties.Properties<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh701254)</ept> collection.",
+      "pos": [
+        21746,
+        21929
+      ]
+    },
+    {
+      "content": "The previously defined GUID for video rotation is used as the key and the rotation, in degrees, is the value.",
+      "pos": [
+        21930,
+        22039
+      ]
+    },
+    {
+      "content": "Finally, call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.StartRecordToStorageFileAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh700863)</ept>, specifying the encoding properties and the output file to begin recording.",
+      "pos": [
+        22040,
+        22236
+      ]
+    },
+    {
+      "pos": [
+        22238,
+        22347
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>StartRecordingAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStartRecordingAsync)</ept>]"
+    },
+    {
+      "pos": [
+        22349,
+        22473
+      ],
+      "content": "To stop recording, simply call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.StopRecordAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226623)</ept>."
+    },
+    {
+      "pos": [
+        22475,
+        22582
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>StopRecordingAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStopRecordingAsync)</ept>]"
+    },
+    {
+      "content": "A handler for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.RecordLimitationExceeded<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh973312)</ept> event was registered when the <bpt id=\"p3\">**</bpt>MediaCapture<ept id=\"p3\">**</ept> was initialized.",
+      "pos": [
+        22584,
+        22767
+      ]
+    },
+    {
+      "content": "In the handler, call the <bpt id=\"p1\">**</bpt>StopRecordingAsync<ept id=\"p1\">**</ept> method to stop video recording.",
+      "pos": [
+        22768,
+        22847
+      ]
+    },
+    {
+      "pos": [
+        22849,
+        22968
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RecordLimitationExceeded<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRecordLimitationExceeded)</ept>]"
+    },
+    {
+      "content": "Pause and resume video capture",
+      "pos": [
+        22973,
+        23003
+      ]
+    },
+    {
+      "content": "For some scenarios you may want to pause and resume an ongoing video capture rather than stopping the capture and starting a new one.",
+      "pos": [
+        23005,
+        23138
+      ]
+    },
+    {
+      "content": "To pause recording call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>PauseRecordAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn858102)</ept>.",
+      "pos": [
+        23139,
+        23244
+      ]
+    },
+    {
+      "content": "If you specify <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapturePauseBehavior.RetainHardwareResources<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn926686)</ept>, then on devices that don't support simultaneous video and photo capture, the app will be unable to capture photos while the video is paused.",
+      "pos": [
+        23245,
+        23515
+      ]
+    },
+    {
+      "content": "For information on determining if a device supports simultaneous photo and video capture, see <bpt id=\"p1\">[</bpt>Camera profiles<ept id=\"p1\">](camera-profiles.md)</ept>.",
+      "pos": [
+        23516,
+        23648
+      ]
+    },
+    {
+      "pos": [
+        23650,
+        23759
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>PauseRecordingAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPauseRecordingAsync)</ept>]"
+    },
+    {
+      "pos": [
+        23761,
+        23893
+      ],
+      "content": "To resume a previously paused video capture, call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResumeRecordAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn858103)</ept>."
+    },
+    {
+      "pos": [
+        23895,
+        24006
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ResumeRecordingAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetResumeRecordingAsync)</ept>]"
+    },
+    {
+      "content": "Clean up capture resources",
+      "pos": [
+        24011,
+        24037
+      ]
+    },
+    {
+      "content": "It is very important that you shut down and release the media capture resources properly.",
+      "pos": [
+        24039,
+        24128
+      ]
+    },
+    {
+      "content": "Failure to do so can cause unexpected camera behavior after your app closes, which results in a negative user experience for your app.",
+      "pos": [
+        24129,
+        24263
+      ]
+    },
+    {
+      "content": "The following sections walk through the different steps you should take to shut down the camera.",
+      "pos": [
+        24264,
+        24360
+      ]
+    },
+    {
+      "content": "Shut down the capture preview",
+      "pos": [
+        24366,
+        24395
+      ]
+    },
+    {
+      "content": "To shut down the capture preview, first call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>MediaCapture.StopPreviewAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226622)</ept>.",
+      "pos": [
+        24397,
+        24536
+      ]
+    },
+    {
+      "content": "Set the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Source<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227419)</ept> property of your <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>MediaElement<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br242926)</ept> to null.",
+      "pos": [
+        24537,
+        24718
+      ]
+    },
+    {
+      "content": "Then, call the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RequestRelease<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241819)</ept> on your <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>DisplayRequest<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br241816)</ept> variable to allow the system to turn off the display when needed.",
+      "pos": [
+        24719,
+        24965
+      ]
+    },
+    {
+      "pos": [
+        24967,
+        25070
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>StopPreviewAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStopPreviewAsync)</ept>]"
+    },
+    {
+      "pos": [
+        25076,
+        25366
+      ],
+      "content": "You can't access the UI from a non-UI thread, so the setting the <bpt id=\"p1\">**</bpt>MediaElement.Source<ept id=\"p1\">**</ept> property and calling <bpt id=\"p2\">**</bpt>RequestRelease<ept id=\"p2\">**</ept> must be made using the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CoreDispatcher.RunAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/hh750317)</ept> method so that the calls execute on the UI thread."
+    },
+    {
+      "content": "Shut down and dispose of the MediaCapture object",
+      "pos": [
+        25372,
+        25420
+      ]
+    },
+    {
+      "content": "Before disposing of the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> object, stop any recording that is ongoing and stop the preview stream by calling the helper methods defined previously.",
+      "pos": [
+        25422,
+        25583
+      ]
+    },
+    {
+      "content": "Once this has been done, remove any event handlers registered with the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept>, then call <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>Dispose<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn278858)</ept> to free any resources associated with the object and set the <bpt id=\"p4\">**</bpt>MediaCapture<ept id=\"p4\">**</ept> variable to null",
+      "pos": [
+        25584,
+        25849
+      ]
+    },
+    {
+      "pos": [
+        25851,
+        25958
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>CleanupCameraAsync<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCleanupCameraAsync)</ept>]"
+    },
+    {
+      "pos": [
+        25960,
+        26166
+      ],
+      "content": "You should call this method to shut down and dispose of the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> object from inside the handler for the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>MediaCapture.Failed<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/br226593)</ept> event."
+    },
+    {
+      "pos": [
+        26168,
+        26265
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>CaptureFailed<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCaptureFailed)</ept>]"
+    },
+    {
+      "content": "Handle app lifetime and page navigation events",
+      "pos": [
+        26271,
+        26317
+      ]
+    },
+    {
+      "content": "The app lifetime events give your app an opportunity to initialize and release resources.",
+      "pos": [
+        26319,
+        26408
+      ]
+    },
+    {
+      "content": "This is especially important with the <bpt id=\"p1\">**</bpt>Application.Suspending<ept id=\"p1\">**</ept> event, where it is essential that your app properly disposes of media capture resources.",
+      "pos": [
+        26409,
+        26562
+      ]
+    },
+    {
+      "content": "You can register handlers for the application lifetime events in your page's constructor.",
+      "pos": [
+        26564,
+        26653
+      ]
+    },
+    {
+      "pos": [
+        26655,
+        26776
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RegisterAppLifetimeEvents<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterAppLifetimeEvents)</ept>]"
+    },
+    {
+      "content": "In the handler for the <bpt id=\"p1\">**</bpt>Application.Suspending<ept id=\"p1\">**</ept> event, you should unregister the handlers for the display and device orientation events and shut down the <bpt id=\"p2\">**</bpt>MediaCapture<ept id=\"p2\">**</ept> object.",
+      "pos": [
+        26778,
+        26958
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SystemMediaTransportControls.PropertyChanged<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn278720)</ept> event unregistered here is needed for another application lifecycle-related task that is described later in this article.",
+      "pos": [
+        26959,
+        27193
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Caution<ept id=\"p1\">**</ept>",
+      "pos": [
+        27195,
+        27206
+      ]
+    },
+    {
+      "content": "You must request a suspending deferral by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SuspendingOperation.GetDeferral<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br224690)</ept> at the beginning of your suspending event handler.",
+      "pos": [
+        27208,
+        27404
+      ]
+    },
+    {
+      "content": "This requests that the system wait for you to signal that the operation is complete before tearing down your app.",
+      "pos": [
+        27405,
+        27518
+      ]
+    },
+    {
+      "content": "This is necessary because the <bpt id=\"p1\">**</bpt>MediaCapture<ept id=\"p1\">**</ept> shutdown operations are asynchronous, so the <bpt id=\"p2\">**</bpt>Application.Suspending<ept id=\"p2\">**</ept> event handler may complete before the camera is properly shut down.",
+      "pos": [
+        27519,
+        27705
+      ]
+    },
+    {
+      "content": "After your awaited asynchronous calls complete, you should release the deferral by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SuspendingDeferral.Complete<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br224685)</ept>.",
+      "pos": [
+        27706,
+        27889
+      ]
+    },
+    {
+      "pos": [
+        27891,
+        27982
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>Suspending<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSuspending)</ept>]"
+    },
+    {
+      "pos": [
+        27984,
+        28227
+      ],
+      "content": "In the handler for the <bpt id=\"p1\">**</bpt>Application.Resuming<ept id=\"p1\">**</ept> event, you should register handlers for the display and device orientation events, register the <bpt id=\"p2\">**</bpt>SystemMediaTransportControls.PropertyChanged<ept id=\"p2\">**</ept> event, and initialize the <bpt id=\"p3\">**</bpt>MediaCapture<ept id=\"p3\">**</ept> object."
+    },
+    {
+      "pos": [
+        28229,
+        28316
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>Resuming<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetResuming)</ept>]"
+    },
+    {
+      "pos": [
+        28318,
+        28547
+      ],
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>OnNavigatedTo<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227508)</ept> event gives an opportunity to initially register handlers for the display and device orientation events and initialize the <bpt id=\"p3\">**</bpt>MediaCapture<ept id=\"p3\">**</ept> object."
+    },
+    {
+      "pos": [
+        28549,
+        28646
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>OnNavigatedTo<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetOnNavigatedTo)</ept>]"
+    },
+    {
+      "pos": [
+        28648,
+        28829
+      ],
+      "content": "If your app has multiple pages, you should clean up your media capture objects in the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>OnNavigatingFrom<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227509)</ept> event handler."
+    },
+    {
+      "pos": [
+        28831,
+        28934
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>OnNavigatingFrom<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetOnNavigatingFrom)</ept>]"
+    },
+    {
+      "content": "For your app to behave properly on devices that support multiple simultaneous windows, you must respond when your app is minimized or restored.",
+      "pos": [
+        28936,
+        29079
+      ]
+    },
+    {
+      "content": "To do this, you must handle the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SystemMediaTransportControls.PropertyChanged<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn278720)</ept> event.",
+      "pos": [
+        29080,
+        29227
+      ]
+    },
+    {
+      "content": "Initialize a member variable to store a reference to the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SystemMediaTransportControls<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn278677)</ept> object for your app.",
+      "pos": [
+        29228,
+        29398
+      ]
+    },
+    {
+      "pos": [
+        29400,
+        29541
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DeclareSystemMediaTransportControls<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDeclareSystemMediaTransportControls)</ept>]"
+    },
+    {
+      "content": "The code to register and unregister the <bpt id=\"p1\">**</bpt>PropertyChanged<ept id=\"p1\">**</ept> event should be added to the app life cycle events as shown in the examples above.",
+      "pos": [
+        29543,
+        29685
+      ]
+    },
+    {
+      "content": "In the handler for the event, check to see if the property change that triggered the event was the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SystemMediaTransportControlsProperty.SoundLevel<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn278721)</ept> property.",
+      "pos": [
+        29686,
+        29906
+      ]
+    },
+    {
+      "content": "If this was the property that changed, check the value of the property.",
+      "pos": [
+        29907,
+        29978
+      ]
+    },
+    {
+      "content": "If the value is <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SoundLevel.Muted<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh700852)</ept>, then your app was minimized and you should clean up your media capture resources appropriately.",
+      "pos": [
+        29979,
+        30172
+      ]
+    },
+    {
+      "content": "Otherwise, the event signals that your app window was restored and you should reinitialize you media capture resources.",
+      "pos": [
+        30173,
+        30292
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>SoundLevel<ept id=\"p1\">**</ept> property must be accessed on the UI thread, so the code in this method is wrapped in a call to <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>Dispatcher.RunAsync<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/hh750317)</ept>.",
+      "pos": [
+        30293,
+        30491
+      ]
+    },
+    {
+      "pos": [
+        30493,
+        30632
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SystemMediaControlsPropertyChanged<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSystemMediaControlsPropertyChanged)</ept>]"
+    },
+    {
+      "content": "Additional UI considerations for media capture",
+      "pos": [
+        30637,
+        30683
+      ]
+    },
+    {
+      "content": "Set auto-rotation preferences",
+      "pos": [
+        30689,
+        30718
+      ]
+    },
+    {
+      "content": "As mentioned in the previous section on rotating the preview stream, some devices support setting <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayInformation.AutoRotationPreferences<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn264259)</ept> to prevent the page, including the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CaptureElement<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br209278)</ept> that displays the preview, from rotating as the device is rotating.",
+      "pos": [
+        30720,
+        31106
+      ]
+    },
+    {
+      "content": "This provides a good user experience on devices that support it.",
+      "pos": [
+        31107,
+        31171
+      ]
+    },
+    {
+      "content": "Set this value when your app launches or when you begin displaying the preview.",
+      "pos": [
+        31172,
+        31251
+      ]
+    },
+    {
+      "content": "Note that you should still implement preview rotation handling for devices that don't support auto-rotation preferences.",
+      "pos": [
+        31252,
+        31372
+      ]
+    },
+    {
+      "pos": [
+        31374,
+        31497
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SetAutoRotationPreferences<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSetAutoRotationPreferences)</ept>]"
+    },
+    {
+      "content": "Handle UI element orientation",
+      "pos": [
+        31503,
+        31532
+      ]
+    },
+    {
+      "content": "Users typically expect for the UI elements in a camera app, such as the buttons for initiating photo or video capture, to rotate along with the video preview.",
+      "pos": [
+        31534,
+        31692
+      ]
+    },
+    {
+      "content": "The following method illustrates the use of the previously defined orientation helper methods to properly orient the buttons in the camera UI.",
+      "pos": [
+        31693,
+        31835
+      ]
+    },
+    {
+      "content": "You should call this method from the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>DisplayInformation.OrientationChanged<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn264268)</ept> and <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SimpleOrientationSensor.OrientationChanged<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br206407)</ept> event handlers and when your app first launches.",
+      "pos": [
+        31836,
+        32134
+      ]
+    },
+    {
+      "content": "Your implementation my vary depending on your app's UI.",
+      "pos": [
+        32135,
+        32190
+      ]
+    },
+    {
+      "pos": [
+        32192,
+        32309
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>UpdateButtonOrientation<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUpdateButtonOrientation)</ept>]"
+    },
+    {
+      "pos": [
+        32311,
+        32547
+      ],
+      "content": "When your app is shutting down or if you navigate to a page that is unrelated to media capture, set the auto-rotation preference to <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>None<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226142)</ept> to allow the UI to rotate normally."
+    },
+    {
+      "pos": [
+        32549,
+        32678
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RevertAutoRotationPreferences<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRevertAutoRotationPreferences)</ept>]"
+    },
+    {
+      "content": "Support simultaneous photo and video capture",
+      "pos": [
+        32684,
+        32728
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Windows.Media.Capture<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br226738)</ept> API allows you to capture photos and videos simultaneously on devices that support it.",
+      "pos": [
+        32730,
+        32906
+      ]
+    },
+    {
+      "content": "For brevity, this example uses the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ConcurrentRecordAndPhotoSupported<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn278843)</ept> property to determine if simultaneous video and photo capture is supported, but a more robust and recommended way to do this is to use camera profiles.",
+      "pos": [
+        32907,
+        33191
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Camera profiles<ept id=\"p1\">](camera-profiles.md)</ept>.",
+      "pos": [
+        33192,
+        33256
+      ]
+    },
+    {
+      "content": "The following helper method updates the app's controls to match the current capture state of the app.",
+      "pos": [
+        33258,
+        33359
+      ]
+    },
+    {
+      "content": "Call this method whenever the capture state of your app changes, such as when video capture is started or stopped.",
+      "pos": [
+        33360,
+        33474
+      ]
+    },
+    {
+      "pos": [
+        33476,
+        33589
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>UpdateCaptureControls<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUpdateCaptureControls)</ept>]"
+    },
+    {
+      "content": "Support mobile-specific UI features",
+      "pos": [
+        33595,
+        33630
+      ]
+    },
+    {
+      "content": "All of the code shown in this article will work in a Universal Windows app.",
+      "pos": [
+        33632,
+        33707
+      ]
+    },
+    {
+      "content": "With a few additional lines of code, you can take advantage of special UI features that are only present on mobile devices.",
+      "pos": [
+        33708,
+        33831
+      ]
+    },
+    {
+      "content": "To use these features, you must add a reference to the Microsoft Mobile Extension SDK for Universal App Platform to your project.",
+      "pos": [
+        33832,
+        33961
+      ]
+    },
+    {
+      "content": "To add a reference to the mobile extension SDK for hardware camera button support",
+      "pos": [
+        33965,
+        34046
+      ]
+    },
+    {
+      "pos": [
+        34054,
+        34138
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click <bpt id=\"p2\">**</bpt>References<ept id=\"p2\">**</ept> and select <bpt id=\"p3\">**</bpt>Add Reference...<ept id=\"p3\">**</ept>"
+    },
+    {
+      "pos": [
+        34144,
+        34208
+      ],
+      "content": "Expand the <bpt id=\"p1\">**</bpt>Windows Universal<ept id=\"p1\">**</ept> node and select <bpt id=\"p2\">**</bpt>Extensions<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        34214,
+        34303
+      ],
+      "content": "Click the checkbox next to <bpt id=\"p1\">**</bpt>Microsoft Mobile Extension SDK for Universal App Platform<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Mobile devices have a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StatusBar<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn633864)</ept> control that provides the user with status information about the device.",
+      "pos": [
+        34305,
+        34473
+      ]
+    },
+    {
+      "content": "This control takes up space on the screen that can interfere with the media capture UI.",
+      "pos": [
+        34474,
+        34561
+      ]
+    },
+    {
+      "content": "You can hide the status bar by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>HideAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn610339)</ept>, but you must make this call from within a conditional block where you use the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>ApiInformation.IsTypePresent<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn949016)</ept> method to determine if the API is available.",
+      "pos": [
+        34562,
+        34891
+      ]
+    },
+    {
+      "content": "This method will only return true on mobile devices that support the status bar.",
+      "pos": [
+        34892,
+        34972
+      ]
+    },
+    {
+      "content": "You should hide the status bar when your app launches or when you begin previewing from the camera.",
+      "pos": [
+        34973,
+        35072
+      ]
+    },
+    {
+      "pos": [
+        35074,
+        35171
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>HideStatusBar<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetHideStatusBar)</ept>]"
+    },
+    {
+      "content": "When your app is shutting down or when the user navigates away from the media capture page of your app, you make the control visible again.",
+      "pos": [
+        35173,
+        35312
+      ]
+    },
+    {
+      "pos": [
+        35314,
+        35411
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ShowStatusBar<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetShowStatusBar)</ept>]"
+    },
+    {
+      "content": "Some mobile devices have a dedicated hardware camera button that some users prefer over an on-screen control.",
+      "pos": [
+        35413,
+        35522
+      ]
+    },
+    {
+      "content": "To be notified when the hardware camera button is pressed, register a handler for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>HardwareButtons.CameraPressed<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653805)</ept> event.",
+      "pos": [
+        35523,
+        35709
+      ]
+    },
+    {
+      "content": "Because this API is available on mobile devices only, you must again use the <bpt id=\"p1\">**</bpt>IsTypePresent<ept id=\"p1\">**</ept> to make sure the API is supported on the current device before attempting to access it.",
+      "pos": [
+        35710,
+        35892
+      ]
+    },
+    {
+      "pos": [
+        35894,
+        35985
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>PhoneUsing<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPhoneUsing)</ept>]"
+    },
+    {
+      "pos": [
+        35987,
+        36112
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RegisterCameraButtonHandler<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterCameraButtonHandler)</ept>]"
+    },
+    {
+      "pos": [
+        36114,
+        36195
+      ],
+      "content": "In the handler for the <bpt id=\"p1\">**</bpt>CameraPressed<ept id=\"p1\">**</ept> event, you can initiate a photo capture."
+    },
+    {
+      "pos": [
+        36197,
+        36294
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>CameraPressed<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCameraPressed)</ept>]"
+    },
+    {
+      "content": "When your app is shutting down or the user moves away from the media capture page of your app, unregister the hardware button handler.",
+      "pos": [
+        36296,
+        36430
+      ]
+    },
+    {
+      "pos": [
+        36432,
+        36561
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>UnregisterCameraButtonHandler<ept id=\"p1\">](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUnregisterCameraButtonHandler)</ept>]"
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept> This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps.",
+      "pos": [
+        36563,
+        36660
+      ]
+    },
+    {
+      "content": "If you're developing for Windows 8.x or Windows Phone 8.x, see the <bpt id=\"p1\">[</bpt>archived documentation<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?linkid=619132)</ept>.",
+      "pos": [
+        36661,
+        36802
+      ]
+    },
+    {
+      "content": "Related topics",
+      "pos": [
+        36807,
+        36821
+      ]
+    },
+    {
+      "content": "Camera profiles",
+      "pos": [
+        36826,
+        36841
+      ]
+    },
+    {
+      "content": "High Dynamic Range (HDR) photo capture",
+      "pos": [
+        36866,
+        36904
+      ]
+    },
+    {
+      "content": "Capture device controls for photo and video capture",
+      "pos": [
+        36950,
+        37001
+      ]
+    },
+    {
+      "content": "Capture device controls for video capture",
+      "pos": [
+        37062,
+        37103
+      ]
+    },
+    {
+      "content": "Effects for video capture",
+      "pos": [
+        37154,
+        37179
+      ]
+    },
+    {
+      "content": "Scene analysis for media capture",
+      "pos": [
+        37214,
+        37246
+      ]
+    },
+    {
+      "content": "Variable photo sequence",
+      "pos": [
+        37288,
+        37311
+      ]
+    },
+    {
+      "content": "Get a preview frame",
+      "pos": [
+        37344,
+        37363
+      ]
+    },
+    {
+      "content": "CameraStarterKit sample",
+      "pos": [
+        37392,
+        37415
+      ]
+    }
+  ],
+  "content": "---\nms.assetid: 1361E82A-202F-40F7-9239-56F00DFCA54B\ndescription: This article describes the steps for capturing photos and video using the MediaCapture API, including initializing and shutting down the MediaCapture and handling changes in device orientation.\ntitle: Capture photos and video with MediaCapture\n---\n\n# Capture photos and video with MediaCapture\n\n\\[ Updated for UWP apps on Windows 10. For Windows 8.x articles, see the [archive](http://go.microsoft.com/fwlink/p/?linkid=619132) \\]\n\n\nThis article describes the steps for capturing photos and video using the [**MediaCapture**](https://msdn.microsoft.com/library/windows/apps/br241124) API, including initializing and shutting down the **MediaCapture** and handling changes in device orientation.\n\n**MediaCapture** is provided to support apps that require low-level control of the media capture process and that implement scenarios that require advanced capture capabilities. Using **MediaCapture** also requires you to provide your own capture UI. If your app only needs to capture a photo or video and is unconcerned with advanced capture techniques, the [**CameraCaptureUI**](https://msdn.microsoft.com/library/windows/apps/br241030) makes it easy to capture a photo or video with only a few lines of code. For more information, see [Capture photos and video with CameraCaptureUI](capture-photos-and-video-with-cameracaptureui.md).\n\nThe code in this article was adapted from the [CameraStarterKit sample](http://go.microsoft.com/fwlink/?LinkId=619479). You can download the sample to see the code used in context or to use the sample as a starting point for your own app.\n\n## Configure your project\n\n### Add capability declarations to the app manifest\n\nIn order for your app to access a device's camera, you must declare that your app uses the *webcam* and *microphone* device capabilities. If you want to save captured photos and videos to the users's Pictures or Videos library, you must also declare the *picturesLibrary* and *videosLibrary* capability.\n\n**Add capabilities to the app manifest**\n\n1.  In Microsoft Visual Studio, in **Solution Explorer**, open the designer for the application manifest by double-clicking the **package.appxmanifest** item.\n2.  Select the **Capabilities** tab.\n3.  Check the box for **Webcam** and the box for **Microphone**.\n4.  For access to the Pictures and Videos library check the boxes for **Pictures Library** and the box for **Videos Library**.\n\n### Add using directives for media capture-related APIs\n\nThe following code listing shows the namespaces that are referenced by the sample code in this article and describes what functionality each namespace provides.\n\n[!code-cs[Using](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUsing)]\n\n## Initialize the MediaCapture object\n\nThe [**MediaCapture**](https://msdn.microsoft.com/library/windows/apps/br241124) class in the [**Windows.Media.Capture**](https://msdn.microsoft.com/library/windows/apps/br226738) namespace is the fundamental interface for all media capture operations. Apps typically declare a variable of this type scoped to a single page. Your app needs to track the current state of the **MediaCapture**, so you should declare boolean variables for the initialization, previewing, and recording state of the object.\n\n[!code-cs[MediaCaptureVariables](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetMediaCaptureVariables)]\n\nTo help orient the preview video correctly, create member variables to track whether the camera is external and whether the app is currently mirroring the preview stream. Your app should mirror the preview stream when you think the video feed is capturing the user because that is a more natural user experience.\n\n[!code-cs[PreviewVariables](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPreviewVariables)]\n\nThe following example method initializes the media capture object. First, the code searches for a video capture device that can be used for media capture. Once found, the **MediaCapture** object is initialized and handlers for its events are registered. Next a [**MediaCaptureInitializationSettings**](https://msdn.microsoft.com/library/windows/desktop/hh802710) object is created using the ID of the video capture device. The **MediaCapture** is then initialized with a call to [**InitializeAsync**](https://msdn.microsoft.com/library/windows/apps/br226598).\n\n[!code-cs[InitializeCameraAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetInitializeCameraAsync)]\n\n-   The [**DeviceInformation.FindAllAsync**](https://msdn.microsoft.com/library/windows/apps/br225432) method can be used to find all devices of a specified type. In this example, the **DeviceClass.VideoCapture** enumeration value is passed in to indicate that only video capture devices should be returned. Note that a video capture device is used for capturing both photos and videos.\n\n-   **FindAllAsync** returns a [**DeviceInformationCollection**](https://msdn.microsoft.com/library/windows/apps/br225395) object that contains a [**DeviceInformation**](https://msdn.microsoft.com/library/windows/apps/br225393) object for each found device of the requested type. The **FirstOrDefault** extension method from the **System.Linq** namespace provides an easy syntax for selecting an item from a list based on specified conditions. The first call attempts to select the first **DeviceInformation** in the list that has an [**EnclosureLocation.Panel**](https://msdn.microsoft.com/library/windows/apps/br229906) value of **Panel.Back**, indicating that the camera is on the back panel of the device's enclosure. If the device does not have a camera on the back panel, the first available camera is used.\n\n-   If you do not specify a device ID when you initialize the [**MediaCaptureInitializationSettings**](https://msdn.microsoft.com/library/windows/apps/br226573), the system will choose the first device in its internal list of devices.\n\n-   The call to [**MediaCapture.InitializeAsync**](https://msdn.microsoft.com/library/windows/apps/br226598) initializes the object to use the specified capture device. This call is made inside a **try** block because it will throw an **UnauthorizedAccessException** if the user has denied the calling app access to the camera. If the call succeeds, the **\\_isInitialized** variable is set to true so that subsequent method calls can determine if the capture device has been initialized.\n\n-   If the initialization of the capture device is successful, variables are set to reflect whether the capture device is external, or if it is on the front panel of the device. These values will be used to orient the capture preview correctly for the user. Finally, the UI is updated to reflect that capture is available and the preview stream from the capture device is started. All of these tasks are performed in helper methods that will be described later in this article.\n\n## Start the capture preview\n\nFor the user to be able to see what they are capturing, you need to provide a preview of what the video capture device is currently seeing in your UI.\n\n**Important** You must start the capture preview in order for the capture device to enable auto focus, auto exposure, and auto white balance.\n\nThe [**CaptureElement**](https://msdn.microsoft.com/library/windows/apps/br209278) control is provided to enable capture preview. The following shows example XAML code that defines the capture element.\n\n[!code-xml[CaptureElement](./code/BasicMediaCaptureWin10/cs/MainPage.xaml#SnippetCaptureElement)]\n\nUsers expect that the screen will stay on while they are previewing the video capture screen and not turn off due to inactivity. To enable this, you must create a [**DisplayRequest**](https://msdn.microsoft.com/library/windows/apps/br241816) object. Declare this variable with page scope so that it persists throughout the capture session.\n\n[!code-cs[DisplayRequest](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayRequest)]\n\nThe following method starts up the media capture preview. First, it requests that the display remain active by calling [**RequestActive**](https://msdn.microsoft.com/library/windows/apps/br241818) on the [**DisplayRequest**](https://msdn.microsoft.com/library/windows/apps/br241816). Next, the preview is started by calling [**StartPreviewAsync**](https://msdn.microsoft.com/library/windows/apps/br226613).\n\n[!code-cs[StartPreviewAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStartPreviewAsync)]\n\n-   The [**RequestActive**](https://msdn.microsoft.com/library/windows/apps/br241818) method is called on the **DisplayRequest** object to request that the system leave the screen on.\n\n-   The [**Source**](https://msdn.microsoft.com/library/windows/apps/br227419) property of the **CaptureElement** is set to the app's **MediaCapture** object to define the source of the preview.\n\n-   The [**FlowDirection**](https://msdn.microsoft.com/library/windows/apps/br208716) property is provided by the XAML framework to support bi-directional user interfaces. Setting the flow direction of the **CaptureElement** to [**FlowDirection.RightToLeft**](https://msdn.microsoft.com/library/windows/apps/br242397) causes the preview video to be flipped horizontally. This is used when the capture device is on the front panel of the device so that the preview in the correct direction from the user's perspective.\n\n-   The [**StartPreviewAsync**](https://msdn.microsoft.com/library/windows/apps/br226613) method starts the display of the preview stream within the **CaptureElement**. If the preview is started successfully, the **\\_isPreviewing** variable is set to allow other parts of the app to know that the app is currently previewing, and the helper method for setting the preview rotation is called. This method is defined in the next section.\n\n## Detect screen and device orientation\n\nThere are several areas of a media capture app that, when running on a mobile device like a phone or a tablet, are impacted by the current orientation of the device. These areas include properly rotating the preview stream from the camera and properly encoding captured images and videos so that, when viewed by the user, they are correctly oriented.\n\nThe term \"display orientation\" refers to the way the system rotates the XAML page on the device to keep it upright for the user. \"Device orientation\" refers to the orientation of the device in world space and, therefore, the orientation of the physical camera device in world space. Both kinds of orientation a relevant to a media capture app. To handle display orientation, declare and initialize a page-scoped variable for the [**DisplayInformation**](https://msdn.microsoft.com/library/windows/apps/dn264258) class. Declare another variable of type [**DisplayOrientations**](https://msdn.microsoft.com/library/windows/apps/br226142) to track the current orientation of the display. Declare a [**SimpleOrientationSensor**](https://msdn.microsoft.com/library/windows/apps/br206400) variable and a [**SimpleOrientation**](https://msdn.microsoft.com/library/windows/apps/br206399) variable to track device orientation.\n\n[!code-cs[DisplayInformationAndOrientation](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayInformationAndOrientation)]\n\nThe following helper methods register and unregister event handlers for the [**DisplayInformation.OrientationChanged**](https://msdn.microsoft.com/library/windows/apps/dn264268) and [**SimpleOrientationSensor.OrientationChanged**](https://msdn.microsoft.com/library/windows/apps/br206407) events and initialize the tracking variables with the current orientation. Note that not all devices have a [**SimpleOrientationSensor**](https://msdn.microsoft.com/library/windows/apps/br206400), so you should check before registering the handler or attempting to get the current orientation.\n\n[!code-cs[RegisterOrientationEventHandlers](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterOrientationEventHandlers)]\n\n[!code-cs[UnregisterOrientationEventHandlers](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUnregisterOrientationEventHandlers)]\n\nIn the event handler for the **SimpleOrientationSensor.OrientationChanged** event, update the device orientation variable with the current orientation. You should not update the orientation if the device is facing up or down.\n\n[!code-cs[SimpleOrientationChanged](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSimpleOrientationChanged)]\n\nIn the event handler for the **DisplayInformation.OrientationChanged** event, update the display orientation variable with the current orientation. If the video preview of the capture device is currently being displayed, update the rotation of the preview video stream. The **SetPreviewRotationAsync** helper method is described in the following section.\n\n[!code-cs[DisplayOrientationChanged](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDisplayOrientationChanged)]\n\n## Set the media capture preview rotation\n\nUsers expect for UI controls to rotate when the orientation of their mobile device changes, so that the text in the UI is vertically aligned and readable. For the **CaptureElement** control, however, users typically do not want the orientation of the video preview to rotate when the device does. In order to provide the expected user experience, you should rotate the preview stream to match the orientation of the device.\n\nThe preview stream orientation must be expressed in degrees. The following helper method to converts the [**DisplayOrientations**](https://msdn.microsoft.com/library/windows/apps/br226142) enumeration values into degrees.\n\n[!code-cs[ConvertDisplayOrientationToDegrees](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertDisplayOrientationToDegrees)]\n\nAnd this helper method converts a [**SimpleOrientation**](https://msdn.microsoft.com/library/windows/apps/br206399) enumeration value, which is used by the [**SimpleOrientationSensor**](https://msdn.microsoft.com/library/windows/apps/br206400) to express the rotation of the device, into degrees.\n\n[!code-cs[ConvertDeviceOrientationToDegrees](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertDeviceOrientationToDegrees)]\n\nAt a low-level, the rotation of a stream is actually performed by the Microsoft Media Foundation framework. The rotation is specified using the [MF\\_MT\\_VIDEO\\_ROTATION](https://msdn.microsoft.com/library/windows/desktop/hh162880) attribute. Since this is a Windows Runtime app, the rotation is specified using the GUID for the attribute, rather than the attribute name. Define the following GUID to identify the video rotation attribute.\n\n[!code-cs[RotationKey](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRotationKey)]\n\nThe following method sets the rotation of the preview stream. The [**GetMediaStreamProperties**](https://msdn.microsoft.com/library/windows/apps/br211995) method of the media capture's [**VideoDeviceController**](https://msdn.microsoft.com/library/windows/apps/br226825) returns a property set made up of key/value pairs. [**MediaStreamType.VideoPreview**](https://msdn.microsoft.com/library/windows/apps/br226640) is specified to indicate that we want the properties for the video preview stream, as opposed to the video recording stream or the audio stream. The property set is a general purpose interface for setting stream properties, but for this task the video rotation GUID defined above is added as the property key and the desired orientation of the video stream, in degrees, is specified as the value. [**SetEncodingPropertiesAsync**](https://msdn.microsoft.com/library/windows/apps/dn297781) updates the encoding properties with the new values. Once again, **MediaStreamType.VideoPreview** is specified to indicate that the properies being set are for the video preview stream.\n\n[!code-cs[SetPreviewRotation](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSetPreviewRotation)]\n\n-   For devices with external cameras, the user does not expect for the camera stream to be rotated when the device rotates.\n\n-   If the preview is being mirrored for a camera on the front panel, the rotation direction must be inverted to match the rotation of the device.\n\n-   Some devices, typically phones, support setting [**DisplayInformation.AutoRotationPreferences**](https://msdn.microsoft.com/library/windows/apps/dn264259) to an orientation value such as [**DisplayOrientations.Landscape**](https://msdn.microsoft.com/library/windows/apps/br226142) to force the display to rotate with the device. You should set this value because it provides a good experience on devices that support it, but you should still implement the above pattern in your app to support devices that don't support auto-rotation preferences.\n\n-   In previous releases, the [**SetPreviewRotation**](https://msdn.microsoft.com/library/windows/apps/br226611) method was the only way to rotate the preview stream. This method is still present in the API surface to support existing apps, but this method inefficient and should not be used for new apps.\n\n## Capture a photo\n\nThe following method captures a photo using the [**CapturePhotoToStreamAsync**](https://msdn.microsoft.com/library/windows/apps/hh700840) method and passing in the requested encoding properties and an [**InMemoryRandomAccessStream**](https://msdn.microsoft.com/library/windows/apps/br241720) object that will contain the output of the capture operation. The [**ImageEncodingProperties**](https://msdn.microsoft.com/library/windows/apps/hh700993) class provides helper methods, like [**CreateJpeg**](https://msdn.microsoft.com/library/windows/apps/hh700994), to generate encoding properties for the file types supported by media capture.\n\n[!code-cs[TakePhotoAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetTakePhotoAsync)]\n\nBefore saving the photo to a file, you need to determine the correct orientation of the photo. The **MediaCapture** object doesn't know about the device's orientation and so it encodes the captured photo data as if the capture device is in its default orientation. This can result in a negative user experience when the user is viewing the captured photo, as the photo will be oriented incorrectly. The following helper methods determine the correct photo orientation and then save the file with the correct orientation.\n\nThe **GetCameraOrientation** helper method starts with the current device orientation and then rotates that value depending on the native orientation of the device and the location of the camera on the device. If the camera is mounted on the front panel of the device, as indicated in this example by the **\\_mirroringPreview** variable, then the camera orientation should be inverted.\n\n[!code-cs[GetCameraOrientation](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetGetCameraOrientation)]\n\nThe following helper method simply converts values from the [**SimpleOrientation**](https://msdn.microsoft.com/library/windows/apps/br206399) enumeration values used by the orientation sensor to the equivalent [**PhotoOrientation**](https://msdn.microsoft.com/library/windows/apps/hh965476) value used by the bitmap encoder that will be used to save the file.\n\n[!code-cs[ConvertOrientationToPhotoOrientation](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetConvertOrientationToPhotoOrientation)]\n\nFinally, the captured photo can be encoded and saved. Create a [**BitmapDecoder**](https://msdn.microsoft.com/library/windows/apps/br226176) object from the input stream containing the captured photo data. Create a new [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) and open it for reading and writing. Create a [**BitmapEncoder**](https://msdn.microsoft.com/library/windows/apps/br226206) object, passing in the output file and the decoder containing the image data. Create a new [**BitmapPropertySet**](https://msdn.microsoft.com/library/windows/apps/hh974338) and add a new property. The key for the property, \"System.Photo.Orientation\" specifies that the property represents the orientation of the photo. The value is the [**PhotoOrientation**](https://msdn.microsoft.com/library/windows/apps/hh965476) value that was previously calculated. Call [**SetPropertiesAsync**](https://msdn.microsoft.com/library/windows/apps/br226252) to update the properties on the encoder and then call [**FlushAsync**](https://msdn.microsoft.com/library/dn237883) to write the photo to the storage file.\n\n[!code-cs[ReencodeAndSavePhotoAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetReencodeAndSavePhotoAsync)]\n\n-   Setting the \"System.Photo.Orientation\" bitmap property encodes the orientation of the photo into the metadata of the file. It does not cause the actual image data to be encoded differently. For more information about embedding metadata into image files, see [Image metadata](image-metadata.md).\n\n-   For more information about working with images, including encoding and decoding images, see [Imaging](imaging.md).\n\n## Capture a video\n\nTo start capturing video, first create a storage file to which the video will be recorded. Next create the [**MediaEncodingProfile**](https://msdn.microsoft.com/library/windows/apps/hh701026) that the **MediaCapture** will use to encode the video to the file. The **MediaEncodingProfile** class provides methods, like [**CreateMp4**](https://msdn.microsoft.com/library/windows/apps/hh701078), that create encoding profiles for the supported video formats. Use the helper methods discussed previously to get the correct rotation for the video, in degrees. Unlike the photo scenario, the video rotation information is encoded into the stream by the **MediaCapture**. Add the rotation information to the encoding profile by adding it to the [**VideoEncodingProperties.Properties**](https://msdn.microsoft.com/library/windows/apps/hh701254) collection. The previously defined GUID for video rotation is used as the key and the rotation, in degrees, is the value. Finally, call [**MediaCapture.StartRecordToStorageFileAsync**](https://msdn.microsoft.com/library/windows/apps/hh700863), specifying the encoding properties and the output file to begin recording.\n\n[!code-cs[StartRecordingAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStartRecordingAsync)]\n\nTo stop recording, simply call [**MediaCapture.StopRecordAsync**](https://msdn.microsoft.com/library/windows/apps/br226623).\n\n[!code-cs[StopRecordingAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStopRecordingAsync)]\n\nA handler for the [**MediaCapture.RecordLimitationExceeded**](https://msdn.microsoft.com/library/windows/apps/hh973312) event was registered when the **MediaCapture** was initialized. In the handler, call the **StopRecordingAsync** method to stop video recording.\n\n[!code-cs[RecordLimitationExceeded](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRecordLimitationExceeded)]\n\n## Pause and resume video capture\n\nFor some scenarios you may want to pause and resume an ongoing video capture rather than stopping the capture and starting a new one. To pause recording call [**PauseRecordAsync**](https://msdn.microsoft.com/library/windows/apps/dn858102). If you specify [**MediaCapturePauseBehavior.RetainHardwareResources**](https://msdn.microsoft.com/library/windows/apps/dn926686), then on devices that don't support simultaneous video and photo capture, the app will be unable to capture photos while the video is paused. For information on determining if a device supports simultaneous photo and video capture, see [Camera profiles](camera-profiles.md).\n\n[!code-cs[PauseRecordingAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPauseRecordingAsync)]\n\nTo resume a previously paused video capture, call [**ResumeRecordAsync**](https://msdn.microsoft.com/library/windows/apps/dn858103).\n\n[!code-cs[ResumeRecordingAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetResumeRecordingAsync)]\n\n## Clean up capture resources\n\nIt is very important that you shut down and release the media capture resources properly. Failure to do so can cause unexpected camera behavior after your app closes, which results in a negative user experience for your app. The following sections walk through the different steps you should take to shut down the camera.\n\n### Shut down the capture preview\n\nTo shut down the capture preview, first call [**MediaCapture.StopPreviewAsync**](https://msdn.microsoft.com/library/windows/apps/br226622). Set the [**Source**](https://msdn.microsoft.com/library/windows/apps/br227419) property of your [**MediaElement**](https://msdn.microsoft.com/library/windows/apps/br242926) to null. Then, call the [**RequestRelease**](https://msdn.microsoft.com/library/windows/apps/br241819) on your [**DisplayRequest**](https://msdn.microsoft.com/library/windows/apps/br241816) variable to allow the system to turn off the display when needed.\n\n[!code-cs[StopPreviewAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetStopPreviewAsync)]\n\n-   You can't access the UI from a non-UI thread, so the setting the **MediaElement.Source** property and calling **RequestRelease** must be made using the [**CoreDispatcher.RunAsync**](https://msdn.microsoft.com/library/windows/apps/hh750317) method so that the calls execute on the UI thread.\n\n### Shut down and dispose of the MediaCapture object\n\nBefore disposing of the **MediaCapture** object, stop any recording that is ongoing and stop the preview stream by calling the helper methods defined previously. Once this has been done, remove any event handlers registered with the **MediaCapture**, then call [**Dispose**](https://msdn.microsoft.com/library/windows/apps/dn278858) to free any resources associated with the object and set the **MediaCapture** variable to null\n\n[!code-cs[CleanupCameraAsync](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCleanupCameraAsync)]\n\nYou should call this method to shut down and dispose of the **MediaCapture** object from inside the handler for the [**MediaCapture.Failed**](https://msdn.microsoft.com/library/windows/apps/br226593) event.\n\n[!code-cs[CaptureFailed](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCaptureFailed)]\n\n### Handle app lifetime and page navigation events\n\nThe app lifetime events give your app an opportunity to initialize and release resources. This is especially important with the **Application.Suspending** event, where it is essential that your app properly disposes of media capture resources.\n\nYou can register handlers for the application lifetime events in your page's constructor.\n\n[!code-cs[RegisterAppLifetimeEvents](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterAppLifetimeEvents)]\n\nIn the handler for the **Application.Suspending** event, you should unregister the handlers for the display and device orientation events and shut down the **MediaCapture** object. The [**SystemMediaTransportControls.PropertyChanged**](https://msdn.microsoft.com/library/windows/apps/dn278720) event unregistered here is needed for another application lifecycle-related task that is described later in this article.\n\n**Caution** \nYou must request a suspending deferral by calling [**SuspendingOperation.GetDeferral**](https://msdn.microsoft.com/library/windows/apps/br224690) at the beginning of your suspending event handler. This requests that the system wait for you to signal that the operation is complete before tearing down your app. This is necessary because the **MediaCapture** shutdown operations are asynchronous, so the **Application.Suspending** event handler may complete before the camera is properly shut down. After your awaited asynchronous calls complete, you should release the deferral by calling [**SuspendingDeferral.Complete**](https://msdn.microsoft.com/library/windows/apps/br224685).\n\n[!code-cs[Suspending](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSuspending)]\n\nIn the handler for the **Application.Resuming** event, you should register handlers for the display and device orientation events, register the **SystemMediaTransportControls.PropertyChanged** event, and initialize the **MediaCapture** object.\n\n[!code-cs[Resuming](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetResuming)]\n\nThe [**OnNavigatedTo**](https://msdn.microsoft.com/library/windows/apps/br227508) event gives an opportunity to initially register handlers for the display and device orientation events and initialize the **MediaCapture** object.\n\n[!code-cs[OnNavigatedTo](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetOnNavigatedTo)]\n\nIf your app has multiple pages, you should clean up your media capture objects in the [**OnNavigatingFrom**](https://msdn.microsoft.com/library/windows/apps/br227509) event handler.\n\n[!code-cs[OnNavigatingFrom](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetOnNavigatingFrom)]\n\nFor your app to behave properly on devices that support multiple simultaneous windows, you must respond when your app is minimized or restored. To do this, you must handle the [**SystemMediaTransportControls.PropertyChanged**](https://msdn.microsoft.com/library/windows/apps/dn278720) event. Initialize a member variable to store a reference to the [**SystemMediaTransportControls**](https://msdn.microsoft.com/library/windows/apps/dn278677) object for your app.\n\n[!code-cs[DeclareSystemMediaTransportControls](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetDeclareSystemMediaTransportControls)]\n\nThe code to register and unregister the **PropertyChanged** event should be added to the app life cycle events as shown in the examples above. In the handler for the event, check to see if the property change that triggered the event was the [**SystemMediaTransportControlsProperty.SoundLevel**](https://msdn.microsoft.com/library/windows/apps/dn278721) property. If this was the property that changed, check the value of the property. If the value is [**SoundLevel.Muted**](https://msdn.microsoft.com/library/windows/apps/hh700852), then your app was minimized and you should clean up your media capture resources appropriately. Otherwise, the event signals that your app window was restored and you should reinitialize you media capture resources. The **SoundLevel** property must be accessed on the UI thread, so the code in this method is wrapped in a call to [**Dispatcher.RunAsync**](https://msdn.microsoft.com/library/windows/apps/hh750317).\n\n[!code-cs[SystemMediaControlsPropertyChanged](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSystemMediaControlsPropertyChanged)]\n\n## Additional UI considerations for media capture\n\n### Set auto-rotation preferences\n\nAs mentioned in the previous section on rotating the preview stream, some devices support setting [**DisplayInformation.AutoRotationPreferences**](https://msdn.microsoft.com/library/windows/apps/dn264259) to prevent the page, including the [**CaptureElement**](https://msdn.microsoft.com/library/windows/apps/br209278) that displays the preview, from rotating as the device is rotating. This provides a good user experience on devices that support it. Set this value when your app launches or when you begin displaying the preview. Note that you should still implement preview rotation handling for devices that don't support auto-rotation preferences.\n\n[!code-cs[SetAutoRotationPreferences](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetSetAutoRotationPreferences)]\n\n### Handle UI element orientation\n\nUsers typically expect for the UI elements in a camera app, such as the buttons for initiating photo or video capture, to rotate along with the video preview. The following method illustrates the use of the previously defined orientation helper methods to properly orient the buttons in the camera UI. You should call this method from the [**DisplayInformation.OrientationChanged**](https://msdn.microsoft.com/library/windows/apps/dn264268) and [**SimpleOrientationSensor.OrientationChanged**](https://msdn.microsoft.com/library/windows/apps/br206407) event handlers and when your app first launches. Your implementation my vary depending on your app's UI.\n\n[!code-cs[UpdateButtonOrientation](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUpdateButtonOrientation)]\n\nWhen your app is shutting down or if you navigate to a page that is unrelated to media capture, set the auto-rotation preference to [**None**](https://msdn.microsoft.com/library/windows/apps/br226142) to allow the UI to rotate normally.\n\n[!code-cs[RevertAutoRotationPreferences](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRevertAutoRotationPreferences)]\n\n### Support simultaneous photo and video capture\n\nThe [**Windows.Media.Capture**](https://msdn.microsoft.com/library/windows/apps/br226738) API allows you to capture photos and videos simultaneously on devices that support it. For brevity, this example uses the [**ConcurrentRecordAndPhotoSupported**](https://msdn.microsoft.com/library/windows/apps/dn278843) property to determine if simultaneous video and photo capture is supported, but a more robust and recommended way to do this is to use camera profiles. For more information, see [Camera profiles](camera-profiles.md).\n\nThe following helper method updates the app's controls to match the current capture state of the app. Call this method whenever the capture state of your app changes, such as when video capture is started or stopped.\n\n[!code-cs[UpdateCaptureControls](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUpdateCaptureControls)]\n\n### Support mobile-specific UI features\n\nAll of the code shown in this article will work in a Universal Windows app. With a few additional lines of code, you can take advantage of special UI features that are only present on mobile devices. To use these features, you must add a reference to the Microsoft Mobile Extension SDK for Universal App Platform to your project.\n\n**To add a reference to the mobile extension SDK for hardware camera button support**\n\n1.  In **Solution Explorer**, right-click **References** and select **Add Reference...**\n\n2.  Expand the **Windows Universal** node and select **Extensions**.\n\n3.  Click the checkbox next to **Microsoft Mobile Extension SDK for Universal App Platform**.\n\nMobile devices have a [**StatusBar**](https://msdn.microsoft.com/library/windows/apps/dn633864) control that provides the user with status information about the device. This control takes up space on the screen that can interfere with the media capture UI. You can hide the status bar by calling [**HideAsync**](https://msdn.microsoft.com/library/windows/apps/dn610339), but you must make this call from within a conditional block where you use the [**ApiInformation.IsTypePresent**](https://msdn.microsoft.com/library/windows/apps/dn949016) method to determine if the API is available. This method will only return true on mobile devices that support the status bar. You should hide the status bar when your app launches or when you begin previewing from the camera.\n\n[!code-cs[HideStatusBar](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetHideStatusBar)]\n\nWhen your app is shutting down or when the user navigates away from the media capture page of your app, you make the control visible again.\n\n[!code-cs[ShowStatusBar](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetShowStatusBar)]\n\nSome mobile devices have a dedicated hardware camera button that some users prefer over an on-screen control. To be notified when the hardware camera button is pressed, register a handler for the [**HardwareButtons.CameraPressed**](https://msdn.microsoft.com/library/windows/apps/dn653805) event. Because this API is available on mobile devices only, you must again use the **IsTypePresent** to make sure the API is supported on the current device before attempting to access it.\n\n[!code-cs[PhoneUsing](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetPhoneUsing)]\n\n[!code-cs[RegisterCameraButtonHandler](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetRegisterCameraButtonHandler)]\n\nIn the handler for the **CameraPressed** event, you can initiate a photo capture.\n\n[!code-cs[CameraPressed](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetCameraPressed)]\n\nWhen your app is shutting down or the user moves away from the media capture page of your app, unregister the hardware button handler.\n\n[!code-cs[UnregisterCameraButtonHandler](./code/BasicMediaCaptureWin10/cs/MainPage.xaml.cs#SnippetUnregisterCameraButtonHandler)]\n\n**Note** This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you're developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).\n\n## Related topics\n\n* [Camera profiles](camera-profiles.md)\n* [High Dynamic Range (HDR) photo capture](high-dynamic-range-hdr-photo-capture.md)\n* [Capture device controls for photo and video capture](capture-device-controls-for-photo-and-video-capture.md)\n* [Capture device controls for video capture](capture-device-controls-for-video-capture.md)\n* [Effects for video capture](effects-for-video-capture.md)\n* [Scene analysis for media capture](scene-analysis-for-media-capture.md)\n* [Variable photo sequence](variable-photo-sequence.md)\n* [Get a preview frame](get-a-preview-frame.md)\n* [CameraStarterKit sample](http://go.microsoft.com/fwlink/?LinkId=619479)\n"
+}
