@@ -1,0 +1,614 @@
+{
+  "nodes": [
+    {
+      "content": "title: 3D printing from your app",
+      "pos": [
+        4,
+        36
+      ]
+    },
+    {
+      "content": "description: Learn how to add 3D printing functionality to your Universal Windows app.",
+      "pos": [
+        37,
+        123
+      ]
+    },
+    {
+      "content": "This topic covers how to launch the 3D print dialog after ensuring your 3D model is printable and in the correct format.",
+      "pos": [
+        124,
+        244
+      ]
+    },
+    {
+      "content": "ms.assetid: D78C4867-4B44-4B58-A82F-EDA59822119C",
+      "pos": [
+        245,
+        293
+      ]
+    },
+    {
+      "content": "3D printing from your app",
+      "pos": [
+        301,
+        326
+      ]
+    },
+    {
+      "content": "\\[ Updated for UWP apps on Windows 10.",
+      "pos": [
+        329,
+        367
+      ]
+    },
+    {
+      "content": "For Windows 8.x articles, see the <bpt id=\"p1\">[</bpt>archive<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?linkid=619132)</ept> \\]",
+      "pos": [
+        368,
+        463
+      ]
+    },
+    {
+      "content": "Important APIs",
+      "pos": [
+        468,
+        482
+      ]
+    },
+    {
+      "content": "Windows.Graphics.Printing3D",
+      "pos": [
+        493,
+        520
+      ]
+    },
+    {
+      "content": "Learn how to add 3D printing functionality to your Universal Windows app.",
+      "pos": [
+        583,
+        656
+      ]
+    },
+    {
+      "content": "This topic covers how to launch the 3D print dialog after ensuring your 3D model is printable and in the correct format.",
+      "pos": [
+        657,
+        777
+      ]
+    },
+    {
+      "content": "Class setup",
+      "pos": [
+        782,
+        793
+      ]
+    },
+    {
+      "pos": [
+        796,
+        956
+      ],
+      "content": "In your class that is to have 3D print functionality, add the <bpt id=\"p1\">[</bpt>Windows.Graphics.Printing3D<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn998169)</ept> namespace."
+    },
+    {
+      "pos": [
+        958,
+        1051
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>3DPrintNamespace<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#Snippet3DPrintNamespace)</ept>]"
+    },
+    {
+      "content": "The following additional namespaces will be used in this particular guide:",
+      "pos": [
+        1053,
+        1127
+      ]
+    },
+    {
+      "pos": [
+        1129,
+        1220
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>OtherNamespaces<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetOtherNamespaces)</ept>]"
+    },
+    {
+      "content": "Next, give your class some helpful member fields.",
+      "pos": [
+        1222,
+        1271
+      ]
+    },
+    {
+      "content": "Declare a <bpt id=\"p1\">[</bpt>Print3DTask<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn998044)</ept> object to serve as a reference to the printing task that is to be passed to the print driver.",
+      "pos": [
+        1272,
+        1447
+      ]
+    },
+    {
+      "content": "Declare a <bpt id=\"p1\">[</bpt>StorageFile<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227171)</ept> object to hold the original 3D data file.",
+      "pos": [
+        1448,
+        1571
+      ]
+    },
+    {
+      "content": "Finally, declare a <bpt id=\"p1\">[</bpt>Printing3D3MFPackage<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn998063)</ept> object, which represents a print-ready 3D model with all necessary metadata.",
+      "pos": [
+        1572,
+        1748
+      ]
+    },
+    {
+      "pos": [
+        1750,
+        1833
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DeclareVars<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetDeclareVars)</ept>]"
+    },
+    {
+      "content": "Create a simple UI",
+      "pos": [
+        1838,
+        1856
+      ]
+    },
+    {
+      "content": "This sample uses three user controls: a load button which will bring a file into program memory, a fix button which will modify the file as necessary, and a print button which will initiate the printing job.",
+      "pos": [
+        1859,
+        2066
+      ]
+    },
+    {
+      "content": "The following code generates these buttons (with their click event handlers) in your class' XAML file:",
+      "pos": [
+        2067,
+        2169
+      ]
+    },
+    {
+      "pos": [
+        2171,
+        2244
+      ],
+      "content": "[!code-xml<bpt id=\"p1\">[</bpt>Buttons<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml#SnippetButtons)</ept>]"
+    },
+    {
+      "pos": [
+        2246,
+        2282
+      ],
+      "content": "Add a <bpt id=\"p1\">**</bpt>TextBlock<ept id=\"p1\">**</ept> for UI feedback."
+    },
+    {
+      "pos": [
+        2284,
+        2363
+      ],
+      "content": "[!code-xml<bpt id=\"p1\">[</bpt>OutputText<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml#SnippetOutputText)</ept>]"
+    },
+    {
+      "content": "Get the 3D data",
+      "pos": [
+        2368,
+        2383
+      ]
+    },
+    {
+      "content": "The method by which your app acquires 3D geometry data to print will vary.",
+      "pos": [
+        2386,
+        2460
+      ]
+    },
+    {
+      "content": "Your app may retrieve data from a 3D scan, pull model data from a web resource, or generate a 3D mesh programmatically using equations.",
+      "pos": [
+        2461,
+        2596
+      ]
+    },
+    {
+      "content": "For the sake of simplicity, this guide will load a 3D data file (of any of several common file types) into program memory from File Explorer.",
+      "pos": [
+        2597,
+        2738
+      ]
+    },
+    {
+      "pos": [
+        2740,
+        2904
+      ],
+      "content": "In your <ph id=\"ph1\">`OnLoadClick`</ph> method, use the <bpt id=\"p1\">[</bpt>FileOpenPicker<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br207847)</ept> class to load a single file into your app's memory."
+    },
+    {
+      "pos": [
+        2906,
+        2983
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FileLoad<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetFileLoad)</ept>]"
+    },
+    {
+      "content": "Use 3D Builder to convert to 3D Manufacturing Format (.3mf)",
+      "pos": [
+        2988,
+        3047
+      ]
+    },
+    {
+      "content": "At this point, you are able to load a 3D data file into your app's memory.",
+      "pos": [
+        3049,
+        3123
+      ]
+    },
+    {
+      "content": "However, 3D geometry data comes in many different formats, and not all are efficient for 3D printing.",
+      "pos": [
+        3124,
+        3225
+      ]
+    },
+    {
+      "content": "Windows 10 uses the 3D Manufacturing Format (.3mf) file type for all 3D Printing tasks.",
+      "pos": [
+        3226,
+        3313
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>  The 3MF file type offers a great deal of functionality not covered in this tutorial.",
+      "pos": [
+        3317,
+        3411
+      ]
+    },
+    {
+      "content": "To learn more about 3MF and the features it provides to producers and consumers of 3D products, refer to the <bpt id=\"p1\">[</bpt>3MF Specification<ept id=\"p1\">](http://3mf.io/what-is-3mf/3mf-specification/)</ept>.",
+      "pos": [
+        3412,
+        3587
+      ]
+    },
+    {
+      "content": "Fortunately, the <bpt id=\"p1\">[</bpt>3D Builder<ept id=\"p1\">](https://www.microsoft.com/store/apps/3d-builder/9wzdncrfj3t6)</ept> app can open files of most popular 3D formats and save them as .3mf files.",
+      "pos": [
+        3589,
+        3755
+      ]
+    },
+    {
+      "content": "In this example, where the file type may vary, a very simple solution is to open 3D Builder and prompt the user to save the imported data as a .3mf file and then reload it.",
+      "pos": [
+        3756,
+        3928
+      ]
+    },
+    {
+      "pos": [
+        3932,
+        4174
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>  In addition to converting file formats, <bpt id=\"p2\">**</bpt>3D Builder<ept id=\"p2\">**</ept> provides simple tools to edit your models, add color data, and perform other print-specific operations, so it is often worth integrating into an app that deals with 3D printing."
+    },
+    {
+      "pos": [
+        4176,
+        4255
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>FileCheck<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetFileCheck)</ept>]"
+    },
+    {
+      "content": "Repair model data for 3D printing",
+      "pos": [
+        4260,
+        4293
+      ]
+    },
+    {
+      "content": "Not all 3D model data is able to be printed, even in .3mf format.",
+      "pos": [
+        4295,
+        4360
+      ]
+    },
+    {
+      "content": "In order for the printer to correctly determine what space to fill and what to leave empty, the model(s) to be printed must be a single seamless mess, have outward-facing surface normals, and have manifold geometry.",
+      "pos": [
+        4361,
+        4576
+      ]
+    },
+    {
+      "content": "Issues in these areas can crop up in a variety of different forms and can be hard to spot in complex shapes.",
+      "pos": [
+        4577,
+        4685
+      ]
+    },
+    {
+      "content": "Fortunately, current software solutions are often adequate for converting raw geometry to printable 3D shapes.",
+      "pos": [
+        4686,
+        4796
+      ]
+    },
+    {
+      "content": "This will be done in the <ph id=\"ph1\">`OnFixClick`</ph> method.",
+      "pos": [
+        4797,
+        4842
+      ]
+    },
+    {
+      "pos": [
+        4844,
+        5093
+      ],
+      "content": "The 3D data file must be converted to implement <bpt id=\"p1\">[</bpt>IRandomAccessStream<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br241731)</ept>, which can then be used to generate a <bpt id=\"p2\">[</bpt>Printing3DModel<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/mt203679)</ept> object."
+    },
+    {
+      "pos": [
+        5095,
+        5178
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RepairModel<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetRepairModel)</ept>]"
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>Printing3DModel<ept id=\"p1\">**</ept> object is now repaired and printable.",
+      "pos": [
+        5180,
+        5241
+      ]
+    },
+    {
+      "content": "Use <bpt id=\"p1\">**</bpt>SaveModelToPackageAsync<ept id=\"p1\">**</ept> to assign the model to the Printing3D3MFPackage object you declared when creating the class.",
+      "pos": [
+        5242,
+        5366
+      ]
+    },
+    {
+      "pos": [
+        5368,
+        5447
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SaveModel<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetSaveModel)</ept>]"
+    },
+    {
+      "content": "Execute printing task: create a TaskRequested handler",
+      "pos": [
+        5452,
+        5505
+      ]
+    },
+    {
+      "content": "Later on, when the 3D print dialog is displayed to the user and the user elects to begin printing, your app will need to pass in the desired parameters to the 3D print pipeline.",
+      "pos": [
+        5508,
+        5685
+      ]
+    },
+    {
+      "content": "The 3D print API will raise the <bpt id=\"p1\">**</bpt>TaskRequested<ept id=\"p1\">**</ept> event.",
+      "pos": [
+        5686,
+        5742
+      ]
+    },
+    {
+      "content": "You must write a method to handle this event appropriately.",
+      "pos": [
+        5743,
+        5802
+      ]
+    },
+    {
+      "content": "As always, it must be of the same type as its event: The <bpt id=\"p1\">**</bpt>TaskRequested<ept id=\"p1\">**</ept> event has parameters <bpt id=\"p2\">[</bpt>Print3DManager<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn998029)</ept> (its sender object) and a <bpt id=\"p3\">[</bpt>Print3DTaskRequestedEventArgs<ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn998051)</ept> object, which holds most of the relevant information.",
+      "pos": [
+        5803,
+        6143
+      ]
+    },
+    {
+      "content": "Its return type is <bpt id=\"p1\">**</bpt>void<ept id=\"p1\">**</ept>.",
+      "pos": [
+        6144,
+        6172
+      ]
+    },
+    {
+      "pos": [
+        6174,
+        6257
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>MyTaskTitle<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetMyTaskTitle)</ept>]"
+    },
+    {
+      "content": "The core purpose of this method is to use the <bpt id=\"p1\">*</bpt>args<ept id=\"p1\">*</ept> object to send a <bpt id=\"p2\">**</bpt>Printing3D3MFPackage<ept id=\"p2\">**</ept> down the pipeline.",
+      "pos": [
+        6259,
+        6372
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>Print3DTaskRequestedEventArgs<ept id=\"p1\">**</ept> type has one property: <bpt id=\"p2\">**</bpt>Request<ept id=\"p2\">**</ept>.",
+      "pos": [
+        6373,
+        6446
+      ]
+    },
+    {
+      "content": "It is of the type <bpt id=\"p1\">[</bpt>Print3DTaskRequest<ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn998050)</ept> and represents one print job request.",
+      "pos": [
+        6447,
+        6581
+      ]
+    },
+    {
+      "content": "Its method <bpt id=\"p1\">**</bpt>CreateTask<ept id=\"p1\">**</ept> allows the program to submit the right information for your print job, and it returns a reference to the <bpt id=\"p2\">[</bpt>Print3DTask<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn998044)</ept> object which is sent down the 3D print pipeline.",
+      "pos": [
+        6582,
+        6833
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>CreateTask<ept id=\"p1\">**</ept> has the following input parameters: A <bpt id=\"p2\">**</bpt>string<ept id=\"p2\">**</ept> for the print job name, a <bpt id=\"p3\">**</bpt>string<ept id=\"p3\">**</ept> for the ID of the printer to use, and a <bpt id=\"p4\">**</bpt>Print3DTaskSourceRequestedHandler<ept id=\"p4\">**</ept> delegate.",
+      "pos": [
+        6835,
+        7023
+      ]
+    },
+    {
+      "content": "The delegate is automatically invoked when the <bpt id=\"p1\">**</bpt>3DTaskSourceRequested<ept id=\"p1\">**</ept> event is raised (this is done by the API itself).",
+      "pos": [
+        7024,
+        7146
+      ]
+    },
+    {
+      "content": "The important thing to note is that this delegate is invoked when a print job is initiated, and it is responsible for providing the right 3D print package.",
+      "pos": [
+        7147,
+        7302
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Print3DTaskSourceRequestedHandler<ept id=\"p1\">**</ept> takes one parameter, a <bpt id=\"p2\">[</bpt>Print3DTaskSourceRequestedArgs<ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn998056)</ept> object which provides the data to be sent.",
+      "pos": [
+        7304,
+        7498
+      ]
+    },
+    {
+      "content": "The one public method of this class, <bpt id=\"p1\">**</bpt>SetSource<ept id=\"p1\">**</ept>, accepts the package to be printed.",
+      "pos": [
+        7499,
+        7585
+      ]
+    },
+    {
+      "content": "Implement a <bpt id=\"p1\">**</bpt>Print3DTaskSourceRequestedHandler<ept id=\"p1\">**</ept> delegate as follows:",
+      "pos": [
+        7586,
+        7656
+      ]
+    },
+    {
+      "pos": [
+        7658,
+        7745
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>SourceHandler<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetSourceHandler)</ept>]"
+    },
+    {
+      "pos": [
+        7747,
+        7823
+      ],
+      "content": "Next, call <bpt id=\"p1\">**</bpt>CreateTask<ept id=\"p1\">**</ept>, using the newly-defined delegate <ph id=\"ph1\">`sourceHandler`</ph>:"
+    },
+    {
+      "pos": [
+        7825,
+        7906
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>CreateTask<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetCreateTask)</ept>]"
+    },
+    {
+      "content": "The returned <bpt id=\"p1\">**</bpt>Print3DTask<ept id=\"p1\">**</ept> is assigned to the class variable declared in the beginning.",
+      "pos": [
+        7908,
+        7997
+      ]
+    },
+    {
+      "content": "You can now (optionally) use this reference to handle certain events thrown by the task:",
+      "pos": [
+        7998,
+        8086
+      ]
+    },
+    {
+      "pos": [
+        8088,
+        8165
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>Optional<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetOptional)</ept>]"
+    },
+    {
+      "pos": [
+        8169,
+        8291
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>  You must implement a <ph id=\"ph1\">`Task_Submitting`</ph> and <ph id=\"ph2\">`Task_Completed`</ph> method if you wish to register them to these events."
+    },
+    {
+      "content": "Execute printing task: open 3D print dialog",
+      "pos": [
+        8296,
+        8339
+      ]
+    },
+    {
+      "content": "The final bit of code needed to print from your app is that which launches the 3D print dialog.",
+      "pos": [
+        8342,
+        8437
+      ]
+    },
+    {
+      "content": "Like a conventional printing dialog window, the 3D print dialog provides a number of last-minute printing specifications and allows the user to choose which printer to use (whether connected via USB or the network).",
+      "pos": [
+        8438,
+        8653
+      ]
+    },
+    {
+      "pos": [
+        8655,
+        8734
+      ],
+      "content": "First, register your <ph id=\"ph1\">`MyTaskRequested`</ph> method with the <bpt id=\"p1\">**</bpt>TaskRequested<ept id=\"p1\">**</ept> event."
+    },
+    {
+      "pos": [
+        8736,
+        8843
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>RegisterMyTaskRequested<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetRegisterMyTaskRequested)</ept>]"
+    },
+    {
+      "pos": [
+        8845,
+        9019
+      ],
+      "content": "After registering your <bpt id=\"p1\">**</bpt>TaskRequested<ept id=\"p1\">**</ept> event handler, you can invoke the method <bpt id=\"p2\">**</bpt>ShowPrintUIAsync<ept id=\"p2\">**</ept>, which brings up the 3D print dialog in the current application window."
+    },
+    {
+      "pos": [
+        9021,
+        9102
+      ],
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>ShowDialog<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetShowDialog)</ept>]"
+    },
+    {
+      "content": "Finally, it is a good practice to de-register your event handlers once your app resumes control:",
+      "pos": [
+        9104,
+        9200
+      ]
+    },
+    {
+      "content": "[!code-cs<bpt id=\"p1\">[</bpt>DeregisterMyTaskRequested<ept id=\"p1\">](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetDeregisterMyTaskRequested)</ept>]",
+      "pos": [
+        9201,
+        9312
+      ]
+    }
+  ],
+  "content": "---\ntitle: 3D printing from your app\ndescription: Learn how to add 3D printing functionality to your Universal Windows app. This topic covers how to launch the 3D print dialog after ensuring your 3D model is printable and in the correct format.\nms.assetid: D78C4867-4B44-4B58-A82F-EDA59822119C\n---\n\n# 3D printing from your app\n\n\n\\[ Updated for UWP apps on Windows 10. For Windows 8.x articles, see the [archive](http://go.microsoft.com/fwlink/p/?linkid=619132) \\]\n\n\n**Important APIs**\n\n-   [**Windows.Graphics.Printing3D**](https://msdn.microsoft.com/library/windows/apps/dn998169)\n\nLearn how to add 3D printing functionality to your Universal Windows app. This topic covers how to launch the 3D print dialog after ensuring your 3D model is printable and in the correct format.\n\n## Class setup\n\n\nIn your class that is to have 3D print functionality, add the [Windows.Graphics.Printing3D](https://msdn.microsoft.com/library/windows/apps/dn998169) namespace.\n\n[!code-cs[3DPrintNamespace](./code/3dprinthowto/cs/MainPage.xaml.cs#Snippet3DPrintNamespace)]\n\nThe following additional namespaces will be used in this particular guide:\n\n[!code-cs[OtherNamespaces](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetOtherNamespaces)]\n\nNext, give your class some helpful member fields. Declare a [Print3DTask](https://msdn.microsoft.com/library/windows/apps/dn998044) object to serve as a reference to the printing task that is to be passed to the print driver. Declare a [StorageFile](https://msdn.microsoft.com/library/windows/apps/br227171) object to hold the original 3D data file. Finally, declare a [Printing3D3MFPackage](https://msdn.microsoft.com/library/windows/apps/dn998063) object, which represents a print-ready 3D model with all necessary metadata.\n\n[!code-cs[DeclareVars](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetDeclareVars)]\n\n## Create a simple UI\n\n\nThis sample uses three user controls: a load button which will bring a file into program memory, a fix button which will modify the file as necessary, and a print button which will initiate the printing job. The following code generates these buttons (with their click event handlers) in your class' XAML file:\n\n[!code-xml[Buttons](./code/3dprinthowto/cs/MainPage.xaml#SnippetButtons)]\n\nAdd a **TextBlock** for UI feedback.\n\n[!code-xml[OutputText](./code/3dprinthowto/cs/MainPage.xaml#SnippetOutputText)]\n\n## Get the 3D data\n\n\nThe method by which your app acquires 3D geometry data to print will vary. Your app may retrieve data from a 3D scan, pull model data from a web resource, or generate a 3D mesh programmatically using equations. For the sake of simplicity, this guide will load a 3D data file (of any of several common file types) into program memory from File Explorer.\n\nIn your `OnLoadClick` method, use the [FileOpenPicker](https://msdn.microsoft.com/library/windows/apps/br207847) class to load a single file into your app's memory.\n\n[!code-cs[FileLoad](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetFileLoad)]\n\n## Use 3D Builder to convert to 3D Manufacturing Format (.3mf)\n\nAt this point, you are able to load a 3D data file into your app's memory. However, 3D geometry data comes in many different formats, and not all are efficient for 3D printing. Windows 10 uses the 3D Manufacturing Format (.3mf) file type for all 3D Printing tasks.\n\n> **Note**  The 3MF file type offers a great deal of functionality not covered in this tutorial. To learn more about 3MF and the features it provides to producers and consumers of 3D products, refer to the [3MF Specification](http://3mf.io/what-is-3mf/3mf-specification/).\n\nFortunately, the [3D Builder](https://www.microsoft.com/store/apps/3d-builder/9wzdncrfj3t6) app can open files of most popular 3D formats and save them as .3mf files. In this example, where the file type may vary, a very simple solution is to open 3D Builder and prompt the user to save the imported data as a .3mf file and then reload it.\n\n> **Note**  In addition to converting file formats, **3D Builder** provides simple tools to edit your models, add color data, and perform other print-specific operations, so it is often worth integrating into an app that deals with 3D printing.\n\n[!code-cs[FileCheck](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetFileCheck)]\n\n## Repair model data for 3D printing\n\nNot all 3D model data is able to be printed, even in .3mf format. In order for the printer to correctly determine what space to fill and what to leave empty, the model(s) to be printed must be a single seamless mess, have outward-facing surface normals, and have manifold geometry. Issues in these areas can crop up in a variety of different forms and can be hard to spot in complex shapes. Fortunately, current software solutions are often adequate for converting raw geometry to printable 3D shapes. This will be done in the `OnFixClick` method.\n\nThe 3D data file must be converted to implement [IRandomAccessStream](https://msdn.microsoft.com/library/windows/apps/br241731), which can then be used to generate a [Printing3DModel](https://msdn.microsoft.com/library/windows/apps/mt203679) object.\n\n[!code-cs[RepairModel](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetRepairModel)]\n\nThe **Printing3DModel** object is now repaired and printable. Use **SaveModelToPackageAsync** to assign the model to the Printing3D3MFPackage object you declared when creating the class.\n\n[!code-cs[SaveModel](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetSaveModel)]\n\n## Execute printing task: create a TaskRequested handler\n\n\nLater on, when the 3D print dialog is displayed to the user and the user elects to begin printing, your app will need to pass in the desired parameters to the 3D print pipeline. The 3D print API will raise the **TaskRequested** event. You must write a method to handle this event appropriately. As always, it must be of the same type as its event: The **TaskRequested** event has parameters [Print3DManager](https://msdn.microsoft.com/library/windows/apps/dn998029) (its sender object) and a [Print3DTaskRequestedEventArgs](https://msdn.microsoft.com/library/windows/apps/dn998051) object, which holds most of the relevant information. Its return type is **void**.\n\n[!code-cs[MyTaskTitle](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetMyTaskTitle)]\n\nThe core purpose of this method is to use the *args* object to send a **Printing3D3MFPackage** down the pipeline. The **Print3DTaskRequestedEventArgs** type has one property: **Request**. It is of the type [Print3DTaskRequest](https://msdn.microsoft.com/library/windows/apps/dn998050) and represents one print job request. Its method **CreateTask** allows the program to submit the right information for your print job, and it returns a reference to the [Print3DTask](https://msdn.microsoft.com/library/windows/apps/dn998044) object which is sent down the 3D print pipeline.\n\n**CreateTask** has the following input parameters: A **string** for the print job name, a **string** for the ID of the printer to use, and a **Print3DTaskSourceRequestedHandler** delegate. The delegate is automatically invoked when the **3DTaskSourceRequested** event is raised (this is done by the API itself). The important thing to note is that this delegate is invoked when a print job is initiated, and it is responsible for providing the right 3D print package.\n\n**Print3DTaskSourceRequestedHandler** takes one parameter, a [Print3DTaskSourceRequestedArgs](https://msdn.microsoft.com/library/windows/apps/dn998056) object which provides the data to be sent. The one public method of this class, **SetSource**, accepts the package to be printed. Implement a **Print3DTaskSourceRequestedHandler** delegate as follows:\n\n[!code-cs[SourceHandler](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetSourceHandler)]\n\nNext, call **CreateTask**, using the newly-defined delegate `sourceHandler`:\n\n[!code-cs[CreateTask](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetCreateTask)]\n\nThe returned **Print3DTask** is assigned to the class variable declared in the beginning. You can now (optionally) use this reference to handle certain events thrown by the task:\n\n[!code-cs[Optional](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetOptional)]\n\n> **Note**  You must implement a `Task_Submitting` and `Task_Completed` method if you wish to register them to these events.\n\n## Execute printing task: open 3D print dialog\n\n\nThe final bit of code needed to print from your app is that which launches the 3D print dialog. Like a conventional printing dialog window, the 3D print dialog provides a number of last-minute printing specifications and allows the user to choose which printer to use (whether connected via USB or the network).\n\nFirst, register your `MyTaskRequested` method with the **TaskRequested** event.\n\n[!code-cs[RegisterMyTaskRequested](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetRegisterMyTaskRequested)]\n\nAfter registering your **TaskRequested** event handler, you can invoke the method **ShowPrintUIAsync**, which brings up the 3D print dialog in the current application window.\n\n[!code-cs[ShowDialog](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetShowDialog)]\n\nFinally, it is a good practice to de-register your event handlers once your app resumes control:\n[!code-cs[DeregisterMyTaskRequested](./code/3dprinthowto/cs/MainPage.xaml.cs#SnippetDeregisterMyTaskRequested)]\n\n\n \n\n \n\n\n\n\n"
+}
