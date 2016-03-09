@@ -1,0 +1,783 @@
+{
+  "nodes": [
+    {
+      "content": "Description: Learn how to capture and recognize long-form, continuous dictation speech input.",
+      "pos": [
+        4,
+        97
+      ]
+    },
+    {
+      "content": "title: Enable continuous dictation",
+      "pos": [
+        98,
+        132
+      ]
+    },
+    {
+      "content": "ms.assetid: 383B3E23-1678-4FBB-B36E-6DE2DA9CA9DC",
+      "pos": [
+        133,
+        181
+      ]
+    },
+    {
+      "content": "label: Continuous dictation",
+      "pos": [
+        182,
+        209
+      ]
+    },
+    {
+      "content": "template: detail.hbs",
+      "pos": [
+        210,
+        230
+      ]
+    },
+    {
+      "content": "Continuous dictation",
+      "pos": [
+        238,
+        258
+      ]
+    },
+    {
+      "content": "\\[ Updated for UWP apps on Windows 10.",
+      "pos": [
+        261,
+        299
+      ]
+    },
+    {
+      "content": "For Windows 8.x articles, see the <bpt id=\"p1\">[</bpt>archive<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?linkid=619132)</ept> \\]",
+      "pos": [
+        300,
+        395
+      ]
+    },
+    {
+      "content": "Learn how to capture and recognize long-form, continuous dictation speech input.",
+      "pos": [
+        397,
+        477
+      ]
+    },
+    {
+      "content": "Important APIs",
+      "pos": [
+        481,
+        495
+      ]
+    },
+    {
+      "content": "SpeechContinuousRecognitionSession",
+      "pos": [
+        506,
+        540
+      ]
+    },
+    {
+      "content": "ContinuousRecognitionSession",
+      "pos": [
+        609,
+        637
+      ]
+    },
+    {
+      "pos": [
+        701,
+        1191
+      ],
+      "content": "In <bpt id=\"p1\">[</bpt>Speech recognition<ept id=\"p1\">](speech-recognition.md)</ept>, you learned how to capture and recognize relatively short speech input using the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>RecognizeAsync<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn653244)</ept> or <bpt id=\"p4\">[</bpt><bpt id=\"p5\">**</bpt>RecognizeWithUIAsync<ept id=\"p5\">**</ept><ept id=\"p4\">](https://msdn.microsoft.com/library/windows/apps/dn653245)</ept> methods of a <bpt id=\"p6\">[</bpt><bpt id=\"p7\">**</bpt>SpeechRecognizer<ept id=\"p7\">**</ept><ept id=\"p6\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept> object, for example, when composing a short message service (SMS) message or when asking a question."
+    },
+    {
+      "pos": [
+        1193,
+        1587
+      ],
+      "content": "For longer, continuous speech recognition sessions, such as dictation or email, use the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ContinuousRecognitionSession<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913913)</ept> property of a <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SpeechRecognizer<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept> to obtain a <bpt id=\"p5\">[</bpt><bpt id=\"p6\">**</bpt>SpeechContinuousRecognitionSession<ept id=\"p6\">**</ept><ept id=\"p5\">](https://msdn.microsoft.com/library/windows/apps/dn913896)</ept> object."
+    },
+    {
+      "pos": [
+        1594,
+        1675
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"Set_up\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph><ph id=\"ph3\">&lt;span id=\"set_up\"&gt;</ph><ph id=\"ph4\">&lt;/span&gt;</ph><ph id=\"ph5\">&lt;span id=\"SET_UP\"&gt;</ph><ph id=\"ph6\">&lt;/span&gt;</ph>Set up"
+    },
+    {
+      "content": "Your app needs a few objects to manage a continuous dictation session:",
+      "pos": [
+        1678,
+        1748
+      ]
+    },
+    {
+      "pos": [
+        1754,
+        1859
+      ],
+      "content": "An instance of a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SpeechRecognizer<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept> object."
+    },
+    {
+      "content": "A reference to a UI dispatcher to update the UI during dictation.",
+      "pos": [
+        1864,
+        1929
+      ]
+    },
+    {
+      "content": "A way to track the accumulated words spoken by the user.",
+      "pos": [
+        1934,
+        1990
+      ]
+    },
+    {
+      "content": "Here, we declare a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SpeechRecognizer<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept> instance as a private field of the code-behind class.",
+      "pos": [
+        1992,
+        2145
+      ]
+    },
+    {
+      "content": "Your app needs to store a reference elsewhere if you want continuous dictation to persist beyond a single Extensible Application Markup Language (XAML) page.",
+      "pos": [
+        2146,
+        2303
+      ]
+    },
+    {
+      "content": "During dictation, the recognizer raises events from a background thread.",
+      "pos": [
+        2405,
+        2477
+      ]
+    },
+    {
+      "content": "Because a background thread cannot directly update the UI in XAML, your app must use a dispatcher to update the UI in response to recognition events.",
+      "pos": [
+        2478,
+        2627
+      ]
+    },
+    {
+      "content": "Here, we declare a private field that will be initialized later with the UI dispatcher.",
+      "pos": [
+        2629,
+        2716
+      ]
+    },
+    {
+      "content": "To track what the user is saying, you need to handle recognition events raised by the speech recognizer.",
+      "pos": [
+        3111,
+        3215
+      ]
+    },
+    {
+      "content": "These events provide the recognition results for chunks of user utterances.",
+      "pos": [
+        3216,
+        3291
+      ]
+    },
+    {
+      "content": "Here, we use a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StringBuilder<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/system.text.stringbuilder.aspx)</ept> object to hold all the recognition results obtained during the session.",
+      "pos": [
+        3293,
+        3466
+      ]
+    },
+    {
+      "content": "New results are appended to the <bpt id=\"p1\">**</bpt>StringBuilder<ept id=\"p1\">**</ept> as they are processed.",
+      "pos": [
+        3467,
+        3539
+      ]
+    },
+    {
+      "pos": [
+        3644,
+        3757
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"Initialization\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph><ph id=\"ph3\">&lt;span id=\"initialization\"&gt;</ph><ph id=\"ph4\">&lt;/span&gt;</ph><ph id=\"ph5\">&lt;span id=\"INITIALIZATION\"&gt;</ph><ph id=\"ph6\">&lt;/span&gt;</ph>Initialization"
+    },
+    {
+      "content": "During the initialization of continuous speech recognition, you must:",
+      "pos": [
+        3760,
+        3829
+      ]
+    },
+    {
+      "content": "Fetch the dispatcher for the UI thread if you update the UI of your app in the continuous recognition event handlers.",
+      "pos": [
+        3835,
+        3952
+      ]
+    },
+    {
+      "content": "Initialize the speech recognizer.",
+      "pos": [
+        3957,
+        3990
+      ]
+    },
+    {
+      "pos": [
+        3995,
+        4258
+      ],
+      "content": "Compile the built-in dictation grammar.\n**Note**   Speech recognition requires at least one constraint to define a recognizable vocabulary. If no constraint is specified, a predefined dictation grammar is used. See [Speech recognition](speech-recognition.md).",
+      "leadings": [
+        "",
+        "    "
+      ],
+      "nodes": [
+        {
+          "content": "Compile the built-in dictation grammar.",
+          "pos": [
+            0,
+            39
+          ]
+        },
+        {
+          "content": "**Note**   Speech recognition requires at least one constraint to define a recognizable vocabulary. If no constraint is specified, a predefined dictation grammar is used. See [Speech recognition](speech-recognition.md).",
+          "pos": [
+            40,
+            259
+          ],
+          "nodes": [
+            {
+              "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>   Speech recognition requires at least one constraint to define a recognizable vocabulary.",
+              "pos": [
+                0,
+                99
+              ]
+            },
+            {
+              "content": "If no constraint is specified, a predefined dictation grammar is used.",
+              "pos": [
+                100,
+                170
+              ]
+            },
+            {
+              "content": "See <bpt id=\"p1\">[</bpt>Speech recognition<ept id=\"p1\">](speech-recognition.md)</ept>.",
+              "pos": [
+                171,
+                219
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "content": "Set up the event listeners for recognition events.",
+      "pos": [
+        4271,
+        4321
+      ]
+    },
+    {
+      "pos": [
+        4323,
+        4452
+      ],
+      "content": "We initialize speech recognition in the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>OnNavigatedTo<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227508)</ept> page event."
+    },
+    {
+      "content": "Because events raised by the speech recognizer occur on a background thread, create a reference to the dispatcher for updates to the UI thread.",
+      "pos": [
+        4458,
+        4601
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>OnNavigatedTo<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br227508)</ept> is always invoked on the UI thread.",
+      "pos": [
+        4602,
+        4715
+      ]
+    },
+    {
+      "pos": [
+        5074,
+        5187
+      ],
+      "content": "We then initialize the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SpeechRecognizer<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept> instance."
+    },
+    {
+      "pos": [
+        5531,
+        5720
+      ],
+      "content": "We then add and compile the grammar that defines all of the words and phrases that can be recognized by the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SpeechRecognizer<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653226)</ept>."
+    },
+    {
+      "content": "If you don't specify a grammar explicitly, a predefined dictation grammar is used by default.",
+      "pos": [
+        5726,
+        5819
+      ]
+    },
+    {
+      "content": "Typically, the default grammar is best for general dictation.",
+      "pos": [
+        5820,
+        5881
+      ]
+    },
+    {
+      "pos": [
+        5887,
+        6026
+      ],
+      "content": "Here, we call <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CompileConstraintsAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653240)</ept> immediately without adding a grammar."
+    },
+    {
+      "pos": [
+        6367,
+        6524
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"Handle_recognition_events\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph><ph id=\"ph3\">&lt;span id=\"handle_recognition_events\"&gt;</ph><ph id=\"ph4\">&lt;/span&gt;</ph><ph id=\"ph5\">&lt;span id=\"HANDLE_RECOGNITION_EVENTS\"&gt;</ph><ph id=\"ph6\">&lt;/span&gt;</ph>Handle recognition events"
+    },
+    {
+      "content": "Here, you can capture a single, brief utterance or phrase by calling <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RecognizeAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653244)</ept> or <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>RecognizeWithUIAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn653245)</ept>.",
+      "pos": [
+        6527,
+        6763
+      ]
+    },
+    {
+      "content": "However, we want to capture a longer, continuous recognition session.",
+      "pos": [
+        6764,
+        6833
+      ]
+    },
+    {
+      "content": "To do this, we specify event listeners to run in the background as the user speaks and define handlers to build the dictation string.",
+      "pos": [
+        6835,
+        6968
+      ]
+    },
+    {
+      "pos": [
+        6970,
+        7303
+      ],
+      "content": "We then use the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ContinuousRecognitionSession<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913913)</ept> property of our recognizer to obtain a <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SpeechContinuousRecognitionSession<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913896)</ept> object that provides methods and events for managing a continuous recognition session."
+    },
+    {
+      "content": "Two events in particular are critical:",
+      "pos": [
+        7305,
+        7343
+      ]
+    },
+    {
+      "pos": [
+        7349,
+        7490
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept>, which occurs when the recognizer has generated some results."
+    },
+    {
+      "pos": [
+        7495,
+        7633
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Completed<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913899)</ept>, which occurs when the continuous recognition session has ended."
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event is raised as the user speaks.",
+      "pos": [
+        7635,
+        7754
+      ]
+    },
+    {
+      "content": "The recognizer continuously listens to the user and periodically raises an event that passes a chunk of speech input.",
+      "pos": [
+        7755,
+        7872
+      ]
+    },
+    {
+      "content": "You must examine the speech input, using the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Result<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913895)</ept> property of the event argument, and take appropriate action in the event handler, such as appending the text to a StringBuilder object.",
+      "pos": [
+        7873,
+        8124
+      ]
+    },
+    {
+      "pos": [
+        8126,
+        8387
+      ],
+      "content": "As an instance of <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>SpeechRecognitionResult<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631432)</ept>, the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>Result<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913895)</ept> property is useful for determining whether you want to accept the speech input:"
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Status<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631440)</ept> indicates whether the recognition was successful.",
+      "pos": [
+        8393,
+        8513
+      ]
+    },
+    {
+      "content": "Recognition can fail for a variety of reasons.",
+      "pos": [
+        8514,
+        8560
+      ]
+    },
+    {
+      "pos": [
+        8565,
+        8723
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Confidence<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631434)</ept> indicates the relative confidence that the recognizer understood the correct words."
+    },
+    {
+      "pos": [
+        8729,
+        8972
+      ],
+      "content": "Here, we register the handler for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> continuous recognition event in the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>OnNavigatedTo<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br227508)</ept> page event."
+    },
+    {
+      "content": "We then check the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Confidence<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631434)</ept> property.",
+      "pos": [
+        9116,
+        9218
+      ]
+    },
+    {
+      "content": "If the value of Confidence is <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Medium<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631409)</ept> or better, we append the text to the StringBuilder.",
+      "pos": [
+        9219,
+        9371
+      ]
+    },
+    {
+      "content": "We also update the UI as we collect input.",
+      "pos": [
+        9372,
+        9414
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>  the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>ResultGenerated<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event is raised on a background thread that cannot update the UI directly.",
+      "pos": [
+        9420,
+        9588
+      ]
+    },
+    {
+      "content": "If a handler needs to update the UI (as the \\[Speech and TTS sample\\] does), you must dispatch the updates to the UI thread through the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RunAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh750317)</ept> method of the dispatcher.",
+      "pos": [
+        9589,
+        9823
+      ]
+    },
+    {
+      "pos": [
+        10711,
+        10859
+      ],
+      "content": "We then handle the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Completed<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913899)</ept> event, which indicates the end of continuous dictation."
+    },
+    {
+      "content": "The session ends when you call the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StopAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913908)</ept> or <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CancelAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913898)</ept> methods (described the next section).",
+      "pos": [
+        10865,
+        11090
+      ]
+    },
+    {
+      "content": "The session can also end when an error occurs, or when the user has stopped speaking.",
+      "pos": [
+        11091,
+        11176
+      ]
+    },
+    {
+      "content": "Check the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Status<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631440)</ept> property of the event argument to determine why the session ended (<bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>SpeechRecognitionResultStatus<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn631433)</ept>).",
+      "pos": [
+        11177,
+        11420
+      ]
+    },
+    {
+      "pos": [
+        11426,
+        11663
+      ],
+      "content": "Here, we register the handler for the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Completed<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913899)</ept> continuous recognition event in the <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>OnNavigatedTo<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/br227508)</ept> page event."
+    },
+    {
+      "content": "The event handler checks the Status property to determine whether the recognition was successful.",
+      "pos": [
+        11793,
+        11890
+      ]
+    },
+    {
+      "content": "It also handles the case where the user has stopped speaking.",
+      "pos": [
+        11891,
+        11952
+      ]
+    },
+    {
+      "content": "Often, a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>TimeoutExceeded<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn631433)</ept> is considered successful recognition as it means the user has finished speaking.",
+      "pos": [
+        11953,
+        12122
+      ]
+    },
+    {
+      "content": "You should handle this case in your code for a good experience.",
+      "pos": [
+        12123,
+        12186
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>  the <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>ResultGenerated<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event is raised on a background thread that cannot update the UI directly.",
+      "pos": [
+        12192,
+        12360
+      ]
+    },
+    {
+      "content": "If a handler needs to update the UI (as the \\[Speech and TTS sample\\] does), you must dispatch the updates to the UI thread through the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>RunAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/hh750317)</ept> method of the dispatcher.",
+      "pos": [
+        12361,
+        12595
+      ]
+    },
+    {
+      "pos": [
+        13737,
+        13938
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"Provide_ongoing_recognition_feedback\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph><ph id=\"ph3\">&lt;span id=\"provide_ongoing_recognition_feedback\"&gt;</ph><ph id=\"ph4\">&lt;/span&gt;</ph><ph id=\"ph5\">&lt;span id=\"PROVIDE_ONGOING_RECOGNITION_FEEDBACK\"&gt;</ph><ph id=\"ph6\">&lt;/span&gt;</ph>Provide ongoing recognition feedback"
+    },
+    {
+      "content": "When people converse, they often rely on context to fully understand what is being said.",
+      "pos": [
+        13941,
+        14029
+      ]
+    },
+    {
+      "content": "Similarly, the speech recognizer often needs context to provide high-confidence recognition results.",
+      "pos": [
+        14030,
+        14130
+      ]
+    },
+    {
+      "content": "For example, by themselves, the words \"weight\" and \"wait\" are indistinguishable until more context can be gleaned from surrounding words.",
+      "pos": [
+        14131,
+        14268
+      ]
+    },
+    {
+      "content": "Until the recognizer has some confidence that a word, or words, have been recognized correctly, it will not raise the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event.",
+      "pos": [
+        14269,
+        14473
+      ]
+    },
+    {
+      "pos": [
+        14475,
+        14737
+      ],
+      "content": "This can result in a less than ideal experience for the user as they continue speaking and no results are provided until the recognizer has high enough confidence to raise the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event."
+    },
+    {
+      "content": "Handle the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>HypothesisGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913914)</ept> event to improve this apparent lack of responsiveness.",
+      "pos": [
+        14739,
+        14888
+      ]
+    },
+    {
+      "content": "This event is raised whenever the recognizer generates a new set of potential matches for the word being processed.",
+      "pos": [
+        14889,
+        15004
+      ]
+    },
+    {
+      "content": "The event argument provides an <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Hypothesis<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913911)</ept> property that contains the current matches.",
+      "pos": [
+        15005,
+        15154
+      ]
+    },
+    {
+      "content": "Show these to the user as they continue speaking and reassure them that processing is still active.",
+      "pos": [
+        15155,
+        15254
+      ]
+    },
+    {
+      "content": "Once confidence is high and a recognition result has been determined, replace the interim <bpt id=\"p1\">**</bpt>Hypothesis<ept id=\"p1\">**</ept> results with the final <bpt id=\"p2\">[</bpt><bpt id=\"p3\">**</bpt>Result<ept id=\"p3\">**</ept><ept id=\"p2\">](https://msdn.microsoft.com/library/windows/apps/dn913895)</ept> provided in the <bpt id=\"p4\">[</bpt><bpt id=\"p5\">**</bpt>ResultGenerated<ept id=\"p5\">**</ept><ept id=\"p4\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event.",
+      "pos": [
+        15255,
+        15556
+      ]
+    },
+    {
+      "content": "Here, we append the hypothetical text and an ellipsis (\"…\") to the current value of the output <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>TextBox<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/br209683)</ept>.",
+      "pos": [
+        15558,
+        15725
+      ]
+    },
+    {
+      "content": "The contents of the text box are updated as new hypotheses are generated and until the final results are obtained from the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event.",
+      "pos": [
+        15726,
+        15935
+      ]
+    },
+    {
+      "pos": [
+        16401,
+        16562
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"Start_and_stop_recognition\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph><ph id=\"ph3\">&lt;span id=\"start_and_stop_recognition\"&gt;</ph><ph id=\"ph4\">&lt;/span&gt;</ph><ph id=\"ph5\">&lt;span id=\"START_AND_STOP_RECOGNITION\"&gt;</ph><ph id=\"ph6\">&lt;/span&gt;</ph>Start and stop recognition"
+    },
+    {
+      "content": "Before starting a recognition session, check the value of the speech recognizer <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>State<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913915)</ept> property.",
+      "pos": [
+        16565,
+        16724
+      ]
+    },
+    {
+      "content": "The speech recognizer must be in an <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>Idle<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn653227)</ept> state.",
+      "pos": [
+        16725,
+        16836
+      ]
+    },
+    {
+      "pos": [
+        16838,
+        17136
+      ],
+      "content": "After checking the state of the speech recognizer, we start the session by calling the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StartAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913901)</ept> method of the speech recognizer's <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>ContinuousRecognitionSession<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913913)</ept> property."
+    },
+    {
+      "content": "Recognition can be stopped in two ways:",
+      "pos": [
+        17283,
+        17322
+      ]
+    },
+    {
+      "pos": [
+        17328,
+        17606
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>StopAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913908)</ept> lets any pending recognition events complete (<bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>ResultGenerated<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> continues to be raised until all pending recognition operations are complete)."
+    },
+    {
+      "pos": [
+        17611,
+        17767
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CancelAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913898)</ept> terminates the recognition session immediately and discards any pending results."
+    },
+    {
+      "pos": [
+        17769,
+        18067
+      ],
+      "content": "After checking the state of the speech recognizer, we stop the session by calling the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>CancelAsync<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913898)</ept> method of the speech recognizer's <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>ContinuousRecognitionSession<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913913)</ept> property."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept>",
+      "pos": [
+        18215,
+        18223
+      ]
+    },
+    {
+      "content": "A <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event can occur after a call to <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CancelAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913898)</ept>.",
+      "pos": [
+        18226,
+        18416
+      ]
+    },
+    {
+      "content": "Because of multithreading, a <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> event might still remain on the stack when <bpt id=\"p3\">[</bpt><bpt id=\"p4\">**</bpt>CancelAsync<ept id=\"p4\">**</ept><ept id=\"p3\">](https://msdn.microsoft.com/library/windows/apps/dn913898)</ept> is called.",
+      "pos": [
+        18418,
+        18656
+      ]
+    },
+    {
+      "content": "If so, the <bpt id=\"p1\">**</bpt>ResultGenerated<ept id=\"p1\">**</ept> event still fires.",
+      "pos": [
+        18657,
+        18706
+      ]
+    },
+    {
+      "content": "If you set any private fields when canceling the recognition session, always confirm their values in the <bpt id=\"p1\">[</bpt><bpt id=\"p2\">**</bpt>ResultGenerated<ept id=\"p2\">**</ept><ept id=\"p1\">](https://msdn.microsoft.com/library/windows/apps/dn913900)</ept> handler.",
+      "pos": [
+        18708,
+        18901
+      ]
+    },
+    {
+      "content": "For example, don't assume a field is initialized in your handler if you set them to null when you cancel the session.",
+      "pos": [
+        18902,
+        19019
+      ]
+    },
+    {
+      "pos": [
+        19027,
+        19076
+      ],
+      "content": "<ph id=\"ph1\">&lt;span id=\"related_topics\"&gt;</ph><ph id=\"ph2\">&lt;/span&gt;</ph>Related articles"
+    },
+    {
+      "content": "Speech interactions",
+      "pos": [
+        19082,
+        19101
+      ]
+    },
+    {
+      "content": "Samples",
+      "pos": [
+        19130,
+        19137
+      ]
+    },
+    {
+      "content": "Speech recognition and speech synthesis sample",
+      "pos": [
+        19143,
+        19189
+      ]
+    }
+  ],
+  "content": "---\nDescription: Learn how to capture and recognize long-form, continuous dictation speech input.\ntitle: Enable continuous dictation\nms.assetid: 383B3E23-1678-4FBB-B36E-6DE2DA9CA9DC\nlabel: Continuous dictation\ntemplate: detail.hbs\n---\n\n# Continuous dictation\n\n\n\\[ Updated for UWP apps on Windows 10. For Windows 8.x articles, see the [archive](http://go.microsoft.com/fwlink/p/?linkid=619132) \\]\n\nLearn how to capture and recognize long-form, continuous dictation speech input.\n\n**Important APIs**\n\n-   [**SpeechContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913896)\n-   [**ContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913913)\n\n\nIn [Speech recognition](speech-recognition.md), you learned how to capture and recognize relatively short speech input using the [**RecognizeAsync**](https://msdn.microsoft.com/library/windows/apps/dn653244) or [**RecognizeWithUIAsync**](https://msdn.microsoft.com/library/windows/apps/dn653245) methods of a [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226) object, for example, when composing a short message service (SMS) message or when asking a question.\n\nFor longer, continuous speech recognition sessions, such as dictation or email, use the [**ContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913913) property of a [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226) to obtain a [**SpeechContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913896) object.\n\n\n\n## <span id=\"Set_up\"></span><span id=\"set_up\"></span><span id=\"SET_UP\"></span>Set up\n\n\nYour app needs a few objects to manage a continuous dictation session:\n\n-   An instance of a [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226) object.\n-   A reference to a UI dispatcher to update the UI during dictation.\n-   A way to track the accumulated words spoken by the user.\n\nHere, we declare a [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226) instance as a private field of the code-behind class. Your app needs to store a reference elsewhere if you want continuous dictation to persist beyond a single Extensible Application Markup Language (XAML) page.\n\n```CSharp\nprivate SpeechRecognizer speechRecognizer;</code></pre></td>\n</tr>\n</tbody>\n</table>\n```\n\nDuring dictation, the recognizer raises events from a background thread. Because a background thread cannot directly update the UI in XAML, your app must use a dispatcher to update the UI in response to recognition events.\n\nHere, we declare a private field that will be initialized later with the UI dispatcher.\n\n<span codelanguage=\"CSharp\"></span>\n```CSharp\n<colgroup>\n<col width=\"100%\" />\n</colgroup>\n<thead>\n<tr class=\"header\">\n<th align=\"left\">C#</th>\n</tr>\n</thead>\n<tbody>\n<tr class=\"odd\">\n// Speech events may originate from a thread other than the UI thread.\n// Keep track of the UI thread dispatcher so that we can update the\n// UI in a thread-safe manner.\nprivate CoreDispatcher dispatcher;\n```\n\nTo track what the user is saying, you need to handle recognition events raised by the speech recognizer. These events provide the recognition results for chunks of user utterances.\n\nHere, we use a [**StringBuilder**](https://msdn.microsoft.com/library/system.text.stringbuilder.aspx) object to hold all the recognition results obtained during the session. New results are appended to the **StringBuilder** as they are processed.\n\n```CSharp\nprivate StringBuilder dictatedTextBuilder;</code></pre></td>\n</tr>\n</tbody>\n</table>\n```\n\n## <span id=\"Initialization\"></span><span id=\"initialization\"></span><span id=\"INITIALIZATION\"></span>Initialization\n\n\nDuring the initialization of continuous speech recognition, you must:\n\n-   Fetch the dispatcher for the UI thread if you update the UI of your app in the continuous recognition event handlers.\n-   Initialize the speech recognizer.\n-   Compile the built-in dictation grammar.\n    **Note**   Speech recognition requires at least one constraint to define a recognizable vocabulary. If no constraint is specified, a predefined dictation grammar is used. See [Speech recognition](speech-recognition.md).\n\n     \n\n-   Set up the event listeners for recognition events.\n\nWe initialize speech recognition in the [**OnNavigatedTo**](https://msdn.microsoft.com/library/windows/apps/br227508) page event.\n\n1.  Because events raised by the speech recognizer occur on a background thread, create a reference to the dispatcher for updates to the UI thread. [**OnNavigatedTo**](https://msdn.microsoft.com/library/windows/apps/br227508) is always invoked on the UI thread.\n\n    <span codelanguage=\"CSharp\"></span>\n```    CSharp\n    <colgroup>\n    <col width=\"100%\" />\n    </colgroup>\n    <thead>\n    <tr class=\"header\">\n    <th align=\"left\">C#</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr class=\"odd\">\nthis.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;</code></pre></td>\n    </tr>\n    </tbody>\n    </table>\n```\n\n2.  We then initialize the [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226) instance.\n\n    <span codelanguage=\"CSharp\"></span>\n```    CSharp\n    <colgroup>\n    <col width=\"100%\" />\n    </colgroup>\n    <thead>\n    <tr class=\"header\">\n    <th align=\"left\">C#</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr class=\"odd\">\nthis.speechRecognizer = new SpeechRecognizer();</code></pre></td>\n    </tr>\n    </tbody>\n    </table>\n```\n\n3.  We then add and compile the grammar that defines all of the words and phrases that can be recognized by the [**SpeechRecognizer**](https://msdn.microsoft.com/library/windows/apps/dn653226).\n\n    If you don't specify a grammar explicitly, a predefined dictation grammar is used by default. Typically, the default grammar is best for general dictation.\n\n    Here, we call [**CompileConstraintsAsync**](https://msdn.microsoft.com/library/windows/apps/dn653240) immediately without adding a grammar.\n\n    <span codelanguage=\"CSharp\"></span>\n```    CSharp\n    <colgroup>\n    <col width=\"100%\" />\n    </colgroup>\n    <thead>\n    <tr class=\"header\">\n    <th align=\"left\">C#</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr class=\"odd\">\nSpeechRecognitionCompilationResult result =\n      await speechRecognizer.CompileConstraintsAsync();\n```\n\n## <span id=\"Handle_recognition_events\"></span><span id=\"handle_recognition_events\"></span><span id=\"HANDLE_RECOGNITION_EVENTS\"></span>Handle recognition events\n\n\nHere, you can capture a single, brief utterance or phrase by calling [**RecognizeAsync**](https://msdn.microsoft.com/library/windows/apps/dn653244) or [**RecognizeWithUIAsync**](https://msdn.microsoft.com/library/windows/apps/dn653245). However, we want to capture a longer, continuous recognition session.\n\nTo do this, we specify event listeners to run in the background as the user speaks and define handlers to build the dictation string.\n\nWe then use the [**ContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913913) property of our recognizer to obtain a [**SpeechContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913896) object that provides methods and events for managing a continuous recognition session.\n\nTwo events in particular are critical:\n\n-   [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900), which occurs when the recognizer has generated some results.\n-   [**Completed**](https://msdn.microsoft.com/library/windows/apps/dn913899), which occurs when the continuous recognition session has ended.\n\nThe [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event is raised as the user speaks. The recognizer continuously listens to the user and periodically raises an event that passes a chunk of speech input. You must examine the speech input, using the [**Result**](https://msdn.microsoft.com/library/windows/apps/dn913895) property of the event argument, and take appropriate action in the event handler, such as appending the text to a StringBuilder object.\n\nAs an instance of [**SpeechRecognitionResult**](https://msdn.microsoft.com/library/windows/apps/dn631432), the [**Result**](https://msdn.microsoft.com/library/windows/apps/dn913895) property is useful for determining whether you want to accept the speech input:\n\n-   [**Status**](https://msdn.microsoft.com/library/windows/apps/dn631440) indicates whether the recognition was successful. Recognition can fail for a variety of reasons.\n-   [**Confidence**](https://msdn.microsoft.com/library/windows/apps/dn631434) indicates the relative confidence that the recognizer understood the correct words.\n\n1.  Here, we register the handler for the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) continuous recognition event in the [**OnNavigatedTo**](https://msdn.microsoft.com/library/windows/apps/br227508) page event.\n\n```    CSharp\nspeechRecognizer.ContinuousRecognitionSession.ResultGenerated +=\n        ContinuousRecognitionSession_ResultGenerated;\n```\n\n2.  We then check the [**Confidence**](https://msdn.microsoft.com/library/windows/apps/dn631434) property. If the value of Confidence is [**Medium**](https://msdn.microsoft.com/library/windows/apps/dn631409) or better, we append the text to the StringBuilder. We also update the UI as we collect input.\n\n    **Note**  the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event is raised on a background thread that cannot update the UI directly. If a handler needs to update the UI (as the \\[Speech and TTS sample\\] does), you must dispatch the updates to the UI thread through the [**RunAsync**](https://msdn.microsoft.com/library/windows/apps/hh750317) method of the dispatcher.\n\n     \n\n```    CSharp\nprivate async void ContinuousRecognitionSession_ResultGenerated(\n      SpeechContinuousRecognitionSession sender,\n      SpeechContinuousRecognitionResultGeneratedEventArgs args)\n      {\n\n        if (args.Result.Confidence == SpeechRecognitionConfidence.Medium ||\n          args.Result.Confidence == SpeechRecognitionConfidence.High)\n          {\n            dictatedTextBuilder.Append(args.Result.Text + \" \");\n\n            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>\n            {\n              dictationTextBox.Text = dictatedTextBuilder.ToString();\n              btnClearText.IsEnabled = true;\n            });\n          }\n        else\n        {\n          await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>\n            {\n              dictationTextBox.Text = dictatedTextBuilder.ToString();\n            });\n        }\n      }\n```\n\n3.  We then handle the [**Completed**](https://msdn.microsoft.com/library/windows/apps/dn913899) event, which indicates the end of continuous dictation.\n\n    The session ends when you call the [**StopAsync**](https://msdn.microsoft.com/library/windows/apps/dn913908) or [**CancelAsync**](https://msdn.microsoft.com/library/windows/apps/dn913898) methods (described the next section). The session can also end when an error occurs, or when the user has stopped speaking. Check the [**Status**](https://msdn.microsoft.com/library/windows/apps/dn631440) property of the event argument to determine why the session ended ([**SpeechRecognitionResultStatus**](https://msdn.microsoft.com/library/windows/apps/dn631433)).\n\n    Here, we register the handler for the [**Completed**](https://msdn.microsoft.com/library/windows/apps/dn913899) continuous recognition event in the [**OnNavigatedTo**](https://msdn.microsoft.com/library/windows/apps/br227508) page event.\n\n```    CSharp\nspeechRecognizer.ContinuousRecognitionSession.Completed +=\n      ContinuousRecognitionSession_Completed;\n```\n\n4.  The event handler checks the Status property to determine whether the recognition was successful. It also handles the case where the user has stopped speaking. Often, a [**TimeoutExceeded**](https://msdn.microsoft.com/library/windows/apps/dn631433) is considered successful recognition as it means the user has finished speaking. You should handle this case in your code for a good experience.\n\n    **Note**  the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event is raised on a background thread that cannot update the UI directly. If a handler needs to update the UI (as the \\[Speech and TTS sample\\] does), you must dispatch the updates to the UI thread through the [**RunAsync**](https://msdn.microsoft.com/library/windows/apps/hh750317) method of the dispatcher.\n\n     \n\n```    CSharp\nprivate async void ContinuousRecognitionSession_Completed(\n      SpeechContinuousRecognitionSession sender,\n      SpeechContinuousRecognitionCompletedEventArgs args)\n      {\n        if (args.Status != SpeechRecognitionResultStatus.Success)\n        {\n          if (args.Status == SpeechRecognitionResultStatus.TimeoutExceeded)\n          {\n            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>\n            {\n              rootPage.NotifyUser(\n                \"Automatic Time Out of Dictation\",\n                NotifyType.StatusMessage);\n\n              DictationButtonText.Text = \" Continuous Recognition\";\n              dictationTextBox.Text = dictatedTextBuilder.ToString();\n            });\n          }\n          else\n          {\n            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>\n            {\n              rootPage.NotifyUser(\n                \"Continuous Recognition Completed: \" + args.Status.ToString(),\n                NotifyType.StatusMessage);\n\n              DictationButtonText.Text = \" Continuous Recognition\";\n            });\n          }\n        }\n      }\n```\n\n## <span id=\"Provide_ongoing_recognition_feedback\"></span><span id=\"provide_ongoing_recognition_feedback\"></span><span id=\"PROVIDE_ONGOING_RECOGNITION_FEEDBACK\"></span>Provide ongoing recognition feedback\n\n\nWhen people converse, they often rely on context to fully understand what is being said. Similarly, the speech recognizer often needs context to provide high-confidence recognition results. For example, by themselves, the words \"weight\" and \"wait\" are indistinguishable until more context can be gleaned from surrounding words. Until the recognizer has some confidence that a word, or words, have been recognized correctly, it will not raise the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event.\n\nThis can result in a less than ideal experience for the user as they continue speaking and no results are provided until the recognizer has high enough confidence to raise the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event.\n\nHandle the [**HypothesisGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913914) event to improve this apparent lack of responsiveness. This event is raised whenever the recognizer generates a new set of potential matches for the word being processed. The event argument provides an [**Hypothesis**](https://msdn.microsoft.com/library/windows/apps/dn913911) property that contains the current matches. Show these to the user as they continue speaking and reassure them that processing is still active. Once confidence is high and a recognition result has been determined, replace the interim **Hypothesis** results with the final [**Result**](https://msdn.microsoft.com/library/windows/apps/dn913895) provided in the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event.\n\nHere, we append the hypothetical text and an ellipsis (\"…\") to the current value of the output [**TextBox**](https://msdn.microsoft.com/library/windows/apps/br209683). The contents of the text box are updated as new hypotheses are generated and until the final results are obtained from the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event.\n\n```CSharp\nprivate async void SpeechRecognizer_HypothesisGenerated(\n  SpeechRecognizer sender,\n  SpeechRecognitionHypothesisGeneratedEventArgs args)\n  {\n\n    string hypothesis = args.Hypothesis.Text;\n    string textboxContent = dictatedTextBuilder.ToString() + \" \" + hypothesis + \" ...\";\n\n    await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>\n    {\n      dictationTextBox.Text = textboxContent;\n      btnClearText.IsEnabled = true;\n    });\n  }\n```\n\n## <span id=\"Start_and_stop_recognition\"></span><span id=\"start_and_stop_recognition\"></span><span id=\"START_AND_STOP_RECOGNITION\"></span>Start and stop recognition\n\n\nBefore starting a recognition session, check the value of the speech recognizer [**State**](https://msdn.microsoft.com/library/windows/apps/dn913915) property. The speech recognizer must be in an [**Idle**](https://msdn.microsoft.com/library/windows/apps/dn653227) state.\n\nAfter checking the state of the speech recognizer, we start the session by calling the [**StartAsync**](https://msdn.microsoft.com/library/windows/apps/dn913901) method of the speech recognizer's [**ContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913913) property.\n\n```CSharp\nif (speechRecognizer.State == SpeechRecognizerState.Idle)\n{\n  await speechRecognizer.ContinuousRecognitionSession.StartAsync();\n}\n```\n\nRecognition can be stopped in two ways:\n\n-   [**StopAsync**](https://msdn.microsoft.com/library/windows/apps/dn913908) lets any pending recognition events complete ([**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) continues to be raised until all pending recognition operations are complete).\n-   [**CancelAsync**](https://msdn.microsoft.com/library/windows/apps/dn913898) terminates the recognition session immediately and discards any pending results.\n\nAfter checking the state of the speech recognizer, we stop the session by calling the [**CancelAsync**](https://msdn.microsoft.com/library/windows/apps/dn913898) method of the speech recognizer's [**ContinuousRecognitionSession**](https://msdn.microsoft.com/library/windows/apps/dn913913) property.\n\n```CSharp\nif (speechRecognizer.State != SpeechRecognizerState.Idle)\n{\n  await speechRecognizer.ContinuousRecognitionSession.CancelAsync();\n}\n```\n\n**Note**  \nA [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event can occur after a call to [**CancelAsync**](https://msdn.microsoft.com/library/windows/apps/dn913898).\n\nBecause of multithreading, a [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) event might still remain on the stack when [**CancelAsync**](https://msdn.microsoft.com/library/windows/apps/dn913898) is called. If so, the **ResultGenerated** event still fires.\n\nIf you set any private fields when canceling the recognition session, always confirm their values in the [**ResultGenerated**](https://msdn.microsoft.com/library/windows/apps/dn913900) handler. For example, don't assume a field is initialized in your handler if you set them to null when you cancel the session.\n\n \n\n## <span id=\"related_topics\"></span>Related articles\n\n\n* [Speech interactions](speech-interactions.md)\n\n**Samples**\n* [Speech recognition and speech synthesis sample](http://go.microsoft.com/fwlink/p/?LinkID=619897)\n \n\n \n\n\n\n\n"
+}
