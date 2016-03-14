@@ -1,0 +1,1020 @@
+{
+  "nodes": [
+    {
+      "content": "ms.ContentId: d0a07897-5fd2-41a5-856d-dc8b499c6783",
+      "pos": [
+        0,
+        50
+      ]
+    },
+    {
+      "content": "title: Manage Windows Server Containers with PowerShell",
+      "pos": [
+        51,
+        106
+      ]
+    },
+    {
+      "content": "Quick Start: Windows Server Containers and PowerShell",
+      "pos": [
+        110,
+        163
+      ]
+    },
+    {
+      "content": "12-Nov update.",
+      "pos": [
+        165,
+        179
+      ]
+    },
+    {
+      "content": "This article will walk through the fundamentals of managing Windows Server Containers with PowerShell.",
+      "pos": [
+        180,
+        282
+      ]
+    },
+    {
+      "content": "Items covered will include creating Windows Server Containers and Windows Server Container Images, removing Windows Server Containers and Container Images and finally deploying an application into a Windows Server Container.",
+      "pos": [
+        283,
+        507
+      ]
+    },
+    {
+      "content": "The lessons learned in this walkthrough should enable you to begin exploring deployment and management of Windows Server Containers using PowerShell.",
+      "pos": [
+        508,
+        657
+      ]
+    },
+    {
+      "content": "Have questions?",
+      "pos": [
+        659,
+        674
+      ]
+    },
+    {
+      "content": "Ask them on the <bpt id=\"p1\">[</bpt>Windows Containers forum<ept id=\"p1\">](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)</ept>.",
+      "pos": [
+        675,
+        795
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note:<ept id=\"p1\">**</ept> Windows Server Containers created with PowerShell can not currently be managed with Docker and visa versa.",
+      "pos": [
+        799,
+        915
+      ]
+    },
+    {
+      "content": "To create containers with Docker instead, see <bpt id=\"p1\">[</bpt>Quick Start: Windows Server Containers and Docker<ept id=\"p1\">](./manage_docker.md)</ept>.",
+      "pos": [
+        916,
+        1034
+      ]
+    },
+    {
+      "content": "If you want to know more, <bpt id=\"p1\">[</bpt>read the FAQ<ept id=\"p1\">](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement)</ept>.",
+      "pos": [
+        1048,
+        1184
+      ]
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1189,
+        1202
+      ]
+    },
+    {
+      "content": "In order to complete this walkthrough the following items need to be in place.",
+      "pos": [
+        1203,
+        1281
+      ]
+    },
+    {
+      "content": "Windows Server 2016 TP3 or later configured with the Windows Server Containers Feature.",
+      "pos": [
+        1285,
+        1372
+      ]
+    },
+    {
+      "content": "If you have completed the setup guide, this is the VM that was created in Azure or Hyper-V.",
+      "pos": [
+        1373,
+        1464
+      ]
+    },
+    {
+      "content": "This system must be connected to a network and able to access the internet.",
+      "pos": [
+        1467,
+        1542
+      ]
+    },
+    {
+      "pos": [
+        1544,
+        1717
+      ],
+      "content": "If you need to configure the container feature, see the following guides: <bpt id=\"p1\">[</bpt>Container Setup in Azure<ept id=\"p1\">](./azure_setup.md)</ept> or <bpt id=\"p2\">[</bpt>Container Setup in Hyper-V<ept id=\"p2\">](./container_setup.md)</ept>."
+    },
+    {
+      "content": "Basic Container Management with PowerShell",
+      "pos": [
+        1723,
+        1765
+      ]
+    },
+    {
+      "content": "This first example will walk through the basics of creating and removing Windows Server Containers and Windows Server Container Images with PowerShell.",
+      "pos": [
+        1767,
+        1918
+      ]
+    },
+    {
+      "content": "To begin the walk through, log into your Windows Server Container Host System, you will see a Windows command prompt.",
+      "pos": [
+        1920,
+        2037
+      ]
+    },
+    {
+      "content": "Start a PowerShell session by typing <ph id=\"ph1\">`powershell`</ph>.",
+      "pos": [
+        2059,
+        2109
+      ]
+    },
+    {
+      "content": "You will know that you are in a PowerShell session when the prompt changes from <ph id=\"ph1\">`C:\\directory&gt;`</ph> to <ph id=\"ph2\">`PS C:\\directory&gt;`</ph>.",
+      "pos": [
+        2110,
+        2228
+      ]
+    },
+    {
+      "pos": [
+        2346,
+        2418
+      ],
+      "content": "Use <ph id=\"ph1\">`Get-Command`</ph> to see the available commands in the containers module"
+    },
+    {
+      "pos": [
+        4509,
+        4625
+      ],
+      "content": "Next make sure that your system has a valid IP Address using <ph id=\"ph1\">`ipconfig`</ph> and take note of this address for later use."
+    },
+    {
+      "pos": [
+        4971,
+        5107
+      ],
+      "content": "If you are working from an Azure VM instead of using <ph id=\"ph1\">`ipconfig`</ph> you will need to get the public IP address of the Azure Virtual Machine."
+    },
+    {
+      "content": "Step 1 - Create a New Container",
+      "pos": [
+        5139,
+        5170
+      ]
+    },
+    {
+      "content": "Before creating a Windows Server Container you will need the name of a Container Image and the name of a virtual switch that will be attached to the new container.",
+      "pos": [
+        5172,
+        5335
+      ]
+    },
+    {
+      "content": "Use the <ph id=\"ph1\">`Get-ContainerImage`</ph> command to return a list of container images loaded on the host.",
+      "pos": [
+        5337,
+        5430
+      ]
+    },
+    {
+      "content": "Take note of the image name that you will use to create the container.",
+      "pos": [
+        5431,
+        5501
+      ]
+    },
+    {
+      "content": "Use the <ph id=\"ph1\">`Get-VMSwitch`</ph> command to return a list of switches available on the host.",
+      "pos": [
+        5699,
+        5781
+      ]
+    },
+    {
+      "content": "Take note of the switch name that will be used with the container.",
+      "pos": [
+        5782,
+        5848
+      ]
+    },
+    {
+      "content": "Run the following command to create a container.",
+      "pos": [
+        6017,
+        6065
+      ]
+    },
+    {
+      "content": "When running <ph id=\"ph1\">`New-Container`</ph> you will name the container, specify the container image, and select the network switch to use with the container.",
+      "pos": [
+        6066,
+        6209
+      ]
+    },
+    {
+      "content": "Notice in this example that the output is placed in a variable $container.",
+      "pos": [
+        6210,
+        6284
+      ]
+    },
+    {
+      "content": "This will be helpful later in this exercise.",
+      "pos": [
+        6285,
+        6329
+      ]
+    },
+    {
+      "content": "To see a list of containers on the host and verify that the container was created, use the <ph id=\"ph1\">`Get-Container`</ph> command.",
+      "pos": [
+        6466,
+        6581
+      ]
+    },
+    {
+      "content": "Notice that a container has been created with the name of MyContainer, however it has not been started.",
+      "pos": [
+        6582,
+        6685
+      ]
+    },
+    {
+      "pos": [
+        6853,
+        6935
+      ],
+      "content": "To start the container, use <ph id=\"ph1\">`Start-Container`</ph> proivding the name of the container."
+    },
+    {
+      "content": "You can interact with containers using PowerShell remoting commands such as <ph id=\"ph1\">`Invoke-Command`</ph>, or <ph id=\"ph2\">`Enter-PSSession`</ph>.",
+      "pos": [
+        6993,
+        7108
+      ]
+    },
+    {
+      "content": "The example below creates a remote PowerShell session into the container using the <ph id=\"ph1\">`Enter-PSSession`</ph> command.",
+      "pos": [
+        7109,
+        7218
+      ]
+    },
+    {
+      "content": "This command needs the container id in order to create the remote session.",
+      "pos": [
+        7219,
+        7293
+      ]
+    },
+    {
+      "content": "The container id was stored in the <ph id=\"ph1\">`$container`</ph> variable when the container was created.",
+      "pos": [
+        7294,
+        7382
+      ]
+    },
+    {
+      "pos": [
+        7385,
+        7541
+      ],
+      "content": "Notice that once the remote session has been created the command prompt will change to include the first 11 characters of the container id <ph id=\"ph1\">`[2446380e-629]`</ph>."
+    },
+    {
+      "content": "A container can be managed very much like a physical or virtual machine.",
+      "pos": [
+        7676,
+        7748
+      ]
+    },
+    {
+      "content": "Command such as <ph id=\"ph1\">`ipconfig`</ph> to return the IP address of the container, <ph id=\"ph2\">`mkdir`</ph> to create a directory in the container and PowerShell commands like <ph id=\"ph3\">`Get-ChildItem`</ph> all work.",
+      "pos": [
+        7749,
+        7920
+      ]
+    },
+    {
+      "content": "Go ahead and make a change to the container such as creating a file or folder.",
+      "pos": [
+        7921,
+        7999
+      ]
+    },
+    {
+      "content": "For example, the following command will create a file which contains network configuration data about the container.",
+      "pos": [
+        8000,
+        8116
+      ]
+    },
+    {
+      "content": "You can read the contents of the file to ensure the command completed successfully.",
+      "pos": [
+        8165,
+        8248
+      ]
+    },
+    {
+      "content": "Notice that the IP address contained in the text file matches that of the container.",
+      "pos": [
+        8249,
+        8333
+      ]
+    },
+    {
+      "content": "Now that the container has been modified, exit the remote PowerShell session.",
+      "pos": [
+        8739,
+        8816
+      ]
+    },
+    {
+      "content": "Stop the container by providing the container name to the <ph id=\"ph1\">`Stop-Container`</ph> command.",
+      "pos": [
+        8843,
+        8926
+      ]
+    },
+    {
+      "content": "When this command has completed, you will be back in control of the container host.",
+      "pos": [
+        8927,
+        9010
+      ]
+    },
+    {
+      "content": "Step 2 - Create a New Container Image",
+      "pos": [
+        9071,
+        9108
+      ]
+    },
+    {
+      "content": "An image can now be made from this container.",
+      "pos": [
+        9110,
+        9155
+      ]
+    },
+    {
+      "content": "This image will behave like a snapshot of the container and can be re-deployed many times.",
+      "pos": [
+        9156,
+        9246
+      ]
+    },
+    {
+      "content": "To create a new image named 'newimage' use the <ph id=\"ph1\">`New-ContainerImage`</ph> command.",
+      "pos": [
+        9248,
+        9324
+      ]
+    },
+    {
+      "content": "When using this command you will specify the container to capture, a name for the new image, and additional metadata as seen below.",
+      "pos": [
+        9325,
+        9456
+      ]
+    },
+    {
+      "content": "Use <ph id=\"ph1\">`Get-ContainerImage`</ph> to return a list of Container Images.",
+      "pos": [
+        9580,
+        9642
+      ]
+    },
+    {
+      "content": "Notice that a new image with the name 'newimage' has been created.",
+      "pos": [
+        9643,
+        9709
+      ]
+    },
+    {
+      "content": "Step 3 - Create New Container From Image",
+      "pos": [
+        9962,
+        10002
+      ]
+    },
+    {
+      "content": "Now that you have created a customized container image, go ahead and deploy a new container from this image.",
+      "pos": [
+        10004,
+        10112
+      ]
+    },
+    {
+      "content": "Create a container named 'newcontainer' from the container image named 'newimage', output the result to a variable named '$newcontainer'.",
+      "pos": [
+        10114,
+        10251
+      ]
+    },
+    {
+      "content": "Start the new container.",
+      "pos": [
+        10382,
+        10406
+      ]
+    },
+    {
+      "content": "Create a remote PowerShell session with the container.",
+      "pos": [
+        10457,
+        10511
+      ]
+    },
+    {
+      "content": "Finally notice that this new container contains the ipconfig.txt file created earlier in this exercise.",
+      "pos": [
+        10607,
+        10710
+      ]
+    },
+    {
+      "content": "Once you are done working with this container, exit the remote PowerShell session.",
+      "pos": [
+        11117,
+        11199
+      ]
+    },
+    {
+      "content": "This exercise has shown that an image taken from a modified container will include all modifications.",
+      "pos": [
+        11226,
+        11327
+      ]
+    },
+    {
+      "content": "While the example here was a simple file modification, the same would apply if you were to install software into the container such as a web server.",
+      "pos": [
+        11328,
+        11476
+      ]
+    },
+    {
+      "content": "Using these methods, custom images can be created that will deploy application ready containers.",
+      "pos": [
+        11477,
+        11573
+      ]
+    },
+    {
+      "content": "Step 4 - Remove Containers and Container Images",
+      "pos": [
+        11579,
+        11626
+      ]
+    },
+    {
+      "content": "To stop all running containers run the command below.",
+      "pos": [
+        11628,
+        11681
+      ]
+    },
+    {
+      "content": "If any containers are in a stopped state when you run this command, you receive a warning, which is ok.",
+      "pos": [
+        11682,
+        11785
+      ]
+    },
+    {
+      "content": "Run the following to remove all containers.",
+      "pos": [
+        11837,
+        11880
+      ]
+    },
+    {
+      "content": "To remove the container image named 'newimage', run the following.",
+      "pos": [
+        11941,
+        12007
+      ]
+    },
+    {
+      "content": "Host a Web Server in a Container",
+      "pos": [
+        12097,
+        12129
+      ]
+    },
+    {
+      "content": "This next example will demonstrate a more practical use case for Windows Server Containers.",
+      "pos": [
+        12131,
+        12222
+      ]
+    },
+    {
+      "content": "The steps included in this exercise will guide you through creating a web server container image that can be used for deploying web applications hosted inside of a Windows Server Container.",
+      "pos": [
+        12223,
+        12412
+      ]
+    },
+    {
+      "content": "Step 1 – Create Container from the Windows Server Core OS Image",
+      "pos": [
+        12418,
+        12481
+      ]
+    },
+    {
+      "content": "To create a web server container image, you first need to deploy and start a container from the Windows Server Core OS image.",
+      "pos": [
+        12483,
+        12608
+      ]
+    },
+    {
+      "content": "Start the container.",
+      "pos": [
+        12738,
+        12758
+      ]
+    },
+    {
+      "content": "When the container is up, create a remote PowerShell session with the container.",
+      "pos": [
+        12806,
+        12886
+      ]
+    },
+    {
+      "content": "Step 2 - Install Web Server Software",
+      "pos": [
+        12983,
+        13019
+      ]
+    },
+    {
+      "content": "The next step is to install the web server software.",
+      "pos": [
+        13021,
+        13073
+      ]
+    },
+    {
+      "content": "This example will use nginx for Windows.",
+      "pos": [
+        13074,
+        13114
+      ]
+    },
+    {
+      "content": "Use the following commands to automatically download and extract the nginx software to c:\\nginx-1.9.3.",
+      "pos": [
+        13115,
+        13217
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept> that this step will require the container host to be connected to the internet.",
+      "pos": [
+        13218,
+        13306
+      ]
+    },
+    {
+      "content": "If this step produces a connectivity or name resolution error check the network configuration of the container host.",
+      "pos": [
+        13307,
+        13423
+      ]
+    },
+    {
+      "content": "Download the nginx software.",
+      "pos": [
+        13425,
+        13453
+      ]
+    },
+    {
+      "content": "Extract the nginx software.",
+      "pos": [
+        13558,
+        13585
+      ]
+    },
+    {
+      "content": "This is all that needs to be completed for the nginx software installation.",
+      "pos": [
+        13673,
+        13748
+      ]
+    },
+    {
+      "content": "Exit the remote PowerShell session.",
+      "pos": [
+        13750,
+        13785
+      ]
+    },
+    {
+      "content": "Stop the container using the following command.",
+      "pos": [
+        13811,
+        13858
+      ]
+    },
+    {
+      "content": "Step 3 - Create Image from Web Server Container",
+      "pos": [
+        13909,
+        13956
+      ]
+    },
+    {
+      "content": "With the container modified to include the nginx web server software, you can now create an image from this container.",
+      "pos": [
+        13958,
+        14076
+      ]
+    },
+    {
+      "content": "To do so, run the following command:",
+      "pos": [
+        14077,
+        14113
+      ]
+    },
+    {
+      "pos": [
+        14240,
+        14337
+      ],
+      "content": "When completed, use the <ph id=\"ph1\">`Get-ContainerImage`</ph> command to validate that the image has been created."
+    },
+    {
+      "content": "Step 4 - Deploy Web Server Ready Container",
+      "pos": [
+        14590,
+        14632
+      ]
+    },
+    {
+      "pos": [
+        14634,
+        14753
+      ],
+      "content": "To deploy a Windows Server Container based off of the 'nginxwindows' image, use the <ph id=\"ph1\">`New-Container`</ph> PowerShell command."
+    },
+    {
+      "content": "Start the container.",
+      "pos": [
+        14890,
+        14910
+      ]
+    },
+    {
+      "content": "Create a remote PowerShell session with the new container.",
+      "pos": [
+        14967,
+        15025
+      ]
+    },
+    {
+      "content": "Once working inside the container, the nginx web server can be started and web content staged.",
+      "pos": [
+        15127,
+        15221
+      ]
+    },
+    {
+      "content": "To start the nginx web server, change to the nginx installation directory.",
+      "pos": [
+        15222,
+        15296
+      ]
+    },
+    {
+      "content": "Start the nginx web server.",
+      "pos": [
+        15336,
+        15363
+      ]
+    },
+    {
+      "content": "And exit this PS-Session.",
+      "pos": [
+        15396,
+        15421
+      ]
+    },
+    {
+      "content": "The web server will keep running.",
+      "pos": [
+        15423,
+        15456
+      ]
+    },
+    {
+      "content": "Step 5 - Configure Container Networking",
+      "pos": [
+        15486,
+        15525
+      ]
+    },
+    {
+      "content": "Depending on the configuration of the container host and network, a container will either receive an IP address from a DHCP server or the container host itself using network address translation (NAT).",
+      "pos": [
+        15527,
+        15727
+      ]
+    },
+    {
+      "content": "This guided walk through is configured to use NAT.",
+      "pos": [
+        15728,
+        15778
+      ]
+    },
+    {
+      "content": "In this configuration a port from the container is mapped to a port on the container host.",
+      "pos": [
+        15779,
+        15869
+      ]
+    },
+    {
+      "content": "The application hosted in the container is then accessed through the IP address / name of the container host.",
+      "pos": [
+        15870,
+        15979
+      ]
+    },
+    {
+      "content": "For example if port 80 from the container was mapped to port 55534 on the container host, a typical http request to the application would look like this http://contianerhost:55534.",
+      "pos": [
+        15980,
+        16160
+      ]
+    },
+    {
+      "content": "This allows a container host to run many containers and allow for the applications in these containers to respond to requests using the same port.",
+      "pos": [
+        16161,
+        16307
+      ]
+    },
+    {
+      "content": "For this lab we need to create this port mapping.",
+      "pos": [
+        16310,
+        16359
+      ]
+    },
+    {
+      "content": "In order to do so we will need to know the IP address of the container and the internal (application) and external (container host) ports that will be configured.",
+      "pos": [
+        16360,
+        16522
+      ]
+    },
+    {
+      "content": "For this example let’s keep it simple and map port 80 from the container to port 80 of the host.",
+      "pos": [
+        16523,
+        16619
+      ]
+    },
+    {
+      "content": "Using the <ph id=\"ph1\">`Add-NetNatStaticMapping`</ph> command, the <ph id=\"ph2\">`–InternalIPAddress`</ph> will be the IP address of the container which for this walkthrough should be ‘172.16.0.2’.",
+      "pos": [
+        16620,
+        16780
+      ]
+    },
+    {
+      "content": "When the port mapping has been created you will also need to configure an inbound firewall rule for the configured port.",
+      "pos": [
+        16954,
+        17074
+      ]
+    },
+    {
+      "content": "To do so for port 80 run the following command.",
+      "pos": [
+        17075,
+        17122
+      ]
+    },
+    {
+      "content": "This script can be copied into the VM.",
+      "pos": [
+        17123,
+        17161
+      ]
+    },
+    {
+      "content": "Next if you are working from Azure and have not already created a Virtual Machine endpoint you will need to create one now.",
+      "pos": [
+        17370,
+        17493
+      ]
+    },
+    {
+      "content": "For more information on Azure VM Endpoints see this article: <bpt id=\"p1\">[</bpt>Set up Azure VM Endpoints<ept id=\"p1\">]( https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/)</ept>.",
+      "pos": [
+        17494,
+        17677
+      ]
+    },
+    {
+      "content": "Step 6 – Access the Container Hosted Website",
+      "pos": [
+        17683,
+        17727
+      ]
+    },
+    {
+      "content": "With the web server container created, you can now checkout the application hosted in the container.",
+      "pos": [
+        17728,
+        17828
+      ]
+    },
+    {
+      "content": "To do so, open up a browser on different machine and enter <ph id=\"ph1\">`http://containerhost-ipaddress`</ph>.",
+      "pos": [
+        17829,
+        17921
+      ]
+    },
+    {
+      "content": "Notice here that you will be browsing to the IP Address of the Container Host and not the container itself.",
+      "pos": [
+        17922,
+        18029
+      ]
+    },
+    {
+      "content": "If you are working from an Azure Virtual Machine this will be the public IP address or Cloud Service name.",
+      "pos": [
+        18030,
+        18136
+      ]
+    },
+    {
+      "content": "If everything has been correctly configured, you will see the nginx welcome page.",
+      "pos": [
+        18139,
+        18220
+      ]
+    },
+    {
+      "content": "At this point, feel free to update the website.",
+      "pos": [
+        18244,
+        18291
+      ]
+    },
+    {
+      "content": "Copy in your own sample website, or use a simple ‘Hello World’ sample site that has been created for this demo.",
+      "pos": [
+        18292,
+        18403
+      ]
+    },
+    {
+      "content": "To use the sample you will first need to re-establish a remote PS session with the container.",
+      "pos": [
+        18404,
+        18497
+      ]
+    },
+    {
+      "content": "You will first need to re-create the remote PS session with the container.",
+      "pos": [
+        18499,
+        18573
+      ]
+    },
+    {
+      "content": "Then run the following command to download and replace the index.html file.",
+      "pos": [
+        18674,
+        18749
+      ]
+    },
+    {
+      "pos": [
+        18985,
+        19071
+      ],
+      "content": "After the website has been updated, navigate back to <ph id=\"ph1\">`http://containerhost-ipaddress`</ph>."
+    },
+    {
+      "content": "Video Walkthrough",
+      "pos": [
+        19098,
+        19115
+      ]
+    },
+    {
+      "content": "Next Steps",
+      "pos": [
+        19353,
+        19363
+      ]
+    },
+    {
+      "content": "Now that you have containers set up and an introduction to the tools, go build your own containerized apps.",
+      "pos": [
+        19364,
+        19471
+      ]
+    },
+    {
+      "pos": [
+        19473,
+        19557
+      ],
+      "content": "Here is a more complete <bpt id=\"p1\">[</bpt>PowerShell reference<ept id=\"p1\">](../reference/powershell_overview.md)</ept>."
+    },
+    {
+      "content": "Remember, this is a <bpt id=\"p1\">**</bpt>preview<ept id=\"p1\">**</ept> there are bugs and we have a lot of work in progress.",
+      "pos": [
+        19559,
+        19644
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>This page<ept id=\"p1\">](../about/work_in_progress.md)</ept> contains many of our known issues.",
+      "pos": [
+        19646,
+        19722
+      ]
+    },
+    {
+      "pos": [
+        19724,
+        19850
+      ],
+      "content": "We are also monitoring the <bpt id=\"p1\">[</bpt>forums<ept id=\"p1\">](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)</ept> very closely."
+    },
+    {
+      "pos": [
+        19852,
+        20000
+      ],
+      "content": "There are also pre-made samples on <bpt id=\"p1\">[</bpt>GitHub<ept id=\"p1\">](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples)</ept>."
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>Back to Container Home<ept id=\"p1\">](../containers_welcome.md)</ept><ph id=\"ph1\"> </ph>",
+      "pos": [
+        20038,
+        20089
+      ]
+    },
+    {
+      "content": "Known Issues for Current Release",
+      "pos": [
+        20093,
+        20125
+      ]
+    },
+    {
+      "content": "Test Test Test",
+      "pos": [
+        20158,
+        20172
+      ]
+    }
+  ],
+  "content": "ms.ContentId: d0a07897-5fd2-41a5-856d-dc8b499c6783\ntitle: Manage Windows Server Containers with PowerShell\n\n# Quick Start: Windows Server Containers and PowerShell\n\n12-Nov update. This article will walk through the fundamentals of managing Windows Server Containers with PowerShell. Items covered will include creating Windows Server Containers and Windows Server Container Images, removing Windows Server Containers and Container Images and finally deploying an application into a Windows Server Container. The lessons learned in this walkthrough should enable you to begin exploring deployment and management of Windows Server Containers using PowerShell.\n\nHave questions? Ask them on the [Windows Containers forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).\n\n> **Note:** Windows Server Containers created with PowerShell can not currently be managed with Docker and visa versa. To create containers with Docker instead, see [Quick Start: Windows Server Containers and Docker](./manage_docker.md). <br /><br /> If you want to know more, [read the FAQ](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement).\n\n## Prerequisites\nIn order to complete this walkthrough the following items need to be in place.\n\n- Windows Server 2016 TP3 or later configured with the Windows Server Containers Feature. If you have completed the setup guide, this is the VM that was created in Azure or Hyper-V.\n- This system must be connected to a network and able to access the internet.\n\nIf you need to configure the container feature, see the following guides: [Container Setup in Azure](./azure_setup.md) or [Container Setup in Hyper-V](./container_setup.md). \n\n## Basic Container Management with PowerShell\n\nThis first example will walk through the basics of creating and removing Windows Server Containers and Windows Server Container Images with PowerShell.\n\nTo begin the walk through, log into your Windows Server Container Host System, you will see a Windows command prompt.\n\n![](media/cmd.png)\n\nStart a PowerShell session by typing `powershell`. You will know that you are in a PowerShell session when the prompt changes from `C:\\directory>` to `PS C:\\directory>`.\n\n```\nC:\\> powershell\nWindows PowerShell\nCopyright (C) 2015 Microsoft Corporation. All rights reserved.\n\nPS C:\\>\n```\n\nUse `Get-Command` to see the available commands in the containers module\n\n```\nPS C:\\> Get-Command -Module containers\n\nCommandType     Name                                               Version    Source\n-----------     ----                                               -------    ------\nFunction        Install-ContainerOSImage                           1.0.0.0    Containers\nFunction        Uninstall-ContainerOSImage                         1.0.0.0    Containers\nCmdlet          Add-ContainerNetworkAdapter                        1.0.0.0    Containers\nCmdlet          Connect-ContainerNetworkAdapter                    1.0.0.0    Containers\nCmdlet          Disconnect-ContainerNetworkAdapter                 1.0.0.0    Containers\nCmdlet          Export-ContainerImage                              1.0.0.0    Containers\nCmdlet          Get-Container                                      1.0.0.0    Containers\nCmdlet          Get-ContainerHost                                  1.0.0.0    Containers\nCmdlet          Get-ContainerImage                                 1.0.0.0    Containers\nCmdlet          Get-ContainerNetworkAdapter                        1.0.0.0    Containers\nCmdlet          Import-ContainerImage                              1.0.0.0    Containers\nCmdlet          Move-ContainerImageRepository                      1.0.0.0    Containers\nCmdlet          New-Container                                      1.0.0.0    Containers\nCmdlet          New-ContainerImage                                 1.0.0.0    Containers\nCmdlet          Remove-Container                                   1.0.0.0    Containers\nCmdlet          Remove-ContainerImage                              1.0.0.0    Containers\nCmdlet          Remove-ContainerNetworkAdapter                     1.0.0.0    Containers\nCmdlet          Set-ContainerNetworkAdapter                        1.0.0.0    Containers\nCmdlet          Start-Container                                    1.0.0.0    Containers\nCmdlet          Stop-Container                                     1.0.0.0    Containers\nCmdlet          Test-ContainerImage                                1.0.0.0    Containers\n```\n\n\nNext make sure that your system has a valid IP Address using `ipconfig` and take note of this address for later use.\n\n```\nipconfig\n\nEthernet adapter Ethernet 3:\n\n   Connection-specific DNS Suffix  . :\n   IPv6 Address. . . . . . . . . . . : 2601:600:8f01:84eb::e\n   IPv6 Address. . . . . . . . . . . : 2601:600:8f01:84eb:a8c1:a3e:96b7:ffcb\n   Link-local IPv6 Address . . . . . : fe80::a8c1:a3e:96b7:ffcb%5\n   IPv4 Address. . . . . . . . . . . : 192.168.1.25\n```\n\nIf you are working from an Azure VM instead of using `ipconfig` you will need to get the public IP address of the Azure Virtual Machine.\n\n![](media/newazure9.png)\n\n### Step 1 - Create a New Container\n\nBefore creating a Windows Server Container you will need the name of a Container Image and the name of a virtual switch that will be attached to the new container.\n\nUse the `Get-ContainerImage` command to return a list of container images loaded on the host. Take note of the image name that you will use to create the container.\n``` PowerShell\nGet-ContainerImage\n\nName              Publisher    Version      IsOSImage\n----              ---------    -------      ---------\nWindowsServerCore CN=Microsoft 10.0.10514.0 True\n```\n\nUse the `Get-VMSwitch` command to return a list of switches available on the host. Take note of the switch name that will be used with the container.\n\n``` PowerShell\nGet-VMSwitch\n\nName           SwitchType NetAdapterInterfaceDescription\n----           ---------- ------------------------------\nVirtual Switch NAT\n```\n\nRun the following command to create a container. When running `New-Container` you will name the container, specify the container image, and select the network switch to use with the container. Notice in this example that the output is placed in a variable $container. This will be helpful later in this exercise. \n\n``` PowerShell\n$container = New-Container -Name \"MyContainer\" -ContainerImageName WindowsServerCore -SwitchName \"Virtual Switch\"\n```\n\nTo see a list of containers on the host and verify that the container was created, use the `Get-Container` command. Notice that a container has been created with the name of MyContainer, however it has not been started.\n\n``` PowerShell\nGet-Container\n\nName        State Uptime   ParentImageName\n----        ----- ------   ---------------\nMyContainer Off   00:00:00 WindowsServerCore\n```\n\nTo start the container, use `Start-Container` proivding the name of the container.\n\n``` PowerShell\nStart-Container -Name \"MyContainer\"\n```\n\nYou can interact with containers using PowerShell remoting commands such as `Invoke-Command`, or `Enter-PSSession`. The example below creates a remote PowerShell session into the container using the `Enter-PSSession` command. This command needs the container id in order to create the remote session. The container id was stored in the `$container` variable when the container was created. \n\nNotice that once the remote session has been created the command prompt will change to include the first 11 characters of the container id `[2446380e-629]`.\n\n``` PowerShell\nEnter-PSSession -ContainerId $container.ContainerId -RunAsAdministrator\n\n[2446380e-629]: PS C:\\Windows\\system32>\n```\n\nA container can be managed very much like a physical or virtual machine. Command such as `ipconfig` to return the IP address of the container, `mkdir` to create a directory in the container and PowerShell commands like `Get-ChildItem` all work. Go ahead and make a change to the container such as creating a file or folder. For example, the following command will create a file which contains network configuration data about the container.\n\n``` PowerShell\nipconfig > c:\\ipconfig.txt\n```\n\nYou can read the contents of the file to ensure the command completed successfully. Notice that the IP address contained in the text file matches that of the container.\n\n``` PowerShell\ntype c:\\ipconfig.txt\n\nEthernet adapter vEthernet (Virtual Switch-E0D87408-325B-4818-ADB2-2EC7A2005739-0):\n\n   Connection-specific DNS Suffix  . : corp.microsoft.com\n   Link-local IPv6 Address . . . . . : fe80::400e:1e0e:591c:beef%18\n   IPv4 Address. . . . . . . . . . . : 172.16.0.2\n   Subnet Mask . . . . . . . . . . . : 255.240.0.0\n   Default Gateway . . . . . . . . . : 172.16.0.1\n```\n\nNow that the container has been modified, exit the remote PowerShell session.\n\n``` PowerShell\nexit\n```\n\nStop the container by providing the container name to the `Stop-Container` command. When this command has completed, you will be back in control of the container host.\n\n``` PowerShell\nStop-Container -Name \"MyContainer\"\n```\n\n### Step 2 - Create a New Container Image\n\nAn image can now be made from this container. This image will behave like a snapshot of the container and can be re-deployed many times.\n\nTo create a new image named 'newimage' use the `New-ContainerImage` command. When using this command you will specify the container to capture, a name for the new image, and additional metadata as seen below.\n\n``` PowerShell\n$newimage = New-ContainerImage -ContainerName MyContainer -Publisher Demo -Name newimage -Version 1.0\n```\n\nUse `Get-ContainerImage` to return a list of Container Images. Notice that a new image with the name 'newimage' has been created.\n\n``` PowerShell\nGet-ContainerImage\n\nName              Publisher    Version      IsOSImage\n----              ---------    -------      ---------\nnewimage          CN=Demo      1.0.0.0      False\nWindowsServerCore CN=Microsoft 10.0.10254.0 True\n```\n\n### Step 3 - Create New Container From Image\n\nNow that you have created a customized container image, go ahead and deploy a new container from this image.\n\nCreate a container named 'newcontainer' from the container image named 'newimage', output the result to a variable named '$newcontainer'.\n\n``` PowerShell\n$newcontainer = New-Container -Name \"newcontainer\" -ContainerImageName newimage -SwitchName \"Virtual Switch\"\n```\n\nStart the new container.\n``` PowerShell\nStart-Container $newcontainer\n```\n\nCreate a remote PowerShell session with the container.\n``` PowerShell\nEnter-PSSession -ContainerId $newcontainer.ContainerId -RunAsAdministrator\n```\n\nFinally notice that this new container contains the ipconfig.txt file created earlier in this exercise.\n\n``` PowerShell\ntype c:\\ipconfig.txt\n\nEthernet adapter vEthernet (Virtual Switch-E0D87408-325B-4818-ADB2-2EC7A2005739-0):\n\n   Connection-specific DNS Suffix  . : corp.microsoft.com\n   Link-local IPv6 Address . . . . . : fe80::400e:1e0e:591c:beef%18\n   IPv4 Address. . . . . . . . . . . : 172.16.0.2\n   Subnet Mask . . . . . . . . . . . : 255.240.0.0\n   Default Gateway . . . . . . . . . : 172.16.0.1\n```\n\n Once you are done working with this container, exit the remote PowerShell session.\n\n``` PowerShell\nexit\n```\n\nThis exercise has shown that an image taken from a modified container will include all modifications. While the example here was a simple file modification, the same would apply if you were to install software into the container such as a web server. Using these methods, custom images can be created that will deploy application ready containers.\n\n### Step 4 - Remove Containers and Container Images\n\nTo stop all running containers run the command below. If any containers are in a stopped state when you run this command, you receive a warning, which is ok.\n\n``` PowerShell\nGet-Container | Stop-Container\n```\nRun the following to remove all containers.\n\n``` PowerShell\nGet-Container | Remove-Container -Force\n```\nTo remove the container image named 'newimage', run the following.\n\n``` PowerShell\nGet-ContainerImage -Name newimage | Remove-ContainerImage -Force\n```\n\n## Host a Web Server in a Container\n\nThis next example will demonstrate a more practical use case for Windows Server Containers. The steps included in this exercise will guide you through creating a web server container image that can be used for deploying web applications hosted inside of a Windows Server Container.\n\n### Step 1 – Create Container from the Windows Server Core OS Image\n\nTo create a web server container image, you first need to deploy and start a container from the Windows Server Core OS image.\n``` PowerShell\n$container = New-Container -Name webbase -ContainerImageName WindowsServerCore -SwitchName \"Virtual Switch\"\n ```\n\nStart the container.\n``` PowerShell\nStart-Container $container\n```\n\nWhen the container is up, create a remote PowerShell session with the container.\n``` PowerShell\nEnter-PSSession -ContainerId $container.ContainerId -RunAsAdministrator\n```\n\n### Step 2 - Install Web Server Software\n\nThe next step is to install the web server software. This example will use nginx for Windows. Use the following commands to automatically download and extract the nginx software to c:\\nginx-1.9.3. **Note** that this step will require the container host to be connected to the internet. If this step produces a connectivity or name resolution error check the network configuration of the container host.\n\nDownload the nginx software.\n``` PowerShell\nwget -uri 'http://nginx.org/download/nginx-1.9.3.zip' -OutFile \"c:\\nginx-1.9.3.zip\"\n```\n\nExtract the nginx software.\n``` PowerShell\nExpand-Archive -Path C:\\nginx-1.9.3.zip -DestinationPath c:\\ -Force\n```\nThis is all that needs to be completed for the nginx software installation.\n\nExit the remote PowerShell session.\n``` PowerShell\nexit\n```\n\nStop the container using the following command. \n``` PowerShell\nStop-Container $container\n```\n### Step 3 - Create Image from Web Server Container\n\nWith the container modified to include the nginx web server software, you can now create an image from this container. To do so, run the following command:\n``` PowerShell\n$webserverimage = New-ContainerImage -Container $container -Publisher Demo -Name nginxwindows -Version 1.0\n```\nWhen completed, use the `Get-ContainerImage` command to validate that the image has been created.\n\n``` PowerShell\nGet-ContainerImage\n\nName              Publisher    Version      IsOSImage\n----              ---------    -------      ---------\nnginxwindows      CN=Demo      1.0.0.0      False\nWindowsServerCore CN=Microsoft 10.0.10254.0 True\n```\n\n### Step 4 - Deploy Web Server Ready Container\n\nTo deploy a Windows Server Container based off of the 'nginxwindows' image, use the `New-Container` PowerShell command.\n\n``` PowerShell\n$webservercontainer = New-Container -Name webserver1 -ContainerImageName nginxwindows -SwitchName \"Virtual Switch\"\n```\n\nStart the container.\n``` PowerShell\nStart-Container $webservercontainer\n```\n\nCreate a remote PowerShell session with the new container.\n``` PowerShell\nEnter-PSSession -ContainerId $webservercontainer.ContainerId -RunAsAdministrator\n```\n\nOnce working inside the container, the nginx web server can be started and web content staged. To start the nginx web server, change to the nginx installation directory.\n``` PowerShell\ncd c:\\nginx-1.9.3\\\n```\n\nStart the nginx web server.\n``` PowerShell\nstart nginx\n```\n\nAnd exit this PS-Session.  The web server will keep running.\n``` PowerShell\nexit\n```\n\n### Step 5 - Configure Container Networking\n\nDepending on the configuration of the container host and network, a container will either receive an IP address from a DHCP server or the container host itself using network address translation (NAT). This guided walk through is configured to use NAT. In this configuration a port from the container is mapped to a port on the container host. The application hosted in the container is then accessed through the IP address / name of the container host. For example if port 80 from the container was mapped to port 55534 on the container host, a typical http request to the application would look like this http://contianerhost:55534. This allows a container host to run many containers and allow for the applications in these containers to respond to requests using the same port. \n\nFor this lab we need to create this port mapping. In order to do so we will need to know the IP address of the container and the internal (application) and external (container host) ports that will be configured. For this example let’s keep it simple and map port 80 from the container to port 80 of the host. Using the `Add-NetNatStaticMapping` command, the `–InternalIPAddress` will be the IP address of the container which for this walkthrough should be ‘172.16.0.2’.\n\n``` PowerShell\nAdd-NetNatStaticMapping -NatName \"ContainerNat\" -Protocol TCP -ExternalIPAddress 0.0.0.0 -InternalIPAddress 172.16.0.2 -InternalPort 80 -ExternalPort 80\n```\nWhen the port mapping has been created you will also need to configure an inbound firewall rule for the configured port. To do so for port 80 run the following command. This script can be copied into the VM. \n\n``` PowerShell\nif (!(Get-NetFirewallRule | where {$_.Name -eq \"TCP80\"})) {\n    New-NetFirewallRule -Name \"TCP80\" -DisplayName \"HTTP on TCP/80\" -Protocol tcp -LocalPort 80 -Action Allow -Enabled True\n}\n```\n\nNext if you are working from Azure and have not already created a Virtual Machine endpoint you will need to create one now. For more information on Azure VM Endpoints see this article: [Set up Azure VM Endpoints]( https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/).\n\n### Step 6 – Access the Container Hosted Website\nWith the web server container created, you can now checkout the application hosted in the container. To do so, open up a browser on different machine and enter `http://containerhost-ipaddress`. Notice here that you will be browsing to the IP Address of the Container Host and not the container itself. If you are working from an Azure Virtual Machine this will be the public IP address or Cloud Service name. \n\nIf everything has been correctly configured, you will see the nginx welcome page.\n\n![](media/nginx.png)\n\nAt this point, feel free to update the website. Copy in your own sample website, or use a simple ‘Hello World’ sample site that has been created for this demo. To use the sample you will first need to re-establish a remote PS session with the container.\n\nYou will first need to re-create the remote PS session with the container.\n``` PowerShell\nEnter-PSSession -ContainerId $webservercontainer.ContainerId -RunAsAdministrator\n```\nThen run the following command to download and replace the index.html file.\n\n``` powershell\nwget -uri 'https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/doc-site/virtualization/windowscontainers/quick_start/SampleFiles/index.html' -OutFile \"C:\\nginx-1.9.3\\html\\index.html\"\n```\n   \nAfter the website has been updated, navigate back to `http://containerhost-ipaddress`.\n\n![](media/hello.png)\n\n## Video Walkthrough\n\n<iframe src=\"https://channel9.msdn.com/Blogs/containers/Quick-Start-Deploying-and-Managing-Windows-Server-Containers-with-PowerShell/player\" width=\"800\" height=\"450\"  allowFullScreen=\"true\" frameBorder=\"0\" scrolling=\"no\"></iframe>\n\n\n## Next Steps\nNow that you have containers set up and an introduction to the tools, go build your own containerized apps.\n\nHere is a more complete [PowerShell reference](../reference/powershell_overview.md).\n\nRemember, this is a **preview** there are bugs and we have a lot of work in progress.  [This page](../about/work_in_progress.md) contains many of our known issues.\n\nWe are also monitoring the [forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers) very closely.\n\nThere are also pre-made samples on [GitHub](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples).\n\n-----------------------------------\n[Back to Container Home](../containers_welcome.md)   \n[Known Issues for Current Release](../about/work_in_progress.md)\n\nTest Test Test\n"
+}

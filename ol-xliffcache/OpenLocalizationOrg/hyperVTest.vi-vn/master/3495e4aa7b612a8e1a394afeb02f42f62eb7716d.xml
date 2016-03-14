@@ -1,0 +1,866 @@
+{
+  "nodes": [
+    {
+      "content": "ms.ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6",
+      "pos": [
+        0,
+        50
+      ]
+    },
+    {
+      "content": "title: Manage Windows Server Containers with Docker",
+      "pos": [
+        51,
+        102
+      ]
+    },
+    {
+      "content": "Quick Start: Windows Server Containers and Docker",
+      "pos": [
+        105,
+        154
+      ]
+    },
+    {
+      "content": "12-Nov update.",
+      "pos": [
+        156,
+        170
+      ]
+    },
+    {
+      "content": "This article will walk through the fundamentals of managing windows Server Containers with Docker.",
+      "pos": [
+        171,
+        269
+      ]
+    },
+    {
+      "content": "Items covered will include creating Windows Server Containers and Windows Server Container Images, removing Windows Server Containers and Container Images and finally deploying an application into a Windows Server Container.",
+      "pos": [
+        270,
+        494
+      ]
+    },
+    {
+      "content": "The lessons learned in this walkthrough should enable you to begin exploring deployment and management of Windows Server Containers using Docker.",
+      "pos": [
+        495,
+        640
+      ]
+    },
+    {
+      "content": "Have questions?",
+      "pos": [
+        642,
+        657
+      ]
+    },
+    {
+      "content": "Ask them on the <bpt id=\"p1\">[</bpt>Windows Containers forum<ept id=\"p1\">](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)</ept>.",
+      "pos": [
+        658,
+        778
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note:<ept id=\"p1\">**</ept> Windows Containers created with PowerShell can not currently be managed with Docker and visa versa.",
+      "pos": [
+        782,
+        891
+      ]
+    },
+    {
+      "content": "To create containers with PowerShell, see  <bpt id=\"p1\">[</bpt>Quick Start: Windows Server Containers and PowerShell<ept id=\"p1\">](./manage_powershell.md)</ept>.",
+      "pos": [
+        892,
+        1015
+      ]
+    },
+    {
+      "content": "If you want to know more, <bpt id=\"p1\">[</bpt>read the FAQ<ept id=\"p1\">](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement)</ept>.",
+      "pos": [
+        1029,
+        1165
+      ]
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1170,
+        1183
+      ]
+    },
+    {
+      "content": "In order to complete this walkthrough the following items need to be in place.",
+      "pos": [
+        1184,
+        1262
+      ]
+    },
+    {
+      "content": "Windows Server 2016 TP3 or later configured with the Windows Server Container Feature.",
+      "pos": [
+        1266,
+        1352
+      ]
+    },
+    {
+      "content": "If you have completed the setup guide, this is the VM that was created in Azure or Hyper-V.",
+      "pos": [
+        1353,
+        1444
+      ]
+    },
+    {
+      "content": "This system must be connected to a network and able to access the internet.",
+      "pos": [
+        1447,
+        1522
+      ]
+    },
+    {
+      "pos": [
+        1524,
+        1697
+      ],
+      "content": "If you need to configure the container feature, see the following guides: <bpt id=\"p1\">[</bpt>Container Setup in Azure<ept id=\"p1\">](./azure_setup.md)</ept> or <bpt id=\"p2\">[</bpt>Container Setup in Hyper-V<ept id=\"p2\">](./container_setup.md)</ept>."
+    },
+    {
+      "content": "Basic Container Management with Docker",
+      "pos": [
+        1703,
+        1741
+      ]
+    },
+    {
+      "content": "This first example will walk through the basics of creating and removing Windows Server Containers and Windows Server Container Images with Docker.",
+      "pos": [
+        1743,
+        1890
+      ]
+    },
+    {
+      "content": "To begin the walk through, log into your Windows Server Container Host System, you will see a Windows command prompt.",
+      "pos": [
+        1892,
+        2009
+      ]
+    },
+    {
+      "content": "Start a PowerShell session by typing <ph id=\"ph1\">`powershell`</ph>.",
+      "pos": [
+        2031,
+        2081
+      ]
+    },
+    {
+      "content": "You will know that you are in a PowerShell session when the prompt changes from <ph id=\"ph1\">`C:\\directory&gt;`</ph> to <ph id=\"ph2\">`PS C:\\directory&gt;`</ph>.",
+      "pos": [
+        2082,
+        2200
+      ]
+    },
+    {
+      "content": "This quick start will be focused on Docker commands however some steps such as managing firewall rules and copying files will be run with PowerShell commands.",
+      "pos": [
+        2318,
+        2476
+      ]
+    },
+    {
+      "content": "Work through this walkthrough from a PowerShell session.",
+      "pos": [
+        2477,
+        2533
+      ]
+    },
+    {
+      "pos": [
+        2535,
+        2651
+      ],
+      "content": "Next make sure that your system has a valid IP Address using <ph id=\"ph1\">`ipconfig`</ph> and take note of this address for later use."
+    },
+    {
+      "pos": [
+        2996,
+        3132
+      ],
+      "content": "If you are working from an Azure VM instead of using <ph id=\"ph1\">`ipconfig`</ph> you will need to get the public IP address of the Azure Virtual Machine."
+    },
+    {
+      "content": "Step 1 - Create a New Container",
+      "pos": [
+        3164,
+        3195
+      ]
+    },
+    {
+      "content": "Before creating a Windows Server Container with Docker you will need the name or ID of an exsisitng Windows Server Container image.",
+      "pos": [
+        3197,
+        3328
+      ]
+    },
+    {
+      "pos": [
+        3330,
+        3409
+      ],
+      "content": "To see all images loaded on the container host use the <ph id=\"ph1\">`docker images`</ph> command."
+    },
+    {
+      "content": "Now, use <ph id=\"ph1\">`docker run`</ph> To create a new Windows Server Container.",
+      "pos": [
+        3717,
+        3780
+      ]
+    },
+    {
+      "content": "This command as seen below will instruct the Docker daemon to create a new container named ‘dockerdemo’ from the image ‘windowsservercore’ and open an interactive (-it) console session (cmd) with the container.",
+      "pos": [
+        3781,
+        3991
+      ]
+    },
+    {
+      "content": "When the command completes you will be working in a console session on the container.",
+      "pos": [
+        4067,
+        4152
+      ]
+    },
+    {
+      "content": "Working in a container is almost identical to working with Windows installed on a virtual or physical machine.",
+      "pos": [
+        4154,
+        4264
+      ]
+    },
+    {
+      "content": "You can run commands such as <ph id=\"ph1\">`ipconfig`</ph> to return the IP address of the container, <ph id=\"ph2\">`mkdir`</ph> to create a new directory, or <ph id=\"ph3\">`powershell`</ph> to start a PowerShell session.",
+      "pos": [
+        4265,
+        4429
+      ]
+    },
+    {
+      "content": "Go ahead and make a change to the container such as creating a file or folder.",
+      "pos": [
+        4430,
+        4508
+      ]
+    },
+    {
+      "content": "For example, the following command will create a file which contains network configuration data about the container.",
+      "pos": [
+        4509,
+        4625
+      ]
+    },
+    {
+      "content": "You can read the contents of the file to ensure the command completed successfully.",
+      "pos": [
+        4674,
+        4757
+      ]
+    },
+    {
+      "content": "Notice that the IP address contained in the text file matches that of the container.",
+      "pos": [
+        4758,
+        4842
+      ]
+    },
+    {
+      "content": "Now that the container has been modified, run the following to stop the console session placing you back in the console session of the container host.",
+      "pos": [
+        5257,
+        5407
+      ]
+    },
+    {
+      "content": "Finally to see a list of containers on the container host use the <ph id=\"ph1\">`docker ps –a`</ph> command.",
+      "pos": [
+        5434,
+        5523
+      ]
+    },
+    {
+      "content": "Notice from the output that a container named 'dockerdemo' has been created.",
+      "pos": [
+        5524,
+        5600
+      ]
+    },
+    {
+      "content": "Step 2 - Create a New Container Image",
+      "pos": [
+        5882,
+        5919
+      ]
+    },
+    {
+      "content": "An image can now be made from this container.",
+      "pos": [
+        5921,
+        5966
+      ]
+    },
+    {
+      "content": "This image will behave like a snapshot of the container and can be re-deployed many times.",
+      "pos": [
+        5967,
+        6057
+      ]
+    },
+    {
+      "content": "To create a new image run the following.",
+      "pos": [
+        6059,
+        6099
+      ]
+    },
+    {
+      "content": "This command instructs the Docker engine to create a new image named 'newcontainerimage' that will include all changes made to the 'deckerdemo' container.",
+      "pos": [
+        6100,
+        6254
+      ]
+    },
+    {
+      "content": "To see all images on the host, run <ph id=\"ph1\">`docker images`</ph>.",
+      "pos": [
+        6319,
+        6370
+      ]
+    },
+    {
+      "content": "Notice that a new image has been created with the name 'newcontainerimage'.",
+      "pos": [
+        6371,
+        6446
+      ]
+    },
+    {
+      "content": "Step 3 - Create New Container From Image",
+      "pos": [
+        6847,
+        6887
+      ]
+    },
+    {
+      "content": "Now that you have a custom container image, deploy a new container named 'newcontainer' from 'newcontainerimage' and open an interactive shell session with the container.",
+      "pos": [
+        6889,
+        7059
+      ]
+    },
+    {
+      "content": "Take a look at the c:\\ drive of this new container and notice that the ipconfig.txt file is present.",
+      "pos": [
+        7138,
+        7238
+      ]
+    },
+    {
+      "content": "Exit the newly created container to return to the container hosts console session.",
+      "pos": [
+        7264,
+        7346
+      ]
+    },
+    {
+      "content": "This exercise has shown that an image taken from a modified container will include all modifications.",
+      "pos": [
+        7373,
+        7474
+      ]
+    },
+    {
+      "content": "While the example here was a simple file modification, the same would apply if you were to install software into the container such as a web server.",
+      "pos": [
+        7475,
+        7623
+      ]
+    },
+    {
+      "content": "Using these methods, custom images can be created that will deploy application ready containers.",
+      "pos": [
+        7624,
+        7720
+      ]
+    },
+    {
+      "content": "Step 4 - Remove Containers and Images",
+      "pos": [
+        7726,
+        7763
+      ]
+    },
+    {
+      "content": "To remove a container after it is no longer needed use the <ph id=\"ph1\">`docker rm`</ph> command.",
+      "pos": [
+        7765,
+        7844
+      ]
+    },
+    {
+      "content": "The following command will remove the container name 'newcontainer'.",
+      "pos": [
+        7845,
+        7913
+      ]
+    },
+    {
+      "content": "To remove container images when they are no longer needed use the <ph id=\"ph1\">`docker rmi`</ph> command.",
+      "pos": [
+        7957,
+        8044
+      ]
+    },
+    {
+      "content": "You cannot remove an image if it is referenced by an existing container.",
+      "pos": [
+        8045,
+        8117
+      ]
+    },
+    {
+      "content": "The following command removes the container image named 'newcontainerimage'.",
+      "pos": [
+        8119,
+        8195
+      ]
+    },
+    {
+      "content": "Host a Web Server in a Container",
+      "pos": [
+        8358,
+        8390
+      ]
+    },
+    {
+      "content": "This next example will demonstrate a more practical use case for Windows Server Containers.",
+      "pos": [
+        8392,
+        8483
+      ]
+    },
+    {
+      "content": "The steps included in this exercise will guide you through creating a web server container image that can be used for deploying web applications hosted inside of a Windows Server Container.",
+      "pos": [
+        8484,
+        8673
+      ]
+    },
+    {
+      "content": "Step 1 - Download Web Server Software",
+      "pos": [
+        8679,
+        8716
+      ]
+    },
+    {
+      "content": "Before creating a container image the web server software will need to be downloaded and staged on the container host.",
+      "pos": [
+        8718,
+        8836
+      ]
+    },
+    {
+      "content": "We will be using the nginx for Windows software for this example.",
+      "pos": [
+        8837,
+        8902
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note<ept id=\"p1\">**</ept> that this step will require the container host to be connected to the internet.",
+      "pos": [
+        8903,
+        8991
+      ]
+    },
+    {
+      "content": "If this step produces a connectivity or name resolution error check the network configuration of the container host.",
+      "pos": [
+        8992,
+        9108
+      ]
+    },
+    {
+      "content": "Run the following command on the container host to create the directory structure that will be used for this example.",
+      "pos": [
+        9110,
+        9227
+      ]
+    },
+    {
+      "content": "Run this command on the container host to download the nginx software to 'c:\\nginx-1.9.3.zip'.",
+      "pos": [
+        9277,
+        9371
+      ]
+    },
+    {
+      "content": "Finally the following command will extract the nginx software to 'C:\\build\\nginx\\source'.",
+      "pos": [
+        9477,
+        9566
+      ]
+    },
+    {
+      "content": "Step 2 - Create Web Server Image",
+      "pos": [
+        9679,
+        9711
+      ]
+    },
+    {
+      "content": "In the previous example, you manually created, updated and captured a container image.",
+      "pos": [
+        9712,
+        9798
+      ]
+    },
+    {
+      "content": "This example will demonstrate an automated method for creating container images using a Dockerfile.",
+      "pos": [
+        9799,
+        9898
+      ]
+    },
+    {
+      "content": "Dockerfiles contain instructions that the Docker engine uses to build and modify a container, and then commit the container to a container image.",
+      "pos": [
+        9899,
+        10044
+      ]
+    },
+    {
+      "content": "For more information on dockerfiles, see <bpt id=\"p1\">[</bpt>Dockerfile reference<ept id=\"p1\">](https://docs.docker.com/reference/builder/)</ept>.",
+      "pos": [
+        10046,
+        10154
+      ]
+    },
+    {
+      "content": "Use the following command to create an empty dockerfile.",
+      "pos": [
+        10156,
+        10212
+      ]
+    },
+    {
+      "content": "Open the dockerfile with notepad.",
+      "pos": [
+        10279,
+        10312
+      ]
+    },
+    {
+      "content": "Copy and paste the following text into notepad, save the file and close notepad.",
+      "pos": [
+        10361,
+        10441
+      ]
+    },
+    {
+      "content": "At this point the dockerfile will be in 'c:\\build\\nginx' and the nginx software extracted to 'c:\\build\\nginx\\source'.",
+      "pos": [
+        10573,
+        10690
+      ]
+    },
+    {
+      "content": "You are now ready to build the web server container image based on the instructions in the dockerfile.",
+      "pos": [
+        10692,
+        10794
+      ]
+    },
+    {
+      "content": "To do this, run the following command on the container host.",
+      "pos": [
+        10795,
+        10855
+      ]
+    },
+    {
+      "pos": [
+        10921,
+        11053
+      ],
+      "content": "This command instructs the docker engine to use the dockerfile located at <ph id=\"ph1\">`C:\\build\\nginx`</ph> to create an image named 'nginx_windows'."
+    },
+    {
+      "content": "The output will look similar to this:",
+      "pos": [
+        11055,
+        11092
+      ]
+    },
+    {
+      "content": "When completed, take a look at the images on the host using the <ph id=\"ph1\">`docker images`</ph> command.",
+      "pos": [
+        11118,
+        11206
+      ]
+    },
+    {
+      "content": "You should see a new image named 'nginx_windows'.",
+      "pos": [
+        11207,
+        11256
+      ]
+    },
+    {
+      "content": "Step 3 – Configure Networking for Container Application",
+      "pos": [
+        11657,
+        11712
+      ]
+    },
+    {
+      "content": "Because you will be hosting a website inside of a container a few networking related configurations need to be made.",
+      "pos": [
+        11713,
+        11829
+      ]
+    },
+    {
+      "content": "First a firewall rule needs to be created on the container host that will allow access to the website.",
+      "pos": [
+        11830,
+        11932
+      ]
+    },
+    {
+      "content": "In this example we will be accessing the site through port 80.",
+      "pos": [
+        11933,
+        11995
+      ]
+    },
+    {
+      "content": "Run the following script to create this firewall rule.",
+      "pos": [
+        11996,
+        12050
+      ]
+    },
+    {
+      "content": "This script can be copied into the VM.",
+      "pos": [
+        12051,
+        12089
+      ]
+    },
+    {
+      "content": "Next if you are working from Azure and have not already created a Virtual Machine endpoint you will need to create one now.",
+      "pos": [
+        12298,
+        12421
+      ]
+    },
+    {
+      "content": "For more information on Azure VM Endpoints see this article: <bpt id=\"p1\">[</bpt>Set up Azure VM Endpoints<ept id=\"p1\">]( https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/)</ept>.",
+      "pos": [
+        12422,
+        12605
+      ]
+    },
+    {
+      "content": "Step 4 - Deploy Web Server Ready Container",
+      "pos": [
+        12611,
+        12653
+      ]
+    },
+    {
+      "content": "To deploy a Windows Server Container based off of the 'nginx_windows' container run the following command.",
+      "pos": [
+        12655,
+        12761
+      ]
+    },
+    {
+      "content": "This will create a new container named 'nginxcontainer' and start an console session on the container.",
+      "pos": [
+        12762,
+        12864
+      ]
+    },
+    {
+      "content": "The –p 80:80 portion of this command creates a port mapping between port 80 on the host to port 80 on the container.",
+      "pos": [
+        12865,
+        12981
+      ]
+    },
+    {
+      "content": "Once working inside the container, the nginx web server can be started and web content staged.",
+      "pos": [
+        13067,
+        13161
+      ]
+    },
+    {
+      "content": "To start the nginx web server, change to the nginx installation directory.",
+      "pos": [
+        13162,
+        13236
+      ]
+    },
+    {
+      "content": "Start the nginx web server.",
+      "pos": [
+        13282,
+        13309
+      ]
+    },
+    {
+      "content": "Step 5 – Access the Container Hosted Website",
+      "pos": [
+        13345,
+        13389
+      ]
+    },
+    {
+      "content": "With the web server container created, you can now checkout the application hosted in the container.",
+      "pos": [
+        13391,
+        13491
+      ]
+    },
+    {
+      "content": "To do so, open up a browser on different machine and enter <ph id=\"ph1\">`http://containerhost-ipaddress`</ph>.",
+      "pos": [
+        13492,
+        13584
+      ]
+    },
+    {
+      "content": "Notice here that you will be browsing to the IP Address of the Container Host and not the container itself.",
+      "pos": [
+        13585,
+        13692
+      ]
+    },
+    {
+      "content": "If you are working from an Azure Virtual Machine this will be the public IP address or Cloud Service name.",
+      "pos": [
+        13693,
+        13799
+      ]
+    },
+    {
+      "content": "If everything has been correctly configured, you will see the nginx welcome page.",
+      "pos": [
+        13802,
+        13883
+      ]
+    },
+    {
+      "content": "At this point, feel free to update the website.",
+      "pos": [
+        13907,
+        13954
+      ]
+    },
+    {
+      "content": "Copy in your own sample website, or run the following command in the container to replace the nginx welcome page with a ‘Hello World’ web page.",
+      "pos": [
+        13955,
+        14098
+      ]
+    },
+    {
+      "pos": [
+        14347,
+        14433
+      ],
+      "content": "After the website has been updated, navigate back to <ph id=\"ph1\">`http://containerhost-ipaddress`</ph>."
+    },
+    {
+      "pos": [
+        14459,
+        14795
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Note:<ept id=\"p1\">**</ept> If you would like to change the Docker Daemon settings (such as to change the port it listens to, to connect to a container remotely), you will need to edit the file \"C:\\ProgramData\\docker\\runDockerDaemon.cmd\" in the container, and then you will need to restart the service with PowerShell, using <ph id=\"ph1\">```Restart-Service docker```</ph>."
+    },
+    {
+      "content": "Video Walkthrough",
+      "pos": [
+        14800,
+        14817
+      ]
+    },
+    {
+      "content": "Next Steps",
+      "pos": [
+        15050,
+        15060
+      ]
+    },
+    {
+      "content": "Now that you have containers set up and an introduction to the tools, go build your own containerized apps.",
+      "pos": [
+        15061,
+        15168
+      ]
+    },
+    {
+      "content": "Remember, this is a <bpt id=\"p1\">**</bpt>preview<ept id=\"p1\">**</ept> there are bugs and we have a lot of work in progress.",
+      "pos": [
+        15170,
+        15255
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>This page<ept id=\"p1\">](../about/work_in_progress.md)</ept> contains many of our known issues.",
+      "pos": [
+        15257,
+        15333
+      ]
+    },
+    {
+      "pos": [
+        15335,
+        15644
+      ],
+      "content": "Be aware that there are some known Docker commands that <bpt id=\"p1\">[</bpt>don't work<ept id=\"p1\">](../about/work_in_progress.md#DockermanagementDockercommandsthatdontworkwithWindowsServerContainers)</ept> and some that only <bpt id=\"p2\">[</bpt>partially work<ept id=\"p2\">](../about/work_in_progress.md#DockermanagementDockercommandsthatpartiallyworkwithWindowsServerContainers)</ept>"
+    },
+    {
+      "pos": [
+        15646,
+        15772
+      ],
+      "content": "We are also monitoring the <bpt id=\"p1\">[</bpt>forums<ept id=\"p1\">](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers)</ept> very closely."
+    },
+    {
+      "pos": [
+        15774,
+        15922
+      ],
+      "content": "There are also pre-made samples on <bpt id=\"p1\">[</bpt>GitHub<ept id=\"p1\">](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples)</ept>."
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>Back to Container Home<ept id=\"p1\">](../containers_welcome.md)</ept><ph id=\"ph1\"> </ph>",
+      "pos": [
+        15960,
+        16011
+      ]
+    },
+    {
+      "content": "Known Issues for Current Release",
+      "pos": [
+        16015,
+        16047
+      ]
+    }
+  ],
+  "content": "ms.ContentId: 347fa279-d588-4094-90ec-8c2fc241f5b6\ntitle: Manage Windows Server Containers with Docker\n\n#Quick Start: Windows Server Containers and Docker\n\n12-Nov update. This article will walk through the fundamentals of managing windows Server Containers with Docker. Items covered will include creating Windows Server Containers and Windows Server Container Images, removing Windows Server Containers and Container Images and finally deploying an application into a Windows Server Container. The lessons learned in this walkthrough should enable you to begin exploring deployment and management of Windows Server Containers using Docker.\n\nHave questions? Ask them on the [Windows Containers forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers).\n\n> **Note:** Windows Containers created with PowerShell can not currently be managed with Docker and visa versa. To create containers with PowerShell, see  [Quick Start: Windows Server Containers and PowerShell](./manage_powershell.md). <br /><br /> If you want to know more, [read the FAQ](../about/faq.md#WhydoIhavetopickbetweenDockerandPowerShellforWindowsServerContainermanagement).\n\n## Prerequisites\nIn order to complete this walkthrough the following items need to be in place.\n\n- Windows Server 2016 TP3 or later configured with the Windows Server Container Feature. If you have completed the setup guide, this is the VM that was created in Azure or Hyper-V.\n- This system must be connected to a network and able to access the internet.\n\nIf you need to configure the container feature, see the following guides: [Container Setup in Azure](./azure_setup.md) or [Container Setup in Hyper-V](./container_setup.md). \n\n## Basic Container Management with Docker\n\nThis first example will walk through the basics of creating and removing Windows Server Containers and Windows Server Container Images with Docker.\n\nTo begin the walk through, log into your Windows Server Container Host System, you will see a Windows command prompt.\n\n![](media/cmd.png)\n\nStart a PowerShell session by typing `powershell`. You will know that you are in a PowerShell session when the prompt changes from `C:\\directory>` to `PS C:\\directory>`.\n```\nC:\\> powershell\nWindows PowerShell\nCopyright (C) 2015 Microsoft Corporation. All rights reserved.\n\nPS C:\\>\n```\n> This quick start will be focused on Docker commands however some steps such as managing firewall rules and copying files will be run with PowerShell commands. Work through this walkthrough from a PowerShell session.\n\nNext make sure that your system has a valid IP Address using `ipconfig` and take note of this address for later use.\n```\nipconfig\n\nEthernet adapter Ethernet 3:\n\n   Connection-specific DNS Suffix  . :\n   IPv6 Address. . . . . . . . . . . : 2601:600:8f01:84eb::e\n   IPv6 Address. . . . . . . . . . . : 2601:600:8f01:84eb:a8c1:a3e:96b7:ffcb\n   Link-local IPv6 Address . . . . . : fe80::a8c1:a3e:96b7:ffcb%5\n   IPv4 Address. . . . . . . . . . . : 192.168.1.25\n```\n\nIf you are working from an Azure VM instead of using `ipconfig` you will need to get the public IP address of the Azure Virtual Machine.\n\n![](media/newazure9.png)\n\n### Step 1 - Create a New Container\n\nBefore creating a Windows Server Container with Docker you will need the name or ID of an exsisitng Windows Server Container image.\n\nTo see all images loaded on the container host use the `docker images` command.\n\n``` PowerShell\ndocker images\n\nREPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE\nwindowsservercore   latest              9eca9231f4d4        30 hours ago        9.613 GB\nwindowsservercore   10.0.10254.0        9eca9231f4d4        30 hours ago        9.613 GB\n```\n\nNow, use `docker run` To create a new Windows Server Container. This command as seen below will instruct the Docker daemon to create a new container named ‘dockerdemo’ from the image ‘windowsservercore’ and open an interactive (-it) console session (cmd) with the container.\n\n``` PowerShell\ndocker run -it --name dockerdemo windowsservercore cmd\n```\nWhen the command completes you will be working in a console session on the container.\n\nWorking in a container is almost identical to working with Windows installed on a virtual or physical machine. You can run commands such as `ipconfig` to return the IP address of the container, `mkdir` to create a new directory, or `powershell` to start a PowerShell session. Go ahead and make a change to the container such as creating a file or folder. For example, the following command will create a file which contains network configuration data about the container.\n\n``` PowerShell\nipconfig > c:\\ipconfig.txt\n```\n\nYou can read the contents of the file to ensure the command completed successfully. Notice that the IP address contained in the text file matches that of the container.\n\n``` PowerShell\ntype c:\\ipconfig.txt\n\nEthernet adapter vEthernet (Virtual Switch-94a3e12ad262b3059e08edc4d48fca3c8390e38c3b219023d4a0a4951883e658-0):\n\n   Connection-specific DNS Suffix  . : \n   Link-local IPv6 Address . . . . . : fe80::cc1f:742:4126:9530%18\n   IPv4 Address. . . . . . . . . . . : 172.16.0.2\n   Subnet Mask . . . . . . . . . . . : 255.240.0.0\n   Default Gateway . . . . . . . . . : 172.16.0.1\n```\n\nNow that the container has been modified, run the following to stop the console session placing you back in the console session of the container host.\n\n``` PowerShell\nexit\n```\n\nFinally to see a list of containers on the container host use the `docker ps –a` command. Notice from the output that a container named 'dockerdemo' has been created.\n\n``` PowerShell\ndocker ps -a\n\nCONTAINER ID        IMAGE               COMMAND        CREATED             STATUS                     PORTS     NAMES\n4f496dbb8048        windowsservercore   \"cmd\"          2 minutes ago       Exited (0) 2 minutes ago             dockerdemo\n``` \n\n### Step 2 - Create a New Container Image\n\nAn image can now be made from this container. This image will behave like a snapshot of the container and can be re-deployed many times.\n\nTo create a new image run the following. This command instructs the Docker engine to create a new image named 'newcontainerimage' that will include all changes made to the 'deckerdemo' container.\n\n``` PowerShell\ndocker commit dockerdemo newcontainerimage\n```\n\nTo see all images on the host, run `docker images`. Notice that a new image has been created with the name 'newcontainerimage'.\n\n``` PowerShell\ndocker images\n\nREPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE\nnewcontainerimage   latest              4f8ebcf0a334        2 minutes ago       9.613 GB\nwindowsservercore   latest              9eca9231f4d4        30 hours ago        9.613 GB\nwindowsservercore   10.0.10254.0        9eca9231f4d4        30 hours ago        9.613 GB\n```\n\n### Step 3 - Create New Container From Image\n\nNow that you have a custom container image, deploy a new container named 'newcontainer' from 'newcontainerimage' and open an interactive shell session with the container.\n\n``` PowerShell\ndocker run –it --name newcontainer newcontainerimage cmd\n```\n\nTake a look at the c:\\ drive of this new container and notice that the ipconfig.txt file is present.\n\n![](media/docker3.png)\n\nExit the newly created container to return to the container hosts console session.\n\n``` PowerShell\nexit\n```\n\nThis exercise has shown that an image taken from a modified container will include all modifications. While the example here was a simple file modification, the same would apply if you were to install software into the container such as a web server. Using these methods, custom images can be created that will deploy application ready containers.\n\n### Step 4 - Remove Containers and Images\n\nTo remove a container after it is no longer needed use the `docker rm` command. The following command will remove the container name 'newcontainer'.\n\n``` PowerShell\ndocker rm newcontainer\n```\nTo remove container images when they are no longer needed use the `docker rmi` command. You cannot remove an image if it is referenced by an existing container.\n\nThe following command removes the container image named 'newcontainerimage'.\n``` PowerShell\ndocker rmi newcontainerimage\n\nUntagged: newcontainerimage:latest\nDeleted: 4f8ebcf0a334601e75070a92294d993b0f182abb6f4c88740c75b05093e6acff\n```\n\n## Host a Web Server in a Container\n\nThis next example will demonstrate a more practical use case for Windows Server Containers. The steps included in this exercise will guide you through creating a web server container image that can be used for deploying web applications hosted inside of a Windows Server Container.\n\n### Step 1 - Download Web Server Software\n\nBefore creating a container image the web server software will need to be downloaded and staged on the container host. We will be using the nginx for Windows software for this example. **Note** that this step will require the container host to be connected to the internet. If this step produces a connectivity or name resolution error check the network configuration of the container host.\n\nRun the following command on the container host to create the directory structure that will be used for this example.\n\n``` PowerShell\nmkdir c:\\build\\nginx\\source\n```\n\nRun this command on the container host to download the nginx software to 'c:\\nginx-1.9.3.zip'.\n\n``` PowerShell\nwget -uri 'http://nginx.org/download/nginx-1.9.3.zip' -OutFile \"c:\\nginx-1.9.3.zip\"\n```\n\nFinally the following command will extract the nginx software to 'C:\\build\\nginx\\source'. \n\n``` PowerShell\nExpand-Archive -Path C:\\nginx-1.9.3.zip -DestinationPath C:\\build\\nginx\\source -Force\n```\n\n### Step 2 - Create Web Server Image\nIn the previous example, you manually created, updated and captured a container image. This example will demonstrate an automated method for creating container images using a Dockerfile. Dockerfiles contain instructions that the Docker engine uses to build and modify a container, and then commit the container to a container image. \nFor more information on dockerfiles, see [Dockerfile reference](https://docs.docker.com/reference/builder/).\n\nUse the following command to create an empty dockerfile.\n\n``` PowerShell\nnew-item -Type File c:\\build\\nginx\\dockerfile\n```\nOpen the dockerfile with notepad.\n\n```\nnotepad.exe c:\\build\\nginx\\dockerfile\n```\n\nCopy and paste the following text into notepad, save the file and close notepad.\n\n``` PowerShell\nFROM windowsservercore\nLABEL Description=\"nginx For Windows\" Vendor=\"nginx\" Version=\"1.9.3\"\nADD source /nginx\n```\n\nAt this point the dockerfile will be in 'c:\\build\\nginx' and the nginx software extracted to 'c:\\build\\nginx\\source'. \nYou are now ready to build the web server container image based on the instructions in the dockerfile. To do this, run the following command on the container host.\n\n``` PowerShell\ndocker build -t nginx_windows C:\\build\\nginx\n```\nThis command instructs the docker engine to use the dockerfile located at `C:\\build\\nginx` to create an image named 'nginx_windows'.\n\nThe output will look similar to this:\n\n![](media/docker1.png)\n\nWhen completed, take a look at the images on the host using the `docker images` command. You should see a new image named 'nginx_windows'.\n``` PowerShell\ndocker images\n\nREPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE\n\nnginx_windows       latest              d792268338d0        5 seconds ago       9.613 GB\nwindowsservercore   10.0.10254.0        9eca9231f4d4        35 hours ago        9.613 GB\nwindowsservercore   latest              9eca9231f4d4        35 hours ago        9.613 GB\n```\n\n### Step 3 – Configure Networking for Container Application\nBecause you will be hosting a website inside of a container a few networking related configurations need to be made. First a firewall rule needs to be created on the container host that will allow access to the website. In this example we will be accessing the site through port 80. Run the following script to create this firewall rule. This script can be copied into the VM. \n\n``` powershell\nif (!(Get-NetFirewallRule | where {$_.Name -eq \"TCP80\"})) {\n    New-NetFirewallRule -Name \"TCP80\" -DisplayName \"HTTP on TCP/80\" -Protocol tcp -LocalPort 80 -Action Allow -Enabled True\n}\n```\n\nNext if you are working from Azure and have not already created a Virtual Machine endpoint you will need to create one now. For more information on Azure VM Endpoints see this article: [Set up Azure VM Endpoints]( https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-set-up-endpoints/).\n\n### Step 4 - Deploy Web Server Ready Container\n\nTo deploy a Windows Server Container based off of the 'nginx_windows' container run the following command. This will create a new container named 'nginxcontainer' and start an console session on the container. The –p 80:80 portion of this command creates a port mapping between port 80 on the host to port 80 on the container. \n\n``` powershell\ndocker run -it --name nginxcontainer -p 80:80 nginx_windows cmd\n```\nOnce working inside the container, the nginx web server can be started and web content staged. To start the nginx web server, change to the nginx installation directory.\n\n``` powershell\ncd c:\\nginx\\nginx-1.9.3\n```\n\nStart the nginx web server.\n``` powershell\nstart nginx\n```\n### Step 5 – Access the Container Hosted Website\n\nWith the web server container created, you can now checkout the application hosted in the container. To do so, open up a browser on different machine and enter `http://containerhost-ipaddress`. Notice here that you will be browsing to the IP Address of the Container Host and not the container itself. If you are working from an Azure Virtual Machine this will be the public IP address or Cloud Service name. \n\nIf everything has been correctly configured, you will see the nginx welcome page.\n\n![](media/nginx.png)\n\nAt this point, feel free to update the website. Copy in your own sample website, or run the following command in the container to replace the nginx welcome page with a ‘Hello World’ web page.\n\n```powershell\npowershell wget -uri 'https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/doc-site/virtualization/windowscontainers/quick_start/SampleFiles/index.html' -OutFile \"C:\\nginx\\nginx-1.9.3\\html\\index.html\"\n```\n\nAfter the website has been updated, navigate back to `http://containerhost-ipaddress`.\n\n![](media/hello.png)\n\n> **Note:** If you would like to change the Docker Daemon settings (such as to change the port it listens to, to connect to a container remotely), you will need to edit the file \"C:\\ProgramData\\docker\\runDockerDaemon.cmd\" in the container, and then you will need to restart the service with PowerShell, using ```Restart-Service docker```.\n\n## Video Walkthrough\n\n<iframe src=\"https://channel9.msdn.com/Blogs/containers/Quick-Start-Deploying-and-Managing-Windows-Server-Containers-with-Docker/player\" width=\"800\" height=\"450\"  allowFullScreen=\"true\" frameBorder=\"0\" scrolling=\"no\"></iframe>\n\n## Next Steps\nNow that you have containers set up and an introduction to the tools, go build your own containerized apps.\n\nRemember, this is a **preview** there are bugs and we have a lot of work in progress.  [This page](../about/work_in_progress.md) contains many of our known issues.\n\nBe aware that there are some known Docker commands that [don't work](../about/work_in_progress.md#DockermanagementDockercommandsthatdontworkwithWindowsServerContainers) and some that only [partially work](../about/work_in_progress.md#DockermanagementDockercommandsthatpartiallyworkwithWindowsServerContainers)\n\nWe are also monitoring the [forums](https://social.msdn.microsoft.com/Forums/en-US/home?forum=windowscontainers) very closely.\n\nThere are also pre-made samples on [GitHub](https://github.com/Microsoft/Virtualization-Documentation/tree/master/windows-server-container-samples).\n\n-----------------------------------\n[Back to Container Home](../containers_welcome.md)   \n[Known Issues for Current Release](../about/work_in_progress.md)"
+}
