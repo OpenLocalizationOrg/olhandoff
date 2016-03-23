@@ -1,0 +1,138 @@
+{
+  "nodes": [
+    {
+      "content": "How to create a VNet using a network config file from PowerShell",
+      "pos": [
+        3,
+        67
+      ]
+    },
+    {
+      "content": "Azure uses an xml file to define all VNets available to a subscription.",
+      "pos": [
+        69,
+        140
+      ]
+    },
+    {
+      "content": "You can download this file, and edit it to modify or delete existing VNets, and create new ones.",
+      "pos": [
+        141,
+        237
+      ]
+    },
+    {
+      "content": "In this document, you will learn how to download this file, referred to as network configuration (or netcgf) file, and edit it to create a new VNet.",
+      "pos": [
+        238,
+        386
+      ]
+    },
+    {
+      "content": "Check the <bpt id=\"p1\">[</bpt>Azure virtual network configuration schema<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/jj157100.aspx)</ept> to learn more about the network configuration file.",
+      "pos": [
+        387,
+        549
+      ]
+    },
+    {
+      "content": "To create a VNet using a netcfg file using PowerShell, follow the steps below.",
+      "pos": [
+        551,
+        629
+      ]
+    },
+    {
+      "pos": [
+        634,
+        859
+      ],
+      "content": "If you have never used Azure PowerShell, see <bpt id=\"p1\">[</bpt>How to Install and Configure Azure PowerShell<ept id=\"p1\">](powershell-install-configure.md)</ept> and follow the instructions all the way to the end to sign into Azure and select your subscription."
+    },
+    {
+      "pos": [
+        863,
+        1009
+      ],
+      "content": "From the Azure PowerShell console, use the <bpt id=\"p1\">**</bpt>Get-AzureVnetConfig<ept id=\"p1\">**</ept> cmdlet to download the network configuration file by running the command below."
+    },
+    {
+      "content": "Expected output:",
+      "pos": [
+        1080,
+        1096
+      ]
+    },
+    {
+      "content": "Open the file you saved in step 2 above using any XML or text editor application, and look for the <bpt id=\"p1\">**</bpt><ph id=\"ph1\">&lt;VirtualNetworkSites&gt;</ph><ept id=\"p1\">**</ept> element.",
+      "pos": [
+        1406,
+        1539
+      ]
+    },
+    {
+      "content": "If you have any networks already created, each network will be displayed as its own <bpt id=\"p1\">**</bpt><ph id=\"ph1\">&lt;VirtualNetworkSite&gt;</ph><ept id=\"p1\">**</ept> element.",
+      "pos": [
+        1540,
+        1657
+      ]
+    },
+    {
+      "pos": [
+        1661,
+        1790
+      ],
+      "content": "To create the virtual network described in this scenario, add the following XML just under the <bpt id=\"p1\">**</bpt><ph id=\"ph1\">&lt;VirtualNetworkSites&gt;</ph><ept id=\"p1\">**</ept> element:"
+    },
+    {
+      "content": "Save the network configuration file.",
+      "pos": [
+        2281,
+        2317
+      ]
+    },
+    {
+      "content": "From the Azure PowerShell console, use the <bpt id=\"p1\">**</bpt>Set-AzureVnetConfig<ept id=\"p1\">**</ept> cmdlet to upload the network configuration file by running the command below.",
+      "pos": [
+        2322,
+        2466
+      ]
+    },
+    {
+      "content": "Notice the output under the command, you should see <bpt id=\"p1\">**</bpt>Succeeded<ept id=\"p1\">**</ept> under <bpt id=\"p2\">**</bpt>OperationStatus<ept id=\"p2\">**</ept>.",
+      "pos": [
+        2467,
+        2559
+      ]
+    },
+    {
+      "content": "If that is not the case, check the xml file for errors.",
+      "pos": [
+        2560,
+        2615
+      ]
+    },
+    {
+      "content": "Here is the expected output for the command above:",
+      "pos": [
+        2690,
+        2740
+      ]
+    },
+    {
+      "pos": [
+        2992,
+        3134
+      ],
+      "content": "From the Azure PowerShell console, use the <bpt id=\"p1\">**</bpt>Get-AzureVnetSite<ept id=\"p1\">**</ept> cmdlet to verify that the new network was added by running the command below."
+    },
+    {
+      "content": "Here is the expected output for the command above:",
+      "pos": [
+        3187,
+        3237
+      ]
+    }
+  ],
+  "content": "## How to create a VNet using a network config file from PowerShell\n\nAzure uses an xml file to define all VNets available to a subscription. You can download this file, and edit it to modify or delete existing VNets, and create new ones. In this document, you will learn how to download this file, referred to as network configuration (or netcgf) file, and edit it to create a new VNet. Check the [Azure virtual network configuration schema](https://msdn.microsoft.com/library/azure/jj157100.aspx) to learn more about the network configuration file.\n\nTo create a VNet using a netcfg file using PowerShell, follow the steps below.\n\n1. If you have never used Azure PowerShell, see [How to Install and Configure Azure PowerShell](powershell-install-configure.md) and follow the instructions all the way to the end to sign into Azure and select your subscription.\n2. From the Azure PowerShell console, use the **Get-AzureVnetConfig** cmdlet to download the network configuration file by running the command below. \n\n        Get-AzureVNetConfig -ExportToFile c:\\NetworkConfig.xml\n\n    Expected output:\n\n        XMLConfiguration                                                                                                     \n        ----------------                                                                                                     \n        <?xml version=\"1.0\" encoding=\"utf-8\"?>...  \n\n3. Open the file you saved in step 2 above using any XML or text editor application, and look for the **<VirtualNetworkSites>** element. If you have any networks already created, each network will be displayed as its own **<VirtualNetworkSite>** element.\n4. To create the virtual network described in this scenario, add the following XML just under the **<VirtualNetworkSites>** element:\n\n        <VirtualNetworkSite name=\"TestVNet\" Location=\"Central US\">\n          <AddressSpace>\n            <AddressPrefix>192.168.0.0/16</AddressPrefix>\n          </AddressSpace>\n          <Subnets>\n            <Subnet name=\"FrontEnd\">\n              <AddressPrefix>192.168.1.0/24</AddressPrefix>\n            </Subnet>\n            <Subnet name=\"BackEnd\">\n              <AddressPrefix>192.168.2.0/24</AddressPrefix>\n            </Subnet>\n          </Subnets>\n        </VirtualNetworkSite>\n\n9.  Save the network configuration file.\n10. From the Azure PowerShell console, use the **Set-AzureVnetConfig** cmdlet to upload the network configuration file by running the command below. Notice the output under the command, you should see **Succeeded** under **OperationStatus**. If that is not the case, check the xml file for errors.\n\n        Set-AzureVNetConfig -ConfigurationPath c:\\NetworkConfig.xml\n\n    Here is the expected output for the command above:\n\n        OperationDescription OperationId                          OperationStatus\n        -------------------- -----------                          ---------------\n        Set-AzureVNetConfig  49579cb9-3f49-07c3-ada2-7abd0e28c4e4 Succeeded \n    \n11. From the Azure PowerShell console, use the **Get-AzureVnetSite** cmdlet to verify that the new network was added by running the command below. \n\n        Get-AzureVNetSite -VNetName TestVNet\n\n    Here is the expected output for the command above:\n\n        AddressSpacePrefixes : {192.168.0.0/16}\n        Location             : Central US\n        AffinityGroup        : \n        DnsServers           : {}\n        GatewayProfile       : \n        GatewaySites         : \n        Id                   : b953f47b-fad9-4075-8cfe-73ff9c98278f\n        InUse                : False\n        Label                : \n        Name                 : TestVNet\n        State                : Created\n        Subnets              : {FrontEnd, BackEnd}\n        OperationDescription : Get-AzureVNetSite\n        OperationId          : 3f35d533-1f38-09c0-b286-3d07cd0904d8\n        OperationStatus      : Succeeded\n\n"
+}

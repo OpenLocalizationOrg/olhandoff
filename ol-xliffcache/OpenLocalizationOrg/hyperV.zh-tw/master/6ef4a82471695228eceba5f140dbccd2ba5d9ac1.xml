@@ -1,0 +1,103 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        0,
+        124
+      ],
+      "content": "Use the procedure that matches your backend project type&amp;mdash;either <bpt id=\"p1\">[</bpt>.NET backend<ept id=\"p1\">](#dotnet)</ept> or <bpt id=\"p2\">[</bpt>Node.js backend<ept id=\"p2\">](#nodejs)</ept>."
+    },
+    {
+      "pos": [
+        130,
+        171
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"dotnet\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>.NET backend project"
+    },
+    {
+      "content": "In Visual Studio, right-click the server project and click <bpt id=\"p1\">**</bpt>Manage NuGet Packages<ept id=\"p1\">**</ept>, search for <ph id=\"ph1\">`Microsoft.Azure.NotificationHubs`</ph>, then click <bpt id=\"p2\">**</bpt>Install<ept id=\"p2\">**</ept>.",
+      "pos": [
+        175,
+        331
+      ]
+    },
+    {
+      "content": "This installs the Notification Hubs library for sending notifications from your backend.",
+      "pos": [
+        332,
+        420
+      ]
+    },
+    {
+      "pos": [
+        425,
+        537
+      ],
+      "content": "In the server project, open <bpt id=\"p1\">**</bpt>Controllers<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>TodoItemController.cs<ept id=\"p2\">**</ept>, and add the following using statements:"
+    },
+    {
+      "pos": [
+        690,
+        779
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>PostTodoItem<ept id=\"p1\">**</ept> method, add the following code after the call to <bpt id=\"p2\">**</bpt>InsertAsync<ept id=\"p2\">**</ept>:"
+    },
+    {
+      "content": "This code tells the notification hub to send a a template notification to all template registrations that contain \"messageParam\".",
+      "pos": [
+        2416,
+        2545
+      ]
+    },
+    {
+      "content": "The string will be inserted in the place of messageParam across each PNS that has a registration using \"messageParam\".",
+      "pos": [
+        2546,
+        2664
+      ]
+    },
+    {
+      "content": "This allows you to send the notification to APNS, GCM, WNS, or any other PNS.",
+      "pos": [
+        2665,
+        2742
+      ]
+    },
+    {
+      "pos": [
+        2748,
+        2854
+      ],
+      "content": "For more information on templates with Notification Hubs, see <bpt id=\"p1\">[</bpt>Templates<ept id=\"p1\">](notification-hubs-templates.md)</ept>."
+    },
+    {
+      "pos": [
+        2861,
+        2905
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"nodejs\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Node.js backend project"
+    },
+    {
+      "content": "Replace the existing code in the todoitem.js file with the following:",
+      "pos": [
+        2910,
+        2979
+      ]
+    },
+    {
+      "content": "This sends a template notification that contains the item.text when a new todo item is inserted.",
+      "pos": [
+        4613,
+        4709
+      ]
+    },
+    {
+      "content": "When editing the file in your local computer, republish the server project.",
+      "pos": [
+        4714,
+        4789
+      ]
+    }
+  ],
+  "content": "Use the procedure that matches your backend project type&mdash;either [.NET backend](#dotnet) or [Node.js backend](#nodejs).\n\n### <a name=\"dotnet\"></a>.NET backend project\n1. In Visual Studio, right-click the server project and click **Manage NuGet Packages**, search for `Microsoft.Azure.NotificationHubs`, then click **Install**. This installs the Notification Hubs library for sending notifications from your backend.\n\n3. In the server project, open **Controllers** > **TodoItemController.cs**, and add the following using statements:\n\n        using System.Collections.Generic;\n        using Microsoft.Azure.NotificationHubs;\n        using Microsoft.Azure.Mobile.Server.Config;\n    \n\n2. In the **PostTodoItem** method, add the following code after the call to **InsertAsync**:  \n\n        // Get the settings for the server project.\n        HttpConfiguration config = this.Configuration;\n        MobileAppSettingsDictionary settings = \n            this.Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();\n        \n        // Get the Notification Hubs credentials for the Mobile App.\n        string notificationHubName = settings.NotificationHubName;\n        string notificationHubConnection = settings\n            .Connections[MobileAppSettingsKeys.NotificationHubConnectionString].ConnectionString;\n\n        // Create a new Notification Hub client.\n        NotificationHubClient hub = NotificationHubClient\n        .CreateClientFromConnectionString(notificationHubConnection, notificationHubName);\n\n        // Sending the message so that all template registrations that contain \"messageParam\"\n        // will receive the notifications. This includes APNS, GCM, WNS, and MPNS template registrations.\n        Dictionary<string,string> templateParams = new Dictionary<string,string>();\n        templateParams[\"messageParam\"] = item.Text + \" was added to the list.\";\n\n        try\n        {\n            // Send the push notification and log the results.\n            var result = await hub.SendTemplateNotificationAsync(templateParams);\n\n            // Write the success result to the logs.\n            config.Services.GetTraceWriter().Info(result.State.ToString());\n        }\n        catch (System.Exception ex)\n        {\n            // Write the failure result to the logs.\n            config.Services.GetTraceWriter()\n                .Error(ex.Message, null, \"Push.SendAsync Error\");\n        }\n\n    This code tells the notification hub to send a a template notification to all template registrations that contain \"messageParam\". The string will be inserted in the place of messageParam across each PNS that has a registration using \"messageParam\". This allows you to send the notification to APNS, GCM, WNS, or any other PNS.\n\n    For more information on templates with Notification Hubs, see [Templates](notification-hubs-templates.md). \n\n### <a name=\"nodejs\"></a>Node.js backend project\n\n1. Replace the existing code in the todoitem.js file with the following:\n\n        var azureMobileApps = require('azure-mobile-apps'),\n        promises = require('azure-mobile-apps/src/utilities/promises'),\n        logger = require('azure-mobile-apps/src/logger');\n    \n        var table = azureMobileApps.table();\n        \n        table.insert(function (context) {\n        // For more information about the Notification Hubs JavaScript SDK, \n        // see http://aka.ms/nodejshubs\n        logger.info('Running TodoItem.insert');\n        \n        // Define the template payload.\n        var payload = '{\"messageParam\": context.item.text}'; \n        \n        // Execute the insert.  The insert returns the results as a Promise,\n        // Do the push as a post-execute action within the promise flow.\n        return context.execute()\n            .then(function (results) {\n                // Only do the push if configured\n                if (context.push) {\n                    // Send a template notification.\n                    context.push.send(null, payload, function (error) {\n                        if (error) {\n                            logger.error('Error while sending push notification: ', error);\n                        } else {\n                            logger.info('Push notification sent successfully!');\n                        }\n                    });\n                }\n                // Don't forget to return the results from the context.execute()\n                return results;\n            })\n            .catch(function (error) {\n                logger.error('Error while running context.execute: ', error);\n            });\n        });\n\n        module.exports = table;  \n\n    This sends a template notification that contains the item.text when a new todo item is inserted.\n\n2. When editing the file in your local computer, republish the server project.\n\n"
+}

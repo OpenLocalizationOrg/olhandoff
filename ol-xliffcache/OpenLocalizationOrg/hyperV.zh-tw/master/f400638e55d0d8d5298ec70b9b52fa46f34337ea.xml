@@ -1,0 +1,495 @@
+{
+  "nodes": [
+    {
+      "content": "Consume an API app in Azure App Service from a .NET client",
+      "pos": [
+        28,
+        86
+      ]
+    },
+    {
+      "content": "Learn how to consume an API app from a .NET client using the App Service SDK.",
+      "pos": [
+        106,
+        183
+      ]
+    },
+    {
+      "content": "Consume an API app in Azure App Service from a .NET client",
+      "pos": [
+        513,
+        571
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        663,
+        671
+      ]
+    },
+    {
+      "content": "This tutorial shows how to use the App Service SDK to write code that calls an <bpt id=\"p1\">[</bpt>API app<ept id=\"p1\">](app-service-api-apps-why-best-platform.md)</ept> that has been configured for <bpt id=\"p2\">**</bpt>Public (anonymous)<ept id=\"p2\">**</ept> or <bpt id=\"p3\">**</bpt>Public (authenticated)<ept id=\"p3\">**</ept> access level.",
+      "pos": [
+        673,
+        900
+      ]
+    },
+    {
+      "content": "The article covers the following example scenarios:",
+      "pos": [
+        901,
+        952
+      ]
+    },
+    {
+      "pos": [
+        956,
+        1020
+      ],
+      "content": "Call a <bpt id=\"p1\">**</bpt>Public (anonymous)<ept id=\"p1\">**</ept> API app from a console application"
+    },
+    {
+      "pos": [
+        1023,
+        1099
+      ],
+      "content": "Call a <bpt id=\"p1\">**</bpt>Public (authenticated)<ept id=\"p1\">**</ept> API app from a Windows Desktop application"
+    },
+    {
+      "content": "Each of these tutorial sections is independent -- you can follow the instructions for the second scenario without having completed the steps for the first one.",
+      "pos": [
+        1102,
+        1261
+      ]
+    },
+    {
+      "pos": [
+        1263,
+        1419
+      ],
+      "content": "For information about how to call an <bpt id=\"p1\">**</bpt>Internal<ept id=\"p1\">**</ept> API app, see <bpt id=\"p2\">[</bpt>Consume an internal API app from a .NET client<ept id=\"p2\">](app-service-api-dotnet-consume-internal.md)</ept>."
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1424,
+        1437
+      ]
+    },
+    {
+      "pos": [
+        1439,
+        1648
+      ],
+      "content": "the tutorial assumes that you are familiar with how to create projects and add code to them in Visual Studio, and how to <bpt id=\"p1\">[</bpt>manage API apps in the Azure preview portal<ept id=\"p1\">](app-service-api-apps-manage-in-portal.md)</ept>."
+    },
+    {
+      "content": "The project and code samples in this article are based on the API app project that you create, deploy, and protect in these articles:",
+      "pos": [
+        1650,
+        1783
+      ]
+    },
+    {
+      "content": "Create an API app",
+      "pos": [
+        1788,
+        1805
+      ]
+    },
+    {
+      "content": "Deploy an API app",
+      "pos": [
+        1848,
+        1865
+      ]
+    },
+    {
+      "content": "Protect an API app",
+      "pos": [
+        1908,
+        1926
+      ]
+    },
+    {
+      "content": "This tutorial requires version 2.6 or later of the Azure SDK for .NET.",
+      "pos": [
+        2060,
+        2130
+      ]
+    },
+    {
+      "content": "Unauthenticated call from a console application",
+      "pos": [
+        2135,
+        2182
+      ]
+    },
+    {
+      "content": "In this section you create a console application project and add code to it that calls an API app that doesn't require authentication.",
+      "pos": [
+        2184,
+        2318
+      ]
+    },
+    {
+      "content": "Set up the API app and create the project",
+      "pos": [
+        2325,
+        2366
+      ]
+    },
+    {
+      "pos": [
+        2371,
+        2555
+      ],
+      "content": "If you haven't already done so, follow the <bpt id=\"p1\">[</bpt>Deploy an API app<ept id=\"p1\">](app-service-dotnet-deploy-api-app.md)</ept> to deploy the ContactsList sample project to an API app in your Azure subscription."
+    },
+    {
+      "content": "That tutorial directs you to set the access level in the Visual Studio publish dialog to <bpt id=\"p1\">**</bpt>Available to anyone<ept id=\"p1\">**</ept>, which is the same as <bpt id=\"p2\">**</bpt>Public (anonymous)<ept id=\"p2\">**</ept> in the portal.",
+      "pos": [
+        2561,
+        2733
+      ]
+    },
+    {
+      "content": "However, if you did the <bpt id=\"p1\">[</bpt>Protect an API app<ept id=\"p1\">](../app-service-api-dotnet-add-authentication.md)</ept> tutorial after that, the access level has been set to <bpt id=\"p2\">**</bpt>Public (authenticated)<ept id=\"p2\">**</ept>, and in that case you need to change it as directed in the following step.",
+      "pos": [
+        2734,
+        2983
+      ]
+    },
+    {
+      "pos": [
+        2988,
+        3203
+      ],
+      "content": "In the <bpt id=\"p1\">[</bpt>Azure preview portal<ept id=\"p1\">](https://portal.azure.com/)</ept>, in the <bpt id=\"p2\">**</bpt>API app<ept id=\"p2\">**</ept> blade for the API app that you want to call, go to <bpt id=\"p3\">**</bpt>Settings &gt; Application Settings<ept id=\"p3\">**</ept> and set <bpt id=\"p4\">**</bpt>Access level<ept id=\"p4\">**</ept> to <bpt id=\"p5\">**</bpt>Public (anonymous)<ept id=\"p5\">**</ept>."
+    },
+    {
+      "content": "In Visual Studio, create a console application project.",
+      "pos": [
+        3276,
+        3331
+      ]
+    },
+    {
+      "pos": [
+        3338,
+        3401
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"addclient\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Add App Service SDK generated client code"
+    },
+    {
+      "content": "Add code to call the API app",
+      "pos": [
+        3533,
+        3561
+      ]
+    },
+    {
+      "content": "To call the API app, all you have to do is create a client object and call methods on it, as in this example:",
+      "pos": [
+        3563,
+        3672
+      ]
+    },
+    {
+      "pos": [
+        3764,
+        3835
+      ],
+      "content": "Open <bpt id=\"p1\">*</bpt>Program.cs<ept id=\"p1\">*</ept>, and add the following code inside the <ph id=\"ph1\">`Main`</ph> method."
+    },
+    {
+      "content": "Press CTRL+F5 to run the application.",
+      "pos": [
+        4393,
+        4430
+      ]
+    },
+    {
+      "content": "Generation Complete",
+      "pos": [
+        4438,
+        4457
+      ]
+    },
+    {
+      "content": "Authenticated call from a Windows desktop application",
+      "pos": [
+        4524,
+        4577
+      ]
+    },
+    {
+      "content": "In this section you create a Windows desktop application project and add code to it that calls an API app that requires authentication.",
+      "pos": [
+        4579,
+        4714
+      ]
+    },
+    {
+      "content": "Set up the API app and create the project",
+      "pos": [
+        4721,
+        4762
+      ]
+    },
+    {
+      "pos": [
+        4767,
+        4923
+      ],
+      "content": "Follow the <bpt id=\"p1\">[</bpt>Protect an API app<ept id=\"p1\">](../app-service-api-dotnet-add-authentication.md)</ept> tutorial to set up an API app with <bpt id=\"p2\">**</bpt>Public (authenticated)<ept id=\"p2\">**</ept> access level."
+    },
+    {
+      "content": "In Visual Studio, create a Windows Forms desktop project.",
+      "pos": [
+        4928,
+        4985
+      ]
+    },
+    {
+      "content": "In the form designer, add the following controls:",
+      "pos": [
+        4990,
+        5039
+      ]
+    },
+    {
+      "content": "A button control",
+      "pos": [
+        5047,
+        5063
+      ]
+    },
+    {
+      "content": "A text box control",
+      "pos": [
+        5070,
+        5088
+      ]
+    },
+    {
+      "content": "A web browser control",
+      "pos": [
+        5095,
+        5116
+      ]
+    },
+    {
+      "content": "Set the text box control to multi-line.",
+      "pos": [
+        5121,
+        5160
+      ]
+    },
+    {
+      "content": "Your form should look like the following example.",
+      "pos": [
+        5166,
+        5215
+      ]
+    },
+    {
+      "content": "Add App Service SDK generated client code",
+      "pos": [
+        5279,
+        5320
+      ]
+    },
+    {
+      "pos": [
+        5325,
+        5436
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the project (not the solution) and select <bpt id=\"p2\">**</bpt>Add &gt; Azure API App Client<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        5442,
+        5524
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Add Azure API App Client<ept id=\"p1\">**</ept> dialog, click <bpt id=\"p2\">**</bpt>Download from Azure API App<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        5530,
+        5619
+      ],
+      "content": "From the drop-down list, select the API app that you want to call, and then click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Add code to call the API app",
+      "pos": [
+        5626,
+        5654
+      ]
+    },
+    {
+      "content": "In the Azure preview portal, copy the URL for your API app's gateway.",
+      "pos": [
+        5659,
+        5728
+      ]
+    },
+    {
+      "content": "You'll use this value in the next step.",
+      "pos": [
+        5730,
+        5769
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">*</bpt>Form1.cs<ept id=\"p1\">*</ept> source code, add the following code before the <ph id=\"ph1\">`Form1()`</ph> constructor, replacing the value for GATEWAY_URL with the value you copied in the previous step.",
+      "pos": [
+        5838,
+        6005
+      ]
+    },
+    {
+      "content": "Make sure you include the trailing slash (/).",
+      "pos": [
+        6007,
+        6052
+      ]
+    },
+    {
+      "content": "In the form designer, double-click the button to add a click handler, and then in the handler method add code to go to the login URL for the gateway, for example:",
+      "pos": [
+        6223,
+        6385
+      ]
+    },
+    {
+      "content": "Replace \"[authprovider]\" with the code for the identity service provider that you configured in the gateway, for example, \"aad\", \"twitter\", \"google\", \"microsoftaccount\", or \"facebook\".",
+      "pos": [
+        6478,
+        6662
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        6663,
+        6675
+      ]
+    },
+    {
+      "pos": [
+        6756,
+        6874
+      ],
+      "content": "Add a <ph id=\"ph1\">`DocumentCompleted`</ph> event handler for the web browser control, and add the following code to the handler method."
+    },
+    {
+      "content": "The code you've added runs after the user logs in using the web browser control.",
+      "pos": [
+        7914,
+        7994
+      ]
+    },
+    {
+      "content": "After a successful login, the response URL contains the user ID and password.",
+      "pos": [
+        7995,
+        8072
+      ]
+    },
+    {
+      "content": "The code extracts these values from the URL, provides them to the App Service client object, and then uses that object to create an API app client object.",
+      "pos": [
+        8073,
+        8227
+      ]
+    },
+    {
+      "content": "You can then call the API by calling methods on this API app client object.",
+      "pos": [
+        8228,
+        8303
+      ]
+    },
+    {
+      "content": "Press CTRL+F5 to run the application.",
+      "pos": [
+        8308,
+        8345
+      ]
+    },
+    {
+      "content": "Click the button, and when the browser control displays a login page, enter the credentials of a user authorized to call the API app.",
+      "pos": [
+        8350,
+        8483
+      ]
+    },
+    {
+      "content": "Azure authenticates you, and the application calls the API app and displays the response.",
+      "pos": [
+        8489,
+        8578
+      ]
+    },
+    {
+      "pos": [
+        8653,
+        8704
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"client-flow\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Server flow vs. client flow"
+    },
+    {
+      "content": "The sample application illustrates <bpt id=\"p1\">[</bpt>server flow<ept id=\"p1\">](../app-service/app-service-authentication-overview.md#server-flow)</ept>, which means the gateway gets the identity provider's access token.",
+      "pos": [
+        8706,
+        8889
+      ]
+    },
+    {
+      "content": "For <bpt id=\"p1\">[</bpt>client flow<ept id=\"p1\">](../app-service/app-service-authentication-overview.md#client-flow)</ept>, in which your client application gets the access token directly from the identity provider and sends it to the gateway, you call <ph id=\"ph1\">`LoginAsync`</ph> rather than <ph id=\"ph2\">`SetCurrentUser`</ph>.",
+      "pos": [
+        8890,
+        9147
+      ]
+    },
+    {
+      "pos": [
+        9150,
+        9425
+      ],
+      "content": "The following code example assumes that you have the identity provider's access token in a string variable named <ph id=\"ph1\">`providerAccessToken`</ph> and the identity provider indicator (\"aad\", \"microsoftaccount\", \"google\", \"twitter\", or \"facebook\") in a string variable named <ph id=\"ph2\">`idProvider`</ph>:"
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        10020,
+        10030
+      ]
+    },
+    {
+      "pos": [
+        10032,
+        10189
+      ],
+      "content": "This article has shown how to consume an API app from a .NET client, for API apps set to <bpt id=\"p1\">**</bpt>Public (authenticated)<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>Public (anonymous)<ept id=\"p2\">**</ept> access levels."
+    },
+    {
+      "pos": [
+        10192,
+        10379
+      ],
+      "content": "For additional examples of code that calls an API app from .NET clients, download the <bpt id=\"p1\">[</bpt>Azure Cards<ept id=\"p1\">](https://github.com/Azure-Samples/API-Apps-DotNet-AzureCards-Sample)</ept> sample application."
+    },
+    {
+      "pos": [
+        10381,
+        10568
+      ],
+      "content": "For information about how to use authentication in API apps, see <bpt id=\"p1\">[</bpt>Authentication for API apps and mobile apps in Azure App Service<ept id=\"p1\">](../app-service/app-service-authentication-overview.md)</ept>."
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Consume an API app in Azure App Service from a .NET client\" \n    description=\"Learn how to consume an API app from a .NET client using the App Service SDK.\" \n    services=\"app-service\\api\" \n    documentationCenter=\".net\" \n    authors=\"tdykstra\" \n    manager=\"wpickett\" \n    editor=\"jimbe\"/>\n\n<tags \n    ms.service=\"app-service-api\" \n    ms.workload=\"web\" \n    ms.tgt_pltfrm=\"dotnet\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"09/22/2015\" \n    ms.author=\"tdykstra\"/>\n\n# Consume an API app in Azure App Service from a .NET client \n\n[AZURE.INCLUDE [app-service-api-v2-note](../../includes/app-service-api-v2-note.md)]\n\n## Overview\n\nThis tutorial shows how to use the App Service SDK to write code that calls an [API app](app-service-api-apps-why-best-platform.md) that has been configured for **Public (anonymous)** or **Public (authenticated)** access level. The article covers the following example scenarios:\n\n- Call a **Public (anonymous)** API app from a console application\n- Call a **Public (authenticated)** API app from a Windows Desktop application \n\nEach of these tutorial sections is independent -- you can follow the instructions for the second scenario without having completed the steps for the first one.\n\nFor information about how to call an **Internal** API app, see [Consume an internal API app from a .NET client](app-service-api-dotnet-consume-internal.md).\n\n## Prerequisites\n\nthe tutorial assumes that you are familiar with how to create projects and add code to them in Visual Studio, and how to [manage API apps in the Azure preview portal](app-service-api-apps-manage-in-portal.md).\n\nThe project and code samples in this article are based on the API app project that you create, deploy, and protect in these articles:\n\n- [Create an API app](app-service-dotnet-create-api-app.md)\n- [Deploy an API app](app-service-dotnet-deploy-api-app.md)\n- [Protect an API app](../app-service-api-dotnet-add-authentication.md)\n\n[AZURE.INCLUDE [install-sdk-2013-only](../../includes/install-sdk-2013-only.md)]\n\nThis tutorial requires version 2.6 or later of the Azure SDK for .NET.\n\n## Unauthenticated call from a console application\n\nIn this section you create a console application project and add code to it that calls an API app that doesn't require authentication. \n\n### Set up the API app and create the project\n\n1. If you haven't already done so, follow the [Deploy an API app](app-service-dotnet-deploy-api-app.md) to deploy the ContactsList sample project to an API app in your Azure subscription.\n\n    That tutorial directs you to set the access level in the Visual Studio publish dialog to **Available to anyone**, which is the same as **Public (anonymous)** in the portal. However, if you did the [Protect an API app](../app-service-api-dotnet-add-authentication.md) tutorial after that, the access level has been set to **Public (authenticated)**, and in that case you need to change it as directed in the following step.\n\n2. In the [Azure preview portal](https://portal.azure.com/), in the **API app** blade for the API app that you want to call, go to **Settings > Application Settings** and set **Access level** to **Public (anonymous)**.\n\n    ![](./media/app-service-api-dotnet-consume/setpublicanon.png)\n \n2. In Visual Studio, create a console application project.\n \n### <a id=\"addclient\"></a>Add App Service SDK generated client code\n\n[AZURE.INCLUDE [app-service-api-dotnet-add-generated-client](../../includes/app-service-api-dotnet-add-generated-client.md)]\n\n### Add code to call the API app\n\nTo call the API app, all you have to do is create a client object and call methods on it, as in this example:\n\n        var client = new ContactList();\n        var contacts = client.Contacts.Get();\n\n1. Open *Program.cs*, and add the following code inside the `Main` method.\n\n        var client = new ContactsList();\n        \n        // Send GET request.\n        var contacts = client.Contacts.Get();\n        foreach (var c in contacts)\n        {\n            Console.WriteLine(\"{0}: {1} {2}\",\n                c.Id, c.Name, c.EmailAddress);\n        }\n        \n        // Send POST request.\n        client.Contacts.Post(new Models.Contact\n        {\n            EmailAddress = \"lkahn@contoso.com\",\n            Name = \"Loretta Kahn\",\n            Id = 4\n        });\n        Console.WriteLine(\"Finished\");\n        Console.ReadLine();\n\n3. Press CTRL+F5 to run the application.\n\n    ![Generation Complete](./media/app-service-api-dotnet-consume/consoleappoutput.png)\n\n## Authenticated call from a Windows desktop application\n\nIn this section you create a Windows desktop application project and add code to it that calls an API app that requires authentication. \n\n### Set up the API app and create the project\n\n1. Follow the [Protect an API app](../app-service-api-dotnet-add-authentication.md) tutorial to set up an API app with **Public (authenticated)** access level.\n\n1. In Visual Studio, create a Windows Forms desktop project.\n\n2. In the form designer, add the following controls:\n\n    * A button control\n    * A text box control\n    * A web browser control\n\n3. Set the text box control to multi-line.\n\n    Your form should look like the following example.\n\n    ![](./media/app-service-api-dotnet-consume/form.png)\n\n### Add App Service SDK generated client code\n\n3. In **Solution Explorer**, right-click the project (not the solution) and select **Add > Azure API App Client**. \n\n3. In the **Add Azure API App Client** dialog, click **Download from Azure API App**. \n\n5. From the drop-down list, select the API app that you want to call, and then click **OK**. \n\n### Add code to call the API app\n\n5. In the Azure preview portal, copy the URL for your API app's gateway.  You'll use this value in the next step.\n\n    ![](./media/app-service-api-dotnet-consume/gatewayurl.png)\n\n4. In *Form1.cs* source code, add the following code before the `Form1()` constructor, replacing the value for GATEWAY_URL with the value you copied in the previous step.  Make sure you include the trailing slash (/). \n\n        private const string GATEWAY_URL = \"https://resourcegroupnameb4f3d966dfa43b6607f30.azurewebsites.net/\";\n        private const string URL_TOKEN = \"#token=\";\n\n4. In the form designer, double-click the button to add a click handler, and then in the handler method add code to go to the login URL for the gateway, for example:\n\n        webBrowser1.Navigate(string.Format(@\"{0}login/[authprovider]\", GATEWAY_URL));\n\n    Replace \"[authprovider]\" with the code for the identity service provider that you configured in the gateway, for example, \"aad\", \"twitter\", \"google\", \"microsoftaccount\", or \"facebook\". For example:\n\n        webBrowser1.Navigate(string.Format(@\"{0}login/aad\", GATEWAY_URL));\n\n7. Add a `DocumentCompleted` event handler for the web browser control, and add the following code to the handler method.\n\n        if (e.Url.AbsoluteUri.IndexOf(URL_TOKEN) > -1)\n        {\n            var encodedJson = e.Url.AbsoluteUri.Substring(e.Url.AbsoluteUri.IndexOf(URL_TOKEN) + URL_TOKEN.Length);\n            var decodedJson = Uri.UnescapeDataString(encodedJson);\n            var result = JsonConvert.DeserializeObject<dynamic>(decodedJson);\n            string userId = result.user.userId;\n            string userToken = result.authenticationToken;\n        \n            var appServiceClient = new AppServiceClient(GATEWAY_URL);\n            appServiceClient.SetCurrentUser(userId, userToken);\n        \n            var contactsListClient = appServiceClient.CreateContactsList();\n            var contacts = contactsListClient.Contacts.Get();\n            foreach (Contact contact in contacts)\n            {\n                textBox1.Text += contact.Name + \" \" + contact.EmailAddress + System.Environment.NewLine;\n            }\n            //appServiceClient.Logout();\n            //webBrowser1.Navigate(string.Format(@\"{0}login/aad\", GW_URL));\n        }\n\n    The code you've added runs after the user logs in using the web browser control. After a successful login, the response URL contains the user ID and password. The code extracts these values from the URL, provides them to the App Service client object, and then uses that object to create an API app client object. You can then call the API by calling methods on this API app client object.\n\n8. Press CTRL+F5 to run the application.\n\n9. Click the button, and when the browser control displays a login page, enter the credentials of a user authorized to call the API app.\n\n    Azure authenticates you, and the application calls the API app and displays the response.  \n\n    ![](./media/app-service-api-dotnet-consume/formaftercall.png)\n\n### <a id=\"client-flow\"></a>Server flow vs. client flow\n\nThe sample application illustrates [server flow](../app-service/app-service-authentication-overview.md#server-flow), which means the gateway gets the identity provider's access token. For [client flow](../app-service/app-service-authentication-overview.md#client-flow), in which your client application gets the access token directly from the identity provider and sends it to the gateway, you call `LoginAsync` rather than `SetCurrentUser`. \n\nThe following code example assumes that you have the identity provider's access token in a string variable named `providerAccessToken` and the identity provider indicator (\"aad\", \"microsoftaccount\", \"google\", \"twitter\", or \"facebook\") in a string variable named `idProvider`:\n\n        var appServiceClient = new AppServiceClient(GATEWAY_URL);\n        var providerAccessTokenJSON = new JObject();\n        providerAccessTokenJSON[\"access_token\"] = providerAccessToken;\n        var appServiceUser = await appServiceClient.LoginAsync(idProvider, providerAccessTokenJSON);\n\n        var contactsListClient = appServiceClient.CreateContactsList();\n        var contacts = contactsListClient.Contacts.Get();\n        foreach (Contact contact in contacts)\n        {\n            textBox1.Text += contact.Name + \" \" + contact.EmailAddress + System.Environment.NewLine;\n        }\n\n## Next steps\n\nThis article has shown how to consume an API app from a .NET client, for API apps set to **Public (authenticated)** and **Public (anonymous)** access levels. \n\nFor additional examples of code that calls an API app from .NET clients, download the [Azure Cards](https://github.com/Azure-Samples/API-Apps-DotNet-AzureCards-Sample) sample application.\n\nFor information about how to use authentication in API apps, see [Authentication for API apps and mobile apps in Azure App Service](../app-service/app-service-authentication-overview.md).\n \n\n\n"
+}

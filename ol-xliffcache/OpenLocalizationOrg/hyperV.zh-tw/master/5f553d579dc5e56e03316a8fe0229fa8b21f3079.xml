@@ -1,0 +1,369 @@
+{
+  "nodes": [
+    {
+      "content": "Azure AD Connect sync: Understanding Users and Contacts | Microsoft Azure",
+      "pos": [
+        27,
+        100
+      ]
+    },
+    {
+      "content": "Explains users and contacts in Azure AD Connect sync.",
+      "pos": [
+        119,
+        172
+      ]
+    },
+    {
+      "content": "Azure AD Connect sync: Understanding Users and Contacts",
+      "pos": [
+        494,
+        549
+      ]
+    },
+    {
+      "content": "There are several different reasons why you would have multiple Active Directory forests and there are several different deployment topologies.",
+      "pos": [
+        551,
+        694
+      ]
+    },
+    {
+      "content": "Common models include an account-resource deployment and GAL sync’ed forests after a merger &amp; acquisition.",
+      "pos": [
+        695,
+        801
+      ]
+    },
+    {
+      "content": "But even if there are pure models, hybrid models are common as well.",
+      "pos": [
+        802,
+        870
+      ]
+    },
+    {
+      "content": "The default configuration in Azure AD Connect sync does not assume any particular model but depending on how user matching was selected in the installation guide, different behaviors can be observed.",
+      "pos": [
+        871,
+        1070
+      ]
+    },
+    {
+      "content": "In this topic, we will go through how the default configuration behaves in certain topologies.",
+      "pos": [
+        1072,
+        1166
+      ]
+    },
+    {
+      "content": "We will go through the configuration and the Synchronization Rules Editor can be used to look at the configuration.",
+      "pos": [
+        1167,
+        1282
+      ]
+    },
+    {
+      "content": "There are a few general rules the configuration assumes:",
+      "pos": [
+        1284,
+        1340
+      ]
+    },
+    {
+      "content": "Regardless of which order we import from the source Active Directories, the end result should always be the same.",
+      "pos": [
+        1344,
+        1457
+      ]
+    },
+    {
+      "pos": [
+        1460,
+        1573
+      ],
+      "content": "An active account will always contribute login information, including <bpt id=\"p1\">**</bpt>userPrincipalName<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>sourceAnchor<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "A disabled account will contribute userPrincipalName and sourceAnchor, unless it is a linked mailbox, if there is no active account to be found.",
+      "pos": [
+        1576,
+        1720
+      ]
+    },
+    {
+      "content": "An account with a linked mailbox will never be used for userPrincipalName and sourceAnchor.",
+      "pos": [
+        1723,
+        1814
+      ]
+    },
+    {
+      "content": "It is assumed that an active account will be found later.",
+      "pos": [
+        1815,
+        1872
+      ]
+    },
+    {
+      "content": "A contact object might be provisioned to Azure AD as a contact or as a user.",
+      "pos": [
+        1875,
+        1951
+      ]
+    },
+    {
+      "content": "You don’t really know until all source Active Directory forests have been processed.",
+      "pos": [
+        1952,
+        2036
+      ]
+    },
+    {
+      "content": "Contacts",
+      "pos": [
+        2041,
+        2049
+      ]
+    },
+    {
+      "content": "Having contacts representing a user in a different forest is common after a merger &amp; acquisition where a GALSync solution is bridging two or more Exchange forests.",
+      "pos": [
+        2051,
+        2214
+      ]
+    },
+    {
+      "content": "The contact object is always joining from the connector space to the metaverse using the mail attribute.",
+      "pos": [
+        2215,
+        2319
+      ]
+    },
+    {
+      "content": "If there is already a contact object or user object with the same mail address, the objects are joined together.",
+      "pos": [
+        2320,
+        2432
+      ]
+    },
+    {
+      "content": "This is configured in the rule <bpt id=\"p1\">**</bpt>In from AD – Contact Join<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2433,
+        2494
+      ]
+    },
+    {
+      "content": "There is also a rule named <bpt id=\"p1\">**</bpt>In from AD – Contact Common<ept id=\"p1\">**</ept> with an attribute flow to the metaverse attribute <bpt id=\"p2\">**</bpt>sourceObjectType<ept id=\"p2\">**</ept> with the constant <bpt id=\"p3\">**</bpt>Contact<ept id=\"p3\">**</ept>.",
+      "pos": [
+        2495,
+        2655
+      ]
+    },
+    {
+      "content": "This rule has very low precedence so if any user object is joined to the same metaverse object, then the rule <bpt id=\"p1\">**</bpt>In from AD – User Common<ept id=\"p1\">**</ept> will contribute the value User to this attribute.",
+      "pos": [
+        2656,
+        2844
+      ]
+    },
+    {
+      "content": "With this rule, this attribute will have the value Contact if no user has been joined and the value User if at least one user has been found.",
+      "pos": [
+        2845,
+        2986
+      ]
+    },
+    {
+      "content": "For provisioning an object to Azure AD, the outbound rule <bpt id=\"p1\">**</bpt>Out to AAD – Contact Join<ept id=\"p1\">**</ept> will create a contact object if the metaverse attribute <bpt id=\"p2\">**</bpt>sourceObjectType<ept id=\"p2\">**</ept> is set to <bpt id=\"p3\">**</bpt>Contact<ept id=\"p3\">**</ept>.",
+      "pos": [
+        2988,
+        3175
+      ]
+    },
+    {
+      "content": "If this attribute is set to <bpt id=\"p1\">**</bpt>User<ept id=\"p1\">**</ept>, then the rule <bpt id=\"p2\">**</bpt>Out to AAD – User Join<ept id=\"p2\">**</ept> will create a user object instead.",
+      "pos": [
+        3176,
+        3289
+      ]
+    },
+    {
+      "content": "It is possible that an object is promoted from Contact to User when more source Active Directories are imported and synchronized.",
+      "pos": [
+        3290,
+        3419
+      ]
+    },
+    {
+      "content": "For example, in a GALSync topology we will find contact objects for everyone in the second forest when we import the first forest.",
+      "pos": [
+        3421,
+        3551
+      ]
+    },
+    {
+      "content": "This will stage new contact objects in the AAD Connector.",
+      "pos": [
+        3552,
+        3609
+      ]
+    },
+    {
+      "content": "When we later import and synchronize the second forest, we will find the real users and join them to the existing metaverse objects.",
+      "pos": [
+        3610,
+        3742
+      ]
+    },
+    {
+      "content": "We will then delete the contact object in AAD and create a new user object instead.",
+      "pos": [
+        3743,
+        3826
+      ]
+    },
+    {
+      "content": "If you have a topology where users and represented as contacts, make sure you select to match users on the mail attribute in the installation guide.",
+      "pos": [
+        3828,
+        3976
+      ]
+    },
+    {
+      "content": "If you select another option, then you will have an order dependent configuration.",
+      "pos": [
+        3977,
+        4059
+      ]
+    },
+    {
+      "content": "Contact objects will always join on the mail attribute, but user objects will only join on the mail attribute if this option was selected in the installation guide.",
+      "pos": [
+        4060,
+        4224
+      ]
+    },
+    {
+      "content": "You could then end up with two different objects in the metaverse with the same mail attribute if the contact object was imported before the user object.",
+      "pos": [
+        4225,
+        4378
+      ]
+    },
+    {
+      "content": "During export to Azure AD, an error will be thrown.",
+      "pos": [
+        4379,
+        4430
+      ]
+    },
+    {
+      "content": "This behavior is by design and would indicate bad data or that the topology was not correctly identified during the installation.",
+      "pos": [
+        4431,
+        4560
+      ]
+    },
+    {
+      "content": "Disabled accounts",
+      "pos": [
+        4565,
+        4582
+      ]
+    },
+    {
+      "content": "Disabled accounts are synchronized as well to Azure AD.",
+      "pos": [
+        4584,
+        4639
+      ]
+    },
+    {
+      "content": "Disabled accounts are common to represent resources in Exchange, for example conference rooms.",
+      "pos": [
+        4640,
+        4734
+      ]
+    },
+    {
+      "content": "The exception is users with a linked mailbox; as previously mentioned, these will never provision an account to Azure AD.",
+      "pos": [
+        4735,
+        4856
+      ]
+    },
+    {
+      "content": "The assumption is that if a disabled user account is found, then we will not find another active account later and the object is provisioned to Azure AD with the userPrincipalName and sourceAnchor found.",
+      "pos": [
+        4858,
+        5061
+      ]
+    },
+    {
+      "content": "In case another active account will join to the same metaverse object, then its userPrincipalName and sourceAnchor will be used.",
+      "pos": [
+        5062,
+        5190
+      ]
+    },
+    {
+      "content": "Changing sourceAnchor",
+      "pos": [
+        5195,
+        5216
+      ]
+    },
+    {
+      "content": "When an object has been exported to Azure AD then it is not allowed to change the sourceAnchor anymore.",
+      "pos": [
+        5218,
+        5321
+      ]
+    },
+    {
+      "content": "When the object has been exported the metaverse attribute <bpt id=\"p1\">**</bpt>cloudSourceAnchor<ept id=\"p1\">**</ept> is set with the <bpt id=\"p2\">**</bpt>sourceAnchor<ept id=\"p2\">**</ept> value accepted by Azure AD.",
+      "pos": [
+        5322,
+        5462
+      ]
+    },
+    {
+      "content": "If <bpt id=\"p1\">**</bpt>sourceAnchor<ept id=\"p1\">**</ept> is changed and not match <bpt id=\"p2\">**</bpt>cloudSourceAnchor<ept id=\"p2\">**</ept>, the rule <bpt id=\"p3\">**</bpt>Out to AAD – User Join<ept id=\"p3\">**</ept> will throw the error <bpt id=\"p4\">**</bpt>sourceAnchor attribute has changed<ept id=\"p4\">**</ept>.",
+      "pos": [
+        5463,
+        5627
+      ]
+    },
+    {
+      "content": "In this case, the configuration or data must be corrected so the same sourceAnchor is present in the metaverse again before the object can be synchronized again.",
+      "pos": [
+        5628,
+        5789
+      ]
+    },
+    {
+      "content": "Additional Resources",
+      "pos": [
+        5794,
+        5814
+      ]
+    },
+    {
+      "content": "Azure AD Connect Sync: Customizing Synchronization options",
+      "pos": [
+        5819,
+        5877
+      ]
+    },
+    {
+      "content": "Integrating your on-premises identities with Azure Active Directory",
+      "pos": [
+        5925,
+        5992
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Azure AD Connect sync: Understanding Users and Contacts | Microsoft Azure\"\n    description=\"Explains users and contacts in Azure AD Connect sync.\"\n    services=\"active-directory\"\n    documentationCenter=\"\"\n    authors=\"markusvi\"\n    manager=\"stevenpo\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"active-directory\"\n    ms.workload=\"identity\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"11/09/2015\"\n    ms.author=\"markusvi;andkjell\"/>\n\n\n# Azure AD Connect sync: Understanding Users and Contacts\n\nThere are several different reasons why you would have multiple Active Directory forests and there are several different deployment topologies. Common models include an account-resource deployment and GAL sync’ed forests after a merger & acquisition. But even if there are pure models, hybrid models are common as well. The default configuration in Azure AD Connect sync does not assume any particular model but depending on how user matching was selected in the installation guide, different behaviors can be observed.\n\nIn this topic, we will go through how the default configuration behaves in certain topologies. We will go through the configuration and the Synchronization Rules Editor can be used to look at the configuration.\n\nThere are a few general rules the configuration assumes:\n\n- Regardless of which order we import from the source Active Directories, the end result should always be the same.\n- An active account will always contribute login information, including **userPrincipalName** and **sourceAnchor**.\n- A disabled account will contribute userPrincipalName and sourceAnchor, unless it is a linked mailbox, if there is no active account to be found.\n- An account with a linked mailbox will never be used for userPrincipalName and sourceAnchor. It is assumed that an active account will be found later.\n- A contact object might be provisioned to Azure AD as a contact or as a user. You don’t really know until all source Active Directory forests have been processed.\n\n## Contacts\n\nHaving contacts representing a user in a different forest is common after a merger & acquisition where a GALSync solution is bridging two or more Exchange forests. The contact object is always joining from the connector space to the metaverse using the mail attribute. If there is already a contact object or user object with the same mail address, the objects are joined together. This is configured in the rule **In from AD – Contact Join**. There is also a rule named **In from AD – Contact Common** with an attribute flow to the metaverse attribute **sourceObjectType** with the constant **Contact**. This rule has very low precedence so if any user object is joined to the same metaverse object, then the rule **In from AD – User Common** will contribute the value User to this attribute. With this rule, this attribute will have the value Contact if no user has been joined and the value User if at least one user has been found.\n\nFor provisioning an object to Azure AD, the outbound rule **Out to AAD – Contact Join** will create a contact object if the metaverse attribute **sourceObjectType** is set to **Contact**. If this attribute is set to **User**, then the rule **Out to AAD – User Join** will create a user object instead.\nIt is possible that an object is promoted from Contact to User when more source Active Directories are imported and synchronized.\n\nFor example, in a GALSync topology we will find contact objects for everyone in the second forest when we import the first forest. This will stage new contact objects in the AAD Connector. When we later import and synchronize the second forest, we will find the real users and join them to the existing metaverse objects. We will then delete the contact object in AAD and create a new user object instead.\n\nIf you have a topology where users and represented as contacts, make sure you select to match users on the mail attribute in the installation guide. If you select another option, then you will have an order dependent configuration. Contact objects will always join on the mail attribute, but user objects will only join on the mail attribute if this option was selected in the installation guide. You could then end up with two different objects in the metaverse with the same mail attribute if the contact object was imported before the user object. During export to Azure AD, an error will be thrown. This behavior is by design and would indicate bad data or that the topology was not correctly identified during the installation.\n\n## Disabled accounts\n\nDisabled accounts are synchronized as well to Azure AD. Disabled accounts are common to represent resources in Exchange, for example conference rooms. The exception is users with a linked mailbox; as previously mentioned, these will never provision an account to Azure AD.\n\nThe assumption is that if a disabled user account is found, then we will not find another active account later and the object is provisioned to Azure AD with the userPrincipalName and sourceAnchor found. In case another active account will join to the same metaverse object, then its userPrincipalName and sourceAnchor will be used.\n\n## Changing sourceAnchor\n\nWhen an object has been exported to Azure AD then it is not allowed to change the sourceAnchor anymore. When the object has been exported the metaverse attribute **cloudSourceAnchor** is set with the **sourceAnchor** value accepted by Azure AD. If **sourceAnchor** is changed and not match **cloudSourceAnchor**, the rule **Out to AAD – User Join** will throw the error **sourceAnchor attribute has changed**. In this case, the configuration or data must be corrected so the same sourceAnchor is present in the metaverse again before the object can be synchronized again.\n\n## Additional Resources\n\n* [Azure AD Connect Sync: Customizing Synchronization options](active-directory-aadconnectsync-whatis.md)\n* [Integrating your on-premises identities with Azure Active Directory](active-directory-aadconnect.md)\n\n\n"
+}

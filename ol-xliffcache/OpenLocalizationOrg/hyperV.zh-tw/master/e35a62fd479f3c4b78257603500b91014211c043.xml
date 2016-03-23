@@ -1,0 +1,411 @@
+{
+  "nodes": [
+    {
+      "content": "Certificate renewal guidance for Office 365 and Azure AD users.",
+      "pos": [
+        27,
+        90
+      ]
+    },
+    {
+      "content": "| Microsoft Azure",
+      "pos": [
+        91,
+        108
+      ]
+    },
+    {
+      "content": "This article explains to Office 365 users how to resolve issues with emails that notify them about renewing a certificate.",
+      "pos": [
+        127,
+        249
+      ]
+    },
+    {
+      "content": "Renewing Federation Certificates for Office 365 and Azure AD",
+      "pos": [
+        569,
+        629
+      ]
+    },
+    {
+      "content": "If you received an email or a portal notification asking you to renew your certificate for Office 365, this article is intended to help you resolve the issue and keep it from happening again.",
+      "pos": [
+        631,
+        822
+      ]
+    },
+    {
+      "content": "This article assumes that you are using AD FS as your federation server.",
+      "pos": [
+        824,
+        896
+      ]
+    },
+    {
+      "content": "Check to see if you have to do anything",
+      "pos": [
+        901,
+        940
+      ]
+    },
+    {
+      "content": "If you are using AD FS 2.0 or later, Office 365 and Azure AD will automatically update your certificate before it expires.",
+      "pos": [
+        942,
+        1064
+      ]
+    },
+    {
+      "content": "You do not need to perform any manual steps or run a script as a scheduled task.",
+      "pos": [
+        1066,
+        1146
+      ]
+    },
+    {
+      "content": "For this to work, both of the following default AD FS configuration settings must be in effect:",
+      "pos": [
+        1148,
+        1243
+      ]
+    },
+    {
+      "content": "The AD FS property AutoCertificateRollover must be set to True, indicating that AD FS will automatically generate new token signing and token decryption certificates before the old ones expire.",
+      "pos": [
+        1247,
+        1440
+      ]
+    },
+    {
+      "content": "If the value is False, you are using custom certificate settings.",
+      "pos": [
+        1447,
+        1512
+      ]
+    },
+    {
+      "content": "Go <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/JJ933264.aspx#BKMK_NotADFSCert)</ept>  for comprehensive guidance.",
+      "pos": [
+        1514,
+        1625
+      ]
+    },
+    {
+      "content": "Your federation metadata must be available to the public internet.",
+      "pos": [
+        1628,
+        1694
+      ]
+    },
+    {
+      "content": "Here is how to check:",
+      "pos": [
+        1700,
+        1721
+      ]
+    },
+    {
+      "content": "Verify that your AD FS installation is using automatic certificate rollover by executing the following command in a PowerShell command window on your primary federation server:",
+      "pos": [
+        1729,
+        1905
+      ]
+    },
+    {
+      "content": "(note that if you are using AD FS 2.0, you will need to run Add-Pssnapin Microsoft.Adfs.Powershell first)",
+      "pos": [
+        1941,
+        2046
+      ]
+    },
+    {
+      "content": "else.",
+      "pos": [
+        2047,
+        2052
+      ]
+    },
+    {
+      "content": "Check that your federation metadata is publicly accessible by navigating to the following URL from a computer on the public internet (off of the corporate network):",
+      "pos": [
+        2054,
+        2218
+      ]
+    },
+    {
+      "content": "https://(your_FS_name)/federationmetadata/2007-06/federationmetadata.xml",
+      "pos": [
+        2221,
+        2293
+      ]
+    },
+    {
+      "content": "where <ph id=\"ph1\">`(your_FS_name) `</ph>is replaced with the federation service host name your organization uses, such as fs.contoso.com.",
+      "pos": [
+        2295,
+        2415
+      ]
+    },
+    {
+      "content": "If you are able to verify both of these settings successfully, you do not have to do anything else.",
+      "pos": [
+        2417,
+        2516
+      ]
+    },
+    {
+      "content": "Example: https://fs.contos.com/federationmetadata/2007-06/federationmetadata.xml",
+      "pos": [
+        2520,
+        2600
+      ]
+    },
+    {
+      "content": "If your AutoCertificateRollover property is set to False",
+      "pos": [
+        2605,
+        2661
+      ]
+    },
+    {
+      "content": "If your AutoCertificateRollover property is set to False, you are using non-default AD FS certificate settings.",
+      "pos": [
+        2663,
+        2774
+      ]
+    },
+    {
+      "content": "The most common reason for this is that your organization manages AD FS certificates enrolled from an organizational certificate authority.",
+      "pos": [
+        2776,
+        2915
+      ]
+    },
+    {
+      "content": "In this case you need to renew and update your certificates yourself.",
+      "pos": [
+        2917,
+        2986
+      ]
+    },
+    {
+      "content": "Use the guidance <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/JJ933264.aspx#BKMK_NotADFSCert)</ept>.",
+      "pos": [
+        2988,
+        3085
+      ]
+    },
+    {
+      "content": "If your metadata is not publicly accessible",
+      "pos": [
+        3090,
+        3133
+      ]
+    },
+    {
+      "content": "If your AutocertificateRollover setting is True but your federation metadata is not publicly available, use the procedure below to ensure your certificates are updated both on premises and in the cloud:",
+      "pos": [
+        3134,
+        3336
+      ]
+    },
+    {
+      "content": "Verify that your AD FS system has generated a new certificate.",
+      "pos": [
+        3342,
+        3404
+      ]
+    },
+    {
+      "content": "verify that you are logged on to the primary AD FS server.",
+      "pos": [
+        3408,
+        3466
+      ]
+    },
+    {
+      "content": "Check the current signing certificates in AD FS by opening a PowerShell command window and running the following command:",
+      "pos": [
+        3469,
+        3590
+      ]
+    },
+    {
+      "content": "(note that if you are using AD FS 2.0, you will need to run Add-Pssnapin Microsoft.Adfs.Powershell first)",
+      "pos": [
+        3654,
+        3759
+      ]
+    },
+    {
+      "content": "Look at the command output at any certificates listed.",
+      "pos": [
+        3764,
+        3818
+      ]
+    },
+    {
+      "content": "If AD FS has generated a new certificate, you should see two certificates in the output:  One for which the IsPrimary value is True and the NotAfter date is within 5 days, and one for which IsPrimary is False and NotAfter is about a year in the future.",
+      "pos": [
+        3820,
+        4072
+      ]
+    },
+    {
+      "content": "If you only see one certificate, and the NotAfter date is within 5 days, you need to generate a new certificate by executing the following steps.",
+      "pos": [
+        4076,
+        4221
+      ]
+    },
+    {
+      "pos": [
+        4225,
+        4381
+      ],
+      "content": "To generate a new certificate, execute the following command at a PowerShell command prompt: <ph id=\"ph1\">`PS C:\\&gt;Update-ADFSCertificate –CertificateType token-signing`</ph>."
+    },
+    {
+      "content": "Verify the update by running the following command again: PS C:\\&gt;Get-ADFSCertificate –CertificateType token-signing",
+      "pos": [
+        4385,
+        4500
+      ]
+    },
+    {
+      "content": "Next, to manually update Office 365 federation trust properties, follow these steps.",
+      "pos": [
+        4503,
+        4587
+      ]
+    },
+    {
+      "content": "Two certificates should be listed now, one of which has a NotAfter date of approximately one year in the future and for which the IsPrimary value is False.",
+      "pos": [
+        4589,
+        4744
+      ]
+    },
+    {
+      "content": "Manually update Office 365 federation trust properties, follow these steps.",
+      "pos": [
+        4751,
+        4826
+      ]
+    },
+    {
+      "content": "Open the Microsoft Azure Active Directory Module for Windows PowerShell.",
+      "pos": [
+        4832,
+        4904
+      ]
+    },
+    {
+      "content": "Run $cred=Get-Credential.",
+      "pos": [
+        4909,
+        4934
+      ]
+    },
+    {
+      "content": "When this cmdlet prompts you for credentials, type your cloud service administrator account credentials.",
+      "pos": [
+        4935,
+        5039
+      ]
+    },
+    {
+      "content": "Run Connect-MsolService –Credential $cred.",
+      "pos": [
+        5044,
+        5086
+      ]
+    },
+    {
+      "content": "This cmdlet connects you to the cloud service.",
+      "pos": [
+        5087,
+        5133
+      ]
+    },
+    {
+      "content": "Creating a context that connects you to the cloud service is required before running any of the additional cmdlets installed by the tool.",
+      "pos": [
+        5134,
+        5271
+      ]
+    },
+    {
+      "content": "If you are running these commands on a computer that is not the AD FS primary federation server, run Set-MSOLAdfscontext -Computer",
+      "pos": [
+        5276,
+        5406
+      ]
+    },
+    {
+      "content": ", where",
+      "pos": [
+        5429,
+        5436
+      ]
+    },
+    {
+      "content": "is the internal FQDN name of the primary AD FS server.",
+      "pos": [
+        5460,
+        5514
+      ]
+    },
+    {
+      "content": "This cmdlet creates a context that connects you to AD FS.",
+      "pos": [
+        5515,
+        5572
+      ]
+    },
+    {
+      "content": "Run Update-MSOLFederatedDomain –DomainName",
+      "pos": [
+        5577,
+        5619
+      ]
+    },
+    {
+      "content": ".",
+      "pos": [
+        5628,
+        5629
+      ]
+    },
+    {
+      "content": "This cmdlet updates the settings from AD FS into the cloud service and configures the trust relationship between the two.",
+      "pos": [
+        5630,
+        5751
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you need to support multiple top-level domains, such as contoso.com and fabrikam.com, you must use the SupportMultipleDomain switch with any cmdlets.",
+      "pos": [
+        5754,
+        5919
+      ]
+    },
+    {
+      "content": "For more information, see Support for Multiple Top Level Domains.",
+      "pos": [
+        5920,
+        5985
+      ]
+    },
+    {
+      "content": "Finally, ensure all Web Application Proxy servers are updated with <bpt id=\"p1\">[</bpt>Windows Server May 2014<ept id=\"p1\">](http://support.microsoft.com/kb/2955164)</ept> rollup, otherwise the proxies may fail to update themselves with the new certificate, resulting in an outage.",
+      "pos": [
+        5986,
+        6229
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Certificate renewal guidance for Office 365 and Azure AD users. | Microsoft Azure\"\n    description=\"This article explains to Office 365 users how to resolve issues with emails that notify them about renewing a certificate.\"\n    services=\"active-directory\"\n    documentationCenter=\"\"\n    authors=\"billmath\"\n    manager=\"stevenpo\"\n    editor=\"curtand\"/>\n\n<tags\n    ms.service=\"active-directory\"\n    ms.workload=\"identity\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"10/13/2015\"\n    ms.author=\"billmath\"/>\n\n\n# Renewing Federation Certificates for Office 365 and Azure AD\n\nIf you received an email or a portal notification asking you to renew your certificate for Office 365, this article is intended to help you resolve the issue and keep it from happening again.  This article assumes that you are using AD FS as your federation server.\n\n## Check to see if you have to do anything\n\nIf you are using AD FS 2.0 or later, Office 365 and Azure AD will automatically update your certificate before it expires.  You do not need to perform any manual steps or run a script as a scheduled task.  For this to work, both of the following default AD FS configuration settings must be in effect:\n\n- The AD FS property AutoCertificateRollover must be set to True, indicating that AD FS will automatically generate new token signing and token decryption certificates before the old ones expire.\n    - If the value is False, you are using custom certificate settings.  Go [here](https://msdn.microsoft.com/library/azure/JJ933264.aspx#BKMK_NotADFSCert)  for comprehensive guidance.\n- Your federation metadata must be available to the public internet.\n\n    Here is how to check:\n\n    - Verify that your AD FS installation is using automatic certificate rollover by executing the following command in a PowerShell command window on your primary federation server:\n\n    `PS C:\\> Get-ADFSProperties`\n\n(note that if you are using AD FS 2.0, you will need to run Add-Pssnapin Microsoft.Adfs.Powershell first)\nelse.\n\nCheck that your federation metadata is publicly accessible by navigating to the following URL from a computer on the public internet (off of the corporate network):\n\n\nhttps://(your_FS_name)/federationmetadata/2007-06/federationmetadata.xml\n\nwhere `(your_FS_name) `is replaced with the federation service host name your organization uses, such as fs.contoso.com.  If you are able to verify both of these settings successfully, you do not have to do anything else.  \n\nExample: https://fs.contos.com/federationmetadata/2007-06/federationmetadata.xml\n\n## If your AutoCertificateRollover property is set to False\n\nIf your AutoCertificateRollover property is set to False, you are using non-default AD FS certificate settings.  The most common reason for this is that your organization manages AD FS certificates enrolled from an organizational certificate authority.  In this case you need to renew and update your certificates yourself.  Use the guidance [here](https://msdn.microsoft.com/library/azure/JJ933264.aspx#BKMK_NotADFSCert).\n\n## If your metadata is not publicly accessible\nIf your AutocertificateRollover setting is True but your federation metadata is not publicly available, use the procedure below to ensure your certificates are updated both on premises and in the cloud:\n\n### Verify that your AD FS system has generated a new certificate.\n\n- verify that you are logged on to the primary AD FS server.\n- Check the current signing certificates in AD FS by opening a PowerShell command window and running the following command:\n\n`PS C:\\>Get-ADFSCertificate –CertificateType token-signing.`\n\n(note that if you are using AD FS 2.0, you will need to run Add-Pssnapin Microsoft.Adfs.Powershell first)\n\n\n- Look at the command output at any certificates listed.  If AD FS has generated a new certificate, you should see two certificates in the output:  One for which the IsPrimary value is True and the NotAfter date is within 5 days, and one for which IsPrimary is False and NotAfter is about a year in the future.\n\n- If you only see one certificate, and the NotAfter date is within 5 days, you need to generate a new certificate by executing the following steps.\n\n- To generate a new certificate, execute the following command at a PowerShell command prompt: `PS C:\\>Update-ADFSCertificate –CertificateType token-signing`.\n\n- Verify the update by running the following command again: PS C:\\>Get-ADFSCertificate –CertificateType token-signing\n- Next, to manually update Office 365 federation trust properties, follow these steps.\n\nTwo certificates should be listed now, one of which has a NotAfter date of approximately one year in the future and for which the IsPrimary value is False.\n\n\n### Manually update Office 365 federation trust properties, follow these steps.\n\n1.  Open the Microsoft Azure Active Directory Module for Windows PowerShell.\n2.  Run $cred=Get-Credential. When this cmdlet prompts you for credentials, type your cloud service administrator account credentials.\n3.  Run Connect-MsolService –Credential $cred. This cmdlet connects you to the cloud service. Creating a context that connects you to the cloud service is required before running any of the additional cmdlets installed by the tool.\n4.  If you are running these commands on a computer that is not the AD FS primary federation server, run Set-MSOLAdfscontext -Computer <AD FS primary server>, where <AD FS primary server> is the internal FQDN name of the primary AD FS server. This cmdlet creates a context that connects you to AD FS.\n5.  Run Update-MSOLFederatedDomain –DomainName <domain>. This cmdlet updates the settings from AD FS into the cloud service and configures the trust relationship between the two.\n\n>[AZURE.NOTE] If you need to support multiple top-level domains, such as contoso.com and fabrikam.com, you must use the SupportMultipleDomain switch with any cmdlets. For more information, see Support for Multiple Top Level Domains.\nFinally, ensure all Web Application Proxy servers are updated with [Windows Server May 2014](http://support.microsoft.com/kb/2955164) rollup, otherwise the proxies may fail to update themselves with the new certificate, resulting in an outage.\n\n\n"
+}
