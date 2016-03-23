@@ -1,0 +1,68 @@
+{
+  "nodes": [
+    {
+      "content": "When you send template notifications you only need to provide a set of properties, in our case we will send the set of properties containing the localized version of the current news, for instance:",
+      "pos": [
+        4,
+        201
+      ]
+    },
+    {
+      "content": "This section shows how to send notifications using a console app",
+      "pos": [
+        366,
+        430
+      ]
+    },
+    {
+      "content": "The included code broadcasts to both Windows Store and iOS devices, since the backend can broadcast to any of the supported devices.",
+      "pos": [
+        432,
+        564
+      ]
+    },
+    {
+      "content": "To send notifications using a C# console app",
+      "pos": [
+        571,
+        615
+      ]
+    },
+    {
+      "content": "Modify the <ph id=\"ph1\">`SendTemplateNotificationAsync`</ph> method in the console app you previously created with the following code.",
+      "pos": [
+        618,
+        734
+      ]
+    },
+    {
+      "content": "Notice how in this case there is no need to send multiple notifications for different locales and platforms.",
+      "pos": [
+        735,
+        843
+      ]
+    },
+    {
+      "pos": [
+        2414,
+        2657
+      ],
+      "content": "Note that this simple call will deliver the localized piece of news to <bpt id=\"p1\">**</bpt>all<ept id=\"p1\">**</ept> your devices, irrespective of the platform, as your Notification Hub builds and delivers the correct native payload to all the devices subscribed to a specific tag."
+    },
+    {
+      "content": "Sending the notification with Mobile Services",
+      "pos": [
+        2663,
+        2708
+      ]
+    },
+    {
+      "content": "In your Mobile Service scheduler, you can use the following script:",
+      "pos": [
+        2710,
+        2777
+      ]
+    }
+  ],
+  "content": "\n\n\n\nWhen you send template notifications you only need to provide a set of properties, in our case we will send the set of properties containing the localized version of the current news, for instance:\n\n    {\n        \"News_English\": \"World News in English!\",\n        \"News_French\": \"World News in French!\",\n        \"News_Mandarin\": \"World News in Mandarin!\"\n    }\n\n\nThis section shows how to send notifications using a console app\n\nThe included code broadcasts to both Windows Store and iOS devices, since the backend can broadcast to any of the supported devices.\n\n\n### To send notifications using a C# console app \n\nModify the `SendTemplateNotificationAsync` method in the console app you previously created with the following code. Notice how in this case there is no need to send multiple notifications for different locales and platforms.\n\n        private static async void SendTemplateNotificationAsync()\n        {\n            // Define the notification hub.\n            NotificationHubClient hub = \n                NotificationHubClient.CreateClientFromConnectionString(\n                    \"<connection string with full access>\", \"<hub name>\");\n\n            // Sending the notification as a template notification. All template registrations that contain \n            // \"messageParam\" or \"News_<local selected>\" and the proper tags will receive the notifications. \n            // This includes APNS, GCM, WNS, and MPNS template registrations.\n            Dictionary<string, string> templateParams = new Dictionary<string, string>();\n\n            // Create an array of breaking news categories.\n            var categories = new string[] { \"World\", \"Politics\", \"Business\", \"Technology\", \"Science\", \"Sports\"};\n            var locales = new string[] { \"English\", \"French\", \"Mandarin\" };\n\n            foreach (var category in categories)\n            {\n                templateParams[\"messageParam\"] = \"Breaking \" + category + \" News!\";\n\n                // Sending localized News for each tag too...\n                foreach( var locale in locales)\n                {\n                    string key = \"News_\" + locale;\n\n                    // Your real localized news content would go here.\n                    templateParams[key] = \"Breaking \" + category + \" News in \" + locale + \"!\";\n                }\n\n                await hub.SendTemplateNotificationAsync(templateParams, category);\n            }\n        }\n\n\nNote that this simple call will deliver the localized piece of news to **all** your devices, irrespective of the platform, as your Notification Hub builds and delivers the correct native payload to all the devices subscribed to a specific tag.\n\n### Sending the notification with Mobile Services\n\nIn your Mobile Service scheduler, you can use the following script:\n\n    var azure = require('azure');\n    var notificationHubService = azure.createNotificationHubService('<hub name>', '<connection string with full access>');\n    var notification = {\n            \"News_English\": \"World News in English!\",\n            \"News_French\": \"World News in French!\",\n            \"News_Mandarin\", \"World News in Mandarin!\"\n    }\n    notificationHubService.send('World', notification, function(error) {\n        if (!error) {\n            console.warn(\"Notification successful\");\n        }\n    });\n    \n\n\n\n"
+}

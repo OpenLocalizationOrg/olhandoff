@@ -1,0 +1,481 @@
+{
+  "nodes": [
+    {
+      "content": "App Model v2.0 .NET Native App | Microsoft Azure",
+      "pos": [
+        27,
+        75
+      ]
+    },
+    {
+      "content": "How to build a .NET native app that signs users in with both personal Microsoft Account and work or school accounts.",
+      "pos": [
+        94,
+        210
+      ]
+    },
+    {
+      "content": "App model v2.0 preview: Add sign-in to a Windows Desktop app",
+      "pos": [
+        525,
+        585
+      ]
+    },
+    {
+      "content": "With the v2.0 app model, you can quickly add authentication to your desktop apps with support for both personal Microsoft accounts and work or school accounts.",
+      "pos": [
+        587,
+        746
+      ]
+    },
+    {
+      "content": "It also enables your app to securely communicate with a backend web api, as well as a few of the <bpt id=\"p1\">[</bpt>Office 365 Unified APIs<ept id=\"p1\">](https://www.msdn.com/office/office365/howto/authenticate-Office-365-APIs-using-v2)</ept>.",
+      "pos": [
+        748,
+        954
+      ]
+    },
+    {
+      "content": "This information applies to the v2.0 app model public preview.",
+      "pos": [
+        975,
+        1037
+      ]
+    },
+    {
+      "content": "For instructions on how to integrate with the generally available Azure AD service, please refer to the <bpt id=\"p1\">[</bpt>Azure Active Directory Developer Guide<ept id=\"p1\">](active-directory-developers-guide.md)</ept>.",
+      "pos": [
+        1039,
+        1222
+      ]
+    },
+    {
+      "content": "For <bpt id=\"p1\">[</bpt>.NET native apps that run on a device<ept id=\"p1\">](active-directory-v2-flows.md#mobile-and-native-apps)</ept>, Azure AD provides the Active Directory Authentication Library, or ADAL.",
+      "pos": [
+        1224,
+        1393
+      ]
+    },
+    {
+      "content": "ADAL's sole purpose in life is to make it easy for your app to get tokens for calling web services.",
+      "pos": [
+        1395,
+        1494
+      ]
+    },
+    {
+      "content": "To demonstrate just how easy it is, here we'll build a .NET WPF To-Do List app that:",
+      "pos": [
+        1496,
+        1580
+      ]
+    },
+    {
+      "pos": [
+        1586,
+        1736
+      ],
+      "content": "Signs the user in &amp; gets access tokens using the <bpt id=\"p1\">[</bpt>OAuth 2.0 authentication protocol<ept id=\"p1\">](active-directory-v2-protocols.md#oauth2-authorization-code-flow)</ept>."
+    },
+    {
+      "content": "Securely calls a backend To-Do List web service, which is also secured by OAuth 2.0.",
+      "pos": [
+        1741,
+        1825
+      ]
+    },
+    {
+      "content": "Signs users out.",
+      "pos": [
+        1830,
+        1846
+      ]
+    },
+    {
+      "content": "To build the complete working app, you'll need to:",
+      "pos": [
+        1848,
+        1898
+      ]
+    },
+    {
+      "content": "Register your app.",
+      "pos": [
+        1903,
+        1921
+      ]
+    },
+    {
+      "content": "Install &amp; Configure ADAL.",
+      "pos": [
+        1925,
+        1950
+      ]
+    },
+    {
+      "content": "Use ADAL to get tokens from Azure AD.",
+      "pos": [
+        1954,
+        1991
+      ]
+    },
+    {
+      "content": "The code for this tutorial is maintained <bpt id=\"p1\">[</bpt>on GitHub<ept id=\"p1\">](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet)</ept>.",
+      "pos": [
+        1993,
+        2116
+      ]
+    },
+    {
+      "content": "To follow along, you can <bpt id=\"p1\">[</bpt>download the app's skeleton as a .zip<ept id=\"p1\">](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet/archive/skeleton.zip)</ept> or clone the skeleton:",
+      "pos": [
+        2118,
+        2296
+      ]
+    },
+    {
+      "content": "The completed app is provided at the end of this tutorial as well.",
+      "pos": [
+        2406,
+        2472
+      ]
+    },
+    {
+      "content": "1. Register an App",
+      "pos": [
+        2477,
+        2495
+      ]
+    },
+    {
+      "content": "Create a new app at <bpt id=\"p1\">[</bpt>apps.dev.microsoft.com<ept id=\"p1\">](https://apps.dev.microsoft.com)</ept>, or follow these <bpt id=\"p2\">[</bpt>detailed steps<ept id=\"p2\">](active-directory-v2-app-registration.md)</ept>.",
+      "pos": [
+        2496,
+        2648
+      ]
+    },
+    {
+      "content": "Make sure to:",
+      "pos": [
+        2650,
+        2663
+      ]
+    },
+    {
+      "pos": [
+        2667,
+        2742
+      ],
+      "content": "Copy down the <bpt id=\"p1\">**</bpt>Application Id<ept id=\"p1\">**</ept> assigned to your app, you'll need it soon."
+    },
+    {
+      "pos": [
+        2745,
+        2786
+      ],
+      "content": "Add the <bpt id=\"p1\">**</bpt>Mobile<ept id=\"p1\">**</ept> platform for your app."
+    },
+    {
+      "content": "Copy down the <bpt id=\"p1\">**</bpt>Redirect URI<ept id=\"p1\">**</ept> from the portal.",
+      "pos": [
+        2789,
+        2836
+      ]
+    },
+    {
+      "content": "You must use the default value of <ph id=\"ph1\">`urn:ietf:wg:oauth:2.0:oob`</ph>.",
+      "pos": [
+        2837,
+        2899
+      ]
+    },
+    {
+      "content": "2. Install &amp; Configure ADAL",
+      "pos": [
+        2904,
+        2931
+      ]
+    },
+    {
+      "content": "Now that you have an app registered with Microsoft, you can install ADAL and write your identity-related code.",
+      "pos": [
+        2932,
+        3042
+      ]
+    },
+    {
+      "content": "In order for ADAL to be able to communicate the v2.0 endpoint, you need to provide it with some information about your app registration.",
+      "pos": [
+        3044,
+        3180
+      ]
+    },
+    {
+      "content": "Begin by adding ADAL to the TodoListClient project using the Package Manager Console.",
+      "pos": [
+        3186,
+        3271
+      ]
+    },
+    {
+      "content": "In the TodoListClient project, open <ph id=\"ph1\">`app.config`</ph>.",
+      "pos": [
+        3414,
+        3463
+      ]
+    },
+    {
+      "content": "Replace the values of the elements in the <ph id=\"ph1\">`&lt;appSettings&gt;`</ph> section to reflect the values you input into the app registration portal.",
+      "pos": [
+        3465,
+        3596
+      ]
+    },
+    {
+      "content": "Your code will reference these values whenever it uses ADAL.",
+      "pos": [
+        3598,
+        3658
+      ]
+    },
+    {
+      "pos": [
+        3667,
+        3751
+      ],
+      "content": "The <ph id=\"ph1\">`ida:ClientId`</ph> is the <bpt id=\"p1\">**</bpt>Application Id<ept id=\"p1\">**</ept> of your app you copied from the portal."
+    },
+    {
+      "pos": [
+        3760,
+        3822
+      ],
+      "content": "The <ph id=\"ph1\">`ida:RedirectUri`</ph> is the <bpt id=\"p1\">**</bpt>Redirect Uri<ept id=\"p1\">**</ept> from the portal."
+    },
+    {
+      "pos": [
+        3825,
+        3903
+      ],
+      "content": "In the TodoList-Service project, open <ph id=\"ph1\">`web.config`</ph> in the root of the project."
+    },
+    {
+      "pos": [
+        3912,
+        3994
+      ],
+      "content": "Replace the <ph id=\"ph1\">`ida:Audience`</ph> value with the same <bpt id=\"p1\">**</bpt>Application Id<ept id=\"p1\">**</ept> from the portal."
+    },
+    {
+      "content": "3. Use ADAL to Get Tokens",
+      "pos": [
+        3999,
+        4024
+      ]
+    },
+    {
+      "pos": [
+        4025,
+        4178
+      ],
+      "content": "The basic principle behind ADAL is that whenever your app needs an access token, you simply call <ph id=\"ph1\">`authContext.AcquireToken(...)`</ph>, and ADAL does the rest."
+    },
+    {
+      "content": "In the <ph id=\"ph1\">`TodoListClient`</ph> project, open <ph id=\"ph2\">`MainWindow.xaml.cs`</ph> and locate the <ph id=\"ph3\">`OnInitialized(...)`</ph> method.",
+      "pos": [
+        4186,
+        4288
+      ]
+    },
+    {
+      "content": "The first step is to initialize your app's <ph id=\"ph1\">`AuthenticationContext`</ph> - ADAL's primary class.",
+      "pos": [
+        4290,
+        4380
+      ]
+    },
+    {
+      "content": "This is where you pass ADAL the coordinates it needs to communicate with Azure AD and tell it how to cache tokens.",
+      "pos": [
+        4382,
+        4496
+      ]
+    },
+    {
+      "content": "When the app starts up, we want to check and see if the user is already signed into the app.",
+      "pos": [
+        4737,
+        4829
+      ]
+    },
+    {
+      "content": "However, we don't want to invoke a sign-in UI just yet - we'll make the user click \"Sign In\" to do so.",
+      "pos": [
+        4831,
+        4933
+      ]
+    },
+    {
+      "content": "Also in the <ph id=\"ph1\">`OnInitialized(...)`</ph> method:",
+      "pos": [
+        4935,
+        4975
+      ]
+    },
+    {
+      "content": "If the user is not signed in and they click the \"Sign In\" button, we want to invoke a login UI and have the user enter their credentials.",
+      "pos": [
+        6289,
+        6426
+      ]
+    },
+    {
+      "content": "Implement the Sign-In button handler:",
+      "pos": [
+        6428,
+        6465
+      ]
+    },
+    {
+      "content": "If the user successfully signs-in, ADAL will receive and cache a token for you, and you can proceed to call the <ph id=\"ph1\">`GetTodoList()`</ph> method with confidence.",
+      "pos": [
+        8088,
+        8239
+      ]
+    },
+    {
+      "content": "All that's left to get a user's tasks is to implement the <ph id=\"ph1\">`GetTodoList()`</ph> method.",
+      "pos": [
+        8241,
+        8322
+      ]
+    },
+    {
+      "content": "Congratulations!",
+      "pos": [
+        10808,
+        10824
+      ]
+    },
+    {
+      "content": "You now have a working .NET WPF app that has the ability to authenticate users &amp; securely call Web APIs using OAuth 2.0.",
+      "pos": [
+        10825,
+        10945
+      ]
+    },
+    {
+      "content": "Run your both projects, and sign in with either a personal Microsoft account or a work or school account.",
+      "pos": [
+        10947,
+        11052
+      ]
+    },
+    {
+      "content": "Add tasks to that user's To-Do list.",
+      "pos": [
+        11054,
+        11090
+      ]
+    },
+    {
+      "content": "Sign out, and sign back in as another user to view their To-Do list.",
+      "pos": [
+        11092,
+        11160
+      ]
+    },
+    {
+      "content": "Close the app, and re-run it.",
+      "pos": [
+        11162,
+        11191
+      ]
+    },
+    {
+      "content": "Notice how the user's session remains intact - that is becuase the app caches tokens in a local file.",
+      "pos": [
+        11193,
+        11294
+      ]
+    },
+    {
+      "content": "ADAL makes it easy to incorporate common identity features into your app, using both personal and work accounts.",
+      "pos": [
+        11296,
+        11408
+      ]
+    },
+    {
+      "content": "It takes care of all the dirty work for you - cache management, OAuth protocol support, presenting the user with a login UI, refreshing expired tokens, and more.",
+      "pos": [
+        11410,
+        11571
+      ]
+    },
+    {
+      "content": "All you really need to know is a single API call, <ph id=\"ph1\">`authContext.AcquireTokenAsync(...)`</ph>.",
+      "pos": [
+        11573,
+        11660
+      ]
+    },
+    {
+      "pos": [
+        11662,
+        11887
+      ],
+      "content": "For reference, the completed sample (without your configuration values) <bpt id=\"p1\">[</bpt>is provided as a .zip here<ept id=\"p1\">](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet/archive/complete.zip)</ept>, or you can clone it from GitHub:"
+    },
+    {
+      "content": "Next Steps",
+      "pos": [
+        12000,
+        12010
+      ]
+    },
+    {
+      "content": "You can now move onto more advanced topics.",
+      "pos": [
+        12012,
+        12055
+      ]
+    },
+    {
+      "content": "You may want to try:",
+      "pos": [
+        12057,
+        12077
+      ]
+    },
+    {
+      "content": "Securing the TodoListService Web API with the v2.0 app model &gt;&gt;",
+      "pos": [
+        12082,
+        12145
+      ]
+    },
+    {
+      "content": "For additional resources, check out:",
+      "pos": [
+        12198,
+        12234
+      ]
+    },
+    {
+      "content": "The App Model v2.0 Preview &gt;&gt;",
+      "pos": [
+        12238,
+        12267
+      ]
+    },
+    {
+      "content": "StackOverflow \"adal\" tag &gt;&gt;",
+      "pos": [
+        12314,
+        12341
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"App Model v2.0 .NET Native App | Microsoft Azure\"\n    description=\"How to build a .NET native app that signs users in with both personal Microsoft Account and work or school accounts.\"\n    services=\"active-directory\"\n    documentationCenter=\"\"\n    authors=\"dstrockis\"\n    manager=\"mbaldwin\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"active-directory\"\n    ms.workload=\"identity\"\n  ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.date=\"12/09/2015\"\n    ms.author=\"dastrock\"/>\n\n# App model v2.0 preview: Add sign-in to a Windows Desktop app\n\nWith the v2.0 app model, you can quickly add authentication to your desktop apps with support for both personal Microsoft accounts and work or school accounts.  It also enables your app to securely communicate with a backend web api, as well as a few of the [Office 365 Unified APIs](https://www.msdn.com/office/office365/howto/authenticate-Office-365-APIs-using-v2).\n\n> [AZURE.NOTE]\n    This information applies to the v2.0 app model public preview.  For instructions on how to integrate with the generally available Azure AD service, please refer to the [Azure Active Directory Developer Guide](active-directory-developers-guide.md).\n\nFor [.NET native apps that run on a device](active-directory-v2-flows.md#mobile-and-native-apps), Azure AD provides the Active Directory Authentication Library, or ADAL.  ADAL's sole purpose in life is to make it easy for your app to get tokens for calling web services.  To demonstrate just how easy it is, here we'll build a .NET WPF To-Do List app that:\n\n-   Signs the user in & gets access tokens using the [OAuth 2.0 authentication protocol](active-directory-v2-protocols.md#oauth2-authorization-code-flow).\n-   Securely calls a backend To-Do List web service, which is also secured by OAuth 2.0.\n-   Signs users out.\n\nTo build the complete working app, you'll need to:\n\n2. Register your app.\n3. Install & Configure ADAL.\n5. Use ADAL to get tokens from Azure AD.\n\nThe code for this tutorial is maintained [on GitHub](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet).  To follow along, you can [download the app's skeleton as a .zip](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet/archive/skeleton.zip) or clone the skeleton:\n\n```git clone --branch skeleton https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet.git```\n\nThe completed app is provided at the end of this tutorial as well.\n\n## 1. Register an App\nCreate a new app at [apps.dev.microsoft.com](https://apps.dev.microsoft.com), or follow these [detailed steps](active-directory-v2-app-registration.md).  Make sure to:\n\n- Copy down the **Application Id** assigned to your app, you'll need it soon.\n- Add the **Mobile** platform for your app.\n- Copy down the **Redirect URI** from the portal. You must use the default value of `urn:ietf:wg:oauth:2.0:oob`.\n\n## 2. Install & Configure ADAL\nNow that you have an app registered with Microsoft, you can install ADAL and write your identity-related code.  In order for ADAL to be able to communicate the v2.0 endpoint, you need to provide it with some information about your app registration.\n\n-   Begin by adding ADAL to the TodoListClient project using the Package Manager Console.\n\n```\nPM> Install-Package Microsoft.Experimental.IdentityModel.Clients.ActiveDirectory -ProjectName TodoListClient -IncludePrerelease\n```\n\n-   In the TodoListClient project, open `app.config`.  Replace the values of the elements in the `<appSettings>` section to reflect the values you input into the app registration portal.  Your code will reference these values whenever it uses ADAL.\n    -   The `ida:ClientId` is the **Application Id** of your app you copied from the portal.\n    -   The `ida:RedirectUri` is the **Redirect Uri** from the portal.\n- In the TodoList-Service project, open `web.config` in the root of the project.  \n    - Replace the `ida:Audience` value with the same **Application Id** from the portal.\n\n## 3. Use ADAL to Get Tokens\nThe basic principle behind ADAL is that whenever your app needs an access token, you simply call `authContext.AcquireToken(...)`, and ADAL does the rest.  \n\n-   In the `TodoListClient` project, open `MainWindow.xaml.cs` and locate the `OnInitialized(...)` method.  The first step is to initialize your app's `AuthenticationContext` - ADAL's primary class.  This is where you pass ADAL the coordinates it needs to communicate with Azure AD and tell it how to cache tokens.\n\n```C#\nprotected override async void OnInitialized(EventArgs e)\n{\n        base.OnInitialized(e);\n\n        authContext = new AuthenticationContext(authority, new FileCache());\n        AuthenticationResult result = null;\n        ...\n}\n```\n\n- When the app starts up, we want to check and see if the user is already signed into the app.  However, we don't want to invoke a sign-in UI just yet - we'll make the user click \"Sign In\" to do so.  Also in the `OnInitialized(...)` method:\n\n```C#\n// As the app starts, we want to check to see if the user is already signed in.\n// You can do so by trying to get a token from ADAL, passing in the parameter\n// PromptBehavior.Never.  This forces ADAL to throw an exception if it cannot\n// get a token for the user without showing a UI.\n\ntry\n{\n        result = await authContext.AcquireTokenAsync(new string[] { clientId }, null, clientId, redirectUri, new PlatformParameters(PromptBehavior.Never, null));\n\n        // If we got here, a valid token is in the cache.  Proceed to\n        // fetch the user's tasks from the TodoListService via the\n        // GetTodoList() method.\n\n        SignInButton.Content = \"Clear Cache\";\n        GetTodoList();\n}\ncatch (AdalException ex)\n{\n        if (ex.ErrorCode == \"user_interaction_required\")\n        {\n                // If user interaction is required, the app should take no action,\n                // and simply show the user the sign in button.\n        }\n        else\n        {\n                // Here, we catch all other AdalExceptions\n\n                string message = ex.Message;\n                if (ex.InnerException != null)\n                {\n                        message += \"Inner Exception : \" + ex.InnerException.Message;\n                }\n                MessageBox.Show(message);\n        }\n}\n```\n\n- If the user is not signed in and they click the \"Sign In\" button, we want to invoke a login UI and have the user enter their credentials.  Implement the Sign-In button handler:\n\n```C#\nprivate async void SignIn(object sender = null, RoutedEventArgs args = null)\n{\n        // TODO: Sign the user out if they clicked the \"Clear Cache\" button\n\n        // If the user clicked the 'Sign-In' button, force\n        // ADAL to prompt the user for credentials by specifying\n        // PromptBehavior.Always.  ADAL will get a token for the\n        // TodoListService and cache it for you.\n\n        AuthenticationResult result = null;\n        try\n        {\n                result = await authContext.AcquireTokenAsync(new string[] { clientId }, null, clientId, redirectUri, new PlatformParameters(PromptBehavior.Always, null));\n                SignInButton.Content = \"Clear Cache\";\n                GetTodoList();\n        }\n        catch (AdalException ex)\n        {\n                // If ADAL cannot get a token, it will throw an exception.\n                // If the user canceled the login, it will result in the\n                // error code 'authentication_canceled'.\n\n                if (ex.ErrorCode == \"authentication_canceled\")\n                {\n                        MessageBox.Show(\"Sign in was canceled by the user\");\n                }\n                else\n                {\n                        // An unexpected error occurred.\n                        string message = ex.Message;\n                        if (ex.InnerException != null)\n                        {\n                                message += \"Inner Exception : \" + ex.InnerException.Message;\n                        }\n\n                        MessageBox.Show(message);\n                }\n\n                return;\n        }\n\n}\n```\n\n- If the user successfully signs-in, ADAL will receive and cache a token for you, and you can proceed to call the `GetTodoList()` method with confidence.  All that's left to get a user's tasks is to implement the `GetTodoList()` method.\n\n```C#\nprivate async void GetTodoList()\n{\n        AuthenticationResult result = null;\n        try\n        {\n                // Here, we try to get an access token to call the TodoListService\n                // without invoking any UI prompt.  PromptBehavior.Never forces\n                // ADAL to throw an exception if it cannot get a token silently.\n\n                result = await authContext.AcquireTokenAsync(new string[] { clientId }, null, clientId, redirectUri, new PlatformParameters(PromptBehavior.Never, null));\n        }\n        catch (AdalException ex)\n        {\n                // ADAL couldn't get a token silently, so show the user a message\n                // and let them click the Sign-In button.\n\n                if (ex.ErrorCode == \"user_interaction_required\")\n                {\n                        MessageBox.Show(\"Please sign in first\");\n                        SignInButton.Content = \"Sign In\";\n                }\n                else\n                {\n                        // In any other case, an unexpected error occurred.\n\n                        string message = ex.Message;\n                        if (ex.InnerException != null)\n                        {\n                                message += \"Inner Exception : \" + ex.InnerException.Message;\n                        }\n                        MessageBox.Show(message);\n                }\n\n                return;\n        }\n\n        // Once the token has been returned by ADAL,\n    // add it to the http authorization header,\n    // before making the call to access the To Do list service.\n\n    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", result.Token);\n\n        ...\n...\n\n\n- When the user is done managing their To-Do List, they may finally sign out of the app by clicking the \"Clear Cache\" button.\n\n```C#\nprivate async void SignIn(object sender = null, RoutedEventArgs args = null)\n{\n        // If the user clicked the 'clear cache' button,\n        // clear the ADAL token cache and show the user as signed out.\n        // It's also necessary to clear the cookies from the browser\n        // control so the next user has a chance to sign in.\n\n        if (SignInButton.Content.ToString() == \"Clear Cache\")\n        {\n                TodoList.ItemsSource = string.Empty;\n                authContext.TokenCache.Clear();\n                ClearCookies();\n                SignInButton.Content = \"Sign In\";\n                return;\n        }\n\n        ...\n```\n\nCongratulations! You now have a working .NET WPF app that has the ability to authenticate users & securely call Web APIs using OAuth 2.0.  Run your both projects, and sign in with either a personal Microsoft account or a work or school account.  Add tasks to that user's To-Do list.  Sign out, and sign back in as another user to view their To-Do list.  Close the app, and re-run it.  Notice how the user's session remains intact - that is becuase the app caches tokens in a local file.\n\nADAL makes it easy to incorporate common identity features into your app, using both personal and work accounts.  It takes care of all the dirty work for you - cache management, OAuth protocol support, presenting the user with a login UI, refreshing expired tokens, and more.  All you really need to know is a single API call, `authContext.AcquireTokenAsync(...)`.\n\nFor reference, the completed sample (without your configuration values) [is provided as a .zip here](https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet/archive/complete.zip), or you can clone it from GitHub:\n\n```git clone --branch complete https://github.com/AzureADQuickStarts/AppModelv2-NativeClient-DotNet.git```\n\n## Next Steps\n\nYou can now move onto more advanced topics.  You may want to try:\n\n- [Securing the TodoListService Web API with the v2.0 app model >>](active-directory-v2-devquickstarts-dotnet-api.md)\n\nFor additional resources, check out:\n- [The App Model v2.0 Preview >>](active-directory-appmodel-v2-overview.md)\n- [StackOverflow \"adal\" tag >>](http://stackoverflow.com/questions/tagged/adal)\n\n\n"
+}

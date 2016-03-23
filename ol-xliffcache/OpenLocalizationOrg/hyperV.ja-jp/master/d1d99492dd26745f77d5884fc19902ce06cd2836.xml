@@ -1,0 +1,873 @@
+{
+  "nodes": [
+    {
+      "content": "Upgrade from Mobile Services to Azure App Service - Node.js",
+      "pos": [
+        27,
+        86
+      ]
+    },
+    {
+      "content": "Learn how to easily upgrade your Mobile Services application to an App Service Mobile App",
+      "pos": [
+        105,
+        194
+      ]
+    },
+    {
+      "content": "Upgrade your existing Node.js Azure Mobile Service to App Service",
+      "pos": [
+        522,
+        587
+      ]
+    },
+    {
+      "content": "App Service Mobile is a new way to build mobile applications using Microsoft Azure.",
+      "pos": [
+        589,
+        672
+      ]
+    },
+    {
+      "content": "To learn more, see <bpt id=\"p1\">[</bpt><ept id=\"p1\">What are Mobile Apps?]</ept>.",
+      "pos": [
+        673,
+        716
+      ]
+    },
+    {
+      "content": "This topic describes how to upgrade an existing Node.js backend application from Azure Mobile Services to a new App Service Mobile Apps.",
+      "pos": [
+        718,
+        854
+      ]
+    },
+    {
+      "content": "While you perform this upgrade, your existing Mobile Services application can continue to operate.",
+      "pos": [
+        855,
+        953
+      ]
+    },
+    {
+      "pos": [
+        955,
+        1132
+      ],
+      "content": "When a mobile backend is upgraded to Azure App Service, it has access to all App Service features and are billed according to <bpt id=\"p1\">[</bpt><ept id=\"p1\">App Service pricing]</ept>, not Mobile Services pricing."
+    },
+    {
+      "content": "Migrate vs. upgrade",
+      "pos": [
+        1137,
+        1156
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> It is recommended that you <bpt id=\"p1\">[</bpt>perform a migration<ept id=\"p1\">](app-service-mobile-migrating-from-mobile-services.md)</ept> before going through an upgrade.",
+      "pos": [
+        1273,
+        1420
+      ]
+    },
+    {
+      "content": "This way, you can put both versions of your application on the same App Service Plan and incur no additional cost.",
+      "pos": [
+        1421,
+        1535
+      ]
+    },
+    {
+      "content": "Improvements in Mobile Apps Node.js server SDK",
+      "pos": [
+        1541,
+        1587
+      ]
+    },
+    {
+      "pos": [
+        1589,
+        1719
+      ],
+      "content": "Upgrading to the new <bpt id=\"p1\">[</bpt>Mobile Apps SDK<ept id=\"p1\">](https://www.npmjs.com/package/azure-mobile-apps)</ept> provides a lot of improvements, including:"
+    },
+    {
+      "content": "Based on <bpt id=\"p1\">[</bpt>Express framework<ept id=\"p1\">](http://expressjs.com/en/index.html)</ept>, the new Node SDK is light-weight and designed to keep up with new Node versions as they come out.",
+      "pos": [
+        1723,
+        1886
+      ]
+    },
+    {
+      "content": "You can customize the application behavior with Express middleware.",
+      "pos": [
+        1887,
+        1954
+      ]
+    },
+    {
+      "content": "Significant performance improvements compared to the Mobile Services SDK.",
+      "pos": [
+        1958,
+        2031
+      ]
+    },
+    {
+      "content": "You can now host a website together with your mobile backend; similarly, it's easy to add the Azure Mobile SDK to any existing expressv4 application.",
+      "pos": [
+        2035,
+        2184
+      ]
+    },
+    {
+      "content": "Built for cross-platform and local development, the Mobile Apps SDK can be developed and run locally on Windows, Linux, and OSX platforms.",
+      "pos": [
+        2188,
+        2326
+      ]
+    },
+    {
+      "content": "It's now easy to use common Node development techniques like running <bpt id=\"p1\">[</bpt>Mocha<ept id=\"p1\">](https://mochajs.org/)</ept> tests prior to deployment.",
+      "pos": [
+        2327,
+        2452
+      ]
+    },
+    {
+      "pos": [
+        2456,
+        2694
+      ],
+      "content": "You can use Redis with native modules like <bpt id=\"p1\">[</bpt>hiredis<ept id=\"p1\">](https://www.npmjs.com/package/hiredis)</ept>; and because App Service will install your npm packages for you, when you deploy, there's no need to include binaries in your deployment packages."
+    },
+    {
+      "pos": [
+        2699,
+        2744
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"overview\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Basic upgrade overview"
+    },
+    {
+      "content": "Unlike the .NET Mobile Apps SDK, upgrading a Node backend from Mobile Services to Mobile Apps isn't as simple as swapping out packages.",
+      "pos": [
+        2746,
+        2881
+      ]
+    },
+    {
+      "content": "You now own your whole application stack, as opposed to Azure controlling it, and thus you need to create a basic Express app to host your mobile backend.",
+      "pos": [
+        2882,
+        3036
+      ]
+    },
+    {
+      "content": "For the table and API controllers, the concepts are similar, but you now must export table objects and the function APIs have changed somewhat.",
+      "pos": [
+        3037,
+        3180
+      ]
+    },
+    {
+      "content": "This article will walk through the basic strategies of upgrading, but before you migrate, you'll want to read the <bpt id=\"p1\">[</bpt>Node Backend How-To<ept id=\"p1\">](app-service-mobile-node-backend-how-to-use-server-sdk.md)</ept> prior to getting started.",
+      "pos": [
+        3181,
+        3400
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> It is advised that you read and understand the rest of this topic completely before starting an upgrade.",
+      "pos": [
+        3403,
+        3519
+      ]
+    },
+    {
+      "content": "Make note of any features you use which are called out below.",
+      "pos": [
+        3520,
+        3581
+      ]
+    },
+    {
+      "content": "The Mobile Services client SDKs are <bpt id=\"p1\">**</bpt>not<ept id=\"p1\">**</ept> compatible with the new Mobile Apps server SDK.",
+      "pos": [
+        3583,
+        3674
+      ]
+    },
+    {
+      "content": "In order to provide continuity of service for your app, you should not publish changes to a site currently serving published clients.",
+      "pos": [
+        3675,
+        3808
+      ]
+    },
+    {
+      "content": "Instead, you should create a new mobile app that serves as a duplicate.",
+      "pos": [
+        3809,
+        3880
+      ]
+    },
+    {
+      "content": "You can put this application on the same App Service plan to avoid incurring additional financial cost.",
+      "pos": [
+        3881,
+        3984
+      ]
+    },
+    {
+      "content": "You will then have two versions of the application: one which stays the same and serves published apps in the wild, and the other which you can then upgrade and target with a new client release.",
+      "pos": [
+        3986,
+        4180
+      ]
+    },
+    {
+      "content": "You can move and test your code at your pace, but you should make sure that any bug fixes you make get applied to both.",
+      "pos": [
+        4181,
+        4300
+      ]
+    },
+    {
+      "content": "Once you feel that a desired number of client apps in the wild have updated to the latest version, you can delete the original migrated app if you desire.",
+      "pos": [
+        4301,
+        4455
+      ]
+    },
+    {
+      "content": "It doesn't incur any additional monetary costs, if hosted in the same App Service plan as your Mobile App.",
+      "pos": [
+        4456,
+        4562
+      ]
+    },
+    {
+      "content": "The full outline for the upgrade process is as follows:",
+      "pos": [
+        4564,
+        4619
+      ]
+    },
+    {
+      "content": "Create a new Mobile App",
+      "pos": [
+        4624,
+        4647
+      ]
+    },
+    {
+      "content": "Update the project to use the new Server SDKs",
+      "pos": [
+        4651,
+        4696
+      ]
+    },
+    {
+      "content": "Release a new version of your client application",
+      "pos": [
+        4700,
+        4748
+      ]
+    },
+    {
+      "content": "(Optional) Delete your original migrated mobile service app",
+      "pos": [
+        4752,
+        4811
+      ]
+    },
+    {
+      "pos": [
+        4816,
+        4870
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"mobile-app-version\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> Starting the Upgrade"
+    },
+    {
+      "content": "The first step in upgrading is to create the Mobile App resource which will host the new version of your application.",
+      "pos": [
+        4871,
+        4988
+      ]
+    },
+    {
+      "content": "If you have already migrated an existing mobile service, you will want to create this version on the same hosting plan.",
+      "pos": [
+        4989,
+        5108
+      ]
+    },
+    {
+      "content": "Open the <bpt id=\"p1\">[</bpt><ept id=\"p1\">Azure portal]</ept> and navigate to your migrated application.",
+      "pos": [
+        5109,
+        5175
+      ]
+    },
+    {
+      "content": "Make note of the App Service Plan it is running on.",
+      "pos": [
+        5176,
+        5227
+      ]
+    },
+    {
+      "content": "Creating a second application instance",
+      "pos": [
+        5233,
+        5271
+      ]
+    },
+    {
+      "content": "Next, create the second application instance.",
+      "pos": [
+        5272,
+        5317
+      ]
+    },
+    {
+      "content": "When prompted to select you App Service Plan or \"hosting plan\" choose the plan of your migrated application.",
+      "pos": [
+        5318,
+        5426
+      ]
+    },
+    {
+      "content": "You will likely want to use the same database and Notification Hub as you did in Mobile Services.",
+      "pos": [
+        5572,
+        5669
+      ]
+    },
+    {
+      "content": "You can copy these values by opening <bpt id=\"p1\">[</bpt><ept id=\"p1\">Azure portal]</ept> and navigating to the original application, then click <bpt id=\"p2\">**</bpt>Settings<ept id=\"p2\">**</ept> &gt; <bpt id=\"p3\">**</bpt>Application settings<ept id=\"p3\">**</ept>.",
+      "pos": [
+        5670,
+        5817
+      ]
+    },
+    {
+      "content": "Under <bpt id=\"p1\">**</bpt>Connection Strings<ept id=\"p1\">**</ept>, copy <ph id=\"ph1\">`MS_NotificationHubConnectionString`</ph> and <ph id=\"ph2\">`MS_TableConnectionString`</ph>.",
+      "pos": [
+        5818,
+        5921
+      ]
+    },
+    {
+      "content": "Navigate to your new upgrade site and paste them in, overwriting any existing values.",
+      "pos": [
+        5922,
+        6007
+      ]
+    },
+    {
+      "content": "Repeat this process for any other application settings your app needs.",
+      "pos": [
+        6008,
+        6078
+      ]
+    },
+    {
+      "content": "If not using a migrated service, you can read connection strings and app settings from the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab of the Mobile Services section of the <bpt id=\"p2\">[</bpt><ept id=\"p2\">Azure portal]</ept>.",
+      "pos": [
+        6079,
+        6241
+      ]
+    },
+    {
+      "content": "Create a basic Mobile App backend with Node",
+      "pos": [
+        6247,
+        6290
+      ]
+    },
+    {
+      "content": "Every Azure App Service Mobile App Node.js backend starts as an ExpressJS application.",
+      "pos": [
+        6292,
+        6378
+      ]
+    },
+    {
+      "content": "You can create a basic <bpt id=\"p1\">[</bpt>Express<ept id=\"p1\">](http://expressjs.com/en/index.html)</ept> application as follows:",
+      "pos": [
+        6379,
+        6471
+      ]
+    },
+    {
+      "content": "In a command or PowerShell window, create a new directory for your project.",
+      "pos": [
+        6476,
+        6551
+      ]
+    },
+    {
+      "content": "Run npm init to initialize the package structure.",
+      "pos": [
+        6580,
+        6629
+      ]
+    },
+    {
+      "content": "The npm init command will ask a set of questions to initialize the project.",
+      "pos": [
+        6673,
+        6748
+      ]
+    },
+    {
+      "content": "See the example output below",
+      "pos": [
+        6750,
+        6778
+      ]
+    },
+    {
+      "content": "The npm init output",
+      "pos": [
+        6786,
+        6805
+      ]
+    },
+    {
+      "content": "Install the express and azure-mobile-apps libraries from the npm repository.",
+      "pos": [
+        6814,
+        6890
+      ]
+    },
+    {
+      "content": "Create an app.js file to implement the basic mobile server.",
+      "pos": [
+        6949,
+        7008
+      ]
+    },
+    {
+      "content": "Updating the server project",
+      "pos": [
+        7724,
+        7751
+      ]
+    },
+    {
+      "content": "Mobile Apps provides a new <bpt id=\"p1\">[</bpt><ept id=\"p1\">Mobile App Server SDK]</ept> which provides much of the same functionality as the Mobile Services runtime, but now you own the full runtime; Mobile Apps doesn't force a Node version or any code updates for you.",
+      "pos": [
+        7753,
+        7985
+      ]
+    },
+    {
+      "content": "If you've followed the steps above, you have a basic version of the Node mobile runtime available.",
+      "pos": [
+        7986,
+        8084
+      ]
+    },
+    {
+      "content": "You can now start moving tables and API logic from your Mobile Service to your Mobile App, customizing your server configuration, enabling push, configuring authentication, and more.",
+      "pos": [
+        8085,
+        8267
+      ]
+    },
+    {
+      "content": "Base configuration",
+      "pos": [
+        8273,
+        8291
+      ]
+    },
+    {
+      "content": "The server has lots of configuration settings, but has a variety of default values to make it easy to get started.",
+      "pos": [
+        8293,
+        8407
+      ]
+    },
+    {
+      "content": "Many of the settings will be set up for you, in the <bpt id=\"p1\">[</bpt><ept id=\"p1\">Azure portal]</ept>, via the <bpt id=\"p2\">**</bpt>Data<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>Authentication/Authorization<ept id=\"p3\">**</ept>, and <bpt id=\"p4\">**</bpt>Push<ept id=\"p4\">**</ept> settings menus.",
+      "pos": [
+        8408,
+        8556
+      ]
+    },
+    {
+      "content": "For local development, if you want use data, authentication, and push, you may need to configure your local development environment.",
+      "pos": [
+        8557,
+        8689
+      ]
+    },
+    {
+      "content": "You can configure your server configuration via environment variables which you can set via App Settings in your Mobile App backend.",
+      "pos": [
+        8691,
+        8823
+      ]
+    },
+    {
+      "pos": [
+        8825,
+        9146
+      ],
+      "content": "You can further customize the Mobile Apps SDK by passing a <bpt id=\"p1\">[</bpt>configuration object<ept id=\"p1\">](http://azure.github.io/azure-mobile-apps-node/global.html#configuration)</ept> to the initializer or <bpt id=\"p2\">[</bpt>creating a file named azureMobile.js<ept id=\"p2\">](app-service-mobile-node-backend-how-to-use-server-sdk/#howto-config-localdev)</ept> in the root of the project."
+    },
+    {
+      "content": "Working with Data &amp; Tables",
+      "pos": [
+        9152,
+        9178
+      ]
+    },
+    {
+      "content": "The SDK comes with an in-memory data provider to allow for quick and easy getting started experiences.",
+      "pos": [
+        9180,
+        9282
+      ]
+    },
+    {
+      "content": "You should switch to using a SQL DB early on, as the in-memory provider will lose all data on restart and doesn't stay consistent across multiple instances.",
+      "pos": [
+        9283,
+        9439
+      ]
+    },
+    {
+      "content": "To start moving your business logic from your Mobile Service to Mobile Apps, you'll first want to create a file with your table's name (appended with '.js') in the <ph id=\"ph1\">`./tables`</ph> directory.",
+      "pos": [
+        9441,
+        9626
+      ]
+    },
+    {
+      "content": "You can see a full example of a Mobile App table on <bpt id=\"p1\">[</bpt>GitHub<ept id=\"p1\">](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/todo/tables/TodoItem.js)</ept>.",
+      "pos": [
+        9627,
+        9781
+      ]
+    },
+    {
+      "content": "The simplest version is:",
+      "pos": [
+        9782,
+        9806
+      ]
+    },
+    {
+      "content": "To start porting some of your logic over, for each of your <ph id=\"ph1\">`&lt;tablename&gt;.&lt;operation&gt;.js`</ph>, you'll need a function for your table.",
+      "pos": [
+        9973,
+        10100
+      ]
+    },
+    {
+      "content": "Let's add a read function for an example.",
+      "pos": [
+        10101,
+        10142
+      ]
+    },
+    {
+      "content": "In a Mobile Service with a TodoItem table and a read operation which filters items based on userid, like this:",
+      "pos": [
+        10144,
+        10254
+      ]
+    },
+    {
+      "content": "function(query, user, request) {",
+      "pos": [
+        10258,
+        10290
+      ]
+    },
+    {
+      "content": "query.where({ userId: user.userId});",
+      "pos": [
+        10295,
+        10331
+      ]
+    },
+    {
+      "content": "request.execute();",
+      "pos": [
+        10336,
+        10354
+      ]
+    },
+    {
+      "content": "}",
+      "pos": [
+        10357,
+        10358
+      ]
+    },
+    {
+      "content": "The function we add to the Azure Mobile Apps table code would look like this:",
+      "pos": [
+        10360,
+        10437
+      ]
+    },
+    {
+      "content": "Inspecting the code, you can see that most of the function parameters from",
+      "pos": [
+        10576,
+        10650
+      ]
+    },
+    {
+      "content": "CORS",
+      "pos": [
+        10656,
+        10660
+      ]
+    },
+    {
+      "pos": [
+        10662,
+        10805
+      ],
+      "content": "CORS can be enabled via a <bpt id=\"p1\">[</bpt>CORS configuration setting<ept id=\"p1\">](http://azure.github.io/azure-mobile-apps-node/global.html#corsConfiguration)</ept> in the SDK."
+    },
+    {
+      "pos": [
+        10807,
+        10952
+      ],
+      "content": "The main areas of concern if using CORS are that the <ph id=\"ph1\">`eTag`</ph> and <ph id=\"ph2\">`Location`</ph> headers must be allowed in order for the client SDKs to work properly."
+    },
+    {
+      "content": "Push Notifications",
+      "pos": [
+        10958,
+        10976
+      ]
+    },
+    {
+      "content": "The Azure Notification Hubs SDK has had some significant updates since Mobile Services, so some Notification Hubs function signatures may be different.",
+      "pos": [
+        10978,
+        11129
+      ]
+    },
+    {
+      "content": "Otherwise, the functionality is similar to Mobile Services; the Azure Mobile SDK will provision a Notifications Hubs instance if the App Setting for Notifications Hubs exists, and expose it on <ph id=\"ph1\">`context.push`</ph>.",
+      "pos": [
+        11130,
+        11338
+      ]
+    },
+    {
+      "content": "A sample can be found on <bpt id=\"p1\">[</bpt>GitHub<ept id=\"p1\">](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/push-on-insert/tables/TodoItem.js)</ept>, with the relevant section shown below shown below:",
+      "pos": [
+        11339,
+        11527
+      ]
+    },
+    {
+      "content": "Scheduled Jobs",
+      "pos": [
+        12985,
+        12999
+      ]
+    },
+    {
+      "content": "Scheduled jobs are not built into Mobile Apps, so any existing jobs that you have in your Mobile Service  backend will need to be upgraded individually.",
+      "pos": [
+        13000,
+        13152
+      ]
+    },
+    {
+      "content": "One option is to create a scheduled <bpt id=\"p1\">[</bpt><ept id=\"p1\">Web Job]</ept> on the Mobile App code site.",
+      "pos": [
+        13153,
+        13227
+      ]
+    },
+    {
+      "content": "You could also set up an API that holds your job code and configure the <bpt id=\"p1\">[</bpt><ept id=\"p1\">Azure Scheduler]</ept> to hit that endpoint on the expected schedule.",
+      "pos": [
+        13228,
+        13364
+      ]
+    },
+    {
+      "pos": [
+        13369,
+        13427
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"authentication\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Authentication considerations"
+    },
+    {
+      "content": "The authentication components of Mobile Services have now been moved into the App Service Authentication/Authorization feature.",
+      "pos": [
+        13429,
+        13556
+      ]
+    },
+    {
+      "content": "You can learn about enabling this for your site by reading the <bpt id=\"p1\">[</bpt>Add authentication to your mobile app<ept id=\"p1\">](app-service-mobile-ios-get-started-users.md)</ept> topic.",
+      "pos": [
+        13557,
+        13711
+      ]
+    },
+    {
+      "content": "For some providers, such as AAD, Facebook, and Google, you should be able to leverage the existing registration from your copy application.",
+      "pos": [
+        13713,
+        13852
+      ]
+    },
+    {
+      "content": "You simply need to navigate to the identity provider's portal and add a new redirect URL to the registration.",
+      "pos": [
+        13853,
+        13962
+      ]
+    },
+    {
+      "content": "Then configure App Service Authentication/Authorization with the client ID and secret.",
+      "pos": [
+        13963,
+        14049
+      ]
+    },
+    {
+      "content": "Controller action authorization and user identity",
+      "pos": [
+        14055,
+        14104
+      ]
+    },
+    {
+      "content": "To limit access to your table, you can set it at the table level with <ph id=\"ph1\">`table.access = 'authenticated';`</ph>.",
+      "pos": [
+        14106,
+        14210
+      ]
+    },
+    {
+      "content": "You can see a full example on <bpt id=\"p1\">[</bpt>GitHub<ept id=\"p1\">](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/authentication/tables/TodoItem.js)</ept>.",
+      "pos": [
+        14211,
+        14353
+      ]
+    },
+    {
+      "pos": [
+        14355,
+        14558
+      ],
+      "content": "You can get access to the user identity information via the <ph id=\"ph1\">`user.getIdentity`</ph> method described <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](http://azure.github.io/azure-mobile-apps-node/module-azure-mobile-apps_auth_user.html#~getIdentity)</ept>."
+    },
+    {
+      "pos": [
+        14563,
+        14610
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"updating-clients\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Updating clients"
+    },
+    {
+      "content": "Once you have an operational Mobile App backend, you can work on a new version of your client application which consumes it.",
+      "pos": [
+        14611,
+        14735
+      ]
+    },
+    {
+      "content": "Mobile Apps also includes a new version of the client SDKs, and similar to the server upgrade above, you will need to remove all references to the Mobile Services SDKs before installing the Mobile Apps versions.",
+      "pos": [
+        14736,
+        14947
+      ]
+    },
+    {
+      "content": "One of the main changes between the versions is that the constructors no longer require an application key.",
+      "pos": [
+        14949,
+        15056
+      ]
+    },
+    {
+      "content": "You now simply pass in the URL of your Mobile App.",
+      "pos": [
+        15057,
+        15107
+      ]
+    },
+    {
+      "content": "For example, on the .NET clients, the <ph id=\"ph1\">`MobileServiceClient`</ph> constructor is now:",
+      "pos": [
+        15108,
+        15187
+      ]
+    },
+    {
+      "content": "You can read about installing the new SDKs and using the new structure via the links below:",
+      "pos": [
+        15358,
+        15449
+      ]
+    },
+    {
+      "content": "iOS version 3.0.0 or later",
+      "pos": [
+        15454,
+        15480
+      ]
+    },
+    {
+      "content": ".NET (Windows/Xamarin) version 2.0.0 or later",
+      "pos": [
+        15538,
+        15583
+      ]
+    },
+    {
+      "content": "If your application makes use of push notifications, make note of the specific registration instructions for each platform, as there have been some changes there as well.",
+      "pos": [
+        15642,
+        15812
+      ]
+    },
+    {
+      "content": "When you have the new client version ready, try it out against your upgraded server project.",
+      "pos": [
+        15814,
+        15906
+      ]
+    },
+    {
+      "content": "After validating that it works, you can release a new version of your application to customers.",
+      "pos": [
+        15907,
+        16002
+      ]
+    },
+    {
+      "content": "Eventually, once your customers have had a chance to receive these updates, you can delete the Mobile Services version of your app.",
+      "pos": [
+        16003,
+        16134
+      ]
+    },
+    {
+      "content": "At this point, you have completely upgraded to an App Service Mobile App using the latest Mobile Apps server SDK.",
+      "pos": [
+        16135,
+        16248
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Upgrade from Mobile Services to Azure App Service - Node.js\"\n    description=\"Learn how to easily upgrade your Mobile Services application to an App Service Mobile App\"\n    services=\"app-service\\mobile\"\n    documentationCenter=\"\"\n    authors=\"christopheranderson\"\n    manager=\"dwrede\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"app-service-mobile\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile\"\n    ms.devlang=\"node\"\n    ms.topic=\"article\"\n    ms.date=\"12/02/2015\"\n    ms.author=\"chrande\"/>\n\n# Upgrade your existing Node.js Azure Mobile Service to App Service\n\nApp Service Mobile is a new way to build mobile applications using Microsoft Azure. To learn more, see [What are Mobile Apps?].\n\nThis topic describes how to upgrade an existing Node.js backend application from Azure Mobile Services to a new App Service Mobile Apps. While you perform this upgrade, your existing Mobile Services application can continue to operate.\n\nWhen a mobile backend is upgraded to Azure App Service, it has access to all App Service features and are billed according to [App Service pricing], not Mobile Services pricing.\n\n## Migrate vs. upgrade\n\n[AZURE.INCLUDE [app-service-mobile-migrate-vs-upgrade](../../includes/app-service-mobile-migrate-vs-upgrade.md)]\n\n>[AZURE.TIP] It is recommended that you [perform a migration](app-service-mobile-migrating-from-mobile-services.md) before going through an upgrade. This way, you can put both versions of your application on the same App Service Plan and incur no additional cost.\n\n### Improvements in Mobile Apps Node.js server SDK\n\nUpgrading to the new [Mobile Apps SDK](https://www.npmjs.com/package/azure-mobile-apps) provides a lot of improvements, including:\n\n- Based on [Express framework](http://expressjs.com/en/index.html), the new Node SDK is light-weight and designed to keep up with new Node versions as they come out. You can customize the application behavior with Express middleware.\n\n- Significant performance improvements compared to the Mobile Services SDK.\n\n- You can now host a website together with your mobile backend; similarly, it's easy to add the Azure Mobile SDK to any existing expressv4 application.\n\n- Built for cross-platform and local development, the Mobile Apps SDK can be developed and run locally on Windows, Linux, and OSX platforms. It's now easy to use common Node development techniques like running [Mocha](https://mochajs.org/) tests prior to deployment.\n\n- You can use Redis with native modules like [hiredis](https://www.npmjs.com/package/hiredis); and because App Service will install your npm packages for you, when you deploy, there's no need to include binaries in your deployment packages.\n\n## <a name=\"overview\"></a>Basic upgrade overview\n\nUnlike the .NET Mobile Apps SDK, upgrading a Node backend from Mobile Services to Mobile Apps isn't as simple as swapping out packages. You now own your whole application stack, as opposed to Azure controlling it, and thus you need to create a basic Express app to host your mobile backend. For the table and API controllers, the concepts are similar, but you now must export table objects and the function APIs have changed somewhat. This article will walk through the basic strategies of upgrading, but before you migrate, you'll want to read the [Node Backend How-To](app-service-mobile-node-backend-how-to-use-server-sdk.md) prior to getting started.\n\n>[AZURE.TIP] It is advised that you read and understand the rest of this topic completely before starting an upgrade. Make note of any features you use which are called out below.\n\nThe Mobile Services client SDKs are **not** compatible with the new Mobile Apps server SDK. In order to provide continuity of service for your app, you should not publish changes to a site currently serving published clients. Instead, you should create a new mobile app that serves as a duplicate. You can put this application on the same App Service plan to avoid incurring additional financial cost.\n\nYou will then have two versions of the application: one which stays the same and serves published apps in the wild, and the other which you can then upgrade and target with a new client release. You can move and test your code at your pace, but you should make sure that any bug fixes you make get applied to both. Once you feel that a desired number of client apps in the wild have updated to the latest version, you can delete the original migrated app if you desire. It doesn't incur any additional monetary costs, if hosted in the same App Service plan as your Mobile App.\n\nThe full outline for the upgrade process is as follows:\n\n1. Create a new Mobile App\n2. Update the project to use the new Server SDKs\n3. Release a new version of your client application\n4. (Optional) Delete your original migrated mobile service app\n\n## <a name=\"mobile-app-version\"></a> Starting the Upgrade\nThe first step in upgrading is to create the Mobile App resource which will host the new version of your application. If you have already migrated an existing mobile service, you will want to create this version on the same hosting plan. Open the [Azure portal] and navigate to your migrated application. Make note of the App Service Plan it is running on.\n\n### Creating a second application instance\nNext, create the second application instance. When prompted to select you App Service Plan or \"hosting plan\" choose the plan of your migrated application.\n\n[AZURE.INCLUDE [app-service-mobile-dotnet-backend-create-new-service](../../includes/app-service-mobile-dotnet-backend-create-new-service.md)]\n\nYou will likely want to use the same database and Notification Hub as you did in Mobile Services. You can copy these values by opening [Azure portal] and navigating to the original application, then click **Settings** > **Application settings**. Under **Connection Strings**, copy `MS_NotificationHubConnectionString` and `MS_TableConnectionString`. Navigate to your new upgrade site and paste them in, overwriting any existing values. Repeat this process for any other application settings your app needs. If not using a migrated service, you can read connection strings and app settings from the **Configure** tab of the Mobile Services section of the [Azure portal].\n\n### Create a basic Mobile App backend with Node\n\nEvery Azure App Service Mobile App Node.js backend starts as an ExpressJS application. You can create a basic [Express](http://expressjs.com/en/index.html) application as follows:\n\n1. In a command or PowerShell window, create a new directory for your project.\n\n        mkdir basicapp\n\n2. Run npm init to initialize the package structure.\n\n        cd basicapp\n        npm init\n\n    The npm init command will ask a set of questions to initialize the project.  See the example output below\n\n    ![The npm init output][0]\n\n3. Install the express and azure-mobile-apps libraries from the npm repository.\n\n        npm install --save express azure-mobile-apps\n\n4. Create an app.js file to implement the basic mobile server.\n\n        var express = require('express'),\n            azureMobileApps = require('azure-mobile-apps');\n\n        var app = express(),\n            mobile = azureMobileApps();\n\n        // Important all tables in the 'tables' directory\n        mobile.tables.import('./tables');\n        mobile.api.import('./api');\n\n        // Provide initialization of any tables that are statically defined\n        mobile.tables.initialize().then(function () {\n           // Add the mobile API so it is accessible as a Web API\n           app.use(mobile);\n\n           // Start listening on HTTP\n           app.listen(process.env.PORT || 3000);\n           console.log('Now listening on ' + (process.env.PORT || 3000)));\n        });\n\n\n## Updating the server project\n\nMobile Apps provides a new [Mobile App Server SDK] which provides much of the same functionality as the Mobile Services runtime, but now you own the full runtime; Mobile Apps doesn't force a Node version or any code updates for you. If you've followed the steps above, you have a basic version of the Node mobile runtime available. You can now start moving tables and API logic from your Mobile Service to your Mobile App, customizing your server configuration, enabling push, configuring authentication, and more.\n\n### Base configuration\n\nThe server has lots of configuration settings, but has a variety of default values to make it easy to get started. Many of the settings will be set up for you, in the [Azure portal], via the **Data**, **Authentication/Authorization**, and **Push** settings menus. For local development, if you want use data, authentication, and push, you may need to configure your local development environment.\n\nYou can configure your server configuration via environment variables which you can set via App Settings in your Mobile App backend.\n\nYou can further customize the Mobile Apps SDK by passing a [configuration object](http://azure.github.io/azure-mobile-apps-node/global.html#configuration) to the initializer or [creating a file named azureMobile.js](app-service-mobile-node-backend-how-to-use-server-sdk/#howto-config-localdev) in the root of the project.\n\n### Working with Data & Tables\n\nThe SDK comes with an in-memory data provider to allow for quick and easy getting started experiences. You should switch to using a SQL DB early on, as the in-memory provider will lose all data on restart and doesn't stay consistent across multiple instances.\n\nTo start moving your business logic from your Mobile Service to Mobile Apps, you'll first want to create a file with your table's name (appended with '.js') in the `./tables` directory. You can see a full example of a Mobile App table on [GitHub](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/todo/tables/TodoItem.js). The simplest version is:\n\n    var azureMobileApps = require('azure-mobile-apps');\n\n    // Create a new table definition\n    var table = azureMobileApps.table();\n\n    module.exports = table;\n\nTo start porting some of your logic over, for each of your `<tablename>.<operation>.js`, you'll need a function for your table. Let's add a read function for an example.\n\nIn a Mobile Service with a TodoItem table and a read operation which filters items based on userid, like this:\n\n  function(query, user, request) {\n    query.where({ userId: user.userId});\n    request.execute();\n  }\n\nThe function we add to the Azure Mobile Apps table code would look like this:\n\n    table.read(function (context) {\n        context.query.where({ userId: context.user.id });\n        return context.execute();\n    });\n\nInspecting the code, you can see that most of the function parameters from\n\n### CORS\n\nCORS can be enabled via a [CORS configuration setting](http://azure.github.io/azure-mobile-apps-node/global.html#corsConfiguration) in the SDK.\n\nThe main areas of concern if using CORS are that the `eTag` and `Location` headers must be allowed in order for the client SDKs to work properly.\n\n### Push Notifications\n\nThe Azure Notification Hubs SDK has had some significant updates since Mobile Services, so some Notification Hubs function signatures may be different. Otherwise, the functionality is similar to Mobile Services; the Azure Mobile SDK will provision a Notifications Hubs instance if the App Setting for Notifications Hubs exists, and expose it on `context.push`. A sample can be found on [GitHub](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/push-on-insert/tables/TodoItem.js), with the relevant section shown below shown below:\n\n    table.insert(function (context) {\n        // For details of the Notification Hubs JavaScript SDK,\n        // see https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-nodejs-how-to-use-notification-hubs/\n        logger.silly('Running TodoItem.insert');\n\n        // This push uses a template mechanism, so we need a template/\n        var payload = '<toast><visual><binding template=\"Toast01\"><text id=\"1\">INSERT</text></binding></visual></toast>';\n\n        // Execute the insert.  The insert returns the results as a Promise,\n        // Do the push as a post-execute action within the promise flow.\n        return context.execute()\n            .then(function (results) {\n                // Only do the push if configured\n                if (context.push) {\n                    context.push.wns.send(null, payload, 'wns/toast', function (error) {\n                        if (error) {\n                            logger.error('Error while sending push notification: ', error);\n                        } else {\n                            logger.silly('Push notification sent successfully!');\n                        }\n                    });\n                }\n                // Don't forget to return the results from the context.execute()\n                return results;\n            })\n            .catch(function (error) {\n                logger.error('Error while running context.execute: ', error);\n            });\n    });\n\n\n### Scheduled Jobs\nScheduled jobs are not built into Mobile Apps, so any existing jobs that you have in your Mobile Service  backend will need to be upgraded individually. One option is to create a scheduled [Web Job] on the Mobile App code site. You could also set up an API that holds your job code and configure the [Azure Scheduler] to hit that endpoint on the expected schedule.\n\n## <a name=\"authentication\"></a>Authentication considerations\n\nThe authentication components of Mobile Services have now been moved into the App Service Authentication/Authorization feature. You can learn about enabling this for your site by reading the [Add authentication to your mobile app](app-service-mobile-ios-get-started-users.md) topic.\n\nFor some providers, such as AAD, Facebook, and Google, you should be able to leverage the existing registration from your copy application. You simply need to navigate to the identity provider's portal and add a new redirect URL to the registration. Then configure App Service Authentication/Authorization with the client ID and secret.\n\n### Controller action authorization and user identity\n\nTo limit access to your table, you can set it at the table level with `table.access = 'authenticated';`. You can see a full example on [GitHub](https://github.com/Azure/azure-mobile-apps-node/blob/master/samples/authentication/tables/TodoItem.js).\n\nYou can get access to the user identity information via the `user.getIdentity` method described [here](http://azure.github.io/azure-mobile-apps-node/module-azure-mobile-apps_auth_user.html#~getIdentity).\n\n## <a name=\"updating-clients\"></a>Updating clients\nOnce you have an operational Mobile App backend, you can work on a new version of your client application which consumes it. Mobile Apps also includes a new version of the client SDKs, and similar to the server upgrade above, you will need to remove all references to the Mobile Services SDKs before installing the Mobile Apps versions.\n\nOne of the main changes between the versions is that the constructors no longer require an application key. You now simply pass in the URL of your Mobile App. For example, on the .NET clients, the `MobileServiceClient` constructor is now:\n\n        public static MobileServiceClient MobileService = new MobileServiceClient(\n            \"https://contoso.azurewebsites.net\", // URL of the Mobile App\n        );\n\nYou can read about installing the new SDKs and using the new structure via the links below:\n\n- [iOS version 3.0.0 or later](app-service-mobile-ios-how-to-use-client-library.md)\n- [.NET (Windows/Xamarin) version 2.0.0 or later](app-service-mobile-dotnet-how-to-use-client-library.md)\n\nIf your application makes use of push notifications, make note of the specific registration instructions for each platform, as there have been some changes there as well.\n\nWhen you have the new client version ready, try it out against your upgraded server project. After validating that it works, you can release a new version of your application to customers. Eventually, once your customers have had a chance to receive these updates, you can delete the Mobile Services version of your app. At this point, you have completely upgraded to an App Service Mobile App using the latest Mobile Apps server SDK.\n\n<!-- Images -->\n[0]: ./media/app-service-mobile-node-backend-how-to-use-server-sdk/npm-init.png\n\n<!-- URLs. -->\n\n[Azure portal]: https://portal.azure.com/\n[Azure classic portal]: https://manage.windowsazure.com/\n[What are Mobile Apps?]: app-service-mobile-value-prop.md\n[I already use web sites and mobile services – how does App Service help me?]: /en-us/documentation/articles/app-service-mobile-value-prop-migration-from-mobile-services\n[Mobile App Server SDK]: https://www.npmjs.com/package/azure-mobile-apps\n[Create a Mobile App]: app-service-mobile-xamarin-ios-get-started.md\n[Add push notifications to your mobile app]: app-service-mobile-xamarin-ios-get-started-push.md\n[Add authentication to your mobile app]: app-service-mobile-xamarin-ios-get-started-users.md\n[Azure Scheduler]: /en-us/documentation/services/scheduler/\n[Web Job]: ../app-service-web/websites-webjobs-resources.md\n[How to use the .NET server SDK]: app-service-mobile-dotnet-backend-how-to-use-server-sdk.md\n[Migrate from Mobile Services to an App Service Mobile App]: app-service-mobile-migrating-from-mobile-services.md\n[Migrate your existing Mobile Service to App Service]: app-service-mobile-migrating-from-mobile-services.md\n[App Service pricing]: https://azure.microsoft.com/en-us/pricing/details/app-service/\n[.NET server SDK overview]: app-service-mobile-dotnet-backend-how-to-use-server-sdk.md\n\n[Azure Portal]: https://portal.azure.com/\n[OData]: http://www.odata.org\n[Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise\n[basicapp sample on GitHub]: https://github.com/azure/azure-mobile-apps-node/tree/master/samples/basic-app\n[todo sample on GitHub]: https://github.com/azure/azure-mobile-apps-node/tree/master/samples/todo\n[samples directory on GitHub]: https://github.com/azure/azure-mobile-apps-node/tree/master/samples\n[static-schema sample on GitHub]: https://github.com/azure/azure-mobile-apps-node/tree/master/samples/static-schema\n[QueryJS]: https://github.com/Azure/queryjs\n[Node.js Tools 1.1 for Visual Studio]: https://github.com/Microsoft/nodejstools/releases/tag/v1.1-RC.2.1\n[mssql Node.js package]: https://www.npmjs.com/package/mssql\n[Microsoft SQL Server 2014 Express]: http://www.microsoft.com/en-us/server-cloud/Products/sql-server-editions/sql-server-express.aspx\n[ExpressJS Middleware]: http://expressjs.com/guide/using-middleware.html\n[Winston]: https://github.com/winstonjs/winston\n\n\n"
+}

@@ -1,0 +1,467 @@
+{
+  "nodes": [
+    {
+      "content": "Getting started with the Azure AD Reporting API",
+      "pos": [
+        26,
+        73
+      ]
+    },
+    {
+      "content": "How to get started with the Azure Active Directory Reporting API",
+      "pos": [
+        91,
+        155
+      ]
+    },
+    {
+      "content": "Getting started with the Azure AD Reporting API",
+      "pos": [
+        454,
+        501
+      ]
+    },
+    {
+      "pos": [
+        504,
+        616
+      ],
+      "content": "This documentation is part of the <bpt id=\"p1\">[</bpt>Azure Active Directory Reporting Guide<ept id=\"p1\">](active-directory-reporting-guide.md)</ept>."
+    },
+    {
+      "content": "Azure Active Directory provides a variety of activity, security and audit reports.",
+      "pos": [
+        619,
+        701
+      ]
+    },
+    {
+      "content": "This data can be consumed through the Azure portal, but can also be very useful in a many other applications, such as SIEM systems, audit, and business intelligence tools.",
+      "pos": [
+        702,
+        873
+      ]
+    },
+    {
+      "content": "The Azure AD Reporting APIs provide programmatic access to these data through a set of REST-based APIs that can be called from a variety programming languages and tools.",
+      "pos": [
+        875,
+        1044
+      ]
+    },
+    {
+      "content": "This article will walk you through the process of calling the Azure AD Reporting APIs using PowerShell.",
+      "pos": [
+        1046,
+        1149
+      ]
+    },
+    {
+      "content": "You can modify the sample PowerShell script to access data from any of the available reports in JSON, XML or text format, as your scenario requires.",
+      "pos": [
+        1150,
+        1298
+      ]
+    },
+    {
+      "pos": [
+        1300,
+        1389
+      ],
+      "content": "To use this sample, you will need an <bpt id=\"p1\">[</bpt>Azure Active Directory<ept id=\"p1\">](active-directory-whatis.md)</ept>"
+    },
+    {
+      "content": "Creating an Azure AD application to access the API",
+      "pos": [
+        1394,
+        1444
+      ]
+    },
+    {
+      "content": "The Reporting API uses <bpt id=\"p1\">[</bpt>OAuth<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn645545.aspx)</ept> to authorize access to the web APIs.",
+      "pos": [
+        1446,
+        1569
+      ]
+    },
+    {
+      "content": "To access information from your directory, you must create an application in your Active Directory, and grant it appropriate permissions to access the AAD data.",
+      "pos": [
+        1570,
+        1730
+      ]
+    },
+    {
+      "content": "Create an application",
+      "pos": [
+        1737,
+        1758
+      ]
+    },
+    {
+      "pos": [
+        1761,
+        1837
+      ],
+      "content": "Navigate to the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">](https://manage.windowsazure.com/)</ept>."
+    },
+    {
+      "content": "Navigate into your directory.",
+      "pos": [
+        1840,
+        1869
+      ]
+    },
+    {
+      "content": "Navigate into applications.",
+      "pos": [
+        1872,
+        1899
+      ]
+    },
+    {
+      "content": "On the bottom bar, click \"Add\".",
+      "pos": [
+        1902,
+        1933
+      ]
+    },
+    {
+      "content": "Click \"Add an application my organization is developing\".",
+      "pos": [
+        1940,
+        1997
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Name<ept id=\"p1\">**</ept>: Any name is fine.",
+      "pos": [
+        2004,
+        2031
+      ]
+    },
+    {
+      "content": "Something like \"Reporting API Application\" is recommended.",
+      "pos": [
+        2032,
+        2090
+      ]
+    },
+    {
+      "pos": [
+        2097,
+        2147
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Type<ept id=\"p1\">**</ept>: Select \"Web application and/or Web API\"."
+    },
+    {
+      "content": "Click the arrow to move to the next page.",
+      "pos": [
+        2154,
+        2195
+      ]
+    },
+    {
+      "pos": [
+        2202,
+        2242
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Sign-on URL<ept id=\"p1\">**</ept>: <ph id=\"ph1\">```http://localhost```</ph>."
+    },
+    {
+      "pos": [
+        2249,
+        2288
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>App ID URI<ept id=\"p1\">**</ept>: <ph id=\"ph1\">```http://localhost```</ph>."
+    },
+    {
+      "content": "Click the checkmark to finish adding the application.",
+      "pos": [
+        2295,
+        2348
+      ]
+    },
+    {
+      "content": "Grant your application permission to use the API",
+      "pos": [
+        2354,
+        2402
+      ]
+    },
+    {
+      "content": "Navigate to the Applications tab.",
+      "pos": [
+        2405,
+        2438
+      ]
+    },
+    {
+      "content": "Navigate to your newly created application.",
+      "pos": [
+        2441,
+        2484
+      ]
+    },
+    {
+      "pos": [
+        2487,
+        2515
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab."
+    },
+    {
+      "content": "In the \"Permissions to Other Applications\" section:",
+      "pos": [
+        2518,
+        2569
+      ]
+    },
+    {
+      "pos": [
+        2576,
+        2674
+      ],
+      "content": "In the microsoft Azure Active Directory &gt; Application Permissions, select <bpt id=\"p1\">**</bpt>Read directory data<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        2677,
+        2710
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept> on the bottom bar."
+    },
+    {
+      "content": "Get your directory ID, client ID, and client secret",
+      "pos": [
+        2717,
+        2768
+      ]
+    },
+    {
+      "content": "The steps below will walk you through obtaining your application's client ID and client secret.",
+      "pos": [
+        2770,
+        2865
+      ]
+    },
+    {
+      "content": "You will also need to know your tenant name, it can be either your *.onmicrosoft.com or a custom domain name.",
+      "pos": [
+        2867,
+        2976
+      ]
+    },
+    {
+      "content": "Copy these into a separate place; you'll use them to modify the script.",
+      "pos": [
+        2978,
+        3049
+      ]
+    },
+    {
+      "content": "Application Client ID",
+      "pos": [
+        3056,
+        3077
+      ]
+    },
+    {
+      "content": "Navigate to the Applications tab.",
+      "pos": [
+        3080,
+        3113
+      ]
+    },
+    {
+      "content": "Navigate to your newly created application.",
+      "pos": [
+        3116,
+        3159
+      ]
+    },
+    {
+      "pos": [
+        3162,
+        3196
+      ],
+      "content": "Navigate to the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab."
+    },
+    {
+      "pos": [
+        3199,
+        3265
+      ],
+      "content": "Your application's client ID is listed on the <bpt id=\"p1\">**</bpt>Client ID<ept id=\"p1\">**</ept> field."
+    },
+    {
+      "content": "Application client secret",
+      "pos": [
+        3272,
+        3297
+      ]
+    },
+    {
+      "content": "Navigate to the Applications tab.",
+      "pos": [
+        3300,
+        3333
+      ]
+    },
+    {
+      "content": "Navigate to your newly created application.",
+      "pos": [
+        3336,
+        3379
+      ]
+    },
+    {
+      "content": "Navigate to the Configure tab.",
+      "pos": [
+        3382,
+        3412
+      ]
+    },
+    {
+      "content": "Generate a new secret key for your application by selecting a duration in the \"Keys\" section.",
+      "pos": [
+        3415,
+        3508
+      ]
+    },
+    {
+      "content": "The key will be displayed upon saving.",
+      "pos": [
+        3511,
+        3549
+      ]
+    },
+    {
+      "content": "Make sure to copy it and paste it into a safe location, because there is no way to retrieve it later.",
+      "pos": [
+        3550,
+        3651
+      ]
+    },
+    {
+      "content": "Modify the script",
+      "pos": [
+        3657,
+        3674
+      ]
+    },
+    {
+      "content": "Edit one of the scripts below to work with your directory by replacing $ClientID, $ClientSecret and $tenantdomain with the correct values from “Delegating Access in Azure AD”.",
+      "pos": [
+        3675,
+        3850
+      ]
+    },
+    {
+      "content": "PowerShell Script",
+      "pos": [
+        3856,
+        3873
+      ]
+    },
+    {
+      "content": "Bash Script",
+      "pos": [
+        5442,
+        5453
+      ]
+    },
+    {
+      "content": "Execute the script",
+      "pos": [
+        6717,
+        6735
+      ]
+    },
+    {
+      "content": "Once you finish editing the script, run it and verify that the expected data from the AuditEvents report is returned.",
+      "pos": [
+        6736,
+        6853
+      ]
+    },
+    {
+      "content": "The script returns lists all the available reports, and returns output from the AccountProvisioningEvents report in the PowerShell window in JSON format.",
+      "pos": [
+        6855,
+        7008
+      ]
+    },
+    {
+      "content": "It also creates files with the same output in JSON, text and XML.",
+      "pos": [
+        7009,
+        7074
+      ]
+    },
+    {
+      "content": "You can comment experiment with modifying the script to return data from other reports, and comment out the output formats that you do not need.",
+      "pos": [
+        7075,
+        7219
+      ]
+    },
+    {
+      "content": "Notes",
+      "pos": [
+        7224,
+        7229
+      ]
+    },
+    {
+      "content": "There is no limit on the number of events returned by the Azure AD Reporting API (using OData pagination).",
+      "pos": [
+        7233,
+        7339
+      ]
+    },
+    {
+      "pos": [
+        7346,
+        7468
+      ],
+      "content": "For retention limits on reporting data, check out <bpt id=\"p1\">[</bpt>Reporting Retention Policies<ept id=\"p1\">](active-directory-reporting-retention.md)</ept>."
+    },
+    {
+      "content": "Next Steps",
+      "pos": [
+        7474,
+        7484
+      ]
+    },
+    {
+      "content": "Curious about what security, audit, and activity reports are available?",
+      "pos": [
+        7487,
+        7558
+      ]
+    },
+    {
+      "content": "Check out <bpt id=\"p1\">[</bpt>Azure AD Security, Audit, and Activity Reports<ept id=\"p1\">](active-directory-view-access-usage-reports.md)</ept>",
+      "pos": [
+        7559,
+        7664
+      ]
+    },
+    {
+      "pos": [
+        7667,
+        7782
+      ],
+      "content": "See <bpt id=\"p1\">[</bpt>Azure AD Audit Report Events<ept id=\"p1\">](active-directory-reporting-audit-events.md)</ept> for more details on the Audit Report"
+    },
+    {
+      "pos": [
+        7785,
+        7931
+      ],
+      "content": "See <bpt id=\"p1\">[</bpt>Azure AD Reports and Events (Preview)<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/mt126081.aspx)</ept> for more details on the Graph API REST service"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Getting started with the Azure AD Reporting API\"\n   description=\"How to get started with the Azure Active Directory Reporting API\"\n   services=\"active-directory\"\n   documentationCenter=\"\"\n   authors=\"kenhoff\"\n   manager=\"mbaldwin\"\n   editor=\"\"/>\n\n<tags\n   ms.service=\"active-directory\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"identity\"\n   ms.date=\"12/07/2015\"\n   ms.author=\"kenhoff\"/>\n\n\n# Getting started with the Azure AD Reporting API\n\n*This documentation is part of the [Azure Active Directory Reporting Guide](active-directory-reporting-guide.md).*\n\nAzure Active Directory provides a variety of activity, security and audit reports. This data can be consumed through the Azure portal, but can also be very useful in a many other applications, such as SIEM systems, audit, and business intelligence tools.\n\nThe Azure AD Reporting APIs provide programmatic access to these data through a set of REST-based APIs that can be called from a variety programming languages and tools.\n\nThis article will walk you through the process of calling the Azure AD Reporting APIs using PowerShell. You can modify the sample PowerShell script to access data from any of the available reports in JSON, XML or text format, as your scenario requires.\n\nTo use this sample, you will need an [Azure Active Directory](active-directory-whatis.md)\n\n## Creating an Azure AD application to access the API\n\nThe Reporting API uses [OAuth](https://msdn.microsoft.com/library/azure/dn645545.aspx) to authorize access to the web APIs. To access information from your directory, you must create an application in your Active Directory, and grant it appropriate permissions to access the AAD data.\n\n\n### Create an application\n- Navigate to the [Azure Management Portal](https://manage.windowsazure.com/).\n- Navigate into your directory.\n- Navigate into applications.\n- On the bottom bar, click \"Add\".\n    - Click \"Add an application my organization is developing\".\n    - **Name**: Any name is fine. Something like \"Reporting API Application\" is recommended.\n    - **Type**: Select \"Web application and/or Web API\".\n    - Click the arrow to move to the next page.\n    - **Sign-on URL**: ```http://localhost```.\n    - **App ID URI**: ```http://localhost```.\n    - Click the checkmark to finish adding the application.\n\n### Grant your application permission to use the API\n- Navigate to the Applications tab.\n- Navigate to your newly created application.\n- Click the **Configure** tab.\n- In the \"Permissions to Other Applications\" section:\n    - In the microsoft Azure Active Directory > Application Permissions, select **Read directory data**.\n- Click **Save** on the bottom bar.\n\n\n### Get your directory ID, client ID, and client secret\n\nThe steps below will walk you through obtaining your application's client ID and client secret.  You will also need to know your tenant name, it can be either your *.onmicrosoft.com or a custom domain name.  Copy these into a separate place; you'll use them to modify the script.\n\n#### Application Client ID\n- Navigate to the Applications tab.\n- Navigate to your newly created application.\n- Navigate to the **Configure** tab.\n- Your application's client ID is listed on the **Client ID** field.\n\n#### Application client secret\n- Navigate to the Applications tab.\n- Navigate to your newly created application.\n- Navigate to the Configure tab.\n- Generate a new secret key for your application by selecting a duration in the \"Keys\" section.\n- The key will be displayed upon saving. Make sure to copy it and paste it into a safe location, because there is no way to retrieve it later.\n\n\n## Modify the script\nEdit one of the scripts below to work with your directory by replacing $ClientID, $ClientSecret and $tenantdomain with the correct values from “Delegating Access in Azure AD”.\n\n### PowerShell Script\n\n    # This script will require the Web Application and permissions setup in Azure Active Directory\n    $ClientID       = \"your-application-client-id-here\"             # Should be a ~35 character string insert your info here\n    $ClientSecret   = \"your-application-client-secret-here\"         # Should be a ~44 character string insert your info here\n    $loginURL       = \"https://login.windows.net\"\n    $tenantdomain   = \"your-directory-name-here.onmicrosoft.com\"            # For example, contoso.onmicrosoft.com\n\n    # Get an Oauth 2 access token based on client id, secret and tenant domain\n    $body       = @{grant_type=\"client_credentials\";resource=$resource;client_id=$ClientID;client_secret=$ClientSecret}\n    $oauth      = Invoke-RestMethod -Method Post -Uri $loginURL/$tenantdomain/oauth2/token?api-version=1.0 -Body $body\n\n    $7daysago = \"{0:s}\" -f (get-date).AddDays(-7) + \"Z\"\n    # or, AddMinutes(-5)\n\n    Write-Output $7daysago\n\n    if ($oauth.access_token -ne $null) {\n        $headerParams = @{'Authorization'=\"$($oauth.token_type) $($oauth.access_token)\"}\n\n        $url = \"https://graph.windows.net/$tenantdomain/reports/auditEvents?api-version=beta&`$filter=eventTime gt $7daysago\"\n\n        $myReport = (Invoke-WebRequest -UseBasicParsing -Headers $headerParams -Uri $url)\n        foreach ($event in ($myReport.Content | ConvertFrom-Json).value) {\n            Write-Output ($event | ConvertTo-Json)\n        }\n        $myReport.Content | Out-File -FilePath auditEvents.json -Force\n    } else {\n        Write-Host \"ERROR: No Access Token\"\n    }\n\n### Bash Script\n\n    #!/bin/bash\n\n    # Author: Ken Hoff (kenhoff@microsoft.com)\n    # Date: 2015.08.20\n    # NOTE: This script requires jq (https://stedolan.github.io/jq/)\n\n    CLIENT_ID=\"your-application-client-id-here\"         # Should be a ~35 character string insert your info here\n    CLIENT_SECRET=\"your-application-client-secret-here\" # Should be a ~44 character string insert your info here\n    LOGIN_URL=\"https://login.windows.net\"\n    TENANT_DOMAIN=\"your-directory-name-here.onmicrosoft.com\"    # For example, contoso.onmicrosoft.com\n\n    TOKEN_INFO=$(curl -s --data-urlencode \"grant_type=client_credentials\" --data-urlencode \"client_id=$CLIENT_ID\" --data-urlencode \"client_secret=$CLIENT_SECRET\" \"$LOGIN_URL/$TENANT_DOMAIN/oauth2/token?api-version=1.0\")\n\n    TOKEN_TYPE=$(echo $TOKEN_INFO | ./jq-win64.exe -r '.token_type')\n    ACCESS_TOKEN=$(echo $TOKEN_INFO | ./jq-win64.exe -r '.access_token')\n\n    # get yesterday's date\n\n    YESTERDAY=$(date --date='1 day ago' +'%Y-%m-%d')\n\n    URL=\"https://graph.windows.net/$TENANT_DOMAIN/reports/auditEvents?api-version=beta&\\$filter=eventTime%20gt%20$YESTERDAY\"\n\n\n    REPORT=$(curl -s --header \"Authorization: $TOKEN_TYPE $ACCESS_TOKEN\" $URL)\n\n    echo $REPORT | ./jq-win64.exe -r '.value' | ./jq-win64.exe -r \".[]\"\n\n\n\n\n\n## Execute the script\nOnce you finish editing the script, run it and verify that the expected data from the AuditEvents report is returned.\n\nThe script returns lists all the available reports, and returns output from the AccountProvisioningEvents report in the PowerShell window in JSON format. It also creates files with the same output in JSON, text and XML. You can comment experiment with modifying the script to return data from other reports, and comment out the output formats that you do not need.\n\n## Notes\n\n- There is no limit on the number of events returned by the Azure AD Reporting API (using OData pagination).\n    - For retention limits on reporting data, check out [Reporting Retention Policies](active-directory-reporting-retention.md).\n\n\n## Next Steps\n- Curious about what security, audit, and activity reports are available? Check out [Azure AD Security, Audit, and Activity Reports](active-directory-view-access-usage-reports.md)\n- See [Azure AD Audit Report Events](active-directory-reporting-audit-events.md) for more details on the Audit Report\n- See [Azure AD Reports and Events (Preview)](https://msdn.microsoft.com/library/azure/mt126081.aspx) for more details on the Graph API REST service\n\n\n"
+}

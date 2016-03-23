@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    {
+      "content": "Obtain a Resource Manager token",
+      "pos": [
+        3,
+        34
+      ]
+    },
+    {
+      "content": "Azure Active Directory must authenticate all the tasks that you perform on resources using the Azure Resource Manager.",
+      "pos": [
+        36,
+        154
+      ]
+    },
+    {
+      "content": "The example shown here uses password authentication, for other approaches see <bpt id=\"p1\">[</bpt>Authenticating Azure Resource Manager requests<ept id=\"p1\">][lnk-authenticate-arm]</ept>.",
+      "pos": [
+        155,
+        304
+      ]
+    },
+    {
+      "pos": [
+        309,
+        441
+      ],
+      "content": "Add the following code to the <bpt id=\"p1\">**</bpt>Main<ept id=\"p1\">**</ept> method in Program.cs to retrieve a token from Azure AD using the application id and password."
+    },
+    {
+      "pos": [
+        886,
+        1014
+      ],
+      "content": "Create a <bpt id=\"p1\">**</bpt>ResourceManagementClient<ept id=\"p1\">**</ept> object that uses the token by adding the following code to the end of the <bpt id=\"p2\">**</bpt>Main<ept id=\"p2\">**</ept> method:"
+    },
+    {
+      "content": "Create, or obtain a reference to, the resource group you are using:",
+      "pos": [
+        1168,
+        1235
+      ]
+    }
+  ],
+  "content": "## Obtain a Resource Manager token\n\nAzure Active Directory must authenticate all the tasks that you perform on resources using the Azure Resource Manager. The example shown here uses password authentication, for other approaches see [Authenticating Azure Resource Manager requests][lnk-authenticate-arm].\n\n1. Add the following code to the **Main** method in Program.cs to retrieve a token from Azure AD using the application id and password.\n\n    ```\n    var authContext = new AuthenticationContext(string.Format  \n      (\"https://login.windows.net/{0}\", tenantId));\n    var credential = new ClientCredential(applicationId, password);\n    AuthenticationResult token = authContext.AcquireTokenAsync\n      (\"https://management.core.windows.net/\", credential).Result;\n    \n    if (token == null)\n    {\n      Console.WriteLine(\"Failed to obtain the token\");\n      return;\n    }\n    ```\n\n2. Create a **ResourceManagementClient** object that uses the token by adding the following code to the end of the **Main** method:\n\n    ```\n    var creds = new TokenCloudCredentials(subscriptionId, token.AccessToken);\n    var client = new ResourceManagementClient(creds);\n    ```\n\n3. Create, or obtain a reference to, the resource group you are using:\n\n    ```\n    var rgResponse = client.ResourceGroups.CreateOrUpdateAsync(rgName,\n        new ResourceGroup(\"East US\")).Result;\n    if (rgResponse.StatusCode != HttpStatusCode.Created\n        && rgResponse.StatusCode != HttpStatusCode.OK)\n    {\n      Console.WriteLine(\"Problem creating resource group\");\n      return;\n    }\n    ```\n\n[lnk-authenticate-arm]: https://msdn.microsoft.com/library/azure/dn790557.aspx\n\n"
+}
