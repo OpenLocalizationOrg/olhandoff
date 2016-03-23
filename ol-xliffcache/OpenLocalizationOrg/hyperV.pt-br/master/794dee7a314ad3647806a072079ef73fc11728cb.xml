@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        3,
+        25
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>.NET backend (C#)<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "content": "In the backend's Visual Studio project, open <bpt id=\"p1\">**</bpt>Controllers<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>TodoItemController.cs<ept id=\"p2\">**</ept>.",
+      "pos": [
+        33,
+        122
+      ]
+    },
+    {
+      "content": "At the top of the file, add the following <ph id=\"ph1\">`using`</ph> statement:",
+      "pos": [
+        123,
+        183
+      ]
+    },
+    {
+      "pos": [
+        2076,
+        2097
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Node.js backend<ept id=\"p1\">**</ept> :"
+    },
+    {
+      "content": "Replace the todoitem.js table script with the following code:",
+      "pos": [
+        2109,
+        2170
+      ]
+    }
+  ],
+  "content": "\n+ **.NET backend (C#)**:  \n\n    In the backend's Visual Studio project, open **Controllers** > **TodoItemController.cs**. At the top of the file, add the following `using` statement:\n\n\n        using Microsoft.Azure.Mobile.Server.Config;\n        using Microsoft.Azure.NotificationHubs;\n\n\n    Replace the `PostTodoItem` method with the following code:  \n\n      \n        public async Task<IHttpActionResult> PostTodoItem(TodoItem item)\n        {\n            TodoItem current = await InsertAsync(item);\n            // Get the settings for the server project.\n            HttpConfiguration config = this.Configuration;\n\n            MobileAppSettingsDictionary settings = \n                this.Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();\n\n            // Get the Notification Hubs credentials for the Mobile App.\n            string notificationHubName = settings.NotificationHubName;\n            string notificationHubConnection = settings\n                .Connections[MobileAppSettingsKeys.NotificationHubConnectionString].ConnectionString;\n\n            // Create a new Notification Hub client.\n            NotificationHubClient hub = NotificationHubClient\n            .CreateClientFromConnectionString(notificationHubConnection, notificationHubName);\n\n            // iOS payload\n            var appleNotificationPayload = \"{\\\"aps\\\":{\\\"alert\\\":\\\"\" + item.Text + \"\\\"}}\";\n\n            try\n            {\n                // Send the push notification and log the results.\n                var result = await hub.SendAppleNativeNotificationAsync(appleNotificationPayload);\n\n                // Write the success result to the logs.\n                config.Services.GetTraceWriter().Info(result.State.ToString());\n            }\n            catch (System.Exception ex)\n            {\n                // Write the failure result to the logs.\n                config.Services.GetTraceWriter()\n                    .Error(ex.Message, null, \"Push.SendAsync Error\");\n            }\n            return CreatedAtRoute(\"Tables\", new { id = current.Id }, current);\n        }\n\n\n+ **Node.js backend** :  \n    \n    Replace the todoitem.js table script with the following code:\n\n\n        var azureMobileApps = require('azure-mobile-apps'),\n            promises = require('azure-mobile-apps/src/utilities/promises'),\n            logger = require('azure-mobile-apps/src/logger');\n        \n        var table = azureMobileApps.table();\n        \n        // When adding record, send a push notification via APNS\n        // For this to work, you must have an APNS Hub already configured\n        table.insert(function (context) {\n            // For details of the Notification Hubs JavaScript SDK, \n            // see http://aka.ms/nodejshubs\n            logger.info('Running TodoItem.insert');\n            \n            // Create a payload that contains the new item Text.\n            var payload = \"{\\\"aps\\\":{\\\"alert\\\":\\\"\" + context.item.text + \"\\\"}}\";\n            \n            // Execute the insert.  The insert returns the results as a Promise,\n            // Do the push as a post-execute action within the promise flow.\n            return context.execute()\n                .then(function (results) {\n                    // Only do the push if configured\n                    if (context.push) {\n                        context.push.apns.send(null, payload, function (error) {\n                            if (error) {\n                                logger.error('Error while sending push notification: ', error);\n                            } else {\n                                logger.info('Push notification sent successfully!');\n                            }\n                        });\n                    }\n                    // Don't forget to return the results from the context.execute()\n                    return results;\n                })\n                .catch(function (error) {\n                    logger.error('Error while running context.execute: ', error);\n                });\n        });\n        \n        module.exports = table;\n\n\n\n\n"
+}

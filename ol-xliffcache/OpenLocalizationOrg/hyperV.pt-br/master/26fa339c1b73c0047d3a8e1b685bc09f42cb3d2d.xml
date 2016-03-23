@@ -1,0 +1,236 @@
+{
+  "nodes": [
+    {
+      "content": "Some packages may not install using pip when run on Azure.",
+      "pos": [
+        0,
+        58
+      ]
+    },
+    {
+      "content": "It may simply be that the package is not available on the Python Package Index.",
+      "pos": [
+        60,
+        139
+      ]
+    },
+    {
+      "content": "It could be that a compiler is required (a compiler is not available on the machine running the web app in Azure App Service).",
+      "pos": [
+        141,
+        267
+      ]
+    },
+    {
+      "content": "In this section, we'll look at ways to deal with this issue.",
+      "pos": [
+        269,
+        329
+      ]
+    },
+    {
+      "content": "Request wheels",
+      "pos": [
+        335,
+        349
+      ]
+    },
+    {
+      "content": "If the package installation requires a compiler, you should try contacting the package owner to request that wheels be made available for the package.",
+      "pos": [
+        351,
+        501
+      ]
+    },
+    {
+      "pos": [
+        503,
+        657
+      ],
+      "content": "With the recent availability of <bpt id=\"p1\">[</bpt>Microsoft Visual C++ Compiler for Python 2.7<ept id=\"p1\">][]</ept>, it is now easier to build packages that have native code for Python 2.7."
+    },
+    {
+      "content": "Build wheels (requires Windows)",
+      "pos": [
+        663,
+        694
+      ]
+    },
+    {
+      "content": "Note: When using this option, make sure to compile the package using a Python environment that matches the platform/architecture/version that is used on the web app in Azure App Service (Windows/32-bit/2.7 or 3.4).",
+      "pos": [
+        696,
+        910
+      ]
+    },
+    {
+      "content": "If the package doesn't install because it requires a compiler, you can install the compiler on your local machine and build a wheel for the package, which you will then include in your repository.",
+      "pos": [
+        912,
+        1108
+      ]
+    },
+    {
+      "content": "Mac/Linux Users: If you don't have access to a Windows machine, see <bpt id=\"p1\">[</bpt>Create a Virtual Machine Running Windows<ept id=\"p1\">][]</ept> for how to create a VM on Azure.",
+      "pos": [
+        1110,
+        1255
+      ]
+    },
+    {
+      "content": "You can use it to build the wheels, add them to the repository, and discard the VM if you like.",
+      "pos": [
+        1257,
+        1352
+      ]
+    },
+    {
+      "pos": [
+        1355,
+        1436
+      ],
+      "content": "For Python 2.7, you can install <bpt id=\"p1\">[</bpt>Microsoft Visual C++ Compiler for Python 2.7<ept id=\"p1\">][]</ept>."
+    },
+    {
+      "pos": [
+        1438,
+        1508
+      ],
+      "content": "For Python 3.4, you can install <bpt id=\"p1\">[</bpt>Microsoft Visual C++ 2010 Express<ept id=\"p1\">][]</ept>."
+    },
+    {
+      "content": "To build wheels, you'll need the wheel package:",
+      "pos": [
+        1510,
+        1557
+      ]
+    },
+    {
+      "pos": [
+        1594,
+        1641
+      ],
+      "content": "You'll use <ph id=\"ph1\">`pip wheel`</ph> to compile a dependency:"
+    },
+    {
+      "content": "This creates a .whl file in the \\wheelhouse folder.",
+      "pos": [
+        1683,
+        1734
+      ]
+    },
+    {
+      "content": "Add the \\wheelhouse folder and wheel files to your repository.",
+      "pos": [
+        1736,
+        1798
+      ]
+    },
+    {
+      "content": "Edit your requirements.txt to add the <ph id=\"ph1\">`--find-links`</ph> option at the top.",
+      "pos": [
+        1800,
+        1871
+      ]
+    },
+    {
+      "content": "This tells pip to look for an exact match in the local folder before going to the python package index.",
+      "pos": [
+        1872,
+        1975
+      ]
+    },
+    {
+      "pos": [
+        2023,
+        2244
+      ],
+      "content": "If you want to include all your dependencies in the \\wheelhouse folder and not use the python package index at all, you can force pip to ignore the package index by adding <ph id=\"ph1\">`--no-index`</ph> to the top of your requirements.txt."
+    },
+    {
+      "content": "Customize installation",
+      "pos": [
+        2266,
+        2288
+      ]
+    },
+    {
+      "content": "You can customize the deployment script to install a package in the virtual environment using an alternate installer, such as easy\\_install.",
+      "pos": [
+        2290,
+        2430
+      ]
+    },
+    {
+      "content": "See deploy.cmd for an example that is commented out.",
+      "pos": [
+        2432,
+        2484
+      ]
+    },
+    {
+      "content": "Make sure that such packages aren't listed in requirements.txt, to prevent pip from installing them.",
+      "pos": [
+        2486,
+        2586
+      ]
+    },
+    {
+      "content": "Add this to the deployment script:",
+      "pos": [
+        2588,
+        2622
+      ]
+    },
+    {
+      "content": "You may also be able to use easy\\_install to install from an exe installer (some are zip compatible, so easy\\_install supports them).",
+      "pos": [
+        2666,
+        2799
+      ]
+    },
+    {
+      "content": "Add the installer to your repository, and invoke easy\\_install by passing the path to the executable.",
+      "pos": [
+        2801,
+        2902
+      ]
+    },
+    {
+      "content": "Add this to the deployment script:",
+      "pos": [
+        2904,
+        2938
+      ]
+    },
+    {
+      "content": "Include the virtual environment in the repository (requires Windows)",
+      "pos": [
+        3023,
+        3091
+      ]
+    },
+    {
+      "content": "Note: When using this option, make sure to use a virtual environment that matches the platform/architecture/version that is used on the web app in Azure App Service (Windows/32-bit/2.7 or 3.4).",
+      "pos": [
+        3093,
+        3286
+      ]
+    },
+    {
+      "content": "If you include the virtual environment in the repository, you can prevent the deployment script from doing virtual environment management on Azure by creating an empty file:",
+      "pos": [
+        3288,
+        3461
+      ]
+    },
+    {
+      "content": "We recommend that you delete the existing virtual environment on the app, to prevent leftover files from when the virtual environment was managed automatically.",
+      "pos": [
+        3490,
+        3650
+      ]
+    }
+  ],
+  "content": "Some packages may not install using pip when run on Azure.  It may simply be that the package is not available on the Python Package Index.  It could be that a compiler is required (a compiler is not available on the machine running the web app in Azure App Service).\n\nIn this section, we'll look at ways to deal with this issue.\n\n### Request wheels\n\nIf the package installation requires a compiler, you should try contacting the package owner to request that wheels be made available for the package.\n\nWith the recent availability of [Microsoft Visual C++ Compiler for Python 2.7][], it is now easier to build packages that have native code for Python 2.7.\n\n### Build wheels (requires Windows)\n\nNote: When using this option, make sure to compile the package using a Python environment that matches the platform/architecture/version that is used on the web app in Azure App Service (Windows/32-bit/2.7 or 3.4).\n\nIf the package doesn't install because it requires a compiler, you can install the compiler on your local machine and build a wheel for the package, which you will then include in your repository.\n\nMac/Linux Users: If you don't have access to a Windows machine, see [Create a Virtual Machine Running Windows][] for how to create a VM on Azure.  You can use it to build the wheels, add them to the repository, and discard the VM if you like. \n\nFor Python 2.7, you can install [Microsoft Visual C++ Compiler for Python 2.7][].\n\nFor Python 3.4, you can install [Microsoft Visual C++ 2010 Express][].\n\nTo build wheels, you'll need the wheel package:\n\n    env\\scripts\\pip install wheel\n\nYou'll use `pip wheel` to compile a dependency:\n\n    env\\scripts\\pip wheel azure==0.8.4\n\nThis creates a .whl file in the \\wheelhouse folder.  Add the \\wheelhouse folder and wheel files to your repository.\n\nEdit your requirements.txt to add the `--find-links` option at the top. This tells pip to look for an exact match in the local folder before going to the python package index.\n\n    --find-links wheelhouse\n    azure==0.8.4\n\nIf you want to include all your dependencies in the \\wheelhouse folder and not use the python package index at all, you can force pip to ignore the package index by adding `--no-index` to the top of your requirements.txt.\n\n    --no-index\n\n### Customize installation\n\nYou can customize the deployment script to install a package in the virtual environment using an alternate installer, such as easy\\_install.  See deploy.cmd for an example that is commented out.  Make sure that such packages aren't listed in requirements.txt, to prevent pip from installing them.\n\nAdd this to the deployment script:\n\n    env\\scripts\\easy_install somepackage\n\nYou may also be able to use easy\\_install to install from an exe installer (some are zip compatible, so easy\\_install supports them).  Add the installer to your repository, and invoke easy\\_install by passing the path to the executable.\n\nAdd this to the deployment script:\n\n    env\\scripts\\easy_install \"%DEPLOYMENT_SOURCE%\\installers\\somepackage.exe\"\n\n### Include the virtual environment in the repository (requires Windows)\n\nNote: When using this option, make sure to use a virtual environment that matches the platform/architecture/version that is used on the web app in Azure App Service (Windows/32-bit/2.7 or 3.4).\n\nIf you include the virtual environment in the repository, you can prevent the deployment script from doing virtual environment management on Azure by creating an empty file:\n\n    .skipPythonDeployment\n\nWe recommend that you delete the existing virtual environment on the app, to prevent leftover files from when the virtual environment was managed automatically.\n\n\n[Create a Virtual Machine Running Windows]: http://azure.microsoft.com/documentation/articles/virtual-machines-windows-tutorial/\n[Microsoft Visual C++ Compiler for Python 2.7]: http://aka.ms/vcpython27\n[Microsoft Visual C++ 2010 Express]: http://go.microsoft.com/?linkid=9709949\n\n\n"
+}

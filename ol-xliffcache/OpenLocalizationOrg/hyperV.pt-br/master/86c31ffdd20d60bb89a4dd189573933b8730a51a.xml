@@ -1,0 +1,691 @@
+{
+  "nodes": [
+    {
+      "content": "Consume an internal API app in Azure App Service from a .NET client",
+      "pos": [
+        28,
+        95
+      ]
+    },
+    {
+      "content": "Learn how to consume an API app from a .NET API app in the same resource group, using the App Service SDK.",
+      "pos": [
+        115,
+        221
+      ]
+    },
+    {
+      "content": "Consume an internal API app in Azure App Service from a .NET client",
+      "pos": [
+        549,
+        616
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        708,
+        716
+      ]
+    },
+    {
+      "content": "This tutorial shows how to write code for an ASP.NET <bpt id=\"p1\">[</bpt>API app<ept id=\"p1\">](app-service-api-apps-why-best-platform.md)</ept> that calls another API app configured for <bpt id=\"p2\">**</bpt>Internal<ept id=\"p2\">**</ept> access level.",
+      "pos": [
+        718,
+        892
+      ]
+    },
+    {
+      "content": "Both API apps must be in the same resource group.",
+      "pos": [
+        893,
+        942
+      ]
+    },
+    {
+      "content": "The same code can be used to call an internal API app from a <bpt id=\"p1\">[</bpt>mobile app<ept id=\"p1\">](../app-service-mobile/app-service-mobile-value-prop-preview.md)</ept>.",
+      "pos": [
+        944,
+        1082
+      ]
+    },
+    {
+      "content": "You'll build a ContactNames Web API.",
+      "pos": [
+        1084,
+        1120
+      ]
+    },
+    {
+      "content": "The Web API's Get method will call a ContactsList API app and return just the names out of the contact information provided by the ContactsList API app.",
+      "pos": [
+        1121,
+        1273
+      ]
+    },
+    {
+      "content": "Here's the Swagger UI screen for a successful call to the ContactNames Get method.",
+      "pos": [
+        1274,
+        1356
+      ]
+    },
+    {
+      "pos": [
+        1425,
+        1660
+      ],
+      "content": "For information about how to call API apps that are configured for <bpt id=\"p1\">**</bpt>Public (anonymous)<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>Public (authenticated)<ept id=\"p2\">**</ept> access levels, see <bpt id=\"p3\">[</bpt>Consume an API app from a .NET client in Azure App Service<ept id=\"p3\">](app-service-api-dotnet-consume.md)</ept>."
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1665,
+        1678
+      ]
+    },
+    {
+      "pos": [
+        1680,
+        1892
+      ],
+      "content": "The tutorial assumes that you are familiar with how to create projects and add code to them in Visual Studio, and how to <bpt id=\"p1\">[</bpt>manage API apps in the Azure preview portal<ept id=\"p1\">](../app-service-api-apps-manage-in-portal.md)</ept>."
+    },
+    {
+      "content": "The project and code samples in this article are based on the API app project that you create and deploy in these articles:",
+      "pos": [
+        1894,
+        2017
+      ]
+    },
+    {
+      "content": "Create an API app",
+      "pos": [
+        2022,
+        2039
+      ]
+    },
+    {
+      "content": "Deploy an API app",
+      "pos": [
+        2082,
+        2099
+      ]
+    },
+    {
+      "content": "This tutorial requires version 2.6 or later of the Azure SDK for .NET.",
+      "pos": [
+        2222,
+        2292
+      ]
+    },
+    {
+      "content": "Set up the target API app",
+      "pos": [
+        2298,
+        2323
+      ]
+    },
+    {
+      "pos": [
+        2328,
+        2521
+      ],
+      "content": "If you haven't already done so, follow the <bpt id=\"p1\">[</bpt>Deploy an API app<ept id=\"p1\">](app-service-dotnet-deploy-api-app.md)</ept> tutorial to deploy the ContactsList sample project to an API app in your Azure subscription."
+    },
+    {
+      "pos": [
+        2526,
+        2773
+      ],
+      "content": "In the <bpt id=\"p1\">[</bpt>Azure preview portal<ept id=\"p1\">](https://portal.azure.com/)</ept>, in the <bpt id=\"p2\">**</bpt>API app<ept id=\"p2\">**</ept> blade for the ContactsList API app that you deployed earlier, click <bpt id=\"p3\">**</bpt>Settings &gt; Application Settings<ept id=\"p3\">**</ept> and set <bpt id=\"p4\">**</bpt>Access level<ept id=\"p4\">**</ept> to <bpt id=\"p5\">**</bpt>Internal<ept id=\"p5\">**</ept>, and then click <bpt id=\"p6\">**</bpt>Save<ept id=\"p6\">**</ept>."
+    },
+    {
+      "content": "Create a new API app that will call the existing API app",
+      "pos": [
+        2853,
+        2909
+      ]
+    },
+    {
+      "content": "In Visual Studio, create an API app project named ContactNames by using the Azure API app project template.",
+      "pos": [
+        2913,
+        3020
+      ]
+    },
+    {
+      "pos": [
+        3026,
+        3199
+      ],
+      "content": "This is the same process that you followed in <bpt id=\"p1\">[</bpt>Create an API app<ept id=\"p1\">](app-service-dotnet-create-api-app.md)</ept>, but you'll add different code to the project later in this tutorial."
+    },
+    {
+      "content": "Add App Service SDK generated client code",
+      "pos": [
+        3205,
+        3246
+      ]
+    },
+    {
+      "pos": [
+        3248,
+        3396
+      ],
+      "content": "The following steps are explained in more detail in <bpt id=\"p1\">[</bpt>Consume an API app from a .NET client in Azure App Service<ept id=\"p1\">](app-service-api-dotnet-consume.md)</ept>."
+    },
+    {
+      "pos": [
+        3402,
+        3513
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the project (not the solution) and select <bpt id=\"p2\">**</bpt>Add &gt; Azure API App Client<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        3519,
+        3601
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Add Azure API App Client<ept id=\"p1\">**</ept> dialog, click <bpt id=\"p2\">**</bpt>Download from Azure API App<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "From the drop-down list, select the API app that you want to call.",
+      "pos": [
+        3607,
+        3673
+      ]
+    },
+    {
+      "content": "For this tutorial choose the ContactsList API app that you created earlier.",
+      "pos": [
+        3674,
+        3749
+      ]
+    },
+    {
+      "pos": [
+        3754,
+        3767
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Enable Swagger UI",
+      "pos": [
+        3773,
+        3790
+      ]
+    },
+    {
+      "content": "By default, API App projects are enabled with automatic <bpt id=\"p1\">[</bpt>Swagger<ept id=\"p1\">]</ept><bpt id=\"p2\">(http://swagger.io/ \"</bpt>Official Swagger information<ept id=\"p2\">\")</ept> metadata generation, but the Azure API App new-project template disables the API test page.",
+      "pos": [
+        3792,
+        4000
+      ]
+    },
+    {
+      "content": "In this section you enable the test page.",
+      "pos": [
+        4001,
+        4042
+      ]
+    },
+    {
+      "pos": [
+        4047,
+        4126
+      ],
+      "content": "Open the <bpt id=\"p1\">*</bpt>App_Start/SwaggerConfig.cs<ept id=\"p1\">*</ept> file, and search for <bpt id=\"p2\">**</bpt>EnableSwaggerUI<ept id=\"p2\">**</ept>:"
+    },
+    {
+      "content": "Uncomment the following lines of code:",
+      "pos": [
+        4131,
+        4169
+      ]
+    },
+    {
+      "content": "Create a controller",
+      "pos": [
+        4234,
+        4253
+      ]
+    },
+    {
+      "pos": [
+        4258,
+        4330
+      ],
+      "content": "Right-click the <bpt id=\"p1\">**</bpt>Controllers<ept id=\"p1\">**</ept> folder, and select <bpt id=\"p2\">**</bpt>Add &gt; Controller<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        4336,
+        4438
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Add Scaffold<ept id=\"p1\">**</ept> dialog, select the <bpt id=\"p2\">**</bpt>Web API 2 Controller - Empty<ept id=\"p2\">**</ept> option, and click <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        4444,
+        4510
+      ],
+      "content": "Name the controller <bpt id=\"p1\">**</bpt>ContactNamesController<ept id=\"p1\">**</ept>, and click <bpt id=\"p2\">**</bpt>Add<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Add code to call the API app",
+      "pos": [
+        4516,
+        4544
+      ]
+    },
+    {
+      "content": "To call an API app that has been protected by setting its access level to <bpt id=\"p1\">**</bpt>Internal<ept id=\"p1\">**</ept>, you have to add",
+      "pos": [
+        4546,
+        4649
+      ]
+    },
+    {
+      "content": "internal authentication headers to HTTP requests.",
+      "pos": [
+        4651,
+        4700
+      ]
+    },
+    {
+      "content": "These headers inform the target API app that the source of the call is a peer API app calling from within the same resource group.",
+      "pos": [
+        4701,
+        4831
+      ]
+    },
+    {
+      "content": "The App Service SDK generates client classes that simplify the code you write to call API app.",
+      "pos": [
+        4834,
+        4928
+      ]
+    },
+    {
+      "content": "To call a <bpt id=\"p1\">**</bpt>Public (anonymous)<ept id=\"p1\">**</ept> API app all you have to do is create a client object and call methods on it, as in this example:",
+      "pos": [
+        4929,
+        5058
+      ]
+    },
+    {
+      "content": "However, to add authentication headers you need access to the <ph id=\"ph1\">`HttpRequestMessage`</ph> object and you don't have that here.",
+      "pos": [
+        5159,
+        5278
+      ]
+    },
+    {
+      "content": "To get access to the request and add the headers you have to create a <ph id=\"ph1\">`DelegatingHandler`</ph> class and pass in an instance of it to the constructor of the generated client.",
+      "pos": [
+        5279,
+        5448
+      ]
+    },
+    {
+      "pos": [
+        5453,
+        5577
+      ],
+      "content": "Add to the project a class file named <bpt id=\"p1\">*</bpt>InternalCredentialHandler.cs<ept id=\"p1\">*</ept>, and replace the template code with the following code."
+    },
+    {
+      "pos": [
+        6224,
+        6344
+      ],
+      "content": "This code calls <ph id=\"ph1\">`SignHttpRequest`</ph> to add the authentication headers to every request sent by the generated client class:"
+    },
+    {
+      "pos": [
+        6412,
+        6494
+      ],
+      "content": "In <bpt id=\"p1\">*</bpt>ContactNamesController.cs<ept id=\"p1\">*</ept>, replace the template code with the following code."
+    },
+    {
+      "content": "This code passes in the handler to the constructor of the generated client class:",
+      "pos": [
+        7519,
+        7600
+      ]
+    },
+    {
+      "content": "Deploy",
+      "pos": [
+        7707,
+        7713
+      ]
+    },
+    {
+      "content": "You can't test by running locally.",
+      "pos": [
+        7715,
+        7749
+      ]
+    },
+    {
+      "content": "You have to deploy the code and run it in an Azure API app; otherwise you won't be able to add the right authentication headers, and the calls will be rejected.",
+      "pos": [
+        7751,
+        7911
+      ]
+    },
+    {
+      "pos": [
+        7913,
+        8034
+      ],
+      "content": "The following deployment steps are explained in more detail in <bpt id=\"p1\">[</bpt>Deploy an API app<ept id=\"p1\">](app-service-dotnet-deploy-api-app.md)</ept>."
+    },
+    {
+      "content": "Create a ContactNames API app.",
+      "pos": [
+        8040,
+        8070
+      ]
+    },
+    {
+      "pos": [
+        8078,
+        8169
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the project (not the solution) and click <bpt id=\"p2\">**</bpt>Publish<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        8178,
+        8249
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Profile<ept id=\"p1\">**</ept> tab, and then click <bpt id=\"p2\">**</bpt>Microsoft Azure API Apps<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        8258,
+        8326
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>New<ept id=\"p1\">**</ept> to provision a new API App in your Azure subscription."
+    },
+    {
+      "pos": [
+        8334,
+        8414
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Create an API App<ept id=\"p1\">**</ept> dialog, enter ContactNames as the <bpt id=\"p2\">**</bpt>API App Name<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        8423,
+        8594
+      ],
+      "content": "For the other values in the <bpt id=\"p1\">**</bpt>Create an API App<ept id=\"p1\">**</ept> dialog, enter the same values that you entered earlier for the <bpt id=\"p2\">[</bpt>Deploy an API app<ept id=\"p2\">](app-service-dotnet-deploy-api-app.md)</ept>."
+    },
+    {
+      "content": "Most importantly, make sure you create the new API app in the same resource group as the API app you're going to call.",
+      "pos": [
+        8605,
+        8723
+      ]
+    },
+    {
+      "pos": [
+        8731,
+        8744
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Deploy your code to the new API app.",
+      "pos": [
+        8750,
+        8786
+      ]
+    },
+    {
+      "pos": [
+        8794,
+        8928
+      ],
+      "content": "Once the API app is provisioned, right-click the project in <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept> and click <bpt id=\"p2\">**</bpt>Publish<ept id=\"p2\">**</ept> to re-open the publish dialog."
+    },
+    {
+      "pos": [
+        8936,
+        9017
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Publish Web<ept id=\"p1\">**</ept> dialog, click <bpt id=\"p2\">**</bpt>Publish<ept id=\"p2\">**</ept> to begin the deployment process."
+    },
+    {
+      "content": "Test",
+      "pos": [
+        9024,
+        9028
+      ]
+    },
+    {
+      "content": "In this section you use the Swagger UI to test the new API app and verify that it can call the API app you created earlier.",
+      "pos": [
+        9030,
+        9153
+      ]
+    },
+    {
+      "content": "Open a browser to the new API app's URL.",
+      "pos": [
+        9158,
+        9198
+      ]
+    },
+    {
+      "content": "With the default publish settings, when Visual Studio completes the publish process it automatically opens a browser to the URL of the API app.",
+      "pos": [
+        9204,
+        9347
+      ]
+    },
+    {
+      "content": "If that doesn't happen, or you have closed that browser window, follow these steps to get to the same URL:",
+      "pos": [
+        9349,
+        9455
+      ]
+    },
+    {
+      "content": "In the Azure preview portal, go to the API App blade for the new ContactsName API app.",
+      "pos": [
+        9463,
+        9549
+      ]
+    },
+    {
+      "pos": [
+        9557,
+        9571
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>URL<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        9654,
+        9736
+      ],
+      "content": "In the browser address bar, add <ph id=\"ph1\">`/swagger`</ph> to the end of the URL, and press Enter."
+    },
+    {
+      "content": "For example, the resulting URL will look like this:",
+      "pos": [
+        9743,
+        9794
+      ]
+    },
+    {
+      "pos": [
+        9891,
+        9957
+      ],
+      "content": "In the Swagger UI page, click <bpt id=\"p1\">**</bpt>ContactNames &gt; Get &gt; Try it out!<ept id=\"p1\">**</ept>"
+    },
+    {
+      "content": "The page displays contact names in the Response Body section, which verifies that the ContactNames API app successfully retrieved data from the ContactsList API app.",
+      "pos": [
+        10036,
+        10201
+      ]
+    },
+    {
+      "pos": [
+        10208,
+        10447
+      ],
+      "content": "If you want to verify that the <bpt id=\"p1\">**</bpt>Internal<ept id=\"p1\">**</ept> setting is protecting the ContactsList API app, comment out the <ph id=\"ph1\">`SignHttpRequest`</ph> call in <bpt id=\"p2\">*</bpt>ContactNamesController.cs<ept id=\"p2\">*</ept>, redeploy, run Swagger <bpt id=\"p3\">**</bpt>Try it now<ept id=\"p3\">**</ept> again, and you'll get an error message."
+    },
+    {
+      "content": "Add code to call the API app by using HttpClient",
+      "pos": [
+        10453,
+        10501
+      ]
+    },
+    {
+      "content": "The App Service SDK depends on Swagger API definitions to generate client classes.",
+      "pos": [
+        10504,
+        10586
+      ]
+    },
+    {
+      "content": "If you want to call an API app that has not implemented Swagger API definitions, you can do so using <ph id=\"ph1\">`HttpClient`</ph>.",
+      "pos": [
+        10587,
+        10701
+      ]
+    },
+    {
+      "content": "In this case, you still use the <ph id=\"ph1\">`SignHttpRequest`</ph> method, but you call it directly on the <ph id=\"ph2\">`HttpRequestMessage`</ph> object.",
+      "pos": [
+        10702,
+        10820
+      ]
+    },
+    {
+      "pos": [
+        10825,
+        10937
+      ],
+      "content": "In <bpt id=\"p1\">*</bpt>ContactNamesController.cs<ept id=\"p1\">*</ept>, add the following code before the <ph id=\"ph1\">`return names;`</ph> statement in the <ph id=\"ph2\">`Get`</ph> method."
+    },
+    {
+      "pos": [
+        11503,
+        11619
+      ],
+      "content": "This code passes in the incoming request object to the <ph id=\"ph1\">`SignHttpRequest`</ph> method to sign the outgoing request object:"
+    },
+    {
+      "content": "In the Azure preview portal, go to the API app blade for the ContactsList API app, and copy the URL.",
+      "pos": [
+        11701,
+        11801
+      ]
+    },
+    {
+      "content": "Replace the placeholder string \"{yourapiappurl}\" in the controller code with the actual URL.",
+      "pos": [
+        11875,
+        11967
+      ]
+    },
+    {
+      "content": "When you're done, that line of code will look like the following example.",
+      "pos": [
+        11968,
+        12041
+      ]
+    },
+    {
+      "content": "Deploy and test",
+      "pos": [
+        12177,
+        12192
+      ]
+    },
+    {
+      "content": "Follow the same procedure you did earlier to deploy the API app code.",
+      "pos": [
+        12197,
+        12266
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Hint:<ept id=\"p1\">**</ept> You can bypass the <bpt id=\"p2\">**</bpt>Publish Web<ept id=\"p2\">**</ept> dialog and redeploy by clicking a single button in the toolbar.",
+      "pos": [
+        12272,
+        12380
+      ]
+    },
+    {
+      "content": "In Visual Studio, click <bpt id=\"p1\">**</bpt>View &gt; Toolbars<ept id=\"p1\">**</ept>, and enable the <bpt id=\"p2\">**</bpt>Web One Click Publish<ept id=\"p2\">**</ept> toolbar.",
+      "pos": [
+        12382,
+        12476
+      ]
+    },
+    {
+      "content": "Follow the procedure you did earlier to use the Swagger UI.",
+      "pos": [
+        12484,
+        12543
+      ]
+    },
+    {
+      "content": "Since you left in the HttpClient code, the output this time shows a duplicate set of names.",
+      "pos": [
+        12549,
+        12640
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        12718,
+        12728
+      ]
+    },
+    {
+      "content": "This article has shown how to consume an internal API app from a .NET client.",
+      "pos": [
+        12730,
+        12807
+      ]
+    },
+    {
+      "content": "For information about how to consume API apps that are set to <bpt id=\"p1\">**</bpt>Public (authenticated)<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>Public (anonymous)<ept id=\"p2\">**</ept> access levels, see <bpt id=\"p3\">[</bpt>Consume an API app from a .NET client in Azure App Service<ept id=\"p3\">](app-service-api-dotnet-consume.md)</ept>.",
+      "pos": [
+        12808,
+        13039
+      ]
+    },
+    {
+      "pos": [
+        13043,
+        13230
+      ],
+      "content": "For additional examples of code that calls an API app from .NET clients, download the <bpt id=\"p1\">[</bpt>Azure Cards<ept id=\"p1\">](https://github.com/Azure-Samples/API-Apps-DotNet-AzureCards-Sample)</ept> sample application."
+    },
+    {
+      "pos": [
+        13232,
+        13390
+      ],
+      "content": "For information about authentication in App Service, see <bpt id=\"p1\">[</bpt>Authentication for API apps and mobile apps<ept id=\"p1\">](../app-service/app-service-authentication-overview.md)</ept>."
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Consume an internal API app in Azure App Service from a .NET client\" \n    description=\"Learn how to consume an API app from a .NET API app in the same resource group, using the App Service SDK.\" \n    services=\"app-service\\api\" \n    documentationCenter=\".net\" \n    authors=\"tdykstra\" \n    manager=\"wpickett\" \n    editor=\"jimbe\"/>\n\n<tags \n    ms.service=\"app-service-api\" \n    ms.workload=\"web\" \n    ms.tgt_pltfrm=\"dotnet\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"10/30/2015\" \n    ms.author=\"bradyg\"/>\n\n# Consume an internal API app in Azure App Service from a .NET client \n\n[AZURE.INCLUDE [app-service-api-v2-note](../../includes/app-service-api-v2-note.md)]\n\n## Overview\n\nThis tutorial shows how to write code for an ASP.NET [API app](app-service-api-apps-why-best-platform.md) that calls another API app configured for **Internal** access level. Both API apps must be in the same resource group.  The same code can be used to call an internal API app from a [mobile app](../app-service-mobile/app-service-mobile-value-prop-preview.md).\n\nYou'll build a ContactNames Web API. The Web API's Get method will call a ContactsList API app and return just the names out of the contact information provided by the ContactsList API app. Here's the Swagger UI screen for a successful call to the ContactNames Get method.\n\n![](./media/app-service-api-dotnet-consume-internal/tryitout.png)\n\nFor information about how to call API apps that are configured for **Public (anonymous)** or **Public (authenticated)** access levels, see [Consume an API app from a .NET client in Azure App Service](app-service-api-dotnet-consume.md).\n\n## Prerequisites\n\nThe tutorial assumes that you are familiar with how to create projects and add code to them in Visual Studio, and how to [manage API apps in the Azure preview portal](../app-service-api-apps-manage-in-portal.md).\n\nThe project and code samples in this article are based on the API app project that you create and deploy in these articles:\n\n- [Create an API app](app-service-dotnet-create-api-app.md)\n- [Deploy an API app](app-service-dotnet-deploy-api-app.md)\n\n[AZURE.INCLUDE [install-sdk-2013-only](../../includes/install-sdk-2013-only.md)]\n\nThis tutorial requires version 2.6 or later of the Azure SDK for .NET.\n\n### Set up the target API app\n\n1. If you haven't already done so, follow the [Deploy an API app](app-service-dotnet-deploy-api-app.md) tutorial to deploy the ContactsList sample project to an API app in your Azure subscription.\n\n2. In the [Azure preview portal](https://portal.azure.com/), in the **API app** blade for the ContactsList API app that you deployed earlier, click **Settings > Application Settings** and set **Access level** to **Internal**, and then click **Save**.\n\n    ![](./media/app-service-api-dotnet-consume-internal/setinternal.png)\n \n## Create a new API app that will call the existing API app\n\n- In Visual Studio, create an API app project named ContactNames by using the Azure API app project template.\n\n    This is the same process that you followed in [Create an API app](app-service-dotnet-create-api-app.md), but you'll add different code to the project later in this tutorial.\n \n## Add App Service SDK generated client code\n\nThe following steps are explained in more detail in [Consume an API app from a .NET client in Azure App Service](app-service-api-dotnet-consume.md). \n\n3. In **Solution Explorer**, right-click the project (not the solution) and select **Add > Azure API App Client**. \n\n3. In the **Add Azure API App Client** dialog, click **Download from Azure API App**. \n\n5. From the drop-down list, select the API app that you want to call. For this tutorial choose the ContactsList API app that you created earlier.\n\n7. Click **OK**. \n\n## Enable Swagger UI\n\nBy default, API App projects are enabled with automatic [Swagger](http://swagger.io/ \"Official Swagger information\") metadata generation, but the Azure API App new-project template disables the API test page. In this section you enable the test page.\n\n1. Open the *App_Start/SwaggerConfig.cs* file, and search for **EnableSwaggerUI**:\n\n2. Uncomment the following lines of code:\n\n            })\n        .EnableSwaggerUi(c =>\n            {\n\n## Create a controller\n\n5. Right-click the **Controllers** folder, and select **Add > Controller**. \n\n6. In the **Add Scaffold** dialog, select the **Web API 2 Controller - Empty** option, and click **Add**. \n\n7. Name the controller **ContactNamesController**, and click **Add**. \n\n## Add code to call the API app\n\nTo call an API app that has been protected by setting its access level to **Internal**, you have to add \ninternal authentication headers to HTTP requests. These headers inform the target API app that the source of the call is a peer API app calling from within the same resource group. \n\nThe App Service SDK generates client classes that simplify the code you write to call API app. To call a **Public (anonymous)** API app all you have to do is create a client object and call methods on it, as in this example:\n\n        var client = new ContactsList();\n        var contacts = await client.Contacts.GetAsync();\n\nHowever, to add authentication headers you need access to the `HttpRequestMessage` object and you don't have that here. To get access to the request and add the headers you have to create a `DelegatingHandler` class and pass in an instance of it to the constructor of the generated client.\n\n1. Add to the project a class file named *InternalCredentialHandler.cs*, and replace the template code with the following code.\n\n        using Microsoft.Azure.AppService.ApiApps.Service;\n        using System.Net.Http;\n        using System.Threading;\n        using System.Threading.Tasks;\n        \n        namespace ContactNames\n        {\n            public class InternalCredentialHandler : DelegatingHandler\n            {\n                protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n                {\n                    Runtime.FromAppSettings(request).SignHttpRequest(request);\n                    return base.SendAsync(request, cancellationToken);\n                }\n            }\n        }\n\n    This code calls `SignHttpRequest` to add the authentication headers to every request sent by the generated client class:\n\n        Runtime.FromAppSettings(this.Request).SignHttpRequest\n\n1. In *ContactNamesController.cs*, replace the template code with the following code.\n\n        using ContactNames.Models;\n        using Microsoft.Azure.AppService.ApiApps.Service;\n        using System;\n        using System.Collections.Generic;\n        using System.Net.Http;\n        using System.Net.Http.Headers;\n        using System.Threading.Tasks;\n        using System.Web.Http;\n        \n        namespace ContactNames.Controllers\n        {\n            public class ContactNamesController : ApiController\n            {\n                [HttpGet]\n                public async Task<IEnumerable<string>> Get()\n                {\n                    var names = new List<string>();\n\n                    var client = new ContactsList(new DelegatingHandler[] { new InternalCredentialHandler() });\n                    var contacts = await client.Contacts.GetAsync();\n        \n                    foreach (Contact contact in contacts)\n                    {\n                        names.Add(contact.Name);\n                    }       \n                    return names;\n                }\n            }\n        }\n\n    This code passes in the handler to the constructor of the generated client class:\n\n        var client = new ContactsList(new DelegatingHandler[] { new InternalCredentialHandler() });\n\n### Deploy\n\nYou can't test by running locally.  You have to deploy the code and run it in an Azure API app; otherwise you won't be able to add the right authentication headers, and the calls will be rejected.\n\nThe following deployment steps are explained in more detail in [Deploy an API app](app-service-dotnet-deploy-api-app.md). \n\n1. Create a ContactNames API app.\n\n    * In **Solution Explorer**, right-click the project (not the solution) and click **Publish**. \n\n    * Click the **Profile** tab, and then click **Microsoft Azure API Apps**. \n\n    * Click **New** to provision a new API App in your Azure subscription.\n\n    * In the **Create an API App** dialog, enter ContactNames as the **API App Name**. \n\n    * For the other values in the **Create an API App** dialog, enter the same values that you entered earlier for the [Deploy an API app](app-service-dotnet-deploy-api-app.md). \n\n        Most importantly, make sure you create the new API app in the same resource group as the API app you're going to call.\n\n    * Click **OK**. \n\n2. Deploy your code to the new API app.\n\n    * Once the API app is provisioned, right-click the project in **Solution Explorer** and click **Publish** to re-open the publish dialog.\n\n    * In the **Publish Web** dialog, click **Publish** to begin the deployment process. \n\n### Test\n\nIn this section you use the Swagger UI to test the new API app and verify that it can call the API app you created earlier.\n\n1. Open a browser to the new API app's URL.\n\n    With the default publish settings, when Visual Studio completes the publish process it automatically opens a browser to the URL of the API app.  If that doesn't happen, or you have closed that browser window, follow these steps to get to the same URL:\n\n    * In the Azure preview portal, go to the API App blade for the new ContactsName API app.\n\n    * Click **URL**. \n\n        ![](./media/app-service-api-dotnet-consume-internal/clickurl.png)\n  \n5. In the browser address bar, add `/swagger` to the end of the URL, and press Enter. \n\n    For example, the resulting URL will look like this:\n\n        https://microsoft-apiapp214f26e673e5449a214f26e673e5449a.azurewebsites.net/swagger\n\n1. In the Swagger UI page, click **ContactNames > Get > Try it out!**\n\n    ![](./media/app-service-api-dotnet-consume-internal/tryitout.png)\n  \n    The page displays contact names in the Response Body section, which verifies that the ContactNames API app successfully retrieved data from the ContactsList API app. \n\n    If you want to verify that the **Internal** setting is protecting the ContactsList API app, comment out the `SignHttpRequest` call in *ContactNamesController.cs*, redeploy, run Swagger **Try it now** again, and you'll get an error message.\n\n\n## Add code to call the API app by using HttpClient\n \nThe App Service SDK depends on Swagger API definitions to generate client classes. If you want to call an API app that has not implemented Swagger API definitions, you can do so using `HttpClient`. In this case, you still use the `SignHttpRequest` method, but you call it directly on the `HttpRequestMessage` object.\n\n1. In *ContactNamesController.cs*, add the following code before the `return names;` statement in the `Get` method.\n\n        var httpClient = new HttpClient();\n        HttpRequestMessage httpRequest = new HttpRequestMessage();\n        httpRequest.Method = HttpMethod.Get;\n        httpRequest.RequestUri = new Uri(\"https://{yourapiappurl}/api/contacts\");\n        Runtime.FromAppSettings(this.Request).SignHttpRequest(httpRequest);\n        var response = await httpClient.SendAsync(httpRequest); \n        var contacts2 = await response.Content.ReadAsAsync<List<Contact>>();\n        foreach (Contact contact in contacts2)\n        {\n            names.Add(contact.Name);\n        }\n\n    This code passes in the incoming request object to the `SignHttpRequest` method to sign the outgoing request object:\n\n        Runtime.FromAppSettings(this.Request).SignHttpRequest(httpRequest);\n\n2. In the Azure preview portal, go to the API app blade for the ContactsList API app, and copy the URL.\n\n    ![](./media/app-service-api-dotnet-consume-internal/clurl.png)\n \n4. Replace the placeholder string \"{yourapiappurl}\" in the controller code with the actual URL. When you're done, that line of code will look like the following example.\n\n        httpRequest.RequestUri = new Uri(\"https://microsoft-apiappd99e684d99e684d99e684d99e684.azurewebsites.net/api/contacts\");\n\n### Deploy and test\n\n1. Follow the same procedure you did earlier to deploy the API app code.\n\n    **Hint:** You can bypass the **Publish Web** dialog and redeploy by clicking a single button in the toolbar.  In Visual Studio, click **View > Toolbars**, and enable the **Web One Click Publish** toolbar.  \n \n2. Follow the procedure you did earlier to use the Swagger UI.\n\n    Since you left in the HttpClient code, the output this time shows a duplicate set of names.\n\n    ![](./media/app-service-api-dotnet-consume-internal/dupnames.png)\n  \n## Next steps\n\nThis article has shown how to consume an internal API app from a .NET client. For information about how to consume API apps that are set to **Public (authenticated)** and **Public (anonymous)** access levels, see [Consume an API app from a .NET client in Azure App Service](app-service-api-dotnet-consume.md).  \n\nFor additional examples of code that calls an API app from .NET clients, download the [Azure Cards](https://github.com/Azure-Samples/API-Apps-DotNet-AzureCards-Sample) sample application.\n\nFor information about authentication in App Service, see [Authentication for API apps and mobile apps](../app-service/app-service-authentication-overview.md).\n \n\n\n"
+}

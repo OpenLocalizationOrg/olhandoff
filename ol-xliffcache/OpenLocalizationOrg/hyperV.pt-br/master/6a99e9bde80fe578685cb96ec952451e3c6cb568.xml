@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "content": "This section shows how to send breaking news as tagged template notifications from a .NET console app.",
+      "pos": [
+        1,
+        103
+      ]
+    },
+    {
+      "pos": [
+        105,
+        265
+      ],
+      "content": "If you are using Mobile Services please refer to the <bpt id=\"p1\">[</bpt>Get Started with Push<ept id=\"p1\">](mobile-services-dotnet-backend-windows-store-dotnet-get-started-push.md)</ept> tutorials."
+    },
+    {
+      "content": "If you want to use Java or PHP refer to <bpt id=\"p1\">[</bpt>How to use Notification Hubs from Java/PHP<ept id=\"p1\">](../articles/notification-hubs/notification-hubs-java-backend-how-to.md)</ept>.",
+      "pos": [
+        268,
+        425
+      ]
+    },
+    {
+      "content": "You can send notifications from any backend using the <bpt id=\"p1\">[</bpt>Notification Hub REST interface<ept id=\"p1\">](http://msdn.microsoft.com/library/windowsazure/dn223264.aspx)</ept>.",
+      "pos": [
+        426,
+        576
+      ]
+    },
+    {
+      "pos": [
+        578,
+        719
+      ],
+      "content": "Skip steps 1-3 if you created the console app for sending notifications when you completed <bpt id=\"p1\">[</bpt>Get started with Notification Hubs<ept id=\"p1\">][get-started]</ept>."
+    },
+    {
+      "content": "In Visual Studio create a new Visual C# console application:",
+      "pos": [
+        724,
+        784
+      ]
+    },
+    {
+      "pos": [
+        803,
+        980
+      ],
+      "content": "In the Visual Studio main menu, click <bpt id=\"p1\">**</bpt>Tools<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Library Package Manager<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>Package Manager Console<ept id=\"p3\">**</ept>, then in the console window type the following and press <bpt id=\"p4\">**</bpt>Enter<ept id=\"p4\">**</ept>:"
+    },
+    {
+      "pos": [
+        1048,
+        1241
+      ],
+      "content": "This adds a reference to the Azure Notification Hubs SDK using the <ph id=\"ph1\">&lt;a href=\"http://www.nuget.org/packages/Microsoft.Azure.NotificationHubs/\"&gt;</ph>Microsoft.Azure.Notification Hubs NuGet package<ph id=\"ph2\">&lt;/a&gt;</ph>."
+    },
+    {
+      "pos": [
+        1247,
+        1312
+      ],
+      "content": "Open the file Program.cs and add the following <ph id=\"ph1\">`using`</ph> statement:"
+    },
+    {
+      "pos": [
+        1366,
+        1451
+      ],
+      "content": "In the <ph id=\"ph1\">`Program`</ph> class, add the following method, or replace it if it already exists:"
+    },
+    {
+      "content": "This code sends a template notification for each of the six tags in the string array.",
+      "pos": [
+        2615,
+        2700
+      ]
+    },
+    {
+      "content": "The use of tags makes sure that devices receive notifications only for the registered categories.",
+      "pos": [
+        2701,
+        2798
+      ]
+    },
+    {
+      "pos": [
+        2804,
+        3045
+      ],
+      "content": "In the above code, replace the <ph id=\"ph1\">`&lt;hub name&gt;`</ph> and <ph id=\"ph2\">`&lt;connection string with full access&gt;`</ph> placeholders with your notification hub name and the connection string for <bpt id=\"p1\">*</bpt>DefaultFullSharedAccessSignature<ept id=\"p1\">*</ept> from the dashboard of your notification hub."
+    },
+    {
+      "pos": [
+        3050,
+        3097
+      ],
+      "content": "Add the following lines in the <bpt id=\"p1\">**</bpt>Main<ept id=\"p1\">**</ept> method:"
+    },
+    {
+      "content": "Build the console app.",
+      "pos": [
+        3174,
+        3196
+      ]
+    }
+  ],
+  "content": "\nThis section shows how to send breaking news as tagged template notifications from a .NET console app.\n\nIf you are using Mobile Services please refer to the [Get Started with Push](mobile-services-dotnet-backend-windows-store-dotnet-get-started-push.md) tutorials. \n\nIf you want to use Java or PHP refer to [How to use Notification Hubs from Java/PHP](../articles/notification-hubs/notification-hubs-java-backend-how-to.md). You can send notifications from any backend using the [Notification Hub REST interface](http://msdn.microsoft.com/library/windowsazure/dn223264.aspx).\n\nSkip steps 1-3 if you created the console app for sending notifications when you completed [Get started with Notification Hubs][get-started].\n\n1. In Visual Studio create a new Visual C# console application: \n\n    ![][13]\n\n2. In the Visual Studio main menu, click **Tools**, **Library Package Manager**, and **Package Manager Console**, then in the console window type the following and press **Enter**:\n\n        Install-Package Microsoft.Azure.NotificationHubs\n    \n    This adds a reference to the Azure Notification Hubs SDK using the <a href=\"http://www.nuget.org/packages/Microsoft.Azure.NotificationHubs/\">Microsoft.Azure.Notification Hubs NuGet package</a>. \n\n3. Open the file Program.cs and add the following `using` statement:\n\n        using Microsoft.Azure.NotificationHubs;\n\n4. In the `Program` class, add the following method, or replace it if it already exists:\n\n        private static async void SendTemplateNotificationAsync()\n        {\n            // Define the notification hub.\n            NotificationHubClient hub = \n                NotificationHubClient.CreateClientFromConnectionString(\n                    \"<connection string with full access>\", \"<hub name>\");\n\n            // Create an array of breaking news categories.\n            var categories = new string[] { \"World\", \"Politics\", \"Business\", \n                                            \"Technology\", \"Science\", \"Sports\"};\n\n            // Sending the notification as a template notification. All template registrations that contain \n            // \"messageParam\" and the proper tags will receive the notifications. \n            // This includes APNS, GCM, WNS, and MPNS template registrations.\n\n            Dictionary<string, string> templateParams = new Dictionary<string, string>();\n\n            foreach (var category in categories)\n            {\n                templateParams[\"messageParam\"] = \"Breaking \" + category + \" News!\";            \n                await hub.SendTemplateNotificationAsync(templateParams, category);\n            }\n         }\n\n    This code sends a template notification for each of the six tags in the string array. The use of tags makes sure that devices receive notifications only for the registered categories. \n\n6. In the above code, replace the `<hub name>` and `<connection string with full access>` placeholders with your notification hub name and the connection string for *DefaultFullSharedAccessSignature* from the dashboard of your notification hub.\n\n7. Add the following lines in the **Main** method:\n\n         SendTemplateNotificationAsync();\n         Console.ReadLine();\n\n8. Build the console app.\n\n<!-- Anchors -->\n[From a console app]: #console\n[From Mobile Services]: #mobile-services\n[Run the app and generate notifications]: #test-app\n\n<!-- Images. -->\n[13]: ./media/notification-hubs-back-end/notification-hub-create-console-app.png\n\n[15]: ./media/notification-hubs-back-end/notification-hub-scheduler1.png\n[16]: ./media/notification-hubs-back-end/notification-hub-scheduler2.png\n\n<!-- URLs. -->\n[get-started]: ../articles/notification-hubs/notification-hubs-windows-store-dotnet-get-started.md\n[Use Notification Hubs to send notifications to users]: ../articles/tutorial-notify-users-mobileservices.md\n[Get started with Mobile Services]: /develop/mobile/tutorials/get-started/#create-new-service\n[wns object]: http://go.microsoft.com/fwlink/p/?LinkId=260591\n[Notification Hubs Guidance]: http://msdn.microsoft.com/library/jj927170.aspx\n[Notification Hubs How-To for Windows Store]: http://msdn.microsoft.com/library/jj927172.aspx\n[Notification Hubs REST interface]: http://msdn.microsoft.com/library/windowsazure/dn223264.aspx\n\n\n"
+}

@@ -1,0 +1,131 @@
+{
+  "nodes": [
+    {
+      "content": "Send messages to Event Hubs",
+      "pos": [
+        3,
+        30
+      ]
+    },
+    {
+      "content": "In this section we will write a C app to send events to your Event Hub.",
+      "pos": [
+        32,
+        103
+      ]
+    },
+    {
+      "content": "We will use the Proton AMQP library from the <bpt id=\"p1\">[</bpt>Apache Qpid project<ept id=\"p1\">](http://qpid.apache.org/)</ept>.",
+      "pos": [
+        104,
+        196
+      ]
+    },
+    {
+      "content": "This is analogous to using Service Bus queues and topics with AMQP from C as shown <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](https://code.msdn.microsoft.com/Using-Apache-Qpid-Proton-C-afd76504)</ept>.",
+      "pos": [
+        197,
+        356
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Qpid Proton documentation<ept id=\"p1\">](http://qpid.apache.org/proton/index.html)</ept>.",
+      "pos": [
+        357,
+        453
+      ]
+    },
+    {
+      "content": "From the <bpt id=\"p1\">[</bpt>Qpid AMQP Messenger page<ept id=\"p1\">](http://qpid.apache.org/components/messenger/index.html)</ept>, click the <bpt id=\"p2\">**</bpt>Installing Qpid Proton<ept id=\"p2\">**</ept> link and follow the instructions depending on your environment.",
+      "pos": [
+        458,
+        651
+      ]
+    },
+    {
+      "content": "We will assume a Linux environment; for example, an <bpt id=\"p1\">[</bpt>Azure Linux VM<ept id=\"p1\">](../articles/virtual-machines/virtual-machines-linux-tutorial.md)</ept> with Ubuntu 14.04.",
+      "pos": [
+        652,
+        804
+      ]
+    },
+    {
+      "content": "To compile the Proton library, install the following packages:",
+      "pos": [
+        809,
+        871
+      ]
+    },
+    {
+      "pos": [
+        968,
+        1075
+      ],
+      "content": "Download the <bpt id=\"p1\">[</bpt>Qpid Proton library<ept id=\"p1\">](http://qpid.apache.org/proton/index.html)</ept> library, and extract it, e.g.:"
+    },
+    {
+      "content": "Create a build directory, compile and install:",
+      "pos": [
+        1208,
+        1254
+      ]
+    },
+    {
+      "content": "In your work directory, create a new file called <bpt id=\"p1\">**</bpt>sender.c<ept id=\"p1\">**</ept> with the following content.",
+      "pos": [
+        1391,
+        1480
+      ]
+    },
+    {
+      "content": "Remember to substitute the value for your Event Hub name and namespace name (the latter is usually <ph id=\"ph1\">`{event hub name}-ns`</ph>).",
+      "pos": [
+        1481,
+        1603
+      ]
+    },
+    {
+      "content": "You must also substitute a URL-encoded version of the key for the <bpt id=\"p1\">**</bpt>SendRule<ept id=\"p1\">**</ept> created earlier.",
+      "pos": [
+        1604,
+        1699
+      ]
+    },
+    {
+      "content": "You can URL-encode it <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](http://www.w3schools.com/tags/ref_urlencode.asp)</ept>.",
+      "pos": [
+        1700,
+        1778
+      ]
+    },
+    {
+      "pos": [
+        4426,
+        4461
+      ],
+      "content": "Compile the file, assuming <bpt id=\"p1\">**</bpt>gcc<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> In this code, we use an outgoing window of 1 to force the messages out as soon as possible.",
+      "pos": [
+        4523,
+        4627
+      ]
+    },
+    {
+      "content": "In general, your application should try to batch messages to increase throughput.",
+      "pos": [
+        4628,
+        4709
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Qpid AMQP Messenger page<ept id=\"p1\">](http://qpid.apache.org/components/messenger/index.html)</ept> for more information about how to use the Qpid Proton library in this and other environments, and from platforms for which bindings are provided (currently Perl, PHP, Python, and Ruby).",
+      "pos": [
+        4710,
+        4982
+      ]
+    }
+  ],
+  "content": "## Send messages to Event Hubs\n\nIn this section we will write a C app to send events to your Event Hub. We will use the Proton AMQP library from the [Apache Qpid project](http://qpid.apache.org/). This is analogous to using Service Bus queues and topics with AMQP from C as shown [here](https://code.msdn.microsoft.com/Using-Apache-Qpid-Proton-C-afd76504). For more information, see [Qpid Proton documentation](http://qpid.apache.org/proton/index.html).\n\n1. From the [Qpid AMQP Messenger page](http://qpid.apache.org/components/messenger/index.html), click the **Installing Qpid Proton** link and follow the instructions depending on your environment. We will assume a Linux environment; for example, an [Azure Linux VM](../articles/virtual-machines/virtual-machines-linux-tutorial.md) with Ubuntu 14.04.\n\n2. To compile the Proton library, install the following packages:\n\n    ```\n    sudo apt-get install build-essential cmake uuid-dev openssl libssl-dev\n    ```\n\n3. Download the [Qpid Proton library](http://qpid.apache.org/proton/index.html) library, and extract it, e.g.:\n\n    ```\n    wget http://apache.fastbull.org/qpid/proton/0.7/qpid-proton-0.7.tar.gz\n    tar xvfz qpid-proton-0.7.tar.gz\n    ```\n\n4. Create a build directory, compile and install:\n\n    ```\n    cd qpid-proton-0.7\n    mkdir build\n    cd build\n    cmake -DCMAKE_INSTALL_PREFIX=/usr ..\n    sudo make install\n    ```\n\n5. In your work directory, create a new file called **sender.c** with the following content. Remember to substitute the value for your Event Hub name and namespace name (the latter is usually `{event hub name}-ns`). You must also substitute a URL-encoded version of the key for the **SendRule** created earlier. You can URL-encode it [here](http://www.w3schools.com/tags/ref_urlencode.asp).\n\n    ```\n    #include \"proton/message.h\"\n    #include \"proton/messenger.h\"\n    \n    #include <getopt.h>\n    #include <proton/util.h>\n    #include <sys/time.h>\n    #include <stddef.h>\n    #include <stdio.h>\n    #include <string.h>\n    #include <unistd.h>\n    #include <stdlib.h>\n    \n    #define check(messenger)                                                     \\\n      {                                                                          \\\n        if(pn_messenger_errno(messenger))                                        \\\n        {                                                                        \\\n          printf(\"check\\n\");                                                     \\\n          die(__FILE__, __LINE__, pn_error_text(pn_messenger_error(messenger))); \\\n        }                                                                        \\\n      }  \n    \n    pn_timestamp_t time_now(void)\n    {\n      struct timeval now;\n      if (gettimeofday(&now, NULL)) pn_fatal(\"gettimeofday failed\\n\");\n      return ((pn_timestamp_t)now.tv_sec) * 1000 + (now.tv_usec / 1000);\n    }  \n    \n    void die(const char *file, int line, const char *message)\n    {\n      printf(\"Dead\\n\");\n      fprintf(stderr, \"%s:%i: %s\\n\", file, line, message);\n      exit(1);\n    }\n    \n    int sendMessage(pn_messenger_t * messenger) {\n        char * address = (char *) \"amqps://SendRule:{Send Rule key}@{namespace name}.servicebus.windows.net/{event hub name}\";\n        char * msgtext = (char *) \"Hello from C!\";\n    \n        pn_message_t * message;\n        pn_data_t * body;\n        message = pn_message();\n    \n        pn_message_set_address(message, address);\n        pn_message_set_content_type(message, (char*) \"application/octect-stream\");\n        pn_message_set_inferred(message, true);\n    \n        body = pn_message_body(message);\n        pn_data_put_binary(body, pn_bytes(strlen(msgtext), msgtext));\n    \n        pn_messenger_put(messenger, message);\n        check(messenger);\n        pn_messenger_send(messenger, 1);\n        check(messenger);\n    \n        pn_message_free(message);\n    }\n    \n    int main(int argc, char** argv) {\n        printf(\"Press Ctrl-C to stop the sender process\\n\");\n    \n        pn_messenger_t *messenger = pn_messenger(NULL);\n        pn_messenger_set_outgoing_window(messenger, 1);\n        pn_messenger_start(messenger);\n    \n        while(true) {\n            sendMessage(messenger);\n            printf(\"Sent message\\n\");\n            sleep(1);\n        }\n    \n        // release messenger resources\n        pn_messenger_stop(messenger);\n        pn_messenger_free(messenger);\n    \n        return 0;\n    }\n    ```\n\n6. Compile the file, assuming **gcc**:\n\n    ```\n    gcc sender.c -o sender -lqpid-proton\n    ```\n\n> [AZURE.NOTE] In this code, we use an outgoing window of 1 to force the messages out as soon as possible. In general, your application should try to batch messages to increase throughput. See [Qpid AMQP Messenger page](http://qpid.apache.org/components/messenger/index.html) for more information about how to use the Qpid Proton library in this and other environments, and from platforms for which bindings are provided (currently Perl, PHP, Python, and Ruby).\n\n\n"
+}
