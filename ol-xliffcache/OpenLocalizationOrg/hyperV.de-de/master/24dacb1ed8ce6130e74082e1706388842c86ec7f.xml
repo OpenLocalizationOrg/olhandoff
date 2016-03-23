@@ -1,0 +1,1048 @@
+{
+  "nodes": [
+    {
+      "content": "Azure AD Connect sync: Understanding the default configuration | Microsoft Azure",
+      "pos": [
+        26,
+        106
+      ]
+    },
+    {
+      "content": "This article describes the default configuration in Azure AD Connect sync.",
+      "pos": [
+        124,
+        198
+      ]
+    },
+    {
+      "content": "Azure AD Connect sync: Understanding the default configuration",
+      "pos": [
+        498,
+        560
+      ]
+    },
+    {
+      "content": "This article walks you through the default configuration of Azure AD Connect sync.",
+      "pos": [
+        562,
+        644
+      ]
+    },
+    {
+      "content": "The goal is that the reader will understand how the configuration model, named declarative provisioning, is working in a real-world example.",
+      "pos": [
+        645,
+        785
+      ]
+    },
+    {
+      "content": "This article assumes that you have already installed and configure Azure AD sync using the installation wizard.",
+      "pos": [
+        786,
+        897
+      ]
+    },
+    {
+      "content": "Scenario description",
+      "pos": [
+        902,
+        922
+      ]
+    },
+    {
+      "content": "In this example we are using a deployment with one account forest (A), one resource forest (R), and one Azure AD directory.",
+      "pos": [
+        924,
+        1047
+      ]
+    },
+    {
+      "content": "scenario",
+      "pos": [
+        1051,
+        1059
+      ]
+    },
+    {
+      "content": "In this configuration we assume to find an enabled account in the account forest and a disabled account in the resource forest with a linked mailbox.",
+      "pos": [
+        1152,
+        1301
+      ]
+    },
+    {
+      "content": "Our goal with the default configuration is:",
+      "pos": [
+        1303,
+        1346
+      ]
+    },
+    {
+      "content": "Attribute information related to login will be synchronized from the forest with the enabled account.",
+      "pos": [
+        1350,
+        1451
+      ]
+    },
+    {
+      "content": "Attributes which can be found in the GAL (Global Address List) will be synchronized from the forest with the mailbox.",
+      "pos": [
+        1454,
+        1571
+      ]
+    },
+    {
+      "content": "If no mailbox can be found, any other forest will be used.",
+      "pos": [
+        1572,
+        1630
+      ]
+    },
+    {
+      "content": "If a linked mailbox is found, the linked enabled account must be found for the object to be exported to Azure AD.",
+      "pos": [
+        1633,
+        1746
+      ]
+    },
+    {
+      "content": "Synchronization Rule Editor",
+      "pos": [
+        1751,
+        1778
+      ]
+    },
+    {
+      "content": "The configuration can be viewed and changed with the tool Synchronization Rules Editor (SRE) and a shortcut to it can be found in the start menu.",
+      "pos": [
+        1780,
+        1925
+      ]
+    },
+    {
+      "content": "Synchronization Rules Editor",
+      "pos": [
+        1929,
+        1957
+      ]
+    },
+    {
+      "content": "The SRE is a resource kit tool and it is installed with Azure AD Connect sync.",
+      "pos": [
+        2045,
+        2123
+      ]
+    },
+    {
+      "content": "To be able to start it you must be a member of the ADSyncAdmins group.",
+      "pos": [
+        2124,
+        2194
+      ]
+    },
+    {
+      "content": "When it starts, you will see something like this:",
+      "pos": [
+        2195,
+        2244
+      ]
+    },
+    {
+      "content": "Synchronization Rules Inbound",
+      "pos": [
+        2248,
+        2277
+      ]
+    },
+    {
+      "content": "In this pane you will see all Synchronization Rules created for your configuration.",
+      "pos": [
+        2378,
+        2461
+      ]
+    },
+    {
+      "content": "Each line in the table is one Synchronization Rule.",
+      "pos": [
+        2462,
+        2513
+      ]
+    },
+    {
+      "content": "To the left under Rule Types the two different types are listed: Inbound and Outbound.",
+      "pos": [
+        2514,
+        2600
+      ]
+    },
+    {
+      "content": "Inbound and Outbound is from the view of the metaverse.",
+      "pos": [
+        2601,
+        2656
+      ]
+    },
+    {
+      "content": "We will mainly focus on the inbound rules in this overview.The actual list of Synchronization Rules will depend on the detected schema in AD.",
+      "pos": [
+        2657,
+        2798
+      ]
+    },
+    {
+      "content": "In the picture above the account forest (fabrikamonline.com) does not have any services, such as Exchange and Lync, and no Synchronization Rules have been created for these services.",
+      "pos": [
+        2799,
+        2981
+      ]
+    },
+    {
+      "content": "However, in the resource forest (res.fabrikamonline.com) we will find Synchronization Rules for these services.",
+      "pos": [
+        2982,
+        3093
+      ]
+    },
+    {
+      "content": "The content of the rules will be different depending on the version detected.",
+      "pos": [
+        3094,
+        3171
+      ]
+    },
+    {
+      "content": "For example in a deployment with Exchange 2013 we will have more attribute flows configured than in Exchange 2010 and Exchange 2007.",
+      "pos": [
+        3172,
+        3304
+      ]
+    },
+    {
+      "content": "Synchronization Rule",
+      "pos": [
+        3309,
+        3329
+      ]
+    },
+    {
+      "content": "A Synchronization Rule is a configuration object with a set of attributes flowing when a condition is satisfied.",
+      "pos": [
+        3331,
+        3443
+      ]
+    },
+    {
+      "content": "It is also used to describe how an object in a connector space is related to an object in the metaverse, known as join or match.",
+      "pos": [
+        3444,
+        3572
+      ]
+    },
+    {
+      "content": "The Synchronization Rules have a precedence value indicating how they relate to each other.",
+      "pos": [
+        3573,
+        3664
+      ]
+    },
+    {
+      "content": "A Synchronization Rule with a lower numeric value in precedence has a higher precedence and in case of an attribute flow conflict, higher precedence will win the conflict resolution.",
+      "pos": [
+        3665,
+        3847
+      ]
+    },
+    {
+      "content": "As an example we will look at the Synchronization Rule <bpt id=\"p1\">**</bpt>In from AD – User AccountEnabled<ept id=\"p1\">**</ept>.",
+      "pos": [
+        3849,
+        3941
+      ]
+    },
+    {
+      "content": "We will mark this line in the SRE and select <bpt id=\"p1\">**</bpt>Edit<ept id=\"p1\">**</ept>.",
+      "pos": [
+        3942,
+        3996
+      ]
+    },
+    {
+      "content": "Since this is an out-of-box rule we will receive a warning when we open the rule.",
+      "pos": [
+        3998,
+        4079
+      ]
+    },
+    {
+      "content": "You should not make any <bpt id=\"p1\">[</bpt>changes to out-of-box rules<ept id=\"p1\">](active-directory-aadconnectsync-best-practices-changing-default-configuration.md)</ept> so you are being asked what your intentions are.",
+      "pos": [
+        4080,
+        4264
+      ]
+    },
+    {
+      "content": "In this case you only want to view the rule, so Select <bpt id=\"p1\">**</bpt>No<ept id=\"p1\">**</ept>.",
+      "pos": [
+        4265,
+        4327
+      ]
+    },
+    {
+      "content": "Synchronization Rules Inbound",
+      "pos": [
+        4331,
+        4360
+      ]
+    },
+    {
+      "content": "A Synchronization Rule has four configuration sections: Description, Scoping filter, Join rules, and Transformations.",
+      "pos": [
+        4460,
+        4577
+      ]
+    },
+    {
+      "content": "Description",
+      "pos": [
+        4583,
+        4594
+      ]
+    },
+    {
+      "content": "The first section provides basic information such as a name and description.",
+      "pos": [
+        4596,
+        4672
+      ]
+    },
+    {
+      "content": "Edit inbound synchronization rule",
+      "pos": [
+        4676,
+        4709
+      ]
+    },
+    {
+      "content": "We also find information about which connected system this rule is related to, which object type in the connected system it applies to, and the metaverse object type.",
+      "pos": [
+        4814,
+        4980
+      ]
+    },
+    {
+      "content": "The metaverse object type is always person regardless if the source object type is a user, iNetOrgPerson, or contact.",
+      "pos": [
+        4981,
+        5098
+      ]
+    },
+    {
+      "content": "The metaverse object type should never change so it is created as a generic type.",
+      "pos": [
+        5099,
+        5180
+      ]
+    },
+    {
+      "content": "The Link Type can be set to Join, StickyJoin, or Provision.",
+      "pos": [
+        5181,
+        5240
+      ]
+    },
+    {
+      "content": "This setting works together with the Join Rules section and we will cover this later.",
+      "pos": [
+        5241,
+        5326
+      ]
+    },
+    {
+      "content": "You can also see that this sync rule is used for password sync.",
+      "pos": [
+        5328,
+        5391
+      ]
+    },
+    {
+      "content": "If a user is in scope for this sync rule, the password will be synchronized from on-prem to cloud (assuming you have enabled the password sync feature).",
+      "pos": [
+        5392,
+        5544
+      ]
+    },
+    {
+      "content": "Scoping filter",
+      "pos": [
+        5550,
+        5564
+      ]
+    },
+    {
+      "content": "The Scoping Filter section is used to configure when a Synchronization Rule should apply.",
+      "pos": [
+        5566,
+        5655
+      ]
+    },
+    {
+      "content": "Since the name of the Synchronization Rule we are looking at indicates it should only be applied for enabled users, the scope is configured so the AD attribute <bpt id=\"p1\">**</bpt>userAccountControl<ept id=\"p1\">**</ept> must not have the bit 2 set.",
+      "pos": [
+        5656,
+        5867
+      ]
+    },
+    {
+      "content": "When we find a user in AD we will apply this sync rule if <bpt id=\"p1\">**</bpt>userAccountControl<ept id=\"p1\">**</ept> is set to the decimal value 512 (enabled normal user) but it will not apply if the user we find has <bpt id=\"p2\">**</bpt>userAccountControl<ept id=\"p2\">**</ept> set to 514 (disabled normal user).",
+      "pos": [
+        5868,
+        6106
+      ]
+    },
+    {
+      "content": "Edit inbound synchronization rule",
+      "pos": [
+        6110,
+        6143
+      ]
+    },
+    {
+      "content": "The scoping filter has Groups and Clauses which can be nested.",
+      "pos": [
+        6250,
+        6312
+      ]
+    },
+    {
+      "content": "All clauses inside a group must be satisfied for a Synchronization Rule to apply.",
+      "pos": [
+        6313,
+        6394
+      ]
+    },
+    {
+      "content": "When multiple groups are defined then at least one group must be satisfied for the rule to apply.",
+      "pos": [
+        6395,
+        6492
+      ]
+    },
+    {
+      "content": "I.e.",
+      "pos": [
+        6493,
+        6497
+      ]
+    },
+    {
+      "content": "a logical OR is evaluated between groups and a logical AND is evaluated inside a group.",
+      "pos": [
+        6498,
+        6585
+      ]
+    },
+    {
+      "content": "An example of this can be found in the outbound Synchronization Rule <bpt id=\"p1\">**</bpt>Out to AAD – Group Join<ept id=\"p1\">**</ept>, shown below.",
+      "pos": [
+        6586,
+        6696
+      ]
+    },
+    {
+      "content": "There are several synchronization filter groups, for example one for security groups (securityEnabled EQUAL True) and one for distribution groups (securityEnabled EQUAL False).",
+      "pos": [
+        6697,
+        6873
+      ]
+    },
+    {
+      "content": "Edit outbound synchronization rule",
+      "pos": [
+        6877,
+        6911
+      ]
+    },
+    {
+      "content": "This rule is used to define which Groups should be provisioned to AAD.",
+      "pos": [
+        7021,
+        7091
+      ]
+    },
+    {
+      "content": "Distribution Groups must be mail enabled to be synchronized with AAD, but for security groups this is not required.",
+      "pos": [
+        7092,
+        7207
+      ]
+    },
+    {
+      "content": "As you can also see, a lot of additional attributes are evaluated as well.",
+      "pos": [
+        7208,
+        7282
+      ]
+    },
+    {
+      "content": "Join rules",
+      "pos": [
+        7288,
+        7298
+      ]
+    },
+    {
+      "content": "The third section is used to configure how objects in the connector space relate to objects in the metaverse.",
+      "pos": [
+        7300,
+        7409
+      ]
+    },
+    {
+      "content": "The rule we have looked at earlier does not have any configuration for Join Rules, so instead we are going to look at <bpt id=\"p1\">**</bpt>In from AD – User Join<ept id=\"p1\">**</ept>.",
+      "pos": [
+        7410,
+        7555
+      ]
+    },
+    {
+      "content": "Edit inbound synchronization rule",
+      "pos": [
+        7559,
+        7592
+      ]
+    },
+    {
+      "content": "The content of the join rules will depend on the matching option selected in the installation wizard.",
+      "pos": [
+        7695,
+        7796
+      ]
+    },
+    {
+      "content": "For an inbound rule the evaluation starts with an object in the source connector space and each group in join rules is evaluated in sequence.",
+      "pos": [
+        7797,
+        7938
+      ]
+    },
+    {
+      "content": "If a source object is evaluated to match exactly one object in the metaverse using one of the join rules, the objects are joined together.",
+      "pos": [
+        7939,
+        8077
+      ]
+    },
+    {
+      "content": "If all rules have been evaluated and there is no match, then the Link Type on the description page is used.",
+      "pos": [
+        8078,
+        8185
+      ]
+    },
+    {
+      "content": "If this setting is set to Provision then a new object is created in the target, the metaverse.",
+      "pos": [
+        8186,
+        8280
+      ]
+    },
+    {
+      "content": "To provision a new object to the metaverse is also known as to project an object to the metaverse.",
+      "pos": [
+        8281,
+        8379
+      ]
+    },
+    {
+      "content": "The join rules are only evaluated once.",
+      "pos": [
+        8381,
+        8420
+      ]
+    },
+    {
+      "content": "When a connector space object and a metaverse object are joined together, they will remain joined as long as the scope of the Synchronization Rule is still satisfied.",
+      "pos": [
+        8421,
+        8587
+      ]
+    },
+    {
+      "content": "When evaluating Synchronization Rules only one Synchronization Rule with join rules defined must be in scope.",
+      "pos": [
+        8589,
+        8698
+      ]
+    },
+    {
+      "content": "If multiple Synchronization Rules with join rules are found for one object, an error is thrown.",
+      "pos": [
+        8699,
+        8794
+      ]
+    },
+    {
+      "content": "For this reason the best practice is to have only one Synchronization Rule with join defined when multiple Synchronization Rules are in scope for an object.",
+      "pos": [
+        8795,
+        8951
+      ]
+    },
+    {
+      "content": "In the out-of-box configuration for Azure Active Directory Sync these rules can be found by looking at the name and find those with the word Join at the end of the name.",
+      "pos": [
+        8952,
+        9121
+      ]
+    },
+    {
+      "content": "A Synchronization Rule without any join rules defined will apply the attribute flows if another Synchronization Rule joined the objects together or provisioned a new object in the target.",
+      "pos": [
+        9122,
+        9309
+      ]
+    },
+    {
+      "content": "If you look at the picture above, you can see that the rule is trying to join <bpt id=\"p1\">**</bpt>objectSID<ept id=\"p1\">**</ept> with <bpt id=\"p2\">**</bpt>msExchMasterAccountSid<ept id=\"p2\">**</ept> (Exchange) and <bpt id=\"p3\">**</bpt>msRTCSIP-OriginatorSid<ept id=\"p3\">**</ept> (Lync), which is what we expect in an account-resource forest topology.",
+      "pos": [
+        9311,
+        9548
+      ]
+    },
+    {
+      "content": "We will find the same rule on all forests, i.e. the assumption is that every forest could be either an account or resource forest.",
+      "pos": [
+        9549,
+        9679
+      ]
+    },
+    {
+      "content": "This will also work if you have accounts which live in a single forest and do not have to be joined.",
+      "pos": [
+        9680,
+        9780
+      ]
+    },
+    {
+      "content": "Transformations",
+      "pos": [
+        9786,
+        9801
+      ]
+    },
+    {
+      "content": "The transformation section defines all attribute flows which will apply to the target object when the objects are joined and the scope filter is satisfied.",
+      "pos": [
+        9803,
+        9958
+      ]
+    },
+    {
+      "content": "Going back to our <bpt id=\"p1\">**</bpt>In from AD – User AccountEnabled<ept id=\"p1\">**</ept> Synchronization Rule we will find the following transformations:",
+      "pos": [
+        9959,
+        10078
+      ]
+    },
+    {
+      "content": "Edit inbound synchronization rule",
+      "pos": [
+        10082,
+        10115
+      ]
+    },
+    {
+      "content": "To put this in context, in an Account-Resource forest deployment we expect to find an enabled account in the account forest and a disabled account in the resource forest with Exchange and Lync settings.",
+      "pos": [
+        10224,
+        10426
+      ]
+    },
+    {
+      "content": "The Synchronization Rule we are looking at contains the attributes required for login and we want these to flow from the forest where we found an enabled account.",
+      "pos": [
+        10427,
+        10589
+      ]
+    },
+    {
+      "content": "All these attribute flows are put together in one Synchronization Rule.",
+      "pos": [
+        10590,
+        10661
+      ]
+    },
+    {
+      "content": "A transformation can have different types: Constant, Direct, and Expression.",
+      "pos": [
+        10663,
+        10739
+      ]
+    },
+    {
+      "content": "A constant flow will always flow a particular value, in the case above we will always set the value True in the metaverse attribute named accountEnabled.",
+      "pos": [
+        10743,
+        10896
+      ]
+    },
+    {
+      "content": "A Direct flow will flow the value of the attribute in the source to the target attribute.",
+      "pos": [
+        10899,
+        10988
+      ]
+    },
+    {
+      "content": "The third flow type is Expression and it allows for more advanced configurations.",
+      "pos": [
+        10991,
+        11072
+      ]
+    },
+    {
+      "content": "The expression language is VBA (Visual Basic for Applications) so user with experience of Microsoft Office or VBScript will recognize the format.",
+      "pos": [
+        11074,
+        11219
+      ]
+    },
+    {
+      "content": "Attributes are enclosed in square brackets, [attributeName].",
+      "pos": [
+        11220,
+        11280
+      ]
+    },
+    {
+      "content": "Attribute names and function names are case sensitive, but the Synchronization Rules Editor will evaluate the expressions and provide a warning if the expression is not valid.",
+      "pos": [
+        11281,
+        11456
+      ]
+    },
+    {
+      "content": "All expressions are expressed on a single line with nested functions.",
+      "pos": [
+        11457,
+        11526
+      ]
+    },
+    {
+      "content": "To show the power of the configuration language, here is the flow for pwdLastSet, but with additional comments inserted:",
+      "pos": [
+        11527,
+        11647
+      ]
+    },
+    {
+      "content": "The topic of transformation is large and it provides a large portion of the custom configuration possible with Azure AD Connect sync.",
+      "pos": [
+        12086,
+        12219
+      ]
+    },
+    {
+      "content": "More of this can be found in the other articles for Azure AD Connect sync.",
+      "pos": [
+        12220,
+        12294
+      ]
+    },
+    {
+      "content": "Precedence",
+      "pos": [
+        12299,
+        12309
+      ]
+    },
+    {
+      "content": "We have now looked at some individual Synchronization Rules, but the rules work together in the configuration.",
+      "pos": [
+        12311,
+        12421
+      ]
+    },
+    {
+      "content": "In some cases an attribute value is contributed from multiple synchronization rules to the same target attribute.",
+      "pos": [
+        12422,
+        12535
+      ]
+    },
+    {
+      "content": "In this case attribute precedence is used to determine which attribute will win.",
+      "pos": [
+        12536,
+        12616
+      ]
+    },
+    {
+      "content": "As an example, let us look at the attribute sourceAnchor.",
+      "pos": [
+        12617,
+        12674
+      ]
+    },
+    {
+      "content": "This attribute is an important attribute to be able to login to Azure AD.",
+      "pos": [
+        12675,
+        12748
+      ]
+    },
+    {
+      "content": "We can find an attribute flow for this attribute in two different Synchronization Rules, <bpt id=\"p1\">**</bpt>In from AD – User AccountEnabled<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>In from AD – User Common<ept id=\"p2\">**</ept>.",
+      "pos": [
+        12749,
+        12908
+      ]
+    },
+    {
+      "content": "Due to Synchronization Rule precedence, the sourceAnchor attribute will be contributed from the forest with an enabled account first if there are several objects joined to the metaverse object.",
+      "pos": [
+        12909,
+        13102
+      ]
+    },
+    {
+      "content": "If there are no enabled accounts, then we will use the catch-all Synchronization Rule <bpt id=\"p1\">**</bpt>In from AD – User Common<ept id=\"p1\">**</ept>.",
+      "pos": [
+        13103,
+        13218
+      ]
+    },
+    {
+      "content": "This will ensure that even for accounts which are disabled we will still provide a sourceAnchor.",
+      "pos": [
+        13219,
+        13315
+      ]
+    },
+    {
+      "content": "Synchronization Rules Inbound",
+      "pos": [
+        13319,
+        13348
+      ]
+    },
+    {
+      "content": "The precedence for Synchronization Rules is set in groups by the installation wizard.",
+      "pos": [
+        13449,
+        13534
+      ]
+    },
+    {
+      "content": "A group of rules all have the same name, but they are connected to different connected directories.",
+      "pos": [
+        13535,
+        13634
+      ]
+    },
+    {
+      "content": "The installation wizard will give the rule <bpt id=\"p1\">**</bpt>In from AD – User Join<ept id=\"p1\">**</ept> highest precedence and iterate over all connected AD directories.",
+      "pos": [
+        13635,
+        13770
+      ]
+    },
+    {
+      "content": "It will then continue with the next groups of rules in a predefined order.",
+      "pos": [
+        13771,
+        13845
+      ]
+    },
+    {
+      "content": "Inside a group the rules are added in the order the Connectors where added in the wizard.",
+      "pos": [
+        13846,
+        13935
+      ]
+    },
+    {
+      "content": "If another Connector is added through the wizard, the Synchronization Rules will be reordered and the new Connector’s rules will be inserted last in each group.",
+      "pos": [
+        13936,
+        14096
+      ]
+    },
+    {
+      "content": "Putting it all together",
+      "pos": [
+        14101,
+        14124
+      ]
+    },
+    {
+      "content": "We now know enough about Synchronization Rules to be able to understand how the configuration works with the different Synchronization Rules.",
+      "pos": [
+        14126,
+        14267
+      ]
+    },
+    {
+      "content": "If we look at a user and the attributes which are contributed to the metaverse, the rules are applied in the following order:",
+      "pos": [
+        14268,
+        14393
+      ]
+    },
+    {
+      "content": "Name",
+      "pos": [
+        14397,
+        14401
+      ]
+    },
+    {
+      "content": "Comment",
+      "pos": [
+        14404,
+        14411
+      ]
+    },
+    {
+      "content": "In from AD – User Join",
+      "pos": [
+        14452,
+        14474
+      ]
+    },
+    {
+      "content": "Rule for joining connector space objects with metaverse.",
+      "pos": [
+        14477,
+        14533
+      ]
+    },
+    {
+      "content": "In from AD – UserAccount Enabled",
+      "pos": [
+        14538,
+        14570
+      ]
+    },
+    {
+      "content": "Attributes required for login to Azure AD and Office 365.",
+      "pos": [
+        14573,
+        14630
+      ]
+    },
+    {
+      "content": "We want these attributes from the enabled account.",
+      "pos": [
+        14631,
+        14681
+      ]
+    },
+    {
+      "content": "In from AD – User Common from Exchange",
+      "pos": [
+        14686,
+        14724
+      ]
+    },
+    {
+      "content": "Attributes found in the Global Address List.",
+      "pos": [
+        14727,
+        14771
+      ]
+    },
+    {
+      "content": "We assume the data quality is best in the forest where we have found the user’s mailbox.",
+      "pos": [
+        14772,
+        14860
+      ]
+    },
+    {
+      "content": "In from AD – User Common",
+      "pos": [
+        14865,
+        14889
+      ]
+    },
+    {
+      "content": "Attributes found in the Global Address List.",
+      "pos": [
+        14892,
+        14936
+      ]
+    },
+    {
+      "content": "In case we didn’t find a mailbox, any other joined object can contribute the attribute value.",
+      "pos": [
+        14937,
+        15030
+      ]
+    },
+    {
+      "content": "In from AD – User Exchange",
+      "pos": [
+        15035,
+        15061
+      ]
+    },
+    {
+      "content": "Will only exist if Exchange has been detected.",
+      "pos": [
+        15064,
+        15110
+      ]
+    },
+    {
+      "content": "Will flow all infrastructure Exchange attributes.",
+      "pos": [
+        15111,
+        15160
+      ]
+    },
+    {
+      "content": "In from AD – User Lync",
+      "pos": [
+        15165,
+        15187
+      ]
+    },
+    {
+      "content": "Will only exist if Lync has been detected.",
+      "pos": [
+        15190,
+        15232
+      ]
+    },
+    {
+      "content": "Will flow all infrastructure Lync attributes.",
+      "pos": [
+        15233,
+        15278
+      ]
+    },
+    {
+      "content": "Additional Resources",
+      "pos": [
+        15285,
+        15305
+      ]
+    },
+    {
+      "content": "Azure AD Connect Sync: Customizing Synchronization options",
+      "pos": [
+        15310,
+        15368
+      ]
+    },
+    {
+      "content": "Integrating your on-premises identities with Azure Active Directory",
+      "pos": [
+        15416,
+        15483
+      ]
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Azure AD Connect sync: Understanding the default configuration | Microsoft Azure\"\n   description=\"This article describes the default configuration in Azure AD Connect sync.\"\n   services=\"active-directory\"\n   documentationCenter=\"\"\n   authors=\"andkjell\"\n   manager=\"stevenpo\"\n   editor=\"\"/>\n\n<tags\n   ms.service=\"active-directory\"\n   ms.workload=\"identity\"\n   ms.tgt_pltfrm=\"na\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.date=\"11/10/2015\"\n   ms.author=\"andkjell\"/>\n\n# Azure AD Connect sync: Understanding the default configuration\n\nThis article walks you through the default configuration of Azure AD Connect sync. The goal is that the reader will understand how the configuration model, named declarative provisioning, is working in a real-world example. This article assumes that you have already installed and configure Azure AD sync using the installation wizard.\n\n## Scenario description\n\nIn this example we are using a deployment with one account forest (A), one resource forest (R), and one Azure AD directory.\n\n![scenario](./media/active-directory-aadconnectsync-understanding-default-configuration/scenario.png)\n\nIn this configuration we assume to find an enabled account in the account forest and a disabled account in the resource forest with a linked mailbox.\n\nOur goal with the default configuration is:\n\n- Attribute information related to login will be synchronized from the forest with the enabled account.\n- Attributes which can be found in the GAL (Global Address List) will be synchronized from the forest with the mailbox. If no mailbox can be found, any other forest will be used.\n- If a linked mailbox is found, the linked enabled account must be found for the object to be exported to Azure AD.\n\n## Synchronization Rule Editor\n\nThe configuration can be viewed and changed with the tool Synchronization Rules Editor (SRE) and a shortcut to it can be found in the start menu.\n\n![Synchronization Rules Editor](./media/active-directory-aadconnectsync-understanding-default-configuration/sre.png)\n\nThe SRE is a resource kit tool and it is installed with Azure AD Connect sync. To be able to start it you must be a member of the ADSyncAdmins group. When it starts, you will see something like this:\n\n![Synchronization Rules Inbound](./media/active-directory-aadconnectsync-understanding-default-configuration/syncrulesinbound.png)\n\nIn this pane you will see all Synchronization Rules created for your configuration. Each line in the table is one Synchronization Rule. To the left under Rule Types the two different types are listed: Inbound and Outbound. Inbound and Outbound is from the view of the metaverse. We will mainly focus on the inbound rules in this overview.The actual list of Synchronization Rules will depend on the detected schema in AD. In the picture above the account forest (fabrikamonline.com) does not have any services, such as Exchange and Lync, and no Synchronization Rules have been created for these services. However, in the resource forest (res.fabrikamonline.com) we will find Synchronization Rules for these services. The content of the rules will be different depending on the version detected. For example in a deployment with Exchange 2013 we will have more attribute flows configured than in Exchange 2010 and Exchange 2007.\n\n## Synchronization Rule\n\nA Synchronization Rule is a configuration object with a set of attributes flowing when a condition is satisfied. It is also used to describe how an object in a connector space is related to an object in the metaverse, known as join or match. The Synchronization Rules have a precedence value indicating how they relate to each other. A Synchronization Rule with a lower numeric value in precedence has a higher precedence and in case of an attribute flow conflict, higher precedence will win the conflict resolution.\n\nAs an example we will look at the Synchronization Rule **In from AD – User AccountEnabled**. We will mark this line in the SRE and select **Edit**.\n\nSince this is an out-of-box rule we will receive a warning when we open the rule. You should not make any [changes to out-of-box rules](active-directory-aadconnectsync-best-practices-changing-default-configuration.md) so you are being asked what your intentions are. In this case you only want to view the rule, so Select **No**.\n\n![Synchronization Rules Inbound](./media/active-directory-aadconnectsync-understanding-default-configuration/warningeditrule.png)\n\nA Synchronization Rule has four configuration sections: Description, Scoping filter, Join rules, and Transformations.\n\n### Description\n\nThe first section provides basic information such as a name and description.\n\n![Edit inbound synchronization rule ](./media/active-directory-aadconnectsync-understanding-default-configuration/syncruledescription.png)\n\nWe also find information about which connected system this rule is related to, which object type in the connected system it applies to, and the metaverse object type. The metaverse object type is always person regardless if the source object type is a user, iNetOrgPerson, or contact. The metaverse object type should never change so it is created as a generic type. The Link Type can be set to Join, StickyJoin, or Provision. This setting works together with the Join Rules section and we will cover this later.\n\nYou can also see that this sync rule is used for password sync. If a user is in scope for this sync rule, the password will be synchronized from on-prem to cloud (assuming you have enabled the password sync feature).\n\n### Scoping filter\n\nThe Scoping Filter section is used to configure when a Synchronization Rule should apply. Since the name of the Synchronization Rule we are looking at indicates it should only be applied for enabled users, the scope is configured so the AD attribute **userAccountControl** must not have the bit 2 set. When we find a user in AD we will apply this sync rule if **userAccountControl** is set to the decimal value 512 (enabled normal user) but it will not apply if the user we find has **userAccountControl** set to 514 (disabled normal user).\n\n![Edit inbound synchronization rule ](./media/active-directory-aadconnectsync-understanding-default-configuration/syncrulescopingfilter.png)\n\nThe scoping filter has Groups and Clauses which can be nested. All clauses inside a group must be satisfied for a Synchronization Rule to apply. When multiple groups are defined then at least one group must be satisfied for the rule to apply. I.e. a logical OR is evaluated between groups and a logical AND is evaluated inside a group. An example of this can be found in the outbound Synchronization Rule **Out to AAD – Group Join**, shown below. There are several synchronization filter groups, for example one for security groups (securityEnabled EQUAL True) and one for distribution groups (securityEnabled EQUAL False).\n\n![Edit outbound synchronization rule ](./media/active-directory-aadconnectsync-understanding-default-configuration/syncrulescopingfilterout.png)\n\nThis rule is used to define which Groups should be provisioned to AAD. Distribution Groups must be mail enabled to be synchronized with AAD, but for security groups this is not required. As you can also see, a lot of additional attributes are evaluated as well.\n\n### Join rules\n\nThe third section is used to configure how objects in the connector space relate to objects in the metaverse. The rule we have looked at earlier does not have any configuration for Join Rules, so instead we are going to look at **In from AD – User Join**.\n\n![Edit inbound synchronization rule ](./media/active-directory-aadconnectsync-understanding-default-configuration/syncrulejoinrules.png)\n\nThe content of the join rules will depend on the matching option selected in the installation wizard. For an inbound rule the evaluation starts with an object in the source connector space and each group in join rules is evaluated in sequence. If a source object is evaluated to match exactly one object in the metaverse using one of the join rules, the objects are joined together. If all rules have been evaluated and there is no match, then the Link Type on the description page is used. If this setting is set to Provision then a new object is created in the target, the metaverse. To provision a new object to the metaverse is also known as to project an object to the metaverse.\n\nThe join rules are only evaluated once. When a connector space object and a metaverse object are joined together, they will remain joined as long as the scope of the Synchronization Rule is still satisfied.\n\nWhen evaluating Synchronization Rules only one Synchronization Rule with join rules defined must be in scope. If multiple Synchronization Rules with join rules are found for one object, an error is thrown. For this reason the best practice is to have only one Synchronization Rule with join defined when multiple Synchronization Rules are in scope for an object. In the out-of-box configuration for Azure Active Directory Sync these rules can be found by looking at the name and find those with the word Join at the end of the name. A Synchronization Rule without any join rules defined will apply the attribute flows if another Synchronization Rule joined the objects together or provisioned a new object in the target.\n\nIf you look at the picture above, you can see that the rule is trying to join **objectSID** with **msExchMasterAccountSid** (Exchange) and **msRTCSIP-OriginatorSid** (Lync), which is what we expect in an account-resource forest topology. We will find the same rule on all forests, i.e. the assumption is that every forest could be either an account or resource forest. This will also work if you have accounts which live in a single forest and do not have to be joined.\n\n### Transformations\n\nThe transformation section defines all attribute flows which will apply to the target object when the objects are joined and the scope filter is satisfied. Going back to our **In from AD – User AccountEnabled** Synchronization Rule we will find the following transformations:\n\n![Edit inbound synchronization rule ](./media/active-directory-aadconnectsync-understanding-default-configuration/syncruletransformations.png)\n\nTo put this in context, in an Account-Resource forest deployment we expect to find an enabled account in the account forest and a disabled account in the resource forest with Exchange and Lync settings. The Synchronization Rule we are looking at contains the attributes required for login and we want these to flow from the forest where we found an enabled account. All these attribute flows are put together in one Synchronization Rule.\n\nA transformation can have different types: Constant, Direct, and Expression.\n\n- A constant flow will always flow a particular value, in the case above we will always set the value True in the metaverse attribute named accountEnabled.\n- A Direct flow will flow the value of the attribute in the source to the target attribute.\n- The third flow type is Expression and it allows for more advanced configurations.\n\nThe expression language is VBA (Visual Basic for Applications) so user with experience of Microsoft Office or VBScript will recognize the format. Attributes are enclosed in square brackets, [attributeName]. Attribute names and function names are case sensitive, but the Synchronization Rules Editor will evaluate the expressions and provide a warning if the expression is not valid. All expressions are expressed on a single line with nested functions. To show the power of the configuration language, here is the flow for pwdLastSet, but with additional comments inserted:\n\n```\n// If-then-else\nIIF(\n// (The evaluation for IIF) Is the attribute pwdLastSet present in AD?\nIsPresent([pwdLastSet]),\n// (The True part of IIF) If it is, then from right to left, convert the AD time format to a .Net datetime, change it to the time format used by AAD, and finally convert it to a string.\nCStr(FormatDateTime(DateFromNum([pwdLastSet]),\"yyyyMMddHHmmss.0Z\")),\n// (The False part of IIF) Nothing to contribute\nNULL\n)\n```\n\nThe topic of transformation is large and it provides a large portion of the custom configuration possible with Azure AD Connect sync. More of this can be found in the other articles for Azure AD Connect sync.\n\n## Precedence\n\nWe have now looked at some individual Synchronization Rules, but the rules work together in the configuration. In some cases an attribute value is contributed from multiple synchronization rules to the same target attribute. In this case attribute precedence is used to determine which attribute will win. As an example, let us look at the attribute sourceAnchor. This attribute is an important attribute to be able to login to Azure AD. We can find an attribute flow for this attribute in two different Synchronization Rules, **In from AD – User AccountEnabled** and **In from AD – User Common**. Due to Synchronization Rule precedence, the sourceAnchor attribute will be contributed from the forest with an enabled account first if there are several objects joined to the metaverse object. If there are no enabled accounts, then we will use the catch-all Synchronization Rule **In from AD – User Common**. This will ensure that even for accounts which are disabled we will still provide a sourceAnchor.\n\n![Synchronization Rules Inbound](./media/active-directory-aadconnectsync-understanding-default-configuration/syncrulesinbound.png)\n\nThe precedence for Synchronization Rules is set in groups by the installation wizard. A group of rules all have the same name, but they are connected to different connected directories. The installation wizard will give the rule **In from AD – User Join** highest precedence and iterate over all connected AD directories. It will then continue with the next groups of rules in a predefined order. Inside a group the rules are added in the order the Connectors where added in the wizard. If another Connector is added through the wizard, the Synchronization Rules will be reordered and the new Connector’s rules will be inserted last in each group.\n\n## Putting it all together\n\nWe now know enough about Synchronization Rules to be able to understand how the configuration works with the different Synchronization Rules. If we look at a user and the attributes which are contributed to the metaverse, the rules are applied in the following order:\n\n| Name | Comment |\n| :------------- | :------------- |\n| In from AD – User Join | Rule for joining connector space objects with metaverse. |\n| In from AD – UserAccount Enabled | Attributes required for login to Azure AD and Office 365. We want these attributes from the enabled account. |\n| In from AD – User Common from Exchange | Attributes found in the Global Address List. We assume the data quality is best in the forest where we have found the user’s mailbox. |\n| In from AD – User Common | Attributes found in the Global Address List. In case we didn’t find a mailbox, any other joined object can contribute the attribute value. |\n| In from AD – User Exchange | Will only exist if Exchange has been detected. Will flow all infrastructure Exchange attributes. |\n| In from AD – User Lync | Will only exist if Lync has been detected. Will flow all infrastructure Lync attributes. |\n\n## Additional Resources\n\n* [Azure AD Connect Sync: Customizing Synchronization options](active-directory-aadconnectsync-whatis.md)\n* [Integrating your on-premises identities with Azure Active Directory](active-directory-aadconnect.md)\n\n\n"
+}

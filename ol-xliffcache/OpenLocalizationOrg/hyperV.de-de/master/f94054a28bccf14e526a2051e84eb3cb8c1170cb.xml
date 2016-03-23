@@ -1,0 +1,887 @@
+{
+  "nodes": [
+    {
+      "content": "App Service API Apps - What's changed | Microsoft Azure",
+      "pos": [
+        27,
+        82
+      ]
+    },
+    {
+      "content": "Learn what's new for API Apps in Azure App Service.",
+      "pos": [
+        101,
+        152
+      ]
+    },
+    {
+      "content": "App Service API Apps - What's changed",
+      "pos": [
+        480,
+        517
+      ]
+    },
+    {
+      "content": "At the Connect() event in November 2015, a number of improvements to Azure App Service were <bpt id=\"p1\">[</bpt>announced<ept id=\"p1\">](https://azure.microsoft.com/blog/azure-app-service-updates-november-2015/)</ept>.",
+      "pos": [
+        519,
+        698
+      ]
+    },
+    {
+      "content": "These improvements include underlying changes to API Apps to better align with Mobile and Web Apps, reduce concept count and improve deployment and runtime performance.",
+      "pos": [
+        699,
+        867
+      ]
+    },
+    {
+      "content": "Starting November 30, 2015, new API apps you create using the Azure management portal or the latest tooling will reflect these changes.",
+      "pos": [
+        868,
+        1003
+      ]
+    },
+    {
+      "content": "This article describes these changes, as well as how to redeploy existing apps to take advantage of the capabilities.",
+      "pos": [
+        1004,
+        1121
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The initial preview of API Apps supported two primary scenarios: 1) custom APIs for use in Logic Apps or your own clients and 2) Marketplace API (often SaaS connectors) for use in Logic Apps.",
+      "pos": [
+        1126,
+        1330
+      ]
+    },
+    {
+      "content": "This article addresses the first scenario, custom APIs.",
+      "pos": [
+        1331,
+        1386
+      ]
+    },
+    {
+      "content": "For Marketplace APIs, an improved Logic Apps designer experience and underlying connectivity foundation will be introduced in early 2016.",
+      "pos": [
+        1387,
+        1524
+      ]
+    },
+    {
+      "content": "The existing Marketplace APIs remain available in the Logic Apps designer.",
+      "pos": [
+        1525,
+        1599
+      ]
+    },
+    {
+      "content": "Feature changes",
+      "pos": [
+        1604,
+        1619
+      ]
+    },
+    {
+      "content": "The key features of API Apps – authentication, CORS and API metadata – have moved directly into App Service.",
+      "pos": [
+        1620,
+        1728
+      ]
+    },
+    {
+      "content": "With this change, the features are available across Web, Mobile and API Apps.",
+      "pos": [
+        1729,
+        1806
+      ]
+    },
+    {
+      "content": "In fact, all three share the same <bpt id=\"p1\">**</bpt>Microsoft.Web/sites<ept id=\"p1\">**</ept> resource type in Resource Manager.",
+      "pos": [
+        1807,
+        1899
+      ]
+    },
+    {
+      "content": "The API Apps gateway is no longer needed or offered with API Apps.",
+      "pos": [
+        1900,
+        1966
+      ]
+    },
+    {
+      "content": "This also makes it easier to use Azure API Management since there will be just the single API Management gateway.",
+      "pos": [
+        1967,
+        2080
+      ]
+    },
+    {
+      "content": "API Apps Overview",
+      "pos": [
+        2084,
+        2101
+      ]
+    },
+    {
+      "content": "A key design principle with the API Apps update is to enable you to bring your API as is, in your language of choice.",
+      "pos": [
+        2165,
+        2282
+      ]
+    },
+    {
+      "content": "If your API is already deployed as a Web App or Mobile App*, you do not have to redeploy your app to take advantage of the new features.",
+      "pos": [
+        2284,
+        2420
+      ]
+    },
+    {
+      "pos": [
+        2424,
+        2517
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> *If you are currently on API Apps preview, migration guidance is detailed below."
+    },
+    {
+      "content": "Authentication",
+      "pos": [
+        2523,
+        2537
+      ]
+    },
+    {
+      "content": "The existing turnkey API Apps, Mobile Services/Apps and Web Apps authentication features have been unified and are available in a single Azure App Service authentication blade in the management portal.",
+      "pos": [
+        2538,
+        2739
+      ]
+    },
+    {
+      "content": "For an introduction to authentication services in App Service, see <bpt id=\"p1\">[</bpt>Expanding App Service authentication / authorization<ept id=\"p1\">](https://azure.microsoft.com/blog/announcing-app-service-authentication-authorization/)</ept>.",
+      "pos": [
+        2740,
+        2949
+      ]
+    },
+    {
+      "content": "For API scenarios, there are a number of relevant new capabilities:",
+      "pos": [
+        2951,
+        3018
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Support for using Azure Active Directory directly<ept id=\"p1\">**</ept>, without client code having to exchange the AAD token for a session token: Your client can just include the AAD tokens in the Authorization header, according to the bearer token specification.",
+      "pos": [
+        3022,
+        3268
+      ]
+    },
+    {
+      "content": "This also means no App Service-specific SDK is required on the client or server side.",
+      "pos": [
+        3269,
+        3354
+      ]
+    },
+    {
+      "pos": [
+        3358,
+        3621
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Service-to-service or \"Internal\" access<ept id=\"p1\">**</ept>: If you have a daemon process or some other client needing access to APIs without an interface, you can request a token using an AAD service principal and pass it to App Service for authentication with your application."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Deferred authorization<ept id=\"p1\">**</ept>: Many applications have varying access restrictions for different parts of the application.",
+      "pos": [
+        3624,
+        3742
+      ]
+    },
+    {
+      "content": "Perhaps you want some APIs to be publicly available, while others require sign-in.",
+      "pos": [
+        3743,
+        3825
+      ]
+    },
+    {
+      "content": "The original Authentication/Authorization feature was all-or-nothing, with the whole site requiring login.",
+      "pos": [
+        3826,
+        3932
+      ]
+    },
+    {
+      "content": "This option still exists, but you can alternatively allow your application code to render access decisions after App Service has authenticated the user.",
+      "pos": [
+        3933,
+        4085
+      ]
+    },
+    {
+      "content": "For more information about the new authentication features, see <bpt id=\"p1\">[</bpt>Authentication and authorization for API Apps in Azure App Service<ept id=\"p1\">](app-service-api-authentication.md)</ept>.",
+      "pos": [
+        4088,
+        4256
+      ]
+    },
+    {
+      "content": "For information about how to migrate existing API apps from the previous API apps model to the new one, see <bpt id=\"p1\">[</bpt>Migrating existing API apps<ept id=\"p1\">](#migrating-existing-api-apps)</ept> later in this article.",
+      "pos": [
+        4257,
+        4447
+      ]
+    },
+    {
+      "content": "CORS",
+      "pos": [
+        4454,
+        4458
+      ]
+    },
+    {
+      "content": "Instead of a comma-delimited <bpt id=\"p1\">**</bpt>MS_CrossDomainOrigins<ept id=\"p1\">**</ept> app setting, there is now a blade in the Azure management portal for configuring CORS.",
+      "pos": [
+        4459,
+        4600
+      ]
+    },
+    {
+      "content": "Alternatively, it can be configured using Resource Manager tooling such as Azure PowerShell, CLI or <bpt id=\"p1\">[</bpt>Resource Explorer<ept id=\"p1\">](https://resources.azure.com/)</ept>.",
+      "pos": [
+        4601,
+        4751
+      ]
+    },
+    {
+      "content": "Set the <bpt id=\"p1\">**</bpt>cors<ept id=\"p1\">**</ept> property on the <bpt id=\"p2\">**</bpt>Microsoft.Web/sites/config<ept id=\"p2\">**</ept> resource type for your <bpt id=\"p3\">**</bpt>&amp;lt;site name&amp;gt;/web<ept id=\"p3\">**</ept> resource.",
+      "pos": [
+        4752,
+        4874
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        4875,
+        4887
+      ]
+    },
+    {
+      "content": "API metadata",
+      "pos": [
+        5023,
+        5035
+      ]
+    },
+    {
+      "content": "The API definition blade is now available across Web, Mobile and API Apps.",
+      "pos": [
+        5036,
+        5110
+      ]
+    },
+    {
+      "content": "In the management portal, you can specify either a relative url or an absolute url pointing to an endpoint that hosts a Swagger 2.0 representation of your API.",
+      "pos": [
+        5111,
+        5270
+      ]
+    },
+    {
+      "content": "Alternatively, it can be configured using Resource Manager tooling.",
+      "pos": [
+        5271,
+        5338
+      ]
+    },
+    {
+      "content": "Set the <bpt id=\"p1\">**</bpt>apiDefinition<ept id=\"p1\">**</ept> property on the <bpt id=\"p2\">**</bpt>Microsoft.Web/sites/config<ept id=\"p2\">**</ept> resource type for your <bpt id=\"p3\">**</bpt>&amp;lt;site name&amp;gt;/web<ept id=\"p3\">**</ept> resource.",
+      "pos": [
+        5339,
+        5470
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        5471,
+        5483
+      ]
+    },
+    {
+      "content": "At this time, the metadata endpoint needs to be publicly accessible without authentication for many downstream clients (e.g. Visual Studio REST API client generation and PowerApps \"Add API\" flow) to consume it.",
+      "pos": [
+        5638,
+        5848
+      ]
+    },
+    {
+      "content": "This does mean if you are using App Service authentication and want to expose the API definition from within your app itself, you will need to use the Deferred Authentication option described earlier so that the route to your Swagger metadata is public.",
+      "pos": [
+        5849,
+        6102
+      ]
+    },
+    {
+      "content": "Management Portal",
+      "pos": [
+        6107,
+        6124
+      ]
+    },
+    {
+      "content": "Selecting <bpt id=\"p1\">**</bpt>New &gt; Web + Mobile &gt; API App<ept id=\"p1\">**</ept> in the portal will create API apps that reflect the new capabilities described in the article.",
+      "pos": [
+        6125,
+        6262
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Browse &gt; API Apps<ept id=\"p1\">**</ept> will only show these new API apps.",
+      "pos": [
+        6263,
+        6319
+      ]
+    },
+    {
+      "content": "Once you browse into an API app, the blade shares the same layout and capabilities as those of Web and Mobile Apps.",
+      "pos": [
+        6320,
+        6435
+      ]
+    },
+    {
+      "content": "The only differences are quickstart content and ordering of settings.",
+      "pos": [
+        6436,
+        6505
+      ]
+    },
+    {
+      "content": "Existing API apps (or Marketplace API apps created from Logic Apps) with the previous Preview capabilities will still be visible in the Logic Apps designer and when browsing all resources in a resource group.",
+      "pos": [
+        6507,
+        6715
+      ]
+    },
+    {
+      "content": "If you do need to create an API App with the previous Preview capabilities, the package is available and searchable in Azure Marketplace as <bpt id=\"p1\">**</bpt>Web + Mobile &gt; API Apps (Preview)<ept id=\"p1\">**</ept>.",
+      "pos": [
+        6716,
+        6894
+      ]
+    },
+    {
+      "content": "Visual Studio",
+      "pos": [
+        6899,
+        6912
+      ]
+    },
+    {
+      "content": "Most Web Apps tooling will work with new API apps since they share the same underlying <bpt id=\"p1\">**</bpt>Microsoft.Web/sites<ept id=\"p1\">**</ept> resource type.",
+      "pos": [
+        6914,
+        7039
+      ]
+    },
+    {
+      "content": "The Azure Visual Studio tooling, however, should be upgraded to version 2.8.1 or later since it exposes a number of capabilities specific to APIs.",
+      "pos": [
+        7040,
+        7186
+      ]
+    },
+    {
+      "content": "Download the SDK from the <bpt id=\"p1\">[</bpt>Azure downloads page<ept id=\"p1\">](https://azure.microsoft.com/downloads/)</ept>.",
+      "pos": [
+        7187,
+        7276
+      ]
+    },
+    {
+      "pos": [
+        7278,
+        7401
+      ],
+      "content": "With the rationalization of the App Service types, publish is also unified under <bpt id=\"p1\">**</bpt>Publish &gt; Microsoft Azure App Service<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "content": "API Apps Publish",
+      "pos": [
+        7405,
+        7421
+      ]
+    },
+    {
+      "pos": [
+        7484,
+        7619
+      ],
+      "content": "To learn more about SDK 2.8.1, read the announcement <bpt id=\"p1\">[</bpt>blog post<ept id=\"p1\">](https://azure.microsoft.com/blog/announcing-azure-sdk-2-8-1-for-net/)</ept>."
+    },
+    {
+      "content": "Alternatively, you can manually import the publish profile from the management portal to enable publish.",
+      "pos": [
+        7621,
+        7725
+      ]
+    },
+    {
+      "content": "However, Cloud Explorer, code generation and API app selection/creation will require SDK 2.8.1 or higher.",
+      "pos": [
+        7726,
+        7831
+      ]
+    },
+    {
+      "content": "The ability to publish to existing API apps with the previous Preview capabilities remains available in SDK 2.8.1.",
+      "pos": [
+        7833,
+        7947
+      ]
+    },
+    {
+      "content": "If you have already published the project, no further action is necessary.",
+      "pos": [
+        7948,
+        8022
+      ]
+    },
+    {
+      "content": "To setup publish, choose <bpt id=\"p1\">**</bpt>API Apps (classic)<ept id=\"p1\">**</ept> from the <bpt id=\"p2\">**</bpt>More Options<ept id=\"p2\">**</ept> dropdown in the publish dialog.",
+      "pos": [
+        8023,
+        8128
+      ]
+    },
+    {
+      "content": "Migrating existing API apps",
+      "pos": [
+        8133,
+        8160
+      ]
+    },
+    {
+      "content": "If your custom API is deployed to the previous Preview version of API Apps, we request that you migrate to the new model for API Apps by December 31, 2015.",
+      "pos": [
+        8161,
+        8316
+      ]
+    },
+    {
+      "content": "Since both the old and new model are based on Web APIs hosted in App Service, the majority of existing code can be reused.",
+      "pos": [
+        8317,
+        8439
+      ]
+    },
+    {
+      "content": "Hosting and redeployment",
+      "pos": [
+        8445,
+        8469
+      ]
+    },
+    {
+      "content": "The steps for redeploying are the same as deploying any existing Web API to App Service.",
+      "pos": [
+        8470,
+        8558
+      ]
+    },
+    {
+      "content": "Steps:",
+      "pos": [
+        8559,
+        8565
+      ]
+    },
+    {
+      "content": "Create an empty API app.",
+      "pos": [
+        8570,
+        8594
+      ]
+    },
+    {
+      "content": "This can be done in the portal with New &gt; API App, in Visual Studio from publish, or from Resource Manager tooling.",
+      "pos": [
+        8595,
+        8710
+      ]
+    },
+    {
+      "content": "If using Resource Manager tooling or templates, set the <bpt id=\"p1\">**</bpt>kind<ept id=\"p1\">**</ept> value to <bpt id=\"p2\">**</bpt>api<ept id=\"p2\">**</ept> on the <bpt id=\"p3\">**</bpt>Microsoft.Web/sites<ept id=\"p3\">**</ept> resource type to have the quickstarts and settings in the management portal oriented towards API scenarios.",
+      "pos": [
+        8711,
+        8931
+      ]
+    },
+    {
+      "content": "Connect and deploy your project to the empty API app using any of the deployment mechanisms supported by App Service.",
+      "pos": [
+        8935,
+        9052
+      ]
+    },
+    {
+      "content": "Read <bpt id=\"p1\">[</bpt>Azure App Service deployment documentation<ept id=\"p1\">](../app-service-web/web-sites-deploy.md)</ept> to learn more.",
+      "pos": [
+        9053,
+        9157
+      ]
+    },
+    {
+      "content": "Authentication",
+      "pos": [
+        9166,
+        9180
+      ]
+    },
+    {
+      "content": "The App Service authentication services support the same capabilities that were available with the previous API Apps model.",
+      "pos": [
+        9181,
+        9304
+      ]
+    },
+    {
+      "content": "If you are using session tokens and require SDKs, use the following client and server SDKs:",
+      "pos": [
+        9305,
+        9396
+      ]
+    },
+    {
+      "pos": [
+        9400,
+        9495
+      ],
+      "content": "Client: <bpt id=\"p1\">[</bpt>Azure Mobile Client SDK<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.Mobile.Client/)</ept>"
+    },
+    {
+      "pos": [
+        9498,
+        9641
+      ],
+      "content": "Server: <bpt id=\"p1\">[</bpt>Microsoft Azure Mobile App .NET Authentication Extension<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.Mobile.Server.Authentication/)</ept>"
+    },
+    {
+      "content": "If you were instead using the App Service alpha SDKs, these are now deprecated:",
+      "pos": [
+        9644,
+        9723
+      ]
+    },
+    {
+      "pos": [
+        9727,
+        9825
+      ],
+      "content": "Client: <bpt id=\"p1\">[</bpt>Microsoft Azure AppService SDK<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.AppService)</ept>"
+    },
+    {
+      "pos": [
+        9828,
+        9954
+      ],
+      "content": "Server: <bpt id=\"p1\">[</bpt>Microsoft.Azure.AppService.ApiApps.Service<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service)</ept>"
+    },
+    {
+      "content": "In particular with Azure Active Directory, however, no App Service-specific is required if you are using the AAD token directly.",
+      "pos": [
+        9956,
+        10084
+      ]
+    },
+    {
+      "content": "Internal access",
+      "pos": [
+        10090,
+        10105
+      ]
+    },
+    {
+      "content": "The previous API Apps model included a built-in internal access level.",
+      "pos": [
+        10106,
+        10176
+      ]
+    },
+    {
+      "content": "This required use of the SDK for signing requests.",
+      "pos": [
+        10177,
+        10227
+      ]
+    },
+    {
+      "content": "As described earlier, with the new API Apps model, AAD service principals can be used as an alternate for service-to-service authentication without requiring an App Service-specific SDK.",
+      "pos": [
+        10228,
+        10414
+      ]
+    },
+    {
+      "content": "Learn more in <bpt id=\"p1\">[</bpt>Service principal authentication for API Apps in Azure App Service<ept id=\"p1\">](app-service-api-dotnet-service-principal-auth.md)</ept>.",
+      "pos": [
+        10415,
+        10548
+      ]
+    },
+    {
+      "content": "Discovery",
+      "pos": [
+        10554,
+        10563
+      ]
+    },
+    {
+      "content": "The previous API Apps model had APIs for discovering other API apps at runtime in the same resource group behind the same gateway.",
+      "pos": [
+        10564,
+        10694
+      ]
+    },
+    {
+      "content": "This is especially useful in architectures that implement microservice patterns.",
+      "pos": [
+        10695,
+        10775
+      ]
+    },
+    {
+      "content": "While this is not directly supported, a number of options are available:",
+      "pos": [
+        10776,
+        10848
+      ]
+    },
+    {
+      "content": "Use the Azure Resource Manager API's for discovery.",
+      "pos": [
+        10853,
+        10904
+      ]
+    },
+    {
+      "content": "Put Azure API Management in front of your App Service-hosted APIs.",
+      "pos": [
+        10908,
+        10974
+      ]
+    },
+    {
+      "content": "Azure API Management serves as a facade and can provide a stable external facing url even if you internal topology changes.",
+      "pos": [
+        10975,
+        11098
+      ]
+    },
+    {
+      "content": "Build your own discovery API app and have other API apps register with the discovery app on startup.",
+      "pos": [
+        11102,
+        11202
+      ]
+    },
+    {
+      "content": "At deployment time, populate the app settings of all the API apps (and clients) with the endpoints of the other API apps.",
+      "pos": [
+        11206,
+        11327
+      ]
+    },
+    {
+      "content": "This is viable in template deployments and since API Apps now give you control of the url.",
+      "pos": [
+        11328,
+        11418
+      ]
+    },
+    {
+      "content": "Logic Apps",
+      "pos": [
+        11424,
+        11434
+      ]
+    },
+    {
+      "content": "The Logic Apps designer will be adding especially seamless integration with the new API Apps model in early 2016.",
+      "pos": [
+        11435,
+        11548
+      ]
+    },
+    {
+      "content": "That said, the HTTP connector built into Logic Apps can invoke any HTTP endpoint and supports service principal authentication, which is also supported natively by the App Service authentication services.",
+      "pos": [
+        11549,
+        11753
+      ]
+    },
+    {
+      "content": "Learn how to consume an App Service-hosted API in Logic Apps in <bpt id=\"p1\">[</bpt>Using your custom API hosted on App Service with Logic apps<ept id=\"p1\">](../app-service-logic/app-service-logic-custom-hosted-api.md)</ept>.",
+      "pos": [
+        11754,
+        11941
+      ]
+    },
+    {
+      "pos": [
+        11947,
+        12019
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"documentation\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> Documentation for the previous API Apps model"
+    },
+    {
+      "content": "Some <bpt id=\"p1\">[</bpt>azure.microsoft.com<ept id=\"p1\">](https://azure.microsoft.com)</ept> articles that were written for the old API Apps model no longer apply to the new model and will be removed from the site.",
+      "pos": [
+        12020,
+        12197
+      ]
+    },
+    {
+      "content": "Their URLs will be redirected to the closest equivalent that works with the new model, but you can still see the old articles in the <bpt id=\"p1\">[</bpt>GitHub documentation repository for azure.microsoft.com<ept id=\"p1\">](https://github.com/Azure/azure-content)</ept>.",
+      "pos": [
+        12198,
+        12429
+      ]
+    },
+    {
+      "content": "Most of the articles you might want will be found in the <bpt id=\"p1\">[</bpt>articles/app-service-api<ept id=\"p1\">](https://github.com/Azure/azure-content/tree/master/articles/app-service-api)</ept> folder.",
+      "pos": [
+        12430,
+        12598
+      ]
+    },
+    {
+      "content": "Here are direct links to a few of the ones most likely to still be of use if you are supporting older API apps or if you create new connector API apps from the Marketplace.",
+      "pos": [
+        12599,
+        12771
+      ]
+    },
+    {
+      "content": "Authentication overview",
+      "pos": [
+        12776,
+        12799
+      ]
+    },
+    {
+      "content": "Protect an API app",
+      "pos": [
+        12916,
+        12934
+      ]
+    },
+    {
+      "content": "Consume an internal API app",
+      "pos": [
+        13061,
+        13088
+      ]
+    },
+    {
+      "content": "Consume using client flow authentication",
+      "pos": [
+        13213,
+        13253
+      ]
+    },
+    {
+      "content": "Deploy and configure a SaaS connector API app",
+      "pos": [
+        13381,
+        13426
+      ]
+    },
+    {
+      "content": "Provision an API app with a new gateway",
+      "pos": [
+        13563,
+        13602
+      ]
+    },
+    {
+      "content": "Debug an API App",
+      "pos": [
+        13729,
+        13745
+      ]
+    },
+    {
+      "content": "Connect to a SaaS platform",
+      "pos": [
+        13859,
+        13885
+      ]
+    },
+    {
+      "content": "Enhance an API App for Logic Apps",
+      "pos": [
+        14009,
+        14042
+      ]
+    },
+    {
+      "content": "API app triggers",
+      "pos": [
+        14167,
+        14183
+      ]
+    },
+    {
+      "content": "Next Steps",
+      "pos": [
+        14301,
+        14311
+      ]
+    },
+    {
+      "content": "To learn more, read the articles in the <bpt id=\"p1\">[</bpt>API Apps Documentation section<ept id=\"p1\">](https://azure.microsoft.com/documentation/services/app-service/api/)</ept>.",
+      "pos": [
+        14312,
+        14454
+      ]
+    },
+    {
+      "content": "They have been updated to reflect the new model for API Apps.",
+      "pos": [
+        14455,
+        14516
+      ]
+    },
+    {
+      "content": "In addition, do reach out on the forums for additional details or guidance on migration:",
+      "pos": [
+        14517,
+        14605
+      ]
+    },
+    {
+      "content": "MSDN forum",
+      "pos": [
+        14610,
+        14620
+      ]
+    },
+    {
+      "content": "Stack Overflow",
+      "pos": [
+        14697,
+        14711
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"App Service API Apps - What's changed | Microsoft Azure\"\n    description=\"Learn what's new for API Apps in Azure App Service.\"\n    services=\"app-service\\api\"\n    documentationCenter=\".net\"\n    authors=\"mohitsriv\"\n    manager=\"wpickett\"\n    editor=\"tdykstra\"/>\n\n<tags\n    ms.service=\"app-service-api\"\n    ms.workload=\"na\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"get-started-article\"\n    ms.date=\"11/29/2015\"\n    ms.author=\"mohisri\"/>\n\n# App Service API Apps - What's changed\n\nAt the Connect() event in November 2015, a number of improvements to Azure App Service were [announced](https://azure.microsoft.com/blog/azure-app-service-updates-november-2015/). These improvements include underlying changes to API Apps to better align with Mobile and Web Apps, reduce concept count and improve deployment and runtime performance. Starting November 30, 2015, new API apps you create using the Azure management portal or the latest tooling will reflect these changes. This article describes these changes, as well as how to redeploy existing apps to take advantage of the capabilities.\n\n\n> [AZURE.NOTE] The initial preview of API Apps supported two primary scenarios: 1) custom APIs for use in Logic Apps or your own clients and 2) Marketplace API (often SaaS connectors) for use in Logic Apps. This article addresses the first scenario, custom APIs. For Marketplace APIs, an improved Logic Apps designer experience and underlying connectivity foundation will be introduced in early 2016. The existing Marketplace APIs remain available in the Logic Apps designer.\n\n## Feature changes\nThe key features of API Apps – authentication, CORS and API metadata – have moved directly into App Service. With this change, the features are available across Web, Mobile and API Apps. In fact, all three share the same **Microsoft.Web/sites** resource type in Resource Manager. The API Apps gateway is no longer needed or offered with API Apps. This also makes it easier to use Azure API Management since there will be just the single API Management gateway.\n\n![API Apps Overview](./media/app-service-api-whats-changed/api-apps-overview.png)\n\nA key design principle with the API Apps update is to enable you to bring your API as is, in your language of choice.  If your API is already deployed as a Web App or Mobile App*, you do not have to redeploy your app to take advantage of the new features.\n\n> [AZURE.NOTE] *If you are currently on API Apps preview, migration guidance is detailed below.\n\n### Authentication\nThe existing turnkey API Apps, Mobile Services/Apps and Web Apps authentication features have been unified and are available in a single Azure App Service authentication blade in the management portal. For an introduction to authentication services in App Service, see [Expanding App Service authentication / authorization](https://azure.microsoft.com/blog/announcing-app-service-authentication-authorization/).\n\nFor API scenarios, there are a number of relevant new capabilities:\n\n- **Support for using Azure Active Directory directly**, without client code having to exchange the AAD token for a session token: Your client can just include the AAD tokens in the Authorization header, according to the bearer token specification. This also means no App Service-specific SDK is required on the client or server side. \n- **Service-to-service or \"Internal\" access**: If you have a daemon process or some other client needing access to APIs without an interface, you can request a token using an AAD service principal and pass it to App Service for authentication with your application.\n- **Deferred authorization**: Many applications have varying access restrictions for different parts of the application. Perhaps you want some APIs to be publicly available, while others require sign-in. The original Authentication/Authorization feature was all-or-nothing, with the whole site requiring login. This option still exists, but you can alternatively allow your application code to render access decisions after App Service has authenticated the user.\n \nFor more information about the new authentication features, see [Authentication and authorization for API Apps in Azure App Service](app-service-api-authentication.md). For information about how to migrate existing API apps from the previous API apps model to the new one, see [Migrating existing API apps](#migrating-existing-api-apps) later in this article.\n \n### CORS\nInstead of a comma-delimited **MS_CrossDomainOrigins** app setting, there is now a blade in the Azure management portal for configuring CORS. Alternatively, it can be configured using Resource Manager tooling such as Azure PowerShell, CLI or [Resource Explorer](https://resources.azure.com/). Set the **cors** property on the **Microsoft.Web/sites/config** resource type for your **&lt;site name&gt;/web** resource. For example:\n\n    {\n        \"cors\": {\n            \"allowedOrigins\": [\n                \"https://localhost:44300\"\n            ]\n        }\n    } \n\n### API metadata\nThe API definition blade is now available across Web, Mobile and API Apps. In the management portal, you can specify either a relative url or an absolute url pointing to an endpoint that hosts a Swagger 2.0 representation of your API. Alternatively, it can be configured using Resource Manager tooling. Set the **apiDefinition** property on the **Microsoft.Web/sites/config** resource type for your **&lt;site name&gt;/web** resource. For example:\n\n    {\n        \"apiDefinition\":\n        {\n            \"url\": \"https://myStorageAccount.blob.core.windows.net/swagger/apiDefinition.json\"\n        }\n    }\n\nAt this time, the metadata endpoint needs to be publicly accessible without authentication for many downstream clients (e.g. Visual Studio REST API client generation and PowerApps \"Add API\" flow) to consume it. This does mean if you are using App Service authentication and want to expose the API definition from within your app itself, you will need to use the Deferred Authentication option described earlier so that the route to your Swagger metadata is public.\n\n## Management Portal\nSelecting **New > Web + Mobile > API App** in the portal will create API apps that reflect the new capabilities described in the article. **Browse > API Apps** will only show these new API apps. Once you browse into an API app, the blade shares the same layout and capabilities as those of Web and Mobile Apps. The only differences are quickstart content and ordering of settings.\n\nExisting API apps (or Marketplace API apps created from Logic Apps) with the previous Preview capabilities will still be visible in the Logic Apps designer and when browsing all resources in a resource group. If you do need to create an API App with the previous Preview capabilities, the package is available and searchable in Azure Marketplace as **Web + Mobile > API Apps (Preview)**.\n\n## Visual Studio\n\nMost Web Apps tooling will work with new API apps since they share the same underlying **Microsoft.Web/sites** resource type. The Azure Visual Studio tooling, however, should be upgraded to version 2.8.1 or later since it exposes a number of capabilities specific to APIs. Download the SDK from the [Azure downloads page](https://azure.microsoft.com/downloads/).\n\nWith the rationalization of the App Service types, publish is also unified under **Publish > Microsoft Azure App Service**:\n\n![API Apps Publish](./media/app-service-api-whats-changed/api-apps-publish.png)\n\nTo learn more about SDK 2.8.1, read the announcement [blog post](https://azure.microsoft.com/blog/announcing-azure-sdk-2-8-1-for-net/).\n\nAlternatively, you can manually import the publish profile from the management portal to enable publish. However, Cloud Explorer, code generation and API app selection/creation will require SDK 2.8.1 or higher.\n\nThe ability to publish to existing API apps with the previous Preview capabilities remains available in SDK 2.8.1. If you have already published the project, no further action is necessary. To setup publish, choose **API Apps (classic)** from the **More Options** dropdown in the publish dialog.\n\n## Migrating existing API apps\nIf your custom API is deployed to the previous Preview version of API Apps, we request that you migrate to the new model for API Apps by December 31, 2015. Since both the old and new model are based on Web APIs hosted in App Service, the majority of existing code can be reused.\n\n### Hosting and redeployment\nThe steps for redeploying are the same as deploying any existing Web API to App Service. Steps:\n\n1. Create an empty API app. This can be done in the portal with New > API App, in Visual Studio from publish, or from Resource Manager tooling. If using Resource Manager tooling or templates, set the **kind** value to **api** on the **Microsoft.Web/sites** resource type to have the quickstarts and settings in the management portal oriented towards API scenarios.\n2. Connect and deploy your project to the empty API app using any of the deployment mechanisms supported by App Service. Read [Azure App Service deployment documentation](../app-service-web/web-sites-deploy.md) to learn more. \n  \n### Authentication\nThe App Service authentication services support the same capabilities that were available with the previous API Apps model. If you are using session tokens and require SDKs, use the following client and server SDKs:\n\n- Client: [Azure Mobile Client SDK](http://www.nuget.org/packages/Microsoft.Azure.Mobile.Client/)\n- Server: [Microsoft Azure Mobile App .NET Authentication Extension](http://www.nuget.org/packages/Microsoft.Azure.Mobile.Server.Authentication/) \n\nIf you were instead using the App Service alpha SDKs, these are now deprecated:\n\n- Client: [Microsoft Azure AppService SDK](http://www.nuget.org/packages/Microsoft.Azure.AppService)\n- Server: [Microsoft.Azure.AppService.ApiApps.Service](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service)\n\nIn particular with Azure Active Directory, however, no App Service-specific is required if you are using the AAD token directly.\n\n### Internal access\nThe previous API Apps model included a built-in internal access level. This required use of the SDK for signing requests. As described earlier, with the new API Apps model, AAD service principals can be used as an alternate for service-to-service authentication without requiring an App Service-specific SDK. Learn more in [Service principal authentication for API Apps in Azure App Service](app-service-api-dotnet-service-principal-auth.md).\n\n### Discovery\nThe previous API Apps model had APIs for discovering other API apps at runtime in the same resource group behind the same gateway. This is especially useful in architectures that implement microservice patterns. While this is not directly supported, a number of options are available:\n\n1. Use the Azure Resource Manager API's for discovery.\n2. Put Azure API Management in front of your App Service-hosted APIs. Azure API Management serves as a facade and can provide a stable external facing url even if you internal topology changes.\n3. Build your own discovery API app and have other API apps register with the discovery app on startup.\n4. At deployment time, populate the app settings of all the API apps (and clients) with the endpoints of the other API apps. This is viable in template deployments and since API Apps now give you control of the url.\n\n### Logic Apps\nThe Logic Apps designer will be adding especially seamless integration with the new API Apps model in early 2016. That said, the HTTP connector built into Logic Apps can invoke any HTTP endpoint and supports service principal authentication, which is also supported natively by the App Service authentication services. Learn how to consume an App Service-hosted API in Logic Apps in [Using your custom API hosted on App Service with Logic apps](../app-service-logic/app-service-logic-custom-hosted-api.md).\n\n### <a id=\"documentation\"></a> Documentation for the previous API Apps model\nSome [azure.microsoft.com](https://azure.microsoft.com) articles that were written for the old API Apps model no longer apply to the new model and will be removed from the site. Their URLs will be redirected to the closest equivalent that works with the new model, but you can still see the old articles in the [GitHub documentation repository for azure.microsoft.com](https://github.com/Azure/azure-content). Most of the articles you might want will be found in the [articles/app-service-api](https://github.com/Azure/azure-content/tree/master/articles/app-service-api) folder. Here are direct links to a few of the ones most likely to still be of use if you are supporting older API apps or if you create new connector API apps from the Marketplace.\n\n* [Authentication overview](https://github.com/Azure/azure-content/tree/master/articles/app-service/app-service-authentication-overview.md)\n* [Protect an API app](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-dotnet-add-authentication.md)\n* [Consume an internal API app](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-dotnet-consume-internal.md)\n* [Consume using client flow authentication](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-authentication-client-flow.md)\n* [Deploy and configure a SaaS connector API app](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-connnect-your-app-to-saas-connector.md)\n* [Provision an API app with a new gateway](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-arm-new-gateway-provision.md)\n* [Debug an API App](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-dotnet-debug.md)\n* [Connect to a SaaS platform](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-dotnet-connect-to-saas.md)\n* [Enhance an API App for Logic Apps](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-optimize-for-logic-apps.md)\n* [API app triggers](https://github.com/Azure/azure-content/tree/master/articles/app-service-api/app-service-api-dotnet-triggers.md)\n\n## Next Steps\nTo learn more, read the articles in the [API Apps Documentation section](https://azure.microsoft.com/documentation/services/app-service/api/). They have been updated to reflect the new model for API Apps. In addition, do reach out on the forums for additional details or guidance on migration:\n\n- [MSDN forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=AzureAPIApps)\n- [Stack Overflow](http://stackoverflow.com/questions/tagged/azure-api-apps)\n\n\n"
+}

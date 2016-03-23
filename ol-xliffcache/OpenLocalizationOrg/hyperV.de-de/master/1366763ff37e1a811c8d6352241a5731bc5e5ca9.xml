@@ -1,0 +1,978 @@
+{
+  "nodes": [
+    {
+      "content": "Custom SaaS connector ASP.NET API app in Azure App Service",
+      "pos": [
+        28,
+        86
+      ]
+    },
+    {
+      "content": "Learn how to write code that connects to a SaaS platform from an API app and how to call the API app from a .NET client.",
+      "pos": [
+        106,
+        226
+      ]
+    },
+    {
+      "content": "Connect to a SaaS platform from an ASP.NET API app in Azure App Service",
+      "pos": [
+        556,
+        627
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        718,
+        726
+      ]
+    },
+    {
+      "content": "This tutorial shows how to code and configure an <bpt id=\"p1\">[</bpt>API app<ept id=\"p1\">](app-service-api-apps-why-best-platform.md)</ept> that connects to a <bpt id=\"p2\">[</bpt>Software-as-a-Service (SaaS) platform<ept id=\"p2\">](../app-service/app-service-authentication-overview.md#obotosaas)</ept> using the <bpt id=\"p3\">[</bpt>App Service API app SDK for .NET<ept id=\"p3\">](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service/)</ept>.",
+      "pos": [
+        728,
+        1074
+      ]
+    },
+    {
+      "content": "The tutorial also shows how to call the API app from a .NET client by using the <bpt id=\"p1\">[</bpt>App Service SDK for .NET<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.AppService)</ept>.",
+      "pos": [
+        1075,
+        1240
+      ]
+    },
+    {
+      "content": "At the end of the tutorial you'll have a .NET console app client that calls a .NET API app running in Azure App Service.",
+      "pos": [
+        1241,
+        1361
+      ]
+    },
+    {
+      "content": "The API app calls the Dropbox API and returns a list of files and folders in the user's Dropbox account.",
+      "pos": [
+        1362,
+        1466
+      ]
+    },
+    {
+      "content": "As an alternative to writing code that calls a SaaS API directly from a custom API app, you can call a prepackaged <bpt id=\"p1\">[</bpt>connector API app<ept id=\"p1\">](../app-service-logic/app-service-logic-what-are-biztalk-api-apps.md)</ept>.",
+      "pos": [
+        1468,
+        1672
+      ]
+    },
+    {
+      "content": "For information about how to do that, see <bpt id=\"p1\">[</bpt>Deploy and configure a SaaS connector API app<ept id=\"p1\">](app-service-api-connnect-your-app-to-saas-connector.md)</ept>.",
+      "pos": [
+        1673,
+        1819
+      ]
+    },
+    {
+      "content": "The tutorial walks you through the following steps:",
+      "pos": [
+        1821,
+        1872
+      ]
+    },
+    {
+      "content": "Create an API app project in Visual Studio.",
+      "pos": [
+        1876,
+        1919
+      ]
+    },
+    {
+      "pos": [
+        1923,
+        2012
+      ],
+      "content": "Configure the <bpt id=\"p1\">*</bpt>apiapp.json<ept id=\"p1\">*</ept> file to enable the API app to connect to the Dropbox service."
+    },
+    {
+      "content": "Add code that calls Dropbox and returns the results.",
+      "pos": [
+        2015,
+        2067
+      ]
+    },
+    {
+      "content": "Create a new API app in Azure.",
+      "pos": [
+        2070,
+        2100
+      ]
+    },
+    {
+      "content": "Deploy the project to the API app.",
+      "pos": [
+        2103,
+        2137
+      ]
+    },
+    {
+      "content": "Configure the API app.",
+      "pos": [
+        2140,
+        2162
+      ]
+    },
+    {
+      "content": "Configure the gateway.",
+      "pos": [
+        2165,
+        2187
+      ]
+    },
+    {
+      "content": "Create a test client.",
+      "pos": [
+        2190,
+        2211
+      ]
+    },
+    {
+      "content": "Run the test client.",
+      "pos": [
+        2214,
+        2234
+      ]
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        2239,
+        2252
+      ]
+    },
+    {
+      "content": "The tutorial makes these assumptions:",
+      "pos": [
+        2254,
+        2291
+      ]
+    },
+    {
+      "pos": [
+        2295,
+        2448
+      ],
+      "content": "You have completed the <bpt id=\"p1\">[</bpt>Create an API app<ept id=\"p1\">](app-service-dotnet-create-api-app.md)</ept> and <bpt id=\"p2\">[</bpt>Deploy an API app<ept id=\"p2\">](app-service-dotnet-deploy-api-app.md)</ept> tutorials."
+    },
+    {
+      "pos": [
+        2454,
+        2653
+      ],
+      "content": "You have a basic understanding of the Azure App Service gateway architecture for authentication, as presented in <bpt id=\"p1\">[</bpt>Authentication for API apps and mobile apps<ept id=\"p1\">](app-service-authentication-overview.md)</ept>."
+    },
+    {
+      "pos": [
+        2657,
+        2831
+      ],
+      "content": "You know how to work with API apps in the Azure preview portal, as explained in <bpt id=\"p1\">[</bpt>How to navigate to API app and gateway blades<ept id=\"p1\">](app-service-api-manage-in-portal.md#navigate)</ept>."
+    },
+    {
+      "content": "Create the API app project",
+      "pos": [
+        2836,
+        2862
+      ]
+    },
+    {
+      "pos": [
+        2865,
+        2953
+      ],
+      "content": "When the instructions direct you to enter a name for the project, enter <bpt id=\"p1\">*</bpt>SimpleDropbox<ept id=\"p1\">*</ept>."
+    },
+    {
+      "pos": [
+        3043,
+        3075
+      ],
+      "content": "Configure the <bpt id=\"p1\">*</bpt>apiapp.json<ept id=\"p1\">*</ept> file"
+    },
+    {
+      "pos": [
+        3077,
+        3199
+      ],
+      "content": "For an API app to make outgoing calls to a SaaS platform, the SaaS platform has to be specified in the <bpt id=\"p1\">*</bpt>apiapp.json<ept id=\"p1\">*</ept> file."
+    },
+    {
+      "pos": [
+        3205,
+        3347
+      ],
+      "content": "Open the <bpt id=\"p1\">*</bpt>apiapp.json<ept id=\"p1\">*</ept> file and add an <ph id=\"ph1\">`authentication`</ph> property as shown here (you'll also have to add a comma after the preceding property):"
+    },
+    {
+      "content": "The complete apiapp.json file will resemble this example:",
+      "pos": [
+        3446,
+        3503
+      ]
+    },
+    {
+      "content": "Save the file.",
+      "pos": [
+        4086,
+        4100
+      ]
+    },
+    {
+      "pos": [
+        4102,
+        4161
+      ],
+      "content": "Setting the <ph id=\"ph1\">`authentication`</ph> property has a couple effects:"
+    },
+    {
+      "content": "It causes the portal to display UI in the API app blade that enables you to enter the SaaS platform's client ID and client secret values.",
+      "pos": [
+        4165,
+        4302
+      ]
+    },
+    {
+      "content": "It enables the API app to retrieve the SaaS provider's access token from the gateway for use when calling the SaaS provider's API.",
+      "pos": [
+        4377,
+        4507
+      ]
+    },
+    {
+      "pos": [
+        4509,
+        4623
+      ],
+      "content": "The <ph id=\"ph1\">`authentication`</ph> property is an array, but this preview release doesn't support specifying multiple providers."
+    },
+    {
+      "pos": [
+        4625,
+        4787
+      ],
+      "content": "For a list of the supported platforms, see <bpt id=\"p1\">[</bpt>Getting user consent to access other SaaS platforms<ept id=\"p1\">](../app-service/app-service-authentication-overview.md#obotosaas)</ept>."
+    },
+    {
+      "content": "You can also specify scopes, as in this example:",
+      "pos": [
+        4789,
+        4837
+      ]
+    },
+    {
+      "content": "Available scopes are defined by each SaaS provider and can be found in the provider's developer portal.",
+      "pos": [
+        5057,
+        5160
+      ]
+    },
+    {
+      "content": "Add Code that calls Dropbox",
+      "pos": [
+        5165,
+        5192
+      ]
+    },
+    {
+      "pos": [
+        5197,
+        5316
+      ],
+      "content": "Install the <bpt id=\"p1\">[</bpt>DropboxRestAPI<ept id=\"p1\">](https://www.nuget.org/packages/DropboxRestAPI)</ept> NuGet package in the SimpleDropbox project."
+    },
+    {
+      "pos": [
+        5324,
+        5407
+      ],
+      "content": "From the <bpt id=\"p1\">**</bpt>Tools<ept id=\"p1\">**</ept> menu, click <bpt id=\"p2\">**</bpt>NuGet Package Manager &gt; Package Manager Console<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        5415,
+        5477
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Package Manager Console<ept id=\"p1\">**</ept> window, enter this command:"
+    },
+    {
+      "pos": [
+        5533,
+        5636
+      ],
+      "content": "Open <bpt id=\"p1\">*</bpt>Controllers\\ValuesController.cs<ept id=\"p1\">*</ept> and replace all of the code in the file with the following code."
+    },
+    {
+      "content": "Before the client calls this method, the user has logged in to Dropbox and granted consent for the API app to access the user's Dropbox account.",
+      "pos": [
+        7103,
+        7247
+      ]
+    },
+    {
+      "content": "Dropbox acknowledges that consent by providing an access token to the App Service gateway.",
+      "pos": [
+        7248,
+        7338
+      ]
+    },
+    {
+      "content": "This code retrieves the token from the gateway and includes it in a call to the Dropbox API, as shown in steps 6 and 7 in the diagram below.",
+      "pos": [
+        7339,
+        7479
+      ]
+    },
+    {
+      "content": "Build the project.",
+      "pos": [
+        7555,
+        7573
+      ]
+    },
+    {
+      "content": "Create an API app in Azure",
+      "pos": [
+        7578,
+        7604
+      ]
+    },
+    {
+      "content": "In this section you use the Visual Studio <bpt id=\"p1\">**</bpt>Publish Web<ept id=\"p1\">**</ept> wizard to create an API app in Azure.",
+      "pos": [
+        7606,
+        7701
+      ]
+    },
+    {
+      "content": "Where the instructions direct you to enter a name for the API app, enter <bpt id=\"p1\">*</bpt>SimpleDropbox<ept id=\"p1\">*</ept>.",
+      "pos": [
+        7702,
+        7791
+      ]
+    },
+    {
+      "content": "Deploy your code",
+      "pos": [
+        7896,
+        7912
+      ]
+    },
+    {
+      "pos": [
+        7914,
+        7993
+      ],
+      "content": "You use the same <bpt id=\"p1\">**</bpt>Publish Web<ept id=\"p1\">**</ept> wizard to deploy your code to the new API app."
+    },
+    {
+      "content": "Configure authentication for incoming calls",
+      "pos": [
+        8098,
+        8141
+      ]
+    },
+    {
+      "content": "For Azure App Service to allow authenticated outgoing calls from the API app, the API app must also require that incoming calls come from authenticated users.",
+      "pos": [
+        8143,
+        8301
+      ]
+    },
+    {
+      "content": "This is not a general OAuth 2.0 requirement but is a requirement of the App Service gateway architecture as it is currently implemented.",
+      "pos": [
+        8302,
+        8438
+      ]
+    },
+    {
+      "content": "The screenshots in this section show a ContactsList API app, but the process is the same for the SimpleDropbox API app that you're creating in this tutorial.",
+      "pos": [
+        8440,
+        8597
+      ]
+    },
+    {
+      "content": "Configure the API app to require that incoming calls be authenticated",
+      "pos": [
+        8603,
+        8672
+      ]
+    },
+    {
+      "content": "Configure an identity provider in the gateway",
+      "pos": [
+        8772,
+        8817
+      ]
+    },
+    {
+      "content": "Configure authentication for outgoing calls",
+      "pos": [
+        8932,
+        8975
+      ]
+    },
+    {
+      "content": "To enable your API app to call the Dropbox API, you have to exchange settings between your API app and a Dropbox app that you create on the Dropbox developer site.",
+      "pos": [
+        8977,
+        9140
+      ]
+    },
+    {
+      "content": "Create a Dropbox app on the Dropbox.com site",
+      "pos": [
+        9146,
+        9190
+      ]
+    },
+    {
+      "content": "Exchange settings between Dropbox and your API app",
+      "pos": [
+        9304,
+        9354
+      ]
+    },
+    {
+      "content": "The following steps refer to a Dropbox connector API app, but the procedures and UI are the same for the SimpleDropbox API app that you're creating in this tutorial.",
+      "pos": [
+        9356,
+        9521
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note:<ept id=\"p1\">**</ept> If you don't see fields for the Dropbox client ID and client secret on the SimpleDropbox API app's <bpt id=\"p2\">**</bpt>Authentication<ept id=\"p2\">**</ept> blade as shown in the screenshot, make sure that you restarted the gateway as directed after deploying the API app project to the API app.",
+      "pos": [
+        9525,
+        9791
+      ]
+    },
+    {
+      "content": "The \"dropbox\" value in the <ph id=\"ph1\">`authentication`</ph> property of the <bpt id=\"p1\">*</bpt>apiapp.json<ept id=\"p1\">*</ept> file that you deployed earlier is what triggers the portal to display these fields.",
+      "pos": [
+        9792,
+        9949
+      ]
+    },
+    {
+      "content": "Create a test client",
+      "pos": [
+        10076,
+        10096
+      ]
+    },
+    {
+      "content": "In this section you create a console app project that uses client code generated by Visual Studio to call the SimpleDropbox API app.",
+      "pos": [
+        10098,
+        10230
+      ]
+    },
+    {
+      "content": "The console app instantiates a Windows Forms browser control to handle user interaction with the gateway and Dropbox login web pages.",
+      "pos": [
+        10231,
+        10364
+      ]
+    },
+    {
+      "content": "Create the project",
+      "pos": [
+        10370,
+        10388
+      ]
+    },
+    {
+      "pos": [
+        10393,
+        10480
+      ],
+      "content": "In Visual Studio, create a console application project and name it <bpt id=\"p1\">*</bpt>SimpleDropboxTest<ept id=\"p1\">*</ept>."
+    },
+    {
+      "content": "Set a reference to System.Windows.Forms.",
+      "pos": [
+        10485,
+        10525
+      ]
+    },
+    {
+      "pos": [
+        10534,
+        10617
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click <bpt id=\"p2\">**</bpt>References<ept id=\"p2\">**</ept>, then click <bpt id=\"p3\">**</bpt>Add Reference<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        10625,
+        10709
+      ],
+      "content": "Select the check box at the left of <bpt id=\"p1\">**</bpt>System.Windows.Forms<ept id=\"p1\">**</ept>, and then click <bpt id=\"p2\">**</bpt>OK<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "The console application will use the Windows Forms assembly to instantiate a browser control when it needs to enable the user to log in to the gateway and to Dropbox.",
+      "pos": [
+        10788,
+        10954
+      ]
+    },
+    {
+      "content": "Add generated client code",
+      "pos": [
+        10960,
+        10985
+      ]
+    },
+    {
+      "content": "The screenshots in this section show a ContactsList project and API app, but for this tutorial select the SimpleDropboxTest project and SimpleDropbox API app.",
+      "pos": [
+        10987,
+        11145
+      ]
+    },
+    {
+      "content": "Add code to call the API app",
+      "pos": [
+        11277,
+        11305
+      ]
+    },
+    {
+      "pos": [
+        11310,
+        11379
+      ],
+      "content": "Open <bpt id=\"p1\">*</bpt>Program.cs<ept id=\"p1\">*</ept> and replace the code in it with the following code."
+    },
+    {
+      "content": "Replace {gateway url} with the actual URL of your gateway.",
+      "pos": [
+        16251,
+        16309
+      ]
+    },
+    {
+      "pos": [
+        16316,
+        16385
+      ],
+      "content": "You can get the gateway URL from the <bpt id=\"p1\">**</bpt>gateway<ept id=\"p1\">**</ept> blade in the portal:"
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Important<ept id=\"p1\">**</ept>: Make sure the gateway URL begins with <ph id=\"ph1\">`https://`</ph>, not <ph id=\"ph2\">`http://`</ph>.",
+      "pos": [
+        16566,
+        16645
+      ]
+    },
+    {
+      "content": "If you copy http:// from the portal, you have to change it to https:// when you paste it in the code.",
+      "pos": [
+        16648,
+        16749
+      ]
+    },
+    {
+      "content": "Explanation of the code",
+      "pos": [
+        16757,
+        16780
+      ]
+    },
+    {
+      "content": "This console application is designed to use a minimum amount of code to illustrate the steps that a client app has to go through.",
+      "pos": [
+        16782,
+        16911
+      ]
+    },
+    {
+      "content": "A production application would not typically be a console application and would implement error handling and logging.",
+      "pos": [
+        16912,
+        17029
+      ]
+    },
+    {
+      "content": "Here's an overview of what the code is doing:",
+      "pos": [
+        17031,
+        17076
+      ]
+    },
+    {
+      "content": "Opens a browser to the gateway login URL for the configured identity provider, in this case Azure Active Directory.",
+      "pos": [
+        17080,
+        17195
+      ]
+    },
+    {
+      "content": "Handles expected response URL after user logs in:  extract user ID and Zumo token, provide them to App Service client object.",
+      "pos": [
+        17205,
+        17330
+      ]
+    },
+    {
+      "content": "Uses App Service client object to retrieve a gateway URL that will redirect to the Dropbox  link for login and consent.",
+      "pos": [
+        17335,
+        17454
+      ]
+    },
+    {
+      "content": "Step 1 in the diagram.",
+      "pos": [
+        17455,
+        17477
+      ]
+    },
+    {
+      "content": "Opens a browser to the gateway consent URL.",
+      "pos": [
+        17481,
+        17524
+      ]
+    },
+    {
+      "content": "Browser gets redirected to Dropbox login and consent link.",
+      "pos": [
+        17525,
+        17583
+      ]
+    },
+    {
+      "content": "Step 2 in the diagram.",
+      "pos": [
+        17584,
+        17606
+      ]
+    },
+    {
+      "content": "Closes browser after user logs and gives consent at Dropbox.com.",
+      "pos": [
+        17616,
+        17680
+      ]
+    },
+    {
+      "content": "Step 3 in the diagram.",
+      "pos": [
+        17681,
+        17703
+      ]
+    },
+    {
+      "content": "Calls the API app.",
+      "pos": [
+        17709,
+        17727
+      ]
+    },
+    {
+      "content": "Step 5 in the diagram.",
+      "pos": [
+        17728,
+        17750
+      ]
+    },
+    {
+      "content": "(Step 4 happens behind the scenes between Dropbox.com and the gateway, steps 6 and 7 are done from the API app, not the client.)",
+      "pos": [
+        17751,
+        17879
+      ]
+    },
+    {
+      "content": "Additional notes:",
+      "pos": [
+        17948,
+        17965
+      ]
+    },
+    {
+      "pos": [
+        17969,
+        18115
+      ],
+      "content": "The <ph id=\"ph1\">`STAThread`</ph> attribute on the <ph id=\"ph2\">`Main`</ph> method is required by the web browser control and is not related to setting up for or calling the API app."
+    },
+    {
+      "pos": [
+        18119,
+        18189
+      ],
+      "content": "The gateway login URL shown ends in <ph id=\"ph1\">`/aad`</ph> for Azure Active Directory."
+    },
+    {
+      "content": "Here are the values to use for the other providers:",
+      "pos": [
+        18268,
+        18319
+      ]
+    },
+    {
+      "content": "\"microsoftaccount\"",
+      "pos": [
+        18326,
+        18344
+      ]
+    },
+    {
+      "content": "\"facebook\"",
+      "pos": [
+        18351,
+        18361
+      ]
+    },
+    {
+      "content": "\"twitter\"",
+      "pos": [
+        18368,
+        18377
+      ]
+    },
+    {
+      "content": "\"google\"",
+      "pos": [
+        18384,
+        18392
+      ]
+    },
+    {
+      "pos": [
+        18407,
+        18605
+      ],
+      "content": "The second parameter for the <ph id=\"ph1\">`GetConsentLinkAsync()`</ph> method is the callback URL that the consent server redirects to after the user logs in to Dropbox and gives consent to access the user's account."
+    },
+    {
+      "content": "For this parameter you would normally specify the next web page that the user should go to in the client application.",
+      "pos": [
+        18721,
+        18838
+      ]
+    },
+    {
+      "content": "Since this demo code is in a console app, there is no application page to go to, and the code specifies the gateway URL just as a convenient landing page.",
+      "pos": [
+        18839,
+        18993
+      ]
+    },
+    {
+      "content": "The client application should verify that it gets redirected to this URL and that there is no error message.",
+      "pos": [
+        19000,
+        19108
+      ]
+    },
+    {
+      "content": "If the login/consent process fails, the redirect URL may contain an error message in the querystring.",
+      "pos": [
+        19109,
+        19210
+      ]
+    },
+    {
+      "content": "For more information, see the <bpt id=\"p1\">[</bpt>Troubleshooting<ept id=\"p1\">](#troubleshooting)</ept> section.",
+      "pos": [
+        19211,
+        19285
+      ]
+    },
+    {
+      "content": "Test",
+      "pos": [
+        19291,
+        19295
+      ]
+    },
+    {
+      "content": "Run the SimpleDropboxTest console application.",
+      "pos": [
+        19300,
+        19346
+      ]
+    },
+    {
+      "content": "In the first logon page, sign in using your Azure Active Directory credentials (or credentials for another identity provider such as Google or Twitter if that's what you configured in the gateway).",
+      "pos": [
+        19351,
+        19548
+      ]
+    },
+    {
+      "content": "In the Dropbox.com login page, sign in using your Dropbox credentials.",
+      "pos": [
+        19623,
+        19693
+      ]
+    },
+    {
+      "content": "In the Dropbox consent page, give the application permission to access your data.",
+      "pos": [
+        19767,
+        19848
+      ]
+    },
+    {
+      "content": "The console app then calls the API app and it returns a list of the files in your Dropbox account.",
+      "pos": [
+        19925,
+        20023
+      ]
+    },
+    {
+      "content": "Troubleshooting",
+      "pos": [
+        20100,
+        20115
+      ]
+    },
+    {
+      "content": "This section contains the following topics:",
+      "pos": [
+        20117,
+        20160
+      ]
+    },
+    {
+      "content": "HTTP Error 405 after gateway login",
+      "pos": [
+        20165,
+        20199
+      ]
+    },
+    {
+      "content": "HTTP Error 400 instead of Dropbox login page",
+      "pos": [
+        20210,
+        20254
+      ]
+    },
+    {
+      "content": "HTTP Error 403 when calling the API app",
+      "pos": [
+        20265,
+        20304
+      ]
+    },
+    {
+      "pos": [
+        20317,
+        20368
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"405\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> HTTP Error 405 after gateway login"
+    },
+    {
+      "content": "If you get HTTP Error 405 when the code calls GetConsentLinkAsync, verify that you used https://, not http:// for the gateway URL.",
+      "pos": [
+        20370,
+        20500
+      ]
+    },
+    {
+      "content": "The 405 method not allowed error is received because the client attempts to make a non-SSL HTTP POST request, the gateway redirects to <bpt id=\"p1\">*</bpt>https://<ept id=\"p1\">*</ept>, and the redirect causes a GET request.",
+      "pos": [
+        20567,
+        20752
+      ]
+    },
+    {
+      "content": "The URL for retrieving a consent link only accepts POST requests.",
+      "pos": [
+        20753,
+        20818
+      ]
+    },
+    {
+      "pos": [
+        20824,
+        20884
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"400\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>HTTP Error 400 instead of Dropbox login page"
+    },
+    {
+      "pos": [
+        20886,
+        21033
+      ],
+      "content": "Make sure that you have the correct <bpt id=\"p1\">**</bpt>client ID<ept id=\"p1\">**</ept> in the API app's <bpt id=\"p2\">**</bpt>Authentication<ept id=\"p2\">**</ept> blade, and make sure there are no leading or trailing spaces."
+    },
+    {
+      "pos": [
+        21040,
+        21096
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"403\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> HTTP Error 403 when calling the API app"
+    },
+    {
+      "pos": [
+        21100,
+        21206
+      ],
+      "content": "Make sure that the <bpt id=\"p1\">**</bpt>Access Level<ept id=\"p1\">**</ept> of the API app is set to <bpt id=\"p2\">**</bpt>Public (authenticated)<ept id=\"p2\">**</ept>, not <bpt id=\"p3\">**</bpt>Internal<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        21210,
+        21361
+      ],
+      "content": "Make sure that you have the correct <bpt id=\"p1\">**</bpt>client secret<ept id=\"p1\">**</ept> in the API app's <bpt id=\"p2\">**</bpt>Authentication<ept id=\"p2\">**</ept> blade, and make sure there are no leading or trailing spaces."
+    },
+    {
+      "content": "The redirect URL after Dropbox login may look like this example:",
+      "pos": [
+        21363,
+        21427
+      ]
+    },
+    {
+      "content": "If you remove the %3d%3d from the end of the <ph id=\"ph1\">`error`</ph> querystring value, this is a valid base64 encoded string.",
+      "pos": [
+        21684,
+        21794
+      ]
+    },
+    {
+      "content": "Decode the string to get the error message:",
+      "pos": [
+        21795,
+        21838
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        21979,
+        21989
+      ]
+    },
+    {
+      "content": "You've seen how to code and configure an API app that connects to a SaaS platform.",
+      "pos": [
+        21991,
+        22073
+      ]
+    },
+    {
+      "content": "For links to other tutorials about how to handle authentication in API apps, see <bpt id=\"p1\">[</bpt>Authentication for API apps and mobile apps - Next steps<ept id=\"p1\">](../app-service/app-service-authentication-overview.md#next-steps)</ept>.",
+      "pos": [
+        22075,
+        22281
+      ]
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Custom SaaS connector ASP.NET API app in Azure App Service\" \n    description=\"Learn how to write code that connects to a SaaS platform from an API app and how to call the API app from a .NET client.\" \n    services=\"app-service\\api\" \n    documentationCenter=\".net\" \n    authors=\"tdykstra\" \n    manager=\"wpickett\" \n    editor=\"jimbe\"/>\n\n<tags \n    ms.service=\"app-service-api\" \n    ms.workload=\"web\" \n    ms.tgt_pltfrm=\"dotnet\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"09/22/2015\" \n    ms.author=\"tdykstra\"/>\n\n# Connect to a SaaS platform from an ASP.NET API app in Azure App Service\n\n[AZURE.INCLUDE [app-service-api-v2-note](../../includes/app-service-api-v2-note.md)]\n\n## Overview\n\nThis tutorial shows how to code and configure an [API app](app-service-api-apps-why-best-platform.md) that connects to a [Software-as-a-Service (SaaS) platform](../app-service/app-service-authentication-overview.md#obotosaas) using the [App Service API app SDK for .NET](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service/). The tutorial also shows how to call the API app from a .NET client by using the [App Service SDK for .NET](http://www.nuget.org/packages/Microsoft.Azure.AppService). At the end of the tutorial you'll have a .NET console app client that calls a .NET API app running in Azure App Service. The API app calls the Dropbox API and returns a list of files and folders in the user's Dropbox account.\n\nAs an alternative to writing code that calls a SaaS API directly from a custom API app, you can call a prepackaged [connector API app](../app-service-logic/app-service-logic-what-are-biztalk-api-apps.md). For information about how to do that, see [Deploy and configure a SaaS connector API app](app-service-api-connnect-your-app-to-saas-connector.md).\n\nThe tutorial walks you through the following steps:\n\n* Create an API app project in Visual Studio. \n* Configure the *apiapp.json* file to enable the API app to connect to the Dropbox service.\n* Add code that calls Dropbox and returns the results.\n* Create a new API app in Azure.\n* Deploy the project to the API app.\n* Configure the API app.\n* Configure the gateway.\n* Create a test client.\n* Run the test client.\n\n## Prerequisites\n\nThe tutorial makes these assumptions:\n\n* You have completed the [Create an API app](app-service-dotnet-create-api-app.md) and [Deploy an API app](app-service-dotnet-deploy-api-app.md) tutorials.\n  \n* You have a basic understanding of the Azure App Service gateway architecture for authentication, as presented in [Authentication for API apps and mobile apps](app-service-authentication-overview.md).\n\n* You know how to work with API apps in the Azure preview portal, as explained in [How to navigate to API app and gateway blades](app-service-api-manage-in-portal.md#navigate).\n\n## Create the API app project\n \nWhen the instructions direct you to enter a name for the project, enter *SimpleDropbox*. \n\n[AZURE.INCLUDE [app-service-api-create](../../includes/app-service-api-create.md)]\n\n## Configure the *apiapp.json* file\n\nFor an API app to make outgoing calls to a SaaS platform, the SaaS platform has to be specified in the *apiapp.json* file. \n\n1. Open the *apiapp.json* file and add an `authentication` property as shown here (you'll also have to add a comma after the preceding property):\n\n        \"authentication\": [\n          {\n            \"type\": \"dropbox\"\n          }\n        ]\n\n    The complete apiapp.json file will resemble this example: \n\n        {\n            \"$schema\": \"http://json-schema.org/schemas/2014-11-01/apiapp.json#\",\n            \"id\": \"SimpleDropBox\",\n            \"namespace\": \"microsoft.com\",\n            \"gateway\": \"2015-01-14\",\n            \"version\": \"1.0.0\",\n            \"title\": \"SimpleDropBox\",\n            \"summary\": \"\",\n            \"author\": \"\",\n            \"endpoints\": {\n                \"apiDefinition\": \"/swagger/docs/v1\",\n                \"status\": null\n            },\n            \"authentication\": [\n              {\n                \"type\": \"dropbox\"\n              }\n            ]\n        }\n\n2. Save the file.\n\nSetting the `authentication` property has a couple effects:\n\n* It causes the portal to display UI in the API app blade that enables you to enter the SaaS platform's client ID and client secret values.\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/authblade.png)\n\n* It enables the API app to retrieve the SaaS provider's access token from the gateway for use when calling the SaaS provider's API.\n\nThe `authentication` property is an array, but this preview release doesn't support specifying multiple providers.\n\nFor a list of the supported platforms, see [Getting user consent to access other SaaS platforms](../app-service/app-service-authentication-overview.md#obotosaas).\n\nYou can also specify scopes, as in this example:\n\n        \"authentication\": [\n          {\n            \"type\": \"google\",\n            \"scopes\": [\"https://www.googleapis.com/auth/userinfo.email\", \"https://www.googleapis.com/auth/userinfo.profile\"]\n          }\n        ]\n\nAvailable scopes are defined by each SaaS provider and can be found in the provider's developer portal.\n\n## Add Code that calls Dropbox\n\n1. Install the [DropboxRestAPI](https://www.nuget.org/packages/DropboxRestAPI) NuGet package in the SimpleDropbox project.\n\n    * From the **Tools** menu, click **NuGet Package Manager > Package Manager Console**.\n\n    * In the **Package Manager Console** window, enter this command:\n     \n            install-package DropboxRestAPI  \n\n1. Open *Controllers\\ValuesController.cs* and replace all of the code in the file with the following code.\n\n        using DropboxRestAPI;\n        using Microsoft.Azure.AppService.ApiApps.Service;\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Net;\n        using System.Net.Http;\n        using System.Threading.Tasks;\n        using System.Web.Http;\n        \n        namespace SimpleDropBox2.Controllers\n        {\n            public class ValuesController : ApiController\n            {\n                public async Task<IEnumerable<string>> Get()\n                {\n                    // Retrieve the token from the gateway\n                    var runtime = Runtime.FromAppSettings(Request);\n                    var dropboxTokenResult = await runtime.CurrentUser.GetRawTokenAsync(\"dropbox\");\n        \n                    // Create a Dropbox client object that will send the token\n                    // with REST API calls to Dropbox.\n                    var dropboxClient = new Client(\n                        new Options\n                        {\n                            AccessToken = dropboxTokenResult.Properties[\"AccessToken\"]\n                        }\n                    );\n        \n                    // Call the Dropbox API\n                    var metadata = await dropboxClient.Core.Metadata.MetadataAsync(\"/\");\n        \n                    // Return a list of files and folders.\n                    return metadata.contents.Select(md => md.path);\n                }\n            }\n        }\n\n    Before the client calls this method, the user has logged in to Dropbox and granted consent for the API app to access the user's Dropbox account. Dropbox acknowledges that consent by providing an access token to the App Service gateway. This code retrieves the token from the gateway and includes it in a call to the Dropbox API, as shown in steps 6 and 7 in the diagram below.\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/saastoken.png)\n\n2. Build the project.\n\n## Create an API app in Azure\n\nIn this section you use the Visual Studio **Publish Web** wizard to create an API app in Azure. Where the instructions direct you to enter a name for the API app, enter *SimpleDropbox*.\n\n[AZURE.INCLUDE [app-service-api-pub-web-create](../../includes/app-service-api-pub-web-create.md)]\n\n## Deploy your code\n\nYou use the same **Publish Web** wizard to deploy your code to the new API app.\n\n[AZURE.INCLUDE [app-service-api-pub-web-deploy](../../includes/app-service-api-pub-web-deploy.md)]\n\n## Configure authentication for incoming calls\n\nFor Azure App Service to allow authenticated outgoing calls from the API app, the API app must also require that incoming calls come from authenticated users. This is not a general OAuth 2.0 requirement but is a requirement of the App Service gateway architecture as it is currently implemented.\n\nThe screenshots in this section show a ContactsList API app, but the process is the same for the SimpleDropbox API app that you're creating in this tutorial.\n\n### Configure the API app to require that incoming calls be authenticated\n\n[AZURE.INCLUDE [app-service-api-config-auth](../../includes/app-service-api-config-auth.md)]\n\n### Configure an identity provider in the gateway\n\n[AZURE.INCLUDE [app-service-api-gateway-config-auth](../../includes/app-service-api-gateway-config-auth.md)]\n\n## Configure authentication for outgoing calls\n\nTo enable your API app to call the Dropbox API, you have to exchange settings between your API app and a Dropbox app that you create on the Dropbox developer site.\n\n### Create a Dropbox app on the Dropbox.com site\n\n[AZURE.INCLUDE [app-service-api-create-dropbox-app](../../includes/app-service-api-create-dropbox-app.md)]\n\n### Exchange settings between Dropbox and your API app\n\nThe following steps refer to a Dropbox connector API app, but the procedures and UI are the same for the SimpleDropbox API app that you're creating in this tutorial.\n\n> **Note:** If you don't see fields for the Dropbox client ID and client secret on the SimpleDropbox API app's **Authentication** blade as shown in the screenshot, make sure that you restarted the gateway as directed after deploying the API app project to the API app. The \"dropbox\" value in the `authentication` property of the *apiapp.json* file that you deployed earlier is what triggers the portal to display these fields.\n\n[AZURE.INCLUDE [app-service-api-exchange-dropbox-settings](../../includes/app-service-api-exchange-dropbox-settings.md)]\n\n## Create a test client\n\nIn this section you create a console app project that uses client code generated by Visual Studio to call the SimpleDropbox API app. The console app instantiates a Windows Forms browser control to handle user interaction with the gateway and Dropbox login web pages.\n\n### Create the project\n\n1. In Visual Studio, create a console application project and name it *SimpleDropboxTest*.\n\n2. Set a reference to System.Windows.Forms.\n \n    * In **Solution Explorer**, right-click **References**, then click **Add Reference**.\n\n    * Select the check box at the left of **System.Windows.Forms**, and then click **OK**.\n     \n    ![](./media/app-service-api-dotnet-connect-to-saas/setref.png)\n\n    The console application will use the Windows Forms assembly to instantiate a browser control when it needs to enable the user to log in to the gateway and to Dropbox.\n\n### Add generated client code\n\nThe screenshots in this section show a ContactsList project and API app, but for this tutorial select the SimpleDropboxTest project and SimpleDropbox API app.\n\n[AZURE.INCLUDE [app-service-api-dotnet-add-generated-client](../../includes/app-service-api-dotnet-add-generated-client.md)]\n\n### Add code to call the API app\n\n3. Open *Program.cs* and replace the code in it with the following code.\n        \n        using Microsoft.Azure.AppService;\n        using Newtonsoft.Json;\n        using System;\n        using System.Collections.Generic;\n        using System.Diagnostics;\n        using System.Linq;\n        using System.Text;\n        using System.Threading.Tasks;\n        using System.Windows.Forms;\n        \n        namespace SimpleDropboxTest\n        {\n            enum Step\n            {\n                GatewayLogin,\n                GetSaaSConsentLink,\n                GetUserConsent\n            }\n        \n            class Program\n            {\n                private const string GATEWAY_URL = @\"{gateway url}\";\n                private const string URL_TOKEN = \"#token=\";\n                private const string SAAS_URL = \"dropbox.com\";\n                private static Form frm = new Form();\n                private static string responseURL = \"\";\n                private static Step step;\n                [STAThread]\n                static void Main(string[] args)\n                {\n                    // Create the web browser control\n                    WebBrowser browser = new WebBrowser();\n                    browser.Dock = DockStyle.Fill;\n                    browser.Navigated += CheckResponseURL;\n                    frm.Controls.Add(browser);\n                    frm.Width = 640;\n                    frm.Height = 480;\n        \n                    // Create the gateway and API app clients.\n                    AppServiceClient appServiceClient = new AppServiceClient(GATEWAY_URL);\n                    SimpleDropbox simpleDropboxClient = appServiceClient.CreateSimpleDropbox();\n        \n                    // Navigate browser to gateway login URL for configured identity provider.\n                    // Identity provider for this example is Azure Active Directory.\n                    step = Step.GatewayLogin;\n                    browser.Navigate(string.Format(@\"{0}/login/aad\", GATEWAY_URL));\n                    frm.ShowDialog();\n                    Console.WriteLine(\"Logged in to gateway, response URL=\" + responseURL);\n        \n                    // Get user ID and Zumo token from return URL, then call \n                    // the gateway URL to log in the gateway client.\n                    var encodedJson = responseURL.Substring(responseURL.IndexOf(URL_TOKEN) + URL_TOKEN.Length);\n                    var decodedJson = Uri.UnescapeDataString(encodedJson);\n                    var result = JsonConvert.DeserializeObject<dynamic>(decodedJson);\n                    string userId = result.user.userId;\n                    string userToken = result.authenticationToken;\n                    appServiceClient.SetCurrentUser(userId, userToken);\n        \n                    // Call gateway API to get consent link URL for target SaaS platform.\n                    // SaaS platform for this example is Dropbox.\n                    // See the tutorial for an explanation of\n                    // the redirectURL parameter for GetConsentLinkAsync\n                    var gatewayConsentLink = appServiceClient.GetConsentLinkAsync(\"SimpleDropbox\", GATEWAY_URL).Result;\n                    Console.WriteLine(\"\\nGot gateway consent link, URL=\" + gatewayConsentLink);\n        \n                    // Navigate browser to consent link URL returned from gateway.\n                    // Response URL will be the SaaS logon link\n                    step = Step.GetSaaSConsentLink;\n                    browser.Navigate(gatewayConsentLink);\n                    frm.ShowDialog();\n                    Console.WriteLine(\"\\nGot SaaS consent link response, URL=\" + responseURL);\n        \n                    // Navigate browser to login/consent link for SaaS platform.\n                    step = Step.GetUserConsent;\n                    browser.Navigate(responseURL);\n                    frm.ShowDialog();\n                    Console.WriteLine(\"\\nGot Dropbox login response, URL=\" + responseURL);\n        \n                    Console.WriteLine(\"\\nResponse from SaaS Provider\");\n                    var response = simpleDropboxClient.Values.Get();\n                    foreach (string s in response)\n                    {\n                        Console.WriteLine(s);\n                    }\n                    Console.Read();\n                }\n        \n                static void CheckResponseURL(object sender, WebBrowserNavigatedEventArgs e)\n                {\n                    if ((step == Step.GatewayLogin && e.Url.AbsoluteUri.IndexOf(URL_TOKEN) > -1)\n                        || (step == Step.GetSaaSConsentLink && e.Url.AbsoluteUri.IndexOf(SAAS_URL) > -1)\n                        || (step == Step.GetUserConsent && e.Url.AbsoluteUri.IndexOf(GATEWAY_URL) > -1))\n                    {\n                        responseURL = e.Url.AbsoluteUri;\n                        frm.Close();\n                    }\n                }\n        \n            }\n        }\n\n1. Replace {gateway url} with the actual URL of your gateway.\n \n    You can get the gateway URL from the **gateway** blade in the portal:\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/gwurl.png)\n\n        private const string GATEWAY_URL = @\"https://sd1aeb4ae60b7cb4f3d966dfa43b660.azurewebsites.net\";\n\n    > **Important**: Make sure the gateway URL begins with `https://`, not `http://`. **If you copy http:// from the portal, you have to change it to https:// when you paste it in the code.**\n\n### Explanation of the code\n\nThis console application is designed to use a minimum amount of code to illustrate the steps that a client app has to go through. A production application would not typically be a console application and would implement error handling and logging.\n\nHere's an overview of what the code is doing:\n\n* Opens a browser to the gateway login URL for the configured identity provider, in this case Azure Active Directory. \n     \n* Handles expected response URL after user logs in:  extract user ID and Zumo token, provide them to App Service client object. \n\n* Uses App Service client object to retrieve a gateway URL that will redirect to the Dropbox  link for login and consent. Step 1 in the diagram.\n\n* Opens a browser to the gateway consent URL. Browser gets redirected to Dropbox login and consent link. Step 2 in the diagram. \n     \n* Closes browser after user logs and gives consent at Dropbox.com. Step 3 in the diagram. \n \n* Calls the API app. Step 5 in the diagram. (Step 4 happens behind the scenes between Dropbox.com and the gateway, steps 6 and 7 are done from the API app, not the client.)\n\n![](./media/app-service-api-dotnet-connect-to-saas/saastoken.png)\n\nAdditional notes:\n\n* The `STAThread` attribute on the `Main` method is required by the web browser control and is not related to setting up for or calling the API app.\n\n* The gateway login URL shown ends in `/aad` for Azure Active Directory.\n\n        browser.Navigate(string.Format(@\"{0}/login/aad\", GATEWAY_URL));\n\n    Here are the values to use for the other providers:\n    * \"microsoftaccount\"\n    * \"facebook\"\n    * \"twitter\"\n    * \"google\"\n<br/><br/>\n\n* The second parameter for the `GetConsentLinkAsync()` method is the callback URL that the consent server redirects to after the user logs in to Dropbox and gives consent to access the user's account. \n\n        var gatewayConsentLink = appServiceClient.GetConsentLinkAsync(\"SimpleDropbox\", GATEWAY_URL).Result;\n\n    For this parameter you would normally specify the next web page that the user should go to in the client application. Since this demo code is in a console app, there is no application page to go to, and the code specifies the gateway URL just as a convenient landing page. \n\n    The client application should verify that it gets redirected to this URL and that there is no error message. If the login/consent process fails, the redirect URL may contain an error message in the querystring. For more information, see the [Troubleshooting](#troubleshooting) section. \n\n## Test\n\n1. Run the SimpleDropboxTest console application.\n\n2. In the first logon page, sign in using your Azure Active Directory credentials (or credentials for another identity provider such as Google or Twitter if that's what you configured in the gateway).\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/aadlogon.png)\n\n3. In the Dropbox.com login page, sign in using your Dropbox credentials.\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/dblogon.png)\n\n4. In the Dropbox consent page, give the application permission to access your data.\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/dbconsent.png)\n\n    The console app then calls the API app and it returns a list of the files in your Dropbox account.\n\n    ![](./media/app-service-api-dotnet-connect-to-saas/testclient.png)\n\n## Troubleshooting\n\nThis section contains the following topics:\n\n* [HTTP Error 405 after gateway login](#405)\n* [HTTP Error 400 instead of Dropbox login page](#400)\n* [HTTP Error 403 when calling the API app](#403)\n\n### <a id=\"405\"></a> HTTP Error 405 after gateway login\n\nIf you get HTTP Error 405 when the code calls GetConsentLinkAsync, verify that you used https://, not http:// for the gateway URL.\n\n![](./media/app-service-api-dotnet-connect-to-saas/http405.png)\n\nThe 405 method not allowed error is received because the client attempts to make a non-SSL HTTP POST request, the gateway redirects to *https://*, and the redirect causes a GET request. The URL for retrieving a consent link only accepts POST requests.\n\n### <a id=\"400\"></a>HTTP Error 400 instead of Dropbox login page\n\nMake sure that you have the correct **client ID** in the API app's **Authentication** blade, and make sure there are no leading or trailing spaces. \n\n### <a id=\"403\"></a> HTTP Error 403 when calling the API app\n\n* Make sure that the **Access Level** of the API app is set to **Public (authenticated)**, not **Internal**.\n\n* Make sure that you have the correct **client secret** in the API app's **Authentication** blade, and make sure there are no leading or trailing spaces.\n\nThe redirect URL after Dropbox login may look like this example:\n\n    https://sd1aeb4ae60b7cb4f3d966dfa43b6607f30.azurewebsites.net/?error=RmFpbGVkIHRvIGV4Y2hhbmdlIGNvZGUgZm9yIHRva2VuLiBEZXRhaWxzOiB7ImVycm9yX2Rlc2NyaXB0aW9uIjogIkludmFsaWQgY2xpZW50X2lkIG9yIGNsaWVudF9zZWNyZXQiLCAiZXJyb3IiOiAiaW52YWxpZF9jbGllbnQifQ%3d%3d\n\nIf you remove the %3d%3d from the end of the `error` querystring value, this is a valid base64 encoded string. Decode the string to get the error message:\n\n    Failed to exchange code for token. Details: {\"error_description\": \"Invalid client_id or client_secret\", \"error\": \"invalid_client\"}\n\n## Next steps\n\nYou've seen how to code and configure an API app that connects to a SaaS platform.  For links to other tutorials about how to handle authentication in API apps, see [Authentication for API apps and mobile apps - Next steps](../app-service/app-service-authentication-overview.md#next-steps). \n\n[Azure preview portal]: https://portal.azure.com/\n[Azure portal]: https://manage.windowsazure.com/\n\n\n"
+}

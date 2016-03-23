@@ -1,0 +1,1349 @@
+{
+  "nodes": [
+    {
+      "content": "Connect to on-premises SQL Server from an API app in Azure App Service using Hybrid Connections",
+      "pos": [
+        28,
+        123
+      ]
+    },
+    {
+      "content": "Create an API app on Microsoft Azure and connect it to an on-premises SQL Server database",
+      "pos": [
+        143,
+        232
+      ]
+    },
+    {
+      "content": "Connect to on-premises SQL Server from an API app in Azure App Service using Hybrid Connections",
+      "pos": [
+        554,
+        649
+      ]
+    },
+    {
+      "content": "Hybrid Connections can connect <bpt id=\"p1\">[</bpt>Azure App Service<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=529714)</ept> API apps to on-premises resources that use a static TCP port.",
+      "pos": [
+        737,
+        896
+      ]
+    },
+    {
+      "content": "Supported resources include Microsoft SQL Server, MySQL, HTTP Web APIs, Mobile Services, and most custom Web Services.",
+      "pos": [
+        897,
+        1015
+      ]
+    },
+    {
+      "content": "In this tutorial, you will learn how to create an App Service API app in the <bpt id=\"p1\">[</bpt>Azure preview<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=529715)</ept> that connects to a local on-premises SQL Server database using the new Hybrid Connection feature.",
+      "pos": [
+        1018,
+        1255
+      ]
+    },
+    {
+      "content": "The tutorial assumes no prior experience using Azure or SQL Server.",
+      "pos": [
+        1256,
+        1323
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you want to get started with Azure App Service before signing up for an Azure account, go to <bpt id=\"p1\">[</bpt>Try App Service<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=523751)</ept>, where you can immediately create a short-lived starter web app in App Service.",
+      "pos": [
+        1326,
+        1579
+      ]
+    },
+    {
+      "content": "No credit cards required; no commitments.",
+      "pos": [
+        1580,
+        1621
+      ]
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1626,
+        1639
+      ]
+    },
+    {
+      "content": "To complete this tutorial, you'll need the following products.",
+      "pos": [
+        1641,
+        1703
+      ]
+    },
+    {
+      "content": "All are available in free versions, so you can start developing Azure solutions entirely for free.",
+      "pos": [
+        1704,
+        1802
+      ]
+    },
+    {
+      "pos": [
+        1810,
+        1905
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Azure subscription<ept id=\"p1\">**</ept> - For a free subscription, see <bpt id=\"p2\">[</bpt>Azure Free Trial<ept id=\"p2\">](/pricing/free-trial/)</ept>."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Visual Studio<ept id=\"p1\">**</ept> - To download a free trial version of Visual Studio 2013 or Visual Studio 2015, see <bpt id=\"p2\">[</bpt>Visual Studio Downloads<ept id=\"p2\">](http://www.visualstudio.com/downloads/download-visual-studio-vs)</ept>.",
+      "pos": [
+        1910,
+        2103
+      ]
+    },
+    {
+      "content": "Install one of these before continuing.",
+      "pos": [
+        2104,
+        2143
+      ]
+    },
+    {
+      "content": "(The screen shots in this tutorial were taken using Visual Studio 2013)",
+      "pos": [
+        2144,
+        2215
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>SQL Server 2014 Express with Tools<ept id=\"p1\">**</ept> - download Microsoft SQL Server Express for free at the <bpt id=\"p2\">[</bpt>Microsoft Web Platform Database page<ept id=\"p2\">](https://www.microsoft.com/en-us/download/details.aspx?id=42299)</ept>.",
+      "pos": [
+        2219,
+        2417
+      ]
+    },
+    {
+      "content": "Later in this tutorial, you'll see how to <bpt id=\"p1\">[</bpt>install SQL Server<ept id=\"p1\">](#InstallSQLDB)</ept> to ensure that it is properly configured.",
+      "pos": [
+        2418,
+        2537
+      ]
+    },
+    {
+      "pos": [
+        2541,
+        2853
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>SQL Server Management Studio Express<ept id=\"p1\">**</ept> - This is included with the SQL Server 2014 Express with Tools download mentioned above, but if you need to install it separately, you can download and install it from the <bpt id=\"p2\">[</bpt>SQL Server Express download page<ept id=\"p2\">](https://www.microsoft.com/en-us/download/details.aspx?id=42299)</ept>."
+    },
+    {
+      "content": "The tutorial assumes that you have an Azure subscription, that you have installed Visual Studio 2013, and that you have installed or enabled .NET Framework 3.5.",
+      "pos": [
+        2855,
+        3015
+      ]
+    },
+    {
+      "content": "The tutorial shows you how to install SQL Server 2014 Express in a configuration that works well with the Azure Hybrid Connections feature (a default instance with a static TCP port).",
+      "pos": [
+        3016,
+        3199
+      ]
+    },
+    {
+      "content": "Before starting the tutorial, download (but, do not install) SQL Server 2014 Express with Tools from the location mentioned above if you do not have SQL Server installed.",
+      "pos": [
+        3200,
+        3370
+      ]
+    },
+    {
+      "content": "Notes",
+      "pos": [
+        3376,
+        3381
+      ]
+    },
+    {
+      "content": "To use an on-premises SQL Server or SQL Server Express database with a hybrid connection, TCP/IP needs to be enabled on a static port.",
+      "pos": [
+        3382,
+        3516
+      ]
+    },
+    {
+      "content": "Default instances on SQL Server use static port 1433, whereas named instances do not.",
+      "pos": [
+        3517,
+        3602
+      ]
+    },
+    {
+      "content": "The computer on which you install the on-premises Hybrid Connection Manager agent:",
+      "pos": [
+        3605,
+        3687
+      ]
+    },
+    {
+      "content": "Must have outbound connectivity to Azure over:",
+      "pos": [
+        3691,
+        3737
+      ]
+    },
+    {
+      "content": "Port",
+      "pos": [
+        3788,
+        3792
+      ]
+    },
+    {
+      "content": "Why",
+      "pos": [
+        3819,
+        3822
+      ]
+    },
+    {
+      "content": "80",
+      "pos": [
+        3859,
+        3861
+      ]
+    },
+    {
+      "content": "Required<ph id=\"ph1\">&lt;/strong&gt;</ph> for HTTP port for certificate validation and optionally for data connectivity.",
+      "pos": [
+        3887,
+        3983
+      ]
+    },
+    {
+      "content": "443",
+      "pos": [
+        4020,
+        4023
+      ]
+    },
+    {
+      "content": "Optional<ph id=\"ph1\">&lt;/strong&gt;</ph> for data connectivity.",
+      "pos": [
+        4049,
+        4089
+      ]
+    },
+    {
+      "content": "If outbound connectivity to 443 is unavailable, TCP port 80 is used.",
+      "pos": [
+        4090,
+        4158
+      ]
+    },
+    {
+      "content": "5671 and 9352",
+      "pos": [
+        4195,
+        4208
+      ]
+    },
+    {
+      "content": "Recommended<ph id=\"ph1\">&lt;/strong&gt;</ph> but Optional for data connectivity.",
+      "pos": [
+        4234,
+        4290
+      ]
+    },
+    {
+      "content": "Note this mode usually yields higher throughput.",
+      "pos": [
+        4291,
+        4339
+      ]
+    },
+    {
+      "content": "If outbound connectivity to these ports is unavailable, TCP port 443 is used.",
+      "pos": [
+        4340,
+        4417
+      ]
+    },
+    {
+      "pos": [
+        4445,
+        4524
+      ],
+      "content": "Must be able to reach the <bpt id=\"p1\">*</bpt>hostname<ept id=\"p1\">*</ept>:<bpt id=\"p2\">*</bpt>portnumber<ept id=\"p2\">*</ept> of your on-premises resource."
+    },
+    {
+      "content": "The steps in this article assume that you are using the browser from the computer that will host the on-premises hybrid connection agent.",
+      "pos": [
+        4527,
+        4664
+      ]
+    },
+    {
+      "pos": [
+        4666,
+        4882
+      ],
+      "content": "If you already have SQL Server installed in a configuration and in an environment that meets the conditions described above, you can skip ahead and start with <bpt id=\"p1\">[</bpt>Create a SQL Server database on-premises<ept id=\"p1\">](#CreateSQLDB)</ept>."
+    },
+    {
+      "content": "Install SQL Server Express, enable TCP/IP, and create a SQL Server database on-premises",
+      "pos": [
+        4913,
+        5000
+      ]
+    },
+    {
+      "pos": [
+        5002,
+        5186
+      ],
+      "content": "This section shows you how to install SQL Server Express, enable TCP/IP, and create a database so that your API app will work with the <bpt id=\"p1\">[</bpt>Azure preview portal<ept id=\"p1\">](https://portal.azure.com)</ept>."
+    },
+    {
+      "content": "Install SQL Server Express",
+      "pos": [
+        5220,
+        5246
+      ]
+    },
+    {
+      "pos": [
+        5251,
+        5431
+      ],
+      "content": "To install SQL Server Express, download the either <bpt id=\"p1\">**</bpt>SQLEXPRWT_x64_ENU.exe<ept id=\"p1\">**</ept> (64-bit version) or <bpt id=\"p2\">**</bpt>SQLEXPR_x86_ENU.exe<ept id=\"p2\">**</ept> (32-bit version) file and extract it to the desired folder."
+    },
+    {
+      "pos": [
+        5437,
+        5522
+      ],
+      "content": "Once you have extracted the SQL Server Express installation files, run <bpt id=\"p1\">**</bpt>setup.exe<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        5527,
+        5676
+      ],
+      "content": "When the <bpt id=\"p1\">**</bpt>SQL Server Installation Center<ept id=\"p1\">**</ept> displays, choose <bpt id=\"p2\">**</bpt>New SQL Server stand-alone installation or add features to an existing installation<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "SQL Server Installation Center",
+      "pos": [
+        5685,
+        5715
+      ]
+    },
+    {
+      "pos": [
+        5811,
+        5933
+      ],
+      "content": "Follow the instructions, accepting the default choices and settings, until you get to the <bpt id=\"p1\">**</bpt>Instance Configuration<ept id=\"p1\">**</ept> page."
+    },
+    {
+      "pos": [
+        5942,
+        6030
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Instance Configuration<ept id=\"p1\">**</ept> page, choose <bpt id=\"p2\">**</bpt>Default instance<ept id=\"p2\">**</ept>, and click <bpt id=\"p3\">**</bpt>Next<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "Instance Configuration",
+      "pos": [
+        6042,
+        6064
+      ]
+    },
+    {
+      "content": "The default instance of SQL Server listens for requests from SQL Server clients on static port 1433, which is what the Hybrid Connections feature requires.",
+      "pos": [
+        6157,
+        6312
+      ]
+    },
+    {
+      "content": "Named instances use dynamic ports and UDP, which are not supported by Hybrid Connections.",
+      "pos": [
+        6313,
+        6402
+      ]
+    },
+    {
+      "pos": [
+        6411,
+        6488
+      ],
+      "content": "Accept the defaults on the <bpt id=\"p1\">**</bpt>Server Configuration<ept id=\"p1\">**</ept> page, and click <bpt id=\"p2\">**</bpt>Next<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6497,
+        6676
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Database Engine Configuration<ept id=\"p1\">**</ept> page, under <bpt id=\"p2\">**</bpt>Authentication Mode<ept id=\"p2\">**</ept>, choose <bpt id=\"p3\">**</bpt>Mixed Mode (SQL Server authentication and Windows authentication)<ept id=\"p3\">**</ept>, and provide a password."
+    },
+    {
+      "content": "Database Engine Configuration",
+      "pos": [
+        6688,
+        6717
+      ]
+    },
+    {
+      "content": "In this tutorial, you will be using SQL Server authentication.",
+      "pos": [
+        6817,
+        6879
+      ]
+    },
+    {
+      "content": "Be sure to remember the password that you provide, because you will need it later.",
+      "pos": [
+        6880,
+        6962
+      ]
+    },
+    {
+      "content": "Step through the rest of the wizard - accepting the defaults as you go - to complete the installation.",
+      "pos": [
+        6971,
+        7073
+      ]
+    },
+    {
+      "pos": [
+        7078,
+        7130
+      ],
+      "content": "Close the <bpt id=\"p1\">**</bpt>SQL Server Installation Center<ept id=\"p1\">**</ept> dialog."
+    },
+    {
+      "content": "Enable TCP/IP",
+      "pos": [
+        7136,
+        7149
+      ]
+    },
+    {
+      "content": "To enable TCP/IP, you will use SQL Server Configuration Manager, which was installed when you installed SQL Server Express.",
+      "pos": [
+        7150,
+        7273
+      ]
+    },
+    {
+      "content": "Follow the steps in <bpt id=\"p1\">[</bpt>Enable TCP/IP Network Protocol for SQL Server<ept id=\"p1\">](http://technet.microsoft.com/library/hh231672%28v=sql.110%29.aspx)</ept> before continuing.",
+      "pos": [
+        7274,
+        7427
+      ]
+    },
+    {
+      "content": "Create a SQL Server database on-premises",
+      "pos": [
+        7460,
+        7500
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>SQL Server Management Studio<ept id=\"p1\">**</ept>, connect to the SQL Server you just installed.",
+      "pos": [
+        7505,
+        7587
+      ]
+    },
+    {
+      "content": "For <bpt id=\"p1\">**</bpt>Server type<ept id=\"p1\">**</ept>, choose <bpt id=\"p2\">**</bpt>Database Engine<ept id=\"p2\">**</ept>.",
+      "pos": [
+        7588,
+        7636
+      ]
+    },
+    {
+      "content": "For <bpt id=\"p1\">**</bpt>Server name<ept id=\"p1\">**</ept>, you can use <bpt id=\"p2\">**</bpt>localhost<ept id=\"p2\">**</ept> or the name of the computer that you are using.",
+      "pos": [
+        7637,
+        7731
+      ]
+    },
+    {
+      "content": "Choose <bpt id=\"p1\">**</bpt>SQL Server authentication<ept id=\"p1\">**</ept>, and then log in with the <ph id=\"ph1\">`sa`</ph> user name, and the password that you created earlier.",
+      "pos": [
+        7732,
+        7853
+      ]
+    },
+    {
+      "content": "Connect to Server",
+      "pos": [
+        7861,
+        7878
+      ]
+    },
+    {
+      "pos": [
+        7966,
+        8137
+      ],
+      "content": "If the <bpt id=\"p1\">**</bpt>Connect to Server<ept id=\"p1\">**</ept> dialog does not appear automatically, navigate to <bpt id=\"p2\">**</bpt>Object Explorer<ept id=\"p2\">**</ept> in the left pane, click <bpt id=\"p3\">**</bpt>Connect<ept id=\"p3\">**</ept>, and then click <bpt id=\"p4\">**</bpt>Database Engine<ept id=\"p4\">**</ept>."
+    },
+    {
+      "pos": [
+        8146,
+        8288
+      ],
+      "content": "To create a new database by using SQL Server Management Studio, right-click <bpt id=\"p1\">**</bpt>Databases<ept id=\"p1\">**</ept> in Object Explorer, and then click <bpt id=\"p2\">**</bpt>New Database<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Create new database menu",
+      "pos": [
+        8300,
+        8324
+      ]
+    },
+    {
+      "pos": [
+        8411,
+        8510
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>New Database<ept id=\"p1\">**</ept> dialog, enter <ph id=\"ph1\">`LocalDatabase`</ph> for the database name, and then click <bpt id=\"p2\">**</bpt>OK<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Creating new database",
+      "pos": [
+        8523,
+        8544
+      ]
+    },
+    {
+      "content": "Create and populate a SQL Server table",
+      "pos": [
+        8627,
+        8665
+      ]
+    },
+    {
+      "pos": [
+        8670,
+        8764
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>SQL Server Management Studio<ept id=\"p1\">**</ept> <bpt id=\"p2\">**</bpt>Object Explorer<ept id=\"p2\">**</ept>, expand the <ph id=\"ph1\">`LocalDatabase`</ph> entry."
+    },
+    {
+      "content": "Database expanded",
+      "pos": [
+        8772,
+        8789
+      ]
+    },
+    {
+      "pos": [
+        8878,
+        8958
+      ],
+      "content": "Right-click <bpt id=\"p1\">**</bpt>Tables<ept id=\"p1\">**</ept> and select the <bpt id=\"p2\">**</bpt>Table...<ept id=\"p2\">**</ept> option from the context menu."
+    },
+    {
+      "content": "New table menu",
+      "pos": [
+        8966,
+        8980
+      ]
+    },
+    {
+      "content": "When the table designer grid appears, enter the column information as shown in the following figure.",
+      "pos": [
+        9060,
+        9160
+      ]
+    },
+    {
+      "content": "New table columns",
+      "pos": [
+        9168,
+        9185
+      ]
+    },
+    {
+      "content": "Press <bpt id=\"p1\">**</bpt>&amp;lt;Ctrl&gt;S<ept id=\"p1\">**</ept> to save the new table's definition.",
+      "pos": [
+        9260,
+        9316
+      ]
+    },
+    {
+      "content": "You will be prompted to enter a table name.",
+      "pos": [
+        9317,
+        9360
+      ]
+    },
+    {
+      "content": "Enter <ph id=\"ph1\">`Speakers`</ph> and press <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9361,
+        9395
+      ]
+    },
+    {
+      "content": "Save new table",
+      "pos": [
+        9403,
+        9417
+      ]
+    },
+    {
+      "pos": [
+        9497,
+        9624
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Object Explorer<ept id=\"p1\">**</ept>, right-click the newly created <ph id=\"ph1\">`Speakers`</ph> table, and select <bpt id=\"p2\">**</bpt>Edit top 200 rows<ept id=\"p2\">**</ept> from the context menu."
+    },
+    {
+      "content": "Edit top 200 rows",
+      "pos": [
+        9632,
+        9649
+      ]
+    },
+    {
+      "content": "When the grid appears to enter/modify the table data, enter some test data as shown in the following figure.",
+      "pos": [
+        9732,
+        9840
+      ]
+    },
+    {
+      "content": "Test data",
+      "pos": [
+        9848,
+        9857
+      ]
+    },
+    {
+      "content": "Create and deploy the demo API app to Azure",
+      "pos": [
+        9936,
+        9979
+      ]
+    },
+    {
+      "content": "This section walks you through creating the demo API app.",
+      "pos": [
+        9982,
+        10039
+      ]
+    },
+    {
+      "pos": [
+        10044,
+        10104
+      ],
+      "content": "Open Visual Studio 2013 and select <bpt id=\"p1\">**</bpt>File &gt; New &gt; Project<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        10110,
+        10290
+      ],
+      "content": "Select the <bpt id=\"p1\">**</bpt>Visual C# &gt; Web &gt; ASP.NET Web Application<ept id=\"p1\">**</ept> template, clear the <bpt id=\"p2\">**</bpt>Add application insights to project<ept id=\"p2\">**</ept> option, name the project <bpt id=\"p3\">*</bpt>SpeakersList<ept id=\"p3\">*</ept>, and then click <bpt id=\"p4\">**</bpt>OK<ept id=\"p4\">**</ept>."
+    },
+    {
+      "pos": [
+        10375,
+        10482
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>New ASP.NET Project<ept id=\"p1\">**</ept> dialog, select the <bpt id=\"p2\">**</bpt>Azure API App<ept id=\"p2\">**</ept> project template and then click <bpt id=\"p3\">**</bpt>OK<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        10575,
+        10699
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the <bpt id=\"p2\">**</bpt>Models<ept id=\"p2\">**</ept> folder, and then select the <bpt id=\"p3\">**</bpt>Add &gt; Class...<ept id=\"p3\">**</ept> context menu option."
+    },
+    {
+      "pos": [
+        10789,
+        10844
+      ],
+      "content": "Name the new file <bpt id=\"p1\">*</bpt>Speaker.cs<ept id=\"p1\">*</ept>, and then click <bpt id=\"p2\">**</bpt>Add<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        10935,
+        11012
+      ],
+      "content": "Replace the entire contents of the <ph id=\"ph1\">`Speaker.cs`</ph> file with the following code."
+    },
+    {
+      "pos": [
+        11288,
+        11422
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the <bpt id=\"p2\">**</bpt>Controllers<ept id=\"p2\">**</ept> folder, and then select the <bpt id=\"p3\">**</bpt>Add &gt; Controller...<ept id=\"p3\">**</ept> context menu option."
+    },
+    {
+      "pos": [
+        11512,
+        11613
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Add Scaffold<ept id=\"p1\">**</ept> dialog, select the <bpt id=\"p2\">**</bpt>Web API 2 Controller - Empty<ept id=\"p2\">**</ept> option and click <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        11701,
+        11762
+      ],
+      "content": "Name the controller <bpt id=\"p1\">**</bpt>SpeakersController<ept id=\"p1\">**</ept> and click <bpt id=\"p2\">**</bpt>Add<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Replace the code in the <ph id=\"ph1\">`SpeakersController.cs`</ph> file with the code below.",
+      "pos": [
+        11858,
+        11931
+      ]
+    },
+    {
+      "content": "Make sure to specify your own values for the &amp;lt;serverName&gt; and &amp;lt;password&gt; placeholders in the <ph id=\"ph1\">`connectionString`</ph>.",
+      "pos": [
+        11932,
+        12050
+      ]
+    },
+    {
+      "content": "The &amp;lt;serverName&gt; value is the machine name on which the SQL Server is located, and the &amp;lt;password&gt; value is the one you set when you installed and configured SQL Server.",
+      "pos": [
+        12051,
+        12225
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The following code snippet includes password information.",
+      "pos": [
+        12233,
+        12303
+      ]
+    },
+    {
+      "content": "This was done to keep the demo simple.",
+      "pos": [
+        12304,
+        12342
+      ]
+    },
+    {
+      "content": "In a real-world production environment, you should not store your credentials in code.",
+      "pos": [
+        12343,
+        12429
+      ]
+    },
+    {
+      "content": "Instead, refer to the <bpt id=\"p1\">[</bpt>best practices for deploying passwords (and other sensitive data) to ASP.NET and Azure<ept id=\"p1\">](http://www.asp.net/identity/overview/features-api/best-practices-for-deploying-passwords-and-other-sensitive-data-to-aspnet-and-azure)</ept>.",
+      "pos": [
+        12430,
+        12676
+      ]
+    },
+    {
+      "content": "Enable Swagger UI",
+      "pos": [
+        15825,
+        15842
+      ]
+    },
+    {
+      "content": "Enabling the Swagger UI will allow you to easily test your API app without having to write client code to call it.",
+      "pos": [
+        15844,
+        15958
+      ]
+    },
+    {
+      "pos": [
+        15963,
+        16042
+      ],
+      "content": "Open the <bpt id=\"p1\">*</bpt>App_Start/SwaggerConfig.cs<ept id=\"p1\">*</ept> file, and search for <bpt id=\"p2\">**</bpt>EnableSwaggerUI<ept id=\"p2\">**</ept>:"
+    },
+    {
+      "content": "Uncomment the following lines of code:",
+      "pos": [
+        16136,
+        16174
+      ]
+    },
+    {
+      "content": "When you're done, verify that the file looks like the following image.",
+      "pos": [
+        16239,
+        16309
+      ]
+    },
+    {
+      "content": "Test the API app",
+      "pos": [
+        16403,
+        16419
+      ]
+    },
+    {
+      "content": "To view the API test page, run the app locally via <bpt id=\"p1\">**</bpt>&amp;lt;Ctrl&gt;F5<ept id=\"p1\">**</ept>.",
+      "pos": [
+        16424,
+        16491
+      ]
+    },
+    {
+      "content": "You should see an error similar to the following image.",
+      "pos": [
+        16492,
+        16547
+      ]
+    },
+    {
+      "content": "In your browser's address bar, add <ph id=\"ph1\">`/swagger`</ph> to the end of the URL, and then click <bpt id=\"p1\">**</bpt>&amp;lt;Enter&gt;<ept id=\"p1\">**</ept>.",
+      "pos": [
+        16637,
+        16736
+      ]
+    },
+    {
+      "content": "This will display the Swagger UI you enabled in the previous section.",
+      "pos": [
+        16737,
+        16806
+      ]
+    },
+    {
+      "pos": [
+        16893,
+        16937
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Speakers<ept id=\"p1\">**</ept> section to expand it."
+    },
+    {
+      "pos": [
+        16942,
+        16993
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>GET /api/speakers<ept id=\"p1\">**</ept> to expand that section."
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Try it out!<ept id=\"p1\">**</ept>",
+      "pos": [
+        16998,
+        17019
+      ]
+    },
+    {
+      "content": "to view the data you entered into the database earlier.",
+      "pos": [
+        17020,
+        17075
+      ]
+    },
+    {
+      "content": "Deploying the API app",
+      "pos": [
+        17161,
+        17182
+      ]
+    },
+    {
+      "content": "Now that you've tested the app locally, it's time to deploy the app to Azure.",
+      "pos": [
+        17184,
+        17261
+      ]
+    },
+    {
+      "pos": [
+        17266,
+        17360
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the project (not the solution) and click <bpt id=\"p2\">**</bpt>Publish...<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Project publish menu option",
+      "pos": [
+        17369,
+        17396
+      ]
+    },
+    {
+      "pos": [
+        17474,
+        17549
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Profile<ept id=\"p1\">**</ept> tab and click <bpt id=\"p2\">**</bpt>Microsoft Azure API Apps (Preview)<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Project publish menu option",
+      "pos": [
+        17558,
+        17585
+      ]
+    },
+    {
+      "pos": [
+        17662,
+        17730
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>New<ept id=\"p1\">**</ept> to provision a new API app in your Azure subscription."
+    },
+    {
+      "content": "Select Existing API Services dialog",
+      "pos": [
+        17738,
+        17773
+      ]
+    },
+    {
+      "pos": [
+        17866,
+        17923
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Create an API App<ept id=\"p1\">**</ept> dialog, enter the following:"
+    },
+    {
+      "pos": [
+        17931,
+        17980
+      ],
+      "content": "Under <bpt id=\"p1\">**</bpt>API App Name<ept id=\"p1\">**</ept>, enter a name for the app."
+    },
+    {
+      "content": "If you have multiple Azure subscriptions, select the one you want to use.",
+      "pos": [
+        17988,
+        18061
+      ]
+    },
+    {
+      "pos": [
+        18068,
+        18216
+      ],
+      "content": "Under <bpt id=\"p1\">**</bpt>App Service Plan<ept id=\"p1\">**</ept>, select from your existing App Service plans, or select <bpt id=\"p2\">**</bpt>Create new App Service plan<ept id=\"p2\">**</ept> and enter the name of a new plan."
+    },
+    {
+      "content": "Under <bpt id=\"p1\">**</bpt>Resource Group<ept id=\"p1\">**</ept>, select from your existing resource groups, or select <bpt id=\"p2\">**</bpt>Create new resource group<ept id=\"p2\">**</ept> and enter a name.",
+      "pos": [
+        18224,
+        18350
+      ]
+    },
+    {
+      "content": "The name must be unique; consider using the app name as a prefix and appending some personal information such as your Microsoft ID (without the @ sign).",
+      "pos": [
+        18351,
+        18503
+      ]
+    },
+    {
+      "content": "Under <bpt id=\"p1\">**</bpt>Access Level<ept id=\"p1\">**</ept>, select <bpt id=\"p2\">**</bpt>Available to Anyone<ept id=\"p2\">**</ept>.",
+      "pos": [
+        18512,
+        18567
+      ]
+    },
+    {
+      "content": "This option will make your API completely public, which is fine for this tutorial.",
+      "pos": [
+        18568,
+        18650
+      ]
+    },
+    {
+      "content": "You can restrict access later through the <bpt id=\"p1\">[</bpt>Azure preview portal<ept id=\"p1\">](https://portal.azure.com)</ept>.",
+      "pos": [
+        18651,
+        18742
+      ]
+    },
+    {
+      "content": "Select a region.",
+      "pos": [
+        18749,
+        18765
+      ]
+    },
+    {
+      "pos": [
+        18771,
+        18827
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to create the API app in your subscription."
+    },
+    {
+      "content": "Configure Microsoft Azure Web App dialog",
+      "pos": [
+        18836,
+        18876
+      ]
+    },
+    {
+      "content": "The process can take a few minutes, so Visual Studio shows a dialog notifying you that the process has initiated.",
+      "pos": [
+        18961,
+        19074
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to the confirmation dialog.",
+      "pos": [
+        19075,
+        19115
+      ]
+    },
+    {
+      "content": "API Service Creation Started confirmation message",
+      "pos": [
+        19123,
+        19172
+      ]
+    },
+    {
+      "pos": [
+        19265,
+        19445
+      ],
+      "content": "While the provisioning process is creating the resource group and API app in your Azure subscription, Visual Studio shows the progress in the <bpt id=\"p1\">**</bpt>Azure App Service Activity<ept id=\"p1\">**</ept> window."
+    },
+    {
+      "content": "Status notification via the Azure App Service Activity window",
+      "pos": [
+        19454,
+        19515
+      ]
+    },
+    {
+      "content": "Once the API App is provisioned, right-click the project in <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept> and select <bpt id=\"p2\">**</bpt>Publish<ept id=\"p2\">**</ept> to re-open the publish dialog.",
+      "pos": [
+        19601,
+        19736
+      ]
+    },
+    {
+      "content": "The publish profile created in the previous step should be pre-selected.",
+      "pos": [
+        19737,
+        19809
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Publish<ept id=\"p1\">**</ept> to begin the deployment process.",
+      "pos": [
+        19810,
+        19860
+      ]
+    },
+    {
+      "content": "Deploying the API App",
+      "pos": [
+        19869,
+        19890
+      ]
+    },
+    {
+      "pos": [
+        19961,
+        20091
+      ],
+      "content": "The <bpt id=\"p1\">**</bpt>Azure App Service Activity<ept id=\"p1\">**</ept> window shows the deployment progress, and will indicate when the publish process has completed."
+    },
+    {
+      "content": "Create a Hybrid Connection and a BizTalk Service",
+      "pos": [
+        20097,
+        20145
+      ]
+    },
+    {
+      "pos": [
+        20153,
+        20235
+      ],
+      "content": "In your browser, navigate to the <bpt id=\"p1\">[</bpt>Azure preview portal<ept id=\"p1\">](https://portal.azure.com)</ept>."
+    },
+    {
+      "pos": [
+        20241,
+        20285
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Browse All<ept id=\"p1\">**</ept> option on the left."
+    },
+    {
+      "pos": [
+        20290,
+        20335
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Browse<ept id=\"p1\">**</ept> blade, select <bpt id=\"p2\">**</bpt>API Apps<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        20340,
+        20400
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>API Apps<ept id=\"p1\">**</ept> blade, locate your API app and click it."
+    },
+    {
+      "pos": [
+        20405,
+        20469
+      ],
+      "content": "In your API app's blade, click the value under <bpt id=\"p1\">**</bpt>API app host<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "API App blade",
+      "pos": [
+        20480,
+        20493
+      ]
+    },
+    {
+      "pos": [
+        20585,
+        20701
+      ],
+      "content": "When the <bpt id=\"p1\">**</bpt>API App Host<ept id=\"p1\">**</ept> blade appears, scroll down to the <bpt id=\"p2\">**</bpt>Networking<ept id=\"p2\">**</ept> section and click <bpt id=\"p3\">**</bpt>Hybrid connections<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "Hybrid connections",
+      "pos": [
+        20713,
+        20731
+      ]
+    },
+    {
+      "pos": [
+        20838,
+        20917
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Hybrid connections<ept id=\"p1\">**</ept> blade, click <bpt id=\"p2\">**</bpt>Add<ept id=\"p2\">**</ept> &gt; <bpt id=\"p3\">**</bpt>New hybrid connection<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        20926,
+        20968
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Create hybrid connection blade<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "pos": [
+        20975,
+        21023
+      ],
+      "content": "For <bpt id=\"p1\">**</bpt>Name<ept id=\"p1\">**</ept>, provide a name for the connection."
+    },
+    {
+      "pos": [
+        21030,
+        21105
+      ],
+      "content": "For <bpt id=\"p1\">**</bpt>Hostname<ept id=\"p1\">**</ept>, enter the computer name of your SQL Server host computer."
+    },
+    {
+      "pos": [
+        21112,
+        21173
+      ],
+      "content": "For <bpt id=\"p1\">**</bpt>Port<ept id=\"p1\">**</ept>, enter <ph id=\"ph1\">`1433`</ph> (the default port for SQL Server)."
+    },
+    {
+      "pos": [
+        21180,
+        21248
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Biz Talk Service<ept id=\"p1\">**</ept> and enter a name for the BizTalk service."
+    },
+    {
+      "content": "Create a hybrid connection",
+      "pos": [
+        21260,
+        21286
+      ]
+    },
+    {
+      "pos": [
+        21382,
+        21401
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> twice."
+    },
+    {
+      "pos": [
+        21408,
+        21604
+      ],
+      "content": "When the process completes, the <bpt id=\"p1\">**</bpt>Notifications<ept id=\"p1\">**</ept> area will flash a green <bpt id=\"p2\">**</bpt>SUCCESS<ept id=\"p2\">**</ept> and the <bpt id=\"p3\">**</bpt>Hybrid connections<ept id=\"p3\">**</ept> blade will show the new hybrid connection with the status as <bpt id=\"p4\">**</bpt>Not connected<ept id=\"p4\">**</ept>."
+    },
+    {
+      "content": "Hybrid connection created",
+      "pos": [
+        21616,
+        21641
+      ]
+    },
+    {
+      "content": "At this point, you have completed an important part of the cloud hybrid connection infrastructure.",
+      "pos": [
+        21732,
+        21830
+      ]
+    },
+    {
+      "content": "Next, you will create a corresponding on-premises piece.",
+      "pos": [
+        21831,
+        21887
+      ]
+    },
+    {
+      "content": "Install the on-premises Hybrid Connection Manager to complete the connection",
+      "pos": [
+        21918,
+        21994
+      ]
+    },
+    {
+      "content": "Now that the hybrid connection infrastructure is complete, it's time to test the application.",
+      "pos": [
+        22128,
+        22221
+      ]
+    },
+    {
+      "content": "Test the completed API app on Azure",
+      "pos": [
+        22254,
+        22289
+      ]
+    },
+    {
+      "pos": [
+        22294,
+        22391
+      ],
+      "content": "In the Azure preview portal, return to the API app host blade, and click the value under <bpt id=\"p1\">**</bpt>URL<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        22400,
+        22543
+      ],
+      "content": "Once the API app's host page is displayed in your browser, append <ph id=\"ph1\">`/swagger`</ph> to the URL in your browser's address bar and click <bpt id=\"p1\">**</bpt>&amp;lt;Enter&gt;<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        22552,
+        22596
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Speakers<ept id=\"p1\">**</ept> section to expand it."
+    },
+    {
+      "pos": [
+        22601,
+        22652
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>GET /api/speakers<ept id=\"p1\">**</ept> to expand that section."
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Try it out!<ept id=\"p1\">**</ept>",
+      "pos": [
+        22657,
+        22678
+      ]
+    },
+    {
+      "content": "to view the data you entered into the database earlier.",
+      "pos": [
+        22679,
+        22734
+      ]
+    },
+    {
+      "content": "Congratulations!",
+      "pos": [
+        22828,
+        22844
+      ]
+    },
+    {
+      "content": "You have created an API app that runs on Azure and uses a hybrid connection to connect to a local on-premises SQL Server database.",
+      "pos": [
+        22847,
+        22977
+      ]
+    },
+    {
+      "content": "See Also",
+      "pos": [
+        22983,
+        22991
+      ]
+    },
+    {
+      "content": "Hybrid Connections overview",
+      "pos": [
+        22993,
+        23020
+      ]
+    },
+    {
+      "content": "Josh Twist introduces hybrid connections (Channel 9 video)",
+      "pos": [
+        23073,
+        23131
+      ]
+    },
+    {
+      "content": "Hybrid Connections overview",
+      "pos": [
+        23221,
+        23248
+      ]
+    },
+    {
+      "content": "BizTalk Services: Dashboard, Monitor, Scale, Configure, and Hybrid Connection tabs",
+      "pos": [
+        23281,
+        23363
+      ]
+    },
+    {
+      "content": "Building a Real-World Hybrid Cloud with Seamless Application Portability (Channel 9 video)",
+      "pos": [
+        23409,
+        23499
+      ]
+    },
+    {
+      "content": "Connect to an on-premises SQL Server from an Azure mobile service using Hybrid Connections",
+      "pos": [
+        23577,
+        23667
+      ]
+    },
+    {
+      "content": "Connect to an on-premises SQL Server from Azure Mobile Services using Hybrid Connections (Channel 9 video)",
+      "pos": [
+        23740,
+        23846
+      ]
+    },
+    {
+      "content": "ASP.NET Identity Overview",
+      "pos": [
+        24002,
+        24027
+      ]
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Connect to on-premises SQL Server from an API app in Azure App Service using Hybrid Connections\" \n    description=\"Create an API app on Microsoft Azure and connect it to an on-premises SQL Server database\"\n    services=\"app-service\\api\" \n    documentationCenter=\"\" \n    authors=\"TomArcher\" \n    manager=\"wpickett\" \n    editor=\"jimbe\"/>\n\n<tags \n    ms.service=\"app-service-api\" \n    ms.workload=\"web\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"11/03/2015\" \n    ms.author=\"tdykstra\"/>\n\n# Connect to on-premises SQL Server from an API app in Azure App Service using Hybrid Connections\n\n[AZURE.INCLUDE [app-service-api-v2-note](../../includes/app-service-api-v2-note.md)]\n\nHybrid Connections can connect [Azure App Service](http://go.microsoft.com/fwlink/?LinkId=529714) API apps to on-premises resources that use a static TCP port. Supported resources include Microsoft SQL Server, MySQL, HTTP Web APIs, Mobile Services, and most custom Web Services. \n\nIn this tutorial, you will learn how to create an App Service API app in the [Azure preview](http://go.microsoft.com/fwlink/?LinkId=529715) that connects to a local on-premises SQL Server database using the new Hybrid Connection feature. The tutorial assumes no prior experience using Azure or SQL Server.\n\n>[AZURE.NOTE] If you want to get started with Azure App Service before signing up for an Azure account, go to [Try App Service](http://go.microsoft.com/fwlink/?LinkId=523751), where you can immediately create a short-lived starter web app in App Service. No credit cards required; no commitments.\n\n## Prerequisites\n\nTo complete this tutorial, you'll need the following products. All are available in free versions, so you can start developing Azure solutions entirely for free.    \n\n- **Azure subscription** - For a free subscription, see [Azure Free Trial](/pricing/free-trial/). \n\n- **Visual Studio** - To download a free trial version of Visual Studio 2013 or Visual Studio 2015, see [Visual Studio Downloads](http://www.visualstudio.com/downloads/download-visual-studio-vs). Install one of these before continuing. (The screen shots in this tutorial were taken using Visual Studio 2013)\n\n- **SQL Server 2014 Express with Tools** - download Microsoft SQL Server Express for free at the [Microsoft Web Platform Database page](https://www.microsoft.com/en-us/download/details.aspx?id=42299). Later in this tutorial, you'll see how to [install SQL Server](#InstallSQLDB) to ensure that it is properly configured.\n\n- **SQL Server Management Studio Express** - This is included with the SQL Server 2014 Express with Tools download mentioned above, but if you need to install it separately, you can download and install it from the [SQL Server Express download page](https://www.microsoft.com/en-us/download/details.aspx?id=42299).\n\nThe tutorial assumes that you have an Azure subscription, that you have installed Visual Studio 2013, and that you have installed or enabled .NET Framework 3.5. The tutorial shows you how to install SQL Server 2014 Express in a configuration that works well with the Azure Hybrid Connections feature (a default instance with a static TCP port). Before starting the tutorial, download (but, do not install) SQL Server 2014 Express with Tools from the location mentioned above if you do not have SQL Server installed.\n\n### Notes\nTo use an on-premises SQL Server or SQL Server Express database with a hybrid connection, TCP/IP needs to be enabled on a static port. Default instances on SQL Server use static port 1433, whereas named instances do not. \n\nThe computer on which you install the on-premises Hybrid Connection Manager agent:\n\n- Must have outbound connectivity to Azure over:\n\n> <table border=\"1\">\n    <tr>\n       <th><strong>Port</strong></th>\n        <th>Why</th>\n    </tr>\n    <tr>\n        <td>80</td>\n        <td><strong>Required</strong> for HTTP port for certificate validation and optionally for data connectivity.</td>\n    </tr>\n    <tr>\n        <td>443</td>\n        <td><strong>Optional</strong> for data connectivity. If outbound connectivity to 443 is unavailable, TCP port 80 is used.</td>\n    </tr>\n    <tr>\n        <td>5671 and 9352</td>\n        <td><strong>Recommended</strong> but Optional for data connectivity. Note this mode usually yields higher throughput. If outbound connectivity to these ports is unavailable, TCP port 443 is used.</td>\n    </tr>\n</table>\n\n- Must be able to reach the *hostname*:*portnumber* of your on-premises resource. \n\nThe steps in this article assume that you are using the browser from the computer that will host the on-premises hybrid connection agent.\n\nIf you already have SQL Server installed in a configuration and in an environment that meets the conditions described above, you can skip ahead and start with [Create a SQL Server database on-premises](#CreateSQLDB).\n\n<a name=\"InstallSQL\"></a>\n## Install SQL Server Express, enable TCP/IP, and create a SQL Server database on-premises\n\nThis section shows you how to install SQL Server Express, enable TCP/IP, and create a database so that your API app will work with the [Azure preview portal](https://portal.azure.com).\n\n<a name=\"InstallSQLDB\"></a>\n### Install SQL Server Express\n\n1. To install SQL Server Express, download the either **SQLEXPRWT_x64_ENU.exe** (64-bit version) or **SQLEXPR_x86_ENU.exe** (32-bit version) file and extract it to the desired folder. \n\n2. Once you have extracted the SQL Server Express installation files, run **setup.exe**.\n\n3. When the **SQL Server Installation Center** displays, choose **New SQL Server stand-alone installation or add features to an existing installation**. \n\n    ![SQL Server Installation Center](./media/app-service-api-hybrid-on-premises-sql-server/sql-server-installation-center.png)\n\n4. Follow the instructions, accepting the default choices and settings, until you get to the **Instance Configuration** page.\n    \n5. On the **Instance Configuration** page, choose **Default instance**, and click **Next**.\n    \n    ![Instance Configuration](./media/app-service-api-hybrid-on-premises-sql-server/instance-configuration.png)\n    \n    The default instance of SQL Server listens for requests from SQL Server clients on static port 1433, which is what the Hybrid Connections feature requires. Named instances use dynamic ports and UDP, which are not supported by Hybrid Connections.\n    \n6. Accept the defaults on the **Server Configuration** page, and click **Next**.\n    \n7. On the **Database Engine Configuration** page, under **Authentication Mode**, choose **Mixed Mode (SQL Server authentication and Windows authentication)**, and provide a password.\n    \n    ![Database Engine Configuration](./media/app-service-api-hybrid-on-premises-sql-server/database-engine-configuration.png)\n    \n    In this tutorial, you will be using SQL Server authentication. Be sure to remember the password that you provide, because you will need it later.\n    \n8. Step through the rest of the wizard - accepting the defaults as you go - to complete the installation.\n\n9. Close the **SQL Server Installation Center** dialog.\n\n### Enable TCP/IP\nTo enable TCP/IP, you will use SQL Server Configuration Manager, which was installed when you installed SQL Server Express. Follow the steps in [Enable TCP/IP Network Protocol for SQL Server](http://technet.microsoft.com/library/hh231672%28v=sql.110%29.aspx) before continuing.\n\n<a name=\"CreateSQLDB\"></a>\n### Create a SQL Server database on-premises\n\n1. In **SQL Server Management Studio**, connect to the SQL Server you just installed. For **Server type**, choose **Database Engine**. For **Server name**, you can use **localhost** or the name of the computer that you are using. Choose **SQL Server authentication**, and then log in with the `sa` user name, and the password that you created earlier.\n\n    ![Connect to Server](./media/app-service-api-hybrid-on-premises-sql-server/connect-to-server.png)\n    \n    If the **Connect to Server** dialog does not appear automatically, navigate to **Object Explorer** in the left pane, click **Connect**, and then click **Database Engine**.\n    \n2. To create a new database by using SQL Server Management Studio, right-click **Databases** in Object Explorer, and then click **New Database**.\n    \n    ![Create new database menu](./media/app-service-api-hybrid-on-premises-sql-server/new-database-menu.png)\n    \n3. In the **New Database** dialog, enter `LocalDatabase` for the database name, and then click **OK**. \n    \n    ![Creating new database](./media/app-service-api-hybrid-on-premises-sql-server/new-database.png)\n    \n### Create and populate a SQL Server table\n\n1. In the **SQL Server Management Studio** **Object Explorer**, expand the `LocalDatabase` entry.\n\n    ![Database expanded](./media/app-service-api-hybrid-on-premises-sql-server/local-database-expanded.png)\n\n2. Right-click **Tables** and select the **Table...** option from the context menu.\n\n    ![New table menu](./media/app-service-api-hybrid-on-premises-sql-server/new-table-menu.png)\n\n3. When the table designer grid appears, enter the column information as shown in the following figure.\n\n    ![New table columns](./media/app-service-api-hybrid-on-premises-sql-server/table-def.png)\n\n4. Press **&lt;Ctrl>S** to save the new table's definition. You will be prompted to enter a table name. Enter `Speakers` and press **OK**.\n\n    ![Save new table](./media/app-service-api-hybrid-on-premises-sql-server/save-new-table.png)\n\n5. In **Object Explorer**, right-click the newly created `Speakers` table, and select **Edit top 200 rows** from the context menu.\n\n    ![Edit top 200 rows](./media/app-service-api-hybrid-on-premises-sql-server/edit-top-200-rows.png)\n\n6. When the grid appears to enter/modify the table data, enter some test data as shown in the following figure.\n\n    ![Test data](./media/app-service-api-hybrid-on-premises-sql-server/speakers-data.png)\n\n## Create and deploy the demo API app to Azure \n\nThis section walks you through creating the demo API app.\n\n1. Open Visual Studio 2013 and select **File > New > Project**. \n\n2. Select the **Visual C# > Web > ASP.NET Web Application** template, clear the **Add application insights to project** option, name the project *SpeakersList*, and then click **OK**.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/new-project.png)\n\n3. On the **New ASP.NET Project** dialog, select the **Azure API App** project template and then click **OK**.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/new-project-api-app.png)\n\n4. In the **Solution Explorer**, right-click the **Models** folder, and then select the **Add > Class...** context menu option. \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/new-model-menu.png) \n\n5. Name the new file *Speaker.cs*, and then click **Add**. \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/new-model-class.png) \n\n6. Replace the entire contents of the `Speaker.cs` file with the following code. \n\n        namespace SpeakersList.Models\n        {\n            public class Speaker\n            {\n                public int Id { get; set; }\n                public string Name { get; set; }\n                public string EmailAddress { get; set; }\n            }\n        }\n\n7. In the **Solution Explorer**, right-click the **Controllers** folder, and then select the **Add > Controller...** context menu option. \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/new-controller.png) \n\n8. In the **Add Scaffold** dialog, select the **Web API 2 Controller - Empty** option and click **Add**. \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/add-scaffold.png) \n\n9. Name the controller **SpeakersController** and click **Add**. \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/add-controller-name.png) \n\n10. Replace the code in the `SpeakersController.cs` file with the code below. Make sure to specify your own values for the &lt;serverName> and &lt;password> placeholders in the `connectionString`. The &lt;serverName> value is the machine name on which the SQL Server is located, and the &lt;password> value is the one you set when you installed and configured SQL Server.\n\n    > [AZURE.NOTE] The following code snippet includes password information. This was done to keep the demo simple. In a real-world production environment, you should not store your credentials in code. Instead, refer to the [best practices for deploying passwords (and other sensitive data) to ASP.NET and Azure](http://www.asp.net/identity/overview/features-api/best-practices-for-deploying-passwords-and-other-sensitive-data-to-aspnet-and-azure).\n\n        using System;\n        using System.Collections.Generic;\n        using System.Linq;\n        using System.Net;\n        using System.Net.Http;\n        using System.Web.Http;\n        using SpeakersList.Models;\n        using System.Data.Sql;\n        using System.Data.SqlClient;\n        \n        namespace SpeakersList.Controllers\n        {\n            public class SpeakersController : ApiController\n            {\n                [HttpGet]\n                public IEnumerable<Speaker> Get()\n                {\n                    // Instantiate List object that will be populated and returned\n                    // from this method.\n                    List<Speaker> speakers = new List<Speaker>();\n    \n                    // Build database connection string.\n                    string connectionString = \"Server=<serverName>;\" +\n                                              \"Initial Catalog=LocalDatabase;\" +\n                                              \"User Id=sa;Password=<password>;\" +\n                                              \"Asynchronous Processing=true;\";\n        \n                    // Build query string to select all three columns from the Speakers table.\n                    string queryString = \"SELECT Id, EmailAddress, Name FROM dbo.Speakers;\";\n\n                    // Instantiate the SqlConnection object using the connection string.\n                    using (SqlConnection connection = new SqlConnection(connectionString))\n                    {\n                        // Instantiate the SqlCommand object using the connection and query strings.\n                        SqlCommand command = new SqlCommand(queryString, connection);\n\n                        // Open the connection to the database.\n                        connection.Open();\n\n                        // Execute the command and return a SqlDataReader object\n                        // that can be iterated.\n                        SqlDataReader reader = command.ExecuteReader();\n                        try\n                        {\n                            // Read a row from the SqlDataReader object\n                            while (reader.Read())\n                            {\n                                // For each row, use the returned data to instantiate\n                                // and add to the List a new Speaker object.\n                                speakers.Add(new Speaker \n                                    { \n                                        Id = Convert.ToInt32(reader[0]), \n                                        EmailAddress = reader[1].ToString(), \n                                        Name = reader[2].ToString() \n                                    }\n                                );\n                            }\n                        }\n                        finally\n                        {\n                            // Close the SqlDataReader object.\n                            reader.Close();\n                        }\n                    }\n                    // Return the List of Speaker objects.\n                    return speakers;\n                }\n            }\n        }\n\n### Enable Swagger UI\n\nEnabling the Swagger UI will allow you to easily test your API app without having to write client code to call it.\n\n1. Open the *App_Start/SwaggerConfig.cs* file, and search for **EnableSwaggerUI**:\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/swagger-ui-disabled.png) \n\n2. Uncomment the following lines of code:\n\n            })\n        .EnableSwaggerUi(c =>\n            {\n\n3. When you're done, verify that the file looks like the following image.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/swagger-ui-enabled.png) \n\n### Test the API app\n\n1. To view the API test page, run the app locally via **&lt;Ctrl>F5**. You should see an error similar to the following image.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/error-forbidden.png) \n\n2. In your browser's address bar, add `/swagger` to the end of the URL, and then click **&lt;Enter>**. This will display the Swagger UI you enabled in the previous section.  \n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/swagger-ui.png) \n\n3. Click the **Speakers** section to expand it.\n\n4. Click **GET /api/speakers** to expand that section.\n\n5. Click **Try it out!** to view the data you entered into the database earlier.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/try-it-out.png) \n\n### Deploying the API app\n\nNow that you've tested the app locally, it's time to deploy the app to Azure.\n\n1. In **Solution Explorer**, right-click the project (not the solution) and click **Publish...**. \n\n    ![Project publish menu option](./media/app-service-api-hybrid-on-premises-sql-server/publish-menu.png)\n\n2. Click the **Profile** tab and click **Microsoft Azure API Apps (Preview)**. \n\n    ![Project publish menu option](./media/app-service-api-hybrid-on-premises-sql-server/publish-web.png)\n\n3. Click **New** to provision a new API app in your Azure subscription.\n\n    ![Select Existing API Services dialog](./media/app-service-api-hybrid-on-premises-sql-server/publish-to-existing-api-app.png)\n\n4. In the **Create an API App** dialog, enter the following:\n\n    - Under **API App Name**, enter a name for the app. \n    - If you have multiple Azure subscriptions, select the one you want to use.\n    - Under **App Service Plan**, select from your existing App Service plans, or select **Create new App Service plan** and enter the name of a new plan. \n    - Under **Resource Group**, select from your existing resource groups, or select **Create new resource group** and enter a name. The name must be unique; consider using the app name as a prefix and appending some personal information such as your Microsoft ID (without the @ sign).  \n    - Under **Access Level**, select **Available to Anyone**. This option will make your API completely public, which is fine for this tutorial. You can restrict access later through the [Azure preview portal](https://portal.azure.com).\n    - Select a region.\n\n    Click **OK** to create the API app in your subscription. \n\n    ![Configure Microsoft Azure Web App dialog](./media/app-service-api-hybrid-on-premises-sql-server/publish-new-api-app.png)\n\n5. The process can take a few minutes, so Visual Studio shows a dialog notifying you that the process has initiated. Click **OK** to the confirmation dialog.\n\n    ![API Service Creation Started confirmation message](./media/app-service-api-hybrid-on-premises-sql-server/create-api-app-confirmation.png)\n\n6. While the provisioning process is creating the resource group and API app in your Azure subscription, Visual Studio shows the progress in the **Azure App Service Activity** window. \n\n    ![Status notification via the Azure App Service Activity window](./media/app-service-api-hybrid-on-premises-sql-server/app-service-activity.png)\n\n7. Once the API App is provisioned, right-click the project in **Solution Explorer** and select **Publish** to re-open the publish dialog. The publish profile created in the previous step should be pre-selected. Click **Publish** to begin the deployment process. \n\n    ![Deploying the API App](./media/app-service-api-hybrid-on-premises-sql-server/publish2.png)\n\nThe **Azure App Service Activity** window shows the deployment progress, and will indicate when the publish process has completed. \n\n## Create a Hybrid Connection and a BizTalk Service ##\n\n1. In your browser, navigate to the [Azure preview portal](https://portal.azure.com). \n\n2. Click the **Browse All** option on the left.\n\n3. In the **Browse** blade, select **API Apps**.\n\n4. In the **API Apps** blade, locate your API app and click it.\n\n5. In your API app's blade, click the value under **API app host**.  \n \n    ![API App blade](./media/app-service-api-hybrid-on-premises-sql-server/api-app-blade-api-app-host.png)\n\n6. When the **API App Host** blade appears, scroll down to the **Networking** section and click **Hybrid connections**.\n    \n    ![Hybrid connections](./media/app-service-api-hybrid-on-premises-sql-server/api-app-host-blade-hybrid-connections.png)\n    \n7. On the **Hybrid connections** blade, click **Add** > **New hybrid connection**.\n    \n8. On the **Create hybrid connection blade**:\n    - For **Name**, provide a name for the connection.\n    - For **Hostname**, enter the computer name of your SQL Server host computer.\n    - For **Port**, enter `1433` (the default port for SQL Server).\n    - Click **Biz Talk Service** and enter a name for the BizTalk service.\n    \n    ![Create a hybrid connection](./media/app-service-api-hybrid-on-premises-sql-server/create-biztalk-service.png)\n        \n9. Click **OK** twice. \n\n    When the process completes, the **Notifications** area will flash a green **SUCCESS** and the **Hybrid connections** blade will show the new hybrid connection with the status as **Not connected**.\n    \n    ![Hybrid connection created](./media/app-service-api-hybrid-on-premises-sql-server/hybrid-not-connected-yet.png)\n    \nAt this point, you have completed an important part of the cloud hybrid connection infrastructure. Next, you will create a corresponding on-premises piece.\n\n<a name=\"InstallHCM\"></a>\n## Install the on-premises Hybrid Connection Manager to complete the connection\n\n[AZURE.INCLUDE [app-service-hybrid-connections-manager-install](../../includes/app-service-hybrid-connections-manager-install.md)]\n\nNow that the hybrid connection infrastructure is complete, it's time to test the application.\n\n<a name=\"CreateASPNET\"></a>\n## Test the completed API app on Azure\n\n1. In the Azure preview portal, return to the API app host blade, and click the value under **URL**.\n    \n2. Once the API app's host page is displayed in your browser, append `/swagger` to the URL in your browser's address bar and click **&lt;Enter>**.\n    \n3. Click the **Speakers** section to expand it.\n\n4. Click **GET /api/speakers** to expand that section.\n\n5. Click **Try it out!** to view the data you entered into the database earlier.\n\n    ![](./media/app-service-api-hybrid-on-premises-sql-server/try-it-out-azure.png) \n    \n**Congratulations!** You have created an API app that runs on Azure and uses a hybrid connection to connect to a local on-premises SQL Server database. \n\n## See Also\n[Hybrid Connections overview](http://go.microsoft.com/fwlink/p/?LinkID=397274)\n\n[Josh Twist introduces hybrid connections (Channel 9 video)](http://channel9.msdn.com/Shows/Azure-Friday/Josh-Twist-introduces-hybrid-connections)\n\n[Hybrid Connections overview](/services/biztalk-services/)\n\n[BizTalk Services: Dashboard, Monitor, Scale, Configure, and Hybrid Connection tabs](../biztalk-dashboard-monitor-scale-tabs/)\n\n[Building a Real-World Hybrid Cloud with Seamless Application Portability (Channel 9 video)](http://channel9.msdn.com/events/TechEd/NorthAmerica/2014/DCIM-B323#fbid=)\n\n[Connect to an on-premises SQL Server from an Azure mobile service using Hybrid Connections](../mobile-services-dotnet-backend-hybrid-connections-get-started.md)\n\n[Connect to an on-premises SQL Server from Azure Mobile Services using Hybrid Connections (Channel 9 video)](http://channel9.msdn.com/Series/Windows-Azure-Mobile-Services/Connect-to-an-on-premises-SQL-Server-from-Azure-Mobile-Services-using-Hybrid-Connections)\n\n[ASP.NET Identity Overview](http://www.asp.net/identity)\n\n[AZURE.INCLUDE [app-service-web-whats-changed](../../includes/app-service-web-whats-changed.md)]\n\n\n"
+}

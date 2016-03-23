@@ -1,0 +1,68 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        4,
+        138
+      ],
+      "content": "Log on to the <bpt id=\"p1\">[</bpt>Azure classic portal<ept id=\"p1\">](https://manage.windowsazure.com/)</ept>, click <bpt id=\"p2\">**</bpt>Mobile Services<ept id=\"p2\">**</ept>, and then click your mobile service."
+    },
+    {
+      "pos": [
+        143,
+        271
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Push<ept id=\"p1\">**</ept> tab, select <bpt id=\"p2\">**</bpt>Only Authenticated Users<ept id=\"p2\">**</ept> for <bpt id=\"p3\">**</bpt>Permissions<ept id=\"p3\">**</ept>, click <bpt id=\"p4\">**</bpt>Save<ept id=\"p4\">**</ept>, and then click <bpt id=\"p5\">**</bpt>Edit Script<ept id=\"p5\">**</ept>."
+    },
+    {
+      "content": "This allows you to customize the push notification registration callback function.",
+      "pos": [
+        281,
+        363
+      ]
+    },
+    {
+      "content": "If you use Git to edit your source code, this same registration function is found in <ph id=\"ph1\">`.\\service\\extensions\\push.js`</ph>.",
+      "pos": [
+        364,
+        480
+      ]
+    },
+    {
+      "pos": [
+        485,
+        576
+      ],
+      "content": "Replace the existing <bpt id=\"p1\">**</bpt>register<ept id=\"p1\">**</ept> function with the following code and then click <bpt id=\"p2\">**</bpt>Save<ept id=\"p2\">**</ept>:"
+    },
+    {
+      "content": "This adds a tag to the registration that is the ID of the logged-in user.",
+      "pos": [
+        1771,
+        1844
+      ]
+    },
+    {
+      "content": "The supplied tags are validated to prevent a user from registering for another user's ID.",
+      "pos": [
+        1845,
+        1934
+      ]
+    },
+    {
+      "content": "When a notification is sent to this user, it is received on this and any other device registered by the user.",
+      "pos": [
+        1935,
+        2044
+      ]
+    },
+    {
+      "pos": [
+        2049,
+        2160
+      ],
+      "content": "Click the back arrow, click the <bpt id=\"p1\">**</bpt>Data<ept id=\"p1\">**</ept> tab, click <bpt id=\"p2\">**</bpt>TodoItem<ept id=\"p2\">**</ept>, click <bpt id=\"p3\">**</bpt>Script<ept id=\"p3\">**</ept>, and then select <bpt id=\"p4\">**</bpt>Insert<ept id=\"p4\">**</ept>."
+    }
+  ],
+  "content": "\n1. Log on to the [Azure classic portal](https://manage.windowsazure.com/), click **Mobile Services**, and then click your mobile service.\n\n2. Click the **Push** tab, select **Only Authenticated Users** for **Permissions**, click **Save**, and then click **Edit Script**.\n    \n    This allows you to customize the push notification registration callback function. If you use Git to edit your source code, this same registration function is found in `.\\service\\extensions\\push.js`.\n\n3. Replace the existing **register** function with the following code and then click **Save**:\n\n        exports.register = function (registration, registrationContext, done) {   \n            // Get the ID of the logged-in user.\n            var userId = registrationContext.user.userId;    \n            \n            // Perform a check here for any disallowed tags.\n            if (!validateTags(registration))\n            {\n                // Return a service error when the client tries \n                // to set a user ID tag, which is not allowed.      \n                done(\"You cannot supply a tag that is a user ID\");      \n            }\n            else{\n                // Add a new tag that is the user ID.\n                registration.tags.push(userId);\n                \n                // Complete the callback as normal.\n                done();\n            }\n        };\n        \n        function validateTags(registration){\n            for(var i = 0; i < registration.tags.length; i++) { \n                console.log(registration.tags[i]);           \n                if (registration.tags[i]\n                .search(/facebook:|twitter:|google:|microsoft:/i) !== -1){\n                    return false;\n                }\n                return true;\n            }\n        }\n\n    This adds a tag to the registration that is the ID of the logged-in user. The supplied tags are validated to prevent a user from registering for another user's ID. When a notification is sent to this user, it is received on this and any other device registered by the user.\n\n4. Click the back arrow, click the **Data** tab, click **TodoItem**, click **Script**, and then select **Insert**. \n\n"
+}

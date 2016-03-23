@@ -1,0 +1,229 @@
+{
+  "nodes": [
+    {
+      "content": "Repeatability during Copy",
+      "pos": [
+        3,
+        28
+      ]
+    },
+    {
+      "content": "When copying data to Azure SQL/SQL Server from other data stores one needs to keep repeatability in mind to avoid unintended outcomes.",
+      "pos": [
+        30,
+        164
+      ]
+    },
+    {
+      "content": "When copying data to Azure SQL/SQL Server Database, copy activity will by default APPEND the data set to the sink table by default.",
+      "pos": [
+        167,
+        298
+      ]
+    },
+    {
+      "content": "For example, when copying data from a CSV (comma separated values data) file source containing two records to Azure SQL/SQL Server Database, this is what the table looks like:",
+      "pos": [
+        299,
+        474
+      ]
+    },
+    {
+      "content": "Suppose you found errors in source file and updated the quantity of Down Tube from 2 to 4 in the source file.",
+      "pos": [
+        666,
+        775
+      ]
+    },
+    {
+      "content": "If you re-run the data slice for that period, you’ll find two new records appended to Azure SQL/SQL Server Database.",
+      "pos": [
+        776,
+        892
+      ]
+    },
+    {
+      "content": "The below assumes none of the columns in the table have the primary key constraint.",
+      "pos": [
+        893,
+        976
+      ]
+    },
+    {
+      "content": "To avoid this, you will need to specify UPSERT semantics by leveraging one of the below 2 mechanisms stated below.",
+      "pos": [
+        1272,
+        1386
+      ]
+    },
+    {
+      "pos": [
+        1390,
+        1495
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> A slice can be re-run automatically in Azure Data Factory as per the retry policy specified."
+    },
+    {
+      "content": "Mechanism 1",
+      "pos": [
+        1501,
+        1512
+      ]
+    },
+    {
+      "pos": [
+        1514,
+        1619
+      ],
+      "content": "You can leverage <bpt id=\"p1\">**</bpt>sqlWriterCleanupScript<ept id=\"p1\">**</ept> property to first perform cleanup action when a slice is run."
+    },
+    {
+      "content": "The cleanup script would be executed first during copy for a given slice which would delete the data from the SQL Table corresponding to that slice.",
+      "pos": [
+        1864,
+        2012
+      ]
+    },
+    {
+      "content": "The activity will subsequently insert the data into the SQL Table.",
+      "pos": [
+        2013,
+        2079
+      ]
+    },
+    {
+      "content": "If the slice is now re-run, then you will find the quantity is updated as desired.",
+      "pos": [
+        2082,
+        2164
+      ]
+    },
+    {
+      "content": "Suppose the Flat Washer record is removed from the original csv.",
+      "pos": [
+        2356,
+        2420
+      ]
+    },
+    {
+      "content": "Then re-running the slice would produce the following result:",
+      "pos": [
+        2421,
+        2482
+      ]
+    },
+    {
+      "content": "Nothing new had to be done.",
+      "pos": [
+        2623,
+        2650
+      ]
+    },
+    {
+      "content": "The copy activity ran the cleanup script to delete the corresponding data for that slice.",
+      "pos": [
+        2651,
+        2740
+      ]
+    },
+    {
+      "content": "Then it read the input from the csv (which then contained only 1 record) and inserted it into the Table.",
+      "pos": [
+        2741,
+        2845
+      ]
+    },
+    {
+      "content": "Mechanism 2",
+      "pos": [
+        2852,
+        2863
+      ]
+    },
+    {
+      "content": "Another mechanism to achieve repeatability is by having a dedicated column (<bpt id=\"p1\">**</bpt>sliceIdentifierColumnName<ept id=\"p1\">**</ept>) in the target Table.",
+      "pos": [
+        2865,
+        2992
+      ]
+    },
+    {
+      "content": "This column would be used by Azure Data Factory to ensure the source and destination stay synchronized.",
+      "pos": [
+        2993,
+        3096
+      ]
+    },
+    {
+      "content": "This approach works when there is flexibility in changing or defining the destination SQL Table schema.",
+      "pos": [
+        3097,
+        3200
+      ]
+    },
+    {
+      "content": "This column would be used by Azure Data Factory for repeatability purposes and in the process Azure Data Factory will not make any schema changes to the Table.",
+      "pos": [
+        3203,
+        3362
+      ]
+    },
+    {
+      "content": "Way to use this approach:",
+      "pos": [
+        3363,
+        3388
+      ]
+    },
+    {
+      "content": "Define a column of type binary (32) in the destination SQL Table.",
+      "pos": [
+        3394,
+        3459
+      ]
+    },
+    {
+      "content": "There should be no constraints on this column.",
+      "pos": [
+        3460,
+        3506
+      ]
+    },
+    {
+      "content": "Let's name this column as ‘ColumnForADFuseOnly’ for this example.",
+      "pos": [
+        3507,
+        3572
+      ]
+    },
+    {
+      "content": "Use it in the copy activity as follows:",
+      "pos": [
+        3577,
+        3616
+      ]
+    },
+    {
+      "content": "Azure Data Factory will populate this column as per its need to ensure the source and destination stay synchronized.",
+      "pos": [
+        3749,
+        3865
+      ]
+    },
+    {
+      "content": "The values of this column should not be used outside of this context by the user.",
+      "pos": [
+        3866,
+        3947
+      ]
+    },
+    {
+      "content": "Similar to mechanism 1, Copy Activity will automatically first clean up the data for the given slice from the destination SQL Table and then run the copy activity normally to insert the data from source to destination for that slice.",
+      "pos": [
+        3950,
+        4183
+      ]
+    }
+  ],
+  "content": "## Repeatability during Copy\n\nWhen copying data to Azure SQL/SQL Server from other data stores one needs to keep repeatability in mind to avoid unintended outcomes. \n\nWhen copying data to Azure SQL/SQL Server Database, copy activity will by default APPEND the data set to the sink table by default. For example, when copying data from a CSV (comma separated values data) file source containing two records to Azure SQL/SQL Server Database, this is what the table looks like:\n    \n    ID  Product     Quantity    ModifiedDate\n    ... ...         ...         ...\n    6   Flat Washer 3           2015-05-01 00:00:00\n    7   Down Tube   2           2015-05-01 00:00:00\n\nSuppose you found errors in source file and updated the quantity of Down Tube from 2 to 4 in the source file. If you re-run the data slice for that period, you’ll find two new records appended to Azure SQL/SQL Server Database. The below assumes none of the columns in the table have the primary key constraint.\n    \n    ID  Product     Quantity    ModifiedDate\n    ... ...         ...         ...\n    6   Flat Washer 3           2015-05-01 00:00:00\n    7   Down Tube   2           2015-05-01 00:00:00\n    6   Flat Washer 3           2015-05-01 00:00:00\n    7   Down Tube   4           2015-05-01 00:00:00\n\nTo avoid this, you will need to specify UPSERT semantics by leveraging one of the below 2 mechanisms stated below.\n\n> [AZURE.NOTE] A slice can be re-run automatically in Azure Data Factory as per the retry policy specified.\n\n### Mechanism 1\n\nYou can leverage **sqlWriterCleanupScript** property to first perform cleanup action when a slice is run. \n\n    \"sink\":  \n    { \n      \"type\": \"SqlSink\", \n      \"sqlWriterCleanupScript\": \"$$Text.Format('DELETE FROM table WHERE ModifiedDate >= \\\\'{0:yyyy-MM-dd HH:mm}\\\\' AND ModifiedDate < \\\\'{1:yyyy-MM-dd HH:mm}\\\\'', WindowStart, WindowEnd)\"\n    }\n\nThe cleanup script would be executed first during copy for a given slice which would delete the data from the SQL Table corresponding to that slice. The activity will subsequently insert the data into the SQL Table. \n\nIf the slice is now re-run, then you will find the quantity is updated as desired.\n    \n    ID  Product     Quantity    ModifiedDate\n    ... ...         ...         ...\n    6   Flat Washer 3           2015-05-01 00:00:00\n    7   Down Tube   4           2015-05-01 00:00:00\n\nSuppose the Flat Washer record is removed from the original csv. Then re-running the slice would produce the following result: \n    \n    ID  Product     Quantity    ModifiedDate\n    ... ...         ...         ...\n    7   Down Tube   4           2015-05-01 00:00:00\n\nNothing new had to be done. The copy activity ran the cleanup script to delete the corresponding data for that slice. Then it read the input from the csv (which then contained only 1 record) and inserted it into the Table. \n\n### Mechanism 2\n\nAnother mechanism to achieve repeatability is by having a dedicated column (**sliceIdentifierColumnName**) in the target Table. This column would be used by Azure Data Factory to ensure the source and destination stay synchronized. This approach works when there is flexibility in changing or defining the destination SQL Table schema. \n\nThis column would be used by Azure Data Factory for repeatability purposes and in the process Azure Data Factory will not make any schema changes to the Table. Way to use this approach:\n\n1.  Define a column of type binary (32) in the destination SQL Table. There should be no constraints on this column. Let's name this column as ‘ColumnForADFuseOnly’ for this example.\n2.  Use it in the copy activity as follows:\n\n        \"sink\":  \n        { \n          \"type\": \"SqlSink\", \n          \"sliceIdentifierColumnName\": \"ColumnForADFuseOnly\"\n        }\n\nAzure Data Factory will populate this column as per its need to ensure the source and destination stay synchronized. The values of this column should not be used outside of this context by the user. \n\nSimilar to mechanism 1, Copy Activity will automatically first clean up the data for the given slice from the destination SQL Table and then run the copy activity normally to insert the data from source to destination for that slice. \n\n\n"
+}

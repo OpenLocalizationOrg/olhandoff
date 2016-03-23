@@ -1,0 +1,712 @@
+{
+  "nodes": [
+    {
+      "content": "Author Logic App definitions | Microsoft Azure",
+      "pos": [
+        28,
+        74
+      ]
+    },
+    {
+      "content": "Learn how to write the JSON definition for Logic apps",
+      "pos": [
+        94,
+        147
+      ]
+    },
+    {
+      "content": "Author Logic App definitions",
+      "pos": [
+        483,
+        511
+      ]
+    },
+    {
+      "content": "This topic demonstrates how to use <bpt id=\"p1\">[</bpt>App Services Logic Apps<ept id=\"p1\">](app-service-logic-what-are-logic-apps.md)</ept> definitions, which is a simple, declarative JSON language.",
+      "pos": [
+        512,
+        673
+      ]
+    },
+    {
+      "content": "If you haven't done so yet, check out <bpt id=\"p1\">[</bpt>how to Create a new Logic app<ept id=\"p1\">](../app-service-create-a-logic-app.md)</ept> first.",
+      "pos": [
+        674,
+        788
+      ]
+    },
+    {
+      "content": "You can also read the <bpt id=\"p1\">[</bpt>full reference material of the definition language on MSDN<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx)</ept>.",
+      "pos": [
+        789,
+        928
+      ]
+    },
+    {
+      "content": "Several steps that repeat over a list",
+      "pos": [
+        933,
+        970
+      ]
+    },
+    {
+      "content": "A common pattern is to have one step that gets a list of items, and then you have a series of two or more actions that you want to do on the list:",
+      "pos": [
+        972,
+        1118
+      ]
+    },
+    {
+      "content": "Repeat over lists",
+      "pos": [
+        1124,
+        1141
+      ]
+    },
+    {
+      "content": "In this example, there are 3 actions:",
+      "pos": [
+        1210,
+        1247
+      ]
+    },
+    {
+      "content": "Get a list of articles.",
+      "pos": [
+        1252,
+        1275
+      ]
+    },
+    {
+      "content": "This returns back an object that contains an array.",
+      "pos": [
+        1276,
+        1327
+      ]
+    },
+    {
+      "content": "An action that goes to a link property on each article, which returns the actual location of the article.",
+      "pos": [
+        1332,
+        1437
+      ]
+    },
+    {
+      "content": "An action that iterates over all of the results from the second action to download the actual articles.",
+      "pos": [
+        1442,
+        1545
+      ]
+    },
+    {
+      "content": "As covered in <bpt id=\"p1\">[</bpt>use logic app features<ept id=\"p1\">](app-service-logic-use-logic-app-features.md)</ept>, you iterate over the first list by using the <ph id=\"ph1\">`repeat:`</ph> property on the second action.",
+      "pos": [
+        2744,
+        2914
+      ]
+    },
+    {
+      "content": "However, for the third action, you need to select the <ph id=\"ph1\">`@actions('readLinks').outputs.repeatItems`</ph> property, because the second executed for each article.",
+      "pos": [
+        2915,
+        3068
+      ]
+    },
+    {
+      "content": "Inside the action you can use either the: <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`repeatItem()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatItem)</ept>, the <bpt id=\"p2\">[</bpt><ph id=\"ph2\">`repeatOutputs()`</ph><ept id=\"p2\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatOutputs)</ept> or <bpt id=\"p3\">[</bpt><ph id=\"ph3\">`repeatBody()`</ph><ept id=\"p3\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatBody)</ept> functions.",
+      "pos": [
+        3070,
+        3388
+      ]
+    },
+    {
+      "content": "In this example, I wanted to get the <ph id=\"ph1\">`location`</ph> header, so I used the <bpt id=\"p1\">[</bpt><ph id=\"ph2\">`repeatOutputs()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatOutputs)</ept> function to get the outputs of the action execution from the second action that we are now iterating over.",
+      "pos": [
+        3389,
+        3655
+      ]
+    },
+    {
+      "content": "Mapping items in a list to some different configuration",
+      "pos": [
+        3662,
+        3717
+      ]
+    },
+    {
+      "content": "Next, let's say that we want to get completely different content depending on a value of a property.",
+      "pos": [
+        3719,
+        3819
+      ]
+    },
+    {
+      "content": "We can create a map of values to destinations as a parameter:",
+      "pos": [
+        3820,
+        3881
+      ]
+    },
+    {
+      "content": "In this case, we first get a list of articles, and then the second step looks up in a map, based on the category that was defined as a parameter, which URL to get the content from.",
+      "pos": [
+        5615,
+        5795
+      ]
+    },
+    {
+      "content": "Two items to pay attention here: the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`intersection()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#intersection)</ept> function is used to check to see if the category matches one of the known categories defined.",
+      "pos": [
+        5798,
+        6016
+      ]
+    },
+    {
+      "content": "Second, once we get the category, we can pull the item of the map using square brackets: <ph id=\"ph1\">`parameters[...]`</ph>.",
+      "pos": [
+        6017,
+        6124
+      ]
+    },
+    {
+      "content": "Chain/nest Logic Apps while repeating over a list",
+      "pos": [
+        6130,
+        6179
+      ]
+    },
+    {
+      "content": "It can often be easier to manage your Logic Apps when they are more discreet.",
+      "pos": [
+        6181,
+        6258
+      ]
+    },
+    {
+      "content": "You can do this by factoring your logic into multiple definitions and calling them from the same parent definition.",
+      "pos": [
+        6259,
+        6374
+      ]
+    },
+    {
+      "content": "In this example, there will be a parent Logic app that receives orders, and a child logic app that executes some steps for each order.",
+      "pos": [
+        6375,
+        6509
+      ]
+    },
+    {
+      "content": "In the parent logic app:",
+      "pos": [
+        6511,
+        6535
+      ]
+    },
+    {
+      "content": "Then, in the child logic app you'll use the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`triggerBody()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#triggerBody)</ept> function to get the values that were passed into the child workflow.",
+      "pos": [
+        8299,
+        8497
+      ]
+    },
+    {
+      "content": "You'll then populate the outputs with the data that you want to return to the parent flow.",
+      "pos": [
+        8498,
+        8588
+      ]
+    },
+    {
+      "pos": [
+        9513,
+        9624
+      ],
+      "content": "You can read about the <bpt id=\"p1\">[</bpt>Logic app type action on MSDN<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948511.aspx)</ept>."
+    },
+    {
+      "pos": [
+        9628,
+        9752
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>The Logic app designer does not support Logic app type actions so you will need to edit the definition manually."
+    },
+    {
+      "content": "A failure-handling step if something goes wrong",
+      "pos": [
+        9758,
+        9805
+      ]
+    },
+    {
+      "content": "You commonly want to be able to write a <bpt id=\"p1\">*</bpt>remediation step<ept id=\"p1\">*</ept> — some logic that executes, if , <bpt id=\"p2\">**</bpt>and only if<ept id=\"p2\">**</ept>, one or more of your calls failed.",
+      "pos": [
+        9807,
+        9949
+      ]
+    },
+    {
+      "content": "In this example, we are getting data from a variety of places, but if the call fails, I want to POST a message somewhere so I can track down that failure later:",
+      "pos": [
+        9950,
+        10110
+      ]
+    },
+    {
+      "content": "I am using two conditions because in the first step I am repeating over a list.",
+      "pos": [
+        11396,
+        11475
+      ]
+    },
+    {
+      "content": "If you just had a single action, you'd only need one condition (the first one).",
+      "pos": [
+        11476,
+        11555
+      ]
+    },
+    {
+      "content": "Also note that you can use the <bpt id=\"p1\">*</bpt>inputs<ept id=\"p1\">*</ept> to the failed action in your remediation step — here I pass the failed URL to the second step:",
+      "pos": [
+        11556,
+        11690
+      ]
+    },
+    {
+      "content": "Remediation",
+      "pos": [
+        11696,
+        11707
+      ]
+    },
+    {
+      "content": "Finally, because you have now handled the error, we no longer mark the run as <bpt id=\"p1\">**</bpt>Failed<ept id=\"p1\">**</ept>.",
+      "pos": [
+        11772,
+        11861
+      ]
+    },
+    {
+      "content": "As you can see here, this run is <bpt id=\"p1\">**</bpt>Succeeded<ept id=\"p1\">**</ept> even though one step Failed, because I wrote the step to handle this failure.",
+      "pos": [
+        11862,
+        11986
+      ]
+    },
+    {
+      "content": "Two (or more) steps that execute in parellel",
+      "pos": [
+        11991,
+        12035
+      ]
+    },
+    {
+      "content": "To have multiple actions execution in parellel, rather than in sequence, you need to remove the <ph id=\"ph1\">`dependsOn`</ph> condition that links those two actions together.",
+      "pos": [
+        12037,
+        12193
+      ]
+    },
+    {
+      "content": "Once the dependency is removed, actions will automatically execute in parallel, unless they need data from each other.",
+      "pos": [
+        12194,
+        12312
+      ]
+    },
+    {
+      "content": "Branches",
+      "pos": [
+        12317,
+        12325
+      ]
+    },
+    {
+      "content": "As you can see in the example above, branch1 and branch2 just depend on the content from readData.",
+      "pos": [
+        13679,
+        13777
+      ]
+    },
+    {
+      "content": "As a result, both of these branches will run in parallel:",
+      "pos": [
+        13778,
+        13835
+      ]
+    },
+    {
+      "content": "Parallel",
+      "pos": [
+        13839,
+        13847
+      ]
+    },
+    {
+      "content": "You can see the timestamp for both branches is identical.",
+      "pos": [
+        13909,
+        13966
+      ]
+    },
+    {
+      "content": "Join two conditional branches of logic",
+      "pos": [
+        13972,
+        14010
+      ]
+    },
+    {
+      "content": "You can combine two conditional flows of logic (that may or may not have executed) by having a single action that takes data from both branches.",
+      "pos": [
+        14012,
+        14156
+      ]
+    },
+    {
+      "content": "Your strategy for this varies depending on if you are handling one item, or a collection of items.",
+      "pos": [
+        14159,
+        14257
+      ]
+    },
+    {
+      "content": "In the case of a single item, you'll want to use the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`coalesce()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#coalesce)</ept> function:",
+      "pos": [
+        14258,
+        14400
+      ]
+    },
+    {
+      "pos": [
+        16162,
+        16398
+      ],
+      "content": "Alternatively, when your first two branches both operate on a list of orders, for example, you'll want to use the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`union()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#union)</ept> function to combine the data from both branches."
+    },
+    {
+      "content": "Working with Strings",
+      "pos": [
+        18481,
+        18501
+      ]
+    },
+    {
+      "content": "There are variety of functions that can be used to maniplate string.",
+      "pos": [
+        18503,
+        18571
+      ]
+    },
+    {
+      "content": "Let's take an example where we have a string that we want to pass to a system, but we are not confident that character encoding will be handled properly.",
+      "pos": [
+        18572,
+        18725
+      ]
+    },
+    {
+      "content": "One option is to base64 encode this string.",
+      "pos": [
+        18726,
+        18769
+      ]
+    },
+    {
+      "content": "However, to avoid escaping in a URL we are going to replace a few characters.",
+      "pos": [
+        18770,
+        18847
+      ]
+    },
+    {
+      "content": "We also want a substring of the the order's name because the first 5 characters are not used.",
+      "pos": [
+        18850,
+        18943
+      ]
+    },
+    {
+      "content": "Working from the inside out:",
+      "pos": [
+        19748,
+        19776
+      ]
+    },
+    {
+      "pos": [
+        19781,
+        19937
+      ],
+      "content": "Get the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`length()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#length)</ept>  of the orderer's name, this returns back the total number of characters"
+    },
+    {
+      "content": "Subtract 5 (because we'll want a shorter string)",
+      "pos": [
+        19942,
+        19990
+      ]
+    },
+    {
+      "content": "Actually take the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`substring()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#substring)</ept> .",
+      "pos": [
+        19995,
+        20096
+      ]
+    },
+    {
+      "content": "We start at index <ph id=\"ph1\">`5`</ph> and go the remainder of the string.",
+      "pos": [
+        20097,
+        20154
+      ]
+    },
+    {
+      "pos": [
+        20159,
+        20269
+      ],
+      "content": "Convert this substring to a <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`base64()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#base64)</ept> string"
+    },
+    {
+      "pos": [
+        20274,
+        20387
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><ph id=\"ph1\">`replace()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#replace)</ept>  all of the <ph id=\"ph2\">`+`</ph> characters with <ph id=\"ph3\">`-`</ph>"
+    },
+    {
+      "pos": [
+        20392,
+        20504
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><ph id=\"ph1\">`replace()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#replace)</ept> all of the <ph id=\"ph2\">`/`</ph> characters with <ph id=\"ph3\">`_`</ph>"
+    },
+    {
+      "content": "Working with Date Times",
+      "pos": [
+        20509,
+        20532
+      ]
+    },
+    {
+      "content": "Date Times can be useful, particularly when you are trying to pull data from a data source that doesn't naturally support <bpt id=\"p1\">**</bpt>Triggers<ept id=\"p1\">**</ept>.",
+      "pos": [
+        20534,
+        20669
+      ]
+    },
+    {
+      "content": "You can also use Date Times to figure out how long various steps are taking.",
+      "pos": [
+        20671,
+        20747
+      ]
+    },
+    {
+      "content": "In this example, we are extracting the <ph id=\"ph1\">`startTime`</ph> of the previous step.",
+      "pos": [
+        21823,
+        21895
+      ]
+    },
+    {
+      "content": "Then we are getting the current time and subtracting one second :<bpt id=\"p1\">[</bpt><ph id=\"ph1\">`addseconds(..., -1)`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#addseconds)</ept> (you could use other units of time such as <ph id=\"ph2\">`minutes`</ph> or <ph id=\"ph3\">`hours`</ph>).",
+      "pos": [
+        21896,
+        22117
+      ]
+    },
+    {
+      "content": "Finally, we can compare these two values.",
+      "pos": [
+        22118,
+        22159
+      ]
+    },
+    {
+      "content": "If the first is less than the second, then that means more than one second has elapsed since the order was first placed.",
+      "pos": [
+        22160,
+        22280
+      ]
+    },
+    {
+      "content": "Also note that we can use string formatters to format dates: in the query string I use <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`utcnow('r')`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#utcnow)</ept> to get the RFC1123.",
+      "pos": [
+        22283,
+        22468
+      ]
+    },
+    {
+      "content": "All date formatting <bpt id=\"p1\">[</bpt>is documented on MSDN<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#utcnow)</ept>.",
+      "pos": [
+        22469,
+        22576
+      ]
+    },
+    {
+      "content": "Passing in values at runtime to vary behavior",
+      "pos": [
+        22582,
+        22627
+      ]
+    },
+    {
+      "content": "Let's say you have different behaviors that you want to run based on some value that you use to kick off your Logic app.",
+      "pos": [
+        22629,
+        22749
+      ]
+    },
+    {
+      "content": "You can use the <bpt id=\"p1\">[</bpt><ph id=\"ph1\">`triggerOutputs()`</ph><ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948512.aspx#triggerOutputs)</ept> function to get these values out of what you passed in:",
+      "pos": [
+        22750,
+        22913
+      ]
+    },
+    {
+      "content": "To actually make this work, when you start the run you need to pass the properties you want (in the above example <ph id=\"ph1\">`uriToGet`</ph> and <ph id=\"ph2\">`doMoreLogic`</ph>).",
+      "pos": [
+        23678,
+        23822
+      ]
+    },
+    {
+      "content": "Here is the call you can <bpt id=\"p1\">[</bpt>use Basic auth for<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948513.aspx#basicAuth)</ept>:",
+      "pos": [
+        23823,
+        23935
+      ]
+    },
+    {
+      "content": "With the following payload.",
+      "pos": [
+        24166,
+        24193
+      ]
+    },
+    {
+      "content": "Note that you have provided the Logic app with the values to use now:",
+      "pos": [
+        24194,
+        24263
+      ]
+    },
+    {
+      "content": "When this logic app runs it will call the uri I passed in, and run that additional step because I passed <ph id=\"ph1\">`true`</ph>.",
+      "pos": [
+        24377,
+        24489
+      ]
+    },
+    {
+      "content": "If you want to only vary parameters at deployment time (not for <bpt id=\"p1\">*</bpt>each run<ept id=\"p1\">*</ept>), then you should use <ph id=\"ph1\">`parameters`</ph> as called out below.",
+      "pos": [
+        24490,
+        24620
+      ]
+    },
+    {
+      "content": "Using deployment-time parameters for different environments",
+      "pos": [
+        24625,
+        24684
+      ]
+    },
+    {
+      "content": "It is common to have a deployment lifecycle where you have a development environment, a staging environment, and then a production environment.",
+      "pos": [
+        24686,
+        24829
+      ]
+    },
+    {
+      "content": "In all of these you may want the same definition, but use different databases, for example.",
+      "pos": [
+        24830,
+        24921
+      ]
+    },
+    {
+      "content": "Likewise, you may want to use the same definition across many different regions for high availability, but want each Logic app instance to talk to that region's database.",
+      "pos": [
+        24922,
+        25092
+      ]
+    },
+    {
+      "pos": [
+        25095,
+        25239
+      ],
+      "content": "Note that this is different from taking different parameters at <bpt id=\"p1\">*</bpt>runtime<ept id=\"p1\">*</ept>, for that you should use the <ph id=\"ph1\">`trigger()`</ph> function as called out above."
+    },
+    {
+      "content": "You can start with a very simplistic definition like this one:",
+      "pos": [
+        25242,
+        25304
+      ]
+    },
+    {
+      "content": "Then, in the actual <ph id=\"ph1\">`PUT`</ph> request for the Logic app you can provide the parameter <ph id=\"ph2\">`connection`</ph>.",
+      "pos": [
+        25826,
+        25921
+      ]
+    },
+    {
+      "content": "Note, as there is no longer a default value this parameter is required in the Logic app payload:",
+      "pos": [
+        25922,
+        26018
+      ]
+    },
+    {
+      "pos": [
+        26523,
+        26613
+      ],
+      "content": "In each environment you can then provide a different value for the <ph id=\"ph1\">`connection`</ph> parameter."
+    },
+    {
+      "content": "Running a step until a condition is met",
+      "pos": [
+        26619,
+        26658
+      ]
+    },
+    {
+      "content": "You may have an API that you are calling, and you want to wait for a certain response before proceeding.",
+      "pos": [
+        26660,
+        26764
+      ]
+    },
+    {
+      "content": "Imagine, for example, that you want to wait for someone to upload a file to a directory before processing the file.",
+      "pos": [
+        26765,
+        26880
+      ]
+    },
+    {
+      "content": "You can do that with <bpt id=\"p1\">*</bpt>do-until<ept id=\"p1\">*</ept>:",
+      "pos": [
+        26881,
+        26913
+      ]
+    },
+    {
+      "pos": [
+        27655,
+        27813
+      ],
+      "content": "See the <bpt id=\"p1\">[</bpt>REST API documentation<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn948513.aspx)</ept> for all of the options you have for creating and managing Logic apps."
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Author Logic App definitions | Microsoft Azure\" \n    description=\"Learn how to write the JSON definition for Logic apps\" \n    authors=\"stepsic-microsoft-com\" \n    manager=\"dwrede\" \n    editor=\"\" \n    services=\"app-service\\logic\" \n    documentationCenter=\"\"/>\n\n<tags\n    ms.service=\"app-service-logic\"\n    ms.workload=\"integration\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"12/07/2015\"\n    ms.author=\"stepsic\"/>\n    \n# Author Logic App definitions\nThis topic demonstrates how to use [App Services Logic Apps](app-service-logic-what-are-logic-apps.md) definitions, which is a simple, declarative JSON language. If you haven't done so yet, check out [how to Create a new Logic app](../app-service-create-a-logic-app.md) first. You can also read the [full reference material of the definition language on MSDN](https://msdn.microsoft.com/library/azure/dn948512.aspx).\n\n## Several steps that repeat over a list\n\nA common pattern is to have one step that gets a list of items, and then you have a series of two or more actions that you want to do on the list:  \n\n![Repeat over lists](./media/app-service-logic-author-definitions/repeatoverlists.png)\n\nIn this example, there are 3 actions:\n\n1. Get a list of articles. This returns back an object that contains an array.\n\n2. An action that goes to a link property on each article, which returns the actual location of the article.\n\n3. An action that iterates over all of the results from the second action to download the actual articles. \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {},\n    \"triggers\": {},\n    \"actions\": {\n        \"getArticles\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://feeds.wired.com/wired/index\"\n            }\n        },\n        \"readLinks\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@repeatItem().link\"\n            },\n            \"repeat\": \"@body('getArticles').responseData.feed.entries\"\n        },\n        \"downloadLinks\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@repeatOutputs().headers.location\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@not(equals(actions('readLinks').status, 'Skipped'))\"\n                }\n            ],\n            \"repeat\": \"@actions('readLinks').outputs.repeatItems\"\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nAs covered in [use logic app features](app-service-logic-use-logic-app-features.md), you iterate over the first list by using the `repeat:` property on the second action. However, for the third action, you need to select the `@actions('readLinks').outputs.repeatItems` property, because the second executed for each article.\n\nInside the action you can use either the: [`repeatItem()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatItem), the [`repeatOutputs()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatOutputs) or [`repeatBody()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatBody) functions. In this example, I wanted to get the `location` header, so I used the [`repeatOutputs()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#repeatOutputs) function to get the outputs of the action execution from the second action that we are now iterating over.  \n\n## Mapping items in a list to some different configuration\n\nNext, let's say that we want to get completely different content depending on a value of a property. We can create a map of values to destinations as a parameter:  \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"specialCategories\": {\n            \"defaultValue\": [\n                \"science\",\n                \"google\",\n                \"microsoft\",\n                \"robots\",\n                \"NSA\"\n            ],\n            \"type\": \"Array\"\n        },\n        \"destinationMap\": {\n            \"defaultValue\": {\n                \"science\": \"http://www.nasa.gov\",\n                \"microsoft\": \"https://www.microsoft.com/en-us/default.aspx\",\n                \"google\": \"https://www.google.com\",\n                \"robots\": \"https://en.wikipedia.org/wiki/Robot\",\n                \"NSA\": \"https://www.nsa.gov/\"\n            },\n            \"type\": \"Object\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"getArticles\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://feeds.wired.com/wired/index\"\n            },\n            \"conditions\": []\n        },\n        \"getSpecialPage\": {\n            \"repeat\": \"@body('getArticles').responseData.feed.entries\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@parameters('destinationMap')[first(intersection(repeatItem().categories, parameters('specialCategories')))]\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@greater(length(intersection(repeatItem().categories, parameters('specialCategories'))), 0)\"\n                }\n            ]\n        }\n    }\n}\n```\n\nIn this case, we first get a list of articles, and then the second step looks up in a map, based on the category that was defined as a parameter, which URL to get the content from. \n\nTwo items to pay attention here: the [`intersection()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#intersection) function is used to check to see if the category matches one of the known categories defined. Second, once we get the category, we can pull the item of the map using square brackets: `parameters[...]`. \n\n## Chain/nest Logic Apps while repeating over a list\n\nIt can often be easier to manage your Logic Apps when they are more discreet. You can do this by factoring your logic into multiple definitions and calling them from the same parent definition. In this example, there will be a parent Logic app that receives orders, and a child logic app that executes some steps for each order.\n\nIn the parent logic app:\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"orders\": {\n            \"defaultValue\": [\n                {\n                    \"quantity\": 10,\n                    \"id\": \"myorder1\"\n                },\n                {\n                    \"quantity\": 200,\n                    \"id\": \"specialOrder\"\n                },\n                {\n                    \"quantity\": 5,\n                    \"id\": \"myOtherOrder\"\n                }\n            ],\n            \"type\": \"Array\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"iterateOverOrders\": {\n            \"repeat\": \"@parameters('orders')\",\n            \"type\": \"Workflow\",\n            \"inputs\": {\n                \"uri\": \"https://westus.logic.azure.com/subscriptions/xxxxxx-xxxxx-xxxxxx/resourceGroups/xxxxxx/providers/Microsoft.Logic/workflows/xxxxxxx\",\n                \"apiVersion\": \"2015-02-01-preview\",\n                \"trigger\": {\n                    \"name\": \"submitOrder\",\n                    \"outputs\": {\n                        \"body\": \"@repeatItem()\"\n                    }\n                },\n                \"authentication\": {\n                    \"type\": \"Basic\",\n                    \"username\": \"default\",\n                    \"password\": \"xxxxxxxxxxxxxx\"\n                }\n            }\n        },\n        \"sendInvoices\": {\n            \"repeat\": \"@outputs('iterateOverOrders').repeatItems\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"uri\": \"http://www.example.com/?invoiceID=@{repeatOutputs().run.outputs.deliverTime.value}\",\n                \"method\": \"GET\"\n            }\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nThen, in the child logic app you'll use the [`triggerBody()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#triggerBody) function to get the values that were passed into the child workflow. You'll then populate the outputs with the data that you want to return to the parent flow. \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {},\n    \"triggers\": {},\n    \"actions\": {\n        \"calulatePrice\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?action=calcPrice&id=@{triggerBody().id}&qty=@{triggerBody().quantity}\"\n            }\n        },\n        \"calculateDeliveryTime\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?action=calcTime&id=@{triggerBody().id}&qty=@{triggerBody().quantity}\"\n            }\n        }\n    },\n    \"outputs\": {\n        \"deliverTime\": {\n            \"type\": \"String\",\n            \"value\": \"@outputs('calculateDeliveryTime').headers.etag\"\n        }\n    }\n}\n```\n\nYou can read about the [Logic app type action on MSDN](https://msdn.microsoft.com/library/azure/dn948511.aspx). \n\n>[AZURE.NOTE]The Logic app designer does not support Logic app type actions so you will need to edit the definition manually.\n\n\n## A failure-handling step if something goes wrong\n\nYou commonly want to be able to write a *remediation step* — some logic that executes, if , **and only if**, one or more of your calls failed. In this example, we are getting data from a variety of places, but if the call fails, I want to POST a message somewhere so I can track down that failure later:  \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"dataFeeds\": {\n            \"defaultValue\": [\n                \"https://www.microsoft.com/en-us/default.aspx\",\n                \"https://gibberish.gibberish/\"\n            ],\n            \"type\": \"Array\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"readData\": {\n            \"repeat\": \"@parameters('dataFeeds')\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@repeatItem()\"\n            }\n        },\n        \"postToErrorMessageQueue\": {\n            \"repeat\": \"@actions('readData').outputs.repeatItems\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?noteAnErrorFor=@{repeatItem().inputs.uri}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@equals(actions('readData').status, 'Failed')\"\n                },\n                {\n                    \"expression\": \"@equals(repeatItem().status, 'Failed')\"\n                }\n            ]\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nI am using two conditions because in the first step I am repeating over a list. If you just had a single action, you'd only need one condition (the first one). Also note that you can use the *inputs* to the failed action in your remediation step — here I pass the failed URL to the second step:  \n\n![Remediation](./media/app-service-logic-author-definitions/remediation.png)\n\nFinally, because you have now handled the error, we no longer mark the run as **Failed**. As you can see here, this run is **Succeeded** even though one step Failed, because I wrote the step to handle this failure.\n\n## Two (or more) steps that execute in parellel\n\nTo have multiple actions execution in parellel, rather than in sequence, you need to remove the `dependsOn` condition that links those two actions together. Once the dependency is removed, actions will automatically execute in parallel, unless they need data from each other. \n\n![Branches](./media/app-service-logic-author-definitions/branches.png)\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"dataFeeds\": {\n            \"defaultValue\": [\n                \"https://www.microsoft.com/en-us/default.aspx\",\n                \"https://office.live.com/start/default.aspx\"\n            ],\n            \"type\": \"Array\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"readData\": {\n            \"repeat\": \"@parameters('dataFeeds')\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@repeatItem()\"\n            }\n        },\n        \"branch1\": {\n            \"repeat\": \"@actions('readData').outputs.repeatItems\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?branch1Logic=@{repeatItem().inputs.uri}\"\n            }\n        },\n        \"branch2\": {\n            \"repeat\": \"@actions('readData').outputs.repeatItems\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?branch2Logic=@{repeatItem().inputs.uri}\"\n            }\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nAs you can see in the example above, branch1 and branch2 just depend on the content from readData. As a result, both of these branches will run in parallel:\n\n![Parallel](./media/app-service-logic-author-definitions/parallel.png)\n\nYou can see the timestamp for both branches is identical. \n\n## Join two conditional branches of logic\n\nYou can combine two conditional flows of logic (that may or may not have executed) by having a single action that takes data from both branches. \n\nYour strategy for this varies depending on if you are handling one item, or a collection of items. In the case of a single item, you'll want to use the [`coalesce()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#coalesce) function:\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"order\": {\n            \"defaultValue\": {\n                \"quantity\": 10,\n                \"id\": \"myorder1\"\n            },\n            \"type\": \"Object\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"handleNormalOrders\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?orderNormally=@{parameters('order').id}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@lessOrEquals(parameters('order').quantity, 100)\"\n                }\n            ]\n        },\n        \"handleSpecialOrders\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?orderSpecially=@{parameters('order').id}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@greater(parameters('order').quantity, 100)\"\n                }\n            ]\n        },\n        \"submitInvoice\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?invoice=@{coalesce(outputs('handleNormalOrders')?.headers?.etag,outputs('handleSpecialOrders')?.headers?.etag )}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@or(equals(actions('handleNormalOrders').status, 'Succeeded'), equals(actions('handleSpecialOrders').status, 'Succeeded'))\"\n                }\n            ]\n        }\n    },\n    \"outputs\": {}\n}\n```\n \nAlternatively, when your first two branches both operate on a list of orders, for example, you'll want to use the [`union()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#union) function to combine the data from both branches. \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"orders\": {\n            \"defaultValue\": [\n                {\n                    \"quantity\": 10,\n                    \"id\": \"myorder1\"\n                },\n                {\n                    \"quantity\": 200,\n                    \"id\": \"specialOrder\"\n                },\n                {\n                    \"quantity\": 5,\n                    \"id\": \"myOtherOrder\"\n                }\n            ],\n            \"type\": \"Array\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"handleNormalOrders\": {\n            \"repeat\": \"@parameters('orders')\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?orderNormally=@{repeatItem().id}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@lessOrEquals(repeatItem().quantity, 100)\"\n                }\n            ]\n        },\n        \"handleSpecialOrders\": {\n            \"repeat\": \"@parameters('orders')\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?orderSpecially=@{repeatItem().id}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@greater(repeatItem().quantity, 100)\"\n                }\n            ]\n        },\n        \"submitInvoice\": {\n            \"repeat\": \"@union(actions('handleNormalOrders').outputs.repeatItems, actions('handleSpecialOrders').outputs.repeatItems)\",\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/?invoice=@{repeatOutputs().headers.etag}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@equals(repeatItem().status, 'Succeeded')\"\n                }\n            ]\n        }\n    },\n    \"outputs\": {}\n}\n```\n## Working with Strings\n\nThere are variety of functions that can be used to maniplate string. Let's take an example where we have a string that we want to pass to a system, but we are not confident that character encoding will be handled properly. One option is to base64 encode this string. However, to avoid escaping in a URL we are going to replace a few characters. \n\nWe also want a substring of the the order's name because the first 5 characters are not used.\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"order\": {\n            \"defaultValue\": {\n                \"quantity\": 10,\n                \"id\": \"myorder1\",\n                \"orderer\": \"NAME=Stèphén__Šīçiłianö\"\n            },\n            \"type\": \"Object\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"order\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?id=@{replace(replace(base64(substring(parameters('order').orderer,5,sub(length(parameters('order').orderer), 5) )),'+','-') ,'/' ,'_' )}\"\n            }\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nWorking from the inside out:\n\n1. Get the [`length()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#length)  of the orderer's name, this returns back the total number of characters\n\n2. Subtract 5 (because we'll want a shorter string)\n\n3. Actually take the [`substring()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#substring) . We start at index `5` and go the remainder of the string.\n\n4. Convert this substring to a [`base64()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#base64) string\n\n5. [`replace()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#replace)  all of the `+` characters with `-`\n\n6. [`replace()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#replace) all of the `/` characters with `_`\n\n## Working with Date Times\n\nDate Times can be useful, particularly when you are trying to pull data from a data source that doesn't naturally support **Triggers**.  You can also use Date Times to figure out how long various steps are taking. \n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"order\": {\n            \"defaultValue\": {\n                \"quantity\": 10,\n                \"id\": \"myorder1\"\n            },\n            \"type\": \"Object\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"order\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?id=@{parameters('order').id}\"\n            }\n        },\n        \"timingWarning\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://www.example.com/?recordLongOrderTime=@{parameters('order').id}&currentTime=@{utcNow('r')}\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@less(actions('order').startTime,addseconds(utcNow(),-1))\"\n                }\n            ]\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nIn this example, we are extracting the `startTime` of the previous step. Then we are getting the current time and subtracting one second :[`addseconds(..., -1)`](https://msdn.microsoft.com/library/azure/dn948512.aspx#addseconds) (you could use other units of time such as `minutes` or `hours`). Finally, we can compare these two values. If the first is less than the second, then that means more than one second has elapsed since the order was first placed. \n\nAlso note that we can use string formatters to format dates: in the query string I use [`utcnow('r')`](https://msdn.microsoft.com/library/azure/dn948512.aspx#utcnow) to get the RFC1123. All date formatting [is documented on MSDN](https://msdn.microsoft.com/library/azure/dn948512.aspx#utcnow). \n\n## Passing in values at runtime to vary behavior\n\nLet's say you have different behaviors that you want to run based on some value that you use to kick off your Logic app. You can use the [`triggerOutputs()`](https://msdn.microsoft.com/library/azure/dn948512.aspx#triggerOutputs) function to get these values out of what you passed in:\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"triggers\": {},\n    \"actions\": {\n        \"readData\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@triggerOutputs().uriToGet\"\n            }\n        },\n        \"extraStep\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"POST\",\n                \"uri\": \"http://www.example.com/extraStep\"\n            },\n            \"conditions\": [\n                {\n                    \"expression\": \"@triggerOutputs().doMoreLogic\"\n                }\n            ]\n        },  \n    },\n    \"outputs\": {}\n}\n```\n\nTo actually make this work, when you start the run you need to pass the properties you want (in the above example `uriToGet` and `doMoreLogic`). Here is the call you can [use Basic auth for](https://msdn.microsoft.com/library/azure/dn948513.aspx#basicAuth):\n\n```\nPOST https://<<Logic app endpoint from the Essentials>>/run?api-version=2015-02-01-preview\nAuthorization: Basic <<Based 64 encoded username (default) : password (from the Settings blade)>>\nContent-type: application/json\n```\n\nWith the following payload. Note that you have provided the Logic app with the values to use now:\n\n```\n{\n    \"outputs\": {\n        \"uriToGet\" : \"http://my.uri.I.want/\",\n        \"doMoreLogic\" : true\n    }\n}\n``` \n\nWhen this logic app runs it will call the uri I passed in, and run that additional step because I passed `true`. If you want to only vary parameters at deployment time (not for *each run*), then you should use `parameters` as called out below.\n\n## Using deployment-time parameters for different environments\n\nIt is common to have a deployment lifecycle where you have a development environment, a staging environment, and then a production environment. In all of these you may want the same definition, but use different databases, for example. Likewise, you may want to use the same definition across many different regions for high availability, but want each Logic app instance to talk to that region's database. \n\nNote that this is different from taking different parameters at *runtime*, for that you should use the `trigger()` function as called out above. \n\nYou can start with a very simplistic definition like this one:\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {\n        \"connection\": {\n            \"type\": \"string\"\n        }\n    },\n    \"triggers\": {},\n    \"actions\": {\n        \"readData\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"@parameters('connection')\"\n            }\n        }        \n    },\n    \"outputs\": {}\n}\n```\n\nThen, in the actual `PUT` request for the Logic app you can provide the parameter `connection`. Note, as there is no longer a default value this parameter is required in the Logic app payload:\n\n```\n{\n    \"properties\": {\n        \"sku\": {\n            \"name\": \"Premium\",\n            \"plan\": {\n                \"id\": \"/subscriptions/xxxxx/resourceGroups/xxxxxx/providers/Microsoft.Web/serverFarms/xxxxxx\"\n            }\n        },\n        \"definition\": {\n          // Use the definition from above here\n        },\n        \"parameters\": {\n            \"connection\": {\n                \"value\": \"https://my.connection.that.is.per.enviornment\"\n            }\n        }\n    },\n    \"location\": \"westus\"\n}\n``` \n\nIn each environment you can then provide a different value for the `connection` parameter. \n\n## Running a step until a condition is met\n\nYou may have an API that you are calling, and you want to wait for a certain response before proceeding. Imagine, for example, that you want to wait for someone to upload a file to a directory before processing the file. You can do that with *do-until*:\n\n```\n{\n    \"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#\",\n    \"contentVersion\": \"1.0.0.0\",\n    \"parameters\": {},\n    \"triggers\": {},\n    \"actions\": {\n        \"http0\": {\n            \"type\": \"Http\",\n            \"inputs\": {\n                \"method\": \"GET\",\n                \"uri\": \"http://mydomain/listfiles\"\n            },\n            \"until\": {\n                \"limit\": {\n                    \"timeout\": \"PT10M\"\n                },\n                \"conditions\": [\n                    {\n                        \"expression\": \"@greater(length(action().outputs.body),0)\"\n                    }\n                ]\n            }\n        }\n    },\n    \"outputs\": {}\n}\n```\n\nSee the [REST API documentation](https://msdn.microsoft.com/library/azure/dn948513.aspx) for all of the options you have for creating and managing Logic apps. \n\n\n"
+}

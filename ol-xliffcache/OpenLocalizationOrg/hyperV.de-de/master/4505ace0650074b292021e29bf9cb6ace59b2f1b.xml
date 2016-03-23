@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    {
+      "content": "Repeatability during Copy",
+      "pos": [
+        3,
+        28
+      ]
+    },
+    {
+      "content": "When copying data from and to relational stores, you need to keep repeatability in mind to avoid unintended outcomes.",
+      "pos": [
+        30,
+        147
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Note:<ept id=\"p1\">**</ept> A slice can be re-run automatically in Azure Data Factory as per the retry policy specified.",
+      "pos": [
+        150,
+        252
+      ]
+    },
+    {
+      "content": "It is recommended to set a retry policy to guard against transient failures.",
+      "pos": [
+        253,
+        329
+      ]
+    },
+    {
+      "content": "Hence repeatability is an important aspect to take care of during data movement.",
+      "pos": [
+        330,
+        410
+      ]
+    },
+    {
+      "content": "As a source:",
+      "pos": [
+        415,
+        427
+      ]
+    },
+    {
+      "content": "In most cases when reading from relational stores, you would want to read only the data corresponding to that slice.",
+      "pos": [
+        431,
+        547
+      ]
+    },
+    {
+      "content": "A way to do so would be by using the WindowStart and WindowEnd variables available in Azure Data Factory.",
+      "pos": [
+        548,
+        653
+      ]
+    },
+    {
+      "content": "Read about the variables and functions in Azure Data Factory here in the <bpt id=\"p1\">[</bpt>Scheduling and Execution<ept id=\"p1\">](data-factory-scheduling-and-execution.md)</ept> article.",
+      "pos": [
+        654,
+        804
+      ]
+    },
+    {
+      "content": "Example:",
+      "pos": [
+        805,
+        813
+      ]
+    },
+    {
+      "content": "The above query will read data from ‘MyTable’ that falls in the slice duration range.",
+      "pos": [
+        1067,
+        1152
+      ]
+    },
+    {
+      "content": "Re-run of this slice would also always ensure this behavior.",
+      "pos": [
+        1153,
+        1213
+      ]
+    },
+    {
+      "content": "In other cases, you may wish to read the entire Table (suppose for one time move only) and may define the sqlReaderQuery as follows:",
+      "pos": [
+        1216,
+        1348
+      ]
+    }
+  ],
+  "content": "## Repeatability during Copy\n\nWhen copying data from and to relational stores, you need to keep repeatability in mind to avoid unintended outcomes. \n\n**Note:** A slice can be re-run automatically in Azure Data Factory as per the retry policy specified. It is recommended to set a retry policy to guard against transient failures. Hence repeatability is an important aspect to take care of during data movement. \n\n**As a source:**\n\nIn most cases when reading from relational stores, you would want to read only the data corresponding to that slice. A way to do so would be by using the WindowStart and WindowEnd variables available in Azure Data Factory. Read about the variables and functions in Azure Data Factory here in the [Scheduling and Execution](data-factory-scheduling-and-execution.md) article. Example: \n    \n      \"source\": {\n        \"type\": \"SqlSource\",\n        \"sqlReaderQuery\": \"$$Text.Format('select * from MyTable where timestampcolumn >= \\\\'{0:yyyy-MM-dd HH:mm\\\\' AND timestampcolumn < \\\\'{1:yyyy-MM-dd HH:mm\\\\'', WindowStart, WindowEnd)\"\n      },\n\nThe above query will read data from ‘MyTable’ that falls in the slice duration range. Re-run of this slice would also always ensure this behavior. \n\nIn other cases, you may wish to read the entire Table (suppose for one time move only) and may define the sqlReaderQuery as follows:\n\n    \n    \"source\": {\n                \"type\": \"SqlSource\",\n                \"sqlReaderQuery\": \"select * from MyTable\"\n              },\n    \n\n\n"
+}

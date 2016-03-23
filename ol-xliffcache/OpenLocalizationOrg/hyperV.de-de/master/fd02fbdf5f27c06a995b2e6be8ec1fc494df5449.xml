@@ -1,0 +1,615 @@
+{
+  "nodes": [
+    {
+      "content": "Enabling Azure AD Application Proxy | Microsoft Azure",
+      "pos": [
+        27,
+        80
+      ]
+    },
+    {
+      "content": "Covers how to get up and running with Azure AD Application Proxy.",
+      "pos": [
+        99,
+        164
+      ]
+    },
+    {
+      "content": "Enabling Azure AD Application Proxy",
+      "pos": [
+        476,
+        511
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Application Proxy is a feature that is available only if you upgraded to the Premium or Basic edition of Azure Active Directory.",
+      "pos": [
+        514,
+        655
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Azure Active Directory editions<ept id=\"p1\">](active-directory-editions.md)</ept>.",
+      "pos": [
+        656,
+        746
+      ]
+    },
+    {
+      "content": "Microsoft Azure Active Directory Application Proxy lets you publish applications, such as SharePoint sites, Outlook Web Access, and IIS-based apps inside your private network and provides secure access to users outside your network.",
+      "pos": [
+        748,
+        980
+      ]
+    },
+    {
+      "content": "Employees can log into your apps from home on their own devices and authenticate through this cloud-based proxy.",
+      "pos": [
+        981,
+        1093
+      ]
+    },
+    {
+      "content": "Application Proxy works by installing a slim Windows service called a Connector inside your network.",
+      "pos": [
+        1095,
+        1195
+      ]
+    },
+    {
+      "content": "The Connector maintains an outbound connection from within your network to the proxy service.",
+      "pos": [
+        1196,
+        1289
+      ]
+    },
+    {
+      "content": "When users access a published application, they proxy uses this connection to provide access to the application.",
+      "pos": [
+        1290,
+        1402
+      ]
+    },
+    {
+      "content": "This article walks you through enabling Microsoft Azure AD Application Proxy for your cloud directory in Azure AD, installing the Application Proxy Connector on your private network, and registering the Connector with your Microsoft Azure AD tenant subscription.",
+      "pos": [
+        1404,
+        1666
+      ]
+    },
+    {
+      "content": "Application Proxy prerequisites",
+      "pos": [
+        1670,
+        1701
+      ]
+    },
+    {
+      "content": "Before you can enable and use Application Proxy services, you need to have:",
+      "pos": [
+        1702,
+        1777
+      ]
+    },
+    {
+      "pos": [
+        1781,
+        1931
+      ],
+      "content": "A Microsoft Azure AD <bpt id=\"p1\">[</bpt>basic or premium subscription<ept id=\"p1\">](active-directory-editions.md)</ept> and an Azure AD directory for which you are a global administrator."
+    },
+    {
+      "content": "A server running Windows Server 2012 R2 or Windows 8.1 or higher on which you can install the Application Proxy Connector.",
+      "pos": [
+        1934,
+        2056
+      ]
+    },
+    {
+      "content": "The server must be able to send HTTPS requests to the Application Proxy services in the cloud, and it must have an HTTPS connection to the applications that you intend to publish.",
+      "pos": [
+        2057,
+        2236
+      ]
+    },
+    {
+      "content": "If a firewall is placed in the path, make sure the firewall is open to allow HTTPS (TCP) requests that originate from the Connector to the Application Proxy.",
+      "pos": [
+        2239,
+        2396
+      ]
+    },
+    {
+      "content": "The Connector uses these ports together with subdomains that are part of the high level domain: msappproxy.net.",
+      "pos": [
+        2397,
+        2508
+      ]
+    },
+    {
+      "content": "Make sure to open <bpt id=\"p1\">**</bpt>all<ept id=\"p1\">**</ept> the following ports to <bpt id=\"p2\">**</bpt>outbound<ept id=\"p2\">**</ept> traffic:",
+      "pos": [
+        2509,
+        2579
+      ]
+    },
+    {
+      "content": "Port Number",
+      "pos": [
+        2581,
+        2592
+      ]
+    },
+    {
+      "content": "Description",
+      "pos": [
+        2595,
+        2606
+      ]
+    },
+    {
+      "content": "80",
+      "pos": [
+        2617,
+        2619
+      ]
+    },
+    {
+      "content": "To enable outbound HTTP traffic for security validation.",
+      "pos": [
+        2622,
+        2678
+      ]
+    },
+    {
+      "content": "443",
+      "pos": [
+        2679,
+        2682
+      ]
+    },
+    {
+      "content": "To enable user authentication against Azure AD (required only for the Connector registration process)",
+      "pos": [
+        2685,
+        2786
+      ]
+    },
+    {
+      "content": "10100 - 10120",
+      "pos": [
+        2787,
+        2800
+      ]
+    },
+    {
+      "content": "To enable LOB HTTP responses sent back to the proxy",
+      "pos": [
+        2803,
+        2854
+      ]
+    },
+    {
+      "content": "9352, 5671",
+      "pos": [
+        2855,
+        2865
+      ]
+    },
+    {
+      "content": "To enable communication between the Connector toward the Azure service for incoming requests.",
+      "pos": [
+        2868,
+        2961
+      ]
+    },
+    {
+      "content": "9350",
+      "pos": [
+        2962,
+        2966
+      ]
+    },
+    {
+      "content": "Optional, to enable better performance for incoming requests",
+      "pos": [
+        2969,
+        3029
+      ]
+    },
+    {
+      "content": "8080",
+      "pos": [
+        3030,
+        3034
+      ]
+    },
+    {
+      "content": "To enable the Connector bootstrap sequence and Connector automatic update",
+      "pos": [
+        3037,
+        3110
+      ]
+    },
+    {
+      "content": "9090",
+      "pos": [
+        3111,
+        3115
+      ]
+    },
+    {
+      "content": "To enable Connector registration (required only for the Connector registration process)",
+      "pos": [
+        3118,
+        3205
+      ]
+    },
+    {
+      "content": "9091",
+      "pos": [
+        3206,
+        3210
+      ]
+    },
+    {
+      "content": "To enable Connector trust certificate automatic renewal",
+      "pos": [
+        3213,
+        3268
+      ]
+    },
+    {
+      "content": "If your firewall enforces traffic according to originating users, open these ports for traffic coming from Windows services running as a Network Service.",
+      "pos": [
+        3270,
+        3423
+      ]
+    },
+    {
+      "content": "Also, make sure to enable port 8080 for NT Authority\\System.",
+      "pos": [
+        3424,
+        3484
+      ]
+    },
+    {
+      "content": "Step 1: Enable Application Proxy in Azure AD",
+      "pos": [
+        3489,
+        3533
+      ]
+    },
+    {
+      "content": "Sign in as an administrator in the Azure classic portal.",
+      "pos": [
+        3537,
+        3593
+      ]
+    },
+    {
+      "content": "Go to Active Directory and select the directory in which you want to enable Application Proxy.",
+      "pos": [
+        3597,
+        3691
+      ]
+    },
+    {
+      "pos": [
+        3695,
+        3828
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept>, scroll down to Application Proxy and toggle Enable Application Proxy Services for this Directory to <bpt id=\"p2\">**</bpt>Enabled<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Enable Application Proxy",
+      "pos": [
+        3836,
+        3860
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Download now<ept id=\"p1\">**</ept> at the bottom of the screen.",
+      "pos": [
+        3941,
+        3992
+      ]
+    },
+    {
+      "content": "This will take you to the download page.",
+      "pos": [
+        3993,
+        4033
+      ]
+    },
+    {
+      "content": "Read and accept the license terms and click <bpt id=\"p1\">**</bpt>Download<ept id=\"p1\">**</ept> to save the Windows Installer file (.exe) for the Application Proxy Connector.",
+      "pos": [
+        4034,
+        4169
+      ]
+    },
+    {
+      "content": "Step 2: Install and register the Connector",
+      "pos": [
+        4173,
+        4215
+      ]
+    },
+    {
+      "pos": [
+        4219,
+        4338
+      ],
+      "content": "Run <ph id=\"ph1\">`AADApplicationProxyConnectorInstaller.exe`</ph> on the server you prepared (see Application Proxy prerequisites above)."
+    },
+    {
+      "content": "Follow the instructions in the wizard to install.",
+      "pos": [
+        4342,
+        4391
+      ]
+    },
+    {
+      "content": "During installation you will be prompted to register the Connector with the Application Proxy of your Azure AD tenant.",
+      "pos": [
+        4395,
+        4513
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">-</ph> Provide your Azure AD global administrator credentials.",
+      "pos": [
+        4517,
+        4574
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">-</ph> Make sure the admin who registers the Connector is in the same directory where you enabled the Application Proxy service, for example if the tenant domain is contoso.com, the admin should be admin@contoso.com or any other alias on that domain.",
+      "pos": [
+        4578,
+        4823
+      ]
+    },
+    {
+      "content": "And that you are a global administrator of the Azure AD tenant.",
+      "pos": [
+        4824,
+        4887
+      ]
+    },
+    {
+      "content": "Your global administrator tenant may be different from your Microsoft Azure credentials.",
+      "pos": [
+        4888,
+        4976
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">-</ph> If IE Enhanced Security Configuration is set to <bpt id=\"p1\">**</bpt>On<ept id=\"p1\">**</ept> on the server where you are installing the Azure AD Connector, the registration screen might be blocked.",
+      "pos": [
+        4980,
+        5141
+      ]
+    },
+    {
+      "content": "If this happens, follow the instructions in the error message to allow access.",
+      "pos": [
+        5142,
+        5220
+      ]
+    },
+    {
+      "content": "Make sure that Internet Explorer Enhanced Security is off.",
+      "pos": [
+        5221,
+        5279
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">-</ph> If Connector registration does not succeed, see <bpt id=\"p1\">[</bpt><ept id=\"p1\">Troubleshoot Application Proxy](active-directory-application-proxy-troubleshoot.md)</ept>.",
+      "pos": [
+        5283,
+        5418
+      ]
+    },
+    {
+      "pos": [
+        5423,
+        5892
+      ],
+      "content": "When the installation completes, two new services are added to your server, as shown below. These are the Connector service, which enables connectivity, and an automated update service, which periodically checks for new versions of the Connector and updates the Connector as needed. Click Finish in the installation window to complete installation\n ![Application Proxy Connector Service!](./media/active-directory-application-proxy-enable/app_proxy_services.png) <p>",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "When the installation completes, two new services are added to your server, as shown below. These are the Connector service, which enables connectivity, and an automated update service, which periodically checks for new versions of the Connector and updates the Connector as needed. Click Finish in the installation window to complete installation",
+          "pos": [
+            0,
+            347
+          ],
+          "nodes": [
+            {
+              "content": "When the installation completes, two new services are added to your server, as shown below.",
+              "pos": [
+                0,
+                91
+              ]
+            },
+            {
+              "content": "These are the Connector service, which enables connectivity, and an automated update service, which periodically checks for new versions of the Connector and updates the Connector as needed.",
+              "pos": [
+                92,
+                282
+              ]
+            },
+            {
+              "content": "Click Finish in the installation window to complete installation",
+              "pos": [
+                283,
+                347
+              ]
+            }
+          ]
+        },
+        {
+          "content": "Application Proxy Connector Service!",
+          "pos": [
+            351,
+            387
+          ]
+        }
+      ]
+    },
+    {
+      "content": "You are now ready to Publish applications with Application Proxy.",
+      "pos": [
+        5896,
+        5961
+      ]
+    },
+    {
+      "content": "For high availability purposes, you must deploy at least one additional Connector.",
+      "pos": [
+        5963,
+        6045
+      ]
+    },
+    {
+      "content": "To deploy an additional Connector, repeat steps 2 and 3, above.",
+      "pos": [
+        6046,
+        6109
+      ]
+    },
+    {
+      "content": "Each Connector must be registered separately.",
+      "pos": [
+        6110,
+        6155
+      ]
+    },
+    {
+      "content": "If you want to uninstall the Connector, uninstall both the Connector service and the Updater service and then make sure to restart your computer to fully remove the service.",
+      "pos": [
+        6157,
+        6330
+      ]
+    },
+    {
+      "content": "See also",
+      "pos": [
+        6336,
+        6344
+      ]
+    },
+    {
+      "content": "There's a lot more you can do with Application Proxy:",
+      "pos": [
+        6345,
+        6398
+      ]
+    },
+    {
+      "content": "Publish applications with Application Proxy",
+      "pos": [
+        6403,
+        6446
+      ]
+    },
+    {
+      "content": "Publish applications using your own domain name",
+      "pos": [
+        6498,
+        6545
+      ]
+    },
+    {
+      "content": "Enable single-sign on",
+      "pos": [
+        6604,
+        6625
+      ]
+    },
+    {
+      "content": "Enable conditional access",
+      "pos": [
+        6683,
+        6708
+      ]
+    },
+    {
+      "content": "Working with claims aware applications",
+      "pos": [
+        6771,
+        6809
+      ]
+    },
+    {
+      "content": "Troubleshoot issues you're having with Application Proxy",
+      "pos": [
+        6871,
+        6927
+      ]
+    },
+    {
+      "content": "Learn more about Application Proxy",
+      "pos": [
+        6985,
+        7019
+      ]
+    },
+    {
+      "content": "Take a look here at our online help",
+      "pos": [
+        7023,
+        7058
+      ]
+    },
+    {
+      "content": "Check out the Application Proxy blog",
+      "pos": [
+        7109,
+        7145
+      ]
+    },
+    {
+      "content": "Watch our videos on Channel 9!",
+      "pos": [
+        7200,
+        7230
+      ]
+    },
+    {
+      "content": "Additional resources",
+      "pos": [
+        7289,
+        7309
+      ]
+    },
+    {
+      "content": "Sign up for Azure as an organization",
+      "pos": [
+        7313,
+        7349
+      ]
+    },
+    {
+      "content": "Azure Identity",
+      "pos": [
+        7379,
+        7393
+      ]
+    },
+    {
+      "content": "Publish Applications with Application Proxy",
+      "pos": [
+        7424,
+        7467
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Enabling Azure AD Application Proxy | Microsoft Azure\"\n    description=\"Covers how to get up and running with Azure AD Application Proxy.\"\n    services=\"active-directory\"\n    documentationCenter=\"\"\n    authors=\"kgremban\"\n    manager=\"StevenPo\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"active-directory\"\n    ms.workload=\"identity\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"article\"\n    ms.date=\"12/02/2015\"\n    ms.author=\"kgremban\"/>\n\n# Enabling Azure AD Application Proxy\n> [AZURE.NOTE] Application Proxy is a feature that is available only if you upgraded to the Premium or Basic edition of Azure Active Directory. For more information, see [Azure Active Directory editions](active-directory-editions.md).\n\nMicrosoft Azure Active Directory Application Proxy lets you publish applications, such as SharePoint sites, Outlook Web Access, and IIS-based apps inside your private network and provides secure access to users outside your network. Employees can log into your apps from home on their own devices and authenticate through this cloud-based proxy.\n\nApplication Proxy works by installing a slim Windows service called a Connector inside your network. The Connector maintains an outbound connection from within your network to the proxy service. When users access a published application, they proxy uses this connection to provide access to the application.\n\nThis article walks you through enabling Microsoft Azure AD Application Proxy for your cloud directory in Azure AD, installing the Application Proxy Connector on your private network, and registering the Connector with your Microsoft Azure AD tenant subscription.\n\n##Application Proxy prerequisites\nBefore you can enable and use Application Proxy services, you need to have:\n\n- A Microsoft Azure AD [basic or premium subscription](active-directory-editions.md) and an Azure AD directory for which you are a global administrator.\n- A server running Windows Server 2012 R2 or Windows 8.1 or higher on which you can install the Application Proxy Connector. The server must be able to send HTTPS requests to the Application Proxy services in the cloud, and it must have an HTTPS connection to the applications that you intend to publish.\n- If a firewall is placed in the path, make sure the firewall is open to allow HTTPS (TCP) requests that originate from the Connector to the Application Proxy. The Connector uses these ports together with subdomains that are part of the high level domain: msappproxy.net. Make sure to open **all** the following ports to **outbound** traffic:\n\nPort Number | Description\n--- | ---\n80 | To enable outbound HTTP traffic for security validation.\n443 | To enable user authentication against Azure AD (required only for the Connector registration process)\n10100 - 10120 | To enable LOB HTTP responses sent back to the proxy\n9352, 5671 | To enable communication between the Connector toward the Azure service for incoming requests.\n9350 | Optional, to enable better performance for incoming requests\n8080 | To enable the Connector bootstrap sequence and Connector automatic update\n9090 | To enable Connector registration (required only for the Connector registration process)\n9091 | To enable Connector trust certificate automatic renewal\n\nIf your firewall enforces traffic according to originating users, open these ports for traffic coming from Windows services running as a Network Service. Also, make sure to enable port 8080 for NT Authority\\System.\n\n\n##Step 1: Enable Application Proxy in Azure AD\n1. Sign in as an administrator in the Azure classic portal.\n2. Go to Active Directory and select the directory in which you want to enable Application Proxy.\n3. Click **Configure**, scroll down to Application Proxy and toggle Enable Application Proxy Services for this Directory to **Enabled**.\n\n    ![Enable Application Proxy](./media/active-directory-application-proxy-enable/app_proxy_enable.png) <p>\n4. Click **Download now** at the bottom of the screen. This will take you to the download page. Read and accept the license terms and click **Download** to save the Windows Installer file (.exe) for the Application Proxy Connector.\n\n##Step 2: Install and register the Connector\n1. Run `AADApplicationProxyConnectorInstaller.exe` on the server you prepared (see Application Proxy prerequisites above).\n2. Follow the instructions in the wizard to install.\n3. During installation you will be prompted to register the Connector with the Application Proxy of your Azure AD tenant.\n<p>- Provide your Azure AD global administrator credentials.\n<p>- Make sure the admin who registers the Connector is in the same directory where you enabled the Application Proxy service, for example if the tenant domain is contoso.com, the admin should be admin@contoso.com or any other alias on that domain. And that you are a global administrator of the Azure AD tenant. Your global administrator tenant may be different from your Microsoft Azure credentials.\n<p>- If IE Enhanced Security Configuration is set to **On** on the server where you are installing the Azure AD Connector, the registration screen might be blocked. If this happens, follow the instructions in the error message to allow access. Make sure that Internet Explorer Enhanced Security is off.\n<p>- If Connector registration does not succeed, see [Troubleshoot Application Proxy](active-directory-application-proxy-troubleshoot.md).\n\n4. When the installation completes, two new services are added to your server, as shown below. These are the Connector service, which enables connectivity, and an automated update service, which periodically checks for new versions of the Connector and updates the Connector as needed. Click Finish in the installation window to complete installation\n    ![Application Proxy Connector Service!](./media/active-directory-application-proxy-enable/app_proxy_services.png) <p>\n5. You are now ready to Publish applications with Application Proxy.\n\nFor high availability purposes, you must deploy at least one additional Connector. To deploy an additional Connector, repeat steps 2 and 3, above. Each Connector must be registered separately.\n\nIf you want to uninstall the Connector, uninstall both the Connector service and the Updater service and then make sure to restart your computer to fully remove the service.\n\n\n## See also\nThere's a lot more you can do with Application Proxy:\n\n- [Publish applications with Application Proxy](active-directory-application-proxy-publish.md)\n- [Publish applications using your own domain name](active-directory-application-proxy-custom-domains.md)\n- [Enable single-sign on](active-directory-application-proxy-sso-using-kcd.md)\n- [Enable conditional access](active-directory-application-proxy-conditional-access.md)\n- [Working with claims aware applications](active-directory-application-proxy-claims-aware-apps.md)\n- [Troubleshoot issues you're having with Application Proxy](active-directory-application-proxy-troubleshoot.md)\n\n## Learn more about Application Proxy\n- [Take a look here at our online help](active-directory-application-proxy-enable.md)\n- [Check out the Application Proxy blog](http://blogs.technet.com/b/applicationproxyblog/)\n- [Watch our videos on Channel 9!](http://channel9.msdn.com/events/Ignite/2015/BRK3864)\n\n## Additional resources\n* [Sign up for Azure as an organization](sign-up-organization.md)\n* [Azure Identity](fundamentals-identity.md)\n* [Publish Applications with Application Proxy](active-directory-application-proxy-publish.md)\n\n\n"
+}
