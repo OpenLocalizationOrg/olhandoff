@@ -1,0 +1,419 @@
+{
+  "nodes": [
+    {
+      "content": "Creating a B2B process in Azure App Service | Microsoft Azure",
+      "pos": [
+        27,
+        88
+      ]
+    },
+    {
+      "content": "Overview of how to create a Business-to-Business Process",
+      "pos": [
+        107,
+        163
+      ]
+    },
+    {
+      "content": "Creating a B2B process",
+      "pos": [
+        491,
+        513
+      ]
+    },
+    {
+      "content": "Business Scenario",
+      "pos": [
+        519,
+        536
+      ]
+    },
+    {
+      "content": "Contoso and Northwind are two business partners.",
+      "pos": [
+        538,
+        586
+      ]
+    },
+    {
+      "content": "Contoso (the retailer) sends purchase orders to Northwind (the supplier) over an industry level transport such as AS2.",
+      "pos": [
+        587,
+        705
+      ]
+    },
+    {
+      "content": "Northwind stores all incoming orders in its Cloud storage.",
+      "pos": [
+        706,
+        764
+      ]
+    },
+    {
+      "content": "The purchase orders are XML messages between these two partners.",
+      "pos": [
+        765,
+        829
+      ]
+    },
+    {
+      "content": "Once the message is stored in Northwind's cloud storage then Northwind's internal processes handle the order from that point on.",
+      "pos": [
+        830,
+        958
+      ]
+    },
+    {
+      "content": "The objective of this tutorial is to establish how Northwind can establish a business process via which it can receive messages (purchase orders in XML) from its partner Contoso over AS2 and then persist it in its Cloud storage.",
+      "pos": [
+        961,
+        1189
+      ]
+    },
+    {
+      "content": "Capabilities demonstrated",
+      "pos": [
+        1195,
+        1220
+      ]
+    },
+    {
+      "content": "This tutorial helps showcase the following capabilities:",
+      "pos": [
+        1222,
+        1278
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Message transportation<ept id=\"p1\">**</ept>: The retailer and supplier can be on different platforms but they can still achieve communication between the two.",
+      "pos": [
+        1283,
+        1424
+      ]
+    },
+    {
+      "content": "In this tutorial they are communicating over AS2 (Applicability Statement 2).",
+      "pos": [
+        1425,
+        1502
+      ]
+    },
+    {
+      "content": "AS2 is a popular way to transport data between trading partners in business-to-business communications.",
+      "pos": [
+        1503,
+        1606
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Data persistence<ept id=\"p1\">**</ept>: Once the message has been received over AS2 then Northwind wants to persist it before further processing.",
+      "pos": [
+        1609,
+        1736
+      ]
+    },
+    {
+      "content": "It can use a connector to persist messages in its Cloud storage.",
+      "pos": [
+        1737,
+        1801
+      ]
+    },
+    {
+      "content": "In this tutorial Azure Blobs is being leveraged as the cloud storage for Northwind.",
+      "pos": [
+        1802,
+        1885
+      ]
+    },
+    {
+      "pos": [
+        1888,
+        2026
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Creating a business process<ept id=\"p1\">**</ept>: In a flow, multiple API apps can be stitched together to achieve a business outcome as demonstrated here."
+    },
+    {
+      "content": "Before you begin",
+      "pos": [
+        2032,
+        2048
+      ]
+    },
+    {
+      "content": "This tutorial assumes that you have a basic understanding of Azure App Services, know how to create API apps, and stitch a flow together.",
+      "pos": [
+        2049,
+        2186
+      ]
+    },
+    {
+      "content": "Steps to achieve the business scenario",
+      "pos": [
+        2192,
+        2230
+      ]
+    },
+    {
+      "content": "Create and configure the required API apps",
+      "pos": [
+        2233,
+        2275
+      ]
+    },
+    {
+      "content": "Create an instance of the <bpt id=\"p1\">**</bpt>Azure Storage Blob Connector<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2282,
+        2341
+      ]
+    },
+    {
+      "content": "This requires the credentials to an Azure Storage account.",
+      "pos": [
+        2342,
+        2400
+      ]
+    },
+    {
+      "content": "Ensure that it is ready before you start creating this.",
+      "pos": [
+        2401,
+        2456
+      ]
+    },
+    {
+      "content": "Create an instance of the <bpt id=\"p1\">**</bpt>BizTalk Trading Partner Management<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2460,
+        2525
+      ]
+    },
+    {
+      "content": "This requires a blank SQL Database to function.",
+      "pos": [
+        2526,
+        2573
+      ]
+    },
+    {
+      "content": "Make sure that it is ready before you start creating this.",
+      "pos": [
+        2574,
+        2632
+      ]
+    },
+    {
+      "content": "Create an instance of the <bpt id=\"p1\">**</bpt>AS2 Connector<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2636,
+        2680
+      ]
+    },
+    {
+      "content": "This also requires a blank SQL Database to function.",
+      "pos": [
+        2681,
+        2733
+      ]
+    },
+    {
+      "content": "Make sure that it is ready before you start creating this.",
+      "pos": [
+        2734,
+        2792
+      ]
+    },
+    {
+      "content": "Additionally, if you want to archive messages as part of AS2 processing, you may provide credentials to an Azure Blob during its creation.",
+      "pos": [
+        2793,
+        2931
+      ]
+    },
+    {
+      "content": "Configure the TPM (Trading Partner Management) service that is created:",
+      "pos": [
+        2935,
+        3006
+      ]
+    },
+    {
+      "content": "Browse to the instance of the TPM service created as part of the above steps.",
+      "pos": [
+        3016,
+        3093
+      ]
+    },
+    {
+      "pos": [
+        3101,
+        3240
+      ],
+      "content": "Use the <bpt id=\"p1\">**</bpt>Partners<ept id=\"p1\">**</ept> option under <bpt id=\"p2\">*</bpt>Components<ept id=\"p2\">*</ept> to <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept> a new partner named <bpt id=\"p4\">**</bpt>Contoso<ept id=\"p4\">**</ept> and in its profile add the required AS2 identity."
+    },
+    {
+      "pos": [
+        3248,
+        3389
+      ],
+      "content": "Use the <bpt id=\"p1\">**</bpt>Partners<ept id=\"p1\">**</ept> option under <bpt id=\"p2\">*</bpt>Components<ept id=\"p2\">*</ept> to <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept> a new partner named <bpt id=\"p4\">**</bpt>Northwind<ept id=\"p4\">**</ept> and in its profile add the required AS2 identity."
+    },
+    {
+      "content": "Use the <bpt id=\"p1\">**</bpt>Agreements<ept id=\"p1\">**</ept> option under <bpt id=\"p2\">*</bpt>Components<ept id=\"p2\">*</ept> to <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept> a new AS2 agreement between Northwind and Contoso.",
+      "pos": [
+        3397,
+        3507
+      ]
+    },
+    {
+      "content": "Northwind will be the hosted partner here, and Contoso will be the guest partner.",
+      "pos": [
+        3508,
+        3589
+      ]
+    },
+    {
+      "content": "As appropriate configure signing, encryption, compression, and acknowledgements during this agreement creation.",
+      "pos": [
+        3590,
+        3701
+      ]
+    },
+    {
+      "content": "In case certificates need to be used, they can be uploaded via the <bpt id=\"p1\">**</bpt>Certificates<ept id=\"p1\">**</ept> option when browsing the TPM service that is created.",
+      "pos": [
+        3702,
+        3839
+      ]
+    },
+    {
+      "content": "Create a flow / business process",
+      "pos": [
+        3845,
+        3877
+      ]
+    },
+    {
+      "pos": [
+        3881,
+        4057
+      ],
+      "content": "Create a new flow in which the first step is AS2. Drag and drop the **AS2 Connector** and choose the instance already created. Choose trigger as the functionality:  \n ![][1]",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Create a new flow in which the first step is AS2. Drag and drop the **AS2 Connector** and choose the instance already created. Choose trigger as the functionality:",
+          "pos": [
+            0,
+            163
+          ],
+          "nodes": [
+            {
+              "content": "Create a new flow in which the first step is AS2.",
+              "pos": [
+                0,
+                49
+              ]
+            },
+            {
+              "content": "Drag and drop the <bpt id=\"p1\">**</bpt>AS2 Connector<ept id=\"p1\">**</ept> and choose the instance already created.",
+              "pos": [
+                50,
+                126
+              ]
+            },
+            {
+              "content": "Choose trigger as the functionality:",
+              "pos": [
+                127,
+                163
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "content": "Next drag and drop <bpt id=\"p1\">**</bpt>Azure Storage Blob Connector<ept id=\"p1\">**</ept> and choose the instance already created.",
+      "pos": [
+        4063,
+        4155
+      ]
+    },
+    {
+      "content": "Choose action as the functionality and within that, select <bpt id=\"p1\">**</bpt>Upload Blob<ept id=\"p1\">**</ept> as the desired functionality.",
+      "pos": [
+        4156,
+        4260
+      ]
+    },
+    {
+      "content": "Configure as appropriate.",
+      "pos": [
+        4261,
+        4286
+      ]
+    },
+    {
+      "content": "Now create/deploy the flow.",
+      "pos": [
+        4290,
+        4317
+      ]
+    },
+    {
+      "content": "Message Processing &amp; Troubleshooting",
+      "pos": [
+        4323,
+        4359
+      ]
+    },
+    {
+      "content": "It is time to test out the flow we have deployed.",
+      "pos": [
+        4363,
+        4412
+      ]
+    },
+    {
+      "content": "Send XML messages wrapped in AS2 (as per the AS2 agreement created above) to the AS2 endpoint surfaced by the AS2Connector instance that you created.",
+      "pos": [
+        4413,
+        4562
+      ]
+    },
+    {
+      "content": "You may need to configure the authentication for the endpoint so that it is publicly accessible.",
+      "pos": [
+        4563,
+        4659
+      ]
+    },
+    {
+      "content": "Execution information about the flow is surfaced by browsing to the flow and then stepping into the flow instance which got executed",
+      "pos": [
+        4663,
+        4795
+      ]
+    },
+    {
+      "content": "For AS2 processing information, browse to the AS2Connector instance involved, and then follow by stepping into the Tracking part.",
+      "pos": [
+        4799,
+        4928
+      ]
+    },
+    {
+      "content": "You can use the filters involved to restrict the view to the information that is desired.",
+      "pos": [
+        4929,
+        5018
+      ]
+    }
+  ],
+  "content": "<properties \n   pageTitle=\"Creating a B2B process in Azure App Service | Microsoft Azure\" \n   description=\"Overview of how to create a Business-to-Business Process\" \n   services=\"app-service\\logic\" \n   documentationCenter=\".net,nodejs,java\" \n   authors=\"rajram\" \n   manager=\"dwrede\" \n   editor=\"\"/>\n\n<tags\n   ms.service=\"app-service-logic\"\n   ms.devlang=\"multiple\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"integration\" \n   ms.date=\"12/07/2015\"\n   ms.author=\"rajram\"/>\n\n\n# Creating a B2B process\n\n\n## Business Scenario \nContoso and Northwind are two business partners. Contoso (the retailer) sends purchase orders to Northwind (the supplier) over an industry level transport such as AS2. Northwind stores all incoming orders in its Cloud storage. The purchase orders are XML messages between these two partners. Once the message is stored in Northwind's cloud storage then Northwind's internal processes handle the order from that point on.\n \nThe objective of this tutorial is to establish how Northwind can establish a business process via which it can receive messages (purchase orders in XML) from its partner Contoso over AS2 and then persist it in its Cloud storage.\n\n\n## Capabilities demonstrated \nThis tutorial helps showcase the following capabilities: \n\n- **Message transportation**: The retailer and supplier can be on different platforms but they can still achieve communication between the two. In this tutorial they are communicating over AS2 (Applicability Statement 2). AS2 is a popular way to transport data between trading partners in business-to-business communications.\n- **Data persistence**: Once the message has been received over AS2 then Northwind wants to persist it before further processing. It can use a connector to persist messages in its Cloud storage. In this tutorial Azure Blobs is being leveraged as the cloud storage for Northwind.\n- **Creating a business process**: In a flow, multiple API apps can be stitched together to achieve a business outcome as demonstrated here.\n\n\n## Before you begin\nThis tutorial assumes that you have a basic understanding of Azure App Services, know how to create API apps, and stitch a flow together.\n\n\n## Steps to achieve the business scenario\n**Create and configure the required API apps**\n\n1. Create an instance of the **Azure Storage Blob Connector**. This requires the credentials to an Azure Storage account. Ensure that it is ready before you start creating this.\n2. Create an instance of the **BizTalk Trading Partner Management**. This requires a blank SQL Database to function. Make sure that it is ready before you start creating this.\n3. Create an instance of the **AS2 Connector**. This also requires a blank SQL Database to function. Make sure that it is ready before you start creating this. Additionally, if you want to archive messages as part of AS2 processing, you may provide credentials to an Azure Blob during its creation.\n4. Configure the TPM (Trading Partner Management) service that is created:  \n    1. Browse to the instance of the TPM service created as part of the above steps.\n    2. Use the **Partners** option under *Components* to **Add** a new partner named **Contoso** and in its profile add the required AS2 identity.\n    3. Use the **Partners** option under *Components* to **Add** a new partner named **Northwind** and in its profile add the required AS2 identity.\n    4. Use the **Agreements** option under *Components* to **Add** a new AS2 agreement between Northwind and Contoso. Northwind will be the hosted partner here, and Contoso will be the guest partner. As appropriate configure signing, encryption, compression, and acknowledgements during this agreement creation. In case certificates need to be used, they can be uploaded via the **Certificates** option when browsing the TPM service that is created.\n\n\n## Create a flow / business process\n1. Create a new flow in which the first step is AS2. Drag and drop the **AS2 Connector** and choose the instance already created. Choose trigger as the functionality:  \n    ![][1]  \n2. Next drag and drop **Azure Storage Blob Connector** and choose the instance already created. Choose action as the functionality and within that, select **Upload Blob** as the desired functionality. Configure as appropriate.\n3. Now create/deploy the flow.\n\n\n## Message Processing & Troubleshooting\n1. It is time to test out the flow we have deployed. Send XML messages wrapped in AS2 (as per the AS2 agreement created above) to the AS2 endpoint surfaced by the AS2Connector instance that you created. You may need to configure the authentication for the endpoint so that it is publicly accessible.\n2. Execution information about the flow is surfaced by browsing to the flow and then stepping into the flow instance which got executed\n3. For AS2 processing information, browse to the AS2Connector instance involved, and then follow by stepping into the Tracking part. You can use the filters involved to restrict the view to the information that is desired.\n\n![][2]\n\n<!--Image references-->\n[1]: ./media/app-service-logic-create-a-b2b-process/Flow.png\n[2]: ./media/app-service-logic-create-a-b2b-process/Tracking.png\n \n\n\n"
+}
