@@ -1,0 +1,1001 @@
+{
+  "nodes": [
+    {
+      "content": "The following steps demonstrate how to connect to the SQL Server instance over the internet using SQL Server Management Studio (SSMS).",
+      "pos": [
+        0,
+        134
+      ]
+    },
+    {
+      "content": "However, the same steps apply to making your SQL Server virtual machine accessible for your applications, running both on-premises and in Azure.",
+      "pos": [
+        135,
+        279
+      ]
+    },
+    {
+      "content": "Before you can connect to the instance of SQL Server from another VM or the internet, you must complete the following tasks as described in the sections that follow:",
+      "pos": [
+        281,
+        446
+      ]
+    },
+    {
+      "content": "Create a TCP endpoint for the virtual machine",
+      "pos": [
+        451,
+        496
+      ]
+    },
+    {
+      "content": "Open TCP ports in the Windows firewall",
+      "pos": [
+        549,
+        587
+      ]
+    },
+    {
+      "content": "Configure SQL Server to listen on the TCP protocol",
+      "pos": [
+        681,
+        731
+      ]
+    },
+    {
+      "content": "Configure SQL Server for mixed mode authentication",
+      "pos": [
+        789,
+        839
+      ]
+    },
+    {
+      "content": "Create SQL Server authentication logins",
+      "pos": [
+        897,
+        936
+      ]
+    },
+    {
+      "content": "Determine the DNS name of the virtual machine",
+      "pos": [
+        983,
+        1028
+      ]
+    },
+    {
+      "content": "Connect to the Database Engine from another computer",
+      "pos": [
+        1081,
+        1133
+      ]
+    },
+    {
+      "content": "The connection path is summarized by the following diagram:",
+      "pos": [
+        1191,
+        1250
+      ]
+    },
+    {
+      "content": "Connecting to a SQL Server virtual machine",
+      "pos": [
+        1254,
+        1296
+      ]
+    },
+    {
+      "content": "Create a TCP endpoint for the virtual machine",
+      "pos": [
+        1388,
+        1433
+      ]
+    },
+    {
+      "content": "In order to access SQL Server from the internet, the virtual machine must have an endpoint to listen for incoming TCP communication.",
+      "pos": [
+        1435,
+        1567
+      ]
+    },
+    {
+      "content": "This Azure configuration step, directs incoming TCP port traffic to a TCP port that is accessible to the virtual machine.",
+      "pos": [
+        1568,
+        1689
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you are connecting within the same cloud service or virtual network, you do not have to create a publically accessible endpoint.",
+      "pos": [
+        1692,
+        1836
+      ]
+    },
+    {
+      "content": "In that case, you could continue to the next step.",
+      "pos": [
+        1837,
+        1887
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Connection Scenarios<ept id=\"p1\">](../articles/virtual-machines/virtual-machines-sql-server-connectivity.md#connection-scenarios)</ept>.",
+      "pos": [
+        1888,
+        2032
+      ]
+    },
+    {
+      "pos": [
+        2037,
+        2099
+      ],
+      "content": "On the Azure Management Portal, click on <bpt id=\"p1\">**</bpt>VIRTUAL MACHINES<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Click on your newly created virtual machine.",
+      "pos": [
+        2108,
+        2152
+      ]
+    },
+    {
+      "content": "Information about your virtual machine is presented.",
+      "pos": [
+        2153,
+        2205
+      ]
+    },
+    {
+      "pos": [
+        2214,
+        2321
+      ],
+      "content": "Near the top of the page, select the <bpt id=\"p1\">**</bpt>ENDPOINTS<ept id=\"p1\">**</ept> page, and then at the bottom of the page, click <bpt id=\"p2\">**</bpt>ADD<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        2330,
+        2464
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Add an Endpoint to a Virtual Machine<ept id=\"p1\">**</ept> page, click <bpt id=\"p2\">**</bpt>Add a Stand-alone Endpoint<ept id=\"p2\">**</ept>, and then click the Next arrow to continue."
+    },
+    {
+      "pos": [
+        2473,
+        2560
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Specify the details of the endpoint<ept id=\"p1\">**</ept> page, provide the following information."
+    },
+    {
+      "pos": [
+        2568,
+        2621
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>NAME<ept id=\"p1\">**</ept> box, provide a name for the endpoint."
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>PROTOCOL<ept id=\"p1\">**</ept> box, select <bpt id=\"p2\">**</bpt>TCP<ept id=\"p2\">**</ept>.",
+      "pos": [
+        2628,
+        2668
+      ]
+    },
+    {
+      "content": "You may type <bpt id=\"p1\">**</bpt>57500<ept id=\"p1\">**</ept> in the <bpt id=\"p2\">**</bpt>PUBLIC PORT<ept id=\"p2\">**</ept> box.",
+      "pos": [
+        2669,
+        2719
+      ]
+    },
+    {
+      "content": "Similarly, you may type SQL Server's default listening port <bpt id=\"p1\">**</bpt>1433<ept id=\"p1\">**</ept> in the <bpt id=\"p2\">**</bpt>Private Port<ept id=\"p2\">**</ept> box.",
+      "pos": [
+        2720,
+        2817
+      ]
+    },
+    {
+      "content": "Note that many organizations select different port numbers to avoid malicious security attacks.",
+      "pos": [
+        2818,
+        2913
+      ]
+    },
+    {
+      "content": "Click the check mark to continue.",
+      "pos": [
+        2919,
+        2952
+      ]
+    },
+    {
+      "content": "The endpoint is created.",
+      "pos": [
+        2953,
+        2977
+      ]
+    },
+    {
+      "content": "Open TCP ports in the Windows firewall for the default instance of the Database Engine",
+      "pos": [
+        2983,
+        3069
+      ]
+    },
+    {
+      "content": "Connect to the virtual machine via Windows Remote Desktop.",
+      "pos": [
+        3074,
+        3132
+      ]
+    },
+    {
+      "content": "Once logged in, at the Start screen, type <bpt id=\"p1\">**</bpt>WF.msc<ept id=\"p1\">**</ept>, and then hit ENTER.",
+      "pos": [
+        3133,
+        3206
+      ]
+    },
+    {
+      "content": "Start the Firewall Program",
+      "pos": [
+        3215,
+        3241
+      ]
+    },
+    {
+      "pos": [
+        3314,
+        3462
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Windows Firewall with Advanced Security<ept id=\"p1\">**</ept>, in the left pane, right-click <bpt id=\"p2\">**</bpt>Inbound Rules<ept id=\"p2\">**</ept>, and then click <bpt id=\"p3\">**</bpt>New Rule<ept id=\"p3\">**</ept> in the action pane."
+    },
+    {
+      "content": "New Rule",
+      "pos": [
+        3470,
+        3478
+      ]
+    },
+    {
+      "pos": [
+        3556,
+        3665
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>New Inbount Rule Wizard<ept id=\"p1\">**</ept> dialog box, under <bpt id=\"p2\">**</bpt>Rule Type<ept id=\"p2\">**</ept>, select <bpt id=\"p3\">**</bpt>Port<ept id=\"p3\">**</ept>, and then click <bpt id=\"p4\">**</bpt>Next<ept id=\"p4\">**</ept>."
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Protocol and Ports<ept id=\"p1\">**</ept> dialog, use the default <bpt id=\"p2\">**</bpt>TCP<ept id=\"p2\">**</ept>.",
+      "pos": [
+        3670,
+        3732
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Specific local ports<ept id=\"p1\">**</ept> box, then type the port number of the instance of the Database Engine (<bpt id=\"p2\">**</bpt>1433<ept id=\"p2\">**</ept> for the default instance or your choice for the private port in the endpoint step).",
+      "pos": [
+        3733,
+        3928
+      ]
+    },
+    {
+      "content": "TCP Port 1433",
+      "pos": [
+        3937,
+        3950
+      ]
+    },
+    {
+      "pos": [
+        4026,
+        4041
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        4046,
+        4133
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Action<ept id=\"p1\">**</ept> dialog box, select <bpt id=\"p2\">**</bpt>Allow the connection<ept id=\"p2\">**</ept>, and then click <bpt id=\"p3\">**</bpt>Next<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Security Note:<ept id=\"p1\">**</ept> Selecting <bpt id=\"p2\">**</bpt>Allow the connection if it is secure<ept id=\"p2\">**</ept> can provide additional security.",
+      "pos": [
+        4139,
+        4241
+      ]
+    },
+    {
+      "content": "Select this option if you want to configure additional security options in your environment.",
+      "pos": [
+        4242,
+        4334
+      ]
+    },
+    {
+      "content": "Allow Connections",
+      "pos": [
+        4342,
+        4359
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Profile<ept id=\"p1\">**</ept> dialog box, select <bpt id=\"p2\">**</bpt>Public<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>Private<ept id=\"p3\">**</ept>, and <bpt id=\"p4\">**</bpt>Domain<ept id=\"p4\">**</ept>.",
+      "pos": [
+        4442,
+        4520
+      ]
+    },
+    {
+      "content": "Then click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept>.",
+      "pos": [
+        4521,
+        4541
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Security Note:<ept id=\"p1\">**</ept>  Selecting <bpt id=\"p2\">**</bpt>Public<ept id=\"p2\">**</ept> allows access over the internet.",
+      "pos": [
+        4548,
+        4621
+      ]
+    },
+    {
+      "content": "Whenever possible, select a more restrictive profile.",
+      "pos": [
+        4622,
+        4675
+      ]
+    },
+    {
+      "content": "Public Profile",
+      "pos": [
+        4683,
+        4697
+      ]
+    },
+    {
+      "pos": [
+        4793,
+        4890
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Name<ept id=\"p1\">**</ept> dialog box, type a name and description for this rule, and then click <bpt id=\"p2\">**</bpt>Finish<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Rule Name",
+      "pos": [
+        4898,
+        4907
+      ]
+    },
+    {
+      "content": "Open additional ports for other components as needed.",
+      "pos": [
+        4980,
+        5033
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Configuring the Windows Firewall to Allow SQL Server Access<ept id=\"p1\">](http://msdn.microsoft.com/library/cc646023.aspx)</ept>.",
+      "pos": [
+        5034,
+        5171
+      ]
+    },
+    {
+      "content": "Configure SQL Server to listen on the TCP protocol",
+      "pos": [
+        5178,
+        5228
+      ]
+    },
+    {
+      "pos": [
+        5233,
+        5348
+      ],
+      "content": "While connected to the virtual machine, on the Start page, type <bpt id=\"p1\">**</bpt>SQL Server Configuration Manager<ept id=\"p1\">**</ept> and hit ENTER."
+    },
+    {
+      "content": "Open SSCM",
+      "pos": [
+        5360,
+        5369
+      ]
+    },
+    {
+      "pos": [
+        5445,
+        5547
+      ],
+      "content": "In SQL Server Configuration Manager, in the console pane, expand <bpt id=\"p1\">**</bpt>SQL Server Network Configuration<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "In the console pane, click <bpt id=\"p1\">**</bpt>Protocols for MSSQLSERVER<ept id=\"p1\">**</ept> (he default instance name.) In the details pane, right-click TCP, it should be Enabled for the gallery images by default.",
+      "pos": [
+        5552,
+        5730
+      ]
+    },
+    {
+      "content": "For your custom images, click <bpt id=\"p1\">**</bpt>Enable<ept id=\"p1\">**</ept> (if its status is Disabled.)",
+      "pos": [
+        5731,
+        5800
+      ]
+    },
+    {
+      "content": "Enable TCP",
+      "pos": [
+        5808,
+        5818
+      ]
+    },
+    {
+      "content": "In the console pane, click <bpt id=\"p1\">**</bpt>SQL Server Services<ept id=\"p1\">**</ept>.",
+      "pos": [
+        5895,
+        5946
+      ]
+    },
+    {
+      "content": "In the details pane, right-click <bpt id=\"p1\">**</bpt>SQL Server (<bpt id=\"p2\">_</bpt>instance name<ept id=\"p2\">_</ept>)<ept id=\"p1\">**</ept> (the default instance is <bpt id=\"p3\">**</bpt>SQL Server (MSSQLSERVER)<ept id=\"p3\">**</ept>), and then click <bpt id=\"p4\">**</bpt>Restart<ept id=\"p4\">**</ept>, to stop and restart the instance of SQL Server.",
+      "pos": [
+        5947,
+        6144
+      ]
+    },
+    {
+      "content": "Restart Database Engine",
+      "pos": [
+        6153,
+        6176
+      ]
+    },
+    {
+      "content": "Close SQL Server Configuration Manager.",
+      "pos": [
+        6250,
+        6289
+      ]
+    },
+    {
+      "pos": [
+        6291,
+        6472
+      ],
+      "content": "For more information about enabling protocols for the SQL Server Database Engine, see <bpt id=\"p1\">[</bpt>Enable or Disable a Server Network Protocol<ept id=\"p1\">](http://msdn.microsoft.com/library/ms191294.aspx)</ept>."
+    },
+    {
+      "content": "Configure SQL Server for mixed mode authentication",
+      "pos": [
+        6478,
+        6528
+      ]
+    },
+    {
+      "content": "The SQL Server Database Engine cannot use Windows Authentication without domain environment.",
+      "pos": [
+        6530,
+        6622
+      ]
+    },
+    {
+      "content": "To connect to the Database Engine from another computer, configure SQL Server for mixed mode authentication.",
+      "pos": [
+        6623,
+        6731
+      ]
+    },
+    {
+      "content": "Mixed mode authentication allows both SQL Server Authentication and Windows Authentication.",
+      "pos": [
+        6732,
+        6823
+      ]
+    },
+    {
+      "pos": [
+        6826,
+        6985
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Configuring mixed mode authentication might not be necessary if you have configured an Azure Virtual Network with a configured domain environment."
+    },
+    {
+      "pos": [
+        6990,
+        7120
+      ],
+      "content": "While connected to the virtual machine, on the Start page, type <bpt id=\"p1\">**</bpt>SQL Server 2014 Management Studio<ept id=\"p1\">**</ept> and click the selected icon."
+    },
+    {
+      "content": "Start SSMS",
+      "pos": [
+        7128,
+        7138
+      ]
+    },
+    {
+      "content": "The first time you open Management Studio it must create the users Management Studio environment.",
+      "pos": [
+        7216,
+        7313
+      ]
+    },
+    {
+      "content": "This may take a few moments.",
+      "pos": [
+        7314,
+        7342
+      ]
+    },
+    {
+      "content": "Management Studio presents the <bpt id=\"p1\">**</bpt>Connect to Server<ept id=\"p1\">**</ept> dialog box.",
+      "pos": [
+        7347,
+        7411
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Server name<ept id=\"p1\">**</ept> box, type the name of the virtual machine to connect to the Database Engine  with the Object Explorer.",
+      "pos": [
+        7412,
+        7537
+      ]
+    },
+    {
+      "content": "(Instead of the virtual machine name you can also use <bpt id=\"p1\">**</bpt>(local)<ept id=\"p1\">**</ept> or a single period as the <bpt id=\"p2\">**</bpt>Server name<ept id=\"p2\">**</ept>.",
+      "pos": [
+        7538,
+        7646
+      ]
+    },
+    {
+      "content": "Select <bpt id=\"p1\">**</bpt>Windows Authentication<ept id=\"p1\">**</ept>, and leave <bpt id=\"p2\">**</bpt><bpt id=\"p3\">_</bpt>your_VM_name<ept id=\"p3\">_</ept>\\your_local_administrator<ept id=\"p2\">**</ept> in the <bpt id=\"p4\">**</bpt>User name<ept id=\"p4\">**</ept> box.",
+      "pos": [
+        7647,
+        7761
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Connect<ept id=\"p1\">**</ept>.",
+      "pos": [
+        7762,
+        7780
+      ]
+    },
+    {
+      "content": "Connect to Server",
+      "pos": [
+        7788,
+        7805
+      ]
+    },
+    {
+      "pos": [
+        7889,
+        8047
+      ],
+      "content": "In SQL Server Management Studio Object Explorer, right-click the name of the instance of SQL Server (the virtual machine name), and then click <bpt id=\"p1\">**</bpt>Properties<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Server Properties",
+      "pos": [
+        8055,
+        8072
+      ]
+    },
+    {
+      "pos": [
+        8156,
+        8292
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Security<ept id=\"p1\">**</ept> page, under <bpt id=\"p2\">**</bpt>Server authentication<ept id=\"p2\">**</ept>, select <bpt id=\"p3\">**</bpt>SQL Server and Windows Authentication mode<ept id=\"p3\">**</ept>, and then click <bpt id=\"p4\">**</bpt>OK<ept id=\"p4\">**</ept>."
+    },
+    {
+      "content": "Select Authentication Mode",
+      "pos": [
+        8300,
+        8326
+      ]
+    },
+    {
+      "pos": [
+        8403,
+        8517
+      ],
+      "content": "In the SQL Server Management Studio dialog box, click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to acknowledge the requirement to restart SQL Server."
+    },
+    {
+      "content": "In Object Explorer, right-click your server, and then click <bpt id=\"p1\">**</bpt>Restart<ept id=\"p1\">**</ept>.",
+      "pos": [
+        8522,
+        8594
+      ]
+    },
+    {
+      "content": "(If SQL Server Agent is running, it must also be restarted.)",
+      "pos": [
+        8595,
+        8655
+      ]
+    },
+    {
+      "content": "Restart",
+      "pos": [
+        8663,
+        8670
+      ]
+    },
+    {
+      "pos": [
+        8745,
+        8852
+      ],
+      "content": "In the SQL Server Management Studio dialog box, click <bpt id=\"p1\">**</bpt>Yes<ept id=\"p1\">**</ept> to agree that you want to restart SQL Server."
+    },
+    {
+      "content": "Create SQL Server authentication logins",
+      "pos": [
+        8858,
+        8897
+      ]
+    },
+    {
+      "content": "To connect to the Database Engine from another computer, you must create at least one SQL Server authentication login.",
+      "pos": [
+        8899,
+        9017
+      ]
+    },
+    {
+      "content": "In SQL Server Management Studio Object Explorer, expand the folder of the server instance in which you want to create the new login.",
+      "pos": [
+        9022,
+        9154
+      ]
+    },
+    {
+      "pos": [
+        9159,
+        9238
+      ],
+      "content": "Right-click the <bpt id=\"p1\">**</bpt>Security<ept id=\"p1\">**</ept> folder, point to <bpt id=\"p2\">**</bpt>New<ept id=\"p2\">**</ept>, and select <bpt id=\"p3\">**</bpt>Login...<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "New Login",
+      "pos": [
+        9246,
+        9255
+      ]
+    },
+    {
+      "pos": [
+        9331,
+        9448
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Login - New<ept id=\"p1\">**</ept> dialog box, on the <bpt id=\"p2\">**</bpt>General<ept id=\"p2\">**</ept> page, enter the name of the new user in the <bpt id=\"p3\">**</bpt>Login name<ept id=\"p3\">**</ept> box."
+    },
+    {
+      "pos": [
+        9453,
+        9490
+      ],
+      "content": "Select <bpt id=\"p1\">**</bpt>SQL Server authentication<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Password<ept id=\"p1\">**</ept> box, enter a password for the new user.",
+      "pos": [
+        9495,
+        9554
+      ]
+    },
+    {
+      "content": "Enter that password again into the <bpt id=\"p1\">**</bpt>Confirm Password<ept id=\"p1\">**</ept> box.",
+      "pos": [
+        9555,
+        9615
+      ]
+    },
+    {
+      "content": "To enforce password policy options for complexity and enforcement, select <bpt id=\"p1\">**</bpt>Enforce password policy<ept id=\"p1\">**</ept> (recommended).",
+      "pos": [
+        9620,
+        9736
+      ]
+    },
+    {
+      "content": "This is a default option when SQL Server authentication is selected.",
+      "pos": [
+        9737,
+        9805
+      ]
+    },
+    {
+      "content": "To enforce password policy options for expiration, select <bpt id=\"p1\">**</bpt>Enforce password expiration<ept id=\"p1\">**</ept> (recommended).",
+      "pos": [
+        9810,
+        9914
+      ]
+    },
+    {
+      "content": "Enforce password policy must be selected to enable this checkbox.",
+      "pos": [
+        9915,
+        9980
+      ]
+    },
+    {
+      "content": "This is a default option when SQL Server authentication is selected.",
+      "pos": [
+        9981,
+        10049
+      ]
+    },
+    {
+      "content": "To force the user to create a new password after the first time the login is used, select <bpt id=\"p1\">**</bpt>User must change password at next login<ept id=\"p1\">**</ept> (Recommended if this login is for someone else to use.",
+      "pos": [
+        10054,
+        10242
+      ]
+    },
+    {
+      "content": "If the login is for your own use, do not select this option.) Enforce password expiration must be selected to enable this checkbox.",
+      "pos": [
+        10243,
+        10374
+      ]
+    },
+    {
+      "content": "This is a default option when SQL Server authentication is selected.",
+      "pos": [
+        10375,
+        10443
+      ]
+    },
+    {
+      "content": "From the <bpt id=\"p1\">**</bpt>Default database<ept id=\"p1\">**</ept> list, select a default database for the login.",
+      "pos": [
+        10449,
+        10525
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>master<ept id=\"p1\">**</ept> is the default for this option.",
+      "pos": [
+        10526,
+        10568
+      ]
+    },
+    {
+      "content": "If you have not yet created a user database, leave this set to <bpt id=\"p1\">**</bpt>master<ept id=\"p1\">**</ept>.",
+      "pos": [
+        10569,
+        10643
+      ]
+    },
+    {
+      "pos": [
+        10649,
+        10714
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Default language<ept id=\"p1\">**</ept> list, leave <bpt id=\"p2\">**</bpt>default<ept id=\"p2\">**</ept> as the value."
+    },
+    {
+      "content": "Login Properties",
+      "pos": [
+        10726,
+        10742
+      ]
+    },
+    {
+      "content": "If this is the first login you are creating, you may want to designate this login as a SQL Server administrator.",
+      "pos": [
+        10820,
+        10932
+      ]
+    },
+    {
+      "content": "If so, on the <bpt id=\"p1\">**</bpt>Server Roles<ept id=\"p1\">**</ept> page, check <bpt id=\"p2\">**</bpt>sysadmin<ept id=\"p2\">**</ept>.",
+      "pos": [
+        10933,
+        10989
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Security Note:<ept id=\"p1\">**</ept> Members of the sysadmin fixed server role have complete control of the Database Engine.",
+      "pos": [
+        10996,
+        11102
+      ]
+    },
+    {
+      "content": "You should carefully restrict membership in this role.",
+      "pos": [
+        11103,
+        11157
+      ]
+    },
+    {
+      "content": "sysadmin",
+      "pos": [
+        11165,
+        11173
+      ]
+    },
+    {
+      "content": "Click OK.",
+      "pos": [
+        11249,
+        11258
+      ]
+    },
+    {
+      "pos": [
+        11260,
+        11376
+      ],
+      "content": "For more information about SQL Server logins, see <bpt id=\"p1\">[</bpt>Create a Login<ept id=\"p1\">](http://msdn.microsoft.com/library/aa337562.aspx)</ept>."
+    },
+    {
+      "content": "Determine the DNS name of the virtual machine",
+      "pos": [
+        11382,
+        11427
+      ]
+    },
+    {
+      "content": "To connect to the SQL Server Database Engine from another computer, you must know the Domain Name System (DNS) name of the virtual machine.",
+      "pos": [
+        11429,
+        11568
+      ]
+    },
+    {
+      "content": "(This is the name the internet uses to identify the virtual machine.",
+      "pos": [
+        11569,
+        11637
+      ]
+    },
+    {
+      "content": "You can use the IP address, but the IP address might change when Azure moves resources for redundancy or maintenance.",
+      "pos": [
+        11638,
+        11755
+      ]
+    },
+    {
+      "content": "The DNS name will be stable because it can be redirected to a new IP address.)",
+      "pos": [
+        11756,
+        11834
+      ]
+    },
+    {
+      "pos": [
+        11841,
+        11929
+      ],
+      "content": "In the Azure Management Portal (or from the previous step), select <bpt id=\"p1\">**</bpt>VIRTUAL MACHINES<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        11935,
+        12064
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>VIRTUAL MACHINE INSTANCES<ept id=\"p1\">**</ept> page, under the <bpt id=\"p2\">**</bpt>Quick Glance<ept id=\"p2\">**</ept> column, find and copy the DNS name for the virtual machine."
+    },
+    {
+      "content": "DNS name",
+      "pos": [
+        12072,
+        12080
+      ]
+    },
+    {
+      "content": "Connect to the Database Engine from another computer",
+      "pos": [
+        12166,
+        12218
+      ]
+    },
+    {
+      "content": "On a computer connected to the internet, open SQL Server Management Studio.",
+      "pos": [
+        12224,
+        12299
+      ]
+    },
+    {
+      "pos": [
+        12303,
+        12876
+      ],
+      "content": "In the **Connect to Server** or **Connect to Database Engine** dialog box, in the**Server name** box, enter the DNS name of the virtual machine (determined in the previous task) and a public endpoint port number in the format of *DNSName,portnumber* such as **tutorialtestVM.cloudapp.net,57500**.\nTo get the port number, log in to the Azure Management Portal and find the Virtual Machine. On the Dashboard, click **ENDPOINTS** and use the **PUBLIC PORT** assigned to **MSSQL**.\n ![Public Port](./media/virtual-machines-sql-server-connection-steps/sql-vm-port-number.png)",
+      "leadings": [
+        "",
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "In the <bpt id=\"p1\">**</bpt>Connect to Server<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>Connect to Database Engine<ept id=\"p2\">**</ept> dialog box, in the<bpt id=\"p3\">**</bpt>Server name<ept id=\"p3\">**</ept> box, enter the DNS name of the virtual machine (determined in the previous task) and a public endpoint port number in the format of <bpt id=\"p4\">*</bpt>DNSName,portnumber<ept id=\"p4\">*</ept> such as <bpt id=\"p5\">**</bpt>tutorialtestVM.cloudapp.net,57500<ept id=\"p5\">**</ept>.",
+          "pos": [
+            0,
+            296
+          ]
+        },
+        {
+          "content": "To get the port number, log in to the Azure Management Portal and find the Virtual Machine. On the Dashboard, click **ENDPOINTS** and use the **PUBLIC PORT** assigned to **MSSQL**.",
+          "pos": [
+            297,
+            477
+          ],
+          "nodes": [
+            {
+              "content": "To get the port number, log in to the Azure Management Portal and find the Virtual Machine.",
+              "pos": [
+                0,
+                91
+              ]
+            },
+            {
+              "content": "On the Dashboard, click <bpt id=\"p1\">**</bpt>ENDPOINTS<ept id=\"p1\">**</ept> and use the <bpt id=\"p2\">**</bpt>PUBLIC PORT<ept id=\"p2\">**</ept> assigned to <bpt id=\"p3\">**</bpt>MSSQL<ept id=\"p3\">**</ept>.",
+              "pos": [
+                92,
+                180
+              ]
+            }
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Public Port<ph id=\"ph2\">](./media/virtual-machines-sql-server-connection-steps/sql-vm-port-number.png)</ph>",
+          "pos": [
+            478,
+            570
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12880,
+        12948
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Authentication<ept id=\"p1\">**</ept> box, select <bpt id=\"p2\">**</bpt>SQL Server Authentication<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        12952,
+        13035
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Login<ept id=\"p1\">**</ept> box, type the name of a login that you created in an earlier task."
+    },
+    {
+      "pos": [
+        13039,
+        13130
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Password<ept id=\"p1\">**</ept> box, type the password of the login that you create in an earlier task."
+    },
+    {
+      "pos": [
+        13134,
+        13152
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Connect<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Connect using SSMS",
+      "pos": [
+        13160,
+        13178
+      ]
+    }
+  ],
+  "content": "The following steps demonstrate how to connect to the SQL Server instance over the internet using SQL Server Management Studio (SSMS). However, the same steps apply to making your SQL Server virtual machine accessible for your applications, running both on-premises and in Azure.\n\nBefore you can connect to the instance of SQL Server from another VM or the internet, you must complete the following tasks as described in the sections that follow:\n\n- [Create a TCP endpoint for the virtual machine](#create-a-tcp-endpoint-for-the-virtual-machine)\n- [Open TCP ports in the Windows firewall](#open-tcp-ports-in-the-windows-firewall-for-the-default-instance-of-the-database-engine)\n- [Configure SQL Server to listen on the TCP protocol](#configure-sql-server-to-listen-on-the-tcp-protocol)\n- [Configure SQL Server for mixed mode authentication](#configure-sql-server-for-mixed-mode-authentication)\n- [Create SQL Server authentication logins](#create-sql-server-authentication-logins)\n- [Determine the DNS name of the virtual machine](#determine-the-dns-name-of-the-virtual-machine)\n- [Connect to the Database Engine from another computer](#connect-to-the-database-engine-from-another-computer)\n\nThe connection path is summarized by the following diagram:\n\n![Connecting to a SQL Server virtual machine](./media/virtual-machines-sql-server-connection-steps/SQLServerinVMConnectionMap.png)\n\n### Create a TCP endpoint for the virtual machine\n\nIn order to access SQL Server from the internet, the virtual machine must have an endpoint to listen for incoming TCP communication. This Azure configuration step, directs incoming TCP port traffic to a TCP port that is accessible to the virtual machine.\n\n>[AZURE.NOTE] If you are connecting within the same cloud service or virtual network, you do not have to create a publically accessible endpoint. In that case, you could continue to the next step. For more information, see [Connection Scenarios](../articles/virtual-machines/virtual-machines-sql-server-connectivity.md#connection-scenarios).\n\n1. On the Azure Management Portal, click on **VIRTUAL MACHINES**.\n    \n2. Click on your newly created virtual machine. Information about your virtual machine is presented.\n    \n3. Near the top of the page, select the **ENDPOINTS** page, and then at the bottom of the page, click **ADD**.\n    \n4. On the **Add an Endpoint to a Virtual Machine** page, click **Add a Stand-alone Endpoint**, and then click the Next arrow to continue.\n    \n5. On the **Specify the details of the endpoint** page, provide the following information.\n\n    - In the **NAME** box, provide a name for the endpoint.\n    - In the **PROTOCOL** box, select **TCP**. You may type **57500** in the **PUBLIC PORT** box. Similarly, you may type SQL Server's default listening port **1433** in the **Private Port** box. Note that many organizations select different port numbers to avoid malicious security attacks. \n\n6. Click the check mark to continue. The endpoint is created.\n\n### Open TCP ports in the Windows firewall for the default instance of the Database Engine\n\n1. Connect to the virtual machine via Windows Remote Desktop. Once logged in, at the Start screen, type **WF.msc**, and then hit ENTER. \n\n    ![Start the Firewall Program](./media/virtual-machines-sql-server-connection-steps/12Open-WF.png)\n2. In the **Windows Firewall with Advanced Security**, in the left pane, right-click **Inbound Rules**, and then click **New Rule** in the action pane.\n\n    ![New Rule](./media/virtual-machines-sql-server-connection-steps/13New-FW-Rule.png)\n\n3. In the **New Inbount Rule Wizard** dialog box, under **Rule Type**, select **Port**, and then click **Next**.\n\n4. In the **Protocol and Ports** dialog, use the default **TCP**. In the **Specific local ports** box, then type the port number of the instance of the Database Engine (**1433** for the default instance or your choice for the private port in the endpoint step). \n\n    ![TCP Port 1433](./media/virtual-machines-sql-server-connection-steps/14Port-1433.png)\n\n5. Click **Next**.\n\n6. In the **Action** dialog box, select **Allow the connection**, and then click **Next**.\n\n    **Security Note:** Selecting **Allow the connection if it is secure** can provide additional security. Select this option if you want to configure additional security options in your environment.\n\n    ![Allow Connections](./media/virtual-machines-sql-server-connection-steps/15Allow-Connection.png)\n\n7. In the **Profile** dialog box, select **Public**, **Private**, and **Domain**. Then click **Next**. \n\n    **Security Note:**  Selecting **Public** allows access over the internet. Whenever possible, select a more restrictive profile.\n\n    ![Public Profile](./media/virtual-machines-sql-server-connection-steps/16Public-Private-Domain-Profile.png)\n\n8. In the **Name** dialog box, type a name and description for this rule, and then click **Finish**.\n\n    ![Rule Name](./media/virtual-machines-sql-server-connection-steps/17Rule-Name.png)\n\nOpen additional ports for other components as needed. For more information, see [Configuring the Windows Firewall to Allow SQL Server Access](http://msdn.microsoft.com/library/cc646023.aspx).\n\n\n### Configure SQL Server to listen on the TCP protocol\n\n1. While connected to the virtual machine, on the Start page, type **SQL Server Configuration Manager** and hit ENTER.\n    \n    ![Open SSCM](./media/virtual-machines-sql-server-connection-steps/9Click-SSCM.png)\n\n2. In SQL Server Configuration Manager, in the console pane, expand **SQL Server Network Configuration**.\n\n3. In the console pane, click **Protocols for MSSQLSERVER** (he default instance name.) In the details pane, right-click TCP, it should be Enabled for the gallery images by default. For your custom images, click **Enable** (if its status is Disabled.)\n\n    ![Enable TCP](./media/virtual-machines-sql-server-connection-steps/10Enable-TCP.png)\n\n5. In the console pane, click **SQL Server Services**. In the details pane, right-click **SQL Server (_instance name_)** (the default instance is **SQL Server (MSSQLSERVER)**), and then click **Restart**, to stop and restart the instance of SQL Server. \n\n    ![Restart Database Engine](./media/virtual-machines-sql-server-connection-steps/11Restart.png)\n\n7. Close SQL Server Configuration Manager.\n\nFor more information about enabling protocols for the SQL Server Database Engine, see [Enable or Disable a Server Network Protocol](http://msdn.microsoft.com/library/ms191294.aspx).\n\n### Configure SQL Server for mixed mode authentication\n\nThe SQL Server Database Engine cannot use Windows Authentication without domain environment. To connect to the Database Engine from another computer, configure SQL Server for mixed mode authentication. Mixed mode authentication allows both SQL Server Authentication and Windows Authentication.\n\n>[AZURE.NOTE] Configuring mixed mode authentication might not be necessary if you have configured an Azure Virtual Network with a configured domain environment.\n\n1. While connected to the virtual machine, on the Start page, type **SQL Server 2014 Management Studio** and click the selected icon.\n\n    ![Start SSMS](./media/virtual-machines-sql-server-connection-steps/18Start-SSMS.png)\n\n    The first time you open Management Studio it must create the users Management Studio environment. This may take a few moments.\n\n2. Management Studio presents the **Connect to Server** dialog box. In the **Server name** box, type the name of the virtual machine to connect to the Database Engine  with the Object Explorer. (Instead of the virtual machine name you can also use **(local)** or a single period as the **Server name**. Select **Windows Authentication**, and leave **_your_VM_name_\\your_local_administrator** in the **User name** box. Click **Connect**.\n\n    ![Connect to Server](./media/virtual-machines-sql-server-connection-steps/19Connect-to-Server.png)\n\n3. In SQL Server Management Studio Object Explorer, right-click the name of the instance of SQL Server (the virtual machine name), and then click **Properties**.\n\n    ![Server Properties](./media/virtual-machines-sql-server-connection-steps/20Server-Properties.png)\n\n4. On the **Security** page, under **Server authentication**, select **SQL Server and Windows Authentication mode**, and then click **OK**.\n\n    ![Select Authentication Mode](./media/virtual-machines-sql-server-connection-steps/21Mixed-Mode.png)\n\n5. In the SQL Server Management Studio dialog box, click **OK** to acknowledge the requirement to restart SQL Server.\n\n6. In Object Explorer, right-click your server, and then click **Restart**. (If SQL Server Agent is running, it must also be restarted.)\n\n    ![Restart](./media/virtual-machines-sql-server-connection-steps/22Restart2.png)\n\n7. In the SQL Server Management Studio dialog box, click **Yes** to agree that you want to restart SQL Server.\n\n### Create SQL Server authentication logins\n\nTo connect to the Database Engine from another computer, you must create at least one SQL Server authentication login.\n\n1. In SQL Server Management Studio Object Explorer, expand the folder of the server instance in which you want to create the new login.\n\n2. Right-click the **Security** folder, point to **New**, and select **Login...**.\n\n    ![New Login](./media/virtual-machines-sql-server-connection-steps/23New-Login.png)\n\n3. In the **Login - New** dialog box, on the **General** page, enter the name of the new user in the **Login name** box.\n\n4. Select **SQL Server authentication**.\n\n5. In the **Password** box, enter a password for the new user. Enter that password again into the **Confirm Password** box.\n\n6. To enforce password policy options for complexity and enforcement, select **Enforce password policy** (recommended). This is a default option when SQL Server authentication is selected.\n\n7. To enforce password policy options for expiration, select **Enforce password expiration** (recommended). Enforce password policy must be selected to enable this checkbox. This is a default option when SQL Server authentication is selected.\n\n8. To force the user to create a new password after the first time the login is used, select **User must change password at next login** (Recommended if this login is for someone else to use. If the login is for your own use, do not select this option.) Enforce password expiration must be selected to enable this checkbox. This is a default option when SQL Server authentication is selected. \n\n9. From the **Default database** list, select a default database for the login. **master** is the default for this option. If you have not yet created a user database, leave this set to **master**.\n\n10. In the **Default language** list, leave **default** as the value.\n    \n    ![Login Properties](./media/virtual-machines-sql-server-connection-steps/24Test-Login.png)\n\n11. If this is the first login you are creating, you may want to designate this login as a SQL Server administrator. If so, on the **Server Roles** page, check **sysadmin**. \n\n    **Security Note:** Members of the sysadmin fixed server role have complete control of the Database Engine. You should carefully restrict membership in this role.\n\n    ![sysadmin](./media/virtual-machines-sql-server-connection-steps/25sysadmin.png)\n\n12. Click OK.\n\nFor more information about SQL Server logins, see [Create a Login](http://msdn.microsoft.com/library/aa337562.aspx).\n\n### Determine the DNS name of the virtual machine\n\nTo connect to the SQL Server Database Engine from another computer, you must know the Domain Name System (DNS) name of the virtual machine. (This is the name the internet uses to identify the virtual machine. You can use the IP address, but the IP address might change when Azure moves resources for redundancy or maintenance. The DNS name will be stable because it can be redirected to a new IP address.)  \n\n1. In the Azure Management Portal (or from the previous step), select **VIRTUAL MACHINES**. \n\n2. On the **VIRTUAL MACHINE INSTANCES** page, under the **Quick Glance** column, find and copy the DNS name for the virtual machine.\n\n    ![DNS name](./media/virtual-machines-sql-server-connection-steps/sql-vm-dns-name.png)\n    \n\n### Connect to the Database Engine from another computer\n \n1. On a computer connected to the internet, open SQL Server Management Studio.\n2. In the **Connect to Server** or **Connect to Database Engine** dialog box, in the**Server name** box, enter the DNS name of the virtual machine (determined in the previous task) and a public endpoint port number in the format of *DNSName,portnumber* such as **tutorialtestVM.cloudapp.net,57500**.\nTo get the port number, log in to the Azure Management Portal and find the Virtual Machine. On the Dashboard, click **ENDPOINTS** and use the **PUBLIC PORT** assigned to **MSSQL**.\n    ![Public Port](./media/virtual-machines-sql-server-connection-steps/sql-vm-port-number.png)\n3. In the **Authentication** box, select **SQL Server Authentication**.\n5. In the **Login** box, type the name of a login that you created in an earlier task.\n6. In the **Password** box, type the password of the login that you create in an earlier task.\n7. Click **Connect**.\n\n    ![Connect using SSMS](./media/virtual-machines-sql-server-connection-steps/33Connect-SSMS.png)\n\n\n"
+}

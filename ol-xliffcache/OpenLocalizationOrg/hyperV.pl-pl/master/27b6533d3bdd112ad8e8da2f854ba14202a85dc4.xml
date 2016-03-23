@@ -1,0 +1,635 @@
+{
+  "nodes": [
+    {
+      "content": "User authentication for API Apps in Azure App Service | Microsoft Azure",
+      "pos": [
+        27,
+        98
+      ]
+    },
+    {
+      "content": "Learn how to protect an API app in Azure App Service by allowing access only to authenticated users.",
+      "pos": [
+        117,
+        217
+      ]
+    },
+    {
+      "content": "User authentication for API Apps in Azure App Service",
+      "pos": [
+        534,
+        587
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        704,
+        712
+      ]
+    },
+    {
+      "content": "This tutorial shows how to use the authentication and authorization features of Azure App Service to protect an API app, and how to consume the API app on behalf of end users.",
+      "pos": [
+        714,
+        889
+      ]
+    },
+    {
+      "content": "The authentication provider shown in the tutorial is Azure Active Directory, the API is ASP.NET Web API, and the client is an AngularJS single page application running in a browser.",
+      "pos": [
+        890,
+        1071
+      ]
+    },
+    {
+      "content": "Authentication and authorization in App Service",
+      "pos": [
+        1156,
+        1203
+      ]
+    },
+    {
+      "pos": [
+        1205,
+        1421
+      ],
+      "content": "For an introduction to authentication features used in this tutorial, see the previous tutorial in this series, <bpt id=\"p1\">[</bpt>authentication and authorization for API Apps in Azure App Service<ept id=\"p1\">](app-service-api-authentication.md)</ept>."
+    },
+    {
+      "content": "How to follow this tutorial",
+      "pos": [
+        1426,
+        1453
+      ]
+    },
+    {
+      "pos": [
+        1455,
+        1658
+      ],
+      "content": "This tutorial builds on a sample application that you download and create an API app for in the <bpt id=\"p1\">[</bpt>first tutorial of the API Apps and ASP.NET getting started series<ept id=\"p1\">](app-service-api-dotnet-get-started.md)</ept>."
+    },
+    {
+      "content": "The ContactsList.Angular.AAD sample project",
+      "pos": [
+        1663,
+        1706
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">[</bpt>ContactsList sample application<ept id=\"p1\">](https://github.com/Azure-Samples/app-service-api-dotnet-contact-list)</ept>, the ContactsList.Angular.AAD project is an AngularJS client that includes code for working with Azure Active Directory.",
+      "pos": [
+        1708,
+        1939
+      ]
+    },
+    {
+      "content": "The code is based on an AAD sample that can be found in the <bpt id=\"p1\">[</bpt>Azure-Samples/active-directory-angularjs-singlepageapp-dotnet-webapi<ept id=\"p1\">](https://github.com/Azure-Samples/active-directory-angularjs-singlepageapp-dotnet-webapi)</ept> repository.",
+      "pos": [
+        1940,
+        2171
+      ]
+    },
+    {
+      "content": "The code in the ContactsList.Angular.AAD project is structured differently than the simpler ContactsLists.Angular project.",
+      "pos": [
+        2173,
+        2295
+      ]
+    },
+    {
+      "content": "The code that calls the API is in the <bpt id=\"p1\">*</bpt>app/scripts/contactsSvc.js<ept id=\"p1\">*</ept> file in the ContactsList.Angular.AAD project.",
+      "pos": [
+        2296,
+        2408
+      ]
+    },
+    {
+      "content": "Here, the <ph id=\"ph1\">`Get`</ph> method is labeled <ph id=\"ph2\">`getItems`</ph>.",
+      "pos": [
+        3601,
+        3646
+      ]
+    },
+    {
+      "content": "In the controller (<bpt id=\"p1\">*</bpt>app/scripts/contactsCtrl.js<ept id=\"p1\">*</ept>), <ph id=\"ph1\">`getItems`</ph> is wired up to <ph id=\"ph2\">`$scope.populate`</ph>.",
+      "pos": [
+        3648,
+        3743
+      ]
+    },
+    {
+      "pos": [
+        4094,
+        4179
+      ],
+      "content": "In the view (<bpt id=\"p1\">*</bpt>app/views/Contacts.html<ept id=\"p1\">*</ept>), $scope.populate is called on initialization."
+    },
+    {
+      "pos": [
+        4217,
+        4500
+      ],
+      "content": "The additional code for logging in and including an authorization token with API requests is provided by the <bpt id=\"p1\">[</bpt>Azure Active Directory Authentication Library for JavaScript<ept id=\"p1\">](https://github.com/AzureAD/azure-activedirectory-library-for-js)</ept>, in the <bpt id=\"p2\">*</bpt>adal.js<ept id=\"p2\">*</ept> and <bpt id=\"p3\">*</bpt>adal-angular.js<ept id=\"p3\">*</ept> files."
+    },
+    {
+      "content": "In the <bpt id=\"p1\">*</bpt>app.js<ept id=\"p1\">*</ept> file, the code passes configuration information and the <ph id=\"ph1\">`$http`</ph> provider to the <ph id=\"ph2\">`adalProvider.init`</ph> function.",
+      "pos": [
+        4503,
+        4628
+      ]
+    },
+    {
+      "content": "Configuration information includes the AAD application client ID that pertains to each API endpoint and the client ID that pertains to this AngularJS app.",
+      "pos": [
+        4629,
+        4783
+      ]
+    },
+    {
+      "content": "The <ph id=\"ph1\">`init`</ph> function adds interceptors to the <ph id=\"ph2\">`$http`</ph> provider, that these add the authorization token to requests.",
+      "pos": [
+        4784,
+        4898
+      ]
+    },
+    {
+      "content": "Set up authentication and authorization in Azure",
+      "pos": [
+        5490,
+        5538
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](https://portal.azure.com/)</ept>, navigate to the <bpt id=\"p2\">**</bpt>API App<ept id=\"p2\">**</ept> blade of the API app that you want to protect so that only authenticated users can call it.",
+      "pos": [
+        5543,
+        5712
+      ]
+    },
+    {
+      "content": "(For this tutorial, choose the API app to which you deployed the ContactsList.API project.)",
+      "pos": [
+        5713,
+        5804
+      ]
+    },
+    {
+      "pos": [
+        5809,
+        5827
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Settings<ept id=\"p1\">**</ept>"
+    },
+    {
+      "pos": [
+        5832,
+        5912
+      ],
+      "content": "Find the <bpt id=\"p1\">**</bpt>Features<ept id=\"p1\">**</ept> section, and then click <bpt id=\"p2\">**</bpt>Authentication/ Authorization<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        5991,
+        6053
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Authentication / Authorization<ept id=\"p1\">**</ept> blade, click <bpt id=\"p2\">**</bpt>On<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6058,
+        6180
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Action to take when request is not authenticated<ept id=\"p1\">**</ept> drop-down list, select <bpt id=\"p2\">**</bpt>Log in with Azure Active Directory<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6185,
+        6254
+      ],
+      "content": "Under <bpt id=\"p1\">**</bpt>Authentication Providers<ept id=\"p1\">**</ept>, click <bpt id=\"p2\">**</bpt>Azure Active Directory<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6334,
+        6401
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Azure Active Directory Settings<ept id=\"p1\">**</ept> blade, click <bpt id=\"p2\">**</bpt>Express<ept id=\"p2\">**</ept>"
+    },
+    {
+      "content": "\"Express\" here means that Azure will automatically create an AAD application in your AAD tenant.",
+      "pos": [
+        6484,
+        6580
+      ]
+    },
+    {
+      "content": "Make a note of the name of the new AAD application, as you'll select it later when you go to the Azure classic portal to get the client ID of the new AAD application.",
+      "pos": [
+        6581,
+        6747
+      ]
+    },
+    {
+      "pos": [
+        6752,
+        6765
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        6771,
+        6835
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Authentication / Authorization<ept id=\"p1\">**</ept> blade, click <bpt id=\"p2\">**</bpt>Save<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6840,
+        6977
+      ],
+      "content": "To verify that the API app is now protected, go to the API app's URL + <ph id=\"ph1\">`/swagger`</ph> as you did in the first tutorial to use the Swagger UI."
+    },
+    {
+      "content": "This time you are redirected to a logon page.",
+      "pos": [
+        6984,
+        7029
+      ]
+    },
+    {
+      "pos": [
+        7110,
+        7208
+      ],
+      "content": "In the <bpt id=\"p1\">[</bpt>Azure classic portal<ept id=\"p1\">](https://manage.windowsazure.com/)</ept>, go to <bpt id=\"p2\">**</bpt>Azure Active Directory<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "You have to go to the classic portal because certain Azure Active Directory settings that you need access to are not yet available in the current Azure portal.",
+      "pos": [
+        7214,
+        7373
+      ]
+    },
+    {
+      "pos": [
+        7379,
+        7427
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>Directory<ept id=\"p1\">**</ept> tab, click your AAD tenant."
+    },
+    {
+      "pos": [
+        7511,
+        7596
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Applications &gt; Applications my company owns<ept id=\"p1\">**</ept>, and then click the check mark."
+    },
+    {
+      "content": "You might also have to refresh the page to see the new application.",
+      "pos": [
+        7602,
+        7669
+      ]
+    },
+    {
+      "content": "In the list of applications, click the name of the one that Azure created for you when you enabled authentication for your API app.",
+      "pos": [
+        7675,
+        7806
+      ]
+    },
+    {
+      "pos": [
+        7885,
+        7905
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        7986,
+        8114
+      ],
+      "content": "At the bottom of the page, click <bpt id=\"p1\">**</bpt>Manage manifest &gt; Download manifest<ept id=\"p1\">**</ept>, and save the file in a location where you can edit it."
+    },
+    {
+      "content": "In the downloaded manifest file, search for the  <ph id=\"ph1\">`oauth2AllowImplicitFlow`</ph> property.",
+      "pos": [
+        8120,
+        8204
+      ]
+    },
+    {
+      "content": "Change the value of this property from <ph id=\"ph1\">`false`</ph> to <ph id=\"ph2\">`true`</ph>, and then save the file.",
+      "pos": [
+        8205,
+        8286
+      ]
+    },
+    {
+      "content": "This setting is required for access from a JavaScript single-page application.",
+      "pos": [
+        8292,
+        8370
+      ]
+    },
+    {
+      "content": "It enables the Oauth 2.0 bearer token to be returned in the URL fragment.",
+      "pos": [
+        8371,
+        8444
+      ]
+    },
+    {
+      "pos": [
+        8450,
+        8554
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Manage manifest &gt; Upload manifest<ept id=\"p1\">**</ept>, and upload the file that you updated in the preceding step."
+    },
+    {
+      "content": "Keep this page open so you can copy and paste values from it and update values on the page in later steps of the tutorial.",
+      "pos": [
+        8560,
+        8682
+      ]
+    },
+    {
+      "content": "Configure the ContactsList.Angular.AAD project to call the Azure API app",
+      "pos": [
+        8687,
+        8759
+      ]
+    },
+    {
+      "content": "The following instructions explain how to deploy the application to Azure and run it there, but with minor changes you could run locally.",
+      "pos": [
+        8761,
+        8898
+      ]
+    },
+    {
+      "content": "The sample code contains localhost URL endpoints.",
+      "pos": [
+        8899,
+        8948
+      ]
+    },
+    {
+      "content": "If you want to run locally, set up the projects for SSL, use the localhost SSL URLs in project code, and use the localhost SSL URLs in the AAD application configuration.",
+      "pos": [
+        8949,
+        9118
+      ]
+    },
+    {
+      "content": "While running locally, the AngularJS code will only allow logged on users to call the API, but unauthenticated callers from other clients could call the API.",
+      "pos": [
+        9119,
+        9276
+      ]
+    },
+    {
+      "pos": [
+        9281,
+        9357
+      ],
+      "content": "In the ContactsList.Angular.AAD project, open the <bpt id=\"p1\">*</bpt>app/scripts/app.js<ept id=\"p1\">*</ept> file."
+    },
+    {
+      "pos": [
+        9362,
+        9478
+      ],
+      "content": "In the code that sets the <ph id=\"ph1\">`endpoints`</ph> variable, comment out the localhost endpoint and uncomment the Azure endpoint."
+    },
+    {
+      "pos": [
+        9484,
+        9632
+      ],
+      "content": "Replace \"yourclientid\" with the actual value of the AAD application's client ID from the classic portal's <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab for the AAD application."
+    },
+    {
+      "content": "Replace \"{your api app name}\" with the name of the API app that you deployed the ContactsList.API project to.",
+      "pos": [
+        9637,
+        9746
+      ]
+    },
+    {
+      "content": "The code is now similar to the following example.",
+      "pos": [
+        9752,
+        9801
+      ]
+    },
+    {
+      "pos": [
+        10022,
+        10150
+      ],
+      "content": "Also in <bpt id=\"p1\">*</bpt>app.js<ept id=\"p1\">*</ept>, in the call to <ph id=\"ph1\">`adalProvider.init`</ph>, replace \"{your tenant url}\" and \"{your client id}\" with the actual values."
+    },
+    {
+      "content": "The code will look similar to the following example:",
+      "pos": [
+        10156,
+        10208
+      ]
+    },
+    {
+      "pos": [
+        10576,
+        10715
+      ],
+      "content": "In the <bpt id=\"p1\">*</bpt>app/scripts/contactsSvc.js<ept id=\"p1\">*</ept> file, make the same endpoint URL change from localhost to API app URL that you did earlier in <bpt id=\"p2\">*</bpt>app.js<ept id=\"p2\">*</ept>."
+    },
+    {
+      "content": "The code is now similar to the following example.",
+      "pos": [
+        10721,
+        10770
+      ]
+    },
+    {
+      "content": "Configure the AAD application for the Azure web app",
+      "pos": [
+        10902,
+        10953
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab for the AAD application in the classic portal, in the <bpt id=\"p2\">**</bpt>Sign-on URL<ept id=\"p2\">**</ept> field, delete the URL that is already there and replace it with the web app's base URL, including the trailing slash.",
+      "pos": [
+        10958,
+        11170
+      ]
+    },
+    {
+      "content": "(Note that this is the URL of the web app that will run the AngularJS code, not the API app's URL.)",
+      "pos": [
+        11171,
+        11270
+      ]
+    },
+    {
+      "pos": [
+        11355,
+        11449
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Reply URL<ept id=\"p1\">**</ept> field, replace the URL that is already there with the web app's base URL."
+    },
+    {
+      "pos": [
+        11533,
+        11548
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Deploy the ContactsList.Angular.AAD project to Azure",
+      "pos": [
+        11553,
+        11605
+      ]
+    },
+    {
+      "pos": [
+        11610,
+        11713
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Solution Explorer<ept id=\"p1\">**</ept>, right-click the ContactsList.Angular.AAD project, and then click <bpt id=\"p2\">**</bpt>Publish<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        11718,
+        11756
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Microsoft Azure App Service<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        11762,
+        11862
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>App Service<ept id=\"p1\">**</ept> dialog box, in the <bpt id=\"p2\">**</bpt>Subscription<ept id=\"p2\">**</ept> drop-down list, choose your subscription."
+    },
+    {
+      "content": "Expand the resource group that you created for this tutorial, and select the web app that you created in the second tutorial.",
+      "pos": [
+        11868,
+        11993
+      ]
+    },
+    {
+      "pos": [
+        12079,
+        12092
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        12098,
+        12229
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Publish Web<ept id=\"p1\">**</ept> wizard, click the <bpt id=\"p2\">**</bpt>Connection<ept id=\"p2\">**</ept> tab, and then in the <bpt id=\"p3\">**</bpt>Destination URL<ept id=\"p3\">**</ept> box change <ph id=\"ph1\">`http://`</ph> to <ph id=\"ph2\">`https://`</ph>"
+    },
+    {
+      "content": "This setting determines what URL the default browser will be opened to after a successful deployment.",
+      "pos": [
+        12315,
+        12416
+      ]
+    },
+    {
+      "pos": [
+        12422,
+        12582
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Publish Web<ept id=\"p1\">**</ept> wizard, click the <bpt id=\"p2\">**</bpt>Settings<ept id=\"p2\">**</ept> tab, expand <bpt id=\"p3\">**</bpt>File Publish Options<ept id=\"p3\">**</ept>, and select the <bpt id=\"p4\">**</bpt>Remove additional files at destination<ept id=\"p4\">**</ept> check box."
+    },
+    {
+      "pos": [
+        12587,
+        12605
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Publish<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Visual Studio deploys the project and opens a browser to the app's home page.",
+      "pos": [
+        12611,
+        12688
+      ]
+    },
+    {
+      "content": "Test the AngularJS web app in Azure",
+      "pos": [
+        12693,
+        12728
+      ]
+    },
+    {
+      "pos": [
+        12733,
+        12760
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Contacts<ept id=\"p1\">**</ept> tab."
+    },
+    {
+      "content": "You are prompted to log in.",
+      "pos": [
+        12766,
+        12793
+      ]
+    },
+    {
+      "content": "Log in with the credentials of a user in your AAD tenant.",
+      "pos": [
+        12798,
+        12855
+      ]
+    },
+    {
+      "pos": [
+        12861,
+        12891
+      ],
+      "content": "The <bpt id=\"p1\">**</bpt>Contacts<ept id=\"p1\">**</ept> page appears."
+    },
+    {
+      "content": "The front-end can now call the API on behalf of an authenticated user, but unauthenticated users can't call the API.",
+      "pos": [
+        12976,
+        13092
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        13097,
+        13107
+      ]
+    },
+    {
+      "content": "In this tutorial you used App Service Authentication/Authorization to restrict access to an API app so that only authenticated users can call it.",
+      "pos": [
+        13109,
+        13254
+      ]
+    },
+    {
+      "content": "In the next tutorial in the series you'll learn how to <bpt id=\"p1\">[</bpt>restrict access to your API app for service-to-service scenarios<ept id=\"p1\">](app-service-api-dotnet-service-principal-auth.md)</ept>.",
+      "pos": [
+        13255,
+        13427
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"User authentication for API Apps in Azure App Service | Microsoft Azure\"\n    description=\"Learn how to protect an API app in Azure App Service by allowing access only to authenticated users.\"\n    services=\"app-service\\api\"\n    documentationCenter=\".net\"\n    authors=\"tdykstra\"\n    manager=\"wpickett\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"app-service-api\"\n    ms.workload=\"na\"\n    ms.tgt_pltfrm=\"dotnet\"\n    ms.devlang=\"na\"\n    ms.topic=\"hero-article\"\n    ms.date=\"11/30/2015\"\n    ms.author=\"tdykstra\"/>\n\n# User authentication for API Apps in Azure App Service\n\n[AZURE.INCLUDE [app-service-api-get-started-selector](../../includes/app-service-api-get-started-selector.md)]\n\n## Overview\n\nThis tutorial shows how to use the authentication and authorization features of Azure App Service to protect an API app, and how to consume the API app on behalf of end users. The authentication provider shown in the tutorial is Azure Active Directory, the API is ASP.NET Web API, and the client is an AngularJS single page application running in a browser.\n\n![](./media/app-service-api-dotnet-user-principal-auth/contactspageazure.png)\n \n## Authentication and authorization in App Service\n\nFor an introduction to authentication features used in this tutorial, see the previous tutorial in this series, [authentication and authorization for API Apps in Azure App Service](app-service-api-authentication.md).\n\n## How to follow this tutorial\n\nThis tutorial builds on a sample application that you download and create an API app for in the [first tutorial of the API Apps and ASP.NET getting started series](app-service-api-dotnet-get-started.md).\n\n## The ContactsList.Angular.AAD sample project\n\nIn the [ContactsList sample application](https://github.com/Azure-Samples/app-service-api-dotnet-contact-list), the ContactsList.Angular.AAD project is an AngularJS client that includes code for working with Azure Active Directory. The code is based on an AAD sample that can be found in the [Azure-Samples/active-directory-angularjs-singlepageapp-dotnet-webapi](https://github.com/Azure-Samples/active-directory-angularjs-singlepageapp-dotnet-webapi) repository.\n\nThe code in the ContactsList.Angular.AAD project is structured differently than the simpler ContactsLists.Angular project. The code that calls the API is in the *app/scripts/contactsSvc.js* file in the ContactsList.Angular.AAD project. \n\n        angular.module('contactsListApp')\n        .factory('contactsSvc', ['$http', function ($http) {\n            //var apiEndpoint = \"https://{your api app name}.azurewebsites.net\";\n            var apiEndpoint = \"https://localhost:44300\";\n        \n            $http.defaults.useXDomain = true;\n            delete $http.defaults.headers.common['X-Requested-With']; \n        \n            return {\n                getItems: function () {\n                    return $http.get(apiEndpoint + '/api/contacts');\n                },\n                getItem : function(id){\n                    return $http.get(apiEndpoint + '/api/contacts/' + id);\n                },\n                postItem : function(item){\n                    return $http.post(apiEndpoint + '/api/contacts', item);\n                },\n                putItem : function(item){\n                    return $http.put(apiEndpoint + '/api/contacts/', item);\n                },\n                deleteItem : function(id){\n                    return $http({\n                        method: 'DELETE',\n                        url: apiEndpoint + '/api/contacts/' + id\n                    });\n                }\n            };\n        }]);\n\nHere, the `Get` method is labeled `getItems`.  In the controller (*app/scripts/contactsCtrl.js*), `getItems` is wired up to `$scope.populate`.\n\n        $scope.populate = function () {\n            contactsSvc.getItems().then(function (results) {\n                $scope.contactsList = results.data;\n                $scope.loadingMessage = \"\";\n            }, function (err) {\n                $scope.loadingMessage = \"\";\n                $scope.error = \"Error: \" + err;\n            });\n        };\n\nIn the view (*app/views/Contacts.html*), $scope.populate is called on initialization.\n\n        <div ng-init=\"populate()\">\n\nThe additional code for logging in and including an authorization token with API requests is provided by the [Azure Active Directory Authentication Library for JavaScript](https://github.com/AzureAD/azure-activedirectory-library-for-js), in the *adal.js* and *adal-angular.js* files. \n\nIn the *app.js* file, the code passes configuration information and the `$http` provider to the `adalProvider.init` function. Configuration information includes the AAD application client ID that pertains to each API endpoint and the client ID that pertains to this AngularJS app. The `init` function adds interceptors to the `$http` provider, that these add the authorization token to requests.\n\n        var endpoints = { \n            //\"https://{your api app name}.azurewebsites.net/\": \"{your client id}\"\n            \"https://localhost:44300/\": \"{your client id}\"\n        };\n\n        adalProvider.init(\n            {\n                instance: 'https://login.microsoftonline.com/', \n                tenant: '{your tenant url}',\n                clientId: '{your client id}',\n                extraQueryParameter: 'nux=1',\n                endpoints: endpoints\n                //cacheLocation: 'localStorage', // enable this for \n            },\n            $httpProvider\n            );\n\n## Set up authentication and authorization in Azure\n\n1. In the [Azure portal](https://portal.azure.com/), navigate to the **API App** blade of the API app that you want to protect so that only authenticated users can call it. (For this tutorial, choose the API app to which you deployed the ContactsList.API project.)\n\n2. Click **Settings**\n\n2. Find the **Features** section, and then click **Authentication/ Authorization**.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/features.png)\n\n3. In the **Authentication / Authorization** blade, click **On**.\n\n4. In the **Action to take when request is not authenticated** drop-down list, select **Log in with Azure Active Directory**.\n\n5. Under **Authentication Providers**, click **Azure Active Directory**.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/authblade.png)\n\n6. In the **Azure Active Directory Settings** blade, click **Express**\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/aadsettings.png)\n\n    \"Express\" here means that Azure will automatically create an AAD application in your AAD tenant. Make a note of the name of the new AAD application, as you'll select it later when you go to the Azure classic portal to get the client ID of the new AAD application.\n\n7. Click **OK**.\n\n10. In the **Authentication / Authorization** blade, click **Save**.\n\n8. To verify that the API app is now protected, go to the API app's URL + `/swagger` as you did in the first tutorial to use the Swagger UI. \n\n    This time you are redirected to a logon page.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/loginpage.png)\n\n11. In the [Azure classic portal](https://manage.windowsazure.com/), go to **Azure Active Directory**.\n\n    You have to go to the classic portal because certain Azure Active Directory settings that you need access to are not yet available in the current Azure portal.\n\n12. On the **Directory** tab, click your AAD tenant.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/selecttenant.png)\n\n14. Click **Applications > Applications my company owns**, and then click the check mark.\n\n    You might also have to refresh the page to see the new application.\n\n15. In the list of applications, click the name of the one that Azure created for you when you enabled authentication for your API app.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/appstab.png)\n\n16. Click **Configure**.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/configure.png)\n\n15. At the bottom of the page, click **Manage manifest > Download manifest**, and save the file in a location where you can edit it.\n\n16. In the downloaded manifest file, search for the  `oauth2AllowImplicitFlow` property. Change the value of this property from `false` to `true`, and then save the file.\n\n    This setting is required for access from a JavaScript single-page application. It enables the Oauth 2.0 bearer token to be returned in the URL fragment.\n\n16. Click **Manage manifest > Upload manifest**, and upload the file that you updated in the preceding step.\n\n17. Keep this page open so you can copy and paste values from it and update values on the page in later steps of the tutorial.\n\n## Configure the ContactsList.Angular.AAD project to call the Azure API app\n\nThe following instructions explain how to deploy the application to Azure and run it there, but with minor changes you could run locally. The sample code contains localhost URL endpoints. If you want to run locally, set up the projects for SSL, use the localhost SSL URLs in project code, and use the localhost SSL URLs in the AAD application configuration. While running locally, the AngularJS code will only allow logged on users to call the API, but unauthenticated callers from other clients could call the API.\n\n1. In the ContactsList.Angular.AAD project, open the *app/scripts/app.js* file.\n\n8. In the code that sets the `endpoints` variable, comment out the localhost endpoint and uncomment the Azure endpoint.\n\n10. Replace \"yourclientid\" with the actual value of the AAD application's client ID from the classic portal's **Configure** tab for the AAD application.\n\n2. Replace \"{your api app name}\" with the name of the API app that you deployed the ContactsList.API project to.\n\n    The code is now similar to the following example.\n\n        var endpoints = {\n            \"https://contactslistapi.azurewebsites.net/\": \"1cf55bc9-9ed8-4df31cf55bc9-9ed8-4df3\"\n            //\"https://localhost:44300/\": \"1cf55bc9-9ed8-4df31cf55bc9-9ed8-4df3\"\n        };\n\n9. Also in *app.js*, in the call to `adalProvider.init`, replace \"{your tenant url}\" and \"{your client id}\" with the actual values.\n\n    The code will look similar to the following example:\n\n        adalProvider.init(\n            {\n                instance: 'https://login.microsoftonline.com/', \n                tenant: 'contoso.onmicrosoft.com',\n                clientId: '1cf55bc9-9ed8-4df31cf55bc9-9ed8-4df3',\n                extraQueryParameter: 'nux=1',\n                endpoints: endpoints\n            },\n            $httpProvider\n            );\n\n1. In the *app/scripts/contactsSvc.js* file, make the same endpoint URL change from localhost to API app URL that you did earlier in *app.js*.\n\n    The code is now similar to the following example.\n\n        var apiEndpoint = \"https://contactslistapi.azurewebsites.net\";\n        //var apiEndpoint = \"https://localhost:44300\";\n\n## Configure the AAD application for the Azure web app\n\n1. In the **Configure** tab for the AAD application in the classic portal, in the **Sign-on URL** field, delete the URL that is already there and replace it with the web app's base URL, including the trailing slash. (Note that this is the URL of the web app that will run the AngularJS code, not the API app's URL.)\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/signonurlazure.png)\n\n3. In the **Reply URL** field, replace the URL that is already there with the web app's base URL.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/replyurlazure.png)\n\n4. Click **Save**.\n\n## Deploy the ContactsList.Angular.AAD project to Azure\n\n8. In **Solution Explorer**, right-click the ContactsList.Angular.AAD project, and then click **Publish**.\n\n9. Click **Microsoft Azure App Service**.\n\n10. In the **App Service** dialog box, in the **Subscription** drop-down list, choose your subscription.\n\n11. Expand the resource group that you created for this tutorial, and select the web app that you created in the second tutorial.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/deploytowebapp.png)\n\n12. Click **OK**.\n\n12. In the **Publish Web** wizard, click the **Connection** tab, and then in the **Destination URL** box change `http://` to `https://`\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/httpsinconntab.png)\n\n    This setting determines what URL the default browser will be opened to after a successful deployment.\n\n12. In the **Publish Web** wizard, click the **Settings** tab, expand **File Publish Options**, and select the **Remove additional files at destination** check box.\n\n7. Click **Publish**.\n\n    Visual Studio deploys the project and opens a browser to the app's home page.\n\n## Test the AngularJS web app in Azure\n\n8. Click the **Contacts** tab.\n\n    You are prompted to log in.\n\n9. Log in with the credentials of a user in your AAD tenant.\n\n10. The **Contacts** page appears.\n\n    ![](./media/app-service-api-dotnet-user-principal-auth/contactspageazure.png)\n\nThe front-end can now call the API on behalf of an authenticated user, but unauthenticated users can't call the API.\n\n## Next steps\n\nIn this tutorial you used App Service Authentication/Authorization to restrict access to an API app so that only authenticated users can call it. In the next tutorial in the series you'll learn how to [restrict access to your API app for service-to-service scenarios](app-service-api-dotnet-service-principal-auth.md).\n\n\n"
+}

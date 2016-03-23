@@ -1,0 +1,418 @@
+{
+  "nodes": [
+    {
+      "content": "Make a new management service",
+      "pos": [
+        2,
+        31
+      ]
+    },
+    {
+      "content": "This document introduces VM Services built on Hyper-V sockets and how to get started using them.",
+      "pos": [
+        34,
+        130
+      ]
+    },
+    {
+      "content": "What is a VM Service?",
+      "pos": [
+        156,
+        177
+      ]
+    },
+    {
+      "content": "VM Services are services that span the Hyper-V host and virtual machines running on the host.",
+      "pos": [
+        178,
+        271
+      ]
+    },
+    {
+      "content": "Hyper-V now (Windows 10 and Server 2016+) provides a non-network connection which allows you to create services spanning the host/virtual machine boundary while preserving Hyper-V’s fundamental requirements around tenant/hoster isolation, control, and diagnosable.",
+      "pos": [
+        273,
+        537
+      ]
+    },
+    {
+      "content": "Hyper-V will continue to provide a base set of in-box services (integration services) for basics (such as time sync) and for common requests we receive, but now anyone can write and deploy a VM service as needed.",
+      "pos": [
+        539,
+        751
+      ]
+    },
+    {
+      "content": "PowerShell Direct is an in-box example of a VM Service.",
+      "pos": [
+        753,
+        808
+      ]
+    },
+    {
+      "content": "What is a Hyper-V socket?",
+      "pos": [
+        813,
+        838
+      ]
+    },
+    {
+      "content": "Hyper-V sockets are TCP-like sockets with no dependence on networking.",
+      "pos": [
+        839,
+        909
+      ]
+    },
+    {
+      "content": "Using Hyper-V sockets, services can run independently of the networking stack and all data flow stays on host memory.",
+      "pos": [
+        911,
+        1028
+      ]
+    },
+    {
+      "content": "System Requirements",
+      "pos": [
+        1033,
+        1052
+      ]
+    },
+    {
+      "content": "Supported Host OS",
+      "pos": [
+        1056,
+        1073
+      ]
+    },
+    {
+      "content": "Windows 10",
+      "pos": [
+        1080,
+        1090
+      ]
+    },
+    {
+      "content": "Windows Server Technical Preview 3",
+      "pos": [
+        1095,
+        1129
+      ]
+    },
+    {
+      "content": "Future releases (Server 2016 +)",
+      "pos": [
+        1134,
+        1165
+      ]
+    },
+    {
+      "content": "Supported Guest OS",
+      "pos": [
+        1169,
+        1187
+      ]
+    },
+    {
+      "content": "Windows 10",
+      "pos": [
+        1194,
+        1204
+      ]
+    },
+    {
+      "content": "Windows Server Technical Preview 3",
+      "pos": [
+        1209,
+        1243
+      ]
+    },
+    {
+      "content": "Future releases (Server 2016 +)",
+      "pos": [
+        1248,
+        1279
+      ]
+    },
+    {
+      "content": "Linux",
+      "pos": [
+        1284,
+        1289
+      ]
+    },
+    {
+      "content": "Capabilities and Limitations",
+      "pos": [
+        1294,
+        1322
+      ]
+    },
+    {
+      "content": "Kernel mode or user mode",
+      "pos": [
+        1323,
+        1347
+      ]
+    },
+    {
+      "content": "Data stream only",
+      "pos": [
+        1350,
+        1366
+      ]
+    },
+    {
+      "content": "No block memory so not the best for backup/video",
+      "pos": [
+        1371,
+        1419
+      ]
+    },
+    {
+      "content": "Getting started",
+      "pos": [
+        1426,
+        1441
+      ]
+    },
+    {
+      "content": "This guide assumes you're familiar with socket programming in C/C++.",
+      "pos": [
+        1443,
+        1511
+      ]
+    },
+    {
+      "content": "Step 1 - Register your service on the Hyper-V host",
+      "pos": [
+        1517,
+        1567
+      ]
+    },
+    {
+      "content": "In order to use a custom service integrated with Hyper-V, the new service must be registered with the Hyper-V Host's registry.",
+      "pos": [
+        1568,
+        1694
+      ]
+    },
+    {
+      "content": "By registering the service in the registry, you get:",
+      "pos": [
+        1696,
+        1748
+      ]
+    },
+    {
+      "content": "WMI management for enable, disable, and listing available services",
+      "pos": [
+        1752,
+        1818
+      ]
+    },
+    {
+      "content": "Onto the list of services allowed to communicate with virtual machines directly.",
+      "pos": [
+        1822,
+        1902
+      ]
+    },
+    {
+      "content": "** Registry location and information **",
+      "pos": [
+        1904,
+        1943
+      ]
+    },
+    {
+      "content": "In this registry location, you'll see several GUIDS.",
+      "pos": [
+        2115,
+        2167
+      ]
+    },
+    {
+      "content": "Those are our in-box services.",
+      "pos": [
+        2169,
+        2199
+      ]
+    },
+    {
+      "content": "Information in the registry per service:",
+      "pos": [
+        2201,
+        2241
+      ]
+    },
+    {
+      "pos": [
+        2268,
+        2329
+      ],
+      "content": "<ph id=\"ph1\">`ElementName (REG_SZ)`</ph> -- this is the service's friendly name"
+    },
+    {
+      "content": "To register your own service, create a new registry key using your own GUID and friendly name.",
+      "pos": [
+        2331,
+        2425
+      ]
+    },
+    {
+      "content": "The registry entry will look like this:",
+      "pos": [
+        2427,
+        2466
+      ]
+    },
+    {
+      "content": "** Tip: **  To generate a GUID in PowerShell and copy it to the clipboard, run:",
+      "pos": [
+        2743,
+        2822
+      ]
+    },
+    {
+      "content": "Step 2 - Create a simple host-side service",
+      "pos": [
+        2940,
+        2982
+      ]
+    },
+    {
+      "content": "Step 3 - Create a simple guest-side service",
+      "pos": [
+        2990,
+        3033
+      ]
+    },
+    {
+      "content": "More information about AF_HYPERV",
+      "pos": [
+        3038,
+        3070
+      ]
+    },
+    {
+      "content": "Since Hyper-V sockets do not depend on a networking stack, TCP/IP, DNS, etc. the socket end point needed a non-IP, not hostname, format that still describes the connection.",
+      "pos": [
+        3071,
+        3243
+      ]
+    },
+    {
+      "content": "In lieu of an IP or hostname, AF_HYPERV endpoints rely heavily on two GUIDS:",
+      "pos": [
+        3245,
+        3321
+      ]
+    },
+    {
+      "content": "VM ID – this is the unique ID assigned per VM.",
+      "pos": [
+        3326,
+        3372
+      ]
+    },
+    {
+      "content": "A VM’s ID can be found using the following PowerShell snippet.",
+      "pos": [
+        3374,
+        3436
+      ]
+    },
+    {
+      "content": "Service ID – GUID under which the service is registered in the Hyper-V host registry.",
+      "pos": [
+        3482,
+        3567
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Registering a New Service<ept id=\"p1\">](#GettingStarted)</ept>.",
+      "pos": [
+        3569,
+        3618
+      ]
+    },
+    {
+      "content": "For connections from a service on the host to the service on a VM:",
+      "pos": [
+        3620,
+        3686
+      ]
+    },
+    {
+      "content": "VMID and Service ID",
+      "pos": [
+        3689,
+        3708
+      ]
+    },
+    {
+      "content": "For connections from a service on a VM to the service on the host:",
+      "pos": [
+        3709,
+        3775
+      ]
+    },
+    {
+      "content": "Zero GUID and Service ID",
+      "pos": [
+        3778,
+        3802
+      ]
+    },
+    {
+      "content": "Supported socket commands",
+      "pos": [
+        3807,
+        3832
+      ]
+    },
+    {
+      "content": "Socket()",
+      "pos": [
+        3834,
+        3842
+      ]
+    },
+    {
+      "content": "Bind()",
+      "pos": [
+        3843,
+        3849
+      ]
+    },
+    {
+      "content": "Connect ()",
+      "pos": [
+        3850,
+        3860
+      ]
+    },
+    {
+      "content": "Send()",
+      "pos": [
+        3861,
+        3867
+      ]
+    },
+    {
+      "content": "Listen()",
+      "pos": [
+        3868,
+        3876
+      ]
+    },
+    {
+      "content": "Accept()",
+      "pos": [
+        3877,
+        3885
+      ]
+    }
+  ],
+  "content": "# Make a new management service #\nThis document introduces VM Services built on Hyper-V sockets and how to get started using them.\n\n![](../media/1.png)\n\n## What is a VM Service?\nVM Services are services that span the Hyper-V host and virtual machines running on the host.\n\nHyper-V now (Windows 10 and Server 2016+) provides a non-network connection which allows you to create services spanning the host/virtual machine boundary while preserving Hyper-V’s fundamental requirements around tenant/hoster isolation, control, and diagnosable.\n\nHyper-V will continue to provide a base set of in-box services (integration services) for basics (such as time sync) and for common requests we receive, but now anyone can write and deploy a VM service as needed.\n\nPowerShell Direct is an in-box example of a VM Service.\n\n## What is a Hyper-V socket?\nHyper-V sockets are TCP-like sockets with no dependence on networking.  Using Hyper-V sockets, services can run independently of the networking stack and all data flow stays on host memory.\n\n## System Requirements\n\n**Supported Host OS**\n*   Windows 10\n*   Windows Server Technical Preview 3\n*   Future releases (Server 2016 +)\n\n**Supported Guest OS**\n*   Windows 10\n*   Windows Server Technical Preview 3\n*   Future releases (Server 2016 +)\n*   Linux\n\n## Capabilities and Limitations\nKernel mode or user mode  \nData stream only    \nNo block memory so not the best for backup/video  \n\n## Getting started\n\nThis guide assumes you're familiar with socket programming in C/C++.\n\n### Step 1 - Register your service on the Hyper-V host\nIn order to use a custom service integrated with Hyper-V, the new service must be registered with the Hyper-V Host's registry.\n\nBy registering the service in the registry, you get:\n*  WMI management for enable, disable, and listing available services\n*  Onto the list of services allowed to communicate with virtual machines directly.\n\n** Registry location and information **  \n\n``` \nHKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\VirtualDevices\\6C09BB55-D683-4DA0-8931-C9BF705F6480\\GuestCommunicationServices\\\n```\nIn this registry location, you'll see several GUIDS.  Those are our in-box services.\n\nInformation in the registry per service:\n* `Service GUID`   \n    * `ElementName (REG_SZ)` -- this is the service's friendly name\n\nTo register your own service, create a new registry key using your own GUID and friendly name.\n\nThe registry entry will look like this:\n```\nHKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\GuestCommunicationServices\\\n    999E53D4-3D5C-4C3E-8779-BED06EC056E1\\\n        ElementName REG_SZ  VM Session Service\n    YourGUID\\\n        ElementName REG_SZ  Your Service Friendly Name\n```\n\n> ** Tip: **  To generate a GUID in PowerShell and copy it to the clipboard, run:  \n``` PowerShell\n[System.Guid]::NewGuid().ToString() | clip.exe\n```\n\n<!-- How do customers know this worked -->\n\n### Step 2 - Create a simple host-side service\n\n\n\n### Step 3 - Create a simple guest-side service\n\n## More information about AF_HYPERV\nSince Hyper-V sockets do not depend on a networking stack, TCP/IP, DNS, etc. the socket end point needed a non-IP, not hostname, format that still describes the connection.  In lieu of an IP or hostname, AF_HYPERV endpoints rely heavily on two GUIDS:  \n* VM ID – this is the unique ID assigned per VM.  A VM’s ID can be found using the following PowerShell snippet.\n```PowerShell\n(Get-VM -Name vmname).Id\n```\n* Service ID – GUID under which the service is registered in the Hyper-V host registry.  See [Registering a New Service](#GettingStarted).\n\nFor connections from a service on the host to the service on a VM:  \nVMID and Service ID\nFor connections from a service on a VM to the service on the host:  \nZero GUID and Service ID\n\n## Supported socket commands\n\nSocket()\nBind()\nConnect ()\nSend()\nListen()\nAccept()\n\n\n \n"
+}

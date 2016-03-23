@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    {
+      "content": "Send messages to Event Hubs",
+      "pos": [
+        3,
+        30
+      ]
+    },
+    {
+      "content": "In this section, you'll write a Windows console app that sends events to your Event Hub.",
+      "pos": [
+        32,
+        120
+      ]
+    },
+    {
+      "content": "In Visual Studio, create a new Visual C# Desktop App project using the <bpt id=\"p1\">**</bpt>Console  Application<ept id=\"p1\">**</ept> project template.",
+      "pos": [
+        125,
+        238
+      ]
+    },
+    {
+      "content": "Name the project <bpt id=\"p1\">**</bpt>Sender<ept id=\"p1\">**</ept>.",
+      "pos": [
+        239,
+        267
+      ]
+    },
+    {
+      "pos": [
+        284,
+        389
+      ],
+      "content": "In Solution Explorer, right-click the solution, and then click <bpt id=\"p1\">**</bpt>Manage NuGet Packages for Solution...<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "This displays the Manage NuGet Packages dialog box.",
+      "pos": [
+        396,
+        447
+      ]
+    },
+    {
+      "pos": [
+        452,
+        541
+      ],
+      "content": "Search for <ph id=\"ph1\">`Microsoft Azure Service Bus`</ph>, click <bpt id=\"p1\">**</bpt>Install<ept id=\"p1\">**</ept>, and accept the terms of use."
+    },
+    {
+      "pos": [
+        560,
+        724
+      ],
+      "content": "This downloads, installs, and adds a reference to the <ph id=\"ph1\">&lt;a href=\"https://www.nuget.org/packages/WindowsAzure.ServiceBus/\"&gt;</ph>Azure Service Bus library NuGet package<ph id=\"ph2\">&lt;/a&gt;</ph>."
+    },
+    {
+      "pos": [
+        729,
+        803
+      ],
+      "content": "Add the following <ph id=\"ph1\">`using`</ph> statement at the top of the <bpt id=\"p1\">**</bpt>Program.cs<ept id=\"p1\">**</ept> file:"
+    },
+    {
+      "pos": [
+        887,
+        1089
+      ],
+      "content": "Add the following fields to the <bpt id=\"p1\">**</bpt>Program<ept id=\"p1\">**</ept> class, substituting the placeholder values with the name of the Event Hub you created in the previous section, and the connection string with <bpt id=\"p2\">**</bpt>Send<ept id=\"p2\">**</ept> rights:"
+    },
+    {
+      "pos": [
+        1221,
+        1271
+      ],
+      "content": "Add the following method to the <bpt id=\"p1\">**</bpt>Program<ept id=\"p1\">**</ept> class:"
+    },
+    {
+      "content": "This method continuously sends events to your Event Hub with a 200ms delay.",
+      "pos": [
+        2119,
+        2194
+      ]
+    },
+    {
+      "pos": [
+        2199,
+        2255
+      ],
+      "content": "Finally, add the following lines to the <bpt id=\"p1\">**</bpt>Main<ept id=\"p1\">**</ept> method:"
+    }
+  ],
+  "content": "## Send messages to Event Hubs\n\nIn this section, you'll write a Windows console app that sends events to your Event Hub.\n\n1. In Visual Studio, create a new Visual C# Desktop App project using the **Console  Application** project template. Name the project **Sender**.\n\n    ![][7]\n\n2. In Solution Explorer, right-click the solution, and then click **Manage NuGet Packages for Solution...**. \n\n    This displays the Manage NuGet Packages dialog box.\n\n3. Search for `Microsoft Azure Service Bus`, click **Install**, and accept the terms of use. \n\n    ![][8]\n\n    This downloads, installs, and adds a reference to the <a href=\"https://www.nuget.org/packages/WindowsAzure.ServiceBus/\">Azure Service Bus library NuGet package</a>.\n\n4. Add the following `using` statement at the top of the **Program.cs** file:\n\n        using System.Threading;\n        using Microsoft.ServiceBus.Messaging;\n\n5. Add the following fields to the **Program** class, substituting the placeholder values with the name of the Event Hub you created in the previous section, and the connection string with **Send** rights:\n\n        static string eventHubName = \"{event hub name}\";\n        static string connectionString = \"{send connection string}\";\n\n6. Add the following method to the **Program** class:\n\n        static void SendingRandomMessages()\n        {\n            var eventHubClient = EventHubClient.CreateFromConnectionString(connectionString, eventHubName);\n            while (true)\n            {\n                try\n                {\n                    var message = Guid.NewGuid().ToString();\n                    Console.WriteLine(\"{0} > Sending message: {1}\", DateTime.Now, message);\n                    eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(message)));\n                }\n                catch (Exception exception)\n                {\n                    Console.ForegroundColor = ConsoleColor.Red;\n                    Console.WriteLine(\"{0} > Exception: {1}\", DateTime.Now, exception.Message);\n                    Console.ResetColor();\n                }\n\n                Thread.Sleep(200);\n            }\n        }\n\n    This method continuously sends events to your Event Hub with a 200ms delay.\n\n7. Finally, add the following lines to the **Main** method:\n\n        Console.WriteLine(\"Press Ctrl-C to stop the sender process\");\n        Console.WriteLine(\"Press Enter to start now\");\n        Console.ReadLine();\n        SendingRandomMessages();\n\n\n<!-- Images -->\n[7]: ./media/service-bus-event-hubs-getstarted/create-sender-csharp1.png\n[8]: ./media/service-bus-event-hubs-getstarted/create-sender-csharp2.png\n\n"
+}

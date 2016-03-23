@@ -1,0 +1,746 @@
+{
+  "nodes": [
+    {
+      "content": "How to Deploy the Access Panel Extension for Internet Explorer using Group Policy | Microsoft Azure",
+      "pos": [
+        26,
+        125
+      ]
+    },
+    {
+      "content": "How to use group policy to deploy the Internet Explorer add-on for the My Apps portal.",
+      "pos": [
+        143,
+        229
+      ]
+    },
+    {
+      "content": "How to Deploy the Access Panel Extension for Internet Explorer using Group Policy",
+      "pos": [
+        527,
+        608
+      ]
+    },
+    {
+      "content": "This tutorial shows how to use group policy to remotely install the Access Panel extension for Internet Explorer on your users' machines.",
+      "pos": [
+        610,
+        747
+      ]
+    },
+    {
+      "content": "This extension is required for Internet Explorer users who need to sign into apps that are configured using <bpt id=\"p1\">[</bpt>password-based single sign-on<ept id=\"p1\">](active-directory-appssoaccess-whatis.md#password-based-single-sign-on)</ept>.",
+      "pos": [
+        748,
+        959
+      ]
+    },
+    {
+      "content": "It is recommended that admins automate the deployment of this extension.",
+      "pos": [
+        961,
+        1033
+      ]
+    },
+    {
+      "content": "Otherwise, users will have to download and install the extension themselves, which is prone to user error and requires administrator permissions.",
+      "pos": [
+        1034,
+        1179
+      ]
+    },
+    {
+      "content": "This tutorial covers one method of automating software deployments by using group policy.",
+      "pos": [
+        1180,
+        1269
+      ]
+    },
+    {
+      "content": "Learn more about group policy.",
+      "pos": [
+        1271,
+        1301
+      ]
+    },
+    {
+      "pos": [
+        1363,
+        1594
+      ],
+      "content": "The Access Panel extension is also available for <bpt id=\"p1\">[</bpt>Chrome<ept id=\"p1\">](https://go.microsoft.com/fwLink/?LinkID=311859)</ept> and <bpt id=\"p2\">[</bpt>Firefox<ept id=\"p2\">](https://go.microsoft.com/fwLink/?LinkID=626998)</ept>, neither of which require administrator permissions to install."
+    },
+    {
+      "content": "Prerequisites",
+      "pos": [
+        1598,
+        1611
+      ]
+    },
+    {
+      "pos": [
+        1615,
+        1786
+      ],
+      "content": "You have set up <bpt id=\"p1\">[</bpt>Active Directory Domain Services<ept id=\"p1\">](https://msdn.microsoft.com/library/aa362244%28v=vs.85%29.aspx)</ept>, and you have joined your users' machines to your domain."
+    },
+    {
+      "content": "You must have the \"Edit settings\" permission in order to edit Group Policy Objects (GPOs).",
+      "pos": [
+        1789,
+        1879
+      ]
+    },
+    {
+      "content": "By default, members of the following security groups have this permission: Domain Administrators, Enterprise Administrators, and Group Policy Creator Owners.",
+      "pos": [
+        1880,
+        2037
+      ]
+    },
+    {
+      "content": "Learn more.",
+      "pos": [
+        2039,
+        2050
+      ]
+    },
+    {
+      "content": "Step 1: Create the Distribution Point",
+      "pos": [
+        2121,
+        2158
+      ]
+    },
+    {
+      "content": "First, you must place the installer package on a network location that can be accessed from all of the machines that you wish to remotely install the extension on.",
+      "pos": [
+        2160,
+        2323
+      ]
+    },
+    {
+      "content": "To do this, follow these steps:",
+      "pos": [
+        2324,
+        2355
+      ]
+    },
+    {
+      "content": "Log on to the server as an administrator",
+      "pos": [
+        2360,
+        2400
+      ]
+    },
+    {
+      "pos": [
+        2405,
+        2476
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Server Manager<ept id=\"p1\">**</ept> window, go to <bpt id=\"p2\">**</bpt>Files and Storage Services<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Open Files and Storage Services",
+      "pos": [
+        2484,
+        2515
+      ]
+    },
+    {
+      "content": "Go to the <bpt id=\"p1\">**</bpt>Shares<ept id=\"p1\">**</ept> tab.",
+      "pos": [
+        2587,
+        2612
+      ]
+    },
+    {
+      "content": "Then click on <bpt id=\"p1\">**</bpt>Tasks<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>New Share...<ept id=\"p2\">**</ept>",
+      "pos": [
+        2613,
+        2655
+      ]
+    },
+    {
+      "content": "Open Files and Storage Services",
+      "pos": [
+        2663,
+        2694
+      ]
+    },
+    {
+      "content": "Complete the <bpt id=\"p1\">**</bpt>New Share Wizard<ept id=\"p1\">**</ept> and set permissions to ensure that it can be accessed from your users' machines.",
+      "pos": [
+        2758,
+        2872
+      ]
+    },
+    {
+      "content": "Learn more about shares.",
+      "pos": [
+        2874,
+        2898
+      ]
+    },
+    {
+      "content": "Download the following Microsoft Windows Installer package (.msi file): [Access Panel Extension.msi](https://account.activedirectory.windowsazure.com/Applications/Installers/x64/Access Panel Extension.msi)",
+      "pos": [
+        2957,
+        3162
+      ]
+    },
+    {
+      "content": "Copy the installer package to a desired location on the share.",
+      "pos": [
+        3167,
+        3229
+      ]
+    },
+    {
+      "content": "Copy the .msi file to your the share.",
+      "pos": [
+        3237,
+        3274
+      ]
+    },
+    {
+      "content": "Verify that your client machines are able to access the installer package from the share.",
+      "pos": [
+        3344,
+        3433
+      ]
+    },
+    {
+      "content": "Step 2: Create the Group Policy Object",
+      "pos": [
+        3438,
+        3476
+      ]
+    },
+    {
+      "content": "Log on to the server that hosts your Active Directory Domain Services (AD DS) installation.",
+      "pos": [
+        3481,
+        3572
+      ]
+    },
+    {
+      "pos": [
+        3577,
+        3646
+      ],
+      "content": "In the Server Manager, go to <bpt id=\"p1\">**</bpt>Tools<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>Group Policy Management<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Go to Tools &gt; Group Policy Managment",
+      "pos": [
+        3654,
+        3690
+      ]
+    },
+    {
+      "content": "In the left pane of the <bpt id=\"p1\">**</bpt>Group Policy Management<ept id=\"p1\">**</ept> window, view your Organizational Unit (OU) hierarchy and determine at which scope you would like to apply the group policy.",
+      "pos": [
+        3757,
+        3932
+      ]
+    },
+    {
+      "content": "For instance, you may decide to pick a small OU to deploy to a few users for testing, or you may pick a top-level OU to deploy to your entire organization.",
+      "pos": [
+        3933,
+        4088
+      ]
+    },
+    {
+      "pos": [
+        4096,
+        4273
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you would like to create or edit your Organization Units (OUs), switch back to the Server Manager and go to <bpt id=\"p1\">**</bpt>Tools<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>Active Directory Users and Computers<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        4278,
+        4389
+      ],
+      "content": "Once you have selected an OU, right-click on it and select <bpt id=\"p1\">**</bpt>Create a GPO in this domain, and Link it here...<ept id=\"p1\">**</ept>"
+    },
+    {
+      "content": "Create a new GPO",
+      "pos": [
+        4397,
+        4413
+      ]
+    },
+    {
+      "pos": [
+        4481,
+        4555
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>New GPO<ept id=\"p1\">**</ept> prompt, type in a name for the new Group Policy Object."
+    },
+    {
+      "content": "Name the new GPO",
+      "pos": [
+        4563,
+        4579
+      ]
+    },
+    {
+      "pos": [
+        4645,
+        4727
+      ],
+      "content": "Right-click on the Group Policy Object that you just created, and select <bpt id=\"p1\">**</bpt>Edit<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "Edit the new GPO",
+      "pos": [
+        4735,
+        4751
+      ]
+    },
+    {
+      "content": "Step 3: Assign the Installation Package",
+      "pos": [
+        4816,
+        4855
+      ]
+    },
+    {
+      "content": "Determine whether you would like to deploy the extension based on <bpt id=\"p1\">**</bpt>Computer Configuration<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>User Configuration<ept id=\"p2\">**</ept>.",
+      "pos": [
+        4860,
+        4979
+      ]
+    },
+    {
+      "content": "When using <bpt id=\"p1\">[</bpt>computer configuration<ept id=\"p1\">](https://technet.microsoft.com/library/cc736413%28v=ws.10%29.aspx)</ept>, the extension will be installed on the computer regardless of which users log on to it.",
+      "pos": [
+        4980,
+        5170
+      ]
+    },
+    {
+      "content": "On the other hand, with <bpt id=\"p1\">[</bpt>user configuration<ept id=\"p1\">](https://technet.microsoft.com/library/cc781953%28v=ws.10%29.aspx)</ept>, users will have the extension installed for them regardless of which computers they log on to.",
+      "pos": [
+        5171,
+        5377
+      ]
+    },
+    {
+      "pos": [
+        5382,
+        5544
+      ],
+      "content": "In the left pane of the <bpt id=\"p1\">**</bpt>Group Policy Management Editor<ept id=\"p1\">**</ept> window, go to either of the following folder paths, depending on which type of configuration you chose:"
+    },
+    {
+      "pos": [
+        5663,
+        5741
+      ],
+      "content": "Right-click on <bpt id=\"p1\">**</bpt>Software installation<ept id=\"p1\">**</ept>, then select <bpt id=\"p2\">**</bpt>New<ept id=\"p2\">**</ept> &gt; <bpt id=\"p3\">**</bpt>Package...<ept id=\"p3\">**</ept>"
+    },
+    {
+      "content": "Create a new software installation package",
+      "pos": [
+        5749,
+        5791
+      ]
+    },
+    {
+      "pos": [
+        5860,
+        6046
+      ],
+      "content": "Go to the shared folder that contains the installer package from <bpt id=\"p1\">[</bpt>Step 1: Create the Distribution Point<ept id=\"p1\">](#step-1-create-the-distribution-point)</ept>, select the .msi file, and click <bpt id=\"p2\">**</bpt>Open<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        6054,
+        6219
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.IMPORTANT]</ph> If the share is located on this same server, verify that you are accessing the .msi through the network file path, rather than the local file path."
+    },
+    {
+      "content": "Select the installation package from the shared folder.",
+      "pos": [
+        6227,
+        6282
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Deploy Software<ept id=\"p1\">**</ept> prompt, select <bpt id=\"p2\">**</bpt>Assigned<ept id=\"p2\">**</ept> for your deployment method.",
+      "pos": [
+        6354,
+        6436
+      ]
+    },
+    {
+      "content": "Then click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept>.",
+      "pos": [
+        6437,
+        6455
+      ]
+    },
+    {
+      "content": "Select Assigned, then click OK.",
+      "pos": [
+        6463,
+        6494
+      ]
+    },
+    {
+      "content": "The extension is now deployed to the OU that you selected.",
+      "pos": [
+        6566,
+        6624
+      ]
+    },
+    {
+      "content": "Learn more about Group Policy Software Installation.",
+      "pos": [
+        6626,
+        6678
+      ]
+    },
+    {
+      "content": "Step 4: Auto-Enable the Extension for Internet Explorer",
+      "pos": [
+        6749,
+        6804
+      ]
+    },
+    {
+      "content": "In addition to running the installer, every extension for Internet Explorer must be explicitly enabled before it can be used.",
+      "pos": [
+        6807,
+        6932
+      ]
+    },
+    {
+      "content": "Follow the steps below to enable the Access Panel Extension using group policy:",
+      "pos": [
+        6933,
+        7012
+      ]
+    },
+    {
+      "pos": [
+        7017,
+        7241
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Group Policy Management Editor<ept id=\"p1\">**</ept> window, go to either of the following paths, depending on which type of configuration you chose in <bpt id=\"p2\">[</bpt>Step 3: Assign the Installation Package<ept id=\"p2\">](#step-3-assign-the-installation-package)</ept>:"
+    },
+    {
+      "pos": [
+        7518,
+        7663
+      ],
+      "content": "Right-click on **Add-on List**, and select **Edit**.\n ![Edit Add-on List.](./media/active-directory-saas-ie-group-policy/edit-add-on-list.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Right-click on <bpt id=\"p1\">**</bpt>Add-on List<ept id=\"p1\">**</ept>, and select <bpt id=\"p2\">**</bpt>Edit<ept id=\"p2\">**</ept>.",
+          "pos": [
+            0,
+            52
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Edit Add-on List.<ph id=\"ph2\">](./media/active-directory-saas-ie-group-policy/edit-add-on-list.png)</ph>",
+          "pos": [
+            53,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Add-on List<ept id=\"p1\">**</ept> window, select <bpt id=\"p2\">**</bpt>Enabled<ept id=\"p2\">**</ept>.",
+      "pos": [
+        7668,
+        7718
+      ]
+    },
+    {
+      "content": "Then, under the <bpt id=\"p1\">**</bpt>Options<ept id=\"p1\">**</ept> section, click <bpt id=\"p2\">**</bpt>Show...<ept id=\"p2\">**</ept>.",
+      "pos": [
+        7719,
+        7774
+      ]
+    },
+    {
+      "content": "Click Enable, then click Show...",
+      "pos": [
+        7782,
+        7814
+      ]
+    },
+    {
+      "pos": [
+        7895,
+        7956
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Show Contents<ept id=\"p1\">**</ept> window, perform the following steps:"
+    },
+    {
+      "pos": [
+        7965,
+        8093
+      ],
+      "content": "For the first column (the <bpt id=\"p1\">**</bpt>Value Name<ept id=\"p1\">**</ept> field), copy and paste the following Class ID: <ph id=\"ph1\">`{030E9A3F-7B18-4122-9A60-B87235E4F59E}`</ph>"
+    },
+    {
+      "pos": [
+        8102,
+        8179
+      ],
+      "content": "For the second column (the <bpt id=\"p1\">**</bpt>Value<ept id=\"p1\">**</ept> field), type in the following value: <ph id=\"ph1\">`1`</ph>"
+    },
+    {
+      "pos": [
+        8188,
+        8239
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to close the <bpt id=\"p2\">**</bpt>Show Contents<ept id=\"p2\">**</ept> window."
+    },
+    {
+      "content": "Fill out the values as specified above.",
+      "pos": [
+        8247,
+        8286
+      ]
+    },
+    {
+      "pos": [
+        8357,
+        8429
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to apply your changes and close the <bpt id=\"p2\">**</bpt>Add-on List<ept id=\"p2\">**</ept> window."
+    },
+    {
+      "content": "The extension should now be enabled for the machines in the selected OU.",
+      "pos": [
+        8431,
+        8503
+      ]
+    },
+    {
+      "content": "Learn more about using group policy to enable or disable Internet Explorer add-ons.",
+      "pos": [
+        8505,
+        8588
+      ]
+    },
+    {
+      "content": "Step 5 (Optional): Disable \"Remember Password\" Prompt",
+      "pos": [
+        8646,
+        8699
+      ]
+    },
+    {
+      "content": "When users sign-in to websites using the Access Panel Extension, Internet Explorer may show the following prompt asking \"Would you like to store your password?\"",
+      "pos": [
+        8701,
+        8861
+      ]
+    },
+    {
+      "content": "If you wish to prevent your users from seeing this prompt, then follow the steps below to prevent auto-complete from remembering passwords:",
+      "pos": [
+        8944,
+        9083
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Group Policy Management Editor<ept id=\"p1\">**</ept> window, go to the path listed below.",
+      "pos": [
+        9088,
+        9166
+      ]
+    },
+    {
+      "content": "Note that this configuration setting is only available under <bpt id=\"p1\">**</bpt>User Configuration<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9167,
+        9251
+      ]
+    },
+    {
+      "pos": [
+        9355,
+        9454
+      ],
+      "content": "Find the setting named <bpt id=\"p1\">**</bpt>Turn on the auto-complete feature for user names and passwords on forms<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Previous versions of Active Directory may list this setting with the name <bpt id=\"p1\">**</bpt>Do not allow auto-complete to save passwords<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9462,
+        9598
+      ]
+    },
+    {
+      "content": "The configuration for that setting differs from the setting described in this tutorial.",
+      "pos": [
+        9599,
+        9686
+      ]
+    },
+    {
+      "content": "Remember to look for this under User Settings.",
+      "pos": [
+        9694,
+        9740
+      ]
+    },
+    {
+      "pos": [
+        9819,
+        9873
+      ],
+      "content": "Right click on the above setting, and select <bpt id=\"p1\">**</bpt>Edit<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        9878,
+        9996
+      ],
+      "content": "In the window titled <bpt id=\"p1\">**</bpt>Turn on the auto-complete feature for user names and passwords on forms<ept id=\"p1\">**</ept>, select <bpt id=\"p2\">**</bpt>Disabled<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Select Disable",
+      "pos": [
+        10004,
+        10018
+      ]
+    },
+    {
+      "pos": [
+        10093,
+        10150
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>OK<ept id=\"p1\">**</ept> to apply these changes and close the window."
+    },
+    {
+      "content": "Users will no longer be able to store their credentials or use auto-complete to access previously stored credentials.",
+      "pos": [
+        10152,
+        10269
+      ]
+    },
+    {
+      "content": "However, this policy does allow users to continue to use auto-complete for other types of form fields, such as search fields.",
+      "pos": [
+        10270,
+        10395
+      ]
+    },
+    {
+      "pos": [
+        10399,
+        10567
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.WARNING]</ph> If this policy is enabled after users have chosen to store some credentials, this policy will <bpt id=\"p1\">*</bpt>not<ept id=\"p1\">*</ept> clear the credentials that have already been stored."
+    },
+    {
+      "content": "Step 6: Testing the Deployment",
+      "pos": [
+        10571,
+        10601
+      ]
+    },
+    {
+      "content": "Follow the steps below to verify if the extension deployment was successful:",
+      "pos": [
+        10603,
+        10679
+      ]
+    },
+    {
+      "content": "If you deployed using <bpt id=\"p1\">**</bpt>Computer Configuration<ept id=\"p1\">**</ept>, sign into a client machine that belongs to the OU that you selected in <bpt id=\"p2\">[</bpt>Step 2: Create the Group Policy Object<ept id=\"p2\">](#step-2-create-the-group-policy-object)</ept>.",
+      "pos": [
+        10684,
+        10886
+      ]
+    },
+    {
+      "content": "If you deployed using <bpt id=\"p1\">**</bpt>User Configuration<ept id=\"p1\">**</ept>, make sure to sign in as a user who belongs to that OU.",
+      "pos": [
+        10887,
+        10987
+      ]
+    },
+    {
+      "content": "It may take a couple sign ins for the group policy changes to fully update with this machine.",
+      "pos": [
+        10992,
+        11085
+      ]
+    },
+    {
+      "content": "To force the update, open a <bpt id=\"p1\">**</bpt>Command Prompt<ept id=\"p1\">**</ept> window and run the following command: <ph id=\"ph1\">`gpupdate /force`</ph>",
+      "pos": [
+        11086,
+        11188
+      ]
+    },
+    {
+      "content": "You will need to restart the machine for the installation to take place.",
+      "pos": [
+        11193,
+        11265
+      ]
+    },
+    {
+      "content": "Bootup may take significantly more time than usual while the extension installs.",
+      "pos": [
+        11266,
+        11346
+      ]
+    },
+    {
+      "content": "After restarting, open <bpt id=\"p1\">**</bpt>Internet Explorer<ept id=\"p1\">**</ept>.",
+      "pos": [
+        11351,
+        11396
+      ]
+    },
+    {
+      "content": "On the upper-right corner of the window, click on <bpt id=\"p1\">**</bpt>Tools<ept id=\"p1\">**</ept> (the gear icon), and then select <bpt id=\"p2\">**</bpt>Manage add-ons<ept id=\"p2\">**</ept>.",
+      "pos": [
+        11397,
+        11509
+      ]
+    },
+    {
+      "content": "Go to Tools &gt; Manage Add-Ons",
+      "pos": [
+        11517,
+        11545
+      ]
+    },
+    {
+      "pos": [
+        11617,
+        11765
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Manage Add-ons<ept id=\"p1\">**</ept> window, verify that the <bpt id=\"p2\">**</bpt>Access Panel Extension<ept id=\"p2\">**</ept> has been installed and that its <bpt id=\"p3\">**</bpt>Status<ept id=\"p3\">**</ept> has been set to <bpt id=\"p4\">**</bpt>Enabled<ept id=\"p4\">**</ept>."
+    },
+    {
+      "content": "Verify that the Access Panel Extension is installed and enabled.",
+      "pos": [
+        11773,
+        11837
+      ]
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"How to Deploy the Access Panel Extension for Internet Explorer using Group Policy | Microsoft Azure\"\n   description=\"How to use group policy to deploy the Internet Explorer add-on for the My Apps portal.\"\n   services=\"active-directory\"\n   documentationCenter=\"\"\n   authors=\"liviodlc\"\n   manager=\"stevenpo\"\n   editor=\"\"/>\n<tags\n   ms.service=\"active-directory\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"identity\"\n   ms.date=\"11/18/2015\"\n   ms.author=\"liviodlc\"/>\n\n#How to Deploy the Access Panel Extension for Internet Explorer using Group Policy\n\nThis tutorial shows how to use group policy to remotely install the Access Panel extension for Internet Explorer on your users' machines. This extension is required for Internet Explorer users who need to sign into apps that are configured using [password-based single sign-on](active-directory-appssoaccess-whatis.md#password-based-single-sign-on).\n\nIt is recommended that admins automate the deployment of this extension. Otherwise, users will have to download and install the extension themselves, which is prone to user error and requires administrator permissions. This tutorial covers one method of automating software deployments by using group policy. [Learn more about group policy.](https://technet.microsoft.com/windowsserver/bb310732.aspx)\n\nThe Access Panel extension is also available for [Chrome](https://go.microsoft.com/fwLink/?LinkID=311859) and [Firefox](https://go.microsoft.com/fwLink/?LinkID=626998), neither of which require administrator permissions to install.\n\n##Prerequisites\n\n- You have set up [Active Directory Domain Services](https://msdn.microsoft.com/library/aa362244%28v=vs.85%29.aspx), and you have joined your users' machines to your domain.\n- You must have the \"Edit settings\" permission in order to edit Group Policy Objects (GPOs). By default, members of the following security groups have this permission: Domain Administrators, Enterprise Administrators, and Group Policy Creator Owners. [Learn more.](https://technet.microsoft.com/library/cc781991%28v=ws.10%29.aspx)\n\n##Step 1: Create the Distribution Point\n\nFirst, you must place the installer package on a network location that can be accessed from all of the machines that you wish to remotely install the extension on. To do this, follow these steps:\n\n1. Log on to the server as an administrator\n\n2. In the **Server Manager** window, go to **Files and Storage Services**.\n\n    ![Open Files and Storage Services](./media/active-directory-saas-ie-group-policy/files-services.png)\n\n3. Go to the **Shares** tab. Then click on **Tasks** > **New Share...**\n\n    ![Open Files and Storage Services](./media/active-directory-saas-ie-group-policy/shares.png)\n\n4. Complete the **New Share Wizard** and set permissions to ensure that it can be accessed from your users' machines. [Learn more about shares.](https://technet.microsoft.com/library/cc753175.aspx)\n\n5. Download the following Microsoft Windows Installer package (.msi file): [Access Panel Extension.msi](https://account.activedirectory.windowsazure.com/Applications/Installers/x64/Access Panel Extension.msi)\n\n6. Copy the installer package to a desired location on the share.\n\n    ![Copy the .msi file to your the share.](./media/active-directory-saas-ie-group-policy/copy-package.png)\n\n8. Verify that your client machines are able to access the installer package from the share. \n\n##Step 2: Create the Group Policy Object\n\n1. Log on to the server that hosts your Active Directory Domain Services (AD DS) installation.\n\n2. In the Server Manager, go to **Tools** > **Group Policy Management**.\n\n    ![Go to Tools > Group Policy Managment](./media/active-directory-saas-ie-group-policy/tools-gpm.png)\n\n3. In the left pane of the **Group Policy Management** window, view your Organizational Unit (OU) hierarchy and determine at which scope you would like to apply the group policy. For instance, you may decide to pick a small OU to deploy to a few users for testing, or you may pick a top-level OU to deploy to your entire organization.\n\n    > [AZURE.NOTE] If you would like to create or edit your Organization Units (OUs), switch back to the Server Manager and go to **Tools** > **Active Directory Users and Computers**.\n\n4. Once you have selected an OU, right-click on it and select **Create a GPO in this domain, and Link it here...**\n\n    ![Create a new GPO](./media/active-directory-saas-ie-group-policy/create-gpo.png)\n\n5. In the **New GPO** prompt, type in a name for the new Group Policy Object.\n\n    ![Name the new GPO](./media/active-directory-saas-ie-group-policy/name-gpo.png)\n\n6. Right-click on the Group Policy Object that you just created, and select **Edit**.\n\n    ![Edit the new GPO](./media/active-directory-saas-ie-group-policy/edit-gpo.png)\n\n##Step 3: Assign the Installation Package\n\n1. Determine whether you would like to deploy the extension based on **Computer Configuration** or **User Configuration**. When using [computer configuration](https://technet.microsoft.com/library/cc736413%28v=ws.10%29.aspx), the extension will be installed on the computer regardless of which users log on to it. On the other hand, with [user configuration](https://technet.microsoft.com/library/cc781953%28v=ws.10%29.aspx), users will have the extension installed for them regardless of which computers they log on to.\n\n2. In the left pane of the **Group Policy Management Editor** window, go to either of the following folder paths, depending on which type of configuration you chose:\n    - `Computer Configuration/Policies/Software Settings/`\n    - `User Configuration/Policies/Software Settings/`\n\n3. Right-click on **Software installation**, then select **New** > **Package...**\n\n    ![Create a new software installation package](./media/active-directory-saas-ie-group-policy/new-package.png)\n\n4. Go to the shared folder that contains the installer package from [Step 1: Create the Distribution Point](#step-1-create-the-distribution-point), select the .msi file, and click **Open**.\n\n    > [AZURE.IMPORTANT] If the share is located on this same server, verify that you are accessing the .msi through the network file path, rather than the local file path.\n\n    ![Select the installation package from the shared folder.](./media/active-directory-saas-ie-group-policy/select-package.png)\n\n5. In the **Deploy Software** prompt, select **Assigned** for your deployment method. Then click **OK**.\n\n    ![Select Assigned, then click OK.](./media/active-directory-saas-ie-group-policy/deployment-method.png)\n\nThe extension is now deployed to the OU that you selected. [Learn more about Group Policy Software Installation.](https://technet.microsoft.com/library/cc738858%28v=ws.10%29.aspx)\n\n##Step 4: Auto-Enable the Extension for Internet Explorer \n\nIn addition to running the installer, every extension for Internet Explorer must be explicitly enabled before it can be used. Follow the steps below to enable the Access Panel Extension using group policy:\n\n1. In the **Group Policy Management Editor** window, go to either of the following paths, depending on which type of configuration you chose in [Step 3: Assign the Installation Package](#step-3-assign-the-installation-package):\n    - `Computer Configuration/Policies/Administrative Templates/Windows Components/Internet Explorer/Security Features/Add-on Management`\n    - `User Configuration/Policies/Administrative Templates/Windows Components/Internet Explorer/Security Features/Add-on Management`\n\n2. Right-click on **Add-on List**, and select **Edit**.\n    ![Edit Add-on List.](./media/active-directory-saas-ie-group-policy/edit-add-on-list.png)\n\n3. In the **Add-on List** window, select **Enabled**. Then, under the **Options** section, click **Show...**.\n\n    ![Click Enable, then click Show...](./media/active-directory-saas-ie-group-policy/edit-add-on-list-window.png)\n\n4. In the **Show Contents** window, perform the following steps:\n\n    1. For the first column (the **Value Name** field), copy and paste the following Class ID: `{030E9A3F-7B18-4122-9A60-B87235E4F59E}`\n\n    2. For the second column (the **Value** field), type in the following value: `1`\n\n    3. Click **OK** to close the **Show Contents** window.\n\n    ![Fill out the values as specified above.](./media/active-directory-saas-ie-group-policy/show-contents.png)\n\n5. Click **OK** to apply your changes and close the **Add-on List** window.\n\nThe extension should now be enabled for the machines in the selected OU. [Learn more about using group policy to enable or disable Internet Explorer add-ons.](https://technet.microsoft.com/library/dn454941.aspx)\n\n##Step 5 (Optional): Disable \"Remember Password\" Prompt\n\nWhen users sign-in to websites using the Access Panel Extension, Internet Explorer may show the following prompt asking \"Would you like to store your password?\"\n\n![](./media/active-directory-saas-ie-group-policy/remember-password-prompt.png)\n\nIf you wish to prevent your users from seeing this prompt, then follow the steps below to prevent auto-complete from remembering passwords:\n\n1. In the **Group Policy Management Editor** window, go to the path listed below. Note that this configuration setting is only available under **User Configuration**.\n    - `User Configuration/Policies/Administrative Templates/Windows Components/Internet Explorer/`\n\n2. Find the setting named **Turn on the auto-complete feature for user names and passwords on forms**.\n\n    > [AZURE.NOTE] Previous versions of Active Directory may list this setting with the name **Do not allow auto-complete to save passwords**. The configuration for that setting differs from the setting described in this tutorial.\n\n    ![Remember to look for this under User Settings.](./media/active-directory-saas-ie-group-policy/disable-auto-complete.png)\n\n3. Right click on the above setting, and select **Edit**.\n\n4. In the window titled **Turn on the auto-complete feature for user names and passwords on forms**, select **Disabled**.\n\n    ![Select Disable](./media/active-directory-saas-ie-group-policy/disable-passwords.png)\n\n5. Click **OK** to apply these changes and close the window.\n\nUsers will no longer be able to store their credentials or use auto-complete to access previously stored credentials. However, this policy does allow users to continue to use auto-complete for other types of form fields, such as search fields.\n\n> [AZURE.WARNING] If this policy is enabled after users have chosen to store some credentials, this policy will *not* clear the credentials that have already been stored.\n\n##Step 6: Testing the Deployment\n\nFollow the steps below to verify if the extension deployment was successful:\n\n1. If you deployed using **Computer Configuration**, sign into a client machine that belongs to the OU that you selected in [Step 2: Create the Group Policy Object](#step-2-create-the-group-policy-object). If you deployed using **User Configuration**, make sure to sign in as a user who belongs to that OU.\n\n2. It may take a couple sign ins for the group policy changes to fully update with this machine. To force the update, open a **Command Prompt** window and run the following command: `gpupdate /force`\n\n3. You will need to restart the machine for the installation to take place. Bootup may take significantly more time than usual while the extension installs.\n\n4. After restarting, open **Internet Explorer**. On the upper-right corner of the window, click on **Tools** (the gear icon), and then select **Manage add-ons**.\n\n    ![Go to Tools > Manage Add-Ons](./media/active-directory-saas-ie-group-policy/manage-add-ons.png)\n\n5. In the **Manage Add-ons** window, verify that the **Access Panel Extension** has been installed and that its **Status** has been set to **Enabled**.\n\n    ![Verify that the Access Panel Extension is installed and enabled.](./media/active-directory-saas-ie-group-policy/verify-install.png)\n\n[AZURE.INCLUDE [saas-toc](../../includes/active-directory-saas-toc.md)]\n\n"
+}

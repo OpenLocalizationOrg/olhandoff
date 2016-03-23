@@ -1,0 +1,145 @@
+{
+  "nodes": [
+    {
+      "content": "The previous example showed a standard sign-in, which requires the client to contact both the identity provider and the backend Azure service every time that the app starts.",
+      "pos": [
+        1,
+        174
+      ]
+    },
+    {
+      "content": "Not only is this method inefficient, you can run into usage-related issues should many customers try to start you app at the same time.",
+      "pos": [
+        175,
+        310
+      ]
+    },
+    {
+      "content": "A better approach is to cache the authorization token returned by the Azure service and try to use this first before using a provider-based sign-in.",
+      "pos": [
+        311,
+        459
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>You can cache the token issued by the backend Azure service regardless of whether you are using client-managed or service-managed authentication.",
+      "pos": [
+        463,
+        620
+      ]
+    },
+    {
+      "content": "This tutorial uses service-managed authentication.",
+      "pos": [
+        621,
+        671
+      ]
+    },
+    {
+      "content": "Open the ToDoActivity.java file and add the following import statements:",
+      "pos": [
+        677,
+        749
+      ]
+    },
+    {
+      "pos": [
+        902,
+        960
+      ],
+      "content": "Add the the following members to the <ph id=\"ph1\">`ToDoActivity`</ph> class."
+    },
+    {
+      "pos": [
+        1142,
+        1238
+      ],
+      "content": "In the ToDoActivity.java file, add the the following definition for the <ph id=\"ph1\">`cacheUserToken`</ph> method."
+    },
+    {
+      "content": "This method stores the user id and token in a preference file that is marked private.",
+      "pos": [
+        1632,
+        1717
+      ]
+    },
+    {
+      "content": "This should protect access to the cache so that other apps on the device do not have access to the token because the preference is sandboxed for the app.",
+      "pos": [
+        1718,
+        1871
+      ]
+    },
+    {
+      "content": "However, if someone gains access to the device, it is possible that they may gain access to the token cache through other means.",
+      "pos": [
+        1872,
+        2000
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>You can further protect the token with encryption if token access to your data is considered highly sensitive and someone may gain access to the device.",
+      "pos": [
+        2008,
+        2172
+      ]
+    },
+    {
+      "content": "However, a completely secure solution is beyond the scope of this tutorial and dependent on your security requirements.",
+      "pos": [
+        2173,
+        2292
+      ]
+    },
+    {
+      "pos": [
+        2298,
+        2398
+      ],
+      "content": "In the ToDoActivity.java file, add the the following definition for the <ph id=\"ph1\">`loadUserTokenCache`</ph> method."
+    },
+    {
+      "content": "In the <bpt id=\"p1\">*</bpt>ToDoActivity.java<ept id=\"p1\">*</ept> file, replace the <ph id=\"ph1\">`authenticate`</ph> method with the following method which uses a token cache.",
+      "pos": [
+        3088,
+        3206
+      ]
+    },
+    {
+      "content": "Change the login provider if you want to use an account other than Google.",
+      "pos": [
+        3207,
+        3281
+      ]
+    },
+    {
+      "content": "Build the app and test authentication using a valid account.",
+      "pos": [
+        4547,
+        4607
+      ]
+    },
+    {
+      "content": "Run it at least twice.",
+      "pos": [
+        4608,
+        4630
+      ]
+    },
+    {
+      "content": "During the first run, you should receive a prompt to login and create the token cache.",
+      "pos": [
+        4631,
+        4717
+      ]
+    },
+    {
+      "content": "After that, each run will attempt to load the token cache for authentication and you should not be required to login.",
+      "pos": [
+        4718,
+        4835
+      ]
+    }
+  ],
+  "content": "\nThe previous example showed a standard sign-in, which requires the client to contact both the identity provider and the backend Azure service every time that the app starts. Not only is this method inefficient, you can run into usage-related issues should many customers try to start you app at the same time. A better approach is to cache the authorization token returned by the Azure service and try to use this first before using a provider-based sign-in. \n\n>[AZURE.NOTE]You can cache the token issued by the backend Azure service regardless of whether you are using client-managed or service-managed authentication. This tutorial uses service-managed authentication.\n\n\n1. Open the ToDoActivity.java file and add the following import statements:\n\n        import android.content.Context;\n        import android.content.SharedPreferences;\n        import android.content.SharedPreferences.Editor;\n\n2. Add the the following members to the `ToDoActivity` class.\n\n        public static final String SHAREDPREFFILE = \"temp\"; \n        public static final String USERIDPREF = \"uid\";  \n        public static final String TOKENPREF = \"tkn\";   \n\n\n3. In the ToDoActivity.java file, add the the following definition for the `cacheUserToken` method.\n \n        private void cacheUserToken(MobileServiceUser user)\n        {\n            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);\n            Editor editor = prefs.edit();\n            editor.putString(USERIDPREF, user.getUserId());\n            editor.putString(TOKENPREF, user.getAuthenticationToken());\n            editor.commit();\n        }   \n  \n    This method stores the user id and token in a preference file that is marked private. This should protect access to the cache so that other apps on the device do not have access to the token because the preference is sandboxed for the app. However, if someone gains access to the device, it is possible that they may gain access to the token cache through other means. \n\n    >[AZURE.NOTE]You can further protect the token with encryption if token access to your data is considered highly sensitive and someone may gain access to the device. However, a completely secure solution is beyond the scope of this tutorial and dependent on your security requirements.\n\n\n4. In the ToDoActivity.java file, add the the following definition for the `loadUserTokenCache` method.\n\n        private boolean loadUserTokenCache(MobileServiceClient client)\n        {\n            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);\n            String userId = prefs.getString(USERIDPREF, \"undefined\"); \n            if (userId == \"undefined\")\n                return false;\n            String token = prefs.getString(TOKENPREF, \"undefined\"); \n            if (token == \"undefined\")\n                return false;\n                \n            MobileServiceUser user = new MobileServiceUser(userId);\n            user.setAuthenticationToken(token);\n            client.setCurrentUser(user);\n                \n            return true;\n        }\n\n\n\n5. In the *ToDoActivity.java* file, replace the `authenticate` method with the following method which uses a token cache. Change the login provider if you want to use an account other than Google.\n\n        private void authenticate() {\n            // We first try to load a token cache if one exists.\n            if (loadUserTokenCache(mClient))\n            {\n                createTable();\n            }\n            // If we failed to load a token cache, login and create a token cache\n            else\n            {\n                // Login using the Google provider.    \n                ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);\n        \n                Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {\n                    @Override\n                    public void onFailure(Throwable exc) {\n                        createAndShowDialog(\"You must log in. Login Required\", \"Error\");\n                    }           \n                    @Override\n                    public void onSuccess(MobileServiceUser user) {\n                        createAndShowDialog(String.format(\n                                \"You are now logged in - %1$2s\",\n                                user.getUserId()), \"Success\");\n                        cacheUserToken(mClient.getCurrentUser());\n                        createTable();  \n                    }\n                });\n            }\n        }\n\n6. Build the app and test authentication using a valid account. Run it at least twice. During the first run, you should receive a prompt to login and create the token cache. After that, each run will attempt to load the token cache for authentication and you should not be required to login.\n\n\n\n\n\n"
+}

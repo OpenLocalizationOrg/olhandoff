@@ -1,0 +1,565 @@
+{
+  "nodes": [
+    {
+      "content": "Azure AD Windows Store Getting Started | Microsoft Azure",
+      "pos": [
+        27,
+        83
+      ]
+    },
+    {
+      "content": "How to build a Windows Store application that integrates with Azure AD for sign in and calls Azure AD protected APIs using OAuth.",
+      "pos": [
+        102,
+        231
+      ]
+    },
+    {
+      "content": "Integrate Azure AD with a Windows Store App",
+      "pos": [
+        574,
+        617
+      ]
+    },
+    {
+      "content": "If you're developing an app for the Windows Store, Azure AD makes it simple and straightforward for you to authenticate your users with their Active Directory accounts.",
+      "pos": [
+        829,
+        997
+      ]
+    },
+    {
+      "content": "It also enables your application to securely consume any web API protected by Azure AD, such as the Office 365 APIs or the Azure API.",
+      "pos": [
+        999,
+        1132
+      ]
+    },
+    {
+      "content": "For Windows Store desktop apps that need to access protected resources, Azure AD provides the Active Directory Authentication Library, or ADAL.",
+      "pos": [
+        1134,
+        1277
+      ]
+    },
+    {
+      "content": "ADAL’s sole purpose in life is to make it easy for your app to get access tokens.",
+      "pos": [
+        1279,
+        1360
+      ]
+    },
+    {
+      "content": "To demonstrate just how easy it is, here we’ll build a \"Directory Searcher\" Windows Store app that:",
+      "pos": [
+        1362,
+        1461
+      ]
+    },
+    {
+      "pos": [
+        1467,
+        1623
+      ],
+      "content": "Gets access tokens for calling the Azure AD Graph API using the <bpt id=\"p1\">[</bpt>OAuth 2.0 authentication protocol<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/dn645545.aspx)</ept>."
+    },
+    {
+      "content": "Searches a directory for users with a given UPN.",
+      "pos": [
+        1628,
+        1676
+      ]
+    },
+    {
+      "content": "Signs users out.",
+      "pos": [
+        1681,
+        1697
+      ]
+    },
+    {
+      "content": "To build the complete working application, you’ll need to:",
+      "pos": [
+        1699,
+        1757
+      ]
+    },
+    {
+      "content": "Register your application with Azure AD.",
+      "pos": [
+        1762,
+        1802
+      ]
+    },
+    {
+      "content": "Install &amp; Configure ADAL.",
+      "pos": [
+        1806,
+        1831
+      ]
+    },
+    {
+      "content": "Use ADAL to get tokens from Azure AD.",
+      "pos": [
+        1835,
+        1872
+      ]
+    },
+    {
+      "content": "To get started, <bpt id=\"p1\">[</bpt>download a skeleton project<ept id=\"p1\">](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/skeleton.zip)</ept> or <bpt id=\"p2\">[</bpt>download the completed sample<ept id=\"p2\">](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/complete.zip)</ept>.",
+      "pos": [
+        1874,
+        2127
+      ]
+    },
+    {
+      "content": "Each is a Visual Studio 2013 solution.",
+      "pos": [
+        2129,
+        2167
+      ]
+    },
+    {
+      "content": "You'll also need an Azure AD tenant in which you can create users and register an application.",
+      "pos": [
+        2169,
+        2263
+      ]
+    },
+    {
+      "content": "If you don't already have a tenant, <bpt id=\"p1\">[</bpt>learn how to get one<ept id=\"p1\">](active-directory-howto-tenant.md)</ept>.",
+      "pos": [
+        2265,
+        2358
+      ]
+    },
+    {
+      "content": "1. Register the Directory Searcher Application",
+      "pos": [
+        2364,
+        2410
+      ]
+    },
+    {
+      "content": "To enable your app to get tokens, you’ll first need to register it in your Azure AD tenant and grant it permission to access the Azure AD Graph API:",
+      "pos": [
+        2412,
+        2560
+      ]
+    },
+    {
+      "pos": [
+        2566,
+        2638
+      ],
+      "content": "Sign into the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">](https://manage.windowsazure.com)</ept>"
+    },
+    {
+      "pos": [
+        2643,
+        2694
+      ],
+      "content": "In the left hand nav, click on <bpt id=\"p1\">**</bpt>Active Directory<ept id=\"p1\">**</ept>"
+    },
+    {
+      "content": "Select a tenant in which to register the application.",
+      "pos": [
+        2699,
+        2752
+      ]
+    },
+    {
+      "pos": [
+        2757,
+        2828
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Applications<ept id=\"p1\">**</ept> tab, and click <bpt id=\"p2\">**</bpt>Add<ept id=\"p2\">**</ept> in the bottom drawer."
+    },
+    {
+      "pos": [
+        2833,
+        2899
+      ],
+      "content": "Follow the prompts and create a new <bpt id=\"p1\">**</bpt>Native Client Application<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        2908,
+        2983
+      ],
+      "content": "The <bpt id=\"p1\">**</bpt>Name<ept id=\"p1\">**</ept> of the application will describe your application to end-users"
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>Redirect Uri<ept id=\"p1\">**</ept> is a scheme and string combination that Azure AD will use to return token responses.",
+      "pos": [
+        2992,
+        3097
+      ]
+    },
+    {
+      "content": "Enter a placeholder value for now, e.g. <ph id=\"ph1\">`http://DirectorySearcher`</ph>.",
+      "pos": [
+        3099,
+        3166
+      ]
+    },
+    {
+      "content": "We'll replace this value later.",
+      "pos": [
+        3168,
+        3199
+      ]
+    },
+    {
+      "content": "Once you’ve completed registration, AAD will assign your app a unique client identifier.",
+      "pos": [
+        3204,
+        3292
+      ]
+    },
+    {
+      "content": "You’ll need this value in the next sections, so copy it from the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab.",
+      "pos": [
+        3294,
+        3377
+      ]
+    },
+    {
+      "content": "Also in <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab, locate the \"Permissions to Other Applications\" section.",
+      "pos": [
+        3380,
+        3462
+      ]
+    },
+    {
+      "content": "For the \"Azure Active Directory\" application, add the <bpt id=\"p1\">**</bpt>Access Your Organization's Directory<ept id=\"p1\">**</ept> permission under <bpt id=\"p2\">**</bpt>Delegated Permissions<ept id=\"p2\">**</ept>.",
+      "pos": [
+        3464,
+        3602
+      ]
+    },
+    {
+      "content": "This will enable your application to query the Graph API for users.",
+      "pos": [
+        3604,
+        3671
+      ]
+    },
+    {
+      "content": "2. Install &amp; Configure ADAL",
+      "pos": [
+        3677,
+        3704
+      ]
+    },
+    {
+      "content": "Now that you have an application in Azure AD, you can install ADAL and write your identity-related code.",
+      "pos": [
+        3706,
+        3810
+      ]
+    },
+    {
+      "content": "In order for ADAL to be able to communicate with Azure AD, you need to provide it with some information about your app registration.",
+      "pos": [
+        3812,
+        3944
+      ]
+    },
+    {
+      "content": "Begin by adding ADAL to the DirectorySearcher project using the Package Manager Console.",
+      "pos": [
+        3949,
+        4037
+      ]
+    },
+    {
+      "content": "In the DirectorySearcher project, open <ph id=\"ph1\">`MainPage.xaml.cs`</ph>.",
+      "pos": [
+        4120,
+        4178
+      ]
+    },
+    {
+      "content": "Replace the values in the <ph id=\"ph1\">`Config Values`</ph> region to reflect the values you input into the Azure Portal.",
+      "pos": [
+        4180,
+        4283
+      ]
+    },
+    {
+      "content": "Your code will reference these values whenever it uses ADAL.",
+      "pos": [
+        4285,
+        4345
+      ]
+    },
+    {
+      "pos": [
+        4354,
+        4434
+      ],
+      "content": "The <ph id=\"ph1\">`tenant`</ph> is the domain of your Azure AD tenant, e.g. contoso.onmicrosoft.com"
+    },
+    {
+      "pos": [
+        4443,
+        4521
+      ],
+      "content": "The <ph id=\"ph1\">`clientId`</ph> is the clientId of your application you copied from the portal."
+    },
+    {
+      "content": "You now need to discover the callback uri for your Windows Phone app.",
+      "pos": [
+        4526,
+        4595
+      ]
+    },
+    {
+      "content": "Set a breakpoint on this line in the <ph id=\"ph1\">`MainPage`</ph> method:",
+      "pos": [
+        4597,
+        4652
+      ]
+    },
+    {
+      "content": "Run the app, and copy aside the value of <ph id=\"ph1\">`redirectUri`</ph> when the breakpoint is hit.",
+      "pos": [
+        4774,
+        4856
+      ]
+    },
+    {
+      "content": "It should look something like",
+      "pos": [
+        4858,
+        4887
+      ]
+    },
+    {
+      "pos": [
+        4992,
+        5131
+      ],
+      "content": "Back on the <bpt id=\"p1\">**</bpt>Configure<ept id=\"p1\">**</ept> tab of your application in the Azure Management Portal, replace the value of the <bpt id=\"p2\">**</bpt>RedirectUri<ept id=\"p2\">**</ept> with this value."
+    },
+    {
+      "content": "3.  Use ADAL to Get Tokens from AAD",
+      "pos": [
+        5139,
+        5174
+      ]
+    },
+    {
+      "pos": [
+        5176,
+        5327
+      ],
+      "content": "The basic principle behind ADAL is that whenever your app needs an access token, it simply calls <ph id=\"ph1\">`authContext.AcquireToken(…)`</ph>, and ADAL does the rest."
+    },
+    {
+      "content": "The first step is to initialize your app’s <ph id=\"ph1\">`AuthenticationContext`</ph> - ADAL’s primary class.",
+      "pos": [
+        5335,
+        5425
+      ]
+    },
+    {
+      "content": "This is where you pass ADAL the coordinates it needs to communicate with Azure AD and tell it how to cache tokens.",
+      "pos": [
+        5427,
+        5541
+      ]
+    },
+    {
+      "content": "Now locate the <ph id=\"ph1\">`Search(...)`</ph> method, which will be invoked when the user cliks the \"Search\" button in the app's UI.",
+      "pos": [
+        5755,
+        5870
+      ]
+    },
+    {
+      "content": "This method makes a GET request to the Azure AD Graph API to query for users whose UPN begins with the given search term.",
+      "pos": [
+        5872,
+        5993
+      ]
+    },
+    {
+      "content": "But in order to query the Graph API, you need to include an access_token in the <ph id=\"ph1\">`Authorization`</ph> header of the request - this is where ADAL comes in.",
+      "pos": [
+        5995,
+        6143
+      ]
+    },
+    {
+      "content": "When your app requests a token by calling <ph id=\"ph1\">`AcquireTokenAsync(...)`</ph>, ADAL will attempt to return a token without asking the user for credentials.",
+      "pos": [
+        6807,
+        6951
+      ]
+    },
+    {
+      "content": "If ADAL determines that the user needs to sign in to get a token, it will display a login dialog, collect the user's credentials, and return a token upon successful authentication.",
+      "pos": [
+        6953,
+        7133
+      ]
+    },
+    {
+      "content": "If ADAL is unable to return a token for any reason, the <ph id=\"ph1\">`AuthenticationResult`</ph> status will be an error.",
+      "pos": [
+        7135,
+        7238
+      ]
+    },
+    {
+      "content": "Now it's time to use the the access_token you just acquired.",
+      "pos": [
+        7242,
+        7302
+      ]
+    },
+    {
+      "content": "Also in the <ph id=\"ph1\">`Search(...)`</ph> method, attach the token to the Graph API GET request in the Authorization header:",
+      "pos": [
+        7304,
+        7412
+      ]
+    },
+    {
+      "pos": [
+        7618,
+        7742
+      ],
+      "content": "You can also use the <ph id=\"ph1\">`AuthenticationResult`</ph> object to display information about the user in your app, such as the user's id:"
+    },
+    {
+      "content": "Finally, you can use ADAL to sign the user out of the application as well.",
+      "pos": [
+        7859,
+        7933
+      ]
+    },
+    {
+      "content": "When the user clicks the \"Sign Out\" button, we want to ensure that the next call to <ph id=\"ph1\">`AcquireTokenAsync(...)`</ph> will show a sign in view.",
+      "pos": [
+        7935,
+        8069
+      ]
+    },
+    {
+      "content": "With ADAL, this is as easy as clearing the token cache:",
+      "pos": [
+        8071,
+        8126
+      ]
+    },
+    {
+      "content": "Congratulations!",
+      "pos": [
+        8260,
+        8276
+      ]
+    },
+    {
+      "content": "You now have a working Windows Store app that has the ability to authenticate users, securely call Web APIs using OAuth 2.0, and get basic information about the user.",
+      "pos": [
+        8277,
+        8443
+      ]
+    },
+    {
+      "content": "If you haven’t already, now is the time to populate your tenant with some users.",
+      "pos": [
+        8445,
+        8525
+      ]
+    },
+    {
+      "content": "Run your DirectorySearcher app, and sign in with one of those users.",
+      "pos": [
+        8527,
+        8595
+      ]
+    },
+    {
+      "content": "Search for other users based on their UPN.",
+      "pos": [
+        8597,
+        8639
+      ]
+    },
+    {
+      "content": "Close the app, and re-run it.",
+      "pos": [
+        8641,
+        8670
+      ]
+    },
+    {
+      "content": "Notice how the user’s session remains intact.",
+      "pos": [
+        8672,
+        8717
+      ]
+    },
+    {
+      "content": "Sign out (by right-clicking to show the bottom bar), and sign back in as another user.",
+      "pos": [
+        8719,
+        8805
+      ]
+    },
+    {
+      "content": "ADAL makes it easy to incorporate all of these common identity features into your application.",
+      "pos": [
+        8807,
+        8901
+      ]
+    },
+    {
+      "content": "It takes care of all the dirty work for you - cache management, OAuth protocol support, presenting the user with a login UI, refreshing expired tokens, and more.",
+      "pos": [
+        8903,
+        9064
+      ]
+    },
+    {
+      "content": "All you really need to know is a single API call, <ph id=\"ph1\">`authContext.AcquireToken*(…)`</ph>.",
+      "pos": [
+        9066,
+        9147
+      ]
+    },
+    {
+      "content": "For reference, the completed sample (without your configuration values) is provided <bpt id=\"p1\">[</bpt>here<ept id=\"p1\">](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/complete.zip)</ept>.",
+      "pos": [
+        9149,
+        9326
+      ]
+    },
+    {
+      "content": "You can now move on to additional identity scenarios.",
+      "pos": [
+        9328,
+        9381
+      ]
+    },
+    {
+      "content": "You may want to try:",
+      "pos": [
+        9383,
+        9403
+      ]
+    },
+    {
+      "content": "Secure a .NET Web API with Azure AD &gt;&gt;",
+      "pos": [
+        9406,
+        9444
+      ]
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Azure AD Windows Store Getting Started | Microsoft Azure\"\n    description=\"How to build a Windows Store application that integrates with Azure AD for sign in and calls Azure AD protected APIs using OAuth.\"\n    services=\"active-directory\"\n    documentationCenter=\"windows\"\n    authors=\"dstrockis\"\n    manager=\"mbaldwin\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"active-directory\"\n    ms.workload=\"identity\"\n    ms.tgt_pltfrm=\"mobile-windows-store\"\n    ms.devlang=\"dotnet\"\n    ms.topic=\"article\"\n    ms.date=\"10/13/2015\"\n    ms.author=\"dastrock\"/>\n\n\n# Integrate Azure AD with a Windows Store App\n\n[AZURE.INCLUDE [active-directory-devquickstarts-switcher](../../includes/active-directory-devquickstarts-switcher.md)]\n\n[AZURE.INCLUDE [active-directory-devguide](../../includes/active-directory-devguide.md)]\n\nIf you're developing an app for the Windows Store, Azure AD makes it simple and straightforward for you to authenticate your users with their Active Directory accounts.  It also enables your application to securely consume any web API protected by Azure AD, such as the Office 365 APIs or the Azure API.\n\nFor Windows Store desktop apps that need to access protected resources, Azure AD provides the Active Directory Authentication Library, or ADAL.  ADAL’s sole purpose in life is to make it easy for your app to get access tokens.  To demonstrate just how easy it is, here we’ll build a \"Directory Searcher\" Windows Store app that:\n\n-   Gets access tokens for calling the Azure AD Graph API using the [OAuth 2.0 authentication protocol](https://msdn.microsoft.com/library/azure/dn645545.aspx).\n-   Searches a directory for users with a given UPN.\n-   Signs users out.\n\nTo build the complete working application, you’ll need to:\n\n2. Register your application with Azure AD.\n3. Install & Configure ADAL.\n5. Use ADAL to get tokens from Azure AD.\n\nTo get started, [download a skeleton project](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/skeleton.zip) or [download the completed sample](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/complete.zip).  Each is a Visual Studio 2013 solution.  You'll also need an Azure AD tenant in which you can create users and register an application.  If you don't already have a tenant, [learn how to get one](active-directory-howto-tenant.md).\n\n## *1. Register the Directory Searcher Application*\nTo enable your app to get tokens, you’ll first need to register it in your Azure AD tenant and grant it permission to access the Azure AD Graph API:\n\n-   Sign into the [Azure Management Portal](https://manage.windowsazure.com)\n-   In the left hand nav, click on **Active Directory**\n-   Select a tenant in which to register the application.\n-   Click the **Applications** tab, and click **Add** in the bottom drawer.\n-   Follow the prompts and create a new **Native Client Application**.\n    -   The **Name** of the application will describe your application to end-users\n    -   The **Redirect Uri** is a scheme and string combination that Azure AD will use to return token responses.  Enter a placeholder value for now, e.g. `http://DirectorySearcher`.  We'll replace this value later.\n-   Once you’ve completed registration, AAD will assign your app a unique client identifier.  You’ll need this value in the next sections, so copy it from the **Configure** tab.\n- Also in **Configure** tab, locate the \"Permissions to Other Applications\" section.  For the \"Azure Active Directory\" application, add the **Access Your Organization's Directory** permission under **Delegated Permissions**.  This will enable your application to query the Graph API for users.\n\n## *2. Install & Configure ADAL*\nNow that you have an application in Azure AD, you can install ADAL and write your identity-related code.  In order for ADAL to be able to communicate with Azure AD, you need to provide it with some information about your app registration.\n-   Begin by adding ADAL to the DirectorySearcher project using the Package Manager Console.\n\n```\nPM> Install-Package Microsoft.IdentityModel.Clients.ActiveDirectory\n```\n\n-   In the DirectorySearcher project, open `MainPage.xaml.cs`.  Replace the values in the `Config Values` region to reflect the values you input into the Azure Portal.  Your code will reference these values whenever it uses ADAL.\n    -   The `tenant` is the domain of your Azure AD tenant, e.g. contoso.onmicrosoft.com\n    -   The `clientId` is the clientId of your application you copied from the portal.\n-   You now need to discover the callback uri for your Windows Phone app.  Set a breakpoint on this line in the `MainPage` method:\n\n```\nredirectURI = Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri();\n```\n- Run the app, and copy aside the value of `redirectUri` when the breakpoint is hit.  It should look something like\n\n```\nms-app://s-1-15-2-1352796503-54529114-405753024-3540103335-3203256200-511895534-1429095407/\n```\n\n- Back on the **Configure** tab of your application in the Azure Management Portal, replace the value of the **RedirectUri** with this value.  \n\n## *3.  Use ADAL to Get Tokens from AAD*\nThe basic principle behind ADAL is that whenever your app needs an access token, it simply calls `authContext.AcquireToken(…)`, and ADAL does the rest.  \n\n-   The first step is to initialize your app’s `AuthenticationContext` - ADAL’s primary class.  This is where you pass ADAL the coordinates it needs to communicate with Azure AD and tell it how to cache tokens.\n\n```C#\npublic MainPage()\n{\n    ...\n\n    // ADAL for Windows Phone 8.1 builds AuthenticationContext instances through a factory\n    authContext = AuthenticationContext.CreateAsync(authority).GetResults();\n}\n```\n\n- Now locate the `Search(...)` method, which will be invoked when the user cliks the \"Search\" button in the app's UI.  This method makes a GET request to the Azure AD Graph API to query for users whose UPN begins with the given search term.  But in order to query the Graph API, you need to include an access_token in the `Authorization` header of the request - this is where ADAL comes in.\n\n```C#\nprivate async void Search(object sender, RoutedEventArgs e)\n{\n    ...\n    AuthenticationResult result = await authContext.AcquireTokenAsync(graphResourceId, clientId, redirectURI);\n    if (result.Status != AuthenticationStatus.Success)\n    {\n        if (result.Error != \"authentication_canceled\")\n        {\n            MessageDialog dialog = new MessageDialog(string.Format(\"If the error continues, please contact your administrator.\\n\\nError: {0}\\n\\nError Description:\\n\\n{1}\", result.Error, result.ErrorDescription), \"Sorry, an error occurred while signing you in.\");\n            await dialog.ShowAsync();\n        }\n        return;\n    }\n    ...\n}\n```\n- When your app requests a token by calling `AcquireTokenAsync(...)`, ADAL will attempt to return a token without asking the user for credentials.  If ADAL determines that the user needs to sign in to get a token, it will display a login dialog, collect the user's credentials, and return a token upon successful authentication.  If ADAL is unable to return a token for any reason, the `AuthenticationResult` status will be an error.\n\n- Now it's time to use the the access_token you just acquired.  Also in the `Search(...)` method, attach the token to the Graph API GET request in the Authorization header:\n\n```C#\n// Add the access token to the Authorization Header of the call to the Graph API\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", result.AccessToken);\n\n```\n- You can also use the `AuthenticationResult` object to display information about the user in your app, such as the user's id:\n\n```C#\n// Update the Page UI to represent the signed in user\nActiveUser.Text = result.UserInfo.DisplayableId;\n```\n- Finally, you can use ADAL to sign the user out of the application as well.  When the user clicks the \"Sign Out\" button, we want to ensure that the next call to `AcquireTokenAsync(...)` will show a sign in view.  With ADAL, this is as easy as clearing the token cache:\n\n```C#\nprivate void SignOut()\n{\n    // Clear session state from the token cache.\n    authContext.TokenCache.Clear();\n\n    ...\n}\n```\n\nCongratulations! You now have a working Windows Store app that has the ability to authenticate users, securely call Web APIs using OAuth 2.0, and get basic information about the user.  If you haven’t already, now is the time to populate your tenant with some users.  Run your DirectorySearcher app, and sign in with one of those users.  Search for other users based on their UPN.  Close the app, and re-run it.  Notice how the user’s session remains intact.  Sign out (by right-clicking to show the bottom bar), and sign back in as another user.\n\nADAL makes it easy to incorporate all of these common identity features into your application.  It takes care of all the dirty work for you - cache management, OAuth protocol support, presenting the user with a login UI, refreshing expired tokens, and more.  All you really need to know is a single API call, `authContext.AcquireToken*(…)`.\n\nFor reference, the completed sample (without your configuration values) is provided [here](https://github.com/AzureADQuickStarts/NativeClient-WindowsStore/archive/complete.zip).  You can now move on to additional identity scenarios.  You may want to try:\n\n[Secure a .NET Web API with Azure AD >>](active-directory-devquickstarts-webapi-dotnet.md)\n\n[AZURE.INCLUDE [active-directory-devquickstarts-additional-resources](../../includes/active-directory-devquickstarts-additional-resources.md)]\n \n\n"
+}
