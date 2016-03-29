@@ -1,5 +1,6 @@
-I really like OpenLoc.
+Cheesy imitation Vietnamese (sorry!!).
 
-It works *exceptionally* well.
+Totally *not Vietnamese* at all.
 
 Not sure ***what else*** to say??
+<!--HONumber=Mar16_HO4-->
