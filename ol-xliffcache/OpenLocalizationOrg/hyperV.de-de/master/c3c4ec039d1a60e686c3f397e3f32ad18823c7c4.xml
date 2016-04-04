@@ -1,0 +1,1042 @@
+{
+  "nodes": [
+    {
+      "content": "Identity synchronization and duplicate attribute resiliency | Microsoft Azure",
+      "pos": [
+        28,
+        105
+      ]
+    },
+    {
+      "content": "New behavior of how to handle objects with UPN or ProxyAddress conflicts during directory sync using Azure AD Connect.",
+      "pos": [
+        125,
+        243
+      ]
+    },
+    {
+      "content": "Identity synchronization and duplicate attribute resiliency",
+      "pos": [
+        570,
+        629
+      ]
+    },
+    {
+      "content": "Duplicate Attribute Resiliency is a new feature being added to Azure Active Directory in order to eliminate friction caused by <bpt id=\"p1\">**</bpt>UserPrincipalName<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>ProxyAddress<ept id=\"p2\">**</ept> conflicts when running one of Microsoft’s synchronization tools.",
+      "pos": [
+        631,
+        865
+      ]
+    },
+    {
+      "content": "This feature is right now in preview.",
+      "pos": [
+        866,
+        903
+      ]
+    },
+    {
+      "pos": [
+        905,
+        1058
+      ],
+      "content": "These two attributes are generally required to be unique across all <bpt id=\"p1\">**</bpt>User<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Group<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Contact<ept id=\"p3\">**</ept> objects in a given Azure Active Directory tenant."
+    },
+    {
+      "pos": [
+        1062,
+        1100
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Only Users can have UPNs."
+    },
+    {
+      "content": "The new behavior that this feature enables is in the cloud portion of the sync pipeline, therefore it is client agnostic and relevant for any Microsoft synchronization product including Azure AD Connect, DirSync and MIM + Connector.",
+      "pos": [
+        1105,
+        1337
+      ]
+    },
+    {
+      "content": "The generic term “sync client” will be used in this document to represent any one of these products.",
+      "pos": [
+        1338,
+        1438
+      ]
+    },
+    {
+      "content": "Current behavior",
+      "pos": [
+        1443,
+        1459
+      ]
+    },
+    {
+      "content": "If there is an attempt to provision a new object with a UPN or ProxyAddress value that violates this uniqueness constraint, Azure Active Directory blocks that object from being created.",
+      "pos": [
+        1461,
+        1646
+      ]
+    },
+    {
+      "content": "Similarly, if an object is updated with a non-unique UPN or ProxyAddress, the update fails.",
+      "pos": [
+        1647,
+        1738
+      ]
+    },
+    {
+      "content": "The provisioning attempt or update is retried by the sync client upon each export cycle, and will continue to fail until the conflict is resolved.",
+      "pos": [
+        1739,
+        1885
+      ]
+    },
+    {
+      "content": "An error report email is generated upon each attempt and an error is logged by the sync client.",
+      "pos": [
+        1886,
+        1981
+      ]
+    },
+    {
+      "content": "Behavior with Duplicate Attribute Resiliency",
+      "pos": [
+        1986,
+        2030
+      ]
+    },
+    {
+      "content": "Instead of completely failing to provision or update an object with a duplicate attribute, Azure Active Directory  “quarantines” the duplicate attribute which would violate the uniqueness constraint.",
+      "pos": [
+        2032,
+        2231
+      ]
+    },
+    {
+      "content": "If this attribute is required for provisioning, like UserPrincipalName, the service will assign a placeholder value.",
+      "pos": [
+        2232,
+        2348
+      ]
+    },
+    {
+      "content": "The format of these temporary values is",
+      "pos": [
+        2349,
+        2388
+      ]
+    },
+    {
+      "content": "“<bpt id=\"p1\">***</bpt><ph id=\"ph1\">&lt;OriginalPrefix&gt;</ph>+&lt;4DigitNumber&gt;@<ph id=\"ph2\">&lt;InitialTenantDomain&gt;</ph>.onmicrosoft.com<ept id=\"p1\">***</ept>”.",
+      "pos": [
+        2393,
+        2471
+      ]
+    },
+    {
+      "content": "If the attribute is not required, like a  <bpt id=\"p1\">**</bpt>ProxyAddress<ept id=\"p1\">**</ept>, Azure Active Directory simply quarantines the conflict attribute and proceeds with the object creation or update.",
+      "pos": [
+        2476,
+        2649
+      ]
+    },
+    {
+      "content": "Upon quarantining the attribute, information about the conflict is sent in the same error report email used in the old behavior.",
+      "pos": [
+        2652,
+        2780
+      ]
+    },
+    {
+      "content": "However, this info only appears in the error report one time, when the quarantine happens, it will not continue to be logged in future emails.",
+      "pos": [
+        2781,
+        2923
+      ]
+    },
+    {
+      "content": "Also, since the export for this object has succeeded, the sync client does not log an error and does not retry the create / update operation upon subsequent sync cycles.",
+      "pos": [
+        2924,
+        3093
+      ]
+    },
+    {
+      "content": "To support this behavior a new attribute has been added to the User, Group, and Contact object classes:",
+      "pos": [
+        3095,
+        3198
+      ]
+    },
+    {
+      "content": "DirSyncProvisioningErrors",
+      "pos": [
+        3206,
+        3231
+      ]
+    },
+    {
+      "content": "This is a multi-valued attribute that is used to store the conflicting attributes that would violate the uniqueness constraint should they be added normally.",
+      "pos": [
+        3236,
+        3393
+      ]
+    },
+    {
+      "content": "A background timer task has been enabled in Azure Active Directory that  runs every hour to look for duplicate attribute conflicts that have been resolved, and automatically removes the attributes in question from quarantine.",
+      "pos": [
+        3394,
+        3619
+      ]
+    },
+    {
+      "content": "Enabling Duplicate Attribute Resiliency",
+      "pos": [
+        3626,
+        3665
+      ]
+    },
+    {
+      "content": "As mentioned earlier in this topic, this new behavior is currently in preview.",
+      "pos": [
+        3667,
+        3745
+      ]
+    },
+    {
+      "content": "Once it is GA, it will be enabled for all tenants automatically.",
+      "pos": [
+        3746,
+        3810
+      ]
+    },
+    {
+      "content": "While it is in preview state, it can be enabled by downloading the latest version of the Azure Active Directory PowerShell module and running:",
+      "pos": [
+        3811,
+        3953
+      ]
+    },
+    {
+      "content": "During preview, UPN and ProxyAddress resiliency can be turned on and disabled individually.",
+      "pos": [
+        4108,
+        4199
+      ]
+    },
+    {
+      "content": "Once the behavior is GA, both will be enabled for all tenants and will not be able to be disabled.",
+      "pos": [
+        4200,
+        4298
+      ]
+    },
+    {
+      "content": "Identifying Objects with DirSyncProvisioningErrors",
+      "pos": [
+        4305,
+        4355
+      ]
+    },
+    {
+      "content": "There are currently two methods to identify objects that have these errors due to duplicate property conflicts, Azure Active Directory PowerShell and the Office 365 Admin Portal.",
+      "pos": [
+        4357,
+        4535
+      ]
+    },
+    {
+      "content": "There are plans to extend to additional portal based reporting in the future.",
+      "pos": [
+        4536,
+        4613
+      ]
+    },
+    {
+      "content": "Azure Active Directory PowerShell",
+      "pos": [
+        4619,
+        4652
+      ]
+    },
+    {
+      "content": "For the PowerShell cmdlets in this topic, the following is true:",
+      "pos": [
+        4654,
+        4718
+      ]
+    },
+    {
+      "content": "All of the following cmdlets are case sensitive.",
+      "pos": [
+        4722,
+        4770
+      ]
+    },
+    {
+      "pos": [
+        4774,
+        4937
+      ],
+      "content": "The **–ErrorCategory PropertyConflict** must always be included. There are currently no other types of \n**ErrorCategory**, but this may be extended in the future.",
+      "leadings": [
+        "",
+        " "
+      ],
+      "nodes": [
+        {
+          "content": "The **–ErrorCategory PropertyConflict** must always be included. There are currently no other types of",
+          "pos": [
+            0,
+            102
+          ],
+          "nodes": [
+            {
+              "content": "The <bpt id=\"p1\">**</bpt>–ErrorCategory PropertyConflict<ept id=\"p1\">**</ept> must always be included.",
+              "pos": [
+                0,
+                64
+              ]
+            },
+            {
+              "content": "There are currently no other types of",
+              "pos": [
+                65,
+                102
+              ]
+            }
+          ]
+        },
+        {
+          "content": "<bpt id=\"p1\">**</bpt>ErrorCategory<ept id=\"p1\">**</ept>, but this may be extended in the future.",
+          "pos": [
+            104,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4939,
+        5045
+      ],
+      "content": "First, get started by running <bpt id=\"p1\">**</bpt>Connect-MsolService<ept id=\"p1\">**</ept> and entering credentials for a tenant administrator."
+    },
+    {
+      "content": "Then, use the following cmdlets and operators to view errors in different ways:",
+      "pos": [
+        5048,
+        5127
+      ]
+    },
+    {
+      "content": "See All",
+      "pos": [
+        5133,
+        5140
+      ]
+    },
+    {
+      "content": "By Property Type",
+      "pos": [
+        5157,
+        5173
+      ]
+    },
+    {
+      "content": "By Conflicting Value",
+      "pos": [
+        5199,
+        5219
+      ]
+    },
+    {
+      "content": "Using a String Search",
+      "pos": [
+        5249,
+        5270
+      ]
+    },
+    {
+      "content": "Sorted",
+      "pos": [
+        5301,
+        5307
+      ]
+    },
+    {
+      "content": "In a Limited Quantity or All",
+      "pos": [
+        5323,
+        5351
+      ]
+    },
+    {
+      "content": "See all",
+      "pos": [
+        5396,
+        5403
+      ]
+    },
+    {
+      "content": "Once connected, to see a general list of attribute provisioning errors in the tenant run:",
+      "pos": [
+        5406,
+        5495
+      ]
+    },
+    {
+      "content": "This will produce a result like the following:",
+      "pos": [
+        5565,
+        5611
+      ]
+    },
+    {
+      "content": "Get-MsolDirSyncProvisioningError",
+      "pos": [
+        5621,
+        5653
+      ]
+    },
+    {
+      "content": "By property type",
+      "pos": [
+        5782,
+        5798
+      ]
+    },
+    {
+      "pos": [
+        5800,
+        5925
+      ],
+      "content": "To see errors by property type, add the <bpt id=\"p1\">**</bpt>-PropertyName<ept id=\"p1\">**</ept> flag with the <bpt id=\"p2\">**</bpt>UserPrincipalName<ept id=\"p2\">**</ept> or <bpt id=\"p3\">**</bpt>ProxyAddresses<ept id=\"p3\">**</ept> argument:"
+    },
+    {
+      "content": "Or",
+      "pos": [
+        6027,
+        6029
+      ]
+    },
+    {
+      "content": "By conflicting value",
+      "pos": [
+        6133,
+        6153
+      ]
+    },
+    {
+      "pos": [
+        6155,
+        6296
+      ],
+      "content": "To see errors relating to a specific property add the <bpt id=\"p1\">**</bpt>-PropertyValue<ept id=\"p1\">**</ept> flag (<bpt id=\"p2\">**</bpt>-PropertyName<ept id=\"p2\">**</ept> must be used as well when adding this flag):"
+    },
+    {
+      "content": "Using a string search",
+      "pos": [
+        6435,
+        6456
+      ]
+    },
+    {
+      "content": "To do a broad string search use the <bpt id=\"p1\">**</bpt>-SearchString<ept id=\"p1\">**</ept> flag.",
+      "pos": [
+        6458,
+        6517
+      ]
+    },
+    {
+      "content": "This can be used independently from all of the above flags, with the exception of <bpt id=\"p1\">**</bpt>-ErrorCategory PropertyConflict<ept id=\"p1\">**</ept>, which is always required:",
+      "pos": [
+        6518,
+        6662
+      ]
+    },
+    {
+      "content": "Sorted",
+      "pos": [
+        6756,
+        6762
+      ]
+    },
+    {
+      "content": "There are two flags that can be used to sort the results of a given query:",
+      "pos": [
+        6764,
+        6838
+      ]
+    },
+    {
+      "pos": [
+        6844,
+        6916
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>SortField<ept id=\"p1\">**</ept>: valid arguments include DisplayName and UserPrincipalName"
+    },
+    {
+      "pos": [
+        6923,
+        6990
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>SortDirection<ept id=\"p1\">**</ept>: valid arguments include Ascending and Descending"
+    },
+    {
+      "content": "In a limited quantity or all",
+      "pos": [
+        7120,
+        7148
+      ]
+    },
+    {
+      "pos": [
+        7153,
+        7236
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>MaxResults <ph id=\"ph1\">&lt;Int&gt;</ph><ept id=\"p1\">**</ept> can be used to limit the query to a specific number of values."
+    },
+    {
+      "pos": [
+        7243,
+        7348
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>All<ept id=\"p1\">**</ept> can be used to ensure all results are retrieved in the case that a large number of errors exists."
+    },
+    {
+      "content": "Office365 admin portal",
+      "pos": [
+        7435,
+        7457
+      ]
+    },
+    {
+      "content": "The report in the O365 portal only displays <bpt id=\"p1\">**</bpt>User<ept id=\"p1\">**</ept> objects that have these errors.",
+      "pos": [
+        7459,
+        7543
+      ]
+    },
+    {
+      "content": "It will not show info about conflicts between <bpt id=\"p1\">**</bpt>Groups<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Contacts<ept id=\"p2\">**</ept> or <bpt id=\"p3\">**</bpt>PublicFolders<ept id=\"p3\">**</ept>.",
+      "pos": [
+        7544,
+        7636
+      ]
+    },
+    {
+      "pos": [
+        7638,
+        7692
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>To see these errors in the Office365 Admin Portal<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "pos": [
+        7698,
+        7755
+      ],
+      "content": "Log in to <bpt id=\"p1\">**</bpt>portal.office.com<ept id=\"p1\">**</ept> as a tenant administrator"
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Users -&gt; Active Users<ept id=\"p1\">**</ept>",
+      "pos": [
+        7761,
+        7792
+      ]
+    },
+    {
+      "pos": [
+        7927,
+        8168
+      ],
+      "content": "A warning at the top of the page will be displayed if there duplicate attribute errors on any object(s) in the tenant: <br>\n![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/3.png \"Active Users\")\n<br>",
+      "leadings": [
+        "",
+        "    ",
+        ""
+      ],
+      "nodes": [
+        {
+          "content": "A warning at the top of the page will be displayed if there duplicate attribute errors on any object(s) in the tenant:",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "Active Users",
+          "pos": [
+            126,
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8175,
+        8391
+      ],
+      "content": "To see object specific details, choose “Users with errors” from the “Select a view” dropdown: <br>\n![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/4.png \"Active Users\")\n<br>",
+      "leadings": [
+        "",
+        "    ",
+        ""
+      ],
+      "nodes": [
+        {
+          "content": "To see object specific details, choose “Users with errors” from the “Select a view” dropdown:",
+          "pos": [
+            0,
+            93
+          ]
+        },
+        {
+          "content": "Active Users",
+          "pos": [
+            101,
+            113
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        8398,
+        8639
+      ],
+      "content": "Click an object to see more details on the conflict, which will be displayed in the bottom right corner of the screen: <br>\n![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/5.png \"Active Users\")\n<br>",
+      "leadings": [
+        "",
+        "    ",
+        ""
+      ],
+      "nodes": [
+        {
+          "content": "Click an object to see more details on the conflict, which will be displayed in the bottom right corner of the screen:",
+          "pos": [
+            0,
+            118
+          ]
+        },
+        {
+          "content": "Active Users",
+          "pos": [
+            126,
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "content": "Identity synchronization error report",
+      "pos": [
+        8646,
+        8683
+      ]
+    },
+    {
+      "content": "When an object with a duplicate attribute conflict is handled with this new behavior a notification is included in the standard Identity Synchronization Error Report email that is sent to the Technical Notification contact for the tenant.",
+      "pos": [
+        8685,
+        8923
+      ]
+    },
+    {
+      "content": "However, there is an important change in this behavior.",
+      "pos": [
+        8924,
+        8979
+      ]
+    },
+    {
+      "content": "In the past, information about a duplicate attribute conflict would be included in every subsequent error report until the conflict was resolved.",
+      "pos": [
+        8980,
+        9125
+      ]
+    },
+    {
+      "content": "With this new behavior, the error notification for a given conflict will only appear once- at the time the conflicting attribute is quarantined.",
+      "pos": [
+        9126,
+        9270
+      ]
+    },
+    {
+      "content": "Here is an example of what the email notification will look like for a ProxyAddress conflict:",
+      "pos": [
+        9272,
+        9365
+      ]
+    },
+    {
+      "content": "Active Users",
+      "pos": [
+        9378,
+        9390
+      ]
+    },
+    {
+      "content": "Resolving conflicts",
+      "pos": [
+        9495,
+        9514
+      ]
+    },
+    {
+      "content": "Troubleshooting strategy and resolution tactics for these errors should not differ from the way duplicate attribute errors were handled in the past.",
+      "pos": [
+        9516,
+        9664
+      ]
+    },
+    {
+      "content": "The only difference is that the timer task will sweep through the tenant on the service-side to automatically add the attribute in question to the proper object once the conflict is resolved.",
+      "pos": [
+        9665,
+        9856
+      ]
+    },
+    {
+      "pos": [
+        9858,
+        10070
+      ],
+      "content": "The following article outlines various troubleshooting and resolution strategies: <bpt id=\"p1\">[</bpt>Duplicate or invalid attributes prevent directory synchronization in Office 365<ept id=\"p1\">](https://support.microsoft.com/en-us/kb/2647098)</ept>."
+    },
+    {
+      "content": "Known issues",
+      "pos": [
+        10075,
+        10087
+      ]
+    },
+    {
+      "content": "None of these known issues will cause data loss or service degradation.",
+      "pos": [
+        10090,
+        10161
+      ]
+    },
+    {
+      "content": "Several of them are aesthetic, others cause standard “<bpt id=\"p1\">*</bpt>pre-resiliency<ept id=\"p1\">*</ept>” duplicate attribute errors to be thrown instead of quarantining the conflict attribute, and another causes certain errors to require extra manual fix-up.",
+      "pos": [
+        10162,
+        10387
+      ]
+    },
+    {
+      "content": "Core behavior:",
+      "pos": [
+        10391,
+        10405
+      ]
+    },
+    {
+      "content": "User with specific attribute configuration continues receiving export errors as opposed to attributes being quarantined.",
+      "pos": [
+        10412,
+        10532
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        10537,
+        10549
+      ]
+    },
+    {
+      "content": "a.",
+      "pos": [
+        10555,
+        10557
+      ]
+    },
+    {
+      "content": "New user with is created in AD with a UPN of <bpt id=\"p1\">**</bpt>Joe@contoso.com<ept id=\"p1\">**</ept> and ProxyAddress <bpt id=\"p2\">**</bpt>smtp:Joe@contoso.com<ept id=\"p2\">**</ept>",
+      "pos": [
+        10558,
+        10664
+      ]
+    },
+    {
+      "content": "b.",
+      "pos": [
+        10671,
+        10673
+      ]
+    },
+    {
+      "content": "The properties of this object conflict with an existing Group, where ProxyAddress is <bpt id=\"p1\">**</bpt>SMTP:Joe@contoso.com<ept id=\"p1\">**</ept>.",
+      "pos": [
+        10674,
+        10784
+      ]
+    },
+    {
+      "content": "c.",
+      "pos": [
+        10791,
+        10793
+      ]
+    },
+    {
+      "content": "Upon export, a <bpt id=\"p1\">**</bpt>ProxyAddress conflict<ept id=\"p1\">**</ept> error is thrown instead of having the conflict attributes quarantined.",
+      "pos": [
+        10794,
+        10905
+      ]
+    },
+    {
+      "content": "The operation is retried upon each subsequent sync cycle, as it would have been before the resiliency feature was enabled.",
+      "pos": [
+        10906,
+        11028
+      ]
+    },
+    {
+      "content": "The timer task that looks for resolved duplicate attribute conflicts only compares UPN conflicts with other UPN conflicts.",
+      "pos": [
+        11033,
+        11155
+      ]
+    },
+    {
+      "content": "This causes the problem shown in step 4 of the following scenario:",
+      "pos": [
+        11156,
+        11222
+      ]
+    },
+    {
+      "content": "a.",
+      "pos": [
+        11228,
+        11230
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>UserA@contoso.com<ept id=\"p1\">**</ept> has a non-unique UPN due to another object's ProxyAddress also having that value.",
+      "pos": [
+        11231,
+        11334
+      ]
+    },
+    {
+      "content": "b.",
+      "pos": [
+        11340,
+        11342
+      ]
+    },
+    {
+      "content": "UserA is given a temporary <bpt id=\"p1\">**</bpt>MOERA UPN<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>UserA1234@contoso.onmicrosoft.com<ept id=\"p2\">**</ept> and the real UPN value is quarantined (as expected).",
+      "pos": [
+        11343,
+        11475
+      ]
+    },
+    {
+      "content": "c.",
+      "pos": [
+        11481,
+        11483
+      ]
+    },
+    {
+      "content": "The other conflicting object has the ProxyAddress removed later.",
+      "pos": [
+        11484,
+        11548
+      ]
+    },
+    {
+      "content": "d.",
+      "pos": [
+        11554,
+        11556
+      ]
+    },
+    {
+      "content": "UserA's UPN is never fixed automatically; it must be updated manually.",
+      "pos": [
+        11557,
+        11627
+      ]
+    },
+    {
+      "content": "If two Groups are created on-premises with the same SMTP address, one will fail to provision on the first attempt with a standard duplicate <bpt id=\"p1\">**</bpt>ProxyAddress<ept id=\"p1\">**</ept> error.",
+      "pos": [
+        11632,
+        11795
+      ]
+    },
+    {
+      "content": "However, the duplicate value will be properly quarantined upon the next sync cycle.",
+      "pos": [
+        11796,
+        11879
+      ]
+    },
+    {
+      "pos": [
+        11881,
+        11904
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>PowerShell cmdlets<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "pos": [
+        11909,
+        11991
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>ImmutableId<ept id=\"p1\">**</ept> / <bpt id=\"p2\">**</bpt>LastDirSyncTime<ept id=\"p2\">**</ept> are not displayed for the User object class."
+    },
+    {
+      "pos": [
+        11997,
+        12061
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>SortField<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>SortDirection<ept id=\"p2\">**</ept> flags do not affect results."
+    },
+    {
+      "pos": [
+        12066,
+        12166
+      ],
+      "content": "Using the <bpt id=\"p1\">**</bpt>PropertyValue<ept id=\"p1\">**</ept> flag without adding the <bpt id=\"p2\">**</bpt>PropertyName<ept id=\"p2\">**</ept> flag throws an ambiguous error."
+    },
+    {
+      "pos": [
+        12171,
+        12279
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>SearchString<ept id=\"p1\">**</ept> flag returns extra results if run without the <bpt id=\"p2\">**</bpt>PropertyValue<ept id=\"p2\">**</ept> and <bpt id=\"p3\">**</bpt>PropertyName<ept id=\"p3\">**</ept> flags."
+    },
+    {
+      "pos": [
+        12283,
+        12308
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Office Portal Report<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "content": "The detailed error message for two objects in a UPN conflict set is the same.",
+      "pos": [
+        12313,
+        12390
+      ]
+    },
+    {
+      "content": "This indicates that they have both had their UPN changed / quarantined, when in fact only a one of them had any data changed.",
+      "pos": [
+        12391,
+        12516
+      ]
+    },
+    {
+      "content": "The detailed error message for a UPN conflict shows the wrong displayName for a user who has had their UPN changed/quarantined.",
+      "pos": [
+        12521,
+        12648
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        12649,
+        12661
+      ]
+    },
+    {
+      "content": "a.",
+      "pos": [
+        12667,
+        12669
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>User A<ept id=\"p1\">**</ept> syncs up first with <bpt id=\"p2\">**</bpt>UPN = User@contoso.com<ept id=\"p2\">**</ept>.",
+      "pos": [
+        12670,
+        12728
+      ]
+    },
+    {
+      "content": "b.",
+      "pos": [
+        12734,
+        12736
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>User B<ept id=\"p1\">**</ept> is attempted to be synced up next with <bpt id=\"p2\">**</bpt>UPN = User@contoso.com<ept id=\"p2\">**</ept>.",
+      "pos": [
+        12737,
+        12814
+      ]
+    },
+    {
+      "content": "c.",
+      "pos": [
+        12820,
+        12822
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>User B’s<ept id=\"p1\">**</ept> UPN is changed to <bpt id=\"p2\">**</bpt>User1234@contoso.onmicrosoft.com<ept id=\"p2\">**</ept> and <bpt id=\"p3\">**</bpt>User@contoso.com<ept id=\"p3\">**</ept> is added to <bpt id=\"p4\">**</bpt>DirSyncProvisioningErrors<ept id=\"p4\">**</ept>.",
+      "pos": [
+        12823,
+        12958
+      ]
+    },
+    {
+      "content": "d.",
+      "pos": [
+        12964,
+        12966
+      ]
+    },
+    {
+      "content": "The error message for <bpt id=\"p1\">**</bpt>User B<ept id=\"p1\">**</ept> should indicate that <bpt id=\"p2\">**</bpt>User A<ept id=\"p2\">**</ept> already has <bpt id=\"p3\">**</bpt>User@contoso.com<ept id=\"p3\">**</ept> as a UPN, but it shows <bpt id=\"p4\">**</bpt>User B’s<ept id=\"p4\">**</ept> own displayName.",
+      "pos": [
+        12967,
+        13117
+      ]
+    },
+    {
+      "pos": [
+        13122,
+        13320
+      ],
+      "content": "The report may only display detailed error information for users with <bpt id=\"p1\">**</bpt>UPN<ept id=\"p1\">**</ept> conflicts, not for those with <bpt id=\"p2\">**</bpt>ProxyAddress<ept id=\"p2\">**</ept> errors (still investigating whether this is consistent or environmental)."
+    },
+    {
+      "content": "See also",
+      "pos": [
+        13327,
+        13335
+      ]
+    },
+    {
+      "content": "Azure AD Connect sync",
+      "pos": [
+        13340,
+        13361
+      ]
+    },
+    {
+      "pos": [
+        13409,
+        13511
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Integrating your on-premises identities with Azure Active Directory<ept id=\"p1\">](active-directory-aadconnect.md)</ept>."
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Identity synchronization and duplicate attribute resiliency | Microsoft Azure\" \n    description=\"New behavior of how to handle objects with UPN or ProxyAddress conflicts during directory sync using Azure AD Connect.\" \n    services=\"active-directory\" \n    documentationCenter=\"\" \n    authors=\"markusvi\" \n    manager=\"stevenpo\" \n    editor=\"\"/>\n\n<tags \n    ms.service=\"active-directory\" \n    ms.workload=\"identity\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"03/18/2016\" \n    ms.author=\"markusvi\"/>\n\n\n\n\n# Identity synchronization and duplicate attribute resiliency\n\nDuplicate Attribute Resiliency is a new feature being added to Azure Active Directory in order to eliminate friction caused by **UserPrincipalName** and **ProxyAddress** conflicts when running one of Microsoft’s synchronization tools.\nThis feature is right now in preview.\n\nThese two attributes are generally required to be unique across all **User**, **Group**, or **Contact** objects in a given Azure Active Directory tenant.\n\n> [AZURE.NOTE] Only Users can have UPNs. \n \n\nThe new behavior that this feature enables is in the cloud portion of the sync pipeline, therefore it is client agnostic and relevant for any Microsoft synchronization product including Azure AD Connect, DirSync and MIM + Connector. The generic term “sync client” will be used in this document to represent any one of these products.\n\n## Current behavior\n\nIf there is an attempt to provision a new object with a UPN or ProxyAddress value that violates this uniqueness constraint, Azure Active Directory blocks that object from being created. Similarly, if an object is updated with a non-unique UPN or ProxyAddress, the update fails. The provisioning attempt or update is retried by the sync client upon each export cycle, and will continue to fail until the conflict is resolved. An error report email is generated upon each attempt and an error is logged by the sync client.\n\n## Behavior with Duplicate Attribute Resiliency\n\nInstead of completely failing to provision or update an object with a duplicate attribute, Azure Active Directory  “quarantines” the duplicate attribute which would violate the uniqueness constraint. If this attribute is required for provisioning, like UserPrincipalName, the service will assign a placeholder value. The format of these temporary values is<br> “***<OriginalPrefix>+<4DigitNumber>@<InitialTenantDomain>.onmicrosoft.com***”.<br> If the attribute is not required, like a  **ProxyAddress**, Azure Active Directory simply quarantines the conflict attribute and proceeds with the object creation or update.\n \nUpon quarantining the attribute, information about the conflict is sent in the same error report email used in the old behavior. However, this info only appears in the error report one time, when the quarantine happens, it will not continue to be logged in future emails. Also, since the export for this object has succeeded, the sync client does not log an error and does not retry the create / update operation upon subsequent sync cycles.\n\nTo support this behavior a new attribute has been added to the User, Group, and Contact object classes: <br> **DirSyncProvisioningErrors** \n\nThis is a multi-valued attribute that is used to store the conflicting attributes that would violate the uniqueness constraint should they be added normally. A background timer task has been enabled in Azure Active Directory that  runs every hour to look for duplicate attribute conflicts that have been resolved, and automatically removes the attributes in question from quarantine.\n\n\n\n###Enabling Duplicate Attribute Resiliency\n\nAs mentioned earlier in this topic, this new behavior is currently in preview. Once it is GA, it will be enabled for all tenants automatically. While it is in preview state, it can be enabled by downloading the latest version of the Azure Active Directory PowerShell module and running:\n\n`Set-MsolDirSyncFeature -Feature DuplicateUPNResiliency -Enable $true`\n\n`Set-MsolDirSyncFeature -Feature DuplicateProxyAddressResiliency -Enable $true`\n\nDuring preview, UPN and ProxyAddress resiliency can be turned on and disabled individually. Once the behavior is GA, both will be enabled for all tenants and will not be able to be disabled.\n\n\n\n## Identifying Objects with DirSyncProvisioningErrors\n\nThere are currently two methods to identify objects that have these errors due to duplicate property conflicts, Azure Active Directory PowerShell and the Office 365 Admin Portal. There are plans to extend to additional portal based reporting in the future.\n\n### Azure Active Directory PowerShell\n\nFor the PowerShell cmdlets in this topic, the following is true:\n\n- All of the following cmdlets are case sensitive. \n- The **–ErrorCategory PropertyConflict** must always be included. There are currently no other types of \n **ErrorCategory**, but this may be extended in the future.\n\nFirst, get started by running **Connect-MsolService** and entering credentials for a tenant administrator. \n\nThen, use the following cmdlets and operators to view errors in different ways:\n\n1. [See All](#see-all)\n\n2. [By Property Type](#by-property-type)\n\n3. [By Conflicting Value](#by-conflicting-value)\n\n4. [Using a String Search](#using-a-string-search)\n\n5. [Sorted](#sorted)\n\n6. [In a Limited Quantity or All](#in-a-limited-quantity-or-all)\n\n<br>\n\n#### See all \n\nOnce connected, to see a general list of attribute provisioning errors in the tenant run:\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict`\n\nThis will produce a result like the following:\n\n<br>\n ![Get-MsolDirSyncProvisioningError](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/1.png \"Get-MsolDirSyncProvisioningError\")\n<br>\n\n\n \n#### By property type\n\nTo see errors by property type, add the **-PropertyName** flag with the **UserPrincipalName** or **ProxyAddresses** argument:\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -PropertyName UserPrincipalName`\n\nOr\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -PropertyName ProxyAddresses`\n\n#### By conflicting value\n\nTo see errors relating to a specific property add the **-PropertyValue** flag (**-PropertyName** must be used as well when adding this flag):\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -PropertyValue User@domain.com -PropertyName UserPrincipalName`\n\n\n#### Using a string search\n\nTo do a broad string search use the **-SearchString** flag. This can be used independently from all of the above flags, with the exception of **-ErrorCategory PropertyConflict**, which is always required:\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -SearchString User`\n\n#### Sorted\n\nThere are two flags that can be used to sort the results of a given query:\n\n1.  **SortField**: valid arguments include DisplayName and UserPrincipalName\n \n2.  **SortDirection**: valid arguments include Ascending and Descending\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -SortField UserPrincipalName -SortDirection Ascending`\n\n\n#### In a limited quantity or all\n\n1. **MaxResults <Int>** can be used to limit the query to a specific number of values. \n \n2. **All** can be used to ensure all results are retrieved in the case that a large number of errors exists.\n\n`Get-MsolDirSyncProvisioningError -ErrorCategory PropertyConflict -MaxResults 5`\n\n## Office365 admin portal\n\nThe report in the O365 portal only displays **User** objects that have these errors. It will not show info about conflicts between **Groups**, **Contacts** or **PublicFolders**.\n\n**To see these errors in the Office365 Admin Portal**:\n\n1.  Log in to **portal.office.com** as a tenant administrator\n\n2.  Click **Users -> Active Users** <br>\n\n\n    ![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/2.png \"Active Users\")\n<br>\n\n\n\n \n3.  A warning at the top of the page will be displayed if there duplicate attribute errors on any object(s) in the tenant: <br>\n    ![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/3.png \"Active Users\")\n<br>\n \n4.  To see object specific details, choose “Users with errors” from the “Select a view” dropdown: <br>\n    ![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/4.png \"Active Users\")\n<br>\n \n5.  Click an object to see more details on the conflict, which will be displayed in the bottom right corner of the screen: <br>\n    ![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/5.png \"Active Users\")\n<br>\n \n### Identity synchronization error report\n\nWhen an object with a duplicate attribute conflict is handled with this new behavior a notification is included in the standard Identity Synchronization Error Report email that is sent to the Technical Notification contact for the tenant. However, there is an important change in this behavior. In the past, information about a duplicate attribute conflict would be included in every subsequent error report until the conflict was resolved. With this new behavior, the error notification for a given conflict will only appear once- at the time the conflicting attribute is quarantined.\n\nHere is an example of what the email notification will look like for a ProxyAddress conflict:\n\n<br>\n    ![Active Users](./media/active-directory-aadconnectsync-duplicate-attribute-resiliency/6.png \"Active Users\")\n<br>\n \n## Resolving conflicts\n\nTroubleshooting strategy and resolution tactics for these errors should not differ from the way duplicate attribute errors were handled in the past. The only difference is that the timer task will sweep through the tenant on the service-side to automatically add the attribute in question to the proper object once the conflict is resolved.\n\nThe following article outlines various troubleshooting and resolution strategies: [Duplicate or invalid attributes prevent directory synchronization in Office 365](https://support.microsoft.com/en-us/kb/2647098).\n\n## Known issues \n\nNone of these known issues will cause data loss or service degradation. Several of them are aesthetic, others cause standard “*pre-resiliency*” duplicate attribute errors to be thrown instead of quarantining the conflict attribute, and another causes certain errors to require extra manual fix-up.\n\n**Core behavior:**\n\n1. User with specific attribute configuration continues receiving export errors as opposed to attributes being quarantined. <br>For example:\n\n    a. New user with is created in AD with a UPN of **Joe@contoso.com** and ProxyAddress **smtp:Joe@contoso.com** \n\n    b. The properties of this object conflict with an existing Group, where ProxyAddress is **SMTP:Joe@contoso.com**. \n\n    c. Upon export, a **ProxyAddress conflict** error is thrown instead of having the conflict attributes quarantined. The operation is retried upon each subsequent sync cycle, as it would have been before the resiliency feature was enabled.\n\n2. The timer task that looks for resolved duplicate attribute conflicts only compares UPN conflicts with other UPN conflicts. This causes the problem shown in step 4 of the following scenario:\n\n    a. **UserA@contoso.com** has a non-unique UPN due to another object's ProxyAddress also having that value.\n\n    b. UserA is given a temporary **MOERA UPN**, **UserA1234@contoso.onmicrosoft.com** and the real UPN value is quarantined (as expected).\n\n    c. The other conflicting object has the ProxyAddress removed later.\n\n    d. UserA's UPN is never fixed automatically; it must be updated manually.\n\n3. If two Groups are created on-premises with the same SMTP address, one will fail to provision on the first attempt with a standard duplicate **ProxyAddress** error. However, the duplicate value will be properly quarantined upon the next sync cycle.\n\n**PowerShell cmdlets**:\n\n1. **ImmutableId** / **LastDirSyncTime** are not displayed for the User object class. \n\n2. **SortField** and **SortDirection** flags do not affect results.\n\n3. Using the **PropertyValue** flag without adding the **PropertyName** flag throws an ambiguous error.\n\n4. **SearchString** flag returns extra results if run without the **PropertyValue** and **PropertyName** flags.\n\n\n\n**Office Portal Report**:\n\n1. The detailed error message for two objects in a UPN conflict set is the same. This indicates that they have both had their UPN changed / quarantined, when in fact only a one of them had any data changed.\n\n2. The detailed error message for a UPN conflict shows the wrong displayName for a user who has had their UPN changed/quarantined. For example:\n\n    a. **User A** syncs up first with **UPN = User@contoso.com**.\n\n    b. **User B** is attempted to be synced up next with **UPN = User@contoso.com**.\n\n    c. **User B’s** UPN is changed to **User1234@contoso.onmicrosoft.com** and **User@contoso.com** is added to **DirSyncProvisioningErrors**.\n\n    d. The error message for **User B** should indicate that **User A** already has **User@contoso.com** as a UPN, but it shows **User B’s** own displayName.\n\n3. The report may only display detailed error information for users with **UPN** conflicts, not for those with **ProxyAddress** errors (still investigating whether this is consistent or environmental).\n\n\n\n\n##See also\n\n- [Azure AD Connect sync](active-directory-aadconnectsync-whatis.md)\n\n- [Integrating your on-premises identities with Azure Active Directory](active-directory-aadconnect.md).\n\n\n\n\n\n\n"
+}
