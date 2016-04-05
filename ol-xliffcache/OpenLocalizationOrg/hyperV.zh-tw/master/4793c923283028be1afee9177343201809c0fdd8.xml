@@ -1,0 +1,103 @@
+{
+  "nodes": [
+    {
+      "content": "Open the shared project file MainPage.cs and add the following code snippet to the MainPage class:",
+      "pos": [
+        4,
+        102
+      ]
+    },
+    {
+      "content": "This code authenticates the user with a Facebook login.",
+      "pos": [
+        1254,
+        1309
+      ]
+    },
+    {
+      "content": "If you are using an identity provider other than Facebook, change the value of <bpt id=\"p1\">**</bpt>MobileServiceAuthenticationProvider<ept id=\"p1\">**</ept> above to the value for your provider.",
+      "pos": [
+        1310,
+        1466
+      ]
+    },
+    {
+      "pos": [
+        1471,
+        1587
+      ],
+      "content": "Comment-out or delete the call to the <bpt id=\"p1\">**</bpt>RefreshTodoItems<ept id=\"p1\">**</ept> method in the existing <bpt id=\"p2\">**</bpt>OnNavigatedTo<ept id=\"p2\">**</ept> method override."
+    },
+    {
+      "content": "This prevents the data from being loaded before the user is authenticated.",
+      "pos": [
+        1593,
+        1667
+      ]
+    },
+    {
+      "content": "Next, you will add a <bpt id=\"p1\">**</bpt>Sign in<ept id=\"p1\">**</ept> button to the app that triggers authentication.",
+      "pos": [
+        1668,
+        1748
+      ]
+    },
+    {
+      "content": "Add the following code snippet to the MainPage class:",
+      "pos": [
+        1753,
+        1806
+      ]
+    },
+    {
+      "pos": [
+        2329,
+        2497
+      ],
+      "content": "In the Windows Store app project, open the MainPage.xaml project file and add the following <bpt id=\"p1\">**</bpt>Button<ept id=\"p1\">**</ept> element just before the element that defines the <bpt id=\"p2\">**</bpt>Save<ept id=\"p2\">**</ept> button:"
+    },
+    {
+      "pos": [
+        2627,
+        2759
+      ],
+      "content": "In the Windows Phone Store app project, add the following <bpt id=\"p1\">**</bpt>Button<ept id=\"p1\">**</ept> element in the <bpt id=\"p2\">**</bpt>ContentPanel<ept id=\"p2\">**</ept>, after the <bpt id=\"p3\">**</bpt>TextBox<ept id=\"p3\">**</ept> element:"
+    },
+    {
+      "content": "Open the shared App.xaml.cs project file and add the following code:",
+      "pos": [
+        2928,
+        2996
+      ]
+    },
+    {
+      "pos": [
+        3662,
+        3747
+      ],
+      "content": "If the <bpt id=\"p1\">**</bpt>OnActivated<ept id=\"p1\">**</ept> method already exists, just add the <ph id=\"ph1\">`#if...#endif`</ph> code block."
+    },
+    {
+      "pos": [
+        3752,
+        3886
+      ],
+      "content": "Press the F5 key to run the Windows Store app, click the <bpt id=\"p1\">**</bpt>Sign in<ept id=\"p1\">**</ept> button, and sign into the app with your chosen identity provider."
+    },
+    {
+      "content": "When you are successfully logged-in, the app should run without errors, and you should be able to query your backend and make updates to data.",
+      "pos": [
+        3893,
+        4035
+      ]
+    },
+    {
+      "pos": [
+        4041,
+        4217
+      ],
+      "content": "Right-click the Windows Phone Store app project, click <bpt id=\"p1\">**</bpt>Set as StartUp Project<ept id=\"p1\">**</ept>, then repeat the previous step to verify that the Windows Phone Store app also runs correctly."
+    }
+  ],
+  "content": "\n1. Open the shared project file MainPage.cs and add the following code snippet to the MainPage class:\n    \n        // Define a member variable for storing the signed-in user. \n        private MobileServiceUser user;\n\n        // Define a method that performs the authentication process\n        // using a Facebook sign-in. \n        private async System.Threading.Tasks.Task<bool> AuthenticateAsync()\n        {\n            string message;\n            bool success = false;\n            try\n            {\n                // Change 'MobileService' to the name of your MobileServiceClient instance.\n                // Sign-in using Facebook authentication.\n                user = await App.MobileService\n                    .LoginAsync(MobileServiceAuthenticationProvider.Facebook);\n                message =\n                    string.Format(\"You are now signed in - {0}\", user.UserId);\n\n                success = true;\n            }\n            catch (InvalidOperationException)\n            {\n                message = \"You must log in. Login Required\";\n            }\n\n            var dialog = new MessageDialog(message);\n            dialog.Commands.Add(new UICommand(\"OK\"));\n            await dialog.ShowAsync();\n            return success;\n        }\n\n    This code authenticates the user with a Facebook login. If you are using an identity provider other than Facebook, change the value of **MobileServiceAuthenticationProvider** above to the value for your provider.\n\n3. Comment-out or delete the call to the **RefreshTodoItems** method in the existing **OnNavigatedTo** method override.\n\n    This prevents the data from being loaded before the user is authenticated. Next, you will add a **Sign in** button to the app that triggers authentication.\n\n4. Add the following code snippet to the MainPage class:\n\n        private async void ButtonLogin_Click(object sender, RoutedEventArgs e)\n        {\n            // Login the user and then load data from the mobile app.\n            if (await AuthenticateAsync())\n            {\n                // Hide the login button and load items from the mobile app.\n                ButtonLogin.Visibility = Windows.UI.Xaml.Visibility.Collapsed;\n                //await InitLocalStoreAsync(); //offline sync support.\n                await RefreshTodoItems();\n            }\n        }\n        \n5. In the Windows Store app project, open the MainPage.xaml project file and add the following **Button** element just before the element that defines the **Save** button:\n\n        <Button Name=\"ButtonLogin\" Click=\"ButtonLogin_Click\" \n                        Visibility=\"Visible\">Sign in</Button>\n\n6. In the Windows Phone Store app project, add the following **Button** element in the **ContentPanel**, after the **TextBox** element:\n\n        <Button Grid.Row =\"1\" Grid.Column=\"1\" Name=\"ButtonLogin\" Click=\"ButtonLogin_Click\" \n            Margin=\"10, 0, 0, 0\" Visibility=\"Visible\">Sign in</Button>\n\n8. Open the shared App.xaml.cs project file and add the following code:\n\n        protected override void OnActivated(IActivatedEventArgs args)\n        {\n            // Windows Phone 8.1 requires you to handle the respose from the WebAuthenticationBroker.\n            #if WINDOWS_PHONE_APP\n            if (args.Kind == ActivationKind.WebAuthenticationBrokerContinuation)\n            {\n                // Completes the sign-in process started by LoginAsync.\n                // Change 'MobileService' to the name of your MobileServiceClient instance. \n                App.MobileService.LoginComplete(args as WebAuthenticationBrokerContinuationEventArgs);\n            }\n            #endif\n\n            base.OnActivated(args);\n        }\n\n    If the **OnActivated** method already exists, just add the `#if...#endif` code block.\n\n9. Press the F5 key to run the Windows Store app, click the **Sign in** button, and sign into the app with your chosen identity provider. \n\n    When you are successfully logged-in, the app should run without errors, and you should be able to query your backend and make updates to data.\n\n10. Right-click the Windows Phone Store app project, click **Set as StartUp Project**, then repeat the previous step to verify that the Windows Phone Store app also runs correctly.  \n\n "
+}

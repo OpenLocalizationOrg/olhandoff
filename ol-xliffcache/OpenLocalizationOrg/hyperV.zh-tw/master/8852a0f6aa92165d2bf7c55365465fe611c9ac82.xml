@@ -1,0 +1,159 @@
+{
+  "nodes": [
+    {
+      "content": "Application Gateway",
+      "pos": [
+        3,
+        22
+      ]
+    },
+    {
+      "content": "Application Gateway provides an Azure-managed HTTP load balancing solution based on layer 7 load balancing.",
+      "pos": [
+        24,
+        131
+      ]
+    },
+    {
+      "content": "Application load balancing allows the use of routing rules for network traffic based on HTTP.",
+      "pos": [
+        132,
+        225
+      ]
+    },
+    {
+      "content": "Property",
+      "pos": [
+        234,
+        242
+      ]
+    },
+    {
+      "content": "Description",
+      "pos": [
+        245,
+        256
+      ]
+    },
+    {
+      "content": "backendAddressPools",
+      "pos": [
+        274,
+        293
+      ]
+    },
+    {
+      "content": "The list of IP addresses of the back end servers.",
+      "pos": [
+        298,
+        347
+      ]
+    },
+    {
+      "content": "The IP addresses listed should either belong to the virtual network subnet, or should be a public IP/VIP or private IP",
+      "pos": [
+        348,
+        466
+      ]
+    },
+    {
+      "content": "backendHttpSettingsCollection",
+      "pos": [
+        473,
+        502
+      ]
+    },
+    {
+      "content": "Every pool has settings like port, protocol, and cookie based affinity.",
+      "pos": [
+        508,
+        579
+      ]
+    },
+    {
+      "content": "These settings are tied to a pool and are applied to all servers within the pool",
+      "pos": [
+        580,
+        660
+      ]
+    },
+    {
+      "content": "frontendPorts",
+      "pos": [
+        667,
+        680
+      ]
+    },
+    {
+      "content": "This port is the public port opened on the application gateway.",
+      "pos": [
+        685,
+        748
+      ]
+    },
+    {
+      "content": "Traffic hits this port, and then gets redirected to one of the back end servers",
+      "pos": [
+        749,
+        828
+      ]
+    },
+    {
+      "content": "httpListeners",
+      "pos": [
+        835,
+        848
+      ]
+    },
+    {
+      "content": "Listener has a frontend port, a protocol (Http or Https, these are case-sensitive), and the SSL certificate name (if configuring SSL offload)",
+      "pos": [
+        853,
+        994
+      ]
+    },
+    {
+      "content": "requestRoutingRules",
+      "pos": [
+        1001,
+        1020
+      ]
+    },
+    {
+      "content": "The rule binds the listener and the back end server pool and defines which back end server pool the traffic should be directed.",
+      "pos": [
+        1025,
+        1152
+      ]
+    },
+    {
+      "content": "Currently works only as Round-robin",
+      "pos": [
+        1153,
+        1188
+      ]
+    },
+    {
+      "content": "Example of an application gateway Json template:",
+      "pos": [
+        1193,
+        1241
+      ]
+    },
+    {
+      "content": "Additional resources",
+      "pos": [
+        8160,
+        8180
+      ]
+    },
+    {
+      "pos": [
+        8182,
+        8296
+      ],
+      "content": "Read <bpt id=\"p1\">[</bpt> application gateway REST API<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/mt299388.aspx)</ept> for more information."
+    }
+  ],
+  "content": "## Application Gateway\n\nApplication Gateway provides an Azure-managed HTTP load balancing solution based on layer 7 load balancing. Application load balancing allows the use of routing rules for network traffic based on HTTP. \n<BR>\n| Property | Description | \n|---|---|\n| **backendAddressPools** | The list of IP addresses of the back end servers. The IP addresses listed should either belong to the virtual network subnet, or should be a public IP/VIP or private IP |\n| **backendHttpSettingsCollection** |  Every pool has settings like port, protocol, and cookie based affinity. These settings are tied to a pool and are applied to all servers within the pool |\n| **frontendPorts** | This port is the public port opened on the application gateway. Traffic hits this port, and then gets redirected to one of the back end servers |\n| **httpListeners** | Listener has a frontend port, a protocol (Http or Https, these are case-sensitive), and the SSL certificate name (if configuring SSL offload) |\n| **requestRoutingRules** | The rule binds the listener and the back end server pool and defines which back end server pool the traffic should be directed. Currently works only as Round-robin |\n\n\nExample of an application gateway Json template:\n\n    {\n      \"$schema\": \"https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#\",\n      \"contentVersion\": \"1.0.0.0\",\n      \"parameters\": {\n        \"location\": {\n          \"type\": \"string\",\n          \"metadata\": {\n            \"description\": \"Location to deploy to\"\n          }\n        },\n        \"addressPrefix\": {\n          \"type\": \"string\",\n          \"defaultValue\": \"10.0.0.0/16\",\n          \"metadata\": {\n            \"description\": \"Address prefix for the Virtual Network\"\n          }\n        },\n        \"subnetPrefix\": {\n          \"type\": \"string\",\n          \"defaultValue\": \"10.0.0.0/28\",\n          \"metadata\": {\n            \"description\": \"Subnet prefix\"\n          }\n        },\n        \"skuName\": {\n          \"type\": \"string\",\n          \"allowedValues\": [\n            \"Standard_Small\",\n            \"Standard_Medium\",\n            \"Standard_Large\"\n          ],\n          \"defaultValue\": \"Standard_Medium\",\n          \"metadata\": {\n            \"description\": \"Sku Name\"\n          }\n        },\n        \"capacity\": {\n          \"type\": \"int\",\n          \"defaultValue\": 2,\n          \"metadata\": {\n            \"description\": \"Number of instances\"\n          }\n        },\n        \"backendIpAddress1\": {\n          \"type\": \"string\",\n          \"metadata\": {\n            \"description\": \"IP Address for Backend Server 1\"\n          }\n        },\n        \"backendIpAddress2\": {\n          \"type\": \"string\",\n          \"metadata\": {\n            \"description\": \"IP Address for Backend Server 2\"\n          }\n        }\n      },\n      \"variables\": {\n        \"applicationGatewayName\": \"applicationGateway1\",\n        \"publicIPAddressName\": \"publicIp1\",\n        \"virtualNetworkName\": \"virtualNetwork1\",\n        \"subnetName\": \"appGatewaySubnet\",\n        \"vnetID\": \"[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]\",\n        \"subnetRef\": \"[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]\",\n        \"publicIPRef\": \"[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]\",\n        \"applicationGatewayID\": \"[resourceId('Microsoft.Network/applicationGateways',variables('applicationGatewayName'))]\",\n        \"apiVersion\": \"2015-05-01-preview\"\n    },\n     \"resources\": [\n        {\n          \"apiVersion\": \"[variables('apiVersion')]\",\n          \"type\": \"Microsoft.Network/publicIPAddresses\",\n          \"name\": \"[variables('publicIPAddressName')]\",\n          \"location\": \"[parameters('location')]\",\n          \"properties\": {\n            \"publicIPAllocationMethod\": \"Dynamic\"\n          }\n        },\n        {\n          \"apiVersion\": \"[variables('apiVersion')]\",\n          \"type\": \"Microsoft.Network/virtualNetworks\",\n          \"name\": \"[variables('virtualNetworkName')]\",\n          \"location\": \"[parameters('location')]\",\n          \"properties\": {\n            \"addressSpace\": {\n              \"addressPrefixes\": [\n                \"[parameters('addressPrefix')]\"\n              ]\n            },\n            \"subnets\": [\n              {\n                \"name\": \"[variables('subnetName')]\",\n                \"properties\": {\n                  \"addressPrefix\": \"[parameters('subnetPrefix')]\"\n                }\n              }\n            ]\n          }\n        },\n        {\n          \"apiVersion\": \"[variables('apiVersion')]\",\n          \"name\": \"[variables('applicationGatewayName')]\",\n          \"type\": \"Microsoft.Network/applicationGateways\",\n          \"location\": \"[parameters('location')]\",\n          \"dependsOn\": [\n            \"[concat('Microsoft.Network/virtualNetworks/', variables    ('virtualNetworkName'))]\",\n            \"[concat('Microsoft.Network/publicIPAddresses/', variables  ('publicIPAddressName'))]\"\n          ],\n          \"properties\": {\n            \"sku\": {\n              \"name\": \"[parameters('skuName')]\",\n              \"tier\": \"Standard\",\n              \"capacity\": \"[parameters('capacity')]\"\n            },\n            \"gatewayIPConfigurations\": [\n              {\n                \"name\": \"appGatewayIpConfig\",\n                \"properties\": {\n                  \"subnet\": {\n                    \"id\": \"[variables('subnetRef')]\"\n                  }\n                }\n              }\n            ],\n            \"frontendIPConfigurations\": [\n              {\n                \"name\": \"appGatewayFrontendIP\",\n                \"properties\": {\n                  \"PublicIPAddress\": {\n                    \"id\": \"[variables('publicIPRef')]\"\n                  }\n                }\n              }\n            ],\n            \"frontendPorts\": [\n              {\n                \"name\": \"appGatewayFrontendPort\",\n                \"properties\": {\n                  \"Port\": 80\n                }\n              }\n            ],\n            \"backendAddressPools\": [\n              {\n                \"name\": \"appGatewayBackendPool\",\n                \"properties\": {\n                  \"BackendAddresses\": [\n                    {\n                      \"IpAddress\": \"[parameters('backendIpAddress1')]\"\n                    },\n                    {\n                      \"IpAddress\": \"[parameters('backendIpAddress2')]\"\n                    }\n                  ]\n                }\n              }\n            ],\n            \"backendHttpSettingsCollection\": [\n              {\n                \"name\": \"appGatewayBackendHttpSettings\",\n                \"properties\": {\n                  \"Port\": 80,\n                  \"Protocol\": \"Http\",\n                  \"CookieBasedAffinity\": \"Disabled\"\n                }\n              }\n            ],\n            \"httpListeners\": [\n              {\n                \"name\": \"appGatewayHttpListener\",\n                \"properties\": {\n                  \"FrontendIPConfiguration\": {\n                    \"Id\": \"[concat(variables('applicationGatewayID'), '/    frontendIPConfigurations/appGatewayFrontendIP')]\"\n                  },\n                  \"FrontendPort\": {\n                    \"Id\": \"[concat(variables('applicationGatewayID'), '/    frontendPorts/appGatewayFrontendPort')]\"\n                  },\n                  \"Protocol\": \"Http\",\n                  \"SslCertificate\": null\n                }\n              }\n            ],\n            \"requestRoutingRules\": [\n              {\n                \"Name\": \"rule1\",\n                \"properties\": {\n                  \"RuleType\": \"Basic\",\n                  \"httpListener\": {\n                    \"id\": \"[concat(variables('applicationGatewayID'), '/    httpListeners/appGatewayHttpListener')]\"\n                  },\n                  \"backendAddressPool\": {\n                    \"id\": \"[concat(variables('applicationGatewayID'), '/    backendAddressPools/appGatewayBackendPool')]\"\n                  },\n                  \"backendHttpSettings\": {\n                    \"id\": \"[concat(variables('applicationGatewayID'), '/    backendHttpSettingsCollection/  appGatewayBackendHttpSettings')]\"\n                  }\n                }\n              }\n            ]\n          }\n        }\n    ]   \n    }\n\n\n### Additional resources\n\nRead [ application gateway REST API](https://msdn.microsoft.com/library/azure/mt299388.aspx) for more information."
+}

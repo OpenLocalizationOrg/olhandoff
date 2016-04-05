@@ -1,0 +1,453 @@
+{
+  "nodes": [
+    {
+      "content": "If you can't access an application running on an Azure virtual machine, this article describes a methodical approach for isolating the source of the problem and correcting it.",
+      "pos": [
+        3,
+        178
+      ]
+    },
+    {
+      "pos": [
+        182,
+        535
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>  For help in connecting to an Azure virtual machine, see <bpt id=\"p1\">[</bpt>Troubleshoot Remote Desktop connections to a Windows-based Azure Virtual Machine<ept id=\"p1\">](virtual-machines-windows-troubleshoot-rdp-connection.md)</ept> or <bpt id=\"p2\">[</bpt>Troubleshoot Secure Shell (SSH) connections to a Linux-based Azure virtual machine<ept id=\"p2\">](virtual-machines-linux-troubleshoot-ssh-connection.md)</ept>."
+    },
+    {
+      "content": "If you need more help at any point in this article, you can contact the Azure experts on <bpt id=\"p1\">[</bpt>the MSDN Azure and the Stack Overflow forums<ept id=\"p1\">](https://azure.microsoft.com/support/forums/)</ept>.",
+      "pos": [
+        537,
+        718
+      ]
+    },
+    {
+      "content": "Alternatively, you can also file an Azure support incident.",
+      "pos": [
+        719,
+        778
+      ]
+    },
+    {
+      "content": "Go to the <bpt id=\"p1\">[</bpt>Azure Support site<ept id=\"p1\">](https://azure.microsoft.com/support/options/)</ept> and click on <bpt id=\"p2\">**</bpt>Get Support<ept id=\"p2\">**</ept>.",
+      "pos": [
+        779,
+        885
+      ]
+    },
+    {
+      "content": "There are four main areas to troubleshoot the access of an application that is running on an Azure virtual machine.",
+      "pos": [
+        888,
+        1003
+      ]
+    },
+    {
+      "content": "The application running on the Azure virtual machine.",
+      "pos": [
+        1098,
+        1151
+      ]
+    },
+    {
+      "content": "The Azure virtual machine.",
+      "pos": [
+        1156,
+        1182
+      ]
+    },
+    {
+      "content": "Azure endpoints for the cloud service that contains the virtual machine (for virtual machines in classic deployment model), inbound NAT rules (for virtual machines in Resource Manager deployment model), and Network Security Groups.",
+      "pos": [
+        1187,
+        1418
+      ]
+    },
+    {
+      "content": "Your Internet edge device.",
+      "pos": [
+        1423,
+        1449
+      ]
+    },
+    {
+      "content": "For client computers that are accessing the application over a site-to-site VPN or ExpressRoute connection, the main areas that can cause problems are the application and the Azure virtual machine.",
+      "pos": [
+        1451,
+        1648
+      ]
+    },
+    {
+      "content": "To determine the source of the problem and its correction, follow these steps.",
+      "pos": [
+        1649,
+        1727
+      ]
+    },
+    {
+      "content": "Step 1: Can you access the application from the target VM?",
+      "pos": [
+        1732,
+        1790
+      ]
+    },
+    {
+      "content": "Try to access the application with the appropriate client program from the VM on which it is running.",
+      "pos": [
+        1792,
+        1893
+      ]
+    },
+    {
+      "content": "Use the local host name, the local IP address, or the loopback address (127.0.0.1).",
+      "pos": [
+        1894,
+        1977
+      ]
+    },
+    {
+      "content": "For example, if the application is a web server, run a browser on the VM and try to access a web page hosted on the VM.",
+      "pos": [
+        2068,
+        2187
+      ]
+    },
+    {
+      "pos": [
+        2189,
+        2247
+      ],
+      "content": "If you can access the application, go to <bpt id=\"p1\">[</bpt>Step 2<ept id=\"p1\">](#step2)</ept>."
+    },
+    {
+      "content": "If you cannot access the application, verify the following:",
+      "pos": [
+        2249,
+        2308
+      ]
+    },
+    {
+      "content": "The application is running on the target virtual machine.",
+      "pos": [
+        2312,
+        2369
+      ]
+    },
+    {
+      "content": "The application is listening on the expected TCP and UDP ports.",
+      "pos": [
+        2372,
+        2435
+      ]
+    },
+    {
+      "content": "On both Windows and Linux-based virtual machines, use the <bpt id=\"p1\">**</bpt>netstat -a<ept id=\"p1\">**</ept> command to show the active listening ports.",
+      "pos": [
+        2437,
+        2553
+      ]
+    },
+    {
+      "content": "Examine the output for the expected ports on which your application should be listening.",
+      "pos": [
+        2554,
+        2642
+      ]
+    },
+    {
+      "content": "Restart the application or configure it to use the expected ports as needed.",
+      "pos": [
+        2643,
+        2719
+      ]
+    },
+    {
+      "pos": [
+        2724,
+        2838
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"step2\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Step 2: Can you access the application from another virtual machine in the same virtual network?"
+    },
+    {
+      "content": "Try to access the application from a different VM but in the same virtual network, using the VM's host name or its Azure-assigned public, private, or provider IP address.",
+      "pos": [
+        2840,
+        3010
+      ]
+    },
+    {
+      "content": "For virtual machines created using the classic deployment model, do not use the public IP address of the cloud service.",
+      "pos": [
+        3011,
+        3130
+      ]
+    },
+    {
+      "content": "For example, if the application is a web server, try to access a web page from a browser on a different VM in the same virtual network.",
+      "pos": [
+        3221,
+        3356
+      ]
+    },
+    {
+      "pos": [
+        3358,
+        3416
+      ],
+      "content": "If you can access the application, go to <bpt id=\"p1\">[</bpt>Step 3<ept id=\"p1\">](#step3)</ept>."
+    },
+    {
+      "content": "If you cannot access the application, verify the following:",
+      "pos": [
+        3418,
+        3477
+      ]
+    },
+    {
+      "content": "The host firewall on the target VM is allowing the inbound request and outbound response traffic.",
+      "pos": [
+        3481,
+        3578
+      ]
+    },
+    {
+      "content": "Intrusion detection or network monitoring software running on the target VM is allowing the traffic.",
+      "pos": [
+        3581,
+        3681
+      ]
+    },
+    {
+      "content": "Network Security Groups are allowing the traffic.",
+      "pos": [
+        3684,
+        3733
+      ]
+    },
+    {
+      "content": "A separate component running in your VM in the path between the test VM and your VM, such as a load balancer or firewall, is allowing the traffic.",
+      "pos": [
+        3736,
+        3882
+      ]
+    },
+    {
+      "content": "On a Windows-based virtual machine, use Windows Firewall with Advanced Security to determine whether the firewall rules exclude your application's inbound and outbound traffic.",
+      "pos": [
+        3884,
+        4060
+      ]
+    },
+    {
+      "pos": [
+        4065,
+        4230
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"step3\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Step 3: Can you access the application from a computer that is outside the virtual network, but not connected to the same network as your computer?"
+    },
+    {
+      "content": "Try to access the application from a computer outside the virtual network as the VM on which the application is running, but is not on the same network as your original client computer.",
+      "pos": [
+        4232,
+        4417
+      ]
+    },
+    {
+      "content": "For example, if the application is a web server, try to access the web page from a browser running on a computer that is not in the virtual network.",
+      "pos": [
+        4508,
+        4656
+      ]
+    },
+    {
+      "content": "If you cannot access the application, verify the following:",
+      "pos": [
+        4658,
+        4717
+      ]
+    },
+    {
+      "content": "For VMs created using the classic deployment model, that the endpoint configuration for the VM is allowing the incoming traffic, especially the protocol (TCP or UDP) and the public and private port numbers.",
+      "pos": [
+        4721,
+        4927
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>How to Set Up Endpoints to a Virtual Machine<ept id=\"p1\">]( virtual-machines-windows-classic-setup-endpoints.md)</ept>.",
+      "pos": [
+        4928,
+        5055
+      ]
+    },
+    {
+      "content": "For VMs created using the classic deployment model, that access control lists (ACLs) on the endpoint are not preventing incoming traffic from the Internet.",
+      "pos": [
+        5058,
+        5213
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>How to Set Up Endpoints to a Virtual Machine<ept id=\"p1\">](virtual-machines-windows-classic-setup-endpoints.md)</ept>.",
+      "pos": [
+        5214,
+        5340
+      ]
+    },
+    {
+      "content": "For VMs created using the Resource Manager deployment model, that the inbound NAT rule configuration for the VM is allowing the incoming traffic, especially the protocol (TCP or UDP) and the public and private port numbers.",
+      "pos": [
+        5343,
+        5566
+      ]
+    },
+    {
+      "content": "That Network Security Groups are allowing the inbound request and outbound response traffic.",
+      "pos": [
+        5569,
+        5661
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>What is a Network Security Group (NSG)?<ept id=\"p1\">](../virtual-network/virtual-networks-nsg.md)</ept>.",
+      "pos": [
+        5662,
+        5774
+      ]
+    },
+    {
+      "content": "If the virtual machine or endpoint is a member of a load-balanced set:",
+      "pos": [
+        5776,
+        5846
+      ]
+    },
+    {
+      "content": "Verify that the probe protocol (TCP or UDP) and port number are correct.",
+      "pos": [
+        5850,
+        5922
+      ]
+    },
+    {
+      "content": "If the probe protocol and port is different than the load-balanced set protocol and port:",
+      "pos": [
+        5925,
+        6014
+      ]
+    },
+    {
+      "pos": [
+        6021,
+        6151
+      ],
+      "content": "Verify that the application is listening on the probe protocol (TCP or UDP) and port number (use <bpt id=\"p1\">**</bpt>netstat –a<ept id=\"p1\">**</ept> on the target VM)."
+    },
+    {
+      "content": "The host firewall on the target VM is allowing the inbound probe request and outbound probe response traffic.",
+      "pos": [
+        6158,
+        6267
+      ]
+    },
+    {
+      "content": "If you can access the application, ensure that your Internet edge device is allowing:",
+      "pos": [
+        6269,
+        6354
+      ]
+    },
+    {
+      "content": "The outbound application request traffic from your client computer to the Azure virtual machine.",
+      "pos": [
+        6358,
+        6454
+      ]
+    },
+    {
+      "content": "The inbound application response traffic from the Azure virtual machine.",
+      "pos": [
+        6457,
+        6529
+      ]
+    },
+    {
+      "content": "Troubleshooting Endpoint Connectivity problems",
+      "pos": [
+        6534,
+        6580
+      ]
+    },
+    {
+      "content": "If you have problems when connecting to an Endpoint such as Remote Desktop  Endpoint, you can try the following general troubleshooting steps:",
+      "pos": [
+        6582,
+        6724
+      ]
+    },
+    {
+      "content": "Restart virtual machine",
+      "pos": [
+        6728,
+        6751
+      ]
+    },
+    {
+      "content": "Recreate Endpoint",
+      "pos": [
+        6754,
+        6771
+      ]
+    },
+    {
+      "content": "Connect from different location",
+      "pos": [
+        6774,
+        6805
+      ]
+    },
+    {
+      "content": "Resize virtual machine",
+      "pos": [
+        6808,
+        6830
+      ]
+    },
+    {
+      "content": "Recreate virtual machine",
+      "pos": [
+        6833,
+        6857
+      ]
+    },
+    {
+      "pos": [
+        6859,
+        7142
+      ],
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Troubleshooting Endpoint Connectivity (RDP/SSH/HTTP, etc. failures)<ept id=\"p1\">](https://social.msdn.microsoft.com/Forums/azure/en-US/538a8f18-7c1f-4d6e-b81c-70c00e25c93d/troubleshooting-endpoint-connectivity-rdpsshhttp-etc-failures?forum=WAVirtualMachinesforWindows)</ept>."
+    },
+    {
+      "content": "Additional resources",
+      "pos": [
+        7149,
+        7169
+      ]
+    },
+    {
+      "content": "Troubleshoot Remote Desktop connections to a Windows-based Azure Virtual Machine",
+      "pos": [
+        7172,
+        7252
+      ]
+    },
+    {
+      "content": "Troubleshoot Secure Shell (SSH) connections to a Linux-based Azure virtual machine",
+      "pos": [
+        7313,
+        7395
+      ]
+    }
+  ],
+  "content": "\n\n\nIf you can't access an application running on an Azure virtual machine, this article describes a methodical approach for isolating the source of the problem and correcting it.\n\n> [AZURE.NOTE]  For help in connecting to an Azure virtual machine, see [Troubleshoot Remote Desktop connections to a Windows-based Azure Virtual Machine](virtual-machines-windows-troubleshoot-rdp-connection.md) or [Troubleshoot Secure Shell (SSH) connections to a Linux-based Azure virtual machine](virtual-machines-linux-troubleshoot-ssh-connection.md).\n\nIf you need more help at any point in this article, you can contact the Azure experts on [the MSDN Azure and the Stack Overflow forums](https://azure.microsoft.com/support/forums/). Alternatively, you can also file an Azure support incident. Go to the [Azure Support site](https://azure.microsoft.com/support/options/) and click on **Get Support**.\n\n\nThere are four main areas to troubleshoot the access of an application that is running on an Azure virtual machine.\n\n![](./media/virtual-machines-common-troubleshoot-app-connection/tshoot_app_access1.png)\n\n1.  The application running on the Azure virtual machine.\n2.  The Azure virtual machine.\n3.  Azure endpoints for the cloud service that contains the virtual machine (for virtual machines in classic deployment model), inbound NAT rules (for virtual machines in Resource Manager deployment model), and Network Security Groups.\n4.  Your Internet edge device.\n\nFor client computers that are accessing the application over a site-to-site VPN or ExpressRoute connection, the main areas that can cause problems are the application and the Azure virtual machine.\nTo determine the source of the problem and its correction, follow these steps.\n\n## Step 1: Can you access the application from the target VM?\n\nTry to access the application with the appropriate client program from the VM on which it is running. Use the local host name, the local IP address, or the loopback address (127.0.0.1).\n\n![](./media/virtual-machines-common-troubleshoot-app-connection/tshoot_app_access2.png)\n\nFor example, if the application is a web server, run a browser on the VM and try to access a web page hosted on the VM.\n\nIf you can access the application, go to [Step 2](#step2).\n\nIf you cannot access the application, verify the following:\n\n- The application is running on the target virtual machine.\n- The application is listening on the expected TCP and UDP ports.\n\nOn both Windows and Linux-based virtual machines, use the **netstat -a** command to show the active listening ports. Examine the output for the expected ports on which your application should be listening. Restart the application or configure it to use the expected ports as needed.\n\n## <a id=\"step2\"></a>Step 2: Can you access the application from another virtual machine in the same virtual network?\n\nTry to access the application from a different VM but in the same virtual network, using the VM's host name or its Azure-assigned public, private, or provider IP address. For virtual machines created using the classic deployment model, do not use the public IP address of the cloud service.\n\n![](./media/virtual-machines-common-troubleshoot-app-connection/tshoot_app_access3.png)\n\nFor example, if the application is a web server, try to access a web page from a browser on a different VM in the same virtual network.\n\nIf you can access the application, go to [Step 3](#step3).\n\nIf you cannot access the application, verify the following:\n\n- The host firewall on the target VM is allowing the inbound request and outbound response traffic.\n- Intrusion detection or network monitoring software running on the target VM is allowing the traffic.\n- Network Security Groups are allowing the traffic.\n- A separate component running in your VM in the path between the test VM and your VM, such as a load balancer or firewall, is allowing the traffic.\n\nOn a Windows-based virtual machine, use Windows Firewall with Advanced Security to determine whether the firewall rules exclude your application's inbound and outbound traffic.\n\n## <a id=\"step3\"></a>Step 3: Can you access the application from a computer that is outside the virtual network, but not connected to the same network as your computer?\n\nTry to access the application from a computer outside the virtual network as the VM on which the application is running, but is not on the same network as your original client computer.\n\n![](./media/virtual-machines-common-troubleshoot-app-connection/tshoot_app_access4.png)\n\nFor example, if the application is a web server, try to access the web page from a browser running on a computer that is not in the virtual network.\n\nIf you cannot access the application, verify the following:\n\n- For VMs created using the classic deployment model, that the endpoint configuration for the VM is allowing the incoming traffic, especially the protocol (TCP or UDP) and the public and private port numbers. For more information, see [How to Set Up Endpoints to a Virtual Machine]( virtual-machines-windows-classic-setup-endpoints.md).\n- For VMs created using the classic deployment model, that access control lists (ACLs) on the endpoint are not preventing incoming traffic from the Internet. For more information, see [How to Set Up Endpoints to a Virtual Machine](virtual-machines-windows-classic-setup-endpoints.md).\n- For VMs created using the Resource Manager deployment model, that the inbound NAT rule configuration for the VM is allowing the incoming traffic, especially the protocol (TCP or UDP) and the public and private port numbers.\n- That Network Security Groups are allowing the inbound request and outbound response traffic. For more information, see [What is a Network Security Group (NSG)?](../virtual-network/virtual-networks-nsg.md).\n\nIf the virtual machine or endpoint is a member of a load-balanced set:\n\n- Verify that the probe protocol (TCP or UDP) and port number are correct.\n- If the probe protocol and port is different than the load-balanced set protocol and port:\n    - Verify that the application is listening on the probe protocol (TCP or UDP) and port number (use **netstat –a** on the target VM).\n    - The host firewall on the target VM is allowing the inbound probe request and outbound probe response traffic.\n\nIf you can access the application, ensure that your Internet edge device is allowing:\n\n- The outbound application request traffic from your client computer to the Azure virtual machine.\n- The inbound application response traffic from the Azure virtual machine.\n\n## Troubleshooting Endpoint Connectivity problems\n\nIf you have problems when connecting to an Endpoint such as Remote Desktop  Endpoint, you can try the following general troubleshooting steps:\n\n- Restart virtual machine\n- Recreate Endpoint\n- Connect from different location\n- Resize virtual machine\n- Recreate virtual machine\n\nFor more information, see [Troubleshooting Endpoint Connectivity (RDP/SSH/HTTP, etc. failures)](https://social.msdn.microsoft.com/Forums/azure/en-US/538a8f18-7c1f-4d6e-b81c-70c00e25c93d/troubleshooting-endpoint-connectivity-rdpsshhttp-etc-failures?forum=WAVirtualMachinesforWindows).\n\n\n\n## Additional resources\n\n[Troubleshoot Remote Desktop connections to a Windows-based Azure Virtual Machine](virtual-machines-windows-troubleshoot-rdp-connection.md)\n\n[Troubleshoot Secure Shell (SSH) connections to a Linux-based Azure virtual machine](virtual-machines-linux-troubleshoot-ssh-connection.md)\n"
+}

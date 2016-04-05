@@ -1,0 +1,264 @@
+{
+  "nodes": [
+    {
+      "content": "Prepare for AKV Integration",
+      "pos": [
+        3,
+        30
+      ]
+    },
+    {
+      "content": "To use Azure Key Vault Integration to configure your SQL Server VM, there are several prerequisites:",
+      "pos": [
+        31,
+        131
+      ]
+    },
+    {
+      "content": "Install Azure Powershell",
+      "pos": [
+        139,
+        163
+      ]
+    },
+    {
+      "content": "Create an Azure Active Directory",
+      "pos": [
+        197,
+        229
+      ]
+    },
+    {
+      "content": "Create a key vault",
+      "pos": [
+        271,
+        289
+      ]
+    },
+    {
+      "content": "The following sections describe these prerequisites and the information you need to collect to later run the PowerShell cmdlets.",
+      "pos": [
+        313,
+        441
+      ]
+    },
+    {
+      "content": "Install Azure PowerShell",
+      "pos": [
+        447,
+        471
+      ]
+    },
+    {
+      "content": "Make sure you have installed the latest Azure PowerShell SDK.",
+      "pos": [
+        472,
+        533
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>How to install and configure Azure PowerShell<ept id=\"p1\">](../articles/powershell-install-configure.md)</ept>.",
+      "pos": [
+        534,
+        653
+      ]
+    },
+    {
+      "content": "Create an Azure Active Directory",
+      "pos": [
+        659,
+        691
+      ]
+    },
+    {
+      "content": "First, you need to have an <bpt id=\"p1\">[</bpt>Azure Active Directory<ept id=\"p1\">](https://azure.microsoft.com/trial/get-started-active-directory/)</ept> (AAD) in your subscription.",
+      "pos": [
+        692,
+        836
+      ]
+    },
+    {
+      "content": "Among many benefits, this allows you to grant permission to your key vault for certain users and applications.",
+      "pos": [
+        837,
+        947
+      ]
+    },
+    {
+      "content": "Next, register an application with AAD.",
+      "pos": [
+        949,
+        988
+      ]
+    },
+    {
+      "content": "This will give you a Service Principal account that has access to your key vault which your VM will need.",
+      "pos": [
+        989,
+        1094
+      ]
+    },
+    {
+      "content": "In the Azure Key Vault article, you can find these steps in the <bpt id=\"p1\">[</bpt>Register an application with Azure Active Directory<ept id=\"p1\">](../articles/key-vault/key-vault-get-started.md#register)</ept> section, or you can see the steps with screen shots in the <bpt id=\"p2\">**</bpt>Get an identity for the application section<ept id=\"p2\">**</ept> of <bpt id=\"p3\">[</bpt>this blog post<ept id=\"p3\">](http://blogs.technet.com/b/kv/archive/2015/01/09/azure-key-vault-step-by-step.aspx)</ept>.",
+      "pos": [
+        1095,
+        1481
+      ]
+    },
+    {
+      "content": "Before completing these steps, note that you need to collect the following information during this registration that is needed later when you enable Azure Key Vault Integration on your SQL VM.",
+      "pos": [
+        1482,
+        1674
+      ]
+    },
+    {
+      "pos": [
+        1678,
+        1867
+      ],
+      "content": "After the application is added, find the **CLIENT ID**  on the **CONFIGURE** tab. \n  ![Azure Active Directory Client ID](./media/virtual-machines-sql-server-akv-prepare/aad-client-id.png)",
+      "leadings": [
+        "",
+        "  "
+      ],
+      "nodes": [
+        {
+          "content": "After the application is added, find the <bpt id=\"p1\">**</bpt>CLIENT ID<ept id=\"p1\">**</ept>  on the <bpt id=\"p2\">**</bpt>CONFIGURE<ept id=\"p2\">**</ept> tab.",
+          "pos": [
+            0,
+            81
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\">  ![</ph>Azure Active Directory Client ID<ph id=\"ph2\">](./media/virtual-machines-sql-server-akv-prepare/aad-client-id.png)</ph>",
+          "pos": [
+            83,
+            187
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        1877,
+        2026
+      ],
+      "content": "The client ID is assigned later to the <bpt id=\"p1\">**</bpt>$spName<ept id=\"p1\">**</ept> (Service Principal name) parameter in the PowerShell script to enable Azure Key Vault Integration."
+    },
+    {
+      "pos": [
+        2030,
+        2374
+      ],
+      "content": "Also, during these steps when you create your key, copy the secret for your key as is shown in the following screenshot. This key secret is assigned later to the **$spSecret** (Service Principal secret) parameter in the PowerShell script.  \n  ![Azure Active Directory Secret](./media/virtual-machines-sql-server-akv-prepare/aad-sp-secret.png)",
+      "leadings": [
+        "",
+        "  "
+      ],
+      "nodes": [
+        {
+          "content": "Also, during these steps when you create your key, copy the secret for your key as is shown in the following screenshot. This key secret is assigned later to the **$spSecret** (Service Principal secret) parameter in the PowerShell script.",
+          "pos": [
+            0,
+            238
+          ],
+          "nodes": [
+            {
+              "content": "Also, during these steps when you create your key, copy the secret for your key as is shown in the following screenshot.",
+              "pos": [
+                0,
+                120
+              ]
+            },
+            {
+              "content": "This key secret is assigned later to the <bpt id=\"p1\">**</bpt>$spSecret<ept id=\"p1\">**</ept> (Service Principal secret) parameter in the PowerShell script.",
+              "pos": [
+                121,
+                238
+              ]
+            }
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\">  ![</ph>Azure Active Directory Secret<ph id=\"ph2\">](./media/virtual-machines-sql-server-akv-prepare/aad-sp-secret.png)</ph>",
+          "pos": [
+            241,
+            342
+          ]
+        }
+      ]
+    },
+    {
+      "content": "You must authorize this new client ID to have the following access permissions: <bpt id=\"p1\">**</bpt>encrypt<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>decrypt<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>wrapKey<ept id=\"p3\">**</ept>, <bpt id=\"p4\">**</bpt>unwrapKey<ept id=\"p4\">**</ept>, <bpt id=\"p5\">**</bpt>sign<ept id=\"p5\">**</ept>, and <bpt id=\"p6\">**</bpt>verify<ept id=\"p6\">**</ept>.",
+      "pos": [
+        2377,
+        2536
+      ]
+    },
+    {
+      "content": "This is done with the <bpt id=\"p1\">[</bpt>Set-AzureRmKeyVaultAccessPolicy<ept id=\"p1\">](https://msdn.microsoft.com/library/azure/mt603625.aspx)</ept> cmdlet.",
+      "pos": [
+        2537,
+        2656
+      ]
+    },
+    {
+      "content": "For more information see <bpt id=\"p1\">[</bpt>Authorize the application to use the key or secret<ept id=\"p1\">](../articles/key-vault/key-vault-get-started.md#authorize)</ept>.",
+      "pos": [
+        2657,
+        2793
+      ]
+    },
+    {
+      "content": "Create a key vault",
+      "pos": [
+        2799,
+        2817
+      ]
+    },
+    {
+      "content": "In order to use Azure Key Vault to store the keys you will use for encryption in your VM, you need access to a key vault.",
+      "pos": [
+        2818,
+        2939
+      ]
+    },
+    {
+      "content": "If you have not already set up your key vault, create one by following the steps in the <bpt id=\"p1\">[</bpt>Getting Started with Azure Key Vault<ept id=\"p1\">](../articles/key-vault/key-vault-get-started.md)</ept> topic.",
+      "pos": [
+        2940,
+        3121
+      ]
+    },
+    {
+      "content": "Before completing these steps, note that there is some information you need to collect during this set up that is needed later when you enable Azure Key Vault Integration on your SQL VM.",
+      "pos": [
+        3122,
+        3308
+      ]
+    },
+    {
+      "content": "When you get to the Create a key vault step, note the returned <bpt id=\"p1\">**</bpt>vaultUri<ept id=\"p1\">**</ept> property, which is the key vault URL.",
+      "pos": [
+        3310,
+        3423
+      ]
+    },
+    {
+      "content": "In the example provided in that step, shown below, the key vault name is ContosoKeyVault, therefore the key vault URL would be https://contosokeyvault.vault.azure.net/.",
+      "pos": [
+        3424,
+        3592
+      ]
+    },
+    {
+      "pos": [
+        3712,
+        3840
+      ],
+      "content": "The key vault URL is assigned later to the <bpt id=\"p1\">**</bpt>$akvURL<ept id=\"p1\">**</ept> parameter in the PowerShell script to enable Azure Key Vault Integration."
+    }
+  ],
+  "content": "## Prepare for AKV Integration\nTo use Azure Key Vault Integration to configure your SQL Server VM, there are several prerequisites: \n\n1.  [Install Azure Powershell](#install-azure-powershell)\n2.  [Create an Azure Active Directory](#create-an-azure-active-directory)\n3.  [Create a key vault](#create-a-key-vault)\n\nThe following sections describe these prerequisites and the information you need to collect to later run the PowerShell cmdlets.\n\n### Install Azure PowerShell\nMake sure you have installed the latest Azure PowerShell SDK. For more information, see [How to install and configure Azure PowerShell](../articles/powershell-install-configure.md).\n\n### Create an Azure Active Directory\nFirst, you need to have an [Azure Active Directory](https://azure.microsoft.com/trial/get-started-active-directory/) (AAD) in your subscription. Among many benefits, this allows you to grant permission to your key vault for certain users and applications.\n\nNext, register an application with AAD. This will give you a Service Principal account that has access to your key vault which your VM will need. In the Azure Key Vault article, you can find these steps in the [Register an application with Azure Active Directory](../articles/key-vault/key-vault-get-started.md#register) section, or you can see the steps with screen shots in the **Get an identity for the application section** of [this blog post](http://blogs.technet.com/b/kv/archive/2015/01/09/azure-key-vault-step-by-step.aspx). Before completing these steps, note that you need to collect the following information during this registration that is needed later when you enable Azure Key Vault Integration on your SQL VM.\n\n- After the application is added, find the **CLIENT ID**  on the **CONFIGURE** tab. \n    ![Azure Active Directory Client ID](./media/virtual-machines-sql-server-akv-prepare/aad-client-id.png)\n    \n    The client ID is assigned later to the **$spName** (Service Principal name) parameter in the PowerShell script to enable Azure Key Vault Integration. \n- Also, during these steps when you create your key, copy the secret for your key as is shown in the following screenshot. This key secret is assigned later to the **$spSecret** (Service Principal secret) parameter in the PowerShell script.  \n    ![Azure Active Directory Secret](./media/virtual-machines-sql-server-akv-prepare/aad-sp-secret.png)\n- You must authorize this new client ID to have the following access permissions: **encrypt**, **decrypt**, **wrapKey**, **unwrapKey**, **sign**, and **verify**. This is done with the [Set-AzureRmKeyVaultAccessPolicy](https://msdn.microsoft.com/library/azure/mt603625.aspx) cmdlet. For more information see [Authorize the application to use the key or secret](../articles/key-vault/key-vault-get-started.md#authorize).\n\n### Create a key vault\nIn order to use Azure Key Vault to store the keys you will use for encryption in your VM, you need access to a key vault. If you have not already set up your key vault, create one by following the steps in the [Getting Started with Azure Key Vault](../articles/key-vault/key-vault-get-started.md) topic. Before completing these steps, note that there is some information you need to collect during this set up that is needed later when you enable Azure Key Vault Integration on your SQL VM.\n\nWhen you get to the Create a key vault step, note the returned **vaultUri** property, which is the key vault URL. In the example provided in that step, shown below, the key vault name is ContosoKeyVault, therefore the key vault URL would be https://contosokeyvault.vault.azure.net/.\n\n    New-AzureRmKeyVault -VaultName 'ContosoKeyVault' -ResourceGroupName 'ContosoResourceGroup' -Location 'East Asia'\n\nThe key vault URL is assigned later to the **$akvURL** parameter in the PowerShell script to enable Azure Key Vault Integration.\n"
+}

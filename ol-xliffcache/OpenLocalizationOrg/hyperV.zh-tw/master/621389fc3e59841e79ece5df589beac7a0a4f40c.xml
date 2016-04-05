@@ -1,0 +1,124 @@
+{
+  "nodes": [
+    {
+      "content": "Invoking stored procedure for SQL Sink",
+      "pos": [
+        3,
+        41
+      ]
+    },
+    {
+      "content": "When copying data into SQL Server or Azure SQL/SQL Server Database, a user specified stored procedure could be configured and invoked with additional parameters.",
+      "pos": [
+        43,
+        204
+      ]
+    },
+    {
+      "content": "A stored procedure can be leveraged when built-in copy mechanisms do not serve the purpose.",
+      "pos": [
+        207,
+        298
+      ]
+    },
+    {
+      "content": "This is typically leveraged when extra processing (merging columns, looking up additional values, insertion into multiple tables…) needs to be done before the final insertion of source data in the destination table.",
+      "pos": [
+        299,
+        514
+      ]
+    },
+    {
+      "content": "You may invoke a stored procedure of choice.",
+      "pos": [
+        517,
+        561
+      ]
+    },
+    {
+      "content": "The following sample shows how to use a stored procedure to do a simple insertion into a table in the database.",
+      "pos": [
+        562,
+        673
+      ]
+    },
+    {
+      "content": "Output dataset",
+      "pos": [
+        678,
+        692
+      ]
+    },
+    {
+      "content": "In this example, type is set to: SqlServerTable.",
+      "pos": [
+        696,
+        744
+      ]
+    },
+    {
+      "content": "Set it to AzureSqlTable to use with an Azure SQL database.",
+      "pos": [
+        745,
+        803
+      ]
+    },
+    {
+      "content": "Define the SqlSink section in copy activity JSON as follows.",
+      "pos": [
+        1128,
+        1188
+      ]
+    },
+    {
+      "content": "To call a stored procedure while insert data, both SqlWriterStoredProcedureName and SqlWriterTableType properties are needed.",
+      "pos": [
+        1189,
+        1314
+      ]
+    },
+    {
+      "content": "In your database, define the stored procedure with the same name as SqlWriterStoredProcedureName.",
+      "pos": [
+        1677,
+        1774
+      ]
+    },
+    {
+      "content": "It handles input data from your specified source, and insert into the output table.",
+      "pos": [
+        1775,
+        1858
+      ]
+    },
+    {
+      "content": "Notice that the parameter name of the stored procedure should be the same as the tableName defined in Table JSON file.",
+      "pos": [
+        1859,
+        1977
+      ]
+    },
+    {
+      "content": "In your database, define the table type with the same name as SqlWriterTableType.",
+      "pos": [
+        2267,
+        2348
+      ]
+    },
+    {
+      "content": "Notice that the schema of the table type should be same as the schema returned by your input data.",
+      "pos": [
+        2349,
+        2447
+      ]
+    },
+    {
+      "pos": [
+        2590,
+        2714
+      ],
+      "content": "The stored procedure feature takes advantage of <bpt id=\"p1\">[</bpt>Table-Valued Parameters<ept id=\"p1\">](https://msdn.microsoft.com/library/bb675163.aspx)</ept>."
+    }
+  ],
+  "content": "## Invoking stored procedure for SQL Sink\n\nWhen copying data into SQL Server or Azure SQL/SQL Server Database, a user specified stored procedure could be configured and invoked with additional parameters. \n\nA stored procedure can be leveraged when built-in copy mechanisms do not serve the purpose. This is typically leveraged when extra processing (merging columns, looking up additional values, insertion into multiple tables…) needs to be done before the final insertion of source data in the destination table. \n\nYou may invoke a stored procedure of choice. The following sample shows how to use a stored procedure to do a simple insertion into a table in the database. \n\n**Output dataset**\n\nIn this example, type is set to: SqlServerTable. Set it to AzureSqlTable to use with an Azure SQL database. \n\n    {\n      \"name\": \"SqlOutput\",\n      \"properties\": {\n        \"type\": \"SqlServerTable\",\n        \"linkedServiceName\": \"SqlLinkedService\",\n        \"typeProperties\": {\n          \"tableName\": \"Marketing\"\n        },\n        \"availability\": {\n          \"frequency\": \"Hour\",\n          \"interval\": 1\n        }\n      }\n    }\n    \nDefine the SqlSink section in copy activity JSON as follows. To call a stored procedure while insert data, both SqlWriterStoredProcedureName and SqlWriterTableType properties are needed.\n\n    \"sink\":\n    {\n        \"type\": \"SqlSink\",\n        \"SqlWriterTableType\": \"MarketingType\",\n        \"SqlWriterStoredProcedureName\": \"spOverwriteMarketing\", \n        \"storedProcedureParameters\":\n                {\n                    \"stringData\": \n                    {\n                        \"value\": \"str1\"     \n                    }\n                }\n    }\n\nIn your database, define the stored procedure with the same name as SqlWriterStoredProcedureName. It handles input data from your specified source, and insert into the output table. Notice that the parameter name of the stored procedure should be the same as the tableName defined in Table JSON file.\n\n    CREATE PROCEDURE spOverwriteMarketing @Marketing [dbo].[MarketingType] READONLY, @stringData varchar(256)\n    AS\n    BEGIN\n        DELETE FROM [dbo].[Marketing] where ProfileID = @stringData\n        INSERT [dbo].[Marketing](ProfileID, State)\n        SELECT * FROM @Marketing\n    END\n\nIn your database, define the table type with the same name as SqlWriterTableType. Notice that the schema of the table type should be same as the schema returned by your input data.\n\n    CREATE TYPE [dbo].[MarketingType] AS TABLE(\n        [ProfileID] [varchar](256) NOT NULL,\n        [State] [varchar](256) NOT NULL,\n    )\n\nThe stored procedure feature takes advantage of [Table-Valued Parameters](https://msdn.microsoft.com/library/bb675163.aspx)."
+}

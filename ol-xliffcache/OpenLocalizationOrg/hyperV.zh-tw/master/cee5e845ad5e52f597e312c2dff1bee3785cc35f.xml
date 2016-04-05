@@ -1,0 +1,1027 @@
+{
+  "nodes": [
+    {
+      "content": "Authentication in Azure App Service API apps and mobile apps",
+      "pos": [
+        28,
+        88
+      ]
+    },
+    {
+      "content": "Learn how to configure and use authentication for API apps and mobile apps in Azure app service.",
+      "pos": [
+        108,
+        204
+      ]
+    },
+    {
+      "content": "Authentication for API apps and mobile apps in Azure App Service",
+      "pos": [
+        518,
+        582
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        673,
+        681
+      ]
+    },
+    {
+      "pos": [
+        683,
+        901
+      ],
+      "content": "This article explains the built-in authentication features for <bpt id=\"p1\">[</bpt>API apps<ept id=\"p1\">](../app-service-api/app-service-api-apps-why-best-platform.md)</ept> and <bpt id=\"p2\">[</bpt>mobile apps<ept id=\"p2\">](../app-service-mobile/app-service-mobile-value-prop-preview.md)</ept>."
+    },
+    {
+      "pos": [
+        904,
+        1015
+      ],
+      "content": "The <bpt id=\"p1\">[</bpt>Next steps<ept id=\"p1\">](#next-steps)</ept> section at the end of the article provides links to related how-to documentation."
+    },
+    {
+      "content": "Azure App Service gateway",
+      "pos": [
+        1020,
+        1045
+      ]
+    },
+    {
+      "content": "Azure App Service offers built-in authentication services that implement <bpt id=\"p1\">[</bpt>OAuth 2.0<ept id=\"p1\">](#oauth)</ept> and <bpt id=\"p2\">[</bpt>OpenID Connect<ept id=\"p2\">](#oauth)</ept> and work with multiple <bpt id=\"p3\">*</bpt>identity providers<ept id=\"p3\">*</ept>.",
+      "pos": [
+        1047,
+        1213
+      ]
+    },
+    {
+      "content": "An identity provider is an external service, trusted by Azure App Service, that authenticates your app's users.",
+      "pos": [
+        1214,
+        1325
+      ]
+    },
+    {
+      "content": "App Service supports the most popular identity providers:",
+      "pos": [
+        1326,
+        1383
+      ]
+    },
+    {
+      "content": "Azure Active Directory",
+      "pos": [
+        1387,
+        1409
+      ]
+    },
+    {
+      "content": "Microsoft Account",
+      "pos": [
+        1412,
+        1429
+      ]
+    },
+    {
+      "content": "Google",
+      "pos": [
+        1432,
+        1438
+      ]
+    },
+    {
+      "content": "Twitter",
+      "pos": [
+        1441,
+        1448
+      ]
+    },
+    {
+      "content": "Facebook",
+      "pos": [
+        1451,
+        1459
+      ]
+    },
+    {
+      "content": "Gateway architecture",
+      "pos": [
+        1465,
+        1485
+      ]
+    },
+    {
+      "content": "Any Azure resource group that contains API apps or mobile apps includes a <bpt id=\"p1\">*</bpt>gateway<ept id=\"p1\">*</ept>.",
+      "pos": [
+        1487,
+        1571
+      ]
+    },
+    {
+      "content": "The gateway is an Azure resource that runs in a web app and handles administrative tasks including authentication for API apps and mobile apps in the resource group.",
+      "pos": [
+        1572,
+        1737
+      ]
+    },
+    {
+      "content": "The gateway handles login procedures, manages tokens, and prevents unauthenticated calls from reaching API apps that are <bpt id=\"p1\">[</bpt>configured to require authenticated access<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-add-authentication.md#protect-the-api-app)</ept>.",
+      "pos": [
+        1739,
+        1990
+      ]
+    },
+    {
+      "content": "The gateway can control access to API apps because all incoming HTTP requests destined for API apps in the resource group are routed through the gateway.",
+      "pos": [
+        1992,
+        2145
+      ]
+    },
+    {
+      "content": "The following diagram illustrates these gateway functions.",
+      "pos": [
+        2147,
+        2205
+      ]
+    },
+    {
+      "content": "Gateway features",
+      "pos": [
+        2273,
+        2289
+      ]
+    },
+    {
+      "content": "The gateway authentication services offer several advantages over running your own implementation of OAuth 2.0:",
+      "pos": [
+        2291,
+        2402
+      ]
+    },
+    {
+      "content": "Microsoft provides SDKs that enable you to perform authentication and authorization tasks using a simplified syntax.",
+      "pos": [
+        2406,
+        2522
+      ]
+    },
+    {
+      "content": "Because App Service handles more authentication tasks, your development and testing time is minimized, and you avoid most or all of the impact of changes in provider implementations of OAuth.",
+      "pos": [
+        2526,
+        2717
+      ]
+    },
+    {
+      "content": "If you have multiple applications to protect and you keep them in one resource group, you only need one client ID and client secret for each authentication provider, because there is only one redirect URL for the gateway.",
+      "pos": [
+        2722,
+        2943
+      ]
+    },
+    {
+      "content": "Monitoring and troubleshooting are easier because you can monitor authentication-related traffic for an entire resource group by monitoring the gateway.",
+      "pos": [
+        2949,
+        3101
+      ]
+    },
+    {
+      "content": "Debugging is easier because you can configure a program to use the gateway while running in debug mode locally, and you don't have to change redirect URLs in your identity provider account.",
+      "pos": [
+        3105,
+        3294
+      ]
+    },
+    {
+      "content": "Server flow vs. client flow",
+      "pos": [
+        3299,
+        3326
+      ]
+    },
+    {
+      "content": "The App Service gateway offers two ways to authenticate clients:  <bpt id=\"p1\">*</bpt>client flow<ept id=\"p1\">*</ept> and <bpt id=\"p2\">*</bpt>server flow<ept id=\"p2\">*</ept>.",
+      "pos": [
+        3328,
+        3426
+      ]
+    },
+    {
+      "content": "In both flows, the client application sends the user credentials (typically, user name and password) directly to the identity provider.",
+      "pos": [
+        3427,
+        3562
+      ]
+    },
+    {
+      "content": "Neither the gateway nor your application receives user credentials in either flow.",
+      "pos": [
+        3563,
+        3645
+      ]
+    },
+    {
+      "content": "Client flow",
+      "pos": [
+        3651,
+        3662
+      ]
+    },
+    {
+      "content": "Client flow means the client application communicates directly with the identity provider to get the provider's access token.",
+      "pos": [
+        3664,
+        3789
+      ]
+    },
+    {
+      "content": "The client application sends the provider's access token to the gateway.",
+      "pos": [
+        3790,
+        3862
+      ]
+    },
+    {
+      "content": "The gateway creates and sends to the client a user context token.",
+      "pos": [
+        3864,
+        3929
+      ]
+    },
+    {
+      "content": "This user context token is also known as a Zumo token, from the original code name for <bpt id=\"p1\">[</bpt>Azure Mobile Services<ept id=\"p1\">](/documentation/services/mobile-services/)</ept>.",
+      "pos": [
+        3930,
+        4083
+      ]
+    },
+    {
+      "content": "(Authentication services for API Apps and Mobile Apps are built on the same architecture originally developed for Mobile Services.)",
+      "pos": [
+        4084,
+        4215
+      ]
+    },
+    {
+      "content": "The following diagram illustrates this flow.",
+      "pos": [
+        4217,
+        4261
+      ]
+    },
+    {
+      "content": "The client then provides the Zumo token in HTTP requests when it calls protected API apps or mobile apps.",
+      "pos": [
+        4329,
+        4434
+      ]
+    },
+    {
+      "content": "The gateway stores the provider tokens and keeps track of which ones are associated with which Zumo tokens.",
+      "pos": [
+        4435,
+        4542
+      ]
+    },
+    {
+      "content": "Server flow",
+      "pos": [
+        4548,
+        4559
+      ]
+    },
+    {
+      "content": "Server flow means the client application relies on the gateway to communicate with the identity provider to initiate login.",
+      "pos": [
+        4561,
+        4684
+      ]
+    },
+    {
+      "content": "The client browser goes to a gateway URL, and the gateway redirects the request to the identity provider's login page.",
+      "pos": [
+        4686,
+        4804
+      ]
+    },
+    {
+      "content": "After the user logs in, the gateway gets the identity provider's token, creates the Zumo token, and sends the Zumo token to the client.",
+      "pos": [
+        4806,
+        4941
+      ]
+    },
+    {
+      "content": "Subsequent interaction between the client application and protected API apps or mobile apps is handled the same as for client flow:  the client provides the Zumo token in HTTP requests.",
+      "pos": [
+        5008,
+        5193
+      ]
+    },
+    {
+      "content": "How to choose between client flow and server flow",
+      "pos": [
+        5200,
+        5249
+      ]
+    },
+    {
+      "content": "The client flow is typically the best choice if the identity provider that you want to use has an SDK for the client platform that you want to support.",
+      "pos": [
+        5251,
+        5402
+      ]
+    },
+    {
+      "content": "Client flow provides the best user experience because it reduces the number of times the user has to enter credentials.",
+      "pos": [
+        5403,
+        5522
+      ]
+    },
+    {
+      "content": "For example, if your user has an android device, they probably have a Google account associated with their device, so if they can use that account without having to re-enter their user name and password, that makes for a better user experience.",
+      "pos": [
+        5524,
+        5768
+      ]
+    },
+    {
+      "content": "Same thing with a Facebook account in an Android, iOS, or Windows Phone device, or a Microsoft account on a Windows desktop or Windows Phone.",
+      "pos": [
+        5769,
+        5910
+      ]
+    },
+    {
+      "content": "In other scenarios the server flow may be a better choice:",
+      "pos": [
+        5914,
+        5972
+      ]
+    },
+    {
+      "content": "There is no native client SDK for the identity provider and client platform you want to support.",
+      "pos": [
+        5977,
+        6073
+      ]
+    },
+    {
+      "content": "You want to get something into production quickly and improve the user experience as time permits later.",
+      "pos": [
+        6077,
+        6181
+      ]
+    },
+    {
+      "content": "The server flow lets Azure App Service do more of the authentication work, which minimizes the amount of development and testing you have to do.",
+      "pos": [
+        6182,
+        6326
+      ]
+    },
+    {
+      "content": "On-behalf-of outgoing calls to SaaS platforms",
+      "pos": [
+        6331,
+        6376
+      ]
+    },
+    {
+      "content": "You can write code to make outgoing calls to Software-as-a-Service (SaaS) platforms on behalf of a logged-in user or you can use a <bpt id=\"p1\">[</bpt>connector API app<ept id=\"p1\">](../app-service-mobile/app-service-logic-what-are-biztalk-api-apps.md)</ept>.",
+      "pos": [
+        6378,
+        6599
+      ]
+    },
+    {
+      "content": "For example, to post a tweet from the user's Twitter account you can use <bpt id=\"p1\">[</bpt>a Twitter SDK<ept id=\"p1\">](https://dev.twitter.com/overview/api/twitter-libraries)</ept>, or provision a <bpt id=\"p2\">[</bpt>Twitter connector<ept id=\"p2\">](../app-service-mobile/app-service-logic-connector-twitter.md)</ept> in your Azure subscription and call that.",
+      "pos": [
+        6600,
+        6884
+      ]
+    },
+    {
+      "content": "This section is about accessing a SaaS platform from code that runs in an API app or mobile app.",
+      "pos": [
+        6885,
+        6981
+      ]
+    },
+    {
+      "pos": [
+        6990,
+        7052
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"obotoidprovider\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> Using the identity provider token"
+    },
+    {
+      "content": "The gateway maintains a <bpt id=\"p1\">*</bpt>token store<ept id=\"p1\">*</ept> in which it associates a Zumo token with one or more identity provider access tokens and refresh tokens.",
+      "pos": [
+        7055,
+        7197
+      ]
+    },
+    {
+      "content": "When an HTTP request with a valid Zumo token is received, the gateway knows which identity provider tokens pertain to that user.",
+      "pos": [
+        7198,
+        7326
+      ]
+    },
+    {
+      "content": "When the code running in your API app or mobile app needs to make a call to a protected resource on behalf of the logged-on user, it can retrieve and use the identity provider's token from the gateway's token store, as shown in the following diagram.",
+      "pos": [
+        7330,
+        7580
+      ]
+    },
+    {
+      "content": "The diagram assumes that the client has already authenticated with the gateway and has the Zumo token.",
+      "pos": [
+        7581,
+        7683
+      ]
+    },
+    {
+      "content": "For example, suppose the identity provider is Azure Active Directory (AAD), and your API app wants to use the AAD access token to call the AAD Graph API or request access to a SharePoint site that the user has permissions for.",
+      "pos": [
+        7757,
+        7983
+      ]
+    },
+    {
+      "content": "You can send a request to the gateway to retrieve the AAD token, then use the AAD token to call the Graph API or to get an access token for the SharePoint site.",
+      "pos": [
+        7985,
+        8145
+      ]
+    },
+    {
+      "pos": [
+        8152,
+        8220
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"obotosaas\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Getting user consent to access other resources"
+    },
+    {
+      "content": "The gateway also has built-in features for getting user consent when you want to access resources secured by a provider other than the original identity provider.",
+      "pos": [
+        8222,
+        8384
+      ]
+    },
+    {
+      "content": "For example, for a user who signs in using Azure Active Directory, you might want to access files in the user's Dropbox account.",
+      "pos": [
+        8386,
+        8514
+      ]
+    },
+    {
+      "content": "The app service gateway includes built-in support for getting the user's consent to such access from the following providers:",
+      "pos": [
+        8516,
+        8641
+      ]
+    },
+    {
+      "content": "Box",
+      "pos": [
+        8645,
+        8648
+      ]
+    },
+    {
+      "content": "DropBox",
+      "pos": [
+        8651,
+        8658
+      ]
+    },
+    {
+      "content": "Facebook",
+      "pos": [
+        8661,
+        8669
+      ]
+    },
+    {
+      "content": "Google",
+      "pos": [
+        8672,
+        8678
+      ]
+    },
+    {
+      "content": "Office365",
+      "pos": [
+        8681,
+        8690
+      ]
+    },
+    {
+      "content": "OneDrive",
+      "pos": [
+        8693,
+        8701
+      ]
+    },
+    {
+      "content": "QuickBooks",
+      "pos": [
+        8704,
+        8714
+      ]
+    },
+    {
+      "content": "Salesforce",
+      "pos": [
+        8717,
+        8727
+      ]
+    },
+    {
+      "content": "SharePointOnline",
+      "pos": [
+        8730,
+        8746
+      ]
+    },
+    {
+      "content": "Twitter",
+      "pos": [
+        8749,
+        8756
+      ]
+    },
+    {
+      "content": "Yammer",
+      "pos": [
+        8759,
+        8765
+      ]
+    },
+    {
+      "content": "Azure Active Directory",
+      "pos": [
+        8768,
+        8790
+      ]
+    },
+    {
+      "content": "Microsoft Account",
+      "pos": [
+        8793,
+        8810
+      ]
+    },
+    {
+      "content": "For these providers, the gateway maintains access tokens and associates them with the Zumo token, as it does for the identity provider access token.",
+      "pos": [
+        8812,
+        8960
+      ]
+    },
+    {
+      "content": "The process of getting user consent and calling a SaaS platform is illustrated in the following diagram.",
+      "pos": [
+        8961,
+        9065
+      ]
+    },
+    {
+      "content": "The diagram assumes that the client has already authenticated with the gateway and has the Zumo token.",
+      "pos": [
+        9066,
+        9168
+      ]
+    },
+    {
+      "content": "The App Service runtime support and SDKs make it relatively easy to write code that accesses resources secured by one of these providers.",
+      "pos": [
+        9234,
+        9371
+      ]
+    },
+    {
+      "content": "There is a preliminary step not shown in the diagram: you have to set up an account with the provider and configure the provider's client ID and client secret settings in Azure App Service.",
+      "pos": [
+        9372,
+        9561
+      ]
+    },
+    {
+      "pos": [
+        9563,
+        9749
+      ],
+      "content": "For these and many other providers you can also access secured resources by using a prepackaged <bpt id=\"p1\">[</bpt>connector API app<ept id=\"p1\">](../app-service-mobile/app-service-logic-what-are-biztalk-api-apps.md)</ept>."
+    },
+    {
+      "content": "SDK availability",
+      "pos": [
+        9756,
+        9772
+      ]
+    },
+    {
+      "content": "For API apps, The SDK for .NET provides authentication functionality:",
+      "pos": [
+        9774,
+        9843
+      ]
+    },
+    {
+      "pos": [
+        9847,
+        9965
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Microsoft.Azure.AppService<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.AppService)</ept> - For use in an API app client."
+    },
+    {
+      "pos": [
+        9970,
+        10145
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Microsoft.Azure.AppService.ApiApps.Service<ept id=\"p1\">](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service/)</ept> - For use in a Web API project that runs in an API app."
+    },
+    {
+      "content": "In addition, Visual Studio can automatically generate code that works with the SDK for .NET to further simplify the code you write to call your API app.",
+      "pos": [
+        10148,
+        10300
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Consume an API app in Azure App Service from a .NET client<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-consume.md)</ept>.",
+      "pos": [
+        10302,
+        10443
+      ]
+    },
+    {
+      "content": "For Mobile Apps, SDKs are available for the following platforms:",
+      "pos": [
+        10445,
+        10509
+      ]
+    },
+    {
+      "content": ".NET Server",
+      "pos": [
+        10514,
+        10525
+      ]
+    },
+    {
+      "content": "iOS",
+      "pos": [
+        10594,
+        10597
+      ]
+    },
+    {
+      "content": "Xamarin iOS",
+      "pos": [
+        10686,
+        10697
+      ]
+    },
+    {
+      "content": "Xamarin Android",
+      "pos": [
+        10794,
+        10809
+      ]
+    },
+    {
+      "content": "Windows",
+      "pos": [
+        10910,
+        10917
+      ]
+    },
+    {
+      "content": "JavaScript (tutorial in development)",
+      "pos": [
+        11022,
+        11058
+      ]
+    },
+    {
+      "content": "Alternative authentication methods",
+      "pos": [
+        11063,
+        11097
+      ]
+    },
+    {
+      "content": "If the gateway authentication services don't meet the needs of your app, you can handle authentication yourself, or use the Azure API Management service.",
+      "pos": [
+        11099,
+        11252
+      ]
+    },
+    {
+      "pos": [
+        11258,
+        11312
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"doityourself\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Do-it-yourself authentication"
+    },
+    {
+      "content": "You can run an authentication framework such as <bpt id=\"p1\">[</bpt>ASP.NET Identity<ept id=\"p1\">](http://www.asp.net/identity)</ept> or <bpt id=\"p2\">[</bpt>Thinktecture<ept id=\"p2\">](http://www.thinktecture.com/identityAndAccessControl)</ept> on Azure.",
+      "pos": [
+        11314,
+        11491
+      ]
+    },
+    {
+      "content": "This gives you control over how everything works, but you also have to spend more time developing and testing authentication functionality.",
+      "pos": [
+        11492,
+        11631
+      ]
+    },
+    {
+      "content": "Also, if you have multiple apps to protect with multiple redirect URLs, you have to configure multiple client IDs and client secrets with third-party authentication providers such as Facebook, Google, and Twitter.",
+      "pos": [
+        11632,
+        11845
+      ]
+    },
+    {
+      "pos": [
+        11847,
+        12058
+      ],
+      "content": "At present App Service does not support using a do-it-yourself solution alongside gateway authentication, as is possible in <bpt id=\"p1\">[</bpt>Mobile Services<ept id=\"p1\">](mobile-services-dotnet-backend-get-started-custom-authentication.md)</ept>."
+    },
+    {
+      "pos": [
+        12065,
+        12102
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"apim\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Azure API Management"
+    },
+    {
+      "content": "If you have existing APIs that you want to protect with authentication, you can do that with the Azure API Management service.",
+      "pos": [
+        12104,
+        12230
+      ]
+    },
+    {
+      "content": "For information about using API Management with API apps, see this blog post by Panos Kefalidis: <bpt id=\"p1\">[</bpt>Taking advantage of API Management for API Apps<ept id=\"p1\">](http://www.kefalidis.me/2015/06/taking-advantage-of-api-management-for-api-apps/)</ept>",
+      "pos": [
+        12231,
+        12459
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        12465,
+        12475
+      ]
+    },
+    {
+      "content": "This article has explained the authentication services provided by Azure App Service for API Apps and Mobile Apps.",
+      "pos": [
+        12477,
+        12591
+      ]
+    },
+    {
+      "content": "Here are some links to resources for learning about the underlying authentication protocols, and documentation about how to use the App Service authentication features.",
+      "pos": [
+        12592,
+        12760
+      ]
+    },
+    {
+      "content": "OAuth 2.0, OpenID Connect, and JSON Web Tokens (JWT)",
+      "pos": [
+        12765,
+        12817
+      ]
+    },
+    {
+      "content": "API Apps resources",
+      "pos": [
+        12829,
+        12847
+      ]
+    },
+    {
+      "content": "API Apps client flow",
+      "pos": [
+        12855,
+        12875
+      ]
+    },
+    {
+      "content": "API Apps server flow",
+      "pos": [
+        12897,
+        12917
+      ]
+    },
+    {
+      "content": "API Apps on-behalf-of calls",
+      "pos": [
+        12939,
+        12966
+      ]
+    },
+    {
+      "content": "Mobile Apps resources",
+      "pos": [
+        12980,
+        13001
+      ]
+    },
+    {
+      "content": "Mobile Apps client flow",
+      "pos": [
+        13009,
+        13032
+      ]
+    },
+    {
+      "content": "Mobile Apps server flow",
+      "pos": [
+        13052,
+        13075
+      ]
+    },
+    {
+      "content": "Mobile Apps on-behalf-of calls",
+      "pos": [
+        13095,
+        13125
+      ]
+    },
+    {
+      "pos": [
+        13140,
+        13210
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"oauth\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>OAuth 2.0, OpenID Connect, and JSON Web Tokens (JWT)"
+    },
+    {
+      "pos": [
+        13214,
+        13329
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Getting started with OAuth 2.0<ept id=\"p1\">]</ept><bpt id=\"p2\">(http://shop.oreilly.com/product/0636920021810.do \"</bpt>Getting Started with OAuth 2.0<ept id=\"p2\">\")</ept>"
+    },
+    {
+      "content": "Introduction to OAuth2, OpenID Connect and JSON Web Tokens (JWT) - PluralSight Course",
+      "pos": [
+        13334,
+        13419
+      ]
+    },
+    {
+      "content": "Building and Securing a RESTful API for Multiple Clients in ASP.NET - PluralSight course",
+      "pos": [
+        13512,
+        13600
+      ]
+    },
+    {
+      "pos": [
+        13683,
+        13726
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"apiaclient\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>API Apps client flow"
+    },
+    {
+      "pos": [
+        13730,
+        13942
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Protect an API app<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-add-authentication.md)</ept> - The API app configuration part applies to both client and server flow, but the test-in-browser part illustrates server flow."
+    },
+    {
+      "pos": [
+        13945,
+        14257
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Consume an API app in Azure App Service from a .NET client<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-consume.md)</ept> - The sample app for an authenticated call illustrates server flow, but it is followed by a <bpt id=\"p2\">[</bpt>client flow<ept id=\"p2\">](../app-service-api/app-service-api-dotnet-consume.md#client-flow)</ept> section with sample code."
+    },
+    {
+      "pos": [
+        14263,
+        14306
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"apiaserver\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>API Apps server flow"
+    },
+    {
+      "pos": [
+        14310,
+        14522
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Protect an API app<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-add-authentication.md)</ept> - The API app configuration part applies to both client and server flow, and the test-in-browser part illustrates server flow."
+    },
+    {
+      "pos": [
+        14525,
+        14708
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Consume an API app in Azure App Service from a .NET client<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-consume.md)</ept> - The sample code for an authenticated call illustrates server flow."
+    },
+    {
+      "pos": [
+        14715,
+        14762
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"apiaobo\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>API Apps on-behalf-of calls"
+    },
+    {
+      "pos": [
+        14766,
+        15020
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Deploy and configure a SaaS connector API app in Azure App Service<ept id=\"p1\">](../app-service-api/app-service-api-connnect-your-app-to-saas-connector.md)</ept> - Illustrates how to provision a prepackaged connector API app, configure it, and call it using browser tools."
+    },
+    {
+      "pos": [
+        15023,
+        15324
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Connect to a SaaS platform from an ASP.NET API app in Azure App Service<ept id=\"p1\">](../app-service-api/app-service-api-dotnet-connect-to-saas.md)</ept> - Illustrates how to write your own connector -- that is, provision, configure, and write code for a custom API app that makes on-behalf-of calls to a SaaS provider."
+    },
+    {
+      "pos": [
+        15330,
+        15374
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"maclient\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Mobile Apps client flow"
+    },
+    {
+      "content": "Add Azure Active Directory single sign-on to your iOS app",
+      "pos": [
+        15379,
+        15436
+      ]
+    },
+    {
+      "pos": [
+        15523,
+        15567
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"maserver\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Mobile Apps server flow"
+    },
+    {
+      "content": "Add authentication to your iOS app",
+      "pos": [
+        15572,
+        15606
+      ]
+    },
+    {
+      "content": "Add authentication to your Xamarin.iOS app",
+      "pos": [
+        15701,
+        15743
+      ]
+    },
+    {
+      "content": "Add authentication to your Xamarin.Android app",
+      "pos": [
+        15846,
+        15892
+      ]
+    },
+    {
+      "content": "Add authentication to your Windows app",
+      "pos": [
+        15999,
+        16037
+      ]
+    },
+    {
+      "pos": [
+        16151,
+        16220
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"maobo\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Mobile Apps on-behalf-of calls to secured resources"
+    },
+    {
+      "content": "Obtain an access token and call the SharePoint API in a mobile app",
+      "pos": [
+        16225,
+        16291
+      ]
+    }
+  ],
+  "content": "<properties \n    pageTitle=\"Authentication in Azure App Service API apps and mobile apps\" \n    description=\"Learn how to configure and use authentication for API apps and mobile apps in Azure app service.\" \n    services=\"app-service\" \n    documentationCenter=\"\" \n    authors=\"tdykstra\" \n    manager=\"wpickett\" \n    editor=\"jimbe\"/>\n\n<tags \n    ms.service=\"app-service\" \n    ms.workload=\"web\" \n    ms.tgt_pltfrm=\"na\" \n    ms.devlang=\"na\" \n    ms.topic=\"article\" \n    ms.date=\"01/08/2016\" \n    ms.author=\"tdykstra\"/>\n\n# Authentication for API apps and mobile apps in Azure App Service\n\n[AZURE.INCLUDE [app-service-api-v2-note](../../includes/app-service-api-v2-note.md)]\n\n## Overview\n\nThis article explains the built-in authentication features for [API apps](../app-service-api/app-service-api-apps-why-best-platform.md) and [mobile apps](../app-service-mobile/app-service-mobile-value-prop-preview.md). \n\nThe [Next steps](#next-steps) section at the end of the article provides links to related how-to documentation.\n\n## Azure App Service gateway\n\nAzure App Service offers built-in authentication services that implement [OAuth 2.0](#oauth) and [OpenID Connect](#oauth) and work with multiple *identity providers*. An identity provider is an external service, trusted by Azure App Service, that authenticates your app's users. App Service supports the most popular identity providers:\n\n* Azure Active Directory\n* Microsoft Account\n* Google\n* Twitter\n* Facebook\n\n### Gateway architecture\n\nAny Azure resource group that contains API apps or mobile apps includes a *gateway*. The gateway is an Azure resource that runs in a web app and handles administrative tasks including authentication for API apps and mobile apps in the resource group.\n\nThe gateway handles login procedures, manages tokens, and prevents unauthenticated calls from reaching API apps that are [configured to require authenticated access](../app-service-api/app-service-api-dotnet-add-authentication.md#protect-the-api-app).  The gateway can control access to API apps because all incoming HTTP requests destined for API apps in the resource group are routed through the gateway.\n\nThe following diagram illustrates these gateway functions.\n\n![](./media/app-service-authentication-overview/gateway.png)\n\n### Gateway features\n\nThe gateway authentication services offer several advantages over running your own implementation of OAuth 2.0:\n\n* Microsoft provides SDKs that enable you to perform authentication and authorization tasks using a simplified syntax.\n\n* Because App Service handles more authentication tasks, your development and testing time is minimized, and you avoid most or all of the impact of changes in provider implementations of OAuth. \n\n* If you have multiple applications to protect and you keep them in one resource group, you only need one client ID and client secret for each authentication provider, because there is only one redirect URL for the gateway.  \n\n* Monitoring and troubleshooting are easier because you can monitor authentication-related traffic for an entire resource group by monitoring the gateway.\n\n* Debugging is easier because you can configure a program to use the gateway while running in debug mode locally, and you don't have to change redirect URLs in your identity provider account.\n\n## Server flow vs. client flow\n\nThe App Service gateway offers two ways to authenticate clients:  *client flow* and *server flow*. In both flows, the client application sends the user credentials (typically, user name and password) directly to the identity provider. Neither the gateway nor your application receives user credentials in either flow.\n\n### Client flow\n\nClient flow means the client application communicates directly with the identity provider to get the provider's access token. The client application sends the provider's access token to the gateway.  The gateway creates and sends to the client a user context token. This user context token is also known as a Zumo token, from the original code name for [Azure Mobile Services](/documentation/services/mobile-services/). (Authentication services for API Apps and Mobile Apps are built on the same architecture originally developed for Mobile Services.)\n\nThe following diagram illustrates this flow. \n\n![](./media/app-service-authentication-overview/clientflow.png)\n\nThe client then provides the Zumo token in HTTP requests when it calls protected API apps or mobile apps. The gateway stores the provider tokens and keeps track of which ones are associated with which Zumo tokens.\n\n### Server flow\n\nServer flow means the client application relies on the gateway to communicate with the identity provider to initiate login.  The client browser goes to a gateway URL, and the gateway redirects the request to the identity provider's login page.  After the user logs in, the gateway gets the identity provider's token, creates the Zumo token, and sends the Zumo token to the client.\n\n![](./media/app-service-authentication-overview/serverflow.png)\n\nSubsequent interaction between the client application and protected API apps or mobile apps is handled the same as for client flow:  the client provides the Zumo token in HTTP requests. \n\n### How to choose between client flow and server flow\n\nThe client flow is typically the best choice if the identity provider that you want to use has an SDK for the client platform that you want to support. Client flow provides the best user experience because it reduces the number of times the user has to enter credentials.  For example, if your user has an android device, they probably have a Google account associated with their device, so if they can use that account without having to re-enter their user name and password, that makes for a better user experience. Same thing with a Facebook account in an Android, iOS, or Windows Phone device, or a Microsoft account on a Windows desktop or Windows Phone.  \n\nIn other scenarios the server flow may be a better choice: \n\n- There is no native client SDK for the identity provider and client platform you want to support.\n\n- You want to get something into production quickly and improve the user experience as time permits later. The server flow lets Azure App Service do more of the authentication work, which minimizes the amount of development and testing you have to do.\n\n## On-behalf-of outgoing calls to SaaS platforms\n\nYou can write code to make outgoing calls to Software-as-a-Service (SaaS) platforms on behalf of a logged-in user or you can use a [connector API app](../app-service-mobile/app-service-logic-what-are-biztalk-api-apps.md). For example, to post a tweet from the user's Twitter account you can use [a Twitter SDK](https://dev.twitter.com/overview/api/twitter-libraries), or provision a [Twitter connector](../app-service-mobile/app-service-logic-connector-twitter.md) in your Azure subscription and call that. This section is about accessing a SaaS platform from code that runs in an API app or mobile app.   \n\n### <a id=\"obotoidprovider\"></a> Using the identity provider token \n\nThe gateway maintains a *token store* in which it associates a Zumo token with one or more identity provider access tokens and refresh tokens. When an HTTP request with a valid Zumo token is received, the gateway knows which identity provider tokens pertain to that user.\n  \nWhen the code running in your API app or mobile app needs to make a call to a protected resource on behalf of the logged-on user, it can retrieve and use the identity provider's token from the gateway's token store, as shown in the following diagram. The diagram assumes that the client has already authenticated with the gateway and has the Zumo token.  \n\n![](./media/app-service-authentication-overview/idprovidertoken.png)\n\nFor example, suppose the identity provider is Azure Active Directory (AAD), and your API app wants to use the AAD access token to call the AAD Graph API or request access to a SharePoint site that the user has permissions for.  You can send a request to the gateway to retrieve the AAD token, then use the AAD token to call the Graph API or to get an access token for the SharePoint site. \n\n### <a id=\"obotosaas\"></a>Getting user consent to access other resources\n\nThe gateway also has built-in features for getting user consent when you want to access resources secured by a provider other than the original identity provider.  For example, for a user who signs in using Azure Active Directory, you might want to access files in the user's Dropbox account.\n\nThe app service gateway includes built-in support for getting the user's consent to such access from the following providers:\n\n* Box\n* DropBox\n* Facebook\n* Google\n* Office365\n* OneDrive\n* QuickBooks\n* Salesforce\n* SharePointOnline\n* Twitter\n* Yammer\n* Azure Active Directory\n* Microsoft Account\n\nFor these providers, the gateway maintains access tokens and associates them with the Zumo token, as it does for the identity provider access token. The process of getting user consent and calling a SaaS platform is illustrated in the following diagram. The diagram assumes that the client has already authenticated with the gateway and has the Zumo token.\n\n![](./media/app-service-authentication-overview/saastoken.png)\n\nThe App Service runtime support and SDKs make it relatively easy to write code that accesses resources secured by one of these providers. There is a preliminary step not shown in the diagram: you have to set up an account with the provider and configure the provider's client ID and client secret settings in Azure App Service.\n\nFor these and many other providers you can also access secured resources by using a prepackaged [connector API app](../app-service-mobile/app-service-logic-what-are-biztalk-api-apps.md).  \n\n## SDK availability\n\nFor API apps, The SDK for .NET provides authentication functionality:\n\n* [Microsoft.Azure.AppService](http://www.nuget.org/packages/Microsoft.Azure.AppService) - For use in an API app client.  \n* [Microsoft.Azure.AppService.ApiApps.Service](http://www.nuget.org/packages/Microsoft.Azure.AppService.ApiApps.Service/) - For use in a Web API project that runs in an API app.\n \nIn addition, Visual Studio can automatically generate code that works with the SDK for .NET to further simplify the code you write to call your API app.  For more information, see [Consume an API app in Azure App Service from a .NET client](../app-service-api/app-service-api-dotnet-consume.md).\n\nFor Mobile Apps, SDKs are available for the following platforms:\n\n- [.NET Server](https://www.nuget.org/packages/Microsoft.Azure.Mobile.Server/) \n- [iOS](../app-service-mobile/app-service-mobile-dotnet-backend-ios-get-started-preview.md)\n- [Xamarin iOS](../app-service-mobile/app-service-mobile-dotnet-backend-xamarin-ios-get-started-preview.md)\n- [Xamarin Android](../app-service-mobile/app-service-mobile-dotnet-backend-xamarin-android-get-started-preview.md)\n- [Windows](../app-service-mobile/app-service-mobile-dotnet-backend-windows-store-dotnet-get-started-preview.md)\n- JavaScript (tutorial in development)\n\n## Alternative authentication methods\n\nIf the gateway authentication services don't meet the needs of your app, you can handle authentication yourself, or use the Azure API Management service.\n\n### <a id=\"doityourself\"></a>Do-it-yourself authentication\n\nYou can run an authentication framework such as [ASP.NET Identity](http://www.asp.net/identity) or [Thinktecture](http://www.thinktecture.com/identityAndAccessControl) on Azure. This gives you control over how everything works, but you also have to spend more time developing and testing authentication functionality. Also, if you have multiple apps to protect with multiple redirect URLs, you have to configure multiple client IDs and client secrets with third-party authentication providers such as Facebook, Google, and Twitter.\n\nAt present App Service does not support using a do-it-yourself solution alongside gateway authentication, as is possible in [Mobile Services](mobile-services-dotnet-backend-get-started-custom-authentication.md). \n\n### <a id=\"apim\"></a>Azure API Management\n\nIf you have existing APIs that you want to protect with authentication, you can do that with the Azure API Management service. For information about using API Management with API apps, see this blog post by Panos Kefalidis: [Taking advantage of API Management for API Apps](http://www.kefalidis.me/2015/06/taking-advantage-of-api-management-for-api-apps/) \n\n## Next steps\n\nThis article has explained the authentication services provided by Azure App Service for API Apps and Mobile Apps. Here are some links to resources for learning about the underlying authentication protocols, and documentation about how to use the App Service authentication features.\n\n* [OAuth 2.0, OpenID Connect, and JSON Web Tokens (JWT)](#oauth)\n* API Apps resources\n    * [API Apps client flow](#apiaclient)\n    * [API Apps server flow](#apiaserver)\n    * [API Apps on-behalf-of calls](#apiaobo)\n* Mobile Apps resources\n    * [Mobile Apps client flow](#maclient)\n    * [Mobile Apps server flow](#maserver)\n    * [Mobile Apps on-behalf-of calls](#maobo)\n\n### <a id=\"oauth\"></a>OAuth 2.0, OpenID Connect, and JSON Web Tokens (JWT)\n\n* [Getting started with OAuth 2.0](http://shop.oreilly.com/product/0636920021810.do \"Getting Started with OAuth 2.0\") \n* [Introduction to OAuth2, OpenID Connect and JSON Web Tokens (JWT) - PluralSight Course](http://www.pluralsight.com/courses/oauth2-json-web-tokens-openid-connect-introduction) \n* [Building and Securing a RESTful API for Multiple Clients in ASP.NET - PluralSight course](http://www.pluralsight.com/courses/building-securing-restful-api-aspdotnet)\n\n### <a id=\"apiaclient\"></a>API Apps client flow\n\n* [Protect an API app](../app-service-api/app-service-api-dotnet-add-authentication.md) - The API app configuration part applies to both client and server flow, but the test-in-browser part illustrates server flow.\n* [Consume an API app in Azure App Service from a .NET client](../app-service-api/app-service-api-dotnet-consume.md) - The sample app for an authenticated call illustrates server flow, but it is followed by a [client flow](../app-service-api/app-service-api-dotnet-consume.md#client-flow) section with sample code.\n\n### <a id=\"apiaserver\"></a>API Apps server flow\n\n* [Protect an API app](../app-service-api/app-service-api-dotnet-add-authentication.md) - The API app configuration part applies to both client and server flow, and the test-in-browser part illustrates server flow.\n* [Consume an API app in Azure App Service from a .NET client](../app-service-api/app-service-api-dotnet-consume.md) - The sample code for an authenticated call illustrates server flow. \n\n### <a id=\"apiaobo\"></a>API Apps on-behalf-of calls\n\n* [Deploy and configure a SaaS connector API app in Azure App Service](../app-service-api/app-service-api-connnect-your-app-to-saas-connector.md) - Illustrates how to provision a prepackaged connector API app, configure it, and call it using browser tools.\n* [Connect to a SaaS platform from an ASP.NET API app in Azure App Service](../app-service-api/app-service-api-dotnet-connect-to-saas.md) - Illustrates how to write your own connector -- that is, provision, configure, and write code for a custom API app that makes on-behalf-of calls to a SaaS provider.\n\n### <a id=\"maclient\"></a>Mobile Apps client flow\n\n* [Add Azure Active Directory single sign-on to your iOS app](../app-service-mobile/app-service-mobile-dotnet-backend-ios-aad-sso-preview.md)\n\n### <a id=\"maserver\"></a>Mobile Apps server flow\n\n* [Add authentication to your iOS app](../app-service-mobile/app-service-mobile-dotnet-backend-ios-get-started-users-preview.md)\n* [Add authentication to your Xamarin.iOS app](../app-service-mobile/app-service-mobile-dotnet-backend-xamarin-ios-get-started-users-preview.md)\n* [Add authentication to your Xamarin.Android app](../app-service-mobile/app-service-mobile-dotnet-backend-xamarin-android-get-started-users-preview.md)\n* [Add authentication to your Windows app](../app-service-mobile/app-service-mobile-dotnet-backend-windows-store-dotnet-get-started-users-preview.md)\n\n### <a id=\"maobo\"></a>Mobile Apps on-behalf-of calls to secured resources\n\n* [Obtain an access token and call the SharePoint API in a mobile app](../app-service-mobile/app-service-mobile-dotnet-backend-get-started-connect-to-enterprise.md#obtain-token)\n"
+}
