@@ -1,0 +1,2448 @@
+{
+  "nodes": [
+    {
+      "content": "Azure is an excellent platform to implement dev/test or proof-of-concept configurations, because it requires very little investment to test a particular approach to an implementation of your solutions.",
+      "pos": [
+        2,
+        203
+      ]
+    },
+    {
+      "content": "However, you must be able to distinguish the easy practices for a dev/test environment from the more difficult, detailed practices for a fully functional, production-ready implementation of an IT workload.",
+      "pos": [
+        204,
+        409
+      ]
+    },
+    {
+      "content": "This guidance identifies many areas for which planning is vital to the success of an IT workload in Azure.",
+      "pos": [
+        411,
+        517
+      ]
+    },
+    {
+      "content": "In addition, planning provides an order to the creation of the necessary resources.",
+      "pos": [
+        518,
+        601
+      ]
+    },
+    {
+      "content": "Although there is some flexibility, we recommend that you apply the order in this article to your planning and decision-making.",
+      "pos": [
+        602,
+        729
+      ]
+    },
+    {
+      "content": "This article was adapted from the content in the <bpt id=\"p1\">[</bpt>Azure implementation guidelines<ept id=\"p1\">](http://blogs.msdn.com/b/thecolorofazure/archive/2014/05/13/azure-implementation-guidelines.aspx)</ept> blog post.",
+      "pos": [
+        731,
+        921
+      ]
+    },
+    {
+      "content": "Thanks to Santiago Cánepa (Application Development Manager for Microsoft) and Hugo Salcedo (Application Development Manager for Microsoft) for their original material.",
+      "pos": [
+        922,
+        1089
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Affinity groups have been deprecated.",
+      "pos": [
+        1093,
+        1143
+      ]
+    },
+    {
+      "content": "Their use is not described here.",
+      "pos": [
+        1144,
+        1176
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>About regional VNets and affinity groups<ept id=\"p1\">](../articles/virtual-network/virtual-networks-migrate-to-regional-vnet.md)</ept>.",
+      "pos": [
+        1177,
+        1320
+      ]
+    },
+    {
+      "content": "1. Naming conventions",
+      "pos": [
+        1325,
+        1346
+      ]
+    },
+    {
+      "content": "You should have a good naming convention in place before creating anything in Azure.",
+      "pos": [
+        1348,
+        1432
+      ]
+    },
+    {
+      "content": "A naming convention ensures that all the resources have a predictable name, which helps lower the administrative burden associated with managing those resources.",
+      "pos": [
+        1433,
+        1594
+      ]
+    },
+    {
+      "content": "You might choose to follow a specific set of naming conventions defined for your entire organization or for a specific Azure subscription or account.",
+      "pos": [
+        1596,
+        1745
+      ]
+    },
+    {
+      "content": "Although it is easy for individuals within organizations to establish implicit rules when working with Azure resources, when a team needs to work on a project on Azure, that model does not scale well.",
+      "pos": [
+        1746,
+        1946
+      ]
+    },
+    {
+      "content": "You should agree on a set of naming conventions up front.",
+      "pos": [
+        1948,
+        2005
+      ]
+    },
+    {
+      "content": "There are some considerations regarding naming conventions that cut across the sets of rules that make up those conventions.",
+      "pos": [
+        2006,
+        2130
+      ]
+    },
+    {
+      "content": "Affixes",
+      "pos": [
+        2136,
+        2143
+      ]
+    },
+    {
+      "content": "When creating certain resources, Azure uses some defaults to simplify management of the resources that are associated with these resources.",
+      "pos": [
+        2145,
+        2284
+      ]
+    },
+    {
+      "content": "For example, when creating the first virtual machine for a new cloud service, the Azure classic portal attempts to use the virtual machine’s name for the name of a new cloud service for the virtual machine.",
+      "pos": [
+        2285,
+        2491
+      ]
+    },
+    {
+      "content": "Therefore, it is beneficial to identify types of resources that need an affix to identify that type.",
+      "pos": [
+        2493,
+        2593
+      ]
+    },
+    {
+      "content": "In addition, clearly specify whether the affix will be at:",
+      "pos": [
+        2594,
+        2652
+      ]
+    },
+    {
+      "content": "The beginning of the name (prefix)",
+      "pos": [
+        2656,
+        2690
+      ]
+    },
+    {
+      "content": "The end of the name (suffix)",
+      "pos": [
+        2693,
+        2721
+      ]
+    },
+    {
+      "content": "For instance, here are two possible names for a resource group that hosts a calculation engine:",
+      "pos": [
+        2723,
+        2818
+      ]
+    },
+    {
+      "content": "Rg-CalculationEngine (prefix)",
+      "pos": [
+        2822,
+        2851
+      ]
+    },
+    {
+      "content": "CalculationEngine-Rg (suffix)",
+      "pos": [
+        2854,
+        2883
+      ]
+    },
+    {
+      "content": "Affixes can refer to different aspects that describe the particular resources.",
+      "pos": [
+        2885,
+        2963
+      ]
+    },
+    {
+      "content": "The following table shows some examples typically used.",
+      "pos": [
+        2964,
+        3019
+      ]
+    },
+    {
+      "content": "Aspect",
+      "pos": [
+        3021,
+        3027
+      ]
+    },
+    {
+      "content": "Examples",
+      "pos": [
+        3030,
+        3038
+      ]
+    },
+    {
+      "content": "Notes",
+      "pos": [
+        3041,
+        3046
+      ]
+    },
+    {
+      "content": "Environment",
+      "pos": [
+        3063,
+        3074
+      ]
+    },
+    {
+      "content": "dev, stg, prod",
+      "pos": [
+        3077,
+        3091
+      ]
+    },
+    {
+      "content": "Depending on the purpose and name of each environment.",
+      "pos": [
+        3094,
+        3148
+      ]
+    },
+    {
+      "content": "Location",
+      "pos": [
+        3149,
+        3157
+      ]
+    },
+    {
+      "content": "usw (West US), use (East US 2)",
+      "pos": [
+        3160,
+        3190
+      ]
+    },
+    {
+      "content": "Depending on the region of the datacenter or the region of the organization.",
+      "pos": [
+        3193,
+        3269
+      ]
+    },
+    {
+      "content": "Azure component, service, or product",
+      "pos": [
+        3270,
+        3306
+      ]
+    },
+    {
+      "content": "Rg for resource group, Svc for cloud service, VNet for virtual network",
+      "pos": [
+        3309,
+        3379
+      ]
+    },
+    {
+      "content": "Depending on the product for which the resource provides support.",
+      "pos": [
+        3382,
+        3447
+      ]
+    },
+    {
+      "content": "Role",
+      "pos": [
+        3448,
+        3452
+      ]
+    },
+    {
+      "content": "sql, ora, sp, iis",
+      "pos": [
+        3455,
+        3472
+      ]
+    },
+    {
+      "content": "Depending on the role of the virtual machine.",
+      "pos": [
+        3475,
+        3520
+      ]
+    },
+    {
+      "content": "Instance",
+      "pos": [
+        3521,
+        3529
+      ]
+    },
+    {
+      "content": "01, 02, 03, etc.",
+      "pos": [
+        3532,
+        3548
+      ]
+    },
+    {
+      "content": "For resources that have more than one instance.",
+      "pos": [
+        3551,
+        3598
+      ]
+    },
+    {
+      "content": "For example, load balanced web servers in a cloud service.",
+      "pos": [
+        3599,
+        3657
+      ]
+    },
+    {
+      "content": "When establishing your naming conventions, make sure that they clearly state which affixes to use for each type of resource, and in which position (prefix vs suffix).",
+      "pos": [
+        3659,
+        3825
+      ]
+    },
+    {
+      "content": "Dates",
+      "pos": [
+        3831,
+        3836
+      ]
+    },
+    {
+      "content": "It is often important to determine the date of creation from the name of a resource.",
+      "pos": [
+        3838,
+        3922
+      ]
+    },
+    {
+      "content": "We recommend the YYYYMMDD date format.",
+      "pos": [
+        3923,
+        3961
+      ]
+    },
+    {
+      "content": "This format ensures that not only the full date is recorded, but also that two resources whose names differ only on the date will be sorted alphabetically and chronologically at the same time.",
+      "pos": [
+        3962,
+        4154
+      ]
+    },
+    {
+      "content": "Naming resources",
+      "pos": [
+        4160,
+        4176
+      ]
+    },
+    {
+      "content": "You should define each type of resource in the naming convention, which should have rules that define how to assign names to each resource that is created.",
+      "pos": [
+        4178,
+        4333
+      ]
+    },
+    {
+      "content": "These rules should apply to all types of resources, for example:",
+      "pos": [
+        4334,
+        4398
+      ]
+    },
+    {
+      "content": "Subscriptions",
+      "pos": [
+        4402,
+        4415
+      ]
+    },
+    {
+      "content": "Accounts",
+      "pos": [
+        4418,
+        4426
+      ]
+    },
+    {
+      "content": "Storage accounts",
+      "pos": [
+        4429,
+        4445
+      ]
+    },
+    {
+      "content": "Virtual networks",
+      "pos": [
+        4448,
+        4464
+      ]
+    },
+    {
+      "content": "Subnets",
+      "pos": [
+        4467,
+        4474
+      ]
+    },
+    {
+      "content": "Availability sets",
+      "pos": [
+        4477,
+        4494
+      ]
+    },
+    {
+      "content": "Resource groups",
+      "pos": [
+        4497,
+        4512
+      ]
+    },
+    {
+      "content": "Cloud services",
+      "pos": [
+        4515,
+        4529
+      ]
+    },
+    {
+      "content": "Virtual machines",
+      "pos": [
+        4532,
+        4548
+      ]
+    },
+    {
+      "content": "Endpoints",
+      "pos": [
+        4551,
+        4560
+      ]
+    },
+    {
+      "content": "Network security groups",
+      "pos": [
+        4563,
+        4586
+      ]
+    },
+    {
+      "content": "Roles",
+      "pos": [
+        4589,
+        4594
+      ]
+    },
+    {
+      "content": "To ensure that the name provides enough information to determine to which resource it refers, you should use descriptive names.",
+      "pos": [
+        4596,
+        4723
+      ]
+    },
+    {
+      "content": "Computer names",
+      "pos": [
+        4729,
+        4743
+      ]
+    },
+    {
+      "content": "When administrators create a virtual machine, Microsoft Azure requires them to provide a virtual machine name of up to 15 characters.",
+      "pos": [
+        4745,
+        4878
+      ]
+    },
+    {
+      "content": "Azure uses the virtual machine name as the Azure virtual machine resource name.",
+      "pos": [
+        4879,
+        4958
+      ]
+    },
+    {
+      "content": "Azure uses the same name as the computer name for the operating system installed in the virtual machine.",
+      "pos": [
+        4959,
+        5063
+      ]
+    },
+    {
+      "content": "However, these names might not always be the same.",
+      "pos": [
+        5064,
+        5114
+      ]
+    },
+    {
+      "content": "In case a virtual machine is created from a .vhd image file that already contains an operating system, the virtual machine name in Azure can differ from the virtual machine’s operating system computer name.",
+      "pos": [
+        5116,
+        5322
+      ]
+    },
+    {
+      "content": "This situation can add a degree of difficulty to virtual machine management, which we therefore do not recommend.",
+      "pos": [
+        5323,
+        5436
+      ]
+    },
+    {
+      "content": "Assign the Azure virtual machine resource the same name as the computer name that you assign to the operating system of that virtual machine.",
+      "pos": [
+        5437,
+        5578
+      ]
+    },
+    {
+      "content": "We recommend that the Azure virtual machine name be the same as the underlying operating system computer name.",
+      "pos": [
+        5580,
+        5690
+      ]
+    },
+    {
+      "content": "Because of this, follow the NetBIOS naming rules as described in <bpt id=\"p1\">[</bpt>Microsoft NetBIOS computer naming conventions<ept id=\"p1\">](https://support.microsoft.com/kb/188997/)</ept>.",
+      "pos": [
+        5691,
+        5846
+      ]
+    },
+    {
+      "content": "Storage account names",
+      "pos": [
+        5852,
+        5873
+      ]
+    },
+    {
+      "content": "Storage accounts have special rules governing their names.",
+      "pos": [
+        5875,
+        5933
+      ]
+    },
+    {
+      "content": "You can only use lowercase letters and numbers.",
+      "pos": [
+        5934,
+        5981
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Create a storage account<ept id=\"p1\">](../storage/storage-create-storage-account.md#create-a-storage-account)</ept> for more information.",
+      "pos": [
+        5982,
+        6105
+      ]
+    },
+    {
+      "content": "Additionally, the storage account name, in combination with core.windows.net, should be a globally valid, unique DNS name.",
+      "pos": [
+        6106,
+        6228
+      ]
+    },
+    {
+      "content": "For instance, if the storage account is called mystorageaccount, the following resulting DNS names should be unique:",
+      "pos": [
+        6229,
+        6345
+      ]
+    },
+    {
+      "content": "mystorageaccount.blob.core.windows.net",
+      "pos": [
+        6349,
+        6387
+      ]
+    },
+    {
+      "content": "mystorageaccount.table.core.windows.net",
+      "pos": [
+        6390,
+        6429
+      ]
+    },
+    {
+      "content": "mystorageaccount.queue.core.windows.net",
+      "pos": [
+        6432,
+        6471
+      ]
+    },
+    {
+      "content": "Azure building block names",
+      "pos": [
+        6478,
+        6504
+      ]
+    },
+    {
+      "content": "Azure building blocks are application-level services that Azure offers, typically to those applications taking advantage of PaaS features, although IaaS resources might leverage some, like SQL Database, Traffic Manager, and others.",
+      "pos": [
+        6506,
+        6737
+      ]
+    },
+    {
+      "content": "These services rely on an array of artifacts that are created and registered in Azure.",
+      "pos": [
+        6739,
+        6825
+      ]
+    },
+    {
+      "content": "These also need to be considered in your naming conventions.",
+      "pos": [
+        6826,
+        6886
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for naming conventions",
+      "pos": [
+        6892,
+        6946
+      ]
+    },
+    {
+      "content": "Decision:",
+      "pos": [
+        6948,
+        6957
+      ]
+    },
+    {
+      "content": "What are your naming conventions for Azure resources?",
+      "pos": [
+        6961,
+        7014
+      ]
+    },
+    {
+      "content": "Task:",
+      "pos": [
+        7016,
+        7021
+      ]
+    },
+    {
+      "content": "Define the naming conventions in terms of affixes, hierarchy, string values, and other policies for Azure resources.",
+      "pos": [
+        7025,
+        7141
+      ]
+    },
+    {
+      "content": "2. Subscriptions and accounts",
+      "pos": [
+        7146,
+        7175
+      ]
+    },
+    {
+      "content": "In order to work with Azure, you need one or more Azure subscriptions.",
+      "pos": [
+        7177,
+        7247
+      ]
+    },
+    {
+      "content": "Resources, like cloud services or virtual machines, exist in the context of those subscriptions.",
+      "pos": [
+        7248,
+        7344
+      ]
+    },
+    {
+      "content": "Enterprise customers typically have an Enterprise Enrollment, which is the top-most resource in the hierarchy, and is associated to one or more accounts.",
+      "pos": [
+        7348,
+        7501
+      ]
+    },
+    {
+      "content": "For consumers and customers without an Enterprise Enrollment, the top-most resource is the account.",
+      "pos": [
+        7504,
+        7603
+      ]
+    },
+    {
+      "content": "Subscriptions are associated to accounts, and there can be one or more subscriptions per account.",
+      "pos": [
+        7606,
+        7703
+      ]
+    },
+    {
+      "content": "Azure records billing information at the subscription level.",
+      "pos": [
+        7704,
+        7764
+      ]
+    },
+    {
+      "content": "Due to the limit of two hierarchy levels on the Account/Subscription relationship, it is important to align the naming convention of accounts and subscriptions to the billing needs.",
+      "pos": [
+        7766,
+        7947
+      ]
+    },
+    {
+      "content": "For instance, if a global company uses Azure, they might choose to have one account per region, and have subscriptions managed at the region level.",
+      "pos": [
+        7948,
+        8095
+      ]
+    },
+    {
+      "content": "For instance, you might use this structure.",
+      "pos": [
+        8179,
+        8222
+      ]
+    },
+    {
+      "content": "Following the same example, if a region decides to have more than one subscription associated to a particular group, then the naming convention should incorporate a way to encode the extra on either the account or the subscription name.",
+      "pos": [
+        8306,
+        8542
+      ]
+    },
+    {
+      "content": "This organization allows massaging billing data to generate the new levels of hierarchy during billing reports.",
+      "pos": [
+        8543,
+        8654
+      ]
+    },
+    {
+      "content": "The organization could look like this.",
+      "pos": [
+        8738,
+        8776
+      ]
+    },
+    {
+      "content": "Microsoft provides detailed billing via a downloadable file for a single account or for all accounts in an enterprise agreement.",
+      "pos": [
+        8860,
+        8988
+      ]
+    },
+    {
+      "content": "You can process this file, for example, by using Microsoft Excel.",
+      "pos": [
+        8989,
+        9054
+      ]
+    },
+    {
+      "content": "This process would ingest the data, partition the resources that encode more than one level of the hierarchy into separate columns, and use a pivot table or PowerPivot to provide dynamic reporting capabilities.",
+      "pos": [
+        9055,
+        9265
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for subscriptions and accounts",
+      "pos": [
+        9271,
+        9333
+      ]
+    },
+    {
+      "content": "Decision:",
+      "pos": [
+        9335,
+        9344
+      ]
+    },
+    {
+      "content": "What set of subscriptions and accounts do you need to host your IT workload or infrastructure?",
+      "pos": [
+        9348,
+        9442
+      ]
+    },
+    {
+      "content": "Task:",
+      "pos": [
+        9444,
+        9449
+      ]
+    },
+    {
+      "content": "Create the set of subscriptions and accounts using your naming convention.",
+      "pos": [
+        9453,
+        9527
+      ]
+    },
+    {
+      "content": "3. Storage",
+      "pos": [
+        9532,
+        9542
+      ]
+    },
+    {
+      "content": "Azure Storage is an integral part of many Azure solutions.",
+      "pos": [
+        9544,
+        9602
+      ]
+    },
+    {
+      "content": "Azure Storage provides services for storing file data, unstructured data, and messages, and it is also part of the infrastructure supporting virtual machines.",
+      "pos": [
+        9603,
+        9761
+      ]
+    },
+    {
+      "content": "There are two types of storage accounts available from Azure.",
+      "pos": [
+        9763,
+        9824
+      ]
+    },
+    {
+      "content": "A standard storage account gives you access to blob storage (used for storing Azure virtual machine disks), table storage, queue storage, and file storage.",
+      "pos": [
+        9825,
+        9980
+      ]
+    },
+    {
+      "content": "Premium storage is designed for high-performance applications, such as SQL Servers in an AlwaysOn cluster, and currently supports Azure virtual machine disks only.",
+      "pos": [
+        9981,
+        10144
+      ]
+    },
+    {
+      "content": "Storage accounts are bound to scalability targets.",
+      "pos": [
+        10146,
+        10196
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Microsoft Azure subscription and service limits, quotas, and constraints<ept id=\"p1\">](../articles/azure-subscription-service-limits.md#storage-limits)</ept> to become familiar with current Azure storage limits.",
+      "pos": [
+        10197,
+        10394
+      ]
+    },
+    {
+      "content": "Also see <bpt id=\"p1\">[</bpt>Azure storage scalability and performance targets<ept id=\"p1\">](../articles/storage/storage-scalability-targets.md)</ept>.",
+      "pos": [
+        10395,
+        10508
+      ]
+    },
+    {
+      "content": "Azure creates virtual machines with an operating system disk, a temporary disk, and zero or more optional data disks.",
+      "pos": [
+        10510,
+        10627
+      ]
+    },
+    {
+      "content": "The operating system disk and data disks are Azure page blobs, whereas the temporary disk is stored locally on the node where the machine lives.",
+      "pos": [
+        10628,
+        10772
+      ]
+    },
+    {
+      "content": "This makes the temporary disk unfit for data that must persist during a system recycle, because the machine might silently be migrated from one node to another, losing any data in that disk.",
+      "pos": [
+        10773,
+        10963
+      ]
+    },
+    {
+      "content": "Do not store anything on the temporary drive.",
+      "pos": [
+        10964,
+        11009
+      ]
+    },
+    {
+      "content": "Operating system disks and data disks have a maximum size of 1023 gigabytes (GB) because the maximum size of a blob is 1024 GB and that must contain the metadata (footer) of the VHD file (a GB is 1024<ph id=\"ph1\">&lt;sup&gt;</ph>3<ph id=\"ph2\">&lt;/sup&gt;</ph> bytes).",
+      "pos": [
+        11011,
+        11231
+      ]
+    },
+    {
+      "content": "You can implement disk striping in Windows to surpass this limit.",
+      "pos": [
+        11232,
+        11297
+      ]
+    },
+    {
+      "content": "Striped disks",
+      "pos": [
+        11303,
+        11316
+      ]
+    },
+    {
+      "content": "Besides providing the ability to create disks larger than 1023 GB, in many instances, using striping for data disks enhances performance by allowing multiple blobs to back the storage for a single volume.",
+      "pos": [
+        11317,
+        11521
+      ]
+    },
+    {
+      "content": "With striping, the I/O required to write and read data from a single logical disk proceeds in parallel.",
+      "pos": [
+        11522,
+        11625
+      ]
+    },
+    {
+      "content": "Azure imposes limits on the amount of data disks and bandwidth available, depending on the virtual machine size.",
+      "pos": [
+        11627,
+        11739
+      ]
+    },
+    {
+      "content": "For details, see <bpt id=\"p1\">[</bpt>Sizes for virtual machines<ept id=\"p1\">](../articles/virtual-machines/virtual-machines-linux-sizes.md)</ept>.",
+      "pos": [
+        11740,
+        11848
+      ]
+    },
+    {
+      "content": "If you are using disk striping for Azure data disks, consider the following guidelines:",
+      "pos": [
+        11850,
+        11937
+      ]
+    },
+    {
+      "content": "Data disks should always be the maximum size (1023 GB)",
+      "pos": [
+        11941,
+        11995
+      ]
+    },
+    {
+      "content": "Attach the maximum data disks allowed for the virtual machine size",
+      "pos": [
+        11998,
+        12064
+      ]
+    },
+    {
+      "content": "Use storage spaces configuration",
+      "pos": [
+        12067,
+        12099
+      ]
+    },
+    {
+      "content": "Use storage striping configuration",
+      "pos": [
+        12102,
+        12136
+      ]
+    },
+    {
+      "content": "Avoid using Azure data disk caching options (caching policy = None)",
+      "pos": [
+        12139,
+        12206
+      ]
+    },
+    {
+      "pos": [
+        12208,
+        12391
+      ],
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Storage spaces - designing for performance<ept id=\"p1\">](http://social.technet.microsoft.com/wiki/contents/articles/15200.storage-spaces-designing-for-performance.aspx)</ept>."
+    },
+    {
+      "content": "Multiple storage accounts",
+      "pos": [
+        12397,
+        12422
+      ]
+    },
+    {
+      "content": "Using multiple storage accounts to back the disks associated with many virtual machines ensures that the aggregated I/O of those disks is well below the scalability targets for each one of those storage accounts.",
+      "pos": [
+        12424,
+        12636
+      ]
+    },
+    {
+      "content": "We recommend that you start with the deployment of one virtual machine per storage account.",
+      "pos": [
+        12638,
+        12729
+      ]
+    },
+    {
+      "content": "Storage layout design",
+      "pos": [
+        12735,
+        12756
+      ]
+    },
+    {
+      "content": "To implement these strategies to implement the disk subsystem of the virtual machines with good performance, an IT workload or infrastructure typically takes advantage of many storage accounts.",
+      "pos": [
+        12758,
+        12951
+      ]
+    },
+    {
+      "content": "These host many VHD blobs.",
+      "pos": [
+        12952,
+        12978
+      ]
+    },
+    {
+      "content": "In some instances, more than one blob is associated to one single volume in a virtual machine.",
+      "pos": [
+        12979,
+        13073
+      ]
+    },
+    {
+      "content": "This situation can add complexity to the management tasks.",
+      "pos": [
+        13075,
+        13133
+      ]
+    },
+    {
+      "content": "Designing a sound strategy for storage, including appropriate naming for the underlying disks and associated VHD blobs is key.",
+      "pos": [
+        13134,
+        13260
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for storage",
+      "pos": [
+        13266,
+        13309
+      ]
+    },
+    {
+      "content": "Decisions:",
+      "pos": [
+        13311,
+        13321
+      ]
+    },
+    {
+      "content": "Do you need disk striping to create disks larger than 500 terabytes (TB)?",
+      "pos": [
+        13325,
+        13398
+      ]
+    },
+    {
+      "content": "Do you need disk striping to achieve optimal performance for your workload?",
+      "pos": [
+        13401,
+        13476
+      ]
+    },
+    {
+      "content": "What set of storage accounts do you need to host your IT workload or infrastructure?",
+      "pos": [
+        13479,
+        13563
+      ]
+    },
+    {
+      "content": "Task:",
+      "pos": [
+        13565,
+        13570
+      ]
+    },
+    {
+      "content": "Create the set of storage accounts using your naming convention.",
+      "pos": [
+        13574,
+        13638
+      ]
+    },
+    {
+      "content": "You can use the Azure portal, the Azure classic portal, or the <bpt id=\"p1\">**</bpt>New-AzureStorageAccount<ept id=\"p1\">**</ept> PowerShell cmdlet.",
+      "pos": [
+        13639,
+        13748
+      ]
+    },
+    {
+      "content": "4. Cloud services",
+      "pos": [
+        13753,
+        13770
+      ]
+    },
+    {
+      "content": "Cloud services are a fundamental building block in Azure service management, both for PaaS and IaaS services.",
+      "pos": [
+        13772,
+        13881
+      ]
+    },
+    {
+      "content": "For PaaS, cloud services represent an association of roles whose instances can communicate among each other.",
+      "pos": [
+        13882,
+        13990
+      ]
+    },
+    {
+      "content": "Cloud services are associated to a public virtual IP (VIP) address and a load balancer, which takes incoming traffic from the Internet and load balances it to the roles configured to receive that traffic.",
+      "pos": [
+        13991,
+        14195
+      ]
+    },
+    {
+      "content": "In the case of IaaS, cloud services offer similar functionality, although in most cases, the load balancer functionality is used to forward traffic to specific TCP or UDP ports from the Internet to the many virtual machines within that cloud service.",
+      "pos": [
+        14197,
+        14447
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Cloud services do not exist in Azure Resource Manager.",
+      "pos": [
+        14451,
+        14518
+      ]
+    },
+    {
+      "content": "For an introduction to the advantages of Resource Manager, see <bpt id=\"p1\">[</bpt>Azure compute, network and storage providers under Azure Resource Manager<ept id=\"p1\">](../articles/virtual-machines/virtual-machines-windows-compare-deployment-models.md)</ept>.",
+      "pos": [
+        14519,
+        14742
+      ]
+    },
+    {
+      "content": "Cloud service names are especially important in IaaS because Azure uses them as part of the default naming convention for disks.",
+      "pos": [
+        14744,
+        14872
+      ]
+    },
+    {
+      "content": "The cloud service name can contain only letters, numbers, and hyphens.",
+      "pos": [
+        14873,
+        14943
+      ]
+    },
+    {
+      "content": "The first and last character in the field must be a letter or number.",
+      "pos": [
+        14944,
+        15013
+      ]
+    },
+    {
+      "content": "Azure exposes the cloud service names, because they are associated to the VIP, in the domain “cloudapp.net”.",
+      "pos": [
+        15015,
+        15123
+      ]
+    },
+    {
+      "content": "For a better user experience of the application, a vanity name should be configured as needed to replace the fully qualified cloud service name.",
+      "pos": [
+        15124,
+        15268
+      ]
+    },
+    {
+      "content": "This is typically done with a CNAME record in your public DNS that maps the public DNS name of your resource (for example, www.contoso.com) to the DNS name of the cloud service hosting the resource (for example, the cloud service hosting the web servers for www.contoso.com).",
+      "pos": [
+        15269,
+        15544
+      ]
+    },
+    {
+      "content": "In addition, the naming convention used for cloud services might need to tolerate exceptions because the cloud service names must be unique among all other Microsoft Azure cloud services, regardless of the Microsoft Azure tenant.",
+      "pos": [
+        15546,
+        15775
+      ]
+    },
+    {
+      "content": "One important limitation of cloud services to consider is that only one virtual machine management operation can be performed at a time for all the virtual machines in the cloud service.",
+      "pos": [
+        15777,
+        15963
+      ]
+    },
+    {
+      "content": "When you perform a virtual machine management operation on one virtual machine in the cloud service, you must wait until it is finished before you can perform a new management operation on another virtual machine.",
+      "pos": [
+        15964,
+        16177
+      ]
+    },
+    {
+      "content": "Therefore, you should keep the number of virtual machines in a cloud service low.",
+      "pos": [
+        16178,
+        16259
+      ]
+    },
+    {
+      "content": "Azure subscriptions can support a maximum of 200 cloud services.",
+      "pos": [
+        16261,
+        16325
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for cloud services",
+      "pos": [
+        16331,
+        16381
+      ]
+    },
+    {
+      "content": "Decision:",
+      "pos": [
+        16383,
+        16392
+      ]
+    },
+    {
+      "content": "What set of cloud services do you need to host your IT workload or infrastructure?",
+      "pos": [
+        16396,
+        16478
+      ]
+    },
+    {
+      "content": "Task:",
+      "pos": [
+        16480,
+        16485
+      ]
+    },
+    {
+      "content": "Create the set of cloud services using your naming convention.",
+      "pos": [
+        16489,
+        16551
+      ]
+    },
+    {
+      "content": "You can use the Azure classic portal or the <bpt id=\"p1\">**</bpt>New-AzureService<ept id=\"p1\">**</ept> PowerShell cmdlet.",
+      "pos": [
+        16552,
+        16635
+      ]
+    },
+    {
+      "content": "5. Virtual networks",
+      "pos": [
+        16640,
+        16659
+      ]
+    },
+    {
+      "content": "The next logical step is to create the virtual networks necessary to support the communications across the virtual machines in the solution.",
+      "pos": [
+        16661,
+        16801
+      ]
+    },
+    {
+      "content": "Although it is possible to host multiple virtual machines of an IT workload within just one cloud service, virtual networks are recommended.",
+      "pos": [
+        16802,
+        16942
+      ]
+    },
+    {
+      "content": "Virtual networks are a container for virtual machines for which you can also specify subnets, custom addressing, and DNS configuration options.",
+      "pos": [
+        16944,
+        17087
+      ]
+    },
+    {
+      "content": "Virtual machines within the same virtual network can communicate directly with other computers within the same virtual network, regardless of which cloud service they are a member of.",
+      "pos": [
+        17088,
+        17271
+      ]
+    },
+    {
+      "content": "Within the virtual network, this communication remains private, without the need for the communication to go through the public endpoints.",
+      "pos": [
+        17272,
+        17410
+      ]
+    },
+    {
+      "content": "This communication can occur via IP address, or by name, using a DNS server installed in the virtual network, or on-premises, if the virtual machine is connected to the corporate network.",
+      "pos": [
+        17411,
+        17598
+      ]
+    },
+    {
+      "content": "Site connectivity",
+      "pos": [
+        17604,
+        17621
+      ]
+    },
+    {
+      "content": "If on-premises users and computers do not require ongoing connectivity to virtual machines in an Azure virtual network, create a cloud-only virtual network.",
+      "pos": [
+        17622,
+        17778
+      ]
+    },
+    {
+      "content": "This is typically for Internet-facing workloads, such as an Internet-based web server.",
+      "pos": [
+        17863,
+        17949
+      ]
+    },
+    {
+      "content": "You can manage these virtual machines using Remote Desktop connections, remote PowerShell sessions, Secure Shell (SSH) connections, and point-to-site VPN connections.",
+      "pos": [
+        17950,
+        18116
+      ]
+    },
+    {
+      "content": "Because they do not connect to your on-premises network, cloud-only virtual networks can use any portion of the private IP address space.",
+      "pos": [
+        18118,
+        18255
+      ]
+    },
+    {
+      "content": "If on-premises users and computers require ongoing connectivity to virtual machines in an Azure virtual network, create a cross-premises virtual network and connect it to your on-premises network with an ExpressRoute or site-to-site VPN connection.",
+      "pos": [
+        18257,
+        18505
+      ]
+    },
+    {
+      "content": "In this configuration, the Azure virtual network is essentially a cloud-based extension of your on-premises network.",
+      "pos": [
+        18590,
+        18706
+      ]
+    },
+    {
+      "content": "Because they connect to your on-premises network, cross-premises virtual networks must use a portion of the address space used by your organization that is unique, and the routing infrastructure must support routing traffic to that portion by forwarding it to your on-premises VPN device.",
+      "pos": [
+        18708,
+        18996
+      ]
+    },
+    {
+      "content": "To allow packets to travel from your cross-premises virtual network to your on-premises network, you must configure the set of relevant on-premises address prefixes as part of the local network definition for the virtual network.",
+      "pos": [
+        18998,
+        19227
+      ]
+    },
+    {
+      "content": "Depending on the address space of the virtual network and the set of relevant on-premises locations, there can be many address prefixes in the local network.",
+      "pos": [
+        19228,
+        19385
+      ]
+    },
+    {
+      "content": "You can convert a cloud-only virtual network to a cross-premises virtual network, but it will most likely require you to renumber your virtual network address space, your subnets, and the virtual machines that use static Azure-assigned IP addresses, known as Dynamic IPs (DIPs).",
+      "pos": [
+        19387,
+        19665
+      ]
+    },
+    {
+      "content": "Therefore, carefully consider the type of virtual networks you need (cloud-only versus cross-premises) before you create them.",
+      "pos": [
+        19666,
+        19792
+      ]
+    },
+    {
+      "content": "Subnets",
+      "pos": [
+        19798,
+        19805
+      ]
+    },
+    {
+      "content": "Subnets allow you to organize resources that are related, either logically (for example, one subnet for virtual machines associated to the same application), or physically (for example, one subnet per cloud service), or to employ subnet isolation techniques for added security.",
+      "pos": [
+        19806,
+        20083
+      ]
+    },
+    {
+      "content": "For cross-premises virtual networks, you should design subnets with the same conventions that you use for on-premises resources, keeping in mind that <bpt id=\"p1\">**</bpt>Azure always uses the first three IP addresses of the address space for each subnet<ept id=\"p1\">**</ept>.",
+      "pos": [
+        20085,
+        20323
+      ]
+    },
+    {
+      "content": "To determine the number of addresses needed for the subnet, count the number of virtual machines that you need now, estimate for future growth, and then use the following table to determine the size of the subnet.",
+      "pos": [
+        20324,
+        20537
+      ]
+    },
+    {
+      "content": "Number of virtual machines needed",
+      "pos": [
+        20539,
+        20572
+      ]
+    },
+    {
+      "content": "Number of host bits needed",
+      "pos": [
+        20575,
+        20601
+      ]
+    },
+    {
+      "content": "Size of the subnet",
+      "pos": [
+        20604,
+        20622
+      ]
+    },
+    {
+      "content": "1–3",
+      "pos": [
+        20639,
+        20642
+      ]
+    },
+    {
+      "content": "3",
+      "pos": [
+        20645,
+        20646
+      ]
+    },
+    {
+      "content": "/29",
+      "pos": [
+        20649,
+        20652
+      ]
+    },
+    {
+      "content": "4–11",
+      "pos": [
+        20653,
+        20657
+      ]
+    },
+    {
+      "content": "4",
+      "pos": [
+        20664,
+        20665
+      ]
+    },
+    {
+      "content": "/28",
+      "pos": [
+        20668,
+        20671
+      ]
+    },
+    {
+      "content": "12–27",
+      "pos": [
+        20672,
+        20677
+      ]
+    },
+    {
+      "content": "5",
+      "pos": [
+        20680,
+        20681
+      ]
+    },
+    {
+      "content": "/27",
+      "pos": [
+        20684,
+        20687
+      ]
+    },
+    {
+      "content": "28–59",
+      "pos": [
+        20688,
+        20693
+      ]
+    },
+    {
+      "content": "6",
+      "pos": [
+        20696,
+        20697
+      ]
+    },
+    {
+      "content": "/26",
+      "pos": [
+        20700,
+        20703
+      ]
+    },
+    {
+      "content": "60–123",
+      "pos": [
+        20704,
+        20710
+      ]
+    },
+    {
+      "content": "7",
+      "pos": [
+        20713,
+        20714
+      ]
+    },
+    {
+      "content": "/25",
+      "pos": [
+        20717,
+        20720
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> For normal on-premises subnets, the maximum number of host addresses for a subnet with n host bits is 2<ph id=\"ph2\">&lt;sup&gt;</ph>n<ph id=\"ph3\">&lt;/sup&gt;</ph> – 2.",
+      "pos": [
+        20724,
+        20857
+      ]
+    },
+    {
+      "content": "For an Azure subnet, the maximum number of host addresses for a subnet with n host bits is 2<ph id=\"ph1\">&lt;sup&gt;</ph>n<ph id=\"ph2\">&lt;/sup&gt;</ph> – 5 (2 plus 3 for the addresses that Azure uses on each subnet).",
+      "pos": [
+        20858,
+        21027
+      ]
+    },
+    {
+      "content": "If you choose a subnet size that is too small, you will have to renumber and redeploy the virtual machines in the subnet.",
+      "pos": [
+        21029,
+        21150
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for virtual networks",
+      "pos": [
+        21156,
+        21208
+      ]
+    },
+    {
+      "content": "Decisions:",
+      "pos": [
+        21210,
+        21220
+      ]
+    },
+    {
+      "content": "What type of virtual network do you need to host your IT workload or infrastructure (cloud-only or cross-premises)?",
+      "pos": [
+        21224,
+        21339
+      ]
+    },
+    {
+      "content": "For cross-premises virtual networks, how much address space do you need to host the subnets and virtual machines now and for reasonable expansion in the future?",
+      "pos": [
+        21342,
+        21502
+      ]
+    },
+    {
+      "content": "Tasks:",
+      "pos": [
+        21504,
+        21510
+      ]
+    },
+    {
+      "content": "Define the address space for the virtual network.",
+      "pos": [
+        21514,
+        21563
+      ]
+    },
+    {
+      "content": "Define the set of subnets and the address space for each.",
+      "pos": [
+        21566,
+        21623
+      ]
+    },
+    {
+      "content": "For cross-premises virtual networks, define the set of local network address spaces for the on-premises locations that the virtual machines in the virtual network need to reach.",
+      "pos": [
+        21626,
+        21803
+      ]
+    },
+    {
+      "content": "Create the virtual network using your naming convention.",
+      "pos": [
+        21806,
+        21862
+      ]
+    },
+    {
+      "content": "You can use the Azure portal or the Azure classic portal.",
+      "pos": [
+        21863,
+        21920
+      ]
+    },
+    {
+      "content": "6. Availability sets",
+      "pos": [
+        21925,
+        21945
+      ]
+    },
+    {
+      "content": "In Azure PaaS, cloud services contain one or more roles that execute application code.",
+      "pos": [
+        21947,
+        22033
+      ]
+    },
+    {
+      "content": "Roles can have one or more virtual machine instances that the fabric automatically provisions.",
+      "pos": [
+        22034,
+        22128
+      ]
+    },
+    {
+      "content": "At any given time, Azure might update the instances in these roles, but because they are part of the same role, Azure knows not to update all at the same time to prevent a service outage for the role.",
+      "pos": [
+        22129,
+        22329
+      ]
+    },
+    {
+      "content": "In Azure IaaS, the concept of role is not significant, because each IaaS virtual machine represents a role with a single instance.",
+      "pos": [
+        22331,
+        22461
+      ]
+    },
+    {
+      "content": "In order to hint to Azure not to bring down two or more associated machines at the same time (for example, for operating system updates of the node where they reside), the concept of availability sets was introduced.",
+      "pos": [
+        22462,
+        22678
+      ]
+    },
+    {
+      "content": "An availability set tells Azure not to bring down all the machines in the same availability set at the same time to prevent a service outage.",
+      "pos": [
+        22679,
+        22820
+      ]
+    },
+    {
+      "content": "The virtual machine members of an availability set have a 99.95% uptime service level agreement.",
+      "pos": [
+        22821,
+        22917
+      ]
+    },
+    {
+      "content": "Availability sets must be part of the high-availability planning of the solution.",
+      "pos": [
+        22919,
+        23000
+      ]
+    },
+    {
+      "content": "An availability set is defined as the set of virtual machines within a single cloud service that have the same availability set name.",
+      "pos": [
+        23001,
+        23134
+      ]
+    },
+    {
+      "content": "You can create availability sets after you create cloud services.",
+      "pos": [
+        23135,
+        23200
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for availability sets",
+      "pos": [
+        23206,
+        23259
+      ]
+    },
+    {
+      "content": "Decision:",
+      "pos": [
+        23261,
+        23270
+      ]
+    },
+    {
+      "content": "How many availability sets do you need for the various roles and tiers in your IT workload or infrastructure?",
+      "pos": [
+        23274,
+        23383
+      ]
+    },
+    {
+      "content": "Task:",
+      "pos": [
+        23385,
+        23390
+      ]
+    },
+    {
+      "content": "Define the set of availability sets using your naming convention.",
+      "pos": [
+        23394,
+        23459
+      ]
+    },
+    {
+      "content": "You can associate a virtual machine to an availability set when you create the virtual machines, or you can associate a virtual machine to an availability set after the virtual machine has been created.",
+      "pos": [
+        23460,
+        23662
+      ]
+    },
+    {
+      "content": "7. Virtual machines",
+      "pos": [
+        23667,
+        23686
+      ]
+    },
+    {
+      "content": "In Azure PaaS, Azure manages virtual machines and their associated disks.",
+      "pos": [
+        23688,
+        23761
+      ]
+    },
+    {
+      "content": "You must create and name cloud services and roles, and then Azure creates instances associated to those roles.",
+      "pos": [
+        23762,
+        23872
+      ]
+    },
+    {
+      "content": "In the case of Azure IaaS, it is up to you to provide names for the cloud services, virtual machines, and associated disks.",
+      "pos": [
+        23873,
+        23996
+      ]
+    },
+    {
+      "content": "To reduce administrative burden, the Azure classic portal uses the computer name as a suggestion for the default name for the associated cloud service (in the case the customer chooses to create a new cloud service as part of the virtual machine creation wizard).",
+      "pos": [
+        23998,
+        24261
+      ]
+    },
+    {
+      "content": "In addition, Azure names disks and their supporting VHD blobs using a combination of the cloud service name, the computer name, and the creation date.",
+      "pos": [
+        24263,
+        24413
+      ]
+    },
+    {
+      "content": "In general, the number of disks is much greater than the number of virtual machines.",
+      "pos": [
+        24415,
+        24499
+      ]
+    },
+    {
+      "content": "You should be careful when manipulating virtual machines to prevent orphaning disks.",
+      "pos": [
+        24500,
+        24584
+      ]
+    },
+    {
+      "content": "Also, disks can be deleted without deleting the supporting blob.",
+      "pos": [
+        24585,
+        24649
+      ]
+    },
+    {
+      "content": "If this is the case, the blob remains in the storage account until manually deleted.",
+      "pos": [
+        24650,
+        24734
+      ]
+    },
+    {
+      "content": "Implementation guidelines recap for virtual machines",
+      "pos": [
+        24740,
+        24792
+      ]
+    },
+    {
+      "content": "Decision:",
+      "pos": [
+        24794,
+        24803
+      ]
+    },
+    {
+      "content": "How many virtual machines do you need to provide for the IT workload or infrastructure?",
+      "pos": [
+        24807,
+        24894
+      ]
+    },
+    {
+      "content": "Tasks:",
+      "pos": [
+        24896,
+        24902
+      ]
+    },
+    {
+      "content": "Define each virtual machine name using your naming convention.",
+      "pos": [
+        24906,
+        24968
+      ]
+    },
+    {
+      "pos": [
+        24971,
+        25138
+      ],
+      "content": "Create your virtual machines with the Azure portal, the Azure classic portal, the <bpt id=\"p1\">**</bpt>New-AzureVM<ept id=\"p1\">**</ept> PowerShell cmdlet, the Azure CLI, or with Resource Manager templates."
+    },
+    {
+      "content": "Example of an IT workload: The Contoso financial analysis engine",
+      "pos": [
+        25143,
+        25207
+      ]
+    },
+    {
+      "content": "The Contoso Corporation has developed a next-generation financial analysis engine with leading-edge proprietary algorithms to aid in futures market trading.",
+      "pos": [
+        25209,
+        25365
+      ]
+    },
+    {
+      "content": "They want to make this engine available to its customers as a set of servers in Azure, which consist of:",
+      "pos": [
+        25366,
+        25470
+      ]
+    },
+    {
+      "content": "Two (and eventually more) IIS-based web servers running custom web services in a web tier",
+      "pos": [
+        25474,
+        25563
+      ]
+    },
+    {
+      "content": "Two (and eventually more) IIS-based application servers that perform the calculations in an application tier",
+      "pos": [
+        25566,
+        25674
+      ]
+    },
+    {
+      "content": "A SQL Server 2014 cluster with AlwaysOn availability groups (two SQL Servers and a majority node witness) that stores historical and ongoing calculation data in a database tier",
+      "pos": [
+        25677,
+        25853
+      ]
+    },
+    {
+      "content": "Two Active Directory domain controllers for a self-contained forest and domain in the authentication tier, which is required by SQL Server clustering",
+      "pos": [
+        25856,
+        26005
+      ]
+    },
+    {
+      "content": "All of the servers are located on two subnets; a front end subnet for the web servers and a back end subnet for the application servers, a SQL Server 2014 cluster, and domain controllers",
+      "pos": [
+        26008,
+        26194
+      ]
+    },
+    {
+      "content": "Incoming secure web traffic from the Contoso clients on the Internet needs to be load-balanced among the web servers.",
+      "pos": [
+        26286,
+        26403
+      ]
+    },
+    {
+      "content": "Calculation request traffic in the form of HTTP requests from the web servers needs to be balanced among the application servers.",
+      "pos": [
+        26404,
+        26533
+      ]
+    },
+    {
+      "content": "Additionally, the engine must be designed for high availability.",
+      "pos": [
+        26534,
+        26598
+      ]
+    },
+    {
+      "content": "The resulting design must incorporate:",
+      "pos": [
+        26600,
+        26638
+      ]
+    },
+    {
+      "content": "A Contoso Azure subscription and account",
+      "pos": [
+        26642,
+        26682
+      ]
+    },
+    {
+      "content": "Storage accounts",
+      "pos": [
+        26685,
+        26701
+      ]
+    },
+    {
+      "content": "A virtual network with two subnets",
+      "pos": [
+        26704,
+        26738
+      ]
+    },
+    {
+      "content": "Availability sets for the sets of servers with a similar role",
+      "pos": [
+        26741,
+        26802
+      ]
+    },
+    {
+      "content": "Virtual machines",
+      "pos": [
+        26805,
+        26821
+      ]
+    },
+    {
+      "content": "A single resource group",
+      "pos": [
+        26824,
+        26847
+      ]
+    },
+    {
+      "content": "All of the above will follow these Contoso naming conventions:",
+      "pos": [
+        26849,
+        26911
+      ]
+    },
+    {
+      "content": "Contoso uses [IT workload]-[location]-[Azure resource] as a prefix.",
+      "pos": [
+        26915,
+        26982
+      ]
+    },
+    {
+      "content": "For this example, \"azfae\" (Azure Financial Analysis Engine) is the IT workload name and \"use\" (East US 2) is the location, because most of Contoso's initial customers are on the East Coast of the United States.",
+      "pos": [
+        26983,
+        27193
+      ]
+    },
+    {
+      "content": "Storage accounts use contosoazfaeusesa[description] Note that contoso was added to the prefix to provide uniqueness, and storage account names do not support the use of hyphens.",
+      "pos": [
+        27196,
+        27373
+      ]
+    },
+    {
+      "content": "Virtual networks use AZFAE-USE-VN[number].",
+      "pos": [
+        27376,
+        27418
+      ]
+    },
+    {
+      "content": "Availability sets use azfae-use-as-[role].",
+      "pos": [
+        27421,
+        27463
+      ]
+    },
+    {
+      "content": "Virtual machine names use azfae-use-vm-[vmname].",
+      "pos": [
+        27466,
+        27514
+      ]
+    },
+    {
+      "content": "Azure subscriptions and accounts",
+      "pos": [
+        27520,
+        27552
+      ]
+    },
+    {
+      "content": "Contoso is using their Enterprise subscription, named Contoso Enterprise Subscription, to provide billing for this IT workload.",
+      "pos": [
+        27554,
+        27681
+      ]
+    },
+    {
+      "content": "Storage accounts",
+      "pos": [
+        27687,
+        27703
+      ]
+    },
+    {
+      "content": "Contoso determined that they needed two storage accounts:",
+      "pos": [
+        27705,
+        27762
+      ]
+    },
+    {
+      "pos": [
+        27766,
+        27908
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>contosoazfaeusesawebapp<ept id=\"p1\">**</ept> for the standard storage of the web servers, application servers, and domain controlles and their extra data disks"
+    },
+    {
+      "pos": [
+        27911,
+        28025
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>contosoazfaeusesasqlclust<ept id=\"p1\">**</ept> for the premium storage of the SQL Server cluster servers and their extra data disks"
+    },
+    {
+      "content": "A virtual network with subnets",
+      "pos": [
+        28031,
+        28061
+      ]
+    },
+    {
+      "content": "Because the virtual network does not need ongoing connectivity to the Contoso on-premises network, Contoso decided on a cloud-only virtual network.",
+      "pos": [
+        28063,
+        28210
+      ]
+    },
+    {
+      "content": "They created a cloud-only virtual network with the following settings using the Azure portal:",
+      "pos": [
+        28212,
+        28305
+      ]
+    },
+    {
+      "content": "Name: AZFAE-USE-VN01",
+      "pos": [
+        28309,
+        28329
+      ]
+    },
+    {
+      "content": "Location: East US 2",
+      "pos": [
+        28332,
+        28351
+      ]
+    },
+    {
+      "content": "Virtual network address space: 10.0.0.0/8",
+      "pos": [
+        28354,
+        28395
+      ]
+    },
+    {
+      "content": "First subnet:",
+      "pos": [
+        28398,
+        28411
+      ]
+    },
+    {
+      "content": "Name: FrontEnd",
+      "pos": [
+        28418,
+        28432
+      ]
+    },
+    {
+      "content": "Address space: 10.0.1.0/24",
+      "pos": [
+        28439,
+        28465
+      ]
+    },
+    {
+      "content": "Second subnet:",
+      "pos": [
+        28468,
+        28482
+      ]
+    },
+    {
+      "content": "Name: BackEnd",
+      "pos": [
+        28489,
+        28502
+      ]
+    },
+    {
+      "content": "Address space: 10.0.2.0/24",
+      "pos": [
+        28509,
+        28535
+      ]
+    },
+    {
+      "content": "Availability sets",
+      "pos": [
+        28541,
+        28558
+      ]
+    },
+    {
+      "content": "To maintain high availability of all four tiers of their financial analysis engine, Contoso decided on four availability sets:",
+      "pos": [
+        28560,
+        28686
+      ]
+    },
+    {
+      "pos": [
+        28690,
+        28736
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-as-dc<ept id=\"p1\">**</ept> for the domain controllers"
+    },
+    {
+      "pos": [
+        28739,
+        28779
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-as-web<ept id=\"p1\">**</ept> for the web servers"
+    },
+    {
+      "pos": [
+        28782,
+        28830
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-as-app<ept id=\"p1\">**</ept> for the application servers"
+    },
+    {
+      "pos": [
+        28833,
+        28895
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-as-sql<ept id=\"p1\">**</ept> for the servers in the SQL Server cluster"
+    },
+    {
+      "content": "These availability sets will be created along with the virtual machines.",
+      "pos": [
+        28897,
+        28969
+      ]
+    },
+    {
+      "content": "Virtual machines",
+      "pos": [
+        28975,
+        28991
+      ]
+    },
+    {
+      "content": "Contoso decided on the following names for their Azure virtual machines:",
+      "pos": [
+        28993,
+        29065
+      ]
+    },
+    {
+      "pos": [
+        29069,
+        29122
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-dc01<ept id=\"p1\">**</ept> for the first domain controller"
+    },
+    {
+      "pos": [
+        29125,
+        29179
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-dc02<ept id=\"p1\">**</ept> for the second domain controller"
+    },
+    {
+      "pos": [
+        29182,
+        29229
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-web01<ept id=\"p1\">**</ept> for the first web server"
+    },
+    {
+      "pos": [
+        29232,
+        29280
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-web02<ept id=\"p1\">**</ept> for the second web server"
+    },
+    {
+      "pos": [
+        29283,
+        29338
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-app01<ept id=\"p1\">**</ept> for the first application server"
+    },
+    {
+      "pos": [
+        29341,
+        29397
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-app02<ept id=\"p1\">**</ept> for the second application server"
+    },
+    {
+      "pos": [
+        29400,
+        29473
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-sql01<ept id=\"p1\">**</ept> for the first SQL Server in the SQL Server cluster"
+    },
+    {
+      "pos": [
+        29476,
+        29550
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-sql02<ept id=\"p1\">**</ept> for the second SQL Server in the SQL Server cluster"
+    },
+    {
+      "pos": [
+        29553,
+        29633
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>azfae-use-vm-sqlmn01<ept id=\"p1\">**</ept> for the majority node witness in the SQL Server cluster"
+    },
+    {
+      "content": "Here is the resulting configuration.",
+      "pos": [
+        29635,
+        29671
+      ]
+    },
+    {
+      "content": "This configuration incorporates:",
+      "pos": [
+        29764,
+        29796
+      ]
+    },
+    {
+      "content": "A cloud-only virtual network with two subnets (FrontEnd and BackEnd)",
+      "pos": [
+        29800,
+        29868
+      ]
+    },
+    {
+      "content": "Two storage accounts",
+      "pos": [
+        29871,
+        29891
+      ]
+    },
+    {
+      "content": "Four availability sets, one for each tier of the financial analysis engine",
+      "pos": [
+        29894,
+        29968
+      ]
+    },
+    {
+      "content": "The virtual machines for the four tiers",
+      "pos": [
+        29971,
+        30010
+      ]
+    },
+    {
+      "content": "An external load balanced set for HTTPS-based web traffic from the Internet to the web servers",
+      "pos": [
+        30013,
+        30107
+      ]
+    },
+    {
+      "content": "An internal load balanced set for unencrypted web traffic from the web servers to the application servers",
+      "pos": [
+        30110,
+        30215
+      ]
+    },
+    {
+      "content": "A single resource group",
+      "pos": [
+        30218,
+        30241
+      ]
+    },
+    {
+      "content": "Additional resources",
+      "pos": [
+        30246,
+        30266
+      ]
+    },
+    {
+      "content": "Microsoft Azure subscription and service limits, quotas, and constraints",
+      "pos": [
+        30269,
+        30341
+      ]
+    },
+    {
+      "content": "Sizes for virtual machines",
+      "pos": [
+        30410,
+        30436
+      ]
+    },
+    {
+      "content": "Azure storage scalability and performance targets",
+      "pos": [
+        30502,
+        30551
+      ]
+    },
+    {
+      "content": "Datacenter extension reference architecture diagram",
+      "pos": [
+        30607,
+        30658
+      ]
+    },
+    {
+      "content": "Azure compute, network, and storage providers under Azure Resource Manager",
+      "pos": [
+        30732,
+        30806
+      ]
+    }
+  ],
+  "content": "\n\nAzure is an excellent platform to implement dev/test or proof-of-concept configurations, because it requires very little investment to test a particular approach to an implementation of your solutions. However, you must be able to distinguish the easy practices for a dev/test environment from the more difficult, detailed practices for a fully functional, production-ready implementation of an IT workload.\n\nThis guidance identifies many areas for which planning is vital to the success of an IT workload in Azure. In addition, planning provides an order to the creation of the necessary resources. Although there is some flexibility, we recommend that you apply the order in this article to your planning and decision-making.\n\nThis article was adapted from the content in the [Azure implementation guidelines](http://blogs.msdn.com/b/thecolorofazure/archive/2014/05/13/azure-implementation-guidelines.aspx) blog post. Thanks to Santiago Cánepa (Application Development Manager for Microsoft) and Hugo Salcedo (Application Development Manager for Microsoft) for their original material.\n\n> [AZURE.NOTE] Affinity groups have been deprecated. Their use is not described here. For more information, see [About regional VNets and affinity groups](../articles/virtual-network/virtual-networks-migrate-to-regional-vnet.md).\n\n## 1. Naming conventions\n\nYou should have a good naming convention in place before creating anything in Azure. A naming convention ensures that all the resources have a predictable name, which helps lower the administrative burden associated with managing those resources.\n\nYou might choose to follow a specific set of naming conventions defined for your entire organization or for a specific Azure subscription or account. Although it is easy for individuals within organizations to establish implicit rules when working with Azure resources, when a team needs to work on a project on Azure, that model does not scale well.\n\nYou should agree on a set of naming conventions up front. There are some considerations regarding naming conventions that cut across the sets of rules that make up those conventions.\n\n### Affixes\n\nWhen creating certain resources, Azure uses some defaults to simplify management of the resources that are associated with these resources. For example, when creating the first virtual machine for a new cloud service, the Azure classic portal attempts to use the virtual machine’s name for the name of a new cloud service for the virtual machine.\n\nTherefore, it is beneficial to identify types of resources that need an affix to identify that type. In addition, clearly specify whether the affix will be at:\n\n- The beginning of the name (prefix)\n- The end of the name (suffix)\n\nFor instance, here are two possible names for a resource group that hosts a calculation engine:\n\n- Rg-CalculationEngine (prefix)\n- CalculationEngine-Rg (suffix)\n\nAffixes can refer to different aspects that describe the particular resources. The following table shows some examples typically used.\n\nAspect | Examples | Notes\n--- | --- | ---\nEnvironment | dev, stg, prod | Depending on the purpose and name of each environment.\nLocation | usw (West US), use (East US 2) | Depending on the region of the datacenter or the region of the organization.\nAzure component, service, or product | Rg for resource group, Svc for cloud service, VNet for virtual network | Depending on the product for which the resource provides support.\nRole | sql, ora, sp, iis | Depending on the role of the virtual machine.\nInstance | 01, 02, 03, etc. | For resources that have more than one instance. For example, load balanced web servers in a cloud service.\n\nWhen establishing your naming conventions, make sure that they clearly state which affixes to use for each type of resource, and in which position (prefix vs suffix).\n\n### Dates\n\nIt is often important to determine the date of creation from the name of a resource. We recommend the YYYYMMDD date format. This format ensures that not only the full date is recorded, but also that two resources whose names differ only on the date will be sorted alphabetically and chronologically at the same time.\n\n### Naming resources\n\nYou should define each type of resource in the naming convention, which should have rules that define how to assign names to each resource that is created. These rules should apply to all types of resources, for example:\n\n- Subscriptions\n- Accounts\n- Storage accounts\n- Virtual networks\n- Subnets\n- Availability sets\n- Resource groups\n- Cloud services\n- Virtual machines\n- Endpoints\n- Network security groups\n- Roles\n\nTo ensure that the name provides enough information to determine to which resource it refers, you should use descriptive names.\n\n### Computer names\n\nWhen administrators create a virtual machine, Microsoft Azure requires them to provide a virtual machine name of up to 15 characters. Azure uses the virtual machine name as the Azure virtual machine resource name. Azure uses the same name as the computer name for the operating system installed in the virtual machine. However, these names might not always be the same.\n\nIn case a virtual machine is created from a .vhd image file that already contains an operating system, the virtual machine name in Azure can differ from the virtual machine’s operating system computer name. This situation can add a degree of difficulty to virtual machine management, which we therefore do not recommend. Assign the Azure virtual machine resource the same name as the computer name that you assign to the operating system of that virtual machine.\n\nWe recommend that the Azure virtual machine name be the same as the underlying operating system computer name. Because of this, follow the NetBIOS naming rules as described in [Microsoft NetBIOS computer naming conventions](https://support.microsoft.com/kb/188997/).\n\n### Storage account names\n\nStorage accounts have special rules governing their names. You can only use lowercase letters and numbers. See [Create a storage account](../storage/storage-create-storage-account.md#create-a-storage-account) for more information. Additionally, the storage account name, in combination with core.windows.net, should be a globally valid, unique DNS name. For instance, if the storage account is called mystorageaccount, the following resulting DNS names should be unique:\n\n- mystorageaccount.blob.core.windows.net\n- mystorageaccount.table.core.windows.net\n- mystorageaccount.queue.core.windows.net\n\n\n### Azure building block names\n\nAzure building blocks are application-level services that Azure offers, typically to those applications taking advantage of PaaS features, although IaaS resources might leverage some, like SQL Database, Traffic Manager, and others.\n\nThese services rely on an array of artifacts that are created and registered in Azure. These also need to be considered in your naming conventions.\n\n### Implementation guidelines recap for naming conventions\n\nDecision:\n\n- What are your naming conventions for Azure resources?\n\nTask:\n\n- Define the naming conventions in terms of affixes, hierarchy, string values, and other policies for Azure resources.\n\n## 2. Subscriptions and accounts\n\nIn order to work with Azure, you need one or more Azure subscriptions. Resources, like cloud services or virtual machines, exist in the context of those subscriptions.\n\n- Enterprise customers typically have an Enterprise Enrollment, which is the top-most resource in the hierarchy, and is associated to one or more accounts.\n- For consumers and customers without an Enterprise Enrollment, the top-most resource is the account.\n- Subscriptions are associated to accounts, and there can be one or more subscriptions per account. Azure records billing information at the subscription level.\n\nDue to the limit of two hierarchy levels on the Account/Subscription relationship, it is important to align the naming convention of accounts and subscriptions to the billing needs. For instance, if a global company uses Azure, they might choose to have one account per region, and have subscriptions managed at the region level.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/sub01.png)\n\nFor instance, you might use this structure.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/sub02.png)\n\nFollowing the same example, if a region decides to have more than one subscription associated to a particular group, then the naming convention should incorporate a way to encode the extra on either the account or the subscription name. This organization allows massaging billing data to generate the new levels of hierarchy during billing reports.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/sub03.png)\n\nThe organization could look like this.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/sub04.png)\n\nMicrosoft provides detailed billing via a downloadable file for a single account or for all accounts in an enterprise agreement. You can process this file, for example, by using Microsoft Excel. This process would ingest the data, partition the resources that encode more than one level of the hierarchy into separate columns, and use a pivot table or PowerPivot to provide dynamic reporting capabilities.\n\n### Implementation guidelines recap for subscriptions and accounts\n\nDecision:\n\n- What set of subscriptions and accounts do you need to host your IT workload or infrastructure?\n\nTask:\n\n- Create the set of subscriptions and accounts using your naming convention.\n\n## 3. Storage\n\nAzure Storage is an integral part of many Azure solutions. Azure Storage provides services for storing file data, unstructured data, and messages, and it is also part of the infrastructure supporting virtual machines.\n\nThere are two types of storage accounts available from Azure. A standard storage account gives you access to blob storage (used for storing Azure virtual machine disks), table storage, queue storage, and file storage. Premium storage is designed for high-performance applications, such as SQL Servers in an AlwaysOn cluster, and currently supports Azure virtual machine disks only.\n\nStorage accounts are bound to scalability targets. See [Microsoft Azure subscription and service limits, quotas, and constraints](../articles/azure-subscription-service-limits.md#storage-limits) to become familiar with current Azure storage limits. Also see [Azure storage scalability and performance targets](../articles/storage/storage-scalability-targets.md).\n\nAzure creates virtual machines with an operating system disk, a temporary disk, and zero or more optional data disks. The operating system disk and data disks are Azure page blobs, whereas the temporary disk is stored locally on the node where the machine lives. This makes the temporary disk unfit for data that must persist during a system recycle, because the machine might silently be migrated from one node to another, losing any data in that disk. Do not store anything on the temporary drive.\n\nOperating system disks and data disks have a maximum size of 1023 gigabytes (GB) because the maximum size of a blob is 1024 GB and that must contain the metadata (footer) of the VHD file (a GB is 1024<sup>3</sup> bytes). You can implement disk striping in Windows to surpass this limit.\n\n### Striped disks\nBesides providing the ability to create disks larger than 1023 GB, in many instances, using striping for data disks enhances performance by allowing multiple blobs to back the storage for a single volume. With striping, the I/O required to write and read data from a single logical disk proceeds in parallel.\n\nAzure imposes limits on the amount of data disks and bandwidth available, depending on the virtual machine size. For details, see [Sizes for virtual machines](../articles/virtual-machines/virtual-machines-linux-sizes.md).\n\nIf you are using disk striping for Azure data disks, consider the following guidelines:\n\n- Data disks should always be the maximum size (1023 GB)\n- Attach the maximum data disks allowed for the virtual machine size\n- Use storage spaces configuration\n- Use storage striping configuration\n- Avoid using Azure data disk caching options (caching policy = None)\n\nFor more information, see [Storage spaces - designing for performance](http://social.technet.microsoft.com/wiki/contents/articles/15200.storage-spaces-designing-for-performance.aspx).\n\n### Multiple storage accounts\n\nUsing multiple storage accounts to back the disks associated with many virtual machines ensures that the aggregated I/O of those disks is well below the scalability targets for each one of those storage accounts.\n\nWe recommend that you start with the deployment of one virtual machine per storage account.\n\n### Storage layout design\n\nTo implement these strategies to implement the disk subsystem of the virtual machines with good performance, an IT workload or infrastructure typically takes advantage of many storage accounts. These host many VHD blobs. In some instances, more than one blob is associated to one single volume in a virtual machine.\n\nThis situation can add complexity to the management tasks. Designing a sound strategy for storage, including appropriate naming for the underlying disks and associated VHD blobs is key.\n\n### Implementation guidelines recap for storage\n\nDecisions:\n\n- Do you need disk striping to create disks larger than 500 terabytes (TB)?\n- Do you need disk striping to achieve optimal performance for your workload?\n- What set of storage accounts do you need to host your IT workload or infrastructure?\n\nTask:\n\n- Create the set of storage accounts using your naming convention. You can use the Azure portal, the Azure classic portal, or the **New-AzureStorageAccount** PowerShell cmdlet.\n\n## 4. Cloud services\n\nCloud services are a fundamental building block in Azure service management, both for PaaS and IaaS services. For PaaS, cloud services represent an association of roles whose instances can communicate among each other. Cloud services are associated to a public virtual IP (VIP) address and a load balancer, which takes incoming traffic from the Internet and load balances it to the roles configured to receive that traffic.\n\nIn the case of IaaS, cloud services offer similar functionality, although in most cases, the load balancer functionality is used to forward traffic to specific TCP or UDP ports from the Internet to the many virtual machines within that cloud service.\n\n> [AZURE.NOTE] Cloud services do not exist in Azure Resource Manager. For an introduction to the advantages of Resource Manager, see [Azure compute, network and storage providers under Azure Resource Manager](../articles/virtual-machines/virtual-machines-windows-compare-deployment-models.md).\n\nCloud service names are especially important in IaaS because Azure uses them as part of the default naming convention for disks. The cloud service name can contain only letters, numbers, and hyphens. The first and last character in the field must be a letter or number.\n\nAzure exposes the cloud service names, because they are associated to the VIP, in the domain “cloudapp.net”. For a better user experience of the application, a vanity name should be configured as needed to replace the fully qualified cloud service name. This is typically done with a CNAME record in your public DNS that maps the public DNS name of your resource (for example, www.contoso.com) to the DNS name of the cloud service hosting the resource (for example, the cloud service hosting the web servers for www.contoso.com).\n\nIn addition, the naming convention used for cloud services might need to tolerate exceptions because the cloud service names must be unique among all other Microsoft Azure cloud services, regardless of the Microsoft Azure tenant.\n\nOne important limitation of cloud services to consider is that only one virtual machine management operation can be performed at a time for all the virtual machines in the cloud service. When you perform a virtual machine management operation on one virtual machine in the cloud service, you must wait until it is finished before you can perform a new management operation on another virtual machine. Therefore, you should keep the number of virtual machines in a cloud service low.\n\nAzure subscriptions can support a maximum of 200 cloud services.\n\n### Implementation guidelines recap for cloud services\n\nDecision:\n\n- What set of cloud services do you need to host your IT workload or infrastructure?\n\nTask:\n\n- Create the set of cloud services using your naming convention. You can use the Azure classic portal or the **New-AzureService** PowerShell cmdlet.\n\n## 5. Virtual networks\n\nThe next logical step is to create the virtual networks necessary to support the communications across the virtual machines in the solution. Although it is possible to host multiple virtual machines of an IT workload within just one cloud service, virtual networks are recommended.\n\nVirtual networks are a container for virtual machines for which you can also specify subnets, custom addressing, and DNS configuration options. Virtual machines within the same virtual network can communicate directly with other computers within the same virtual network, regardless of which cloud service they are a member of. Within the virtual network, this communication remains private, without the need for the communication to go through the public endpoints. This communication can occur via IP address, or by name, using a DNS server installed in the virtual network, or on-premises, if the virtual machine is connected to the corporate network.\n\n### Site connectivity\nIf on-premises users and computers do not require ongoing connectivity to virtual machines in an Azure virtual network, create a cloud-only virtual network.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/vnet01.png)\n\nThis is typically for Internet-facing workloads, such as an Internet-based web server. You can manage these virtual machines using Remote Desktop connections, remote PowerShell sessions, Secure Shell (SSH) connections, and point-to-site VPN connections.\n\nBecause they do not connect to your on-premises network, cloud-only virtual networks can use any portion of the private IP address space.\n\nIf on-premises users and computers require ongoing connectivity to virtual machines in an Azure virtual network, create a cross-premises virtual network and connect it to your on-premises network with an ExpressRoute or site-to-site VPN connection.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/vnet02.png)\n\nIn this configuration, the Azure virtual network is essentially a cloud-based extension of your on-premises network.\n\nBecause they connect to your on-premises network, cross-premises virtual networks must use a portion of the address space used by your organization that is unique, and the routing infrastructure must support routing traffic to that portion by forwarding it to your on-premises VPN device.\n\nTo allow packets to travel from your cross-premises virtual network to your on-premises network, you must configure the set of relevant on-premises address prefixes as part of the local network definition for the virtual network. Depending on the address space of the virtual network and the set of relevant on-premises locations, there can be many address prefixes in the local network.\n\nYou can convert a cloud-only virtual network to a cross-premises virtual network, but it will most likely require you to renumber your virtual network address space, your subnets, and the virtual machines that use static Azure-assigned IP addresses, known as Dynamic IPs (DIPs). Therefore, carefully consider the type of virtual networks you need (cloud-only versus cross-premises) before you create them.\n\n### Subnets\nSubnets allow you to organize resources that are related, either logically (for example, one subnet for virtual machines associated to the same application), or physically (for example, one subnet per cloud service), or to employ subnet isolation techniques for added security.\n\nFor cross-premises virtual networks, you should design subnets with the same conventions that you use for on-premises resources, keeping in mind that **Azure always uses the first three IP addresses of the address space for each subnet**. To determine the number of addresses needed for the subnet, count the number of virtual machines that you need now, estimate for future growth, and then use the following table to determine the size of the subnet.\n\nNumber of virtual machines needed | Number of host bits needed | Size of the subnet\n--- | --- | ---\n1–3 | 3 | /29\n4–11     | 4 | /28\n12–27 | 5 | /27\n28–59 | 6 | /26\n60–123 | 7 | /25\n\n> [AZURE.NOTE] For normal on-premises subnets, the maximum number of host addresses for a subnet with n host bits is 2<sup>n</sup> – 2. For an Azure subnet, the maximum number of host addresses for a subnet with n host bits is 2<sup>n</sup> – 5 (2 plus 3 for the addresses that Azure uses on each subnet).\n\nIf you choose a subnet size that is too small, you will have to renumber and redeploy the virtual machines in the subnet.\n\n### Implementation guidelines recap for virtual networks\n\nDecisions:\n\n- What type of virtual network do you need to host your IT workload or infrastructure (cloud-only or cross-premises)?\n- For cross-premises virtual networks, how much address space do you need to host the subnets and virtual machines now and for reasonable expansion in the future?\n\nTasks:\n\n- Define the address space for the virtual network.\n- Define the set of subnets and the address space for each.\n- For cross-premises virtual networks, define the set of local network address spaces for the on-premises locations that the virtual machines in the virtual network need to reach.\n- Create the virtual network using your naming convention. You can use the Azure portal or the Azure classic portal.\n\n## 6. Availability sets\n\nIn Azure PaaS, cloud services contain one or more roles that execute application code. Roles can have one or more virtual machine instances that the fabric automatically provisions. At any given time, Azure might update the instances in these roles, but because they are part of the same role, Azure knows not to update all at the same time to prevent a service outage for the role.\n\nIn Azure IaaS, the concept of role is not significant, because each IaaS virtual machine represents a role with a single instance. In order to hint to Azure not to bring down two or more associated machines at the same time (for example, for operating system updates of the node where they reside), the concept of availability sets was introduced. An availability set tells Azure not to bring down all the machines in the same availability set at the same time to prevent a service outage. The virtual machine members of an availability set have a 99.95% uptime service level agreement.\n\nAvailability sets must be part of the high-availability planning of the solution. An availability set is defined as the set of virtual machines within a single cloud service that have the same availability set name. You can create availability sets after you create cloud services.\n\n### Implementation guidelines recap for availability sets\n\nDecision:\n\n- How many availability sets do you need for the various roles and tiers in your IT workload or infrastructure?\n\nTask:\n\n- Define the set of availability sets using your naming convention. You can associate a virtual machine to an availability set when you create the virtual machines, or you can associate a virtual machine to an availability set after the virtual machine has been created.\n\n## 7. Virtual machines\n\nIn Azure PaaS, Azure manages virtual machines and their associated disks. You must create and name cloud services and roles, and then Azure creates instances associated to those roles. In the case of Azure IaaS, it is up to you to provide names for the cloud services, virtual machines, and associated disks.\n\nTo reduce administrative burden, the Azure classic portal uses the computer name as a suggestion for the default name for the associated cloud service (in the case the customer chooses to create a new cloud service as part of the virtual machine creation wizard).\n\nIn addition, Azure names disks and their supporting VHD blobs using a combination of the cloud service name, the computer name, and the creation date.\n\nIn general, the number of disks is much greater than the number of virtual machines. You should be careful when manipulating virtual machines to prevent orphaning disks. Also, disks can be deleted without deleting the supporting blob. If this is the case, the blob remains in the storage account until manually deleted.\n\n### Implementation guidelines recap for virtual machines\n\nDecision:\n\n- How many virtual machines do you need to provide for the IT workload or infrastructure?\n\nTasks:\n\n- Define each virtual machine name using your naming convention.\n- Create your virtual machines with the Azure portal, the Azure classic portal, the **New-AzureVM** PowerShell cmdlet, the Azure CLI, or with Resource Manager templates.\n\n## Example of an IT workload: The Contoso financial analysis engine\n\nThe Contoso Corporation has developed a next-generation financial analysis engine with leading-edge proprietary algorithms to aid in futures market trading. They want to make this engine available to its customers as a set of servers in Azure, which consist of:\n\n- Two (and eventually more) IIS-based web servers running custom web services in a web tier\n- Two (and eventually more) IIS-based application servers that perform the calculations in an application tier\n- A SQL Server 2014 cluster with AlwaysOn availability groups (two SQL Servers and a majority node witness) that stores historical and ongoing calculation data in a database tier\n- Two Active Directory domain controllers for a self-contained forest and domain in the authentication tier, which is required by SQL Server clustering\n- All of the servers are located on two subnets; a front end subnet for the web servers and a back end subnet for the application servers, a SQL Server 2014 cluster, and domain controllers\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/example-tiers.png)\n\nIncoming secure web traffic from the Contoso clients on the Internet needs to be load-balanced among the web servers. Calculation request traffic in the form of HTTP requests from the web servers needs to be balanced among the application servers. Additionally, the engine must be designed for high availability.\n\nThe resulting design must incorporate:\n\n- A Contoso Azure subscription and account\n- Storage accounts\n- A virtual network with two subnets\n- Availability sets for the sets of servers with a similar role\n- Virtual machines\n- A single resource group\n\nAll of the above will follow these Contoso naming conventions:\n\n- Contoso uses [IT workload]-[location]-[Azure resource] as a prefix. For this example, \"azfae\" (Azure Financial Analysis Engine) is the IT workload name and \"use\" (East US 2) is the location, because most of Contoso's initial customers are on the East Coast of the United States.\n- Storage accounts use contosoazfaeusesa[description] Note that contoso was added to the prefix to provide uniqueness, and storage account names do not support the use of hyphens.\n- Virtual networks use AZFAE-USE-VN[number].\n- Availability sets use azfae-use-as-[role].\n- Virtual machine names use azfae-use-vm-[vmname].\n\n### Azure subscriptions and accounts\n\nContoso is using their Enterprise subscription, named Contoso Enterprise Subscription, to provide billing for this IT workload.\n\n### Storage accounts\n\nContoso determined that they needed two storage accounts:\n\n- **contosoazfaeusesawebapp** for the standard storage of the web servers, application servers, and domain controlles and their extra data disks\n- **contosoazfaeusesasqlclust** for the premium storage of the SQL Server cluster servers and their extra data disks\n\n### A virtual network with subnets\n\nBecause the virtual network does not need ongoing connectivity to the Contoso on-premises network, Contoso decided on a cloud-only virtual network.\n\nThey created a cloud-only virtual network with the following settings using the Azure portal:\n\n- Name: AZFAE-USE-VN01\n- Location: East US 2\n- Virtual network address space: 10.0.0.0/8\n- First subnet:\n    - Name: FrontEnd\n    - Address space: 10.0.1.0/24\n- Second subnet:\n    - Name: BackEnd\n    - Address space: 10.0.2.0/24\n\n### Availability sets\n\nTo maintain high availability of all four tiers of their financial analysis engine, Contoso decided on four availability sets:\n\n- **azfae-use-as-dc** for the domain controllers\n- **azfae-use-as-web** for the web servers\n- **azfae-use-as-app** for the application servers\n- **azfae-use-as-sql** for the servers in the SQL Server cluster\n\nThese availability sets will be created along with the virtual machines.\n\n### Virtual machines\n\nContoso decided on the following names for their Azure virtual machines:\n\n- **azfae-use-vm-dc01** for the first domain controller\n- **azfae-use-vm-dc02** for the second domain controller\n- **azfae-use-vm-web01** for the first web server\n- **azfae-use-vm-web02** for the second web server\n- **azfae-use-vm-app01** for the first application server\n- **azfae-use-vm-app02** for the second application server\n- **azfae-use-vm-sql01** for the first SQL Server in the SQL Server cluster\n- **azfae-use-vm-sql02** for the second SQL Server in the SQL Server cluster\n- **azfae-use-vm-sqlmn01** for the majority node witness in the SQL Server cluster\n\nHere is the resulting configuration.\n\n![](./media/virtual-machines-common-infrastructure-service-guidelines/example-config.png)\n\nThis configuration incorporates:\n\n- A cloud-only virtual network with two subnets (FrontEnd and BackEnd)\n- Two storage accounts\n- Four availability sets, one for each tier of the financial analysis engine\n- The virtual machines for the four tiers\n- An external load balanced set for HTTPS-based web traffic from the Internet to the web servers\n- An internal load balanced set for unencrypted web traffic from the web servers to the application servers\n- A single resource group\n\n## Additional resources\n\n[Microsoft Azure subscription and service limits, quotas, and constraints](../articles/azure-subscription-service-limits.md#storage-limits)\n\n[Sizes for virtual machines](../articles/virtual-machines/virtual-machines-linux-sizes.md)\n\n[Azure storage scalability and performance targets](../articles/storage/storage-scalability-targets.md)\n\n[Datacenter extension reference architecture diagram](https://gallery.technet.microsoft.com/Datacenter-extension-687b1d84)\n\n\n[Azure compute, network, and storage providers under Azure Resource Manager](../articles/virtual-machines/virtual-machines-windows-compare-deployment-models.md)\n\n"
+}

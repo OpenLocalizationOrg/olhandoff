@@ -1,0 +1,159 @@
+{
+  "nodes": [
+    {
+      "content": "In order to support the offline features of mobile services, we used the <ph id=\"ph1\">`IMobileServiceSyncTable`</ph> interface and initialized <ph id=\"ph2\">`MobileServiceClient.SyncContext`</ph> with a local store.",
+      "pos": [
+        0,
+        178
+      ]
+    },
+    {
+      "content": "In this case the local store was a SQLite database.",
+      "pos": [
+        179,
+        230
+      ]
+    },
+    {
+      "content": "The normal CRUD operations for mobile services work as if the app is still connected but, all the operations occur against the local store.",
+      "pos": [
+        232,
+        371
+      ]
+    },
+    {
+      "pos": [
+        373,
+        540
+      ],
+      "content": "When we wanted to synchronize the local store with the server, we used the <ph id=\"ph1\">`IMobileServiceSyncTable.PullAsync`</ph> and <ph id=\"ph2\">`MobileServiceClient.SyncContext.PushAsync`</ph> methods."
+    },
+    {
+      "content": "To push changes to the server, we called <ph id=\"ph1\">`IMobileServiceSyncContext.PushAsync()`</ph>.",
+      "pos": [
+        545,
+        626
+      ]
+    },
+    {
+      "content": "This method is a member of <ph id=\"ph1\">`IMobileServicesSyncContext`</ph> instead of the sync table because it will push changes across all tables.",
+      "pos": [
+        627,
+        756
+      ]
+    },
+    {
+      "content": "Only records that have been modified in some way locally (through CUD operations) will be sent to the server.",
+      "pos": [
+        762,
+        871
+      ]
+    },
+    {
+      "pos": [
+        878,
+        976
+      ],
+      "content": "To pull data from a table on the server to the app, we called <ph id=\"ph1\">`IMobileServiceSyncTable.PullAsync`</ph>."
+    },
+    {
+      "content": "A pull always issues a push first.",
+      "pos": [
+        982,
+        1016
+      ]
+    },
+    {
+      "content": "This is to ensure all tables in the local store along with relationships remain consistent.",
+      "pos": [
+        1017,
+        1108
+      ]
+    },
+    {
+      "content": "There are also overloads of <ph id=\"ph1\">`PullAsync()`</ph> that allow a query to be specified in order to filter the data that is stored on the client.",
+      "pos": [
+        1114,
+        1248
+      ]
+    },
+    {
+      "content": "If a query is not passed, <ph id=\"ph1\">`PullAsync()`</ph> will pull all rows in the corresponding table (or query).",
+      "pos": [
+        1249,
+        1346
+      ]
+    },
+    {
+      "content": "You can pass the query to filter only the changes your app needs to sync with.",
+      "pos": [
+        1347,
+        1425
+      ]
+    },
+    {
+      "content": "To enable incremental sync, pass a query ID to <ph id=\"ph1\">`PullAsync()`</ph>.",
+      "pos": [
+        1429,
+        1490
+      ]
+    },
+    {
+      "content": "The query ID is used to store the last updated timestamp from the results of the last pull operation.",
+      "pos": [
+        1491,
+        1592
+      ]
+    },
+    {
+      "content": "The query ID should be a descriptive string that is unique for each logical query in your app.",
+      "pos": [
+        1593,
+        1687
+      ]
+    },
+    {
+      "content": "If the query has a parameter, then the same parameter value has to be part of the query ID.",
+      "pos": [
+        1688,
+        1779
+      ]
+    },
+    {
+      "content": "For instance, if you are filtering on userid, it needs to be part of the query ID:",
+      "pos": [
+        1785,
+        1867
+      ]
+    },
+    {
+      "content": "If you want to opt out of incremental sync, pass <ph id=\"ph1\">`null`</ph> as the query ID.",
+      "pos": [
+        1962,
+        2034
+      ]
+    },
+    {
+      "content": "In this case, all records will be retrieved on every call to <ph id=\"ph1\">`PullAsync`</ph>, which is potentially inefficient.",
+      "pos": [
+        2035,
+        2142
+      ]
+    },
+    {
+      "content": "To remove records from the device local store when they have been deleted in your mobile service database, you should enable [Soft Delete].",
+      "pos": [
+        2146,
+        2285
+      ]
+    },
+    {
+      "content": "Otherwise, your app should periodically call <ph id=\"ph1\">`IMobileServiceSyncTable.PurgeAsync()`</ph> to purge the local store.",
+      "pos": [
+        2286,
+        2395
+      ]
+    }
+  ],
+  "content": "In order to support the offline features of mobile services, we used the `IMobileServiceSyncTable` interface and initialized `MobileServiceClient.SyncContext` with a local store. In this case the local store was a SQLite database.\n\nThe normal CRUD operations for mobile services work as if the app is still connected but, all the operations occur against the local store.\n\nWhen we wanted to synchronize the local store with the server, we used the `IMobileServiceSyncTable.PullAsync` and `MobileServiceClient.SyncContext.PushAsync` methods.\n\n*  To push changes to the server, we called `IMobileServiceSyncContext.PushAsync()`. This method is a member of `IMobileServicesSyncContext` instead of the sync table because it will push changes across all tables.\n\n    Only records that have been modified in some way locally (through CUD operations) will be sent to the server.\n   \n* To pull data from a table on the server to the app, we called `IMobileServiceSyncTable.PullAsync`.\n\n    A pull always issues a push first. This is to ensure all tables in the local store along with relationships remain consistent.\n\n    There are also overloads of `PullAsync()` that allow a query to be specified in order to filter the data that is stored on the client. If a query is not passed, `PullAsync()` will pull all rows in the corresponding table (or query). You can pass the query to filter only the changes your app needs to sync with.\n\n* To enable incremental sync, pass a query ID to `PullAsync()`. The query ID is used to store the last updated timestamp from the results of the last pull operation. The query ID should be a descriptive string that is unique for each logical query in your app. If the query has a parameter, then the same parameter value has to be part of the query ID.\n\n    For instance, if you are filtering on userid, it needs to be part of the query ID:\n\n        await PullAsync(\"todoItems\" + userid, syncTable.Where(u => u.UserId = userid));\n\n    If you want to opt out of incremental sync, pass `null` as the query ID. In this case, all records will be retrieved on every call to `PullAsync`, which is potentially inefficient.\n\n* To remove records from the device local store when they have been deleted in your mobile service database, you should enable [Soft Delete]. Otherwise, your app should periodically call `IMobileServiceSyncTable.PurgeAsync()` to purge the local store.\n"
+}

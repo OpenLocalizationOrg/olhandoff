@@ -1,0 +1,103 @@
+{
+  "nodes": [
+    {
+      "content": "The previous example showed a standard sign-in, which requires the client to contact both the identity provider and the mobile service every time that the app starts.",
+      "pos": [
+        1,
+        167
+      ]
+    },
+    {
+      "content": "Not only is this method inefficient, you can run into usage-relates issues should many customers try to start you app at the same time.",
+      "pos": [
+        168,
+        303
+      ]
+    },
+    {
+      "content": "A better approach is to cache the authorization token returned by Mobile Services and try to use this first before using a provider-based sign-in.",
+      "pos": [
+        304,
+        450
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>You can cache the token issued by Mobile Services regardless of whether you are using client-managed or service-managed authentication.",
+      "pos": [
+        453,
+        600
+      ]
+    },
+    {
+      "content": "This tutorial uses service-managed authentication.",
+      "pos": [
+        601,
+        651
+      ]
+    },
+    {
+      "pos": [
+        656,
+        752
+      ],
+      "content": "In the default.js project file, replace the existing <bpt id=\"p1\">**</bpt>Login<ept id=\"p1\">**</ept> function with the following code:"
+    },
+    {
+      "pos": [
+        1992,
+        2063
+      ],
+      "content": "Replace the existing <bpt id=\"p1\">**</bpt>authenticate<ept id=\"p1\">**</ept> function with the following code:"
+    },
+    {
+      "content": "In this version of <bpt id=\"p1\">**</bpt>authenticate<ept id=\"p1\">**</ept>, the app tries to use credentials stored in the <bpt id=\"p2\">**</bpt>PasswordVault<ept id=\"p2\">**</ept> to access the mobile service.",
+      "pos": [
+        3847,
+        3978
+      ]
+    },
+    {
+      "content": "A simple query is sent to verify that the stored token is not expired.",
+      "pos": [
+        3979,
+        4049
+      ]
+    },
+    {
+      "content": "When a 401 is returned, a regular provider-based sign-in is attempted.",
+      "pos": [
+        4050,
+        4120
+      ]
+    },
+    {
+      "content": "A regular sign-in is also performed when there is no stored credential.",
+      "pos": [
+        4121,
+        4192
+      ]
+    },
+    {
+      "content": "Restart the app twice.",
+      "pos": [
+        4197,
+        4219
+      ]
+    },
+    {
+      "content": "Notice that on the first start-up, sign-in with the provider is again required.",
+      "pos": [
+        4225,
+        4304
+      ]
+    },
+    {
+      "content": "However, on the second restart the cached credentials are used and sign-in is bypassed.",
+      "pos": [
+        4305,
+        4392
+      ]
+    }
+  ],
+  "content": "\nThe previous example showed a standard sign-in, which requires the client to contact both the identity provider and the mobile service every time that the app starts. Not only is this method inefficient, you can run into usage-relates issues should many customers try to start you app at the same time. A better approach is to cache the authorization token returned by Mobile Services and try to use this first before using a provider-based sign-in.\n\n>[AZURE.NOTE]You can cache the token issued by Mobile Services regardless of whether you are using client-managed or service-managed authentication. This tutorial uses service-managed authentication.\n\n1. In the default.js project file, replace the existing **Login** function with the following code:\n\n        var credential = null;\n        var vault = new Windows.Security.Credentials.PasswordVault();\n\n        // Request authentication from Mobile Services using a Facebook login.\n        var login = function () {\n            return new WinJS.Promise(function (complete) {\n                client.login(\"facebook\").done(function (results) {\n                    // Create a credential for the returned user.\n                    credential = new Windows.Security.Credentials\n                        .PasswordCredential(\"Facebook\", results.userId,\n                        results.mobileServiceAuthenticationToken);\n                    vault.add(credential);\n                    userId = results.userId;\n\n                    refreshTodoItems();\n                    var message = \"You are now logged in as: \" + userId;\n                    var dialog = new Windows.UI.Popups.MessageDialog(message);\n                    dialog.showAsync().done(complete);\n                }, function (error) {\n                    var dialog = new Windows.UI.Popups\n                        .MessageDialog(\"An error occurred during login\", \"Login Required\");\n                    dialog.showAsync().done(complete);\n                });\n            });\n        }\n\n2. Replace the existing **authenticate** function with the following code:\n\n        var authenticate = function () {\n            // Try to get a stored credential from the PasswordVault.                \n            try{\n                credential = vault.findAllByResource(\"Facebook\").getAt(0);\n            }\n            catch (error) {\n                // This is expected when there's no stored credential.\n            }\n            \n            if (credential) {\n                // Set the user from the returned credential.   \n                credential.retrievePassword();\n                client.currentUser = {\n                    \"userId\": credential.userName,\n                    \"mobileServiceAuthenticationToken\": credential.password\n                };\n\n                // Try to return an item now to determine if the cached credential has expired.\n                todoTable.take(1).read()\n                            .done(function () {\n                                refreshTodoItems();\n                            }, function (error) {\n                                if (error.request.status === 401) {\n                                    login(credential, vault).then(function () {\n                                        if (!credential) {\n\n                                            // Authentication failed, try again.\n                                            authenticate();\n                                        }\n                                    });\n                                }                                   \n                            });\n            } else {\n\n                login().then(function () {\n                    if (!credential) {\n                        // Authentication failed, try again.\n                        authenticate();\n                    }\n                });\n            }\n        }\n\n    In this version of **authenticate**, the app tries to use credentials stored in the **PasswordVault** to access the mobile service. A simple query is sent to verify that the stored token is not expired. When a 401 is returned, a regular provider-based sign-in is attempted. A regular sign-in is also performed when there is no stored credential.\n\n3. Restart the app twice.\n\n    Notice that on the first start-up, sign-in with the provider is again required. However, on the second restart the cached credentials are used and sign-in is bypassed. "
+}

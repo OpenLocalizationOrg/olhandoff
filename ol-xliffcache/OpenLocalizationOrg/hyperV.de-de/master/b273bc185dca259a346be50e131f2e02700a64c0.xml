@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        4,
+        69
+      ],
+      "content": "Create a new class in the project called <ph id=\"ph1\">`ToDoBroadcastReceiver`</ph>."
+    },
+    {
+      "pos": [
+        74,
+        144
+      ],
+      "content": "Add the following using statements to <bpt id=\"p1\">**</bpt>ToDoBroadcastReceiver<ept id=\"p1\">**</ept> class:"
+    },
+    {
+      "pos": [
+        229,
+        334
+      ],
+      "content": "Add the following permission requests between the <bpt id=\"p1\">**</bpt>using<ept id=\"p1\">**</ept> statements and the <bpt id=\"p2\">**</bpt>namespace<ept id=\"p2\">**</ept> declaration:"
+    },
+    {
+      "pos": [
+        890,
+        973
+      ],
+      "content": "Replace the existing <bpt id=\"p1\">**</bpt>ToDoBroadcastReceiver<ept id=\"p1\">**</ept> class definition with the following:"
+    },
+    {
+      "pos": [
+        1756,
+        1917
+      ],
+      "content": "In the above code, you must replace <bpt id=\"p1\">_</bpt><ph id=\"ph1\">`&lt;PROJECT_NUMBER&gt;`</ph><ept id=\"p1\">_</ept> with the project number assigned by Google when you provisioned your app in the Google developer portal."
+    },
+    {
+      "pos": [
+        1923,
+        2038
+      ],
+      "content": "In the ToDoBroadcastReceiver.cs project file, add the following code that defines the <bpt id=\"p1\">**</bpt>PushHandlerService<ept id=\"p1\">**</ept> class:"
+    },
+    {
+      "pos": [
+        2360,
+        2478
+      ],
+      "content": "Note that this class derives from <bpt id=\"p1\">**</bpt>GcmServiceBase<ept id=\"p1\">**</ept> and that the <bpt id=\"p2\">**</bpt>Service<ept id=\"p2\">**</ept> attribute must be applied to this class."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>The <bpt id=\"p1\">**</bpt>GcmServiceBase<ept id=\"p1\">**</ept> class implements the <bpt id=\"p2\">**</bpt>OnRegistered()<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>OnUnRegistered()<ept id=\"p3\">**</ept>, <bpt id=\"p4\">**</bpt>OnMessage()<ept id=\"p4\">**</ept> and <bpt id=\"p5\">**</bpt>OnError()<ept id=\"p5\">**</ept> methods.",
+      "pos": [
+        2485,
+        2625
+      ]
+    },
+    {
+      "content": "You must override these methods in the <bpt id=\"p1\">**</bpt>PushHandlerService<ept id=\"p1\">**</ept> class.",
+      "pos": [
+        2626,
+        2694
+      ]
+    },
+    {
+      "pos": [
+        2699,
+        2808
+      ],
+      "content": "Add the following code to the <bpt id=\"p1\">**</bpt>PushHandlerService<ept id=\"p1\">**</ept> class that overrides the <bpt id=\"p2\">**</bpt>OnRegistered<ept id=\"p2\">**</ept> event handler."
+    },
+    {
+      "content": "This method uses the returned GCM registration ID to register with Azure for push notifications.",
+      "pos": [
+        3997,
+        4093
+      ]
+    },
+    {
+      "pos": [
+        4099,
+        4183
+      ],
+      "content": "Override the <bpt id=\"p1\">**</bpt>OnMessage<ept id=\"p1\">**</ept> method in <bpt id=\"p2\">**</bpt>PushHandlerService<ept id=\"p2\">**</ept> with the following code:"
+    },
+    {
+      "pos": [
+        5653,
+        5737
+      ],
+      "content": "Override the <bpt id=\"p1\">**</bpt>OnUnRegistered()<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>OnError()<ept id=\"p2\">**</ept> methods with the following code."
+    }
+  ],
+  "content": "\n4. Create a new class in the project called `ToDoBroadcastReceiver`.\n\n5. Add the following using statements to **ToDoBroadcastReceiver** class:\n\n        using Gcm.Client;\n        using Microsoft.WindowsAzure.MobileServices;\n\n6. Add the following permission requests between the **using** statements and the **namespace** declaration:\n\n        [assembly: Permission(Name = \"@PACKAGE_NAME@.permission.C2D_MESSAGE\")]\n        [assembly: UsesPermission(Name = \"@PACKAGE_NAME@.permission.C2D_MESSAGE\")]\n        [assembly: UsesPermission(Name = \"com.google.android.c2dm.permission.RECEIVE\")]\n\n        //GET_ACCOUNTS is only needed for android versions 4.0.3 and below\n        [assembly: UsesPermission(Name = \"android.permission.GET_ACCOUNTS\")]\n        [assembly: UsesPermission(Name = \"android.permission.INTERNET\")]\n        [assembly: UsesPermission(Name = \"android.permission.WAKE_LOCK\")]\n\n7. Replace the existing **ToDoBroadcastReceiver** class definition with the following:\n \n        [BroadcastReceiver(Permission = Gcm.Client.Constants.PERMISSION_GCM_INTENTS)]\n        [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_MESSAGE }, \n            Categories = new string[] { \"@PACKAGE_NAME@\" })]\n        [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_REGISTRATION_CALLBACK }, \n            Categories = new string[] { \"@PACKAGE_NAME@\" })]\n        [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_LIBRARY_RETRY }, \n        Categories = new string[] { \"@PACKAGE_NAME@\" })]\n        public class ToDoBroadcastReceiver : GcmBroadcastReceiverBase<PushHandlerService>\n        {\n            // Set the Google app ID.\n            public static string[] senderIDs = new string[] { \"<PROJECT_NUMBER>\" };\n        }\n\n    In the above code, you must replace _`<PROJECT_NUMBER>`_ with the project number assigned by Google when you provisioned your app in the Google developer portal. \n\n8. In the ToDoBroadcastReceiver.cs project file, add the following code that defines the **PushHandlerService** class:\n \n        // The ServiceAttribute must be applied to the class.\n        [Service] \n        public class PushHandlerService : GcmServiceBase\n        {\n            public static string RegistrationID { get; private set; }\n \n            public PushHandlerService() : base(ToDoBroadcastReceiver.senderIDs) { }\n        }\n\n    Note that this class derives from **GcmServiceBase** and that the **Service** attribute must be applied to this class.\n\n    >[AZURE.NOTE]The **GcmServiceBase** class implements the **OnRegistered()**, **OnUnRegistered()**, **OnMessage()** and **OnError()** methods. You must override these methods in the **PushHandlerService** class.\n\n5. Add the following code to the **PushHandlerService** class that overrides the **OnRegistered** event handler. \n\n        protected override void OnRegistered(Context context, string registrationId)\n        {\n            System.Diagnostics.Debug.WriteLine(\"The device has been registered with GCM.\", \"Success!\");\n            \n            // Get the MobileServiceClient from the current activity instance.\n            MobileServiceClient client = ToDoActivity.CurrentActivity.CurrentClient;           \n            var push = client.GetPush();\n\n            List<string> tags = null;\n\n            //// (Optional) Uncomment to add tags to the registration.\n            //var tags = new List<string>() { \"myTag\" }; // create tags if you want\n\n            try\n            {\n                // Make sure we run the registration on the same thread as the activity, \n                // to avoid threading errors.\n                ToDoActivity.CurrentActivity.RunOnUiThread(\n                    async () => await push.RegisterNativeAsync(registrationId, tags));\n            }\n            catch (Exception ex)\n            {\n                System.Diagnostics.Debug.WriteLine(\n                    string.Format(\"Error with Azure push registration: {0}\", ex.Message));                \n            }\n        }\n\n    This method uses the returned GCM registration ID to register with Azure for push notifications.\n\n10. Override the **OnMessage** method in **PushHandlerService** with the following code:\n\n        protected override void OnMessage(Context context, Intent intent)\n        {          \n            string message = string.Empty;\n\n            // Extract the push notification message from the intent.\n            if (intent.Extras.ContainsKey(\"message\"))\n            {\n                message = intent.Extras.Get(\"message\").ToString();\n                var title = \"New item added:\";\n\n                // Create a notification manager to send the notification.\n                var notificationManager = \n                    GetSystemService(Context.NotificationService) as NotificationManager;\n\n                // Create a new intent to show the notification in the UI. \n                PendingIntent contentIntent = \n                    PendingIntent.GetActivity(context, 0, \n                    new Intent(this, typeof(ToDoActivity)), 0);           \n\n                // Create the notification using the builder.\n                var builder = new Notification.Builder(context);\n                builder.SetAutoCancel(true);\n                builder.SetContentTitle(title);\n                builder.SetContentText(message);\n                builder.SetSmallIcon(Resource.Drawable.ic_launcher);\n                builder.SetContentIntent(contentIntent);\n                var notification = builder.Build();\n\n                // Display the notification in the Notifications Area.\n                notificationManager.Notify(1, notification);\n\n            }\n        }\n\n12. Override the **OnUnRegistered()** and **OnError()** methods with the following code.\n\n        protected override void OnUnRegistered(Context context, string registrationId)\n        {\n            throw new NotImplementedException();\n        }\n\n        protected override void OnError(Context context, string errorId)\n        {\n            System.Diagnostics.Debug.WriteLine(\n                string.Format(\"Error occurred in the notification: {0}.\", errorId));\n        }"
+}

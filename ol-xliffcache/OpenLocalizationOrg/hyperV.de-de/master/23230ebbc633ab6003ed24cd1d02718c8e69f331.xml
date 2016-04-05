@@ -1,0 +1,131 @@
+{
+  "nodes": [
+    {
+      "content": "Receiving messages on the simulated device",
+      "pos": [
+        3,
+        45
+      ]
+    },
+    {
+      "content": "In this section, you'll modify the simulated device application you created in [Get started with IoT Hub] to receive cloud-to-device messages from the IoT hub.",
+      "pos": [
+        47,
+        206
+      ]
+    },
+    {
+      "pos": [
+        211,
+        315
+      ],
+      "content": "In Visual Studio, in the <bpt id=\"p1\">**</bpt>SimulatedDevice<ept id=\"p1\">**</ept> project, add the following method to the <bpt id=\"p2\">**</bpt>Program<ept id=\"p2\">**</ept> class."
+    },
+    {
+      "content": "The <ph id=\"ph1\">`ReceiveAsync`</ph> method asynchronously returns the received message at the time that it is received by the device.",
+      "pos": [
+        947,
+        1063
+      ]
+    },
+    {
+      "content": "It returns <bpt id=\"p1\">*</bpt>null<ept id=\"p1\">*</ept> after a specifiable timeout period (in this case the default of 1 minute is used).",
+      "pos": [
+        1064,
+        1164
+      ]
+    },
+    {
+      "content": "When this happens, we want the code to continue waiting for new messages.",
+      "pos": [
+        1165,
+        1238
+      ]
+    },
+    {
+      "content": "This is the reason for the <ph id=\"ph1\">`if (receivedMessage == null) continue`</ph> line.",
+      "pos": [
+        1239,
+        1311
+      ]
+    },
+    {
+      "content": "The call to <ph id=\"ph1\">`CompleteAsync()`</ph> notifies IoT Hub that the message has been successfully processed and that it can be safely removed from the device queue.",
+      "pos": [
+        1317,
+        1469
+      ]
+    },
+    {
+      "content": "If something happened that prevented the device app from completing the processing of the message, IoT Hub will deliver it again; it is then important that message processing logic in the device app be <bpt id=\"p1\">*</bpt>idempotent<ept id=\"p1\">*</ept>, so that receiving the same message multiple times produces the same result.",
+      "pos": [
+        1470,
+        1761
+      ]
+    },
+    {
+      "content": "An application can also temporarily <ph id=\"ph1\">`Abandon`</ph> a message, which will have IoT hub retain the message in the queue for future consumption; or <ph id=\"ph2\">`Reject`</ph> a message, which will permanently remove the message from the queue.",
+      "pos": [
+        1762,
+        1979
+      ]
+    },
+    {
+      "content": "Refer to <bpt id=\"p1\">[</bpt>IoT Hub Developer Guide<ept id=\"p1\">][IoT Hub Developer Guide - C2D]</ept> for more information on the cloud-to-device message lifecycle.",
+      "pos": [
+        1980,
+        2108
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> When using HTTP/1 instead of AMQP as a transport, the <ph id=\"ph2\">`ReceiveAsync`</ph> will return immediately.",
+      "pos": [
+        2112,
+        2218
+      ]
+    },
+    {
+      "content": "The supported pattern for cloud-to-device messages with HTTP/1 is intermittently connected devices that check for messages infrequently (i.e. less than every 25 mins).",
+      "pos": [
+        2219,
+        2386
+      ]
+    },
+    {
+      "content": "Issuing more HTTP/1 receives will result in IoT Hub throttling the requests.",
+      "pos": [
+        2387,
+        2463
+      ]
+    },
+    {
+      "content": "Refer to <bpt id=\"p1\">[</bpt>IoT Hub Developer Guide<ept id=\"p1\">][IoT Hub Developer Guide - C2D]</ept> for more information on the differences between AMQP and HTTP/1 support, and IoT Hub throttling.",
+      "pos": [
+        2464,
+        2626
+      ]
+    },
+    {
+      "pos": [
+        2631,
+        2722
+      ],
+      "content": "Add the following method in the <bpt id=\"p1\">**</bpt>Main<ept id=\"p1\">**</ept> method right before the <ph id=\"ph1\">`Console.ReadLine()`</ph> line:"
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> For simplicity's sake, this tutorial does not implement any retry policy.",
+      "pos": [
+        2754,
+        2840
+      ]
+    },
+    {
+      "content": "In production code, it is reccommended to implement retry policies (such as exponential backoff), as suggested in the MSDN article [Transient Fault Handling].",
+      "pos": [
+        2841,
+        2999
+      ]
+    }
+  ],
+  "content": "## Receiving messages on the simulated device\n\nIn this section, you'll modify the simulated device application you created in [Get started with IoT Hub] to receive cloud-to-device messages from the IoT hub.\n\n1. In Visual Studio, in the **SimulatedDevice** project, add the following method to the **Program** class.\n\n        private static async void ReceiveC2dAsync()\n        {\n            Console.WriteLine(\"\\nReceiving cloud to device messages from service\");\n            while (true)\n            {\n                Message receivedMessage = await deviceClient.ReceiveAsync();\n                if (receivedMessage == null) continue;\n\n                Console.ForegroundColor = ConsoleColor.Yellow;\n                Console.WriteLine(\"Received message: {0}\", Encoding.ASCII.GetString(receivedMessage.GetBytes()));\n                Console.ResetColor();\n\n                await deviceClient.CompleteAsync(receivedMessage);\n            }\n        }\n\n    The `ReceiveAsync` method asynchronously returns the received message at the time that it is received by the device. It returns *null* after a specifiable timeout period (in this case the default of 1 minute is used). When this happens, we want the code to continue waiting for new messages. This is the reason for the `if (receivedMessage == null) continue` line.\n\n    The call to `CompleteAsync()` notifies IoT Hub that the message has been successfully processed and that it can be safely removed from the device queue. If something happened that prevented the device app from completing the processing of the message, IoT Hub will deliver it again; it is then important that message processing logic in the device app be *idempotent*, so that receiving the same message multiple times produces the same result. An application can also temporarily `Abandon` a message, which will have IoT hub retain the message in the queue for future consumption; or `Reject` a message, which will permanently remove the message from the queue. Refer to [IoT Hub Developer Guide][IoT Hub Developer Guide - C2D] for more information on the cloud-to-device message lifecycle.\n\n> [AZURE.NOTE] When using HTTP/1 instead of AMQP as a transport, the `ReceiveAsync` will return immediately. The supported pattern for cloud-to-device messages with HTTP/1 is intermittently connected devices that check for messages infrequently (i.e. less than every 25 mins). Issuing more HTTP/1 receives will result in IoT Hub throttling the requests. Refer to [IoT Hub Developer Guide][IoT Hub Developer Guide - C2D] for more information on the differences between AMQP and HTTP/1 support, and IoT Hub throttling.\n\n2. Add the following method in the **Main** method right before the `Console.ReadLine()` line:\n\n        ReceiveC2dAsync();\n\n> [AZURE.NOTE] For simplicity's sake, this tutorial does not implement any retry policy. In production code, it is reccommended to implement retry policies (such as exponential backoff), as suggested in the MSDN article [Transient Fault Handling].\n\n<!-- Links -->\n[IoT Hub Developer Guide - C2D]: iot-hub-devguide.md#c2d\n\n<!-- Images -->\n"
+}
