@@ -106,3 +106,8 @@ You can also review performance statistics and control security to the connector
 [11]: ./media/app-service-logic-connector-yammer/img11.PNG
 
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+

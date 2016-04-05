@@ -3,19 +3,19 @@
     description="Frequently asked questions about Enterprise State Roaming settings in Windows devices. Enterprise State Roaming provides users with a unified experience across their Windows devices and reduces the time needed for configuring a new device."
     services="active-directory"
     keywords="enterprise state roaming, windows cloud, how to enable enterprise state roaming"
-	documentationCenter=""
-	authors="femila"
-	manager="stevenpo"
-	editor="curtand"/>
+    documentationCenter=""
+    authors="femila"
+    manager="stevenpo"
+    editor="curtand"/>
 
 <tags
     ms.service="active-directory"  
-	ms.workload="identity"
-	ms.tgt_pltfrm="na"
-	ms.devlang="na"
-	ms.topic="article"
-	ms.date="02/04/2016"
-	ms.author="femila"/>
+    ms.workload="identity"
+    ms.tgt_pltfrm="na"
+    ms.devlang="na"
+    ms.topic="article"
+    ms.date="02/04/2016"
+    ms.author="femila"/>
 
  
 
@@ -29,10 +29,10 @@ After obtaining an Azure AD subscription, follow these steps to enable Enterpris
  
 1. Login to the Azure classic portal. 
 2. On the left, select **ACTIVE DIRECTORY**, and then select the directory for which you want to enable Enterprise State Roaming.
-![](./media/active-directory-enterprise-state-roaming/active-directory-enterprise-state-roaming.png)	 
+![](./media/active-directory-enterprise-state-roaming/active-directory-enterprise-state-roaming.png)     
 3. Go to the **Configure** tab on the top.
 ![](./media/active-directory-enterprise-state-roaming/active-directory-enterprise-state-roaming-configure.png)
-4.	Scroll down the page and select **Users may Sync settings and enterprise app data**, and then click **Save**.
+4.  Scroll down the page and select **Users may Sync settings and enterprise app data**, and then click **Save**.
 ![](./media/active-directory-enterprise-state-roaming/active-directory-enterprise-state-roaming-select-all-sync-settings.png)
 
 For a Windows 10 device to roam settings with the Enterprise State Roaming service, the device must authenticate using an Azure AD identity. For devices that are joined to Azure AD, the user’s primary login is the Azure AD identity, so no extra configuration is required. For devices that use a traditional on-premises Active Directory, the IT admin must connect the on-premises Active Directory to Azure AD using [Azure AD Connect](active-directory-aadconnect.md) and then must configure Group Policy to force client devices to automatically sync user data with Azure.
@@ -69,3 +69,8 @@ The data retention policy is not configurable. Once the data has been permanentl
 - [Settings and data roaming FAQ](active-directory-windows-enterprise-state-roaming-faqs.md)
 - [Group Policy and MDM settings for settings sync](active-directory-windows-enterprise-state-roaming-group-policy-settings.md)
 - [Windows 10 roaming settings reference](active-directory-windows-enterprise-state-roaming-windows-settings-reference.md)
+
+
+<!--HONumber=Apr16_HO1-->
+
+

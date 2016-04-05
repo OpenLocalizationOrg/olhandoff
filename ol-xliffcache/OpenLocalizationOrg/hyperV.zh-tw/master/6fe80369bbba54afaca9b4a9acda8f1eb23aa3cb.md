@@ -173,3 +173,8 @@ Users upgrading from Windows 8.1 domain joined devices who had their MSA connect
 * [Connect domain-joined devices to Azure AD for Windows 10 experiences](active-directory-azureadjoin-devices-group-policy.md)
 * [Set up Azure AD Join](active-directory-azureadjoin-setup.md)
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+

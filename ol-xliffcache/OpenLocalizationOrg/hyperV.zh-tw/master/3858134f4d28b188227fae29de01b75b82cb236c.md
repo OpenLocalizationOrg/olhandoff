@@ -19,7 +19,7 @@
 
 # Azure AD Connect sync: Best practices for changing the default configuration
 
-yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy is to describe supported and unsupported changes to Azure AD Connect sync.
+The purpose of this topic is to describe supported and unsupported changes to Azure AD Connect sync.
 
 The configuration created by Azure AD Connect works “as is” for the majority of environments that synchronize on-premises Active Directory with Azure AD. However, in some cases, it is necessary to apply some changes to a configuration to satisfy a particular need or requirement.
 

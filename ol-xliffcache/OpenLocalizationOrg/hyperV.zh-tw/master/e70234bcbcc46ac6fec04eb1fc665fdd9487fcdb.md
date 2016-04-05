@@ -246,3 +246,8 @@ When you click the Skilljar tile in the Access Panel, you should get automatical
 [205]: ./media/active-directory-saas-skilljar-tutorial/tutorial_general_205.png
 
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+

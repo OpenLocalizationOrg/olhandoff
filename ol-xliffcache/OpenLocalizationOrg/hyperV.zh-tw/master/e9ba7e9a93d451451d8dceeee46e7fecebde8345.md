@@ -1,20 +1,20 @@
 <properties
-	pageTitle="How to enable cross-app SSO on iOS using ADAL | Microsoft Azure"
-	description="How to use the features of the ADAL SDK to enable Single Sign On across your applications. "
-	services="active-directory"
-	documentationCenter=""
-	authors="brandwe"
-	manager="mbaldwin"
-	editor=""/>
+    pageTitle="How to enable cross-app SSO on iOS using ADAL | Microsoft Azure"
+    description="How to use the features of the ADAL SDK to enable Single Sign On across your applications. "
+    services="active-directory"
+    documentationCenter=""
+    authors="brandwe"
+    manager="mbaldwin"
+    editor=""/>
 
 <tags
-	ms.service="active-directory"
-	ms.workload="identity"
-	ms.tgt_pltfrm="ios"
-	ms.devlang="objective-c"
-	ms.topic="article"
-	ms.date="03/17/2015"
-	ms.author="brandwe"/>
+    ms.service="active-directory"
+    ms.workload="identity"
+    ms.tgt_pltfrm="ios"
+    ms.devlang="objective-c"
+    ms.topic="article"
+    ms.date="03/17/2015"
+    ms.author="brandwe"/>
 
 
 # How to enable cross-app SSO on iOS using ADAL
@@ -215,11 +215,11 @@ When you do have entitlements set up correctly you should see a file in your pro
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>keychain-access-groups</key>
-	<array>
-		<string>$(AppIdentifierPrefix)com.myapp.mytestapp</string>
-		<string>$(AppIdentifierPrefix)com.myapp.mycache</string>
-	</array>
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.myapp.mytestapp</string>
+        <string>$(AppIdentifierPrefix)com.myapp.mycache</string>
+    </array>
 </dict>
 </plist>
 ```
@@ -321,5 +321,10 @@ Now the Microsoft Identity SDK will automatically both share credentials across 
 
 
 
+
+
+
+
+<!--HONumber=Apr16_HO1-->
 
 

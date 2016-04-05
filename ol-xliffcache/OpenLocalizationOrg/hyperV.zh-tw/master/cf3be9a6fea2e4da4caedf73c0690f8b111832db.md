@@ -116,3 +116,8 @@ To test your configuration, you need to grant the Azure AD users you want to all
     ![Yes](./media/active-directory-saas-directions-microsoft-tutorial/IC767830.png "Yes")
 
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+

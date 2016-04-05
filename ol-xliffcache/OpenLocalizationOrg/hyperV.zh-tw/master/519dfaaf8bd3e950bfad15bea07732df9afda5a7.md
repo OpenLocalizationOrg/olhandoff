@@ -122,8 +122,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[GroupMembers](
-	[MemberID] [int] NOT NULL,
-	[Group_ID] [int] NOT NULL
+    [MemberID] [int] NOT NULL,
+    [Group_ID] [int] NOT NULL
 ) ON [PRIMARY]
 
 GO
@@ -133,14 +133,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[GROUPS](
-	[GroupID] [int] NOT NULL,
-	[GROUPNAME] [nvarchar](200) NOT NULL,
-	[DESCRIPTION] [nvarchar](200) NULL,
-	[WATERMARK] [datetime] NULL,
-	[OwnerID] [int] NULL,
+    [GroupID] [int] NOT NULL,
+    [GROUPNAME] [nvarchar](200) NOT NULL,
+    [DESCRIPTION] [nvarchar](200) NULL,
+    [WATERMARK] [datetime] NULL,
+    [OwnerID] [int] NULL,
 PRIMARY KEY CLUSTERED
 (
-	[GroupID] ASC
+    [GroupID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -153,8 +153,8 @@ GO
 SET ANSI_PADDING ON
 GO
 CREATE TABLE [dbo].[USERPHONE](
-	[USER_ID] [int] NULL,
-	[Phone] [varchar](20) NULL
+    [USER_ID] [int] NULL,
+    [Phone] [varchar](20) NULL
 ) ON [PRIMARY]
 
 GO
@@ -166,17 +166,17 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[USERS](
-	[USERID] [int] NOT NULL,
-	[USERNAME] [nvarchar](200) NOT NULL,
-	[FirstName] [nvarchar](100) NULL,
-	[LastName] [nvarchar](100) NULL,
-	[DisplayName] [nvarchar](100) NULL,
-	[ACCOUNTDISABLED] [bit] NULL,
-	[EMPLOYEEID] [int] NOT NULL,
-	[WATERMARK] [datetime] NULL,
+    [USERID] [int] NOT NULL,
+    [USERNAME] [nvarchar](200) NOT NULL,
+    [FirstName] [nvarchar](100) NULL,
+    [LastName] [nvarchar](100) NULL,
+    [DisplayName] [nvarchar](100) NULL,
+    [ACCOUNTDISABLED] [bit] NULL,
+    [EMPLOYEEID] [int] NOT NULL,
+    [WATERMARK] [datetime] NULL,
 PRIMARY KEY CLUSTERED
 (
-	[USERID] ASC
+    [USERID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -202,3 +202,8 @@ GO
 ALTER TABLE [dbo].[USERPHONE] CHECK CONSTRAINT [FK_USERPHONE_USER]
 GO
 ```
+
+
+<!--HONumber=Apr16_HO1-->
+
+

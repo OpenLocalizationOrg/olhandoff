@@ -1,20 +1,20 @@
 <properties
-	pageTitle="Authentication and Authorization in Azure Mobile Apps | Microsoft Azure"
-	description="Conceptual reference and overview of the Authentication / Authorization feature for Azure Mobile Apps"
-	services="app-service\mobile"
-	documentationCenter=""
-	authors="mattchenderson"
-	manager="dwrede"
-	editor=""/>
+    pageTitle="Authentication and Authorization in Azure Mobile Apps | Microsoft Azure"
+    description="Conceptual reference and overview of the Authentication / Authorization feature for Azure Mobile Apps"
+    services="app-service\mobile"
+    documentationCenter=""
+    authors="mattchenderson"
+    manager="dwrede"
+    editor=""/>
 
 <tags
-	ms.service="app-service-mobile"
-	ms.workload="mobile"
-	ms.tgt_pltfrm="na"
-	ms.devlang="multiple"
-	ms.topic="article"
-	ms.date="02/04/2016"
-	ms.author="mahender"/>
+    ms.service="app-service-mobile"
+    ms.workload="mobile"
+    ms.tgt_pltfrm="na"
+    ms.devlang="multiple"
+    ms.topic="article"
+    ms.date="02/04/2016"
+    ms.author="mahender"/>
 
 # Authentication and Authorization in Azure Mobile Apps
 
@@ -103,3 +103,7 @@ You can also find some more detail on the above flows in the [App Service authen
 [How to configure your app to use Google login]: app-service-mobile-how-to-configure-google-authentication.md
 [How to configure your app to use Microsoft Account login]: app-service-mobile-how-to-configure-microsoft-authentication.md
 [How to configure your app to use Twitter login]: app-service-mobile-how-to-configure-twitter-authentication.md
+
+<!--HONumber=Apr16_HO1-->
+
+

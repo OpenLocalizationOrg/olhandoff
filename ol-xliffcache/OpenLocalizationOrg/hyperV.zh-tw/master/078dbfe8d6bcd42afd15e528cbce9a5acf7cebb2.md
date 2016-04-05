@@ -125,3 +125,8 @@ With Azure AD you can secure your applications with granular access policies and
 To get started integrating applications with Azure AD, take a look at the [Integrating Azure Active Directory with applications getting started guide](active-directory-integrating-applications-getting-started.md).
 
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+

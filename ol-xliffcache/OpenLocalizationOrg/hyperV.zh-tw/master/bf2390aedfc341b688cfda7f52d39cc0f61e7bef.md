@@ -1,21 +1,21 @@
 <properties
-	pageTitle="Types of risk events detected by Azure Active Directory Identity Protection | Microsoft Azure"
-	description="This topic gives you a detailed overview of the available types of risk events in Azure Active Directory Identity Protection"
-	services="active-directory"
-	keywords="azure active directory identity protection, cloud app discovery, managing applications, security, risk, risk level, vulnerability, security policy"
-	documentationCenter=""
-	authors="markusvi"
-	manager="stevenpo"
-	editor=""/>
+    pageTitle="Types of risk events detected by Azure Active Directory Identity Protection | Microsoft Azure"
+    description="This topic gives you a detailed overview of the available types of risk events in Azure Active Directory Identity Protection"
+    services="active-directory"
+    keywords="azure active directory identity protection, cloud app discovery, managing applications, security, risk, risk level, vulnerability, security policy"
+    documentationCenter=""
+    authors="markusvi"
+    manager="stevenpo"
+    editor=""/>
 
 <tags
-	ms.service="active-directory"
-	ms.workload="identity"
-	ms.tgt_pltfrm="na"
-	ms.devlang="na"
-	ms.topic="article"
-	ms.date="03/04/2016"
-	ms.author="markvi"/>
+    ms.service="active-directory"
+    ms.workload="identity"
+    ms.tgt_pltfrm="na"
+    ms.devlang="na"
+    ms.topic="article"
+    ms.date="03/04/2016"
+    ms.author="markvi"/>
 
 #Types of risk events detected by Azure Active Directory Identity Protection 
 
@@ -78,5 +78,10 @@ Unfamiliar locations can provide a strong indication that an attacker is able at
 ## See also
 
 - [Azure Active Directory Identity Protection](active-directory-identityprotection.md)
+
+
+
+
+<!--HONumber=Apr16_HO1-->
 
 

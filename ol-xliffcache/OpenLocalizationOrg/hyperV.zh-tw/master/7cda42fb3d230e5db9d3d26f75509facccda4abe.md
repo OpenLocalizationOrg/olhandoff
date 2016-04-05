@@ -1,20 +1,20 @@
 <properties
-	pageTitle="Tutorial: Azure Active Directory integration with ADP eTime | Microsoft Azure"
-	description="Learn how to configure single sign-on between Azure Active Directory and ADP eTime."
-	services="active-directory"
-	documentationCenter=""
-	authors="jeevansd"
-	manager="stevenpo"
-	editor=""/>
+    pageTitle="Tutorial: Azure Active Directory integration with ADP eTime | Microsoft Azure"
+    description="Learn how to configure single sign-on between Azure Active Directory and ADP eTime."
+    services="active-directory"
+    documentationCenter=""
+    authors="jeevansd"
+    manager="stevenpo"
+    editor=""/>
 
 <tags
-	ms.service="active-directory"
-	ms.workload="identity"
-	ms.tgt_pltfrm="na"
-	ms.devlang="na"
-	ms.topic="article"
-	ms.date="03/14/2016"
-	ms.author="jeedes"/>
+    ms.service="active-directory"
+    ms.workload="identity"
+    ms.tgt_pltfrm="na"
+    ms.devlang="na"
+    ms.topic="article"
+    ms.date="03/14/2016"
+    ms.author="jeedes"/>
 
 
 # Tutorial: Azure Active Directory integration with ADP eTime
@@ -247,3 +247,8 @@ When you click the ADP eTime tile in the Access Panel, you should get automatica
 [203]: ./media/active-directory-saas-adpetime-tutorial/tutorial_general_203.png
 [204]: ./media/active-directory-saas-adpetime-tutorial/tutorial_general_204.png
 [205]: ./media/active-directory-saas-adpetime-tutorial/tutorial_general_205.png
+
+
+<!--HONumber=Apr16_HO1-->
+
+
