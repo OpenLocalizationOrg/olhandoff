@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "content": "The instructions below apply to updating a Windows Store client app but, you can test this on any of the other platforms supported by Azure Mobile Services.",
+      "pos": [
+        2,
+        158
+      ]
+    },
+    {
+      "pos": [
+        165,
+        268
+      ],
+      "content": "In Visual Studio, open MainPage.xaml.cs and add the following <ph id=\"ph1\">`using`</ph> statement to the top of the file."
+    },
+    {
+      "content": "In MainPage.xaml.cs, add the following class definition to the namespace to help serialize the user information.",
+      "pos": [
+        306,
+        418
+      ]
+    },
+    {
+      "pos": [
+        1320,
+        1463
+      ],
+      "content": "In MainPage.xaml.cs, update the <ph id=\"ph1\">`AuthenticateAsync`</ph> method to call the custom API to return additional information about the user from the AAD."
+    },
+    {
+      "content": "Save your changes and build the the service to verify no syntax errors.",
+      "pos": [
+        2595,
+        2666
+      ]
+    }
+  ],
+  "content": "\n\nThe instructions below apply to updating a Windows Store client app but, you can test this on any of the other platforms supported by Azure Mobile Services. \n\n\n1. In Visual Studio, open MainPage.xaml.cs and add the following `using` statement to the top of the file.\n \n        using System.Net.Http;\n\n2. In MainPage.xaml.cs, add the following class definition to the namespace to help serialize the user information.\n\n        public class UserInfo\n        {\n            public String displayName { get; set; }\n            public String streetAddress { get; set; }\n            public String city { get; set; }\n            public String state { get; set; }\n            public String postalCode { get; set; }\n            public String mail { get; set; }\n            public String[] otherMails { get; set; }\n            \n            public override string ToString()\n            {\n                return \"displayName : \" + displayName + \"\\n\" +\n                       \"streetAddress : \" + streetAddress + \"\\n\" +\n                       \"city : \" + city + \"\\n\" +\n                       \"state : \" + state + \"\\n\" +\n                       \"postalCode : \" + postalCode + \"\\n\" +\n                       \"mail : \" + mail + \"\\n\" +\n                       \"otherMails : \" + string.Join(\", \", otherMails);\n            }\n        }\n\n\n3. In MainPage.xaml.cs, update the `AuthenticateAsync` method to call the custom API to return additional information about the user from the AAD. \n\n        private async System.Threading.Tasks.Task AuthenticateAsync()\n        {\n            while (user == null)\n            {\n                string message;\n                try\n                {\n                    // Change 'MobileService' to the name of your MobileServiceClient instance.\n                    // Sign-in using Facebook authentication.\n                    user = await App.MobileService\n                        .LoginAsync(MobileServiceAuthenticationProvider.WindowsAzureActiveDirectory);\n\n                    UserInfo userInfo = await App.MobileService\n                        .InvokeApiAsync<UserInfo>(\"getuserinfo\", HttpMethod.Get, null);\n\n                    message = string.Format(\"User info for the logged in user...\\n\\n{0}\",userInfo.ToString());\n                }\n                catch (InvalidOperationException)\n                {\n                    message = \"You must log in. Login Required\";\n                }\n\n                var dialog = new MessageDialog(message);\n                dialog.Commands.Add(new UICommand(\"OK\"));\n                await dialog.ShowAsync();\n            }\n        }\n\n\n4. Save your changes and build the the service to verify no syntax errors.  \n"
+}

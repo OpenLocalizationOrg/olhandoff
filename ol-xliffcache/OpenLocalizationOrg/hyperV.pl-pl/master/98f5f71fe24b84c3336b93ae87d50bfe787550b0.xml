@@ -1,0 +1,117 @@
+{
+  "nodes": [
+    {
+      "content": "Create a simulated device app",
+      "pos": [
+        3,
+        32
+      ]
+    },
+    {
+      "content": "In this section, you'll create a Node.js console app that simulates a device that sends device-to-cloud messages to an IoT hub.",
+      "pos": [
+        34,
+        161
+      ]
+    },
+    {
+      "content": "Create a new empty folder called <bpt id=\"p1\">**</bpt>simulateddevice<ept id=\"p1\">**</ept>.",
+      "pos": [
+        166,
+        219
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>simulateddevice<ept id=\"p1\">**</ept> folder, create a new package.json file using the following command at your command-prompt.",
+      "pos": [
+        220,
+        337
+      ]
+    },
+    {
+      "content": "Accept all the defaults:",
+      "pos": [
+        338,
+        362
+      ]
+    },
+    {
+      "pos": [
+        397,
+        530
+      ],
+      "content": "At your command-prompt in the <bpt id=\"p1\">**</bpt>simulateddevice<ept id=\"p1\">**</ept> folder, run the following command to install the <bpt id=\"p2\">**</bpt>azure-iot-device-amqp<ept id=\"p2\">**</ept> package:"
+    },
+    {
+      "pos": [
+        597,
+        693
+      ],
+      "content": "Using a text editor, create a new <bpt id=\"p1\">**</bpt>SimulatedDevice.js<ept id=\"p1\">**</ept> file in the <bpt id=\"p2\">**</bpt>simulateddevice<ept id=\"p2\">**</ept> folder."
+    },
+    {
+      "pos": [
+        698,
+        785
+      ],
+      "content": "Add the following <ph id=\"ph1\">`require`</ph> statements at the start of the <bpt id=\"p1\">**</bpt>SimulatedDevice.js<ept id=\"p1\">**</ept> file:"
+    },
+    {
+      "content": "Add a <bpt id=\"p1\">**</bpt>connectionString<ept id=\"p1\">**</ept> variable and use it to create a device client.",
+      "pos": [
+        979,
+        1052
+      ]
+    },
+    {
+      "content": "Replace <bpt id=\"p1\">**</bpt>{youriothubname}<ept id=\"p1\">**</ept> with your IoT hub name, and <bpt id=\"p2\">**</bpt>{yourdeviceid}<ept id=\"p2\">**</ept> and <bpt id=\"p3\">**</bpt>{yourdevicekey}<ept id=\"p3\">**</ept> with the device values you generated in the <bpt id=\"p4\">*</bpt>Create a device identity<ept id=\"p4\">*</ept> section:",
+      "pos": [
+        1053,
+        1232
+      ]
+    },
+    {
+      "content": "Add the following function to display output from the application:",
+      "pos": [
+        1452,
+        1518
+      ]
+    },
+    {
+      "pos": [
+        1770,
+        1876
+      ],
+      "content": "Create a callback and use the <bpt id=\"p1\">**</bpt>setInterval<ept id=\"p1\">**</ept> function to send a new message to your IoT hub every second:"
+    },
+    {
+      "content": "Open the connection to your IoT Hub and start sending messages:",
+      "pos": [
+        2513,
+        2576
+      ]
+    },
+    {
+      "pos": [
+        2632,
+        2679
+      ],
+      "content": "Save and close the <bpt id=\"p1\">**</bpt>SimulatedDevice.js<ept id=\"p1\">**</ept> file."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> To keep things simple, this tutorial does not implement any retry policy.",
+      "pos": [
+        2683,
+        2769
+      ]
+    },
+    {
+      "content": "In production code, you should implement retry policies (such as an exponential backoff), as suggested in the MSDN article <bpt id=\"p1\">[</bpt>Transient Fault Handling<ept id=\"p1\">][lnk-transient-faults]</ept>.",
+      "pos": [
+        2770,
+        2942
+      ]
+    }
+  ],
+  "content": "## Create a simulated device app\n\nIn this section, you'll create a Node.js console app that simulates a device that sends device-to-cloud messages to an IoT hub.\n\n1. Create a new empty folder called **simulateddevice**. In the **simulateddevice** folder, create a new package.json file using the following command at your command-prompt. Accept all the defaults:\n\n    ```\n    npm init\n    ```\n\n2. At your command-prompt in the **simulateddevice** folder, run the following command to install the **azure-iot-device-amqp** package:\n\n    ```\n    npm install azure-iot-device-amqp --save\n    ```\n\n3. Using a text editor, create a new **SimulatedDevice.js** file in the **simulateddevice** folder.\n\n4. Add the following `require` statements at the start of the **SimulatedDevice.js** file:\n\n    ```\n    'use strict';\n\n    var clientFromConnectionString = require('azure-iot-device-amqp').clientFromConnectionString;\n    var Message = require('azure-iot-device').Message;\n    ```\n\n5. Add a **connectionString** variable and use it to create a device client. Replace **{youriothubname}** with your IoT hub name, and **{yourdeviceid}** and **{yourdevicekey}** with the device values you generated in the *Create a device identity* section:\n\n    ```\n    var connectionString = 'HostName={youriothubname}.azure-devices.net;DeviceId={yourdeviceid};SharedAccessKey={yourdevicekey}';\n    \n    var client = clientFromConnectionString(connectionString);\n    ```\n\n6. Add the following function to display output from the application:\n\n    ```\n    function printResultFor(op) {\n      return function printResult(err, res) {\n        if (err) console.log(op + ' error: ' + err.toString());\n        if (res) console.log(op + ' status: ' + res.constructor.name);\n      };\n    }\n    ```\n\n7. Create a callback and use the **setInterval** function to send a new message to your IoT hub every second:\n\n    ```\n    var connectCallback = function (err) {\n      if (err) {\n        console.log('Could not connect: ' + err);\n      } else {\n        console.log('Client connected');\n\n        // Create a message and send it to the IoT Hub every second\n        setInterval(function(){\n            var windSpeed = 10 + (Math.random() * 4);\n            var data = JSON.stringify({ deviceId: 'mydevice', windSpeed: windSpeed });\n            var message = new Message(data);\n            console.log(\"Sending message: \" + message.getData());\n            client.sendEvent(message, printResultFor('send'));\n        }, 2000);\n      }\n    };\n    ```\n\n8. Open the connection to your IoT Hub and start sending messages:\n\n    ```\n    client.open(connectCallback);\n    ```\n\n9. Save and close the **SimulatedDevice.js** file.\n\n> [AZURE.NOTE] To keep things simple, this tutorial does not implement any retry policy. In production code, you should implement retry policies (such as an exponential backoff), as suggested in the MSDN article [Transient Fault Handling][lnk-transient-faults].\n\n<!-- Links -->\n[lnk-transient-faults]: https://msdn.microsoft.com/library/hh680901(v=pandp.50).aspx\n"
+}
