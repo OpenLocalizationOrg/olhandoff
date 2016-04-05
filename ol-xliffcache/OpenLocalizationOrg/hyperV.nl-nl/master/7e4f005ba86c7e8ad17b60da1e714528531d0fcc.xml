@@ -1,0 +1,124 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        5,
+        116
+      ],
+      "content": "In Visual Studio, open the project that you modified when you completed the tutorial <bpt id=\"p1\">**</bpt>Get started with data<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        121,
+        217
+      ],
+      "content": "Press the <bpt id=\"p1\">**</bpt>F5<ept id=\"p1\">**</ept> key to run the app, then type text in <bpt id=\"p2\">**</bpt>Insert a TodoItem<ept id=\"p2\">**</ept> and click <bpt id=\"p3\">**</bpt>Save<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "Repeat the previous step at least three times, so that you have more than three items stored in the TodoItem table.",
+      "pos": [
+        222,
+        337
+      ]
+    },
+    {
+      "pos": [
+        343,
+        437
+      ],
+      "content": "In the MainPage.xaml.cs file, replace the <bpt id=\"p1\">**</bpt>RefreshTodoItems<ept id=\"p1\">**</ept> method with the following code:"
+    },
+    {
+      "content": "This query, when executed during data binding, returns the top three items that are not marked as completed.",
+      "pos": [
+        852,
+        960
+      ]
+    },
+    {
+      "pos": [
+        965,
+        1001
+      ],
+      "content": "Press the <bpt id=\"p1\">**</bpt>F5<ept id=\"p1\">**</ept> key to run the app."
+    },
+    {
+      "content": "Notice that only the first three results from the TodoItem table are displayed.",
+      "pos": [
+        1007,
+        1086
+      ]
+    },
+    {
+      "pos": [
+        1092,
+        1241
+      ],
+      "content": "(Optional) View the URI of the request sent to the mobile service by using message inspection software, such as browser developer tools or <bpt id=\"p1\">[</bpt><ept id=\"p1\">Fiddler]</ept>."
+    },
+    {
+      "pos": [
+        1248,
+        1344
+      ],
+      "content": "Notice that the <ph id=\"ph1\">`Take(3)`</ph> method was translated into the query option <ph id=\"ph2\">`$top=3`</ph> in the query URI."
+    },
+    {
+      "pos": [
+        1349,
+        1422
+      ],
+      "content": "Update the <bpt id=\"p1\">**</bpt>RefreshTodoItems<ept id=\"p1\">**</ept> method once more with the following code:"
+    },
+    {
+      "content": "This query skips the first three results and returns the next three after that.",
+      "pos": [
+        1934,
+        2013
+      ]
+    },
+    {
+      "content": "This is effectively the second \"page\" of data, where the page size is three items.",
+      "pos": [
+        2014,
+        2096
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>This tutorial uses a simplified scenario by passing hard-coded paging values to the <ph id=\"ph2\">&lt;strong&gt;</ph>Take<ph id=\"ph3\">&lt;/strong&gt;</ph> and <ph id=\"ph4\">&lt;strong&gt;</ph>Skip<ph id=\"ph5\">&lt;/strong&gt;</ph> methods.",
+      "pos": [
+        2103,
+        2255
+      ]
+    },
+    {
+      "content": "In a real-world app, you can use queries similar to the above with a pager control or comparable UI to let users navigate to previous and next pages.",
+      "pos": [
+        2256,
+        2405
+      ]
+    },
+    {
+      "content": "You can also call the  <ph id=\"ph1\">&lt;strong&gt;</ph>IncludeTotalCount<ph id=\"ph2\">&lt;/strong&gt;</ph> method to get the total count of items available on the server, along with the paged data.",
+      "pos": [
+        2406,
+        2554
+      ]
+    },
+    {
+      "content": "(Optional) Again view the URI of the request sent to the mobile service.",
+      "pos": [
+        2559,
+        2631
+      ]
+    },
+    {
+      "pos": [
+        2638,
+        2735
+      ],
+      "content": "Notice that the <ph id=\"ph1\">`Skip(3)`</ph> method was translated into the query option <ph id=\"ph2\">`$skip=3`</ph> in the query URI."
+    }
+  ],
+  "content": "\n\n1. In Visual Studio, open the project that you modified when you completed the tutorial **Get started with data**.\n\n2. Press the **F5** key to run the app, then type text in **Insert a TodoItem** and click **Save**.\n\n3. Repeat the previous step at least three times, so that you have more than three items stored in the TodoItem table. \n\n2. In the MainPage.xaml.cs file, replace the **RefreshTodoItems** method with the following code:\n\n        private async void RefreshTodoItems()\n        {\n            // Define a filtered query that returns the top 3 items.\n            IMobileServiceTableQuery<TodoItem> query = todoTable\n                            .Where(todoItem => todoItem.Complete == false)\n                           .Take(3);\n            items = await query.ToCollectionAsync();\n            ListItems.ItemsSource = items;\n        }\n\n    This query, when executed during data binding, returns the top three items that are not marked as completed.\n\n3. Press the **F5** key to run the app.\n\n    Notice that only the first three results from the TodoItem table are displayed. \n\n4. (Optional) View the URI of the request sent to the mobile service by using message inspection software, such as browser developer tools or [Fiddler]. \n\n    Notice that the `Take(3)` method was translated into the query option `$top=3` in the query URI.\n\n5. Update the **RefreshTodoItems** method once more with the following code:\n            \n        private async void RefreshTodoItems()\n        {\n            // Define a filtered query that skips the first 3 items and \n            // then returns the next 3 items.\n            IMobileServiceTableQuery<TodoItem> query = todoTable\n                           .Where(todoItem => todoItem.Complete == false)\n                           .Skip(3)\n                           .Take(3);\n            items = await query.ToCollectionAsync();\n            ListItems.ItemsSource = items;\n        }\n\n    This query skips the first three results and returns the next three after that. This is effectively the second \"page\" of data, where the page size is three items.\n\n    >[AZURE.NOTE]This tutorial uses a simplified scenario by passing hard-coded paging values to the <strong>Take</strong> and <strong>Skip</strong> methods. In a real-world app, you can use queries similar to the above with a pager control or comparable UI to let users navigate to previous and next pages. You can also call the  <strong>IncludeTotalCount</strong> method to get the total count of items available on the server, along with the paged data.\n\n6. (Optional) Again view the URI of the request sent to the mobile service. \n\n    Notice that the `Skip(3)` method was translated into the query option `$skip=3` in the query URI.\n\n<!-- URLs -->\n[Fiddler]: http://go.microsoft.com/fwlink/?LinkID=262412"
+}

@@ -1,0 +1,1229 @@
+{
+  "nodes": [
+    {
+      "content": "Enable offline sync for your Azure Mobile App (iOS)",
+      "pos": [
+        27,
+        78
+      ]
+    },
+    {
+      "content": "Learn how to use App Service Mobile Apps to cache and sync offline data in your iOS application",
+      "pos": [
+        97,
+        192
+      ]
+    },
+    {
+      "content": "Enable offline sync for your iOS mobile app",
+      "pos": [
+        524,
+        567
+      ]
+    },
+    {
+      "content": "Overview",
+      "pos": [
+        682,
+        690
+      ]
+    },
+    {
+      "content": "This tutorial covers the offline sync feature of Azure Mobile Apps for iOS.",
+      "pos": [
+        692,
+        767
+      ]
+    },
+    {
+      "content": "Offline sync allows end-users to interact with a mobile app&amp;mdash;viewing, adding, or modifying data&amp;mdash;even when there is no network connection.",
+      "pos": [
+        768,
+        916
+      ]
+    },
+    {
+      "content": "Changes are stored in a local database; once the device is back online, these changes are synced with the remote backend.",
+      "pos": [
+        917,
+        1038
+      ]
+    },
+    {
+      "content": "If this is your first experience with Azure Mobile Apps, you should first complete the tutorial <bpt id=\"p1\">[</bpt><ept id=\"p1\">Create an iOS App]</ept>.",
+      "pos": [
+        1040,
+        1156
+      ]
+    },
+    {
+      "content": "If you do not use the downloaded quick start server project, you must add the data access extension packages to your project.",
+      "pos": [
+        1157,
+        1282
+      ]
+    },
+    {
+      "content": "For more information about server extension packages, see <bpt id=\"p1\">[</bpt>Work with the .NET backend server SDK for Azure Mobile Apps<ept id=\"p1\">](app-service-mobile-dotnet-backend-how-to-use-server-sdk.md)</ept>.",
+      "pos": [
+        1283,
+        1463
+      ]
+    },
+    {
+      "pos": [
+        1465,
+        1566
+      ],
+      "content": "To learn more about the offline sync feature, see the topic <bpt id=\"p1\">[</bpt><ept id=\"p1\">Offline Data Sync in Azure Mobile Apps]</ept>."
+    },
+    {
+      "pos": [
+        1571,
+        1624
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"review-sync\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Review the client sync code"
+    },
+    {
+      "content": "The client project that you downloaded for the tutorial <bpt id=\"p1\">[</bpt><ept id=\"p1\">Create an iOS App]</ept> already contains code supporting offline synchronization using a local Core Data-based database.",
+      "pos": [
+        1626,
+        1798
+      ]
+    },
+    {
+      "content": "This section is a summary of what is already included in the tutorial code.",
+      "pos": [
+        1799,
+        1874
+      ]
+    },
+    {
+      "content": "For a conceptual overview of the feature, see <bpt id=\"p1\">[</bpt><ept id=\"p1\">Offline Data Sync in Azure Mobile Apps]</ept>.",
+      "pos": [
+        1875,
+        1962
+      ]
+    },
+    {
+      "content": "The offline data sync sync feature of Azure Mobile Apps allows end users to interact with a local database when the network is not accessible.",
+      "pos": [
+        1964,
+        2106
+      ]
+    },
+    {
+      "content": "To use these features in your app, you initialize the sync context of <ph id=\"ph1\">`MSClient`</ph> and reference a local store.",
+      "pos": [
+        2107,
+        2216
+      ]
+    },
+    {
+      "content": "Then reference your table through the <ph id=\"ph1\">`MSSyncTable`</ph> interface.",
+      "pos": [
+        2217,
+        2279
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>QSTodoService.m<ept id=\"p1\">**</ept>, notice the type of the member <ph id=\"ph1\">`syncTable`</ph> is <ph id=\"ph2\">`MSSyncTable`</ph>.",
+      "pos": [
+        2284,
+        2367
+      ]
+    },
+    {
+      "content": "Offline sync uses this sync table interface instead of <ph id=\"ph1\">`MSTable`</ph>.",
+      "pos": [
+        2368,
+        2433
+      ]
+    },
+    {
+      "content": "When a sync table is used, all operations go to the local store and are only synchronized with the remote backend with explicit push and pull operations.",
+      "pos": [
+        2434,
+        2587
+      ]
+    },
+    {
+      "content": "To get a reference to a sync table, use the method <ph id=\"ph1\">`syncTableWithName`</ph>.",
+      "pos": [
+        2593,
+        2664
+      ]
+    },
+    {
+      "content": "To remove offline sync functionality, use <ph id=\"ph1\">`tableWithName`</ph> instead.",
+      "pos": [
+        2665,
+        2731
+      ]
+    },
+    {
+      "content": "Before any table operations can be performed, the local store must be initialized.",
+      "pos": [
+        2736,
+        2818
+      ]
+    },
+    {
+      "content": "This is the relevant code in the <ph id=\"ph1\">`QSTodoService.init`</ph> method:",
+      "pos": [
+        2819,
+        2880
+      ]
+    },
+    {
+      "content": "This creates a local store using the interface <ph id=\"ph1\">`MSCoreDataStore`</ph>, which is provided in the Mobile Apps SDK.",
+      "pos": [
+        3095,
+        3202
+      ]
+    },
+    {
+      "content": "You can instead a provide a different local store by implementing the <ph id=\"ph1\">`MSSyncContextDataSource`</ph> protocol.",
+      "pos": [
+        3203,
+        3308
+      ]
+    },
+    {
+      "content": "The first parameter of <ph id=\"ph1\">`initWithDelegate`</ph> is used to specify a conflict handler.",
+      "pos": [
+        3314,
+        3394
+      ]
+    },
+    {
+      "content": "Since we have passed <ph id=\"ph1\">`nil`</ph>, we will get the default conflict handler, which fails on any conflict.",
+      "pos": [
+        3395,
+        3493
+      ]
+    },
+    {
+      "pos": [
+        3651,
+        3820
+      ],
+      "content": "The methods <ph id=\"ph1\">`pullData`</ph> and <ph id=\"ph2\">`syncData`</ph> performs the actual sync operation: <ph id=\"ph3\">`syncData`</ph> first pushes new changes, then calls <ph id=\"ph4\">`pullData`</ph> to get data from the remote backend."
+    },
+    {
+      "pos": [
+        4156,
+        4222
+      ],
+      "content": "In turn, the method <ph id=\"ph1\">`pullData`</ph> gets new data that matches a query:"
+    },
+    {
+      "content": "In <ph id=\"ph1\">`syncData`</ph>, we first call <ph id=\"ph2\">`pushWithCompletion`</ph> on the sync context.",
+      "pos": [
+        4908,
+        4978
+      ]
+    },
+    {
+      "content": "This method is a member of <ph id=\"ph1\">`MSSyncContext`</ph> (rather than the sync table itself)  because it will push changes across all tables.",
+      "pos": [
+        4979,
+        5106
+      ]
+    },
+    {
+      "content": "Only records that have been modified in some way locally (through CUD operations) will be sent to the server.",
+      "pos": [
+        5107,
+        5216
+      ]
+    },
+    {
+      "content": "Then the helper <ph id=\"ph1\">`pullData`</ph> is called, which calls <ph id=\"ph2\">`MSSyncTable.pullWithQuery`</ph> to retrieve remote data and store in the local database.",
+      "pos": [
+        5217,
+        5351
+      ]
+    },
+    {
+      "content": "Note that in this example, the push operation was not strictly necessary.",
+      "pos": [
+        5357,
+        5430
+      ]
+    },
+    {
+      "content": "If there are any changes pending in the sync context for the table that is doing a push operation, pull always issues a push first.",
+      "pos": [
+        5431,
+        5562
+      ]
+    },
+    {
+      "content": "However, if you have more than one sync table, it is best explicitly call push to ensure that everything is consistent across related tables.",
+      "pos": [
+        5563,
+        5704
+      ]
+    },
+    {
+      "content": "The method <ph id=\"ph1\">`pullWithQuery`</ph> allows you to specify a query to filter the records you wish to retrieve.",
+      "pos": [
+        5710,
+        5810
+      ]
+    },
+    {
+      "content": "In this example, the query just retrieves all records in the remote <ph id=\"ph1\">`TodoItem`</ph> table.",
+      "pos": [
+        5811,
+        5896
+      ]
+    },
+    {
+      "content": "The second parameter to <ph id=\"ph1\">`pullWithQuery`</ph> is a query ID that is used for <bpt id=\"p1\">*</bpt>incremental sync<ept id=\"p1\">*</ept>.",
+      "pos": [
+        5902,
+        5992
+      ]
+    },
+    {
+      "content": "Incremental sync retrieves only those records modified since the last sync, using the record's <ph id=\"ph1\">`UpdatedAt`</ph> timestamp (called <ph id=\"ph2\">`updatedAt`</ph> in the local store).",
+      "pos": [
+        5993,
+        6150
+      ]
+    },
+    {
+      "content": "The query ID should be a descriptive string that is unique for each logical query in your app.",
+      "pos": [
+        6151,
+        6245
+      ]
+    },
+    {
+      "content": "To opt-out of incremental sync, pass <ph id=\"ph1\">`nil`</ph> as the query ID.",
+      "pos": [
+        6246,
+        6305
+      ]
+    },
+    {
+      "content": "Note that this can be potentially inefficient, since it will retrieve all records on each pull operation.",
+      "pos": [
+        6306,
+        6411
+      ]
+    },
+    {
+      "content": "In the class <ph id=\"ph1\">`QSTodoService`</ph>, the method <ph id=\"ph2\">`syncData`</ph> is called after the operations that modify data, <ph id=\"ph3\">`addItem`</ph> and <ph id=\"ph4\">`completeItem`</ph>.",
+      "pos": [
+        6416,
+        6546
+      ]
+    },
+    {
+      "content": "It is also called from <ph id=\"ph1\">`QSTodoListViewController.refresh`</ph>, so that the user gets the latest data whenever they perform the refresh gesture.",
+      "pos": [
+        6547,
+        6686
+      ]
+    },
+    {
+      "content": "The app also performs a sync on launch, since <ph id=\"ph1\">`QSTodoListViewController.init`</ph> calls <ph id=\"ph2\">`refresh`</ph>.",
+      "pos": [
+        6687,
+        6781
+      ]
+    },
+    {
+      "content": "Because <ph id=\"ph1\">`syncData`</ph> is called whenever data is modified, this app assumes that the user is online whenever they are editing data.",
+      "pos": [
+        6787,
+        6915
+      ]
+    },
+    {
+      "content": "In another section, we will update the app so that users can edit even when they are offline.",
+      "pos": [
+        6916,
+        7009
+      ]
+    },
+    {
+      "pos": [
+        7014,
+        7071
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"review-core-data\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Review the Core Data model"
+    },
+    {
+      "content": "When using the Core Data offline store, you need to define particular tables and fields in your data model.",
+      "pos": [
+        7073,
+        7180
+      ]
+    },
+    {
+      "content": "The sample app already includes a data model with the right format.",
+      "pos": [
+        7181,
+        7248
+      ]
+    },
+    {
+      "content": "In this section we will walk through these tables and how they are used.",
+      "pos": [
+        7249,
+        7321
+      ]
+    },
+    {
+      "pos": [
+        7325,
+        7917
+      ],
+      "content": "Open **QSDataModel.xcdatamodeld**. There are four tables defined--three that are used by the SDK, and one table for the todo items themselves:\n    * MS_TableOperations: For tracking the items that need to be synchronized with the server\n    * MS_TableOperationErrors: For tracking any errors that happen during offline synchronization\n    * MS_TableConfig: For tracking the last updated time for the last sync operation for all pull operations\n    * TodoItem: For storing the todo items. The system columns **createdAt**, **updatedAt**, and **version** are optional system properties.",
+      "leadings": [
+        "",
+        "  ",
+        "  ",
+        "  ",
+        "  "
+      ],
+      "nodes": [
+        {
+          "content": "Open **QSDataModel.xcdatamodeld**. There are four tables defined--three that are used by the SDK, and one table for the todo items themselves:",
+          "pos": [
+            0,
+            142
+          ],
+          "nodes": [
+            {
+              "content": "Open <bpt id=\"p1\">**</bpt>QSDataModel.xcdatamodeld<ept id=\"p1\">**</ept>.",
+              "pos": [
+                0,
+                34
+              ]
+            },
+            {
+              "content": "There are four tables defined--three that are used by the SDK, and one table for the todo items themselves:",
+              "pos": [
+                35,
+                142
+              ]
+            }
+          ]
+        },
+        {
+          "content": "* MS_TableOperations: For tracking the items that need to be synchronized with the server",
+          "pos": [
+            147,
+            236
+          ]
+        },
+        {
+          "content": "* MS_TableOperationErrors: For tracking any errors that happen during offline synchronization",
+          "pos": [
+            241,
+            334
+          ]
+        },
+        {
+          "content": "* MS_TableConfig: For tracking the last updated time for the last sync operation for all pull operations",
+          "pos": [
+            339,
+            443
+          ]
+        },
+        {
+          "content": "    * TodoItem: For storing the todo items. The system columns **createdAt**, **updatedAt**, and **version** are optional system properties.",
+          "pos": [
+            444,
+            584
+          ],
+          "nodes": [
+            {
+              "content": "* TodoItem: For storing the todo items.",
+              "pos": [
+                4,
+                43
+              ]
+            },
+            {
+              "content": "The system columns <bpt id=\"p1\">**</bpt>createdAt<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>updatedAt<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>version<ept id=\"p3\">**</ept> are optional system properties.",
+              "pos": [
+                44,
+                140
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The Azure Mobile Apps SDK reserves column names that being with \"<bpt id=\"p1\">**</bpt>``<ept id=\"p1\">**</ept>\".",
+      "pos": [
+        7920,
+        8006
+      ]
+    },
+    {
+      "content": "You should not use this prefix on anything other than system columns, otherwise your column names will be modified when using the remote backend.",
+      "pos": [
+        8007,
+        8152
+      ]
+    },
+    {
+      "content": "When using the offline sync feature, you must define the system tables as shown below.",
+      "pos": [
+        8156,
+        8242
+      ]
+    },
+    {
+      "content": "System Tables",
+      "pos": [
+        8252,
+        8265
+      ]
+    },
+    {
+      "content": "MS_TableOperations",
+      "pos": [
+        8273,
+        8291
+      ]
+    },
+    {
+      "content": "Attribute",
+      "pos": [
+        8353,
+        8362
+      ]
+    },
+    {
+      "content": "Type",
+      "pos": [
+        8369,
+        8373
+      ]
+    },
+    {
+      "content": "id",
+      "pos": [
+        8419,
+        8421
+      ]
+    },
+    {
+      "content": "Integer 64",
+      "pos": [
+        8432,
+        8442
+      ]
+    },
+    {
+      "content": "itemId",
+      "pos": [
+        8452,
+        8458
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        8465,
+        8471
+      ]
+    },
+    {
+      "content": "properties",
+      "pos": [
+        8485,
+        8495
+      ]
+    },
+    {
+      "content": "Binary Data",
+      "pos": [
+        8498,
+        8509
+      ]
+    },
+    {
+      "content": "table",
+      "pos": [
+        8518,
+        8523
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        8531,
+        8537
+      ]
+    },
+    {
+      "content": "tableKind",
+      "pos": [
+        8551,
+        8560
+      ]
+    },
+    {
+      "content": "Integer 16",
+      "pos": [
+        8564,
+        8574
+      ]
+    },
+    {
+      "content": "MS_TableOperationErrors",
+      "pos": [
+        8589,
+        8612
+      ]
+    },
+    {
+      "content": "Attribute",
+      "pos": [
+        8679,
+        8688
+      ]
+    },
+    {
+      "content": "Type",
+      "pos": [
+        8695,
+        8699
+      ]
+    },
+    {
+      "content": "id",
+      "pos": [
+        8745,
+        8747
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        8758,
+        8764
+      ]
+    },
+    {
+      "content": "operationId",
+      "pos": [
+        8778,
+        8789
+      ]
+    },
+    {
+      "content": "Integer 64",
+      "pos": [
+        8792,
+        8802
+      ]
+    },
+    {
+      "content": "properties",
+      "pos": [
+        8811,
+        8821
+      ]
+    },
+    {
+      "content": "Binary Data",
+      "pos": [
+        8824,
+        8835
+      ]
+    },
+    {
+      "content": "tableKind",
+      "pos": [
+        8844,
+        8853
+      ]
+    },
+    {
+      "content": "Integer 16",
+      "pos": [
+        8857,
+        8867
+      ]
+    },
+    {
+      "content": "MS_TableConfig",
+      "pos": [
+        8882,
+        8896
+      ]
+    },
+    {
+      "content": "Attribute",
+      "pos": [
+        8954,
+        8963
+      ]
+    },
+    {
+      "content": "Type",
+      "pos": [
+        8970,
+        8974
+      ]
+    },
+    {
+      "content": "id",
+      "pos": [
+        9020,
+        9022
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9033,
+        9039
+      ]
+    },
+    {
+      "content": "key",
+      "pos": [
+        9053,
+        9056
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9066,
+        9072
+      ]
+    },
+    {
+      "content": "keyType",
+      "pos": [
+        9086,
+        9093
+      ]
+    },
+    {
+      "content": "Integer 64",
+      "pos": [
+        9099,
+        9109
+      ]
+    },
+    {
+      "content": "table",
+      "pos": [
+        9119,
+        9124
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9132,
+        9138
+      ]
+    },
+    {
+      "content": "value",
+      "pos": [
+        9152,
+        9157
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9165,
+        9171
+      ]
+    },
+    {
+      "content": "Data table",
+      "pos": [
+        9188,
+        9198
+      ]
+    },
+    {
+      "content": "TodoItem",
+      "pos": [
+        9206,
+        9214
+      ]
+    },
+    {
+      "content": "Attribute",
+      "pos": [
+        9224,
+        9233
+      ]
+    },
+    {
+      "content": "Type",
+      "pos": [
+        9240,
+        9244
+      ]
+    },
+    {
+      "content": "Note",
+      "pos": [
+        9249,
+        9253
+      ]
+    },
+    {
+      "content": "id",
+      "pos": [
+        9400,
+        9402
+      ]
+    },
+    {
+      "content": "String, marked required",
+      "pos": [
+        9415,
+        9438
+      ]
+    },
+    {
+      "content": "primary key in remote store",
+      "pos": [
+        9442,
+        9469
+      ]
+    },
+    {
+      "content": "complete",
+      "pos": [
+        9505,
+        9513
+      ]
+    },
+    {
+      "content": "Boolean",
+      "pos": [
+        9520,
+        9527
+      ]
+    },
+    {
+      "content": "todo item field",
+      "pos": [
+        9530,
+        9545
+      ]
+    },
+    {
+      "content": "text",
+      "pos": [
+        9593,
+        9597
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9608,
+        9614
+      ]
+    },
+    {
+      "content": "todo item field",
+      "pos": [
+        9618,
+        9633
+      ]
+    },
+    {
+      "content": "createdAt",
+      "pos": [
+        9681,
+        9690
+      ]
+    },
+    {
+      "content": "Date",
+      "pos": [
+        9693,
+        9697
+      ]
+    },
+    {
+      "content": "(optional) maps to createdAt system property",
+      "pos": [
+        9703,
+        9747
+      ]
+    },
+    {
+      "content": "updatedAt",
+      "pos": [
+        9764,
+        9773
+      ]
+    },
+    {
+      "content": "Date",
+      "pos": [
+        9776,
+        9780
+      ]
+    },
+    {
+      "content": "(optional) maps to updatedAt system property",
+      "pos": [
+        9786,
+        9830
+      ]
+    },
+    {
+      "content": "version",
+      "pos": [
+        9847,
+        9854
+      ]
+    },
+    {
+      "content": "String",
+      "pos": [
+        9859,
+        9865
+      ]
+    },
+    {
+      "content": "(optional) used to detect conflicts, maps to version",
+      "pos": [
+        9869,
+        9921
+      ]
+    },
+    {
+      "pos": [
+        9929,
+        9989
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"setup-sync\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Change the sync behavior of the app"
+    },
+    {
+      "content": "In this section, you will modify the app so that it does not sync on app start, or when inserting and updating items, but only when the refresh gesture button is performed.",
+      "pos": [
+        9991,
+        10163
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>QSTodoListViewController.m<ept id=\"p1\">**</ept>, change the <bpt id=\"p2\">**</bpt>viewDidLoad<ept id=\"p2\">**</ept> method to remove the call to <ph id=\"ph1\">`[self refresh]`</ph> at the end of the method.",
+      "pos": [
+        10168,
+        10301
+      ]
+    },
+    {
+      "content": "Now, the data will not be synced with the server on app start, but instead will be the contents of local store.",
+      "pos": [
+        10302,
+        10413
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>QSTodoService.m<ept id=\"p1\">**</ept>, modify the definition of <ph id=\"ph1\">`addItem`</ph> so that it doesn't sync after the item is inserted.",
+      "pos": [
+        10418,
+        10528
+      ]
+    },
+    {
+      "content": "Remove the <ph id=\"ph1\">`self syncData`</ph> block and replace with the following:",
+      "pos": [
+        10529,
+        10593
+      ]
+    },
+    {
+      "pos": [
+        10721,
+        10839
+      ],
+      "content": "Modify the definition of <ph id=\"ph1\">`completeItem`</ph> as above; remove the block for <ph id=\"ph2\">`self syncData`</ph> and replace with the following:"
+    },
+    {
+      "pos": [
+        10967,
+        11002
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"test-app\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Test the app"
+    },
+    {
+      "content": "In this section, you will connect to an invalid URL to simulate an offline scenario.",
+      "pos": [
+        11004,
+        11088
+      ]
+    },
+    {
+      "content": "When you add data items, they will be held in the local Core Data store, but not synced to the mobile backend.",
+      "pos": [
+        11089,
+        11199
+      ]
+    },
+    {
+      "pos": [
+        11204,
+        11294
+      ],
+      "content": "Change the Mobile App URL in <bpt id=\"p1\">**</bpt>QSTodoService.m<ept id=\"p1\">**</ept> to an invalid URL, and run the app again:"
+    },
+    {
+      "content": "Add some todo items or complete some items.",
+      "pos": [
+        11408,
+        11451
+      ]
+    },
+    {
+      "content": "Quit the simulator (or forcibly close the app) and restart.",
+      "pos": [
+        11452,
+        11511
+      ]
+    },
+    {
+      "content": "Verify that your changes have been persisted.",
+      "pos": [
+        11512,
+        11557
+      ]
+    },
+    {
+      "content": "View the contents of the remote TodoItem table:",
+      "pos": [
+        11562,
+        11609
+      ]
+    },
+    {
+      "pos": [
+        11617,
+        11806
+      ],
+      "content": "For a Node.js backend, go to the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](https://portal.azure.com/)</ept>, and in your Mobile App backend click <bpt id=\"p2\">**</bpt>Easy Tables<ept id=\"p2\">**</ept> &gt; <bpt id=\"p3\">**</bpt>TodoItem<ept id=\"p3\">**</ept> to view the contents of the <ph id=\"ph1\">`TodoItem`</ph> table."
+    },
+    {
+      "content": "For a .NET backend, view the table contents either with a SQL tool such as SQL Server Management Studio, or a REST client such as Fiddler or Postman.",
+      "pos": [
+        11813,
+        11962
+      ]
+    },
+    {
+      "pos": [
+        11968,
+        12031
+      ],
+      "content": "Verify that the new items have <bpt id=\"p1\">*</bpt>not<ept id=\"p1\">*</ept> been synced to the server:"
+    },
+    {
+      "content": "Change the URL back to the correct on in <bpt id=\"p1\">**</bpt>QSTodoService.m<ept id=\"p1\">**</ept> and rerun the app.",
+      "pos": [
+        12036,
+        12115
+      ]
+    },
+    {
+      "content": "Perform the refresh gesture by pulling down the list of items.",
+      "pos": [
+        12116,
+        12178
+      ]
+    },
+    {
+      "content": "You will see a progress spinner and the text \"Syncing...\".",
+      "pos": [
+        12179,
+        12237
+      ]
+    },
+    {
+      "content": "View the TodoItem data again.",
+      "pos": [
+        12242,
+        12271
+      ]
+    },
+    {
+      "content": "The new and changed TodoItems should now appear.",
+      "pos": [
+        12272,
+        12320
+      ]
+    },
+    {
+      "content": "Summary",
+      "pos": [
+        12325,
+        12332
+      ]
+    },
+    {
+      "content": "In order to support the offline sync feature, we used the <ph id=\"ph1\">`MSSyncTable`</ph> interface and initialized <ph id=\"ph2\">`MSClient.syncContext`</ph> with a local store.",
+      "pos": [
+        12334,
+        12474
+      ]
+    },
+    {
+      "content": "In this case the local store was a Core Data-based database.",
+      "pos": [
+        12475,
+        12535
+      ]
+    },
+    {
+      "pos": [
+        12537,
+        12660
+      ],
+      "content": "When using a Core Data local store, you must define several tables with the <bpt id=\"p1\">[</bpt>correct system properties<ept id=\"p1\">](#review-core-data)</ept>."
+    },
+    {
+      "content": "The normal CRUD operations for Azure Mobile Apps work as if the app is still connected but all the operations occur against the local store.",
+      "pos": [
+        12662,
+        12802
+      ]
+    },
+    {
+      "pos": [
+        12804,
+        12961
+      ],
+      "content": "When we wanted to synchronize the local store with the server, we used the <ph id=\"ph1\">`MSSyncTable.pullWithQuery`</ph> and <ph id=\"ph2\">`MSClient.syncContext.pushWithCompletion`</ph> methods."
+    },
+    {
+      "content": "To push changes to the server, we called <ph id=\"ph1\">`pushWithCompletion`</ph>.",
+      "pos": [
+        12966,
+        13028
+      ]
+    },
+    {
+      "content": "This method is a member of <ph id=\"ph1\">`MSSyncContext`</ph> instead of the sync table because it will push changes across all tables.",
+      "pos": [
+        13029,
+        13145
+      ]
+    },
+    {
+      "content": "Only records that have been modified in some way locally (through CUD operations) will be sent to the server.",
+      "pos": [
+        13151,
+        13260
+      ]
+    },
+    {
+      "pos": [
+        13264,
+        13354
+      ],
+      "content": "To pull data from a table on the server to the app, we called <ph id=\"ph1\">`MSSyncTable.pullWithQuery`</ph>."
+    },
+    {
+      "content": "A pull always issues a push first.",
+      "pos": [
+        13360,
+        13394
+      ]
+    },
+    {
+      "content": "This is to ensure all tables in the local store along with relationships remain consistent.",
+      "pos": [
+        13395,
+        13486
+      ]
+    },
+    {
+      "pos": [
+        13492,
+        13616
+      ],
+      "content": "Note that <ph id=\"ph1\">`pullWithQuery`</ph> can by used to filter the data that is stored on the client, by customizing the <ph id=\"ph2\">`query`</ph> parameter."
+    },
+    {
+      "content": "To enable incremental sync, pass a query ID to <ph id=\"ph1\">`pullWithQuery`</ph>.",
+      "pos": [
+        13620,
+        13683
+      ]
+    },
+    {
+      "content": "The query ID is used to store the last updated timestamp from the results of the last pull operation.",
+      "pos": [
+        13684,
+        13785
+      ]
+    },
+    {
+      "content": "The query ID should be a descriptive string that is unique for each logical query in your app.",
+      "pos": [
+        13786,
+        13880
+      ]
+    },
+    {
+      "content": "If the query has a parameter, then the same parameter value has to be part of the query ID.",
+      "pos": [
+        13881,
+        13972
+      ]
+    },
+    {
+      "content": "If you want to opt out of incremental sync, pass <ph id=\"ph1\">`nil`</ph> as the query ID.",
+      "pos": [
+        13978,
+        14049
+      ]
+    },
+    {
+      "content": "In this case, all records will be retrieved on every call to <ph id=\"ph1\">`pullWithQuery`</ph>, which is potentially inefficient.",
+      "pos": [
+        14050,
+        14161
+      ]
+    },
+    {
+      "content": "Additional Resources",
+      "pos": [
+        14167,
+        14187
+      ]
+    },
+    {
+      "content": "Offline Data Sync in Azure Mobile Apps",
+      "pos": [
+        14192,
+        14230
+      ]
+    },
+    {
+      "pos": [
+        14235,
+        14391
+      ],
+      "content": "<bpt id=\"p1\">[</bpt><ept id=\"p1\">Cloud Cover: Offline Sync in Azure Mobile Services]</ept> \\(note: the video is on Mobile Services, but offline sync works in a similar way in Azure Mobile Apps\\)"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Enable offline sync for your Azure Mobile App (iOS)\"\n    description=\"Learn how to use App Service Mobile Apps to cache and sync offline data in your iOS application\"\n    documentationCenter=\"ios\"\n    authors=\"krisragh\"\n    manager=\"dwrede\"\n    editor=\"\"\n    services=\"app-service\\mobile\"/>\n\n<tags\n    ms.service=\"app-service-mobile\"\n    ms.workload=\"mobile\"\n    ms.tgt_pltfrm=\"mobile-ios\"\n    ms.devlang=\"objective-c\"\n    ms.topic=\"article\"\n    ms.date=\"03/09/2016\"\n    ms.author=\"krisragh\"/>\n\n# Enable offline sync for your iOS mobile app\n\n[AZURE.INCLUDE [app-service-mobile-selector-offline](../../includes/app-service-mobile-selector-offline.md)]\n\n## Overview\n\nThis tutorial covers the offline sync feature of Azure Mobile Apps for iOS. Offline sync allows end-users to interact with a mobile app&mdash;viewing, adding, or modifying data&mdash;even when there is no network connection. Changes are stored in a local database; once the device is back online, these changes are synced with the remote backend.\n\nIf this is your first experience with Azure Mobile Apps, you should first complete the tutorial [Create an iOS App]. If you do not use the downloaded quick start server project, you must add the data access extension packages to your project. For more information about server extension packages, see [Work with the .NET backend server SDK for Azure Mobile Apps](app-service-mobile-dotnet-backend-how-to-use-server-sdk.md).\n\nTo learn more about the offline sync feature, see the topic [Offline Data Sync in Azure Mobile Apps].\n\n## <a name=\"review-sync\"></a>Review the client sync code\n\nThe client project that you downloaded for the tutorial [Create an iOS App] already contains code supporting offline synchronization using a local Core Data-based database. This section is a summary of what is already included in the tutorial code. For a conceptual overview of the feature, see [Offline Data Sync in Azure Mobile Apps].\n\nThe offline data sync sync feature of Azure Mobile Apps allows end users to interact with a local database when the network is not accessible. To use these features in your app, you initialize the sync context of `MSClient` and reference a local store. Then reference your table through the `MSSyncTable` interface.\n\n1. In **QSTodoService.m**, notice the type of the member `syncTable` is `MSSyncTable`. Offline sync uses this sync table interface instead of `MSTable`. When a sync table is used, all operations go to the local store and are only synchronized with the remote backend with explicit push and pull operations.\n\n    To get a reference to a sync table, use the method `syncTableWithName`. To remove offline sync functionality, use `tableWithName` instead.\n\n2. Before any table operations can be performed, the local store must be initialized. This is the relevant code in the `QSTodoService.init` method:\n\n        MSCoreDataStore *store = [[MSCoreDataStore alloc] initWithManagedObjectContext:context];\n\n        self.client.syncContext = [[MSSyncContext alloc] initWithDelegate:nil dataSource:store callback:nil];\n\n    This creates a local store using the interface `MSCoreDataStore`, which is provided in the Mobile Apps SDK. You can instead a provide a different local store by implementing the `MSSyncContextDataSource` protocol.\n\n    The first parameter of `initWithDelegate` is used to specify a conflict handler. Since we have passed `nil`, we will get the default conflict handler, which fails on any conflict.\n\n    <!-- For details on how to implement a custom conflict handler, see the tutorial [Handling conflicts with offline support for Mobile Services]. -->\n\n3. The methods `pullData` and `syncData` performs the actual sync operation: `syncData` first pushes new changes, then calls `pullData` to get data from the remote backend.\n\n        -(void)syncData:(QSCompletionBlock)completion\n        {\n            // push all changes in the sync context, then pull new data\n            [self.client.syncContext pushWithCompletion:^(NSError *error) {\n                [self logErrorIfNotNil:error];\n                [self pullData:completion];\n            }];\n        }\n\n    In turn, the method `pullData` gets new data that matches a query:\n\n        -(void)pullData:(QSCompletionBlock)completion\n        {\n            MSQuery *query = [self.syncTable query];\n\n            // Pulls data from the remote server into the local table.\n            // We're pulling all items and filtering in the view\n            // query ID is used for incremental sync\n            [self.syncTable pullWithQuery:query queryId:@\"allTodoItems\" completion:^(NSError *error) {\n                [self logErrorIfNotNil:error];\n\n                // Let the caller know that we have finished\n                if (completion != nil) {\n                    dispatch_async(dispatch_get_main_queue(), completion);\n                }\n            }];\n        }\n\n    In `syncData`, we first call `pushWithCompletion` on the sync context. This method is a member of `MSSyncContext` (rather than the sync table itself)  because it will push changes across all tables. Only records that have been modified in some way locally (through CUD operations) will be sent to the server. Then the helper `pullData` is called, which calls `MSSyncTable.pullWithQuery` to retrieve remote data and store in the local database.\n\n    Note that in this example, the push operation was not strictly necessary. If there are any changes pending in the sync context for the table that is doing a push operation, pull always issues a push first. However, if you have more than one sync table, it is best explicitly call push to ensure that everything is consistent across related tables.\n\n    The method `pullWithQuery` allows you to specify a query to filter the records you wish to retrieve. In this example, the query just retrieves all records in the remote `TodoItem` table.\n\n    The second parameter to `pullWithQuery` is a query ID that is used for *incremental sync*. Incremental sync retrieves only those records modified since the last sync, using the record's `UpdatedAt` timestamp (called `updatedAt` in the local store). The query ID should be a descriptive string that is unique for each logical query in your app. To opt-out of incremental sync, pass `nil` as the query ID. Note that this can be potentially inefficient, since it will retrieve all records on each pull operation.\n\n5. In the class `QSTodoService`, the method `syncData` is called after the operations that modify data, `addItem` and `completeItem`. It is also called from `QSTodoListViewController.refresh`, so that the user gets the latest data whenever they perform the refresh gesture. The app also performs a sync on launch, since `QSTodoListViewController.init` calls `refresh`.\n\n    Because `syncData` is called whenever data is modified, this app assumes that the user is online whenever they are editing data. In another section, we will update the app so that users can edit even when they are offline.\n\n## <a name=\"review-core-data\"></a>Review the Core Data model\n\nWhen using the Core Data offline store, you need to define particular tables and fields in your data model. The sample app already includes a data model with the right format. In this section we will walk through these tables and how they are used.\n\n- Open **QSDataModel.xcdatamodeld**. There are four tables defined--three that are used by the SDK, and one table for the todo items themselves:\n      * MS_TableOperations: For tracking the items that need to be synchronized with the server\n      * MS_TableOperationErrors: For tracking any errors that happen during offline synchronization\n      * MS_TableConfig: For tracking the last updated time for the last sync operation for all pull operations\n      * TodoItem: For storing the todo items. The system columns **createdAt**, **updatedAt**, and **version** are optional system properties.\n\n>[AZURE.NOTE] The Azure Mobile Apps SDK reserves column names that being with \"**``**\". You should not use this prefix on anything other than system columns, otherwise your column names will be modified when using the remote backend.\n\n- When using the offline sync feature, you must define the system tables as shown below.\n\n    ### System Tables\n\n    **MS_TableOperations**\n\n    ![][defining-core-data-tableoperations-entity]\n\n    | Attribute  |    Type     |\n    |----------- |   ------    |\n    | id         | Integer 64  |\n    | itemId     | String      |\n    | properties | Binary Data |\n    | table      | String      |\n    | tableKind  | Integer 16  |\n\n    <br>**MS_TableOperationErrors**\n\n    ![][defining-core-data-tableoperationerrors-entity]\n\n    | Attribute  |    Type     |\n    |----------- |   ------    |\n    | id         | String      |\n    | operationId | Integer 64 |\n    | properties | Binary Data |\n    | tableKind  | Integer 16  |\n\n    <br>**MS_TableConfig**\n\n    ![][defining-core-data-tableconfig-entity]\n\n    | Attribute  |    Type     |\n    |----------- |   ------    |\n    | id         | String      |\n    | key        | String      |\n    | keyType    | Integer 64  |\n    | table      | String      |\n    | value      | String      |\n\n    ### Data table\n\n    **TodoItem**\n\n    | Attribute    |  Type   | Note                                                   |\n    |-----------   |  ------ | -------------------------------------------------------|\n    | id           | String, marked required  | primary key in remote store                            |\n    | complete     | Boolean | todo item field                                        |\n    | text         | String  | todo item field                                        |\n    | createdAt | Date    | (optional) maps to createdAt system property         |\n    | updatedAt | Date    | (optional) maps to updatedAt system property         |\n    | version   | String  | (optional) used to detect conflicts, maps to version |\n\n\n## <a name=\"setup-sync\"></a>Change the sync behavior of the app\n\nIn this section, you will modify the app so that it does not sync on app start, or when inserting and updating items, but only when the refresh gesture button is performed.\n\n1. In **QSTodoListViewController.m**, change the **viewDidLoad** method to remove the call to `[self refresh]` at the end of the method. Now, the data will not be synced with the server on app start, but instead will be the contents of local store.\n\n2. In **QSTodoService.m**, modify the definition of `addItem` so that it doesn't sync after the item is inserted. Remove the `self syncData` block and replace with the following:\n\n            if (completion != nil) {\n                dispatch_async(dispatch_get_main_queue(), completion);\n            }\n\n3. Modify the definition of `completeItem` as above; remove the block for `self syncData` and replace with the following:\n\n            if (completion != nil) {\n                dispatch_async(dispatch_get_main_queue(), completion);\n            }\n\n## <a name=\"test-app\"></a>Test the app\n\nIn this section, you will connect to an invalid URL to simulate an offline scenario. When you add data items, they will be held in the local Core Data store, but not synced to the mobile backend.\n\n1. Change the Mobile App URL in **QSTodoService.m** to an invalid URL, and run the app again:\n\n        self.client = [MSClient clientWithApplicationURLString:@\"https://sitename.azurewebsites.net.fail\"];\n\n2. Add some todo items or complete some items. Quit the simulator (or forcibly close the app) and restart. Verify that your changes have been persisted.\n\n3. View the contents of the remote TodoItem table:\n\n    + For a Node.js backend, go to the [Azure portal](https://portal.azure.com/), and in your Mobile App backend click **Easy Tables** > **TodoItem** to view the contents of the `TodoItem` table.\n    + For a .NET backend, view the table contents either with a SQL tool such as SQL Server Management Studio, or a REST client such as Fiddler or Postman.\n\n    Verify that the new items have *not* been synced to the server:\n\n4. Change the URL back to the correct on in **QSTodoService.m** and rerun the app. Perform the refresh gesture by pulling down the list of items. You will see a progress spinner and the text \"Syncing...\".\n\n5. View the TodoItem data again. The new and changed TodoItems should now appear.\n\n## Summary\n\nIn order to support the offline sync feature, we used the `MSSyncTable` interface and initialized `MSClient.syncContext` with a local store. In this case the local store was a Core Data-based database.\n\nWhen using a Core Data local store, you must define several tables with the [correct system properties](#review-core-data).\n\nThe normal CRUD operations for Azure Mobile Apps work as if the app is still connected but all the operations occur against the local store.\n\nWhen we wanted to synchronize the local store with the server, we used the `MSSyncTable.pullWithQuery` and `MSClient.syncContext.pushWithCompletion` methods.\n\n*  To push changes to the server, we called `pushWithCompletion`. This method is a member of `MSSyncContext` instead of the sync table because it will push changes across all tables.\n\n    Only records that have been modified in some way locally (through CUD operations) will be sent to the server.\n\n* To pull data from a table on the server to the app, we called `MSSyncTable.pullWithQuery`.\n\n    A pull always issues a push first. This is to ensure all tables in the local store along with relationships remain consistent.\n\n    Note that `pullWithQuery` can by used to filter the data that is stored on the client, by customizing the `query` parameter.\n\n* To enable incremental sync, pass a query ID to `pullWithQuery`. The query ID is used to store the last updated timestamp from the results of the last pull operation. The query ID should be a descriptive string that is unique for each logical query in your app. If the query has a parameter, then the same parameter value has to be part of the query ID.\n\n    If you want to opt out of incremental sync, pass `nil` as the query ID. In this case, all records will be retrieved on every call to `pullWithQuery`, which is potentially inefficient.\n\n\n## Additional Resources\n\n* [Offline Data Sync in Azure Mobile Apps]\n\n* [Cloud Cover: Offline Sync in Azure Mobile Services] \\(note: the video is on Mobile Services, but offline sync works in a similar way in Azure Mobile Apps\\)\n\n<!-- URLs. -->\n\n\n[Create an iOS App]: ../app-service-mobile-ios-get-started.md\n[Offline Data Sync in Azure Mobile Apps]: ../app-service-mobile-offline-data-sync.md\n\n[defining-core-data-tableoperationerrors-entity]: ./media/app-service-mobile-ios-get-started-offline-data/defining-core-data-tableoperationerrors-entity.png\n[defining-core-data-tableoperations-entity]: ./media/app-service-mobile-ios-get-started-offline-data/defining-core-data-tableoperations-entity.png\n[defining-core-data-tableconfig-entity]: ./media/app-service-mobile-ios-get-started-offline-data/defining-core-data-tableconfig-entity.png\n[defining-core-data-todoitem-entity]: ./media/app-service-mobile-ios-get-started-offline-data/defining-core-data-todoitem-entity.png\n\n[Cloud Cover: Offline Sync in Azure Mobile Services]: http://channel9.msdn.com/Shows/Cloud+Cover/Episode-155-Offline-Storage-with-Donna-Malayeri\n[Azure Friday: Offline-enabled apps in Azure Mobile Services]: http://azure.microsoft.com/en-us/documentation/videos/azure-mobile-services-offline-enabled-apps-with-donna-malayeri/\n\n"
+}

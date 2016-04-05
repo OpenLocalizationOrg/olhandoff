@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        3,
+        65
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"update-app\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Update the app to call the custom API"
+    },
+    {
+      "pos": [
+        70,
+        245
+      ],
+      "content": "In Visual Studio, open the default.html file in your quickstart project, locate the <bpt id=\"p1\">**</bpt>button<ept id=\"p1\">**</ept> element named <ph id=\"ph1\">`buttonRefresh`</ph>, and add the following new element right after it:"
+    },
+    {
+      "content": "This adds a new button to the page.",
+      "pos": [
+        339,
+        374
+      ]
+    },
+    {
+      "pos": [
+        380,
+        540
+      ],
+      "content": "Open the default.js code file in the <ph id=\"ph1\">`js`</ph> project folder, locate the <bpt id=\"p1\">**</bpt>refreshTodoItems<ept id=\"p1\">**</ept> function and make sure that this function contains the following code:"
+    },
+    {
+      "content": "This filters the items so that completed items are not returned by the query.",
+      "pos": [
+        811,
+        888
+      ]
+    },
+    {
+      "pos": [
+        893,
+        957
+      ],
+      "content": "After the <bpt id=\"p1\">**</bpt>refreshTodoItems<ept id=\"p1\">**</ept> function, add the following code:"
+    },
+    {
+      "content": "This method handles the <bpt id=\"p1\">**</bpt>Click<ept id=\"p1\">**</ept> event for the new button.",
+      "pos": [
+        2013,
+        2072
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>InvokeApiAsync<ept id=\"p1\">**</ept> method is called on the client, which sends a POST request to the new custom API.",
+      "pos": [
+        2073,
+        2177
+      ]
+    },
+    {
+      "content": "The result returned by the custom API is displayed in a message dialog, as are any errors.",
+      "pos": [
+        2178,
+        2268
+      ]
+    },
+    {
+      "pos": [
+        2273,
+        2308
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"test-app\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Test the app"
+    },
+    {
+      "pos": [
+        2313,
+        2393
+      ],
+      "content": "In Visual Studio, press the <bpt id=\"p1\">**</bpt>F5<ept id=\"p1\">**</ept> key to rebuild the project and start the app."
+    },
+    {
+      "pos": [
+        2398,
+        2471
+      ],
+      "content": "In the app, type some text in <bpt id=\"p1\">**</bpt>Insert a TodoItem<ept id=\"p1\">**</ept>, then click <bpt id=\"p2\">**</bpt>Save<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Repeat the previous step until you have added several todo items to the list.",
+      "pos": [
+        2476,
+        2553
+      ]
+    },
+    {
+      "pos": [
+        2558,
+        2592
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Complete All<ept id=\"p1\">**</ept> button."
+    },
+    {
+      "content": "A message dialog is displayed that indicates the number of items marked complete and the filtered query is executed again, which clears all items from the list.",
+      "pos": [
+        2719,
+        2879
+      ]
+    }
+  ],
+  "content": "\n##<a name=\"update-app\"></a>Update the app to call the custom API\n\n1. In Visual Studio, open the default.html file in your quickstart project, locate the **button** element named `buttonRefresh`, and add the following new element right after it: \n\n        <button id=\"buttonCompleteAll\" style=\"margin-left: 5px\">Complete All</button>\n\n    This adds a new button to the page. \n\n2. Open the default.js code file in the `js` project folder, locate the **refreshTodoItems** function and make sure that this function contains the following code:\n\n        todoTable.where({ complete: false })\n           .read()\n           .done(function (results) {\n               todoItems = new WinJS.Binding.List(results);\n               listItems.winControl.itemDataSource = todoItems.dataSource;\n           });            \n\n    This filters the items so that completed items are not returned by the query.\n\n3. After the **refreshTodoItems** function, add the following code:\n\n        var completeAllTodoItems = function () {\n            var okCommand = new Windows.UI.Popups.UICommand(\"OK\");\n        \n            // Asynchronously call the custom API using the POST method. \n            mobileService.invokeApi(\"completeall\", {\n                body: null,\n                method: \"post\"\n            }).done(function (results) {\n                var message = results.result.count + \" item(s) marked as complete.\";\n                var dialog = new Windows.UI.Popups.MessageDialog(message);\n                dialog.commands.append(okCommand);\n                dialog.showAsync().done(function () {\n                    refreshTodoItems();\n                });\n            }, function (error) {\n                var dialog = new Windows.UI.Popups\n                    .MessageDialog(error.message);\n                dialog.commands.append(okCommand);\n                dialog.showAsync().done();\n            });\n        };\n\n        buttonCompleteAll.addEventListener(\"click\", function () {\n            completeAllTodoItems();\n        });\n\n    This method handles the **Click** event for the new button. The **InvokeApiAsync** method is called on the client, which sends a POST request to the new custom API. The result returned by the custom API is displayed in a message dialog, as are any errors.\n\n## <a name=\"test-app\"></a>Test the app\n\n1. In Visual Studio, press the **F5** key to rebuild the project and start the app.\n\n2. In the app, type some text in **Insert a TodoItem**, then click **Save**.\n\n3. Repeat the previous step until you have added several todo items to the list.\n\n4. Click the **Complete All** button.\n\n    ![](./media/mobile-services-windows-store-javascript-call-custom-api/mobile-custom-api-windows-store-completed.png)\n\n    A message dialog is displayed that indicates the number of items marked complete and the filtered query is executed again, which clears all items from the list."
+}
