@@ -1,0 +1,117 @@
+{
+  "nodes": [
+    {
+      "content": "The previous example showed a standard sign-in, which requires the client to contact both the identity provider and the mobile service every time that the app starts.",
+      "pos": [
+        1,
+        167
+      ]
+    },
+    {
+      "content": "Not only is this method inefficient, you can run into usage-relates issues should many customers try to start you app at the same time.",
+      "pos": [
+        168,
+        303
+      ]
+    },
+    {
+      "content": "A better approach is to cache the authorization token returned by Mobile Services and try to use this first before using a provider-based sign-in.",
+      "pos": [
+        304,
+        450
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>You can cache the token issued by Mobile Services regardless of whether you are using client-managed or service-managed authentication.",
+      "pos": [
+        454,
+        601
+      ]
+    },
+    {
+      "content": "This tutorial uses service-managed authentication.",
+      "pos": [
+        602,
+        652
+      ]
+    },
+    {
+      "pos": [
+        657,
+        734
+      ],
+      "content": "In the MainPage.xaml.cs project file, add the following <bpt id=\"p1\">**</bpt>using<ept id=\"p1\">**</ept> statements:"
+    },
+    {
+      "pos": [
+        830,
+        895
+      ],
+      "content": "Replace the <bpt id=\"p1\">**</bpt>AuthenticateAsync<ept id=\"p1\">**</ept> method with the following code:"
+    },
+    {
+      "content": "In this version of <bpt id=\"p1\">**</bpt>AuthenticateAsync<ept id=\"p1\">**</ept>, the app tries to use credentials stored encrypted in local storage to access the mobile service.",
+      "pos": [
+        4199,
+        4337
+      ]
+    },
+    {
+      "content": "A simple query is sent to verify that the stored token is not expired.",
+      "pos": [
+        4338,
+        4408
+      ]
+    },
+    {
+      "content": "When a 401 is returned, a regular provider-based sign-in is attempted.",
+      "pos": [
+        4409,
+        4479
+      ]
+    },
+    {
+      "content": "A regular sign-in is also performed when there is no stored credential.",
+      "pos": [
+        4480,
+        4551
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>This app tests for expired tokens during login, but token expiration can occur after authentication when the app is in use.",
+      "pos": [
+        4562,
+        4697
+      ]
+    },
+    {
+      "content": "For a solution to handling authorization errors related to expiring tokens, see the post <bpt id=\"p1\">[</bpt>Caching and handling expired tokens in Azure Mobile Services managed SDK<ept id=\"p1\">](http://blogs.msdn.com/b/carlosfigueira/archive/2014/03/13/caching-and-handling-expired-tokens-in-azure-mobile-services-managed-sdk.aspx)</ept>.",
+      "pos": [
+        4698,
+        4999
+      ]
+    },
+    {
+      "content": "Restart the app twice.",
+      "pos": [
+        5009,
+        5031
+      ]
+    },
+    {
+      "content": "Notice that on the first start-up, sign-in with the provider is again required.",
+      "pos": [
+        5037,
+        5116
+      ]
+    },
+    {
+      "content": "However, on the second restart the cached credentials are used and sign-in is bypassed.",
+      "pos": [
+        5117,
+        5204
+      ]
+    }
+  ],
+  "content": "\nThe previous example showed a standard sign-in, which requires the client to contact both the identity provider and the mobile service every time that the app starts. Not only is this method inefficient, you can run into usage-relates issues should many customers try to start you app at the same time. A better approach is to cache the authorization token returned by Mobile Services and try to use this first before using a provider-based sign-in. \n\n>[AZURE.NOTE]You can cache the token issued by Mobile Services regardless of whether you are using client-managed or service-managed authentication. This tutorial uses service-managed authentication.\n\n1. In the MainPage.xaml.cs project file, add the following **using** statements:\n\n        using System.IO.IsolatedStorage;\n        using System.Security.Cryptography;     \n\n2. Replace the **AuthenticateAsync** method with the following code:\n\n        private async System.Threading.Tasks.Task AuthenticateAsync()\n        {\n            string message;\n            // This sample uses the Facebook provider.\n            var provider = \"Facebook\";\n\n            // Provide some additional app-specific security for the encryption.\n            byte [] entropy = { 1, 8, 3, 6, 5 };\n\n            // Authorization credential.\n            MobileServiceUser user = null;\n\n            // Isolated storage for the app.\n            IsolatedStorageSettings settings =\n                IsolatedStorageSettings.ApplicationSettings;\n\n            while (user == null)\n            {\n                // Try to get an existing encrypted credential from isolated storage.                    \n                if (settings.Contains(provider))\n                {\n                    // Get the encrypted byte array, decrypt and deserialize the user.\n                    var encryptedUser = settings[provider] as byte[];\n                    var userBytes = ProtectedData.Unprotect(encryptedUser, entropy);\n                    user = JsonConvert.DeserializeObject<MobileServiceUser>(\n                        System.Text.Encoding.Unicode.GetString(userBytes, 0, userBytes.Length));\n                }\n                if (user != null)\n                {\n                    // Set the user from the stored credentials.\n                    App.MobileService.CurrentUser = user;\n\n                    try\n                    {\n                        // Try to return an item now to determine if the cached credential has expired.\n                        await App.MobileService.GetTable<TodoItem>().Take(1).ToListAsync();\n                    }\n                    catch (MobileServiceInvalidOperationException ex)\n                    {\n                        if (ex.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)\n                        {\n                            // Remove the credential with the expired token.\n                            settings.Remove(provider);\n                            user = null;\n                            continue;\n                        }\n                    }\n                }\n                else\n                {\n                    try\n                    {\n                        // Login with the identity provider.\n                        user = await App.MobileService\n                            .LoginAsync(provider);\n\n                        // Serialize the user into an array of bytes and encrypt with DPAPI.\n                        var userBytes = System.Text.Encoding.Unicode\n                            .GetBytes(JsonConvert.SerializeObject(user));\n                        byte[] encryptedUser = ProtectedData.Protect(userBytes, entropy);\n\n                        // Store the encrypted user credentials in local settings.\n                        settings.Add(provider, encryptedUser);\n                        settings.Save();\n                    }\n                    catch (MobileServiceInvalidOperationException ex)\n                    {\n                        message = \"You must log in. Login Required\";\n                    }\n                }\n                message = string.Format(\"You are now logged in - {0}\", user.UserId);\n                MessageBox.Show(message);\n            }\n        }\n\n    In this version of **AuthenticateAsync**, the app tries to use credentials stored encrypted in local storage to access the mobile service. A simple query is sent to verify that the stored token is not expired. When a 401 is returned, a regular provider-based sign-in is attempted. A regular sign-in is also performed when there is no stored credential.    \n\n    >[AZURE.NOTE]This app tests for expired tokens during login, but token expiration can occur after authentication when the app is in use. For a solution to handling authorization errors related to expiring tokens, see the post [Caching and handling expired tokens in Azure Mobile Services managed SDK](http://blogs.msdn.com/b/carlosfigueira/archive/2014/03/13/caching-and-handling-expired-tokens-in-azure-mobile-services-managed-sdk.aspx). \n    \n3. Restart the app twice.\n\n    Notice that on the first start-up, sign-in with the provider is again required. However, on the second restart the cached credentials are used and sign-in is bypassed. "
+}

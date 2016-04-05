@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        4,
+        54
+      ],
+      "content": "<ph id=\"ph1\">&lt;a id=\"add-push\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Add Push Notifications to App"
+    },
+    {
+      "content": "In QSAppDelegate.m, import the iOS SDK and QSTodoService.h:",
+      "pos": [
+        58,
+        117
+      ]
+    },
+    {
+      "pos": [
+        238,
+        347
+      ],
+      "content": "In <ph id=\"ph1\">`didFinishLaunchingWithOptions`</ph> in QSAppDelegate.m, insert the following lines right before <ph id=\"ph2\">`return YES;`</ph>:"
+    },
+    {
+      "content": "In QSAppDelegate.m, add the following handler methods.",
+      "pos": [
+        744,
+        798
+      ]
+    },
+    {
+      "content": "Your app is now updated to support push notifications.",
+      "pos": [
+        799,
+        853
+      ]
+    }
+  ],
+  "content": "\n## <a id=\"add-push\"></a>Add Push Notifications to App\n\n* In QSAppDelegate.m, import the iOS SDK and QSTodoService.h:\n\n```\n        #import <WindowsAzureMobileServices/WindowsAzureMobileServices.h>\n        #import \"QSTodoService.h\"\n```\n\n* In `didFinishLaunchingWithOptions` in QSAppDelegate.m, insert the following lines right before `return YES;`:\n\n```\n        UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];\n        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];\n        [[UIApplication sharedApplication] registerForRemoteNotifications];\n```\n\n* In QSAppDelegate.m, add the following handler methods. Your app is now updated to support push notifications.\n\n```\n        // Registration with APNs is successful\n        - (void)application:(UIApplication *)application\n        didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {\n\n            QSTodoService *todoService = [QSTodoService defaultService];\n            MSClient *client = todoService.client;\n\n            [client.push registerNativeWithDeviceToken:deviceToken tags:nil completion:^(NSError *error) {\n                if (error != nil) {\n                    NSLog(@\"Error registering for notifications: %@\", error);\n                }\n            }];\n        }\n\n        // Handle any failure to register\n        - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:\n        (NSError *)error {\n            NSLog(@\"Failed to register for remote notifications: %@\", error);\n        }\n\n        // Use userInfo in the payload to display a UIAlertView.\n        - (void)application:(UIApplication *)application\n              didReceiveRemoteNotification:(NSDictionary *)userInfo {\n            NSLog(@\"%@\", userInfo);\n\n            NSDictionary *apsPayload = userInfo[@\"aps\"];\n            NSString *alertString = apsPayload[@\"alert\"];\n\n            UIAlertView *alert = [[UIAlertView alloc]\n              initWithTitle:@\"Notification\"\n              message:alertString\n              delegate:nil\n              cancelButtonTitle:@\"OK\"\n              otherButtonTitles:nil];\n            [alert show];\n        }\n```\n"
+}

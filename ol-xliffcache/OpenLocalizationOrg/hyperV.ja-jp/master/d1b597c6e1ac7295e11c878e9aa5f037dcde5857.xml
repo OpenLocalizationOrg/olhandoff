@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        4,
+        130
+      ],
+      "content": "In the <bpt id=\"p1\">[</bpt>Azure classic portal<ept id=\"p1\">](https://manage.windowsazure.com/)</ept>, click the <bpt id=\"p2\">**</bpt>Data<ept id=\"p2\">**</ept> tab and then click the <bpt id=\"p3\">**</bpt>TodoItem<ept id=\"p3\">**</ept> table."
+    },
+    {
+      "pos": [
+        137,
+        201
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>todoitem<ept id=\"p1\">**</ept>, click the <bpt id=\"p2\">**</bpt>Script<ept id=\"p2\">**</ept> tab and select <bpt id=\"p3\">**</bpt>Insert<ept id=\"p3\">**</ept>."
+    },
+    {
+      "pos": [
+        210,
+        301
+      ],
+      "content": "This displays the function that is invoked when an insert occurs in the <bpt id=\"p1\">**</bpt>TodoItem<ept id=\"p1\">**</ept> table."
+    },
+    {
+      "pos": [
+        306,
+        383
+      ],
+      "content": "Replace the insert function with the following code, and then click <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept>:"
+    },
+    {
+      "pos": [
+        1426,
+        1619
+      ],
+      "content": "This registers a new insert script, which uses the <bpt id=\"p1\">[</bpt>gcm object<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?LinkId=282645)</ept> to send a push notification to all registered devices after the insert succeeds."
+    }
+  ],
+  "content": "\n1. In the [Azure classic portal](https://manage.windowsazure.com/), click the **Data** tab and then click the **TodoItem** table. \n \n2. In **todoitem**, click the **Script** tab and select **Insert**.\n   \n    This displays the function that is invoked when an insert occurs in the **TodoItem** table.\n\n3. Replace the insert function with the following code, and then click **Save**:\n\n        function insert(item, user, request) {\n        // Define a simple payload for a GCM notification.\n        var payload = {\n            \"data\": {\n                \"message\": item.text\n            }\n        };      \n        request.execute({\n            success: function() {\n                // If the insert succeeds, send a notification.\n                push.gcm.send(null, payload, {\n                    success: function(pushResponse) {\n                        console.log(\"Sent push:\", pushResponse, payload);\n                        request.respond();\n                        },              \n                    error: function (pushResponse) {\n                        console.log(\"Error Sending push:\", pushResponse);\n                        request.respond(500, { error: pushResponse });\n                        }\n                    });\n                },\n            error: function(err) {\n                console.log(\"request.execute error\", err)\n                request.respond();\n            }\n          });\n        }\n\n    This registers a new insert script, which uses the [gcm object](http://go.microsoft.com/fwlink/p/?LinkId=282645) to send a push notification to all registered devices after the insert succeeds. "
+}

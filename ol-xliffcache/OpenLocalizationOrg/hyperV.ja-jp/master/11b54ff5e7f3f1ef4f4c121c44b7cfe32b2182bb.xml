@@ -1,0 +1,124 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        2,
+        64
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"update-app\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Update the app to call the custom API"
+    },
+    {
+      "pos": [
+        69,
+        240
+      ],
+      "content": "In Visual Studio, open the MainPage.xaml file in your quickstart project, locate the <bpt id=\"p1\">**</bpt>Button<ept id=\"p1\">**</ept> element named <ph id=\"ph1\">`ButtonRefresh`</ph>, and replace it with the following XAML code:"
+    },
+    {
+      "content": "This adds a new button to the page.",
+      "pos": [
+        593,
+        628
+      ]
+    },
+    {
+      "content": "Open the MainPage.xaml.cs code file, and add the following class definition code:",
+      "pos": [
+        634,
+        715
+      ]
+    },
+    {
+      "content": "This class is used to hold the row count value returned by the custom API.",
+      "pos": [
+        820,
+        894
+      ]
+    },
+    {
+      "pos": [
+        900,
+        1048
+      ],
+      "content": "Locate the <bpt id=\"p1\">**</bpt>RefreshTodoItems<ept id=\"p1\">**</ept> method in the <bpt id=\"p2\">**</bpt>MainPage<ept id=\"p2\">**</ept> class, and make sure that the <ph id=\"ph1\">`query`</ph> is defined by using the following <bpt id=\"p3\">**</bpt>Where<ept id=\"p3\">**</ept> method:"
+    },
+    {
+      "content": "This filters the items so that completed items are not returned by the query.",
+      "pos": [
+        1110,
+        1187
+      ]
+    },
+    {
+      "pos": [
+        1192,
+        1244
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>MainPage<ept id=\"p1\">**</ept> class, add the following method:"
+    },
+    {
+      "content": "This method handles the <bpt id=\"p1\">**</bpt>Click<ept id=\"p1\">**</ept> event for the new button.",
+      "pos": [
+        1989,
+        2048
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>InvokeApiAsync<ept id=\"p1\">**</ept> method is called on the client, which sends a request to the new custom API.",
+      "pos": [
+        2049,
+        2148
+      ]
+    },
+    {
+      "content": "The result returned by the custom API is displayed in a message dialog.",
+      "pos": [
+        2149,
+        2220
+      ]
+    },
+    {
+      "pos": [
+        2225,
+        2260
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"test-app\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Test the app"
+    },
+    {
+      "pos": [
+        2265,
+        2345
+      ],
+      "content": "In Visual Studio, press the <bpt id=\"p1\">**</bpt>F5<ept id=\"p1\">**</ept> key to rebuild the project and start the app."
+    },
+    {
+      "pos": [
+        2350,
+        2421
+      ],
+      "content": "In the app, type some text in <bpt id=\"p1\">**</bpt>Insert a TodoItem<ept id=\"p1\">**</ept>, then tap <bpt id=\"p2\">**</bpt>Save<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Repeat the previous step until you have added several todo items to the list.",
+      "pos": [
+        2426,
+        2503
+      ]
+    },
+    {
+      "pos": [
+        2508,
+        2540
+      ],
+      "content": "Tap the <bpt id=\"p1\">**</bpt>Complete All<ept id=\"p1\">**</ept> button."
+    },
+    {
+      "content": "A message box is displayed that indicates the number of items marked complete and the filtered query is executed again, which clears all items from the list.",
+      "pos": [
+        2656,
+        2813
+      ]
+    }
+  ],
+  "content": "##<a name=\"update-app\"></a>Update the app to call the custom API\n\n1. In Visual Studio, open the MainPage.xaml file in your quickstart project, locate the **Button** element named `ButtonRefresh`, and replace it with the following XAML code: \n\n        <StackPanel Grid.Row=\"3\" Grid.ColumnSpan=\"2\" Orientation=\"Horizontal\">\n            <Button Width=\"225\" Name=\"ButtonRefresh\" \n                Click=\"ButtonRefresh_Click\">Refresh</Button>\n            <Button Width=\"225\"  Name=\"ButtonCompleteAll\" \n                Click=\"ButtonCompleteAll_Click\">Complete All</Button>\n        </StackPanel>\n\n    This adds a new button to the page. \n\n2. Open the MainPage.xaml.cs code file, and add the following class definition code:\n\n        public class MarkAllResult\n        {\n            public int Count { get; set; }\n        }\n\n    This class is used to hold the row count value returned by the custom API. \n\n3. Locate the **RefreshTodoItems** method in the **MainPage** class, and make sure that the `query` is defined by using the following **Where** method:\n\n        .Where(todoItem => todoItem.Complete == false)\n\n    This filters the items so that completed items are not returned by the query.\n\n3. In the **MainPage** class, add the following method:\n\n        private async void ButtonCompleteAll_Click(object sender, RoutedEventArgs e)\n        {\n            string message;\n            try\n            {\n                // Asynchronously call the custom API using the POST method. \n                var result = await App.MobileService\n                    .InvokeApiAsync<MarkAllResult>(\"completeAll\", \n                    System.Net.Http.HttpMethod.Post, null);\n                message =  result.Count + \" item(s) marked as complete.\";\n                RefreshTodoItems();\n            }\n            catch (MobileServiceInvalidOperationException ex)\n            {\n                message = ex.Message;                \n            }\n        \n            MessageBox.Show(message);  \n        }\n\n    This method handles the **Click** event for the new button. The **InvokeApiAsync** method is called on the client, which sends a request to the new custom API. The result returned by the custom API is displayed in a message dialog.\n\n## <a name=\"test-app\"></a>Test the app\n\n1. In Visual Studio, press the **F5** key to rebuild the project and start the app.\n\n2. In the app, type some text in **Insert a TodoItem**, then tap **Save**.\n\n3. Repeat the previous step until you have added several todo items to the list.\n\n4. Tap the **Complete All** button.\n\n    ![](./media/mobile-services-windows-phone-call-custom-api/mobile-custom-api-windows-phone-completed.png)\n\n    A message box is displayed that indicates the number of items marked complete and the filtered query is executed again, which clears all items from the list."
+}

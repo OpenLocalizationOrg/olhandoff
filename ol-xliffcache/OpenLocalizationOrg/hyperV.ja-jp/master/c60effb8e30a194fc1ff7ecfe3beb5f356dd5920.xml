@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    {
+      "content": "Add or remove prefixes if you haven't yet created a VPN gateway connection",
+      "pos": [
+        4,
+        78
+      ]
+    },
+    {
+      "pos": [
+        82,
+        240
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>To add<ept id=\"p1\">**</ept> additional address prefixes to a local network gateway that you created, but that doesn't yet have a VPN gateway connection, use the example below."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>To remove<ept id=\"p1\">**</ept> an address prefix from a local network gateway that doesn't have a VPN connection, use the example below.",
+      "pos": [
+        463,
+        582
+      ]
+    },
+    {
+      "content": "Leave out the prefixes that you no longer need.",
+      "pos": [
+        583,
+        630
+      ]
+    },
+    {
+      "content": "In this example, we no longer need prefix 20.0.0.0/24 (from the previous example), so we will update the local network gateway and exclude that prefix.",
+      "pos": [
+        631,
+        782
+      ]
+    },
+    {
+      "content": "Add or remove prefixes if you've already created a VPN gateway connection",
+      "pos": [
+        992,
+        1065
+      ]
+    },
+    {
+      "content": "If you have created your VPN connection and want to add or remove the IP address prefixes contained in your local network gateway, you'll need to do the following steps in order.",
+      "pos": [
+        1067,
+        1245
+      ]
+    },
+    {
+      "content": "This will result in some downtime for your VPN connection, as you will need to remove and rebuild the gateway.",
+      "pos": [
+        1246,
+        1356
+      ]
+    },
+    {
+      "content": "However, because you have requested an IP address for the connection, you won't need to re-configure your on-premises VPN router unless you decide to change the values you previously used.",
+      "pos": [
+        1358,
+        1546
+      ]
+    },
+    {
+      "content": "Remove the gateway connection.",
+      "pos": [
+        1552,
+        1582
+      ]
+    },
+    {
+      "content": "Modify the prefixes for your local network gateway.",
+      "pos": [
+        1587,
+        1638
+      ]
+    },
+    {
+      "content": "Create a new gateway connection.",
+      "pos": [
+        1643,
+        1675
+      ]
+    },
+    {
+      "content": "You can use the following sample as a guideline.",
+      "pos": [
+        1678,
+        1726
+      ]
+    }
+  ],
+  "content": "### Add or remove prefixes if you haven't yet created a VPN gateway connection\n\n- **To add** additional address prefixes to a local network gateway that you created, but that doesn't yet have a VPN gateway connection, use the example below.\n\n        $local = Get-AzureRmLocalNetworkGateway -Name LocalSite -ResourceGroupName testrg\n        Set-AzureRmLocalNetworkGateway -LocalNetworkGateway $local -AddressPrefix @('10.0.0.0/24','20.0.0.0/24','30.0.0.0/24')\n\n\n- **To remove** an address prefix from a local network gateway that doesn't have a VPN connection, use the example below. Leave out the prefixes that you no longer need. In this example, we no longer need prefix 20.0.0.0/24 (from the previous example), so we will update the local network gateway and exclude that prefix.\n\n        $local = Get-AzureRmLocalNetworkGateway -Name LocalSite -ResourceGroupName testrg\n        Set-AzureRmLocalNetworkGateway -LocalNetworkGateway $local -AddressPrefix @('10.0.0.0/24','30.0.0.0/24')\n\n### Add or remove prefixes if you've already created a VPN gateway connection\n\nIf you have created your VPN connection and want to add or remove the IP address prefixes contained in your local network gateway, you'll need to do the following steps in order. This will result in some downtime for your VPN connection, as you will need to remove and rebuild the gateway.  However, because you have requested an IP address for the connection, you won't need to re-configure your on-premises VPN router unless you decide to change the values you previously used.\n \n1. Remove the gateway connection. \n2. Modify the prefixes for your local network gateway. \n3. Create a new gateway connection. \n\nYou can use the following sample as a guideline.\n\n    $gateway1 = Get-AzureRmVirtualNetworkGateway -Name vnetgw1 -ResourceGroupName testrg\n    $local = Get-AzureRmLocalNetworkGateway -Name LocalSite -ResourceGroupName testrg\n\n    Remove-AzureRmVirtualNetworkGatewayConnection -Name localtovon -ResourceGroupName testrg\n\n    $local = Get-AzureRmLocalNetworkGateway -Name LocalSite -ResourceGroupName testrg\n    Set-AzureRmLocalNetworkGateway -LocalNetworkGateway $local -AddressPrefix @('10.0.0.0/24','20.0.0.0/24','30.0.0.0/24')\n    \n    New-AzureRmVirtualNetworkGatewayConnection -Name localtovon -ResourceGroupName testrg -Location 'West US' -VirtualNetworkGateway1 $gateway1 -LocalNetworkGateway2 $local -ConnectionType IPsec -RoutingWeight 10 -SharedKey 'abc123'\n"
+}

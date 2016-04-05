@@ -1,0 +1,82 @@
+{
+  "nodes": [
+    {
+      "content": "These steps create a new custom <bpt id=\"p1\">[</bpt>ApiController<ept id=\"p1\">](http://go.microsoft.com/fwlink/p/?LinkId=512673)</ept> that sends push notifications to the app.",
+      "pos": [
+        0,
+        138
+      ]
+    },
+    {
+      "content": "You could implement this same code in a <bpt id=\"p1\">[</bpt>TableController<ept id=\"p1\">](http://msdn.microsoft.com/library/azure/dn643359.aspx)</ept> or anywhere else in your backend services.",
+      "pos": [
+        139,
+        294
+      ]
+    },
+    {
+      "pos": [
+        300,
+        454
+      ],
+      "content": "In Visual Studio Solution Explorer, right-click the Controllers folder for the mobile service project, expand <bpt id=\"p1\">**</bpt>Add<ept id=\"p1\">**</ept>, then click <bpt id=\"p2\">**</bpt>New Scaffolded Item<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "This displays the Add Scaffold dialog.",
+      "pos": [
+        460,
+        498
+      ]
+    },
+    {
+      "pos": [
+        503,
+        696
+      ],
+      "content": "Expand <bpt id=\"p1\">**</bpt>Azure Mobile Services<ept id=\"p1\">**</ept> and click <bpt id=\"p2\">**</bpt>Azure Mobile Services Custom Controller<ept id=\"p2\">**</ept>, then click <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept>, supply a <bpt id=\"p4\">**</bpt>Controller name<ept id=\"p4\">**</ept> of <ph id=\"ph1\">`NotifyAllUsersController`</ph>, then click <bpt id=\"p5\">**</bpt>Add<ept id=\"p5\">**</ept> again."
+    },
+    {
+      "content": "Web API Add Scaffold dialog",
+      "pos": [
+        704,
+        731
+      ]
+    },
+    {
+      "pos": [
+        834,
+        911
+      ],
+      "content": "This creates a new empty controller class named <bpt id=\"p1\">**</bpt>NotifyAllUsersController<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        917,
+        1009
+      ],
+      "content": "In the new NotifyAllUsersController.cs project file, add the following <bpt id=\"p1\">**</bpt>using<ept id=\"p1\">**</ept> statements:"
+    },
+    {
+      "content": "Add the following code that implements the POST method on the controller:",
+      "pos": [
+        1089,
+        1162
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>This POST method can be called by any client that has the application key, which is not secure.",
+      "pos": [
+        2226,
+        2333
+      ]
+    },
+    {
+      "content": "To secure the endpoint, apply the attribute <ph id=\"ph1\">`[AuthorizeLevel(AuthorizationLevel.User)]`</ph> to the method or class to require authentication.",
+      "pos": [
+        2334,
+        2471
+      ]
+    }
+  ],
+  "content": "These steps create a new custom [ApiController](http://go.microsoft.com/fwlink/p/?LinkId=512673) that sends push notifications to the app. You could implement this same code in a [TableController](http://msdn.microsoft.com/library/azure/dn643359.aspx) or anywhere else in your backend services. \n\n1. In Visual Studio Solution Explorer, right-click the Controllers folder for the mobile service project, expand **Add**, then click **New Scaffolded Item**.\n\n    This displays the Add Scaffold dialog.\n\n2. Expand **Azure Mobile Services** and click **Azure Mobile Services Custom Controller**, then click **Add**, supply a **Controller name** of `NotifyAllUsersController`, then click **Add** again.\n\n    ![Web API Add Scaffold dialog](./media/mobile-services-dotnet-backend-update-server-push-vs2013/add-custom-api-controller.png)\n\n    This creates a new empty controller class named **NotifyAllUsersController**. \n\n3. In the new NotifyAllUsersController.cs project file, add the following **using** statements:\n\n        using Newtonsoft.Json.Linq;\n        using System.Threading.Tasks;\n\n4. Add the following code that implements the POST method on the controller:\n\n        public async Task<bool> Post(JObject data)\n        {\n            try\n            {\n                // Define the XML paylod for a WNS native toast notification \n                // that contains the value supplied in the POST request.\n                string wnsToast = \n                    string.Format(\"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\"?>\" +\n                    \"<toast><visual><binding template=\\\"ToastText01\\\">\" + \n                    \"<text id=\\\"1\\\">{0}</text></binding></visual></toast>\", \n                    data.GetValue(\"toast\").Value<string>());\n\n                // Define the WNS native toast with the payload string.\n                WindowsPushMessage message = new WindowsPushMessage();\n                message.XmlPayload = wnsToast;\n\n                // Send the toast notification.\n                await Services.Push.SendAsync(message);\n                return true;\n            }\n            catch (Exception e)\n            {\n                Services.Log.Error(e.ToString());\n            }\n            return false;\n        }\n\n    >[AZURE.NOTE]This POST method can be called by any client that has the application key, which is not secure. To secure the endpoint, apply the attribute `[AuthorizeLevel(AuthorizationLevel.User)]` to the method or class to require authentication. \n"
+}

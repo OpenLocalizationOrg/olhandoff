@@ -1,0 +1,117 @@
+{
+  "nodes": [
+    {
+      "content": "In Visual Studio, right-click the Controllers folder, expand <bpt id=\"p1\">**</bpt>Add<ept id=\"p1\">**</ept>, then click <bpt id=\"p2\">**</bpt>New Scaffolded Item<ept id=\"p2\">**</ept>.",
+      "pos": [
+        5,
+        110
+      ]
+    },
+    {
+      "content": "This displays the Add Scaffold dialog.",
+      "pos": [
+        111,
+        149
+      ]
+    },
+    {
+      "pos": [
+        154,
+        336
+      ],
+      "content": "Expand <bpt id=\"p1\">**</bpt>Azure Mobile Services<ept id=\"p1\">**</ept>, click <bpt id=\"p2\">**</bpt>Azure Mobile Services Custom Controller<ept id=\"p2\">**</ept>,  click <bpt id=\"p3\">**</bpt>Add<ept id=\"p3\">**</ept>, supply a <bpt id=\"p4\">**</bpt>Controller name<ept id=\"p4\">**</ept> of <ph id=\"ph1\">`CompleteAllController`</ph>, and click <bpt id=\"p5\">**</bpt>Add<ept id=\"p5\">**</ept> again."
+    },
+    {
+      "content": "Web API Add Scaffold dialog",
+      "pos": [
+        344,
+        371
+      ]
+    },
+    {
+      "pos": [
+        466,
+        540
+      ],
+      "content": "This creates a new empty controller class named <bpt id=\"p1\">**</bpt>CompleteAllController<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph>If your dialog doesn't have Mobile Services-specific scaffolds, instead create a new <bpt id=\"p1\">**</bpt>Web API Controller - Empty<ept id=\"p1\">**</ept>.",
+      "pos": [
+        547,
+        675
+      ]
+    },
+    {
+      "content": "In this new controller class, add a public <bpt id=\"p1\">**</bpt>Services<ept id=\"p1\">**</ept> property, which returns the <bpt id=\"p2\">**</bpt>ApiServices<ept id=\"p2\">**</ept> type.",
+      "pos": [
+        676,
+        781
+      ]
+    },
+    {
+      "content": "This property is used to access server-specific settings from inside your controller.",
+      "pos": [
+        782,
+        867
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>CompleteAllController.cs<ept id=\"p1\">**</ept>, add the following <bpt id=\"p2\">**</bpt>using<ept id=\"p2\">**</ept> statements.",
+      "pos": [
+        872,
+        944
+      ]
+    },
+    {
+      "content": "Replace <ph id=\"ph1\">`todolistService`</ph> with the namespace of your mobile service project, which should be the mobile service name appended with <ph id=\"ph2\">`Service`</ph>.",
+      "pos": [
+        949,
+        1090
+      ]
+    },
+    {
+      "pos": [
+        1172,
+        1269
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>CompleteAllController.cs<ept id=\"p1\">**</ept>, add the following class to wrap the response sent to the client."
+    },
+    {
+      "content": "Add the following code to the new controller.",
+      "pos": [
+        1564,
+        1609
+      ]
+    },
+    {
+      "content": "Replace <ph id=\"ph1\">`todolistContext`</ph> with the name of the DbContext for your data model, which should be the mobile service name appended with <ph id=\"ph2\">`Context`</ph>.",
+      "pos": [
+        1610,
+        1752
+      ]
+    },
+    {
+      "content": "Similarly, replace the schema name in the UPDATE statement with the name of your mobile service.",
+      "pos": [
+        1753,
+        1849
+      ]
+    },
+    {
+      "content": "This code uses the <bpt id=\"p1\">[</bpt>Database Class<ept id=\"p1\">](http://msdn.microsoft.com/library/system.data.entity.database.aspx)</ept> to access the <bpt id=\"p2\">**</bpt>TodoItems<ept id=\"p2\">**</ept> table directly to set the completed flag on all items.",
+      "pos": [
+        1850,
+        2036
+      ]
+    },
+    {
+      "content": "This method supports a POST request, and the number of changed rows is returned to the client as an integer value.",
+      "pos": [
+        2037,
+        2151
+      ]
+    }
+  ],
+  "content": "\n\n1. In Visual Studio, right-click the Controllers folder, expand **Add**, then click **New Scaffolded Item**. This displays the Add Scaffold dialog.\n\n2. Expand **Azure Mobile Services**, click **Azure Mobile Services Custom Controller**,  click **Add**, supply a **Controller name** of `CompleteAllController`, and click **Add** again.\n\n    ![Web API Add Scaffold dialog](./media/mobile-services-dotnet-backend-create-custom-api/add-custom-api-controller.png)\n\n    This creates a new empty controller class named **CompleteAllController**.\n\n    >[AZURE.NOTE]If your dialog doesn't have Mobile Services-specific scaffolds, instead create a new **Web API Controller - Empty**. In this new controller class, add a public **Services** property, which returns the **ApiServices** type. This property is used to access server-specific settings from inside your controller.\n\n3. In **CompleteAllController.cs**, add the following **using** statements.     Replace `todolistService` with the namespace of your mobile service project, which should be the mobile service name appended with `Service`.\n\n        using System.Threading.Tasks;\n        using todolistService.Models;\n\n4. In **CompleteAllController.cs**, add the following class to wrap the response sent to the client.\n\n        // We use this class to keep parity with other Mobile Services\n        // that use the JavaScript backend. This way the same client\n        // code can call either type of Mobile Service backend.\n        public class MarkAllResult\n        {\n            public int count;\n        }\n\n5. Add the following code to the new controller. Replace `todolistContext` with the name of the DbContext for your data model, which should be the mobile service name appended with `Context`. Similarly, replace the schema name in the UPDATE statement with the name of your mobile service. This code uses the [Database Class](http://msdn.microsoft.com/library/system.data.entity.database.aspx) to access the **TodoItems** table directly to set the completed flag on all items. This method supports a POST request, and the number of changed rows is returned to the client as an integer value.\n\n\n        // POST api/completeall\n        public async Task<MarkAllResult> Post()\n        {\n            using (todolistContext context = new todolistContext())\n            {\n                // Get the database from the context.\n                var database = context.Database;\n\n                // Create a SQL statement that sets all uncompleted items\n                // to complete and execute the statement asynchronously.\n                var sql = @\"UPDATE todolist.TodoItems SET Complete = 1 \" +\n                            @\"WHERE Complete = 0; SELECT @@ROWCOUNT as count\";\n\n                var result = new MarkAllResult();\n                result.count = await database.ExecuteSqlCommandAsync(sql);\n\n                // Log the result.\n                Services.Log.Info(string.Format(\"{0} items set to 'complete'.\",\n                    result.count.ToString()));\n\n                return result;\n            }\n        }\n\n    > [AZURE.TIP] With default permissions, anyone with the app key may call the custom API. However, the application key is not considered a secure credential because it may not be distributed or stored securely. Consider restricting access to only authenticated users for additional security.\n"
+}
