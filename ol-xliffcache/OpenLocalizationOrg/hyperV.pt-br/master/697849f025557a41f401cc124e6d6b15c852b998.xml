@@ -1,0 +1,103 @@
+{
+  "nodes": [
+    {
+      "content": "In Solution Explorer in Visual Studio, expand the App_Start folder and open the WebApiConfig.cs project file.",
+      "pos": [
+        4,
+        113
+      ]
+    },
+    {
+      "pos": [
+        118,
+        211
+      ],
+      "content": "Add the following line of code to the Register method after the <bpt id=\"p1\">**</bpt>ConfigOptions<ept id=\"p1\">**</ept> definition:"
+    },
+    {
+      "content": "This enforces user authentication before registering for push notifications.",
+      "pos": [
+        340,
+        416
+      ]
+    },
+    {
+      "pos": [
+        422,
+        485
+      ],
+      "content": "Right-click the project, click <bpt id=\"p1\">**</bpt>Add<ept id=\"p1\">**</ept> then click <bpt id=\"p2\">**</bpt>Class...<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        490,
+        560
+      ],
+      "content": "Name the new empty class <ph id=\"ph1\">`PushRegistrationHandler`</ph> then click <bpt id=\"p1\">**</bpt>Add<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        565,
+        633
+      ],
+      "content": "At the top of the code page, add the following <bpt id=\"p1\">**</bpt>using<ept id=\"p1\">**</ept> statements:"
+    },
+    {
+      "pos": [
+        939,
+        1018
+      ],
+      "content": "Replace the existing <bpt id=\"p1\">**</bpt>PushRegistrationHandler<ept id=\"p1\">**</ept> class with the following code:"
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>Register<ept id=\"p1\">**</ept> method is called during registration.",
+      "pos": [
+        3143,
+        3197
+      ]
+    },
+    {
+      "content": "This lets you add a tag to the registration that is the ID of the logged-in user.",
+      "pos": [
+        3198,
+        3279
+      ]
+    },
+    {
+      "content": "The supplied tags are validated to prevent a user from registering for another user's ID.",
+      "pos": [
+        3280,
+        3369
+      ]
+    },
+    {
+      "content": "When a notification is sent to this user, it is received on this and any other device registered by the user.",
+      "pos": [
+        3370,
+        3479
+      ]
+    },
+    {
+      "pos": [
+        3485,
+        3674
+      ],
+      "content": "Expand the Controllers folder, open the TodoItemController.cs project file, locate the <bpt id=\"p1\">**</bpt>PostTodoItem<ept id=\"p1\">**</ept> method and replace the line of code that calls <bpt id=\"p2\">**</bpt>SendAsync<ept id=\"p2\">**</ept> with the following code:"
+    },
+    {
+      "content": "Republish the mobile service project.",
+      "pos": [
+        3927,
+        3964
+      ]
+    },
+    {
+      "content": "Now, the service uses the user ID tag to send a push notification (with the text of the inserted item) to all registrations created by the logged-in user.",
+      "pos": [
+        3966,
+        4120
+      ]
+    }
+  ],
+  "content": "\n1. In Solution Explorer in Visual Studio, expand the App_Start folder and open the WebApiConfig.cs project file.\n\n2. Add the following line of code to the Register method after the **ConfigOptions** definition:\n\n        options.PushAuthorization = \n            Microsoft.WindowsAzure.Mobile.Service.Security.AuthorizationLevel.User;\n \n    This enforces user authentication before registering for push notifications. \n\n2. Right-click the project, click **Add** then click **Class...**.\n\n3. Name the new empty class `PushRegistrationHandler` then click **Add**.\n\n4. At the top of the code page, add the following **using** statements:\n\n        using System.Threading.Tasks; \n        using System.Web.Http; \n        using System.Web.Http.Controllers; \n        using Microsoft.WindowsAzure.Mobile.Service; \n        using Microsoft.WindowsAzure.Mobile.Service.Notifications; \n        using Microsoft.WindowsAzure.Mobile.Service.Security; \n\n5. Replace the existing **PushRegistrationHandler** class with the following code:\n \n        public class PushRegistrationHandler : INotificationHandler\n        {\n            public Task Register(ApiServices services, HttpRequestContext context,\n            NotificationRegistration registration)\n            {\n                try\n                {\n                    // Perform a check here for user ID tags, which are not allowed.\n                    if(!ValidateTags(registration))\n                    {\n                        throw new InvalidOperationException(\n                            \"You cannot supply a tag that is a user ID.\");                    \n                    }\n    \n                    // Get the logged-in user.\n                    var currentUser = context.Principal as ServiceUser;\n    \n                    // Add a new tag that is the user ID.\n                    registration.Tags.Add(currentUser.Id);\n    \n                    services.Log.Info(\"Registered tag for userId: \" + currentUser.Id);\n                }\n                catch(Exception ex)\n                {\n                    services.Log.Error(ex.ToString());\n                }\n                    return Task.FromResult(true);\n            }\n    \n            private bool ValidateTags(NotificationRegistration registration)\n            {\n                // Create a regex to search for disallowed tags.\n                System.Text.RegularExpressions.Regex searchTerm =\n                new System.Text.RegularExpressions.Regex(@\"facebook:|google:|twitter:|microsoftaccount:\",\n                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);\n    \n                foreach (string tag in registration.Tags)\n                {\n                    if (searchTerm.IsMatch(tag))\n                    {\n                        return false;\n                    }\n                }\n                return true;\n            }\n        \n            public Task Unregister(ApiServices services, HttpRequestContext context, \n                string deviceId)\n            {\n                // This is where you can hook into registration deletion.\n                return Task.FromResult(true);\n            }\n        }\n\n    The **Register** method is called during registration. This lets you add a tag to the registration that is the ID of the logged-in user. The supplied tags are validated to prevent a user from registering for another user's ID. When a notification is sent to this user, it is received on this and any other device registered by the user. \n\n6. Expand the Controllers folder, open the TodoItemController.cs project file, locate the **PostTodoItem** method and replace the line of code that calls **SendAsync** with the following code:\n\n        // Get the logged-in user.\n        var currentUser = this.User as ServiceUser;\n        \n        // Use a tag to only send the notification to the logged-in user.\n        var result = await Services.Push.SendAsync(message, currentUser.Id);\n\n7. Republish the mobile service project.\n\nNow, the service uses the user ID tag to send a push notification (with the text of the inserted item) to all registrations created by the logged-in user.\n "
+}

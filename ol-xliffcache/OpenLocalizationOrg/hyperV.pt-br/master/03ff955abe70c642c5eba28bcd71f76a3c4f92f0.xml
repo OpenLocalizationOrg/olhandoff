@@ -1,0 +1,124 @@
+{
+  "nodes": [
+    {
+      "content": "Upload a file from a simulated device",
+      "pos": [
+        3,
+        40
+      ]
+    },
+    {
+      "content": "In this section, you'll modify the simulated device application you created in [Send Cloud-to-Device messages with IoT Hub] to receive cloud-to-device messages from the IoT hub.",
+      "pos": [
+        42,
+        219
+      ]
+    },
+    {
+      "pos": [
+        224,
+        331
+      ],
+      "content": "In Visual Studio, right-click the <bpt id=\"p1\">**</bpt>SimulatedDevice<ept id=\"p1\">**</ept> project, and then click <bpt id=\"p2\">**</bpt>Manage NuGet Packages...<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "This displays the Manage NuGet Packages window.",
+      "pos": [
+        338,
+        385
+      ]
+    },
+    {
+      "pos": [
+        390,
+        472
+      ],
+      "content": "Search for <ph id=\"ph1\">`WindowsAzure.Storage`</ph>, click <bpt id=\"p1\">**</bpt>Install<ept id=\"p1\">**</ept>, and accept the terms of use."
+    },
+    {
+      "pos": [
+        479,
+        617
+      ],
+      "content": "This downloads, installs, and adds a reference to the <bpt id=\"p1\">[</bpt>Microsoft Azure Storage SDK<ept id=\"p1\">](https://www.nuget.org/packages/WindowsAzure.Storage/)</ept>."
+    },
+    {
+      "pos": [
+        622,
+        702
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Program.cs<ept id=\"p1\">**</ept> file, add the following statements at the top of the file:"
+    },
+    {
+      "pos": [
+        830,
+        915
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Program<ept id=\"p1\">**</ept> class, change the <bpt id=\"p2\">**</bpt>ReceiveC2dAsync<ept id=\"p2\">**</ept> method in the following way:"
+    },
+    {
+      "pos": [
+        1743,
+        1912
+      ],
+      "content": "This makes the <bpt id=\"p1\">**</bpt>ReceiveC2dAsync<ept id=\"p1\">**</ept> differentiate messages with the <ph id=\"ph1\">`command`</ph> property set to <ph id=\"ph2\">`FileUpload`</ph>, which will be handled by the <bpt id=\"p2\">**</bpt>UploadFileToBlobAsync<ept id=\"p2\">**</ept> method."
+    },
+    {
+      "content": "Add the method below to handle the file upload commands.",
+      "pos": [
+        1918,
+        1974
+      ]
+    },
+    {
+      "content": "This method uses the Azure Storage SDK to upload a randomly generated 10Mb blob to the specified URI.",
+      "pos": [
+        2775,
+        2876
+      ]
+    },
+    {
+      "content": "Refer to <bpt id=\"p1\">[</bpt><ept id=\"p1\">Azure Storage - How to use blobs]</ept> for more information on how to upload blobs.",
+      "pos": [
+        2877,
+        2965
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Note how this implementation of the simulated device completes the cloud-to-device message only after the blob has been uploaded.",
+      "pos": [
+        2969,
+        3111
+      ]
+    },
+    {
+      "content": "This approach simplifies the processing of the uploaded files in the back end because the delivery acknowledgment represents the availability of the uploaded file for processing.",
+      "pos": [
+        3112,
+        3290
+      ]
+    },
+    {
+      "content": "As explained in the <bpt id=\"p1\">[</bpt>IoT Hub Developer Guide<ept id=\"p1\">][IoT Hub Developer Guide - C2D]</ept>, however, a message that is not completed before the <bpt id=\"p2\">*</bpt>visibility timeout<ept id=\"p2\">*</ept> (usually 1 minute) is put back in the device queue, and the <bpt id=\"p3\">**</bpt>ReceiveAsync()<ept id=\"p3\">**</ept> method will receive it again.",
+      "pos": [
+        3291,
+        3550
+      ]
+    },
+    {
+      "content": "For scenarios where the file upload can take longer, it might be preferable for the simulated device to keep a durable store of current upload jobs.",
+      "pos": [
+        3551,
+        3699
+      ]
+    },
+    {
+      "content": "This allows the simulated device to complete the cloud-to-device message before the file upload is complete, and then send a device-to-cloud message notifying the back end of completion.",
+      "pos": [
+        3700,
+        3886
+      ]
+    }
+  ],
+  "content": "## Upload a file from a simulated device\n\nIn this section, you'll modify the simulated device application you created in [Send Cloud-to-Device messages with IoT Hub] to receive cloud-to-device messages from the IoT hub.\n\n1. In Visual Studio, right-click the **SimulatedDevice** project, and then click **Manage NuGet Packages...**. \n\n    This displays the Manage NuGet Packages window.\n\n2. Search for `WindowsAzure.Storage`, click **Install**, and accept the terms of use. \n\n    This downloads, installs, and adds a reference to the [Microsoft Azure Storage SDK](https://www.nuget.org/packages/WindowsAzure.Storage/).\n\n3. In the **Program.cs** file, add the following statements at the top of the file:\n\n        using System.IO;\n        using Microsoft.WindowsAzure.Storage;\n        using Microsoft.WindowsAzure.Storage.Blob;\n\n4. In the **Program** class, change the **ReceiveC2dAsync** method in the following way:\n         \n        private static async void ReceiveC2dAsync()\n        {\n            Console.WriteLine(\"\\nReceiving cloud to device messages from service\");\n            while (true)\n            {\n                Message receivedMessage = await deviceClient.ReceiveAsync();\n                if (receivedMessage == null) continue;\n\n                if (receivedMessage.Properties.ContainsKey(\"command\") && receivedMessage.Properties[\"command\"] == \"FileUpload\")\n                {\n                    UploadFileToBlobAsync(receivedMessage);\n                    continue;\n                }\n\n                Console.ForegroundColor = ConsoleColor.Yellow;\n                Console.WriteLine(\"Received message: {0}\", Encoding.ASCII.GetString(receivedMessage.GetBytes()));\n                Console.ResetColor();\n            }\n        }\n\n    This makes the **ReceiveC2dAsync** differentiate messages with the `command` property set to `FileUpload`, which will be handled by the **UploadFileToBlobAsync** method.\n\n    Add the method below to handle the file upload commands.\n   \n        private static async Task UploadFileToBlobAsync(Message fileUploadCommand)\n        {\n            var fileUri = fileUploadCommand.Properties[\"fileUri\"];\n            var blob = new CloudBlockBlob(new Uri(fileUri));\n\n            byte[] data = new byte[10 * 1024 * 1024];\n            Random rng = new Random();\n            rng.NextBytes(data);\n\n            MemoryStream msWrite = new MemoryStream(data);\n            msWrite.Position = 0;\n            using (msWrite)\n            {\n                await blob.UploadFromStreamAsync(msWrite);\n            }\n            Console.ForegroundColor = ConsoleColor.Yellow;\n            Console.WriteLine(\"Uploaded file to: {0}\", fileUri);\n            Console.ResetColor();\n\n            await deviceClient.CompleteAsync(fileUploadCommand);\n        }\n\n    This method uses the Azure Storage SDK to upload a randomly generated 10Mb blob to the specified URI. Refer to [Azure Storage - How to use blobs] for more information on how to upload blobs.\n\n> [AZURE.NOTE] Note how this implementation of the simulated device completes the cloud-to-device message only after the blob has been uploaded. This approach simplifies the processing of the uploaded files in the back end because the delivery acknowledgment represents the availability of the uploaded file for processing. As explained in the [IoT Hub Developer Guide][IoT Hub Developer Guide - C2D], however, a message that is not completed before the *visibility timeout* (usually 1 minute) is put back in the device queue, and the **ReceiveAsync()** method will receive it again. For scenarios where the file upload can take longer, it might be preferable for the simulated device to keep a durable store of current upload jobs. This allows the simulated device to complete the cloud-to-device message before the file upload is complete, and then send a device-to-cloud message notifying the back end of completion.\n\n<!-- Links -->\n[IoT Hub Developer Guide - C2D]: iot-hub-devguide.md#c2d\n[Azure Storage - How to use blobs]: ../storage/storage-dotnet-how-to-use-blobs.md#upload-a-blob-into-a-container\n\n<!-- Images -->\n\n\n\n\n\n"
+}

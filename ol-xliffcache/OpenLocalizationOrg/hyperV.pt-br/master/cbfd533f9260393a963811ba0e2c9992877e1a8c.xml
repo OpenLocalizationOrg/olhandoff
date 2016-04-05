@@ -1,0 +1,1993 @@
+{
+  "nodes": [
+    {
+      "content": "This article shows you how to configure HTTPS for a web app in Azure App Service.",
+      "pos": [
+        1,
+        82
+      ]
+    },
+    {
+      "content": "It does not cover client certificate authentication; for information about that, see <bpt id=\"p1\">[</bpt>How To Configure TLS Mutual Authentication for Web Apps<ept id=\"p1\">](../articles/app-service-web/app-service-web-configure-tls-mutual-auth.md)</ept>.",
+      "pos": [
+        83,
+        300
+      ]
+    },
+    {
+      "content": "By default, Azure already enables HTTPS for your app with a wildcard certificate for  the \\*.azurewebsites.net domain.",
+      "pos": [
+        302,
+        420
+      ]
+    },
+    {
+      "content": "If you don't plan to configure a custom domain, then you can benefit from the default HTTPS certificate.",
+      "pos": [
+        421,
+        525
+      ]
+    },
+    {
+      "content": "However, like <bpt id=\"p1\">[</bpt>all wildcard domains<ept id=\"p1\">](https://casecurity.org/2014/02/26/pros-and-cons-of-single-domain-multi-domain-and-wildcard-certificates/)</ept>, it is not as secure as using a custom domain with your own certificate.",
+      "pos": [
+        526,
+        741
+      ]
+    },
+    {
+      "pos": [
+        746,
+        894
+      ],
+      "content": "The rest of this document provides details on enabling HTTPS for custom domains, such as <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>www.contoso.com<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>\\*.contoso.com<ept id=\"p3\">**</ept>"
+    },
+    {
+      "content": "Enable SSL for your custom domain",
+      "pos": [
+        930,
+        963
+      ]
+    },
+    {
+      "content": "To enable HTTPS for a custom domain, such as <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept>, you must first <bpt id=\"p2\">[</bpt>configure a custom domain name in Azure App Service<ept id=\"p2\">](../articles/app-service-web/web-sites-custom-domain-name.md)</ept>.",
+      "pos": [
+        965,
+        1157
+      ]
+    },
+    {
+      "content": "Then, you do the following:",
+      "pos": [
+        1158,
+        1185
+      ]
+    },
+    {
+      "content": "Get an SSL certificate",
+      "pos": [
+        1191,
+        1213
+      ]
+    },
+    {
+      "content": "Configure Standard or Premium pricing tier",
+      "pos": [
+        1234,
+        1276
+      ]
+    },
+    {
+      "content": "Configure SSL in your app",
+      "pos": [
+        1302,
+        1327
+      ]
+    },
+    {
+      "pos": [
+        1352,
+        1403
+      ],
+      "content": "<bpt id=\"p1\">[</bpt>Enforce SSL on your app<ept id=\"p1\">](#bkmk_enforce)</ept> (Optional)"
+    },
+    {
+      "content": "If you need more help at any point in this article, you can contact the Azure experts on <bpt id=\"p1\">[</bpt>the MSDN Azure and the Stack Overflow forums<ept id=\"p1\">](https://azure.microsoft.com/support/forums/)</ept>.",
+      "pos": [
+        1405,
+        1586
+      ]
+    },
+    {
+      "content": "Alternatively, you can also file an Azure support incident.",
+      "pos": [
+        1587,
+        1646
+      ]
+    },
+    {
+      "content": "Go to the <bpt id=\"p1\">[</bpt>Azure Support site<ept id=\"p1\">](https://azure.microsoft.com/support/options/)</ept> and click on <bpt id=\"p2\">**</bpt>Get Support<ept id=\"p2\">**</ept>.",
+      "pos": [
+        1647,
+        1753
+      ]
+    },
+    {
+      "content": "1. Get an SSL certificate",
+      "pos": [
+        1786,
+        1811
+      ]
+    },
+    {
+      "content": "Before requesting an SSL certificate you must first determine which domain names will be secured by the certificate.",
+      "pos": [
+        1813,
+        1929
+      ]
+    },
+    {
+      "content": "This will determine what type of certificate you must obtain.",
+      "pos": [
+        1930,
+        1991
+      ]
+    },
+    {
+      "content": "If you just need to secure a single domain name such as <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>www.contoso.com<ept id=\"p2\">**</ept> a basic certificate is sufficient.",
+      "pos": [
+        1992,
+        2121
+      ]
+    },
+    {
+      "content": "If you need to secure multiple domain names, such as <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>www.contoso.com<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>mail.contoso.com<ept id=\"p3\">**</ept>, then you can get a <bpt id=\"p4\">[</bpt>wildcard certificate<ept id=\"p4\">](http://en.wikipedia.org/wiki/Wildcard_certificate)</ept>, or a certificate with <bpt id=\"p5\">[</bpt>Subject Alternate Name<ept id=\"p5\">](http://en.wikipedia.org/wiki/SubjectAltName)</ept> (subjectAltName).",
+      "pos": [
+        2122,
+        2442
+      ]
+    },
+    {
+      "content": "SSL certificates used with App Service must be signed by a <bpt id=\"p1\">[</bpt>Certificate Authority<ept id=\"p1\">](http://en.wikipedia.org/wiki/Certificate_authority)</ept> (CA).",
+      "pos": [
+        2444,
+        2584
+      ]
+    },
+    {
+      "content": "If you do not already have one, you will need to obtain one from a company that issues SSL certificates.",
+      "pos": [
+        2585,
+        2689
+      ]
+    },
+    {
+      "content": "For a list of Certificate Authorities, see <bpt id=\"p1\">[</bpt>Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)<ept id=\"p1\">][cas]</ept> on the Microsoft TechNet Wiki.",
+      "pos": [
+        2690,
+        2841
+      ]
+    },
+    {
+      "content": "The certificate must meet the following requirements for SSL certificates in Azure:",
+      "pos": [
+        2843,
+        2926
+      ]
+    },
+    {
+      "content": "The certificate must contain a private key.",
+      "pos": [
+        2930,
+        2973
+      ]
+    },
+    {
+      "content": "The certificate must be created for key exchange, exportable to a Personal Information Exchange (.pfx) file.",
+      "pos": [
+        2976,
+        3084
+      ]
+    },
+    {
+      "content": "The certificate's subject name must match the domain used to access the app.",
+      "pos": [
+        3087,
+        3163
+      ]
+    },
+    {
+      "content": "If you need to serve multiple domains with this certificate, you will need to use a wildcard value or specify subjectAltName values as discussed previously.",
+      "pos": [
+        3164,
+        3320
+      ]
+    },
+    {
+      "content": "The certificate should use a minimum of 2048-bit encryption.",
+      "pos": [
+        3323,
+        3383
+      ]
+    },
+    {
+      "content": "Certificates issued from private CA servers are not supported by Azure App Service.",
+      "pos": [
+        3386,
+        3469
+      ]
+    },
+    {
+      "content": "To get an SSL certificate for use with Azure App Service, you submit a Certificate Signing Request (CSR) to a Certificate Authority and then generate a .pfx file from the certificate you receive back.",
+      "pos": [
+        3471,
+        3671
+      ]
+    },
+    {
+      "content": "You can do this using the tool of your choice.",
+      "pos": [
+        3672,
+        3718
+      ]
+    },
+    {
+      "content": "Below are some of the common ways to get a certificate:",
+      "pos": [
+        3719,
+        3774
+      ]
+    },
+    {
+      "content": "Get a certificate using Certreq.exe",
+      "pos": [
+        3779,
+        3814
+      ]
+    },
+    {
+      "content": "Get a certificate using IIS Manager",
+      "pos": [
+        3834,
+        3869
+      ]
+    },
+    {
+      "content": "Get a certificate using OpenSSL",
+      "pos": [
+        3888,
+        3919
+      ]
+    },
+    {
+      "content": "Get a SubjectAltName certificate using OpenSSL",
+      "pos": [
+        3939,
+        3985
+      ]
+    },
+    {
+      "content": "Generate self-signed certificates (for testing only)",
+      "pos": [
+        4012,
+        4064
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> When following the steps, you will be prompted to enter a <bpt id=\"p1\">**</bpt>Common Name<ept id=\"p1\">**</ept>, such as <ph id=\"ph2\">`www.contoso.com`</ph>.",
+      "pos": [
+        4087,
+        4201
+      ]
+    },
+    {
+      "content": "For wildcard certificates, this value should be \\*.domainname (for example, \\*.contoso.com).",
+      "pos": [
+        4202,
+        4294
+      ]
+    },
+    {
+      "content": "If you need to support both a wildcard name like \\*.contoso.com and a root domain name like contoso.com, you can use a wildcard subjectAltName certificate.",
+      "pos": [
+        4295,
+        4450
+      ]
+    },
+    {
+      "content": "Elliptic Curve Cryptography (ECC) certificates are supported with Azure App Service; however, they are relatively new and you should work with your CA on the exact steps to create the CSR.",
+      "pos": [
+        4455,
+        4643
+      ]
+    },
+    {
+      "content": "You may also need to obtain <bpt id=\"p1\">**</bpt><bpt id=\"p2\">[</bpt>intermediate certificates<ept id=\"p2\">](http://en.wikipedia.org/wiki/Intermediate_certificate_authorities)</ept><ept id=\"p1\">**</ept> (also known as chain certificates), if these are used by your CA.",
+      "pos": [
+        4645,
+        4837
+      ]
+    },
+    {
+      "content": "The use of intermediate certificates is considered more secure than 'unchained certificates', so it is common for a CA to use them.",
+      "pos": [
+        4838,
+        4969
+      ]
+    },
+    {
+      "content": "Intermediate certificates are often provided as a separate download from the CAs website.",
+      "pos": [
+        4970,
+        5059
+      ]
+    },
+    {
+      "content": "This article provides steps to ensure that any intermediate certificates are merged with the certificate uploaded to your apps.",
+      "pos": [
+        5060,
+        5187
+      ]
+    },
+    {
+      "content": "In case your CA uses intermediate certificates each of them must be installed along with the certificate issued for your domain.",
+      "pos": [
+        5208,
+        5336
+      ]
+    },
+    {
+      "content": "Failing to install any of the intermediate certificates may cause hard to reproduce interoperability problems for some clients.",
+      "pos": [
+        5337,
+        5464
+      ]
+    },
+    {
+      "content": "Get a certificate using Certreq.exe (Windows only)",
+      "pos": [
+        5498,
+        5548
+      ]
+    },
+    {
+      "content": "Certreq.exe is Windows utility for creating certificate requests.",
+      "pos": [
+        5550,
+        5615
+      ]
+    },
+    {
+      "content": "It has been part of the base Windows installation since Windows XP/Windows Server 2000, so should be available on recent Windows systems.",
+      "pos": [
+        5616,
+        5753
+      ]
+    },
+    {
+      "content": "Use the following steps to obtain an SSL certificate using certreq.exe.",
+      "pos": [
+        5754,
+        5825
+      ]
+    },
+    {
+      "content": "Open <bpt id=\"p1\">**</bpt>Notepad<ept id=\"p1\">**</ept> and create a new document that contains the following.",
+      "pos": [
+        5830,
+        5901
+      ]
+    },
+    {
+      "content": "Replace <bpt id=\"p1\">**</bpt>mysite.com<ept id=\"p1\">**</ept> on the Subject line with the custom domain name of your app.",
+      "pos": [
+        5902,
+        5985
+      ]
+    },
+    {
+      "content": "For example, Subject = \"CN=www.contoso.com\".",
+      "pos": [
+        5986,
+        6030
+      ]
+    },
+    {
+      "pos": [
+        6380,
+        6563
+      ],
+      "content": "For more information on the options specified above, as well as other available options, see the <bpt id=\"p1\">[</bpt>Certreq reference documentation<ept id=\"p1\">](http://technet.microsoft.com/library/cc725793.aspx)</ept>."
+    },
+    {
+      "pos": [
+        6568,
+        6608
+      ],
+      "content": "Save the text file as <bpt id=\"p1\">**</bpt>myrequest.txt<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        6613,
+        6674
+      ],
+      "content": "From the <bpt id=\"p1\">**</bpt>Start Screen<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>Start Menu<ept id=\"p2\">**</ept>, run <bpt id=\"p3\">**</bpt>cmd.exe<ept id=\"p3\">**</ept>."
+    },
+    {
+      "content": "From the command prompt, use the following command to create the certificate request file:",
+      "pos": [
+        6679,
+        6769
+      ]
+    },
+    {
+      "pos": [
+        6850,
+        6977
+      ],
+      "content": "Specify the path to the <bpt id=\"p1\">**</bpt>myrequest.txt<ept id=\"p1\">**</ept> file created in step 1, and the path to use when creating the <bpt id=\"p2\">**</bpt>myrequest.csr<ept id=\"p2\">**</ept> file."
+    },
+    {
+      "content": "Submit the <bpt id=\"p1\">**</bpt>myrequest.csr<ept id=\"p1\">**</ept> to a Certificate Authority to obtain an SSL certificate.",
+      "pos": [
+        6982,
+        7067
+      ]
+    },
+    {
+      "content": "This may involve uploading the file, or opening the file in Notepad and pasting the contents directly into a web form.",
+      "pos": [
+        7068,
+        7186
+      ]
+    },
+    {
+      "pos": [
+        7192,
+        7343
+      ],
+      "content": "For a list of Certificate Authorities, see <bpt id=\"p1\">[</bpt>Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)<ept id=\"p1\">][cas]</ept> on the Microsoft TechNet Wiki."
+    },
+    {
+      "content": "Once the Certificate Authority has provided you with a certificate (.CER) file, save this file to the computer used to generate the request, and then use the following command to accept the request and complete the certificate generation process.",
+      "pos": [
+        7348,
+        7594
+      ]
+    },
+    {
+      "content": "In this case, the <bpt id=\"p1\">**</bpt>mycert.cer<ept id=\"p1\">**</ept> certificate received from the Certificate Authority will be used to complete the signature of the certificate.",
+      "pos": [
+        7642,
+        7785
+      ]
+    },
+    {
+      "content": "No file will be created; instead, the certificate will be stored in the Windows certificate store.",
+      "pos": [
+        7786,
+        7884
+      ]
+    },
+    {
+      "content": "If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next steps.",
+      "pos": [
+        7889,
+        8019
+      ]
+    },
+    {
+      "content": "Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types.",
+      "pos": [
+        8020,
+        8164
+      ]
+    },
+    {
+      "content": "Select the version that is provided for Microsoft IIS.",
+      "pos": [
+        8165,
+        8219
+      ]
+    },
+    {
+      "content": "Once you have downloaded the certificate, right click on it in explorer and select <bpt id=\"p1\">**</bpt>Install certificate<ept id=\"p1\">**</ept>.",
+      "pos": [
+        8225,
+        8332
+      ]
+    },
+    {
+      "content": "Use the default values in the <bpt id=\"p1\">**</bpt>Certificate Import Wizard<ept id=\"p1\">**</ept>, and continue selecting <bpt id=\"p2\">**</bpt>Next<ept id=\"p2\">**</ept> until the import has completed.",
+      "pos": [
+        8333,
+        8457
+      ]
+    },
+    {
+      "content": "To export the certificate from the certificate store, run <bpt id=\"p1\">**</bpt>certmgr.msc<ept id=\"p1\">**</ept> from the <bpt id=\"p2\">**</bpt>Start Screen<ept id=\"p2\">**</ept> or <bpt id=\"p3\">**</bpt>Start Menu<ept id=\"p3\">**</ept>.",
+      "pos": [
+        8462,
+        8580
+      ]
+    },
+    {
+      "content": "When <bpt id=\"p1\">**</bpt>Certificate Manager<ept id=\"p1\">**</ept> appears, expand the <bpt id=\"p2\">**</bpt>Personal<ept id=\"p2\">**</ept> folder, and then select <bpt id=\"p3\">**</bpt>Certificates<ept id=\"p3\">**</ept>.",
+      "pos": [
+        8581,
+        8684
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Issued To<ept id=\"p1\">**</ept> field, look for an entry with the custom domain name you requested a certificate for.",
+      "pos": [
+        8685,
+        8791
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Issued By<ept id=\"p1\">**</ept> field, it should list the Certificate Authority you used for this certificate.",
+      "pos": [
+        8792,
+        8891
+      ]
+    },
+    {
+      "content": "insert image of cert manager here",
+      "pos": [
+        8899,
+        8932
+      ]
+    },
+    {
+      "content": "Right click the certificate and select <bpt id=\"p1\">**</bpt>All Tasks<ept id=\"p1\">**</ept>, and then select <bpt id=\"p2\">**</bpt>Export<ept id=\"p2\">**</ept>.",
+      "pos": [
+        8947,
+        9028
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Certificate Export Wizard<ept id=\"p1\">**</ept>, click <bpt id=\"p2\">**</bpt>Next<ept id=\"p2\">**</ept> and then select <bpt id=\"p3\">**</bpt>Yes, export the private key<ept id=\"p3\">**</ept>.",
+      "pos": [
+        9029,
+        9130
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9131,
+        9146
+      ]
+    },
+    {
+      "content": "Export the private key",
+      "pos": [
+        9154,
+        9176
+      ]
+    },
+    {
+      "content": "Select <bpt id=\"p1\">**</bpt>Personal Information Exchange - PKCS #12<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Include all certificates in the certificate chain<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>Export all extended properties<ept id=\"p3\">**</ept>.",
+      "pos": [
+        9193,
+        9340
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9341,
+        9356
+      ]
+    },
+    {
+      "content": "include all certs and extended properties",
+      "pos": [
+        9364,
+        9405
+      ]
+    },
+    {
+      "content": "Select <bpt id=\"p1\">**</bpt>Password<ept id=\"p1\">**</ept>, and then enter and confirm the password.",
+      "pos": [
+        9422,
+        9483
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9484,
+        9499
+      ]
+    },
+    {
+      "content": "specify a password",
+      "pos": [
+        9507,
+        9525
+      ]
+    },
+    {
+      "content": "Provide a path and filename that will contain the exported certificate.",
+      "pos": [
+        9542,
+        9613
+      ]
+    },
+    {
+      "content": "The filename should have an extension of <bpt id=\"p1\">**</bpt>.pfx<ept id=\"p1\">**</ept>.",
+      "pos": [
+        9614,
+        9664
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Next<ept id=\"p1\">**</ept> to complete the process.",
+      "pos": [
+        9665,
+        9704
+      ]
+    },
+    {
+      "content": "provide a file path",
+      "pos": [
+        9712,
+        9731
+      ]
+    },
+    {
+      "content": "You can now upload the exported PFX file to your app in Azure App Service.",
+      "pos": [
+        9744,
+        9818
+      ]
+    },
+    {
+      "content": "Get a certificate using OpenSSL",
+      "pos": [
+        9852,
+        9883
+      ]
+    },
+    {
+      "content": "Generate a private key and Certificate Signing Request by using the following from a command-line, bash or terminal session:",
+      "pos": [
+        9888,
+        10012
+      ]
+    },
+    {
+      "content": "When prompted, enter the appropriate information.",
+      "pos": [
+        10104,
+        10153
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        10154,
+        10166
+      ]
+    },
+    {
+      "content": "Once this process completes, you should have two files; <bpt id=\"p1\">**</bpt>myserver.key<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>server.csr<ept id=\"p2\">**</ept>.",
+      "pos": [
+        10638,
+        10730
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>server.csr<ept id=\"p1\">**</ept> contains the Certificate Signing Request.",
+      "pos": [
+        10731,
+        10791
+      ]
+    },
+    {
+      "content": "Submit your CSR to a Certificate Authority to obtain an SSL certificate.",
+      "pos": [
+        10796,
+        10868
+      ]
+    },
+    {
+      "content": "For a list of Certificate Authorities, see <bpt id=\"p1\">[</bpt>Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)<ept id=\"p1\">][cas]</ept> on the Microsoft TechNet Wiki.",
+      "pos": [
+        10869,
+        11020
+      ]
+    },
+    {
+      "content": "Once you have obtained a certificate from a CA, save it to a file named <bpt id=\"p1\">**</bpt>myserver.crt<ept id=\"p1\">**</ept>.",
+      "pos": [
+        11025,
+        11114
+      ]
+    },
+    {
+      "content": "If your CA provided the certificate in a text format, simply paste the certificate text into the <bpt id=\"p1\">**</bpt>myserver.crt<ept id=\"p1\">**</ept> file.",
+      "pos": [
+        11115,
+        11234
+      ]
+    },
+    {
+      "content": "The file contents should be similar to the following when viewed in a text editor:",
+      "pos": [
+        11235,
+        11317
+      ]
+    },
+    {
+      "content": "Save the file.",
+      "pos": [
+        12627,
+        12641
+      ]
+    },
+    {
+      "pos": [
+        12646,
+        12847
+      ],
+      "content": "From the command-line, Bash or terminal session, use the following command to convert the <bpt id=\"p1\">**</bpt>myserver.key<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>myserver.crt<ept id=\"p2\">**</ept> into <bpt id=\"p3\">**</bpt>myserver.pfx<ept id=\"p3\">**</ept>, which is the format required by Azure App Service:"
+    },
+    {
+      "content": "When prompted, enter a password to secure the .pfx file.",
+      "pos": [
+        12940,
+        12996
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step.",
+      "pos": [
+        13004,
+        13146
+      ]
+    },
+    {
+      "content": "Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types.",
+      "pos": [
+        13147,
+        13291
+      ]
+    },
+    {
+      "content": "Select the version that is provided as a PEM file (.pem file extension.)",
+      "pos": [
+        13292,
+        13364
+      ]
+    },
+    {
+      "pos": [
+        13377,
+        13534
+      ],
+      "content": "The follow command demonstrates how to create a .pfx file that includes intermediate certificates, which are contained in the <bpt id=\"p1\">**</bpt>intermediate-cets.pem<ept id=\"p1\">**</ept> file:"
+    },
+    {
+      "pos": [
+        13695,
+        13803
+      ],
+      "content": "After running this command, you should have a <bpt id=\"p1\">**</bpt>myserver.pfx<ept id=\"p1\">**</ept> file suitable for use with Azure App Service."
+    },
+    {
+      "content": "Get a certificate using the IIS Manager",
+      "pos": [
+        13836,
+        13875
+      ]
+    },
+    {
+      "content": "If you are familiar with IIS Manager, you can use it to generate a certificate that can be used with Azure App Service.",
+      "pos": [
+        13877,
+        13996
+      ]
+    },
+    {
+      "content": "Generate a CSR with IIS Manager to send to the Certificate Authority.",
+      "pos": [
+        14001,
+        14070
+      ]
+    },
+    {
+      "content": "For more information on generating a CSR, see <bpt id=\"p1\">[</bpt>Request an Internet Server Certificate (IIS 7)<ept id=\"p1\">][iiscsr]</ept>.",
+      "pos": [
+        14071,
+        14174
+      ]
+    },
+    {
+      "content": "Submit your CSR to a Certificate Authority to obtain an SSL certificate.",
+      "pos": [
+        14179,
+        14251
+      ]
+    },
+    {
+      "content": "For a list of Certificate Authorities, see <bpt id=\"p1\">[</bpt>Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)<ept id=\"p1\">][cas]</ept> on the Microsoft TechNet Wiki.",
+      "pos": [
+        14252,
+        14403
+      ]
+    },
+    {
+      "content": "Complete the CSR with the certificate provided by the Certificate Authority vendor.",
+      "pos": [
+        14408,
+        14491
+      ]
+    },
+    {
+      "content": "For more information on completing the CSR, see <bpt id=\"p1\">[</bpt>Install an Internet Server Certificate (IIS 7)<ept id=\"p1\">][installcertiis]</ept>.",
+      "pos": [
+        14492,
+        14605
+      ]
+    },
+    {
+      "content": "If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step.",
+      "pos": [
+        14610,
+        14739
+      ]
+    },
+    {
+      "content": "Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types.",
+      "pos": [
+        14740,
+        14884
+      ]
+    },
+    {
+      "content": "Select the version that is provided for Microsoft IIS.",
+      "pos": [
+        14885,
+        14939
+      ]
+    },
+    {
+      "content": "Once you have downloaded the certificate, right click on it in explorer and select <bpt id=\"p1\">**</bpt>Install certificate<ept id=\"p1\">**</ept>.",
+      "pos": [
+        14945,
+        15052
+      ]
+    },
+    {
+      "content": "Use the default values in the <bpt id=\"p1\">**</bpt>Certificate Import Wizard<ept id=\"p1\">**</ept>, and continue selecting <bpt id=\"p2\">**</bpt>Next<ept id=\"p2\">**</ept> until the import has completed.",
+      "pos": [
+        15053,
+        15177
+      ]
+    },
+    {
+      "content": "Export the certificate from IIS Manager For more information on exporting the certificate, see <bpt id=\"p1\">[</bpt>Export a Server Certificate (IIS 7)<ept id=\"p1\">][exportcertiis]</ept>.",
+      "pos": [
+        15182,
+        15330
+      ]
+    },
+    {
+      "content": "The exported file will be used in later steps to upload to Azure for use with your app.",
+      "pos": [
+        15331,
+        15418
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> During the export process, be sure to select the option <ph id=\"ph2\">&lt;strong&gt;</ph>Yes, export the private key<ph id=\"ph3\">&lt;/strong&gt;</ph>.",
+      "pos": [
+        15426,
+        15540
+      ]
+    },
+    {
+      "content": "This will include the private key in the exported certificate.",
+      "pos": [
+        15541,
+        15603
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> During the export process, be sure to select the option <bpt id=\"p1\">**</bpt>include all certs in the certification path<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>Export all extended properties<ept id=\"p2\">**</ept>.",
+      "pos": [
+        15611,
+        15767
+      ]
+    },
+    {
+      "content": "This will include any intermediate certificates in the exported certificate.",
+      "pos": [
+        15768,
+        15844
+      ]
+    },
+    {
+      "content": "Get a SubjectAltName certificate using OpenSSL",
+      "pos": [
+        15885,
+        15931
+      ]
+    },
+    {
+      "content": "OpenSSL can be used to create a certificate request that uses the SubjectAltName extension to support multiple domain names with a single certificate, however it requires a configuration file.",
+      "pos": [
+        15933,
+        16125
+      ]
+    },
+    {
+      "content": "The following steps walk through creating a configuration file, and then using it to request a certificate.",
+      "pos": [
+        16126,
+        16233
+      ]
+    },
+    {
+      "pos": [
+        16238,
+        16328
+      ],
+      "content": "Create a new file named <bpt id=\"p1\">__</bpt>sancert.cnf<ept id=\"p1\">__</ept> and use the following as the contents of the file:"
+    },
+    {
+      "content": "Note the line that begins with 'subjectAltName'.",
+      "pos": [
+        17404,
+        17452
+      ]
+    },
+    {
+      "content": "Replace the domain names currently listed with domain names you wish to support in addition to the common name.",
+      "pos": [
+        17453,
+        17564
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        17565,
+        17577
+      ]
+    },
+    {
+      "content": "You do not need to change the commonName_default field, as you will be prompted to enter your common name in one of the following steps.",
+      "pos": [
+        17670,
+        17806
+      ]
+    },
+    {
+      "pos": [
+        17811,
+        17841
+      ],
+      "content": "Save the <bpt id=\"p1\">__</bpt>sancert.cnf<ept id=\"p1\">__</ept> file."
+    },
+    {
+      "content": "Generate a private key and Certificate Signing Request by using the sancert.cnf configuration file.",
+      "pos": [
+        17846,
+        17945
+      ]
+    },
+    {
+      "content": "From a bash or terminal session, use the following command:",
+      "pos": [
+        17946,
+        18005
+      ]
+    },
+    {
+      "content": "When prompted, enter the appropriate information.",
+      "pos": [
+        18117,
+        18166
+      ]
+    },
+    {
+      "content": "For example:",
+      "pos": [
+        18167,
+        18179
+      ]
+    },
+    {
+      "content": "Once this process completes, you should have two files; <bpt id=\"p1\">**</bpt>myserver.key<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>server.csr<ept id=\"p2\">**</ept>.",
+      "pos": [
+        18456,
+        18548
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>server.csr<ept id=\"p1\">**</ept> contains the Certificate Signing Request.",
+      "pos": [
+        18549,
+        18609
+      ]
+    },
+    {
+      "content": "Submit your CSR to a Certificate Authority to obtain an SSL certificate.",
+      "pos": [
+        18614,
+        18686
+      ]
+    },
+    {
+      "content": "For a list of Certificate Authorities, see <bpt id=\"p1\">[</bpt>Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)<ept id=\"p1\">][cas]</ept> on the Microsoft TechNet Wiki.",
+      "pos": [
+        18687,
+        18838
+      ]
+    },
+    {
+      "content": "Once you have obtained a certificate from a CA, save it to a file named <bpt id=\"p1\">**</bpt>myserver.crt<ept id=\"p1\">**</ept>.",
+      "pos": [
+        18843,
+        18932
+      ]
+    },
+    {
+      "content": "If your CA provided the certificate in a text format, simply paste the certificate text into the <bpt id=\"p1\">**</bpt>myserver.crt<ept id=\"p1\">**</ept> file.",
+      "pos": [
+        18933,
+        19052
+      ]
+    },
+    {
+      "content": "The file contents should be similar to the following when viewed in a text editor:",
+      "pos": [
+        19053,
+        19135
+      ]
+    },
+    {
+      "content": "Save the file.",
+      "pos": [
+        20445,
+        20459
+      ]
+    },
+    {
+      "pos": [
+        20464,
+        20665
+      ],
+      "content": "From the command-line, Bash or terminal session, use the following command to convert the <bpt id=\"p1\">**</bpt>myserver.key<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>myserver.crt<ept id=\"p2\">**</ept> into <bpt id=\"p3\">**</bpt>myserver.pfx<ept id=\"p3\">**</ept>, which is the format required by Azure App Service:"
+    },
+    {
+      "content": "When prompted, enter a password to secure the .pfx file.",
+      "pos": [
+        20758,
+        20814
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step.",
+      "pos": [
+        20822,
+        20964
+      ]
+    },
+    {
+      "content": "Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types.",
+      "pos": [
+        20965,
+        21109
+      ]
+    },
+    {
+      "content": "Select the version that is provided as a PEM file (.pem file extension.)",
+      "pos": [
+        21110,
+        21182
+      ]
+    },
+    {
+      "pos": [
+        21197,
+        21354
+      ],
+      "content": "The follow command demonstrates how to create a .pfx file that includes intermediate certificates, which are contained in the <bpt id=\"p1\">**</bpt>intermediate-cets.pem<ept id=\"p1\">**</ept> file:"
+    },
+    {
+      "pos": [
+        21515,
+        21623
+      ],
+      "content": "After running this command, you should have a <bpt id=\"p1\">**</bpt>myserver.pfx<ept id=\"p1\">**</ept> file suitable for use with Azure App Service."
+    },
+    {
+      "content": "Generate a self-signed certificate (for testing only)",
+      "pos": [
+        21660,
+        21713
+      ]
+    },
+    {
+      "content": "In some cases you may wish to obtain a certificate for testing, and delay purchasing one from a trusted CA until you go into production.",
+      "pos": [
+        21715,
+        21851
+      ]
+    },
+    {
+      "content": "Self-signed certificates can fill this gap.",
+      "pos": [
+        21852,
+        21895
+      ]
+    },
+    {
+      "content": "A self-signed certificate is a certificate you create and sign as if you were a Certificate Authority.",
+      "pos": [
+        21896,
+        21998
+      ]
+    },
+    {
+      "content": "While this certificate can be used to secure an app, most browsers will return errors when visiting the app as the certificate was not signed by a trusted CA.",
+      "pos": [
+        21999,
+        22157
+      ]
+    },
+    {
+      "content": "Some browsers may even refuse to allow you to view the app.",
+      "pos": [
+        22158,
+        22217
+      ]
+    },
+    {
+      "content": "Generate a self-signed certificate using makecert",
+      "pos": [
+        22222,
+        22271
+      ]
+    },
+    {
+      "content": "Generate a self-signed certificate using OpenSSL",
+      "pos": [
+        22294,
+        22342
+      ]
+    },
+    {
+      "content": "Generate a self-signed certificate using makecert",
+      "pos": [
+        22398,
+        22447
+      ]
+    },
+    {
+      "content": "You can create a test certificate from a Windows system that has Visual Studio installed by performing the following steps:",
+      "pos": [
+        22454,
+        22577
+      ]
+    },
+    {
+      "content": "From the <bpt id=\"p1\">**</bpt>Start Menu<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>Start Screen<ept id=\"p2\">**</ept>, search for <bpt id=\"p3\">**</bpt>Developer Command Prompt<ept id=\"p3\">**</ept>.",
+      "pos": [
+        22582,
+        22667
+      ]
+    },
+    {
+      "content": "Finally, right-click <bpt id=\"p1\">**</bpt>Developer Command Prompt<ept id=\"p1\">**</ept> and select <bpt id=\"p2\">**</bpt>Run As Administrator<ept id=\"p2\">**</ept>.",
+      "pos": [
+        22668,
+        22754
+      ]
+    },
+    {
+      "pos": [
+        22760,
+        22833
+      ],
+      "content": "If you receive a User Account Control dialog, select <bpt id=\"p1\">**</bpt>Yes<ept id=\"p1\">**</ept> to continue."
+    },
+    {
+      "content": "From the Developer Command Prompt, use the following command to create a new self-signed certificate.",
+      "pos": [
+        22838,
+        22939
+      ]
+    },
+    {
+      "content": "You must substitute <bpt id=\"p1\">**</bpt>serverdnsname<ept id=\"p1\">**</ept> with the DNS of your app.",
+      "pos": [
+        22940,
+        23003
+      ]
+    },
+    {
+      "content": "This command will create a certificate that is good between the dates of 01/01/2013 and 01/01/2014, and will store the location in the CurrentUser certificate store.",
+      "pos": [
+        23195,
+        23360
+      ]
+    },
+    {
+      "pos": [
+        23365,
+        23471
+      ],
+      "content": "From the <bpt id=\"p1\">**</bpt>Start Menu<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>Start Screen<ept id=\"p2\">**</ept>, search for <bpt id=\"p3\">**</bpt>Windows PowerShell<ept id=\"p3\">**</ept> and start this application."
+    },
+    {
+      "content": "From the Windows PowerShell prompt, use the following commands to export the certificate created previously:",
+      "pos": [
+        23476,
+        23584
+      ]
+    },
+    {
+      "content": "This stores the specified password as a secure string in $mypwd, then finds the certificate by using the DNS name specified by the <bpt id=\"p1\">**</bpt>dnsname<ept id=\"p1\">**</ept> parameter, and exports to the file specified by the <bpt id=\"p2\">**</bpt>filepath<ept id=\"p2\">**</ept> parameter.",
+      "pos": [
+        23809,
+        24027
+      ]
+    },
+    {
+      "content": "The secure string containing the password is used to secure the exported file.",
+      "pos": [
+        24028,
+        24106
+      ]
+    },
+    {
+      "content": "Generate a self-signed certificate using OpenSSL",
+      "pos": [
+        24142,
+        24190
+      ]
+    },
+    {
+      "pos": [
+        24200,
+        24297
+      ],
+      "content": "Create a new document named <bpt id=\"p1\">**</bpt>serverauth.cnf<ept id=\"p1\">**</ept>, using the following as the contents of this file:"
+    },
+    {
+      "content": "This specifies the configuration settings required to produce an SSL certificate that can be used by Azure App Service.",
+      "pos": [
+        25598,
+        25717
+      ]
+    },
+    {
+      "content": "Generate a new self-signed certificate by using the following from a command-line, bash or terminal session:",
+      "pos": [
+        25722,
+        25830
+      ]
+    },
+    {
+      "pos": [
+        25959,
+        26064
+      ],
+      "content": "This creates a new certificate using the configuration settings specified in the <bpt id=\"p1\">**</bpt>serverauth.cnf<ept id=\"p1\">**</ept> file."
+    },
+    {
+      "content": "To export the certificate to a .PFX file that can be uploaded to an app in Azure App Service, use the following command:",
+      "pos": [
+        26069,
+        26189
+      ]
+    },
+    {
+      "content": "When prompted, enter a password to secure the .pfx file.",
+      "pos": [
+        26282,
+        26338
+      ]
+    },
+    {
+      "pos": [
+        26344,
+        26442
+      ],
+      "content": "The <bpt id=\"p1\">**</bpt>myserver.pfx<ept id=\"p1\">**</ept> produced by this command can be used to secure your app for testing purposes."
+    },
+    {
+      "content": "2. Configure Standard or Premium pricing tier",
+      "pos": [
+        26480,
+        26525
+      ]
+    },
+    {
+      "content": "Enabling HTTPS for a custom domain is only available for the <bpt id=\"p1\">**</bpt>Standard<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>Premium<ept id=\"p2\">**</ept> pricing tiers in Azure App Service.",
+      "pos": [
+        26527,
+        26652
+      ]
+    },
+    {
+      "content": "Use the following steps to switch your App Service plan to <bpt id=\"p1\">**</bpt>Standard<ept id=\"p1\">**</ept> tier.",
+      "pos": [
+        26653,
+        26730
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Before switching an app from the <bpt id=\"p1\">**</bpt>Free<ept id=\"p1\">**</ept> tier to <bpt id=\"p2\">**</bpt>Standard<ept id=\"p2\">**</ept> tier, you should remove spending caps in place for your subscription, otherwise you risk your app becoming unavailable if you reach your caps before the billing period ends.",
+      "pos": [
+        26734,
+        26983
+      ]
+    },
+    {
+      "content": "For more information on shared and <bpt id=\"p1\">**</bpt>Standard<ept id=\"p1\">**</ept> tier, see <bpt id=\"p2\">[</bpt>Pricing Details<ept id=\"p2\">][pricing]</ept>.",
+      "pos": [
+        26984,
+        27069
+      ]
+    },
+    {
+      "pos": [
+        27075,
+        27142
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Azure Portal<ept id=\"p1\">](https://portal.azure.com)</ept>."
+    },
+    {
+      "pos": [
+        27152,
+        27214
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>App Service<ept id=\"p1\">**</ept> option on the left side of the page."
+    },
+    {
+      "content": "Click the name of your app.",
+      "pos": [
+        27220,
+        27247
+      ]
+    },
+    {
+      "pos": [
+        27253,
+        27300
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Essentials<ept id=\"p1\">**</ept> page, click <bpt id=\"p2\">**</bpt>Settings<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        27306,
+        27324
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Scale Up<ept id=\"p1\">**</ept>"
+    },
+    {
+      "content": "The scale tab",
+      "pos": [
+        27336,
+        27349
+      ]
+    },
+    {
+      "pos": [
+        27363,
+        27445
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Scale Up<ept id=\"p1\">**</ept> section, set the App Service plan mode by clicking <bpt id=\"p2\">**</bpt>Select<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you receive a \"Configuring scale for web app '&amp;lt;app name&amp;gt;' failed\" error you can use the details button to get more information.",
+      "pos": [
+        27453,
+        27602
+      ]
+    },
+    {
+      "content": "You may receive a \"Not enough available standard instance servers to satisfy this request.\"",
+      "pos": [
+        27603,
+        27694
+      ]
+    },
+    {
+      "content": "error.",
+      "pos": [
+        27695,
+        27701
+      ]
+    },
+    {
+      "content": "If you receive this error, please contact <bpt id=\"p1\">[</bpt>Azure support<ept id=\"p1\">](/support/options/)</ept>.",
+      "pos": [
+        27702,
+        27779
+      ]
+    },
+    {
+      "content": "3. Configure SSL in your app",
+      "pos": [
+        27817,
+        27845
+      ]
+    },
+    {
+      "content": "Before performing the steps in this section, you must have associated a custom domain name with your app.",
+      "pos": [
+        27847,
+        27952
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Configuring a custom domain name for a web app<ept id=\"p1\">][customdomain]</ept>.",
+      "pos": [
+        27953,
+        28042
+      ]
+    },
+    {
+      "pos": [
+        28048,
+        28115
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Azure Portal<ept id=\"p1\">](https://portal.azure.com)</ept>."
+    },
+    {
+      "pos": [
+        28121,
+        28183
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>App Service<ept id=\"p1\">**</ept> option on the left side of the page."
+    },
+    {
+      "content": "Click the name of your app.",
+      "pos": [
+        28189,
+        28216
+      ]
+    },
+    {
+      "pos": [
+        28222,
+        28269
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Essentials<ept id=\"p1\">**</ept> page, click <bpt id=\"p2\">**</bpt>Settings<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        28275,
+        28308
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Custom domains and SSL<ept id=\"p1\">**</ept>."
+    },
+    {
+      "content": "The config tab",
+      "pos": [
+        28316,
+        28330
+      ]
+    },
+    {
+      "pos": [
+        28348,
+        28397
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>certificates<ept id=\"p1\">**</ept> section, click <bpt id=\"p2\">**</bpt>Upload<ept id=\"p2\">**</ept>"
+    },
+    {
+      "content": "Using the <bpt id=\"p1\">**</bpt>Upload a certificate<ept id=\"p1\">**</ept> dialog, select the .pfx certificate file created earlier using the IIS Manager or OpenSSL.",
+      "pos": [
+        28403,
+        28528
+      ]
+    },
+    {
+      "content": "Specify the password, if any, that was used to secure the .pfx file.",
+      "pos": [
+        28529,
+        28597
+      ]
+    },
+    {
+      "content": "Finally, click the <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept> to upload the certificate.",
+      "pos": [
+        28598,
+        28652
+      ]
+    },
+    {
+      "content": "ssl upload",
+      "pos": [
+        28660,
+        28670
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>ssl bindings<ept id=\"p1\">**</ept> section of the <bpt id=\"p2\">**</bpt>SSL Settings<ept id=\"p2\">**</ept> tab, use the dropdowns to select the domain name to secure with SSL, and the certificate to use.",
+      "pos": [
+        28688,
+        28840
+      ]
+    },
+    {
+      "content": "You may also select whether to use <bpt id=\"p1\">[</bpt>Server Name Indication<ept id=\"p1\">][sni]</ept> (SNI) or IP based SSL.",
+      "pos": [
+        28841,
+        28928
+      ]
+    },
+    {
+      "content": "ssl bindings",
+      "pos": [
+        28936,
+        28948
+      ]
+    },
+    {
+      "content": "IP based SSL associates a certificate with a domain name by mapping the dedicated public IP address of the server to the domain name.",
+      "pos": [
+        28970,
+        29103
+      ]
+    },
+    {
+      "content": "This requires each domain name (contoso.com, fabricam.com, etc.) associated with your service to have a dedicated IP address.",
+      "pos": [
+        29104,
+        29229
+      ]
+    },
+    {
+      "content": "This is the traditional method of associating SSL certificates with a web server.",
+      "pos": [
+        29230,
+        29311
+      ]
+    },
+    {
+      "content": "SNI based SSL is an extension to SSL and <bpt id=\"p1\">[</bpt>Transport Layer Security<ept id=\"p1\">][tls]</ept> (TLS) that allows multiple domains to share the same IP address, with separate security certificates for each domain.",
+      "pos": [
+        29319,
+        29509
+      ]
+    },
+    {
+      "content": "Most modern browsers (including Internet Explorer, Chrome, Firefox and Opera) support SNI, however older browsers may not support SNI.",
+      "pos": [
+        29510,
+        29644
+      ]
+    },
+    {
+      "content": "For more information on SNI, see the <bpt id=\"p1\">[</bpt>Server Name Indication<ept id=\"p1\">][sni]</ept> article on Wikipedia.",
+      "pos": [
+        29645,
+        29733
+      ]
+    },
+    {
+      "pos": [
+        29739,
+        29789
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept> to save the changes and enable SSL."
+    },
+    {
+      "pos": [
+        29793,
+        29943
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you selected <bpt id=\"p1\">**</bpt>IP based SSL<ept id=\"p1\">**</ept> and your custom domain is configured using an A record, you must perform the following additional steps:"
+    },
+    {
+      "content": "After you have configured an IP based SSL binding, a dedicated IP address is assigned to your app.",
+      "pos": [
+        29951,
+        30049
+      ]
+    },
+    {
+      "content": "You can find this IP address on the <bpt id=\"p1\">**</bpt>Dashboard<ept id=\"p1\">**</ept> page of your app, in the <bpt id=\"p2\">**</bpt>quick glance<ept id=\"p2\">**</ept> section.",
+      "pos": [
+        30050,
+        30150
+      ]
+    },
+    {
+      "content": "It will be listed as <bpt id=\"p1\">**</bpt>Virtual IP Address<ept id=\"p1\">**</ept>:",
+      "pos": [
+        30151,
+        30195
+      ]
+    },
+    {
+      "content": "Virtual IP address",
+      "pos": [
+        30210,
+        30228
+      ]
+    },
+    {
+      "content": "Note that this IP address will be different than the virtual IP address used previously to configure the A record for your domain.",
+      "pos": [
+        30287,
+        30417
+      ]
+    },
+    {
+      "content": "If you are configured to use SNI based SSL, or are not configured to use SSL, no address will be listed for this entry.",
+      "pos": [
+        30418,
+        30537
+      ]
+    },
+    {
+      "content": "Using the tools provided by your domain name registrar, modify the A record for your custom domain name to point to the IP address from the previous step.",
+      "pos": [
+        30545,
+        30699
+      ]
+    },
+    {
+      "pos": [
+        30702,
+        30853
+      ],
+      "content": "At this point, you should be able to visit your app using <ph id=\"ph1\">`HTTPS://`</ph> instead of <ph id=\"ph2\">`HTTP://`</ph> to verify that the certificate has been configured correctly."
+    },
+    {
+      "content": "4. Enforce HTTPS on your app",
+      "pos": [
+        30886,
+        30914
+      ]
+    },
+    {
+      "content": "Azure App Service do <bpt id=\"p1\">*</bpt>not<ept id=\"p1\">*</ept> enforce HTTPS.",
+      "pos": [
+        30916,
+        30957
+      ]
+    },
+    {
+      "content": "Visitors may still access your app using HTTP, which may compromise your app's security.",
+      "pos": [
+        30958,
+        31046
+      ]
+    },
+    {
+      "content": "If you want to enforce HTTPS for your app, you can use the <bpt id=\"p1\">**</bpt>URL Rewrite<ept id=\"p1\">**</ept> module.",
+      "pos": [
+        31047,
+        31129
+      ]
+    },
+    {
+      "content": "The URL Rewrite module is included with Azure App Service, and enables you to define rules that are applied to incoming requests before the requests are handed to your application.",
+      "pos": [
+        31130,
+        31310
+      ]
+    },
+    {
+      "content": "It can be used for applications written in any programming language supported by Azure .",
+      "pos": [
+        31313,
+        31401
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> .NET MVC applications should use the <bpt id=\"p1\">[</bpt>RequireHttps<ept id=\"p1\">](http://msdn.microsoft.com/library/system.web.mvc.requirehttpsattribute.aspx)</ept> filter instead of URL Rewrite.",
+      "pos": [
+        31407,
+        31579
+      ]
+    },
+    {
+      "content": "For more information on using RequireHttps, see <bpt id=\"p1\">[</bpt>Deploy a secure ASP.NET MVC 5 app to a web app<ept id=\"p1\">](../articles/app-service-web/web-sites-dotnet-deploy-aspnet-mvc-app-membership-oauth-sql-database.md)</ept>.",
+      "pos": [
+        31580,
+        31778
+      ]
+    },
+    {
+      "content": "For information on programmatic redirection of requests using other programming languages and frameworks, consult the documentation for those technologies.",
+      "pos": [
+        31783,
+        31938
+      ]
+    },
+    {
+      "content": "URL Rewrite rules are defined in a <bpt id=\"p1\">**</bpt>web.config<ept id=\"p1\">**</ept> file stored in the root of your application.",
+      "pos": [
+        31940,
+        32034
+      ]
+    },
+    {
+      "content": "The following example contains a basic URL Rewrite rule that forces all incoming traffic to use HTTPS.",
+      "pos": [
+        32035,
+        32137
+      ]
+    },
+    {
+      "pos": [
+        32139,
+        32195
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"example\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph><bpt id=\"p1\">**</bpt>URL Rewrite Example Web.Config<ept id=\"p1\">**</ept>"
+    },
+    {
+      "content": "This rule works by returning an HTTP status code of 301 (permanent redirect) when the user requests a page using HTTP.",
+      "pos": [
+        32766,
+        32884
+      ]
+    },
+    {
+      "content": "The 301 redirects the request to the same URL as the visitor requested, but replaces the HTTP portion of the request with HTTPS.",
+      "pos": [
+        32885,
+        33013
+      ]
+    },
+    {
+      "content": "For example, HTTP://contoso.com would be redirected to HTTPS://contoso.com.",
+      "pos": [
+        33014,
+        33089
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If your application is written in  <bpt id=\"p1\">**</bpt>Node.js<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>PHP<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>Python Django<ept id=\"p3\">**</ept>, or <bpt id=\"p4\">**</bpt>Java<ept id=\"p4\">**</ept>, it probably doesn't include a web.config file.",
+      "pos": [
+        33093,
+        33241
+      ]
+    },
+    {
+      "content": "However <bpt id=\"p1\">**</bpt>Node.js<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Python Django<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>Java<ept id=\"p3\">**</ept> all actually do use a web.config when hosted on Azure App Service- Azure creates the file automatically during deployment, so you never see it.",
+      "pos": [
+        33242,
+        33438
+      ]
+    },
+    {
+      "content": "If you include one as part of your application, it will override the one that Azure automatically generates.",
+      "pos": [
+        33439,
+        33547
+      ]
+    },
+    {
+      "content": ".NET",
+      "pos": [
+        33552,
+        33556
+      ]
+    },
+    {
+      "pos": [
+        33558,
+        33736
+      ],
+      "content": "For .NET applications, modify the web.config file for your application and add the <bpt id=\"p1\">**</bpt>&amp;lt;rewrite&gt;<ept id=\"p1\">**</ept> section from the <bpt id=\"p2\">[</bpt>example<ept id=\"p2\">](#example)</ept> to the <bpt id=\"p3\">**</bpt>&amp;lt;system.WebServer&gt;<ept id=\"p3\">**</ept> section."
+    },
+    {
+      "pos": [
+        33738,
+        33907
+      ],
+      "content": "If your web.config file already includes a <bpt id=\"p1\">**</bpt>&amp;lt;rewrite&gt;<ept id=\"p1\">**</ept> section, add the <bpt id=\"p2\">**</bpt>&amp;lt;rule&gt;<ept id=\"p2\">**</ept> from the <bpt id=\"p3\">[</bpt>example<ept id=\"p3\">](#example)</ept> as the first entry in the <bpt id=\"p4\">**</bpt>&amp;lt;rules&gt;<ept id=\"p4\">**</ept> section."
+    },
+    {
+      "content": "PHP",
+      "pos": [
+        33912,
+        33915
+      ]
+    },
+    {
+      "pos": [
+        33917,
+        34072
+      ],
+      "content": "For PHP applications, simply save the <bpt id=\"p1\">[</bpt>example<ept id=\"p1\">](#example)</ept> as a web.config file in the root of your application, then re-deploy the application to your app."
+    },
+    {
+      "content": "Node.js, Python Django, and Java",
+      "pos": [
+        34077,
+        34109
+      ]
+    },
+    {
+      "content": "A web.config file is automatically created for Node.js, Python Django, and Java apps if they don't already provide one, but it only exists on the server since it is created during deployment.",
+      "pos": [
+        34111,
+        34302
+      ]
+    },
+    {
+      "content": "The automatically generated file contains settings that tell Azure how to host your application.",
+      "pos": [
+        34303,
+        34399
+      ]
+    },
+    {
+      "content": "To retrieve and modify the auto-generated file from the app, use the following steps.",
+      "pos": [
+        34401,
+        34486
+      ]
+    },
+    {
+      "pos": [
+        34491,
+        34750
+      ],
+      "content": "Download the file using FTP (see <bpt id=\"p1\">[</bpt>Uploading/downloading files over FTP and collecting diagnostics logs<ept id=\"p1\">](http://blogs.msdn.com/b/avkashchauhan/archive/2012/06/19/windows-azure-website-uploading-downloading-files-over-ftp-and-collecting-diagnostics-logs.aspx)</ept>)."
+    },
+    {
+      "content": "Add it to the root of your application.",
+      "pos": [
+        34755,
+        34794
+      ]
+    },
+    {
+      "content": "Add the rewrite rules using the following information.",
+      "pos": [
+        34799,
+        34853
+      ]
+    },
+    {
+      "content": "Node.js and Python Django",
+      "pos": [
+        34863,
+        34888
+      ]
+    },
+    {
+      "content": "The web.config file generated for Node.js and Python Django applications will already have a <bpt id=\"p1\">**</bpt>&amp;lt;rewrite&gt;<ept id=\"p1\">**</ept> section, containing <bpt id=\"p2\">**</bpt>&amp;lt;rule&gt;<ept id=\"p2\">**</ept> entries that are required for the proper functioning of the app.",
+      "pos": [
+        34900,
+        35108
+      ]
+    },
+    {
+      "content": "To force the app to use HTTPS, add the <bpt id=\"p1\">**</bpt>&amp;lt;rule&gt;<ept id=\"p1\">**</ept> from the example as the first entry in the <bpt id=\"p2\">**</bpt>&amp;lt;rules&gt;<ept id=\"p2\">**</ept> section.",
+      "pos": [
+        35109,
+        35228
+      ]
+    },
+    {
+      "content": "This will force HTTPS, while leaving the rest of the rules intact.",
+      "pos": [
+        35229,
+        35295
+      ]
+    },
+    {
+      "content": "Java",
+      "pos": [
+        35305,
+        35309
+      ]
+    },
+    {
+      "pos": [
+        35321,
+        35531
+      ],
+      "content": "The web.config file for Java applications using Apache Tomcat do not contain a <bpt id=\"p1\">**</bpt>&amp;lt;rewrite&gt;<ept id=\"p1\">**</ept> section, so you must add the <bpt id=\"p2\">**</bpt>&amp;lt;rewrite&gt;<ept id=\"p2\">**</ept> section from the example into the <bpt id=\"p3\">**</bpt>&amp;lt;system.webServer&gt;<ept id=\"p3\">**</ept> section."
+    },
+    {
+      "content": "Redeploy the project (including the updated web.config,) to Azure",
+      "pos": [
+        35536,
+        35601
+      ]
+    },
+    {
+      "content": "Once you deploy a web.config with a rewrite rule to force HTTPS, it should take effect immediately and redirect all requests to HTTPS.",
+      "pos": [
+        35603,
+        35737
+      ]
+    },
+    {
+      "pos": [
+        35739,
+        35879
+      ],
+      "content": "For more information on the IIS URL Rewrite module, see the <bpt id=\"p1\">[</bpt>URL Rewrite<ept id=\"p1\">](http://www.iis.net/downloads/microsoft/url-rewrite)</ept> documentation."
+    },
+    {
+      "content": "More Resources",
+      "pos": [
+        35884,
+        35898
+      ]
+    },
+    {
+      "content": "Microsoft Azure Trust Center",
+      "pos": [
+        35905,
+        35933
+      ]
+    },
+    {
+      "content": "Configuration options unlocked in Azure Web Sites",
+      "pos": [
+        35971,
+        36020
+      ]
+    },
+    {
+      "content": "Enable diagnostic logging",
+      "pos": [
+        36118,
+        36143
+      ]
+    },
+    {
+      "content": "Configure web apps in Azure App Service",
+      "pos": [
+        36212,
+        36251
+      ]
+    },
+    {
+      "content": "Azure Management Portal",
+      "pos": [
+        36308,
+        36331
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you want to get started with Azure App Service before signing up for an Azure account, go to <bpt id=\"p1\">[</bpt>Try App Service<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=523751)</ept>, where you can immediately create a short-lived starter app in App Service.",
+      "pos": [
+        36368,
+        36617
+      ]
+    },
+    {
+      "content": "No credit cards required; no commitments.",
+      "pos": [
+        36618,
+        36659
+      ]
+    },
+    {
+      "content": "What's changed",
+      "pos": [
+        36664,
+        36678
+      ]
+    },
+    {
+      "pos": [
+        36681,
+        36849
+      ],
+      "content": "For a guide to the change from Websites to App Service see: <bpt id=\"p1\">[</bpt>Azure App Service and Its Impact on Existing Azure Services<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkId=529714)</ept>"
+    }
+  ],
+  "content": "\nThis article shows you how to configure HTTPS for a web app in Azure App Service. It does not cover client certificate authentication; for information about that, see [How To Configure TLS Mutual Authentication for Web Apps](../articles/app-service-web/app-service-web-configure-tls-mutual-auth.md).\n\nBy default, Azure already enables HTTPS for your app with a wildcard certificate for  the \\*.azurewebsites.net domain. If you don't plan to configure a custom domain, then you can benefit from the default HTTPS certificate. However, like [all wildcard domains](https://casecurity.org/2014/02/26/pros-and-cons-of-single-domain-multi-domain-and-wildcard-certificates/), it is not as secure as using a custom domain with your own certificate.   \n\nThe rest of this document provides details on enabling HTTPS for custom domains, such as **contoso.com**, **www.contoso.com**, or **\\*.contoso.com**\n\n<a name=\"bkmk_domainname\"></a>\n## Enable SSL for your custom domain\n\nTo enable HTTPS for a custom domain, such as **contoso.com**, you must first [configure a custom domain name in Azure App Service](../articles/app-service-web/web-sites-custom-domain-name.md). Then, you do the following:\n\n1. [Get an SSL certificate](#bkmk_getcert)\n2. [Configure Standard or Premium pricing tier](#bkmk_standardmode)\n2. [Configure SSL in your app](#bkmk_configuressl)\n3. [Enforce SSL on your app](#bkmk_enforce) (Optional)\n\nIf you need more help at any point in this article, you can contact the Azure experts on [the MSDN Azure and the Stack Overflow forums](https://azure.microsoft.com/support/forums/). Alternatively, you can also file an Azure support incident. Go to the [Azure Support site](https://azure.microsoft.com/support/options/) and click on **Get Support**.\n\n<a name=\"bkmk_getcert\"></a>\n## 1. Get an SSL certificate\n\nBefore requesting an SSL certificate you must first determine which domain names will be secured by the certificate. This will determine what type of certificate you must obtain. If you just need to secure a single domain name such as **contoso.com** or **www.contoso.com** a basic certificate is sufficient. If you need to secure multiple domain names, such as **contoso.com**, **www.contoso.com**, and **mail.contoso.com**, then you can get a [wildcard certificate](http://en.wikipedia.org/wiki/Wildcard_certificate), or a certificate with [Subject Alternate Name](http://en.wikipedia.org/wiki/SubjectAltName) (subjectAltName).\n\nSSL certificates used with App Service must be signed by a [Certificate Authority](http://en.wikipedia.org/wiki/Certificate_authority) (CA). If you do not already have one, you will need to obtain one from a company that issues SSL certificates. For a list of Certificate Authorities, see [Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)][cas] on the Microsoft TechNet Wiki.\n\nThe certificate must meet the following requirements for SSL certificates in Azure:\n\n* The certificate must contain a private key.\n* The certificate must be created for key exchange, exportable to a Personal Information Exchange (.pfx) file.\n* The certificate's subject name must match the domain used to access the app. If you need to serve multiple domains with this certificate, you will need to use a wildcard value or specify subjectAltName values as discussed previously.\n* The certificate should use a minimum of 2048-bit encryption.\n* Certificates issued from private CA servers are not supported by Azure App Service.\n\nTo get an SSL certificate for use with Azure App Service, you submit a Certificate Signing Request (CSR) to a Certificate Authority and then generate a .pfx file from the certificate you receive back. You can do this using the tool of your choice. Below are some of the common ways to get a certificate:\n\n- [Get a certificate using Certreq.exe](#bkmk_certreq)\n- [Get a certificate using IIS Manager](#bkmk_iismgr)\n- [Get a certificate using OpenSSL](#bkmk_openssl)\n- [Get a SubjectAltName certificate using OpenSSL](#bkmk_subjectaltname)\n- [Generate self-signed certificates (for testing only)](#bkmk_selfsigned)\n\n> [AZURE.NOTE] When following the steps, you will be prompted to enter a **Common Name**, such as `www.contoso.com`. For wildcard certificates, this value should be \\*.domainname (for example, \\*.contoso.com). If you need to support both a wildcard name like \\*.contoso.com and a root domain name like contoso.com, you can use a wildcard subjectAltName certificate.\n>\n> Elliptic Curve Cryptography (ECC) certificates are supported with Azure App Service; however, they are relatively new and you should work with your CA on the exact steps to create the CSR.\n\nYou may also need to obtain **[intermediate certificates](http://en.wikipedia.org/wiki/Intermediate_certificate_authorities)** (also known as chain certificates), if these are used by your CA. The use of intermediate certificates is considered more secure than 'unchained certificates', so it is common for a CA to use them. Intermediate certificates are often provided as a separate download from the CAs website. This article provides steps to ensure that any intermediate certificates are merged with the certificate uploaded to your apps.\n\n> [AZURE.NOTE]\n>\n> In case your CA uses intermediate certificates each of them must be installed along with the certificate issued for your domain. Failing to install any of the intermediate certificates may cause hard to reproduce interoperability problems for some clients.\n\n<a name=\"bkmk_certreq\"></a>\n### Get a certificate using Certreq.exe (Windows only)\n\nCertreq.exe is Windows utility for creating certificate requests. It has been part of the base Windows installation since Windows XP/Windows Server 2000, so should be available on recent Windows systems. Use the following steps to obtain an SSL certificate using certreq.exe.\n\n1. Open **Notepad** and create a new document that contains the following. Replace **mysite.com** on the Subject line with the custom domain name of your app. For example, Subject = \"CN=www.contoso.com\".\n\n        [NewRequest]\n        Subject = \"CN=mysite.com\"\n        Exportable = TRUE\n        KeyLength = 2048\n        KeySpec = 1\n        KeyUsage = 0xA0\n        MachineKeySet = True\n        ProviderName = \"Microsoft RSA SChannel Cryptographic Provider\"\n        ProviderType = 12\n\n        [EnhancedKeyUsageExtension]\n        OID=1.3.6.1.5.5.7.3.1\n\n    For more information on the options specified above, as well as other available options, see the [Certreq reference documentation](http://technet.microsoft.com/library/cc725793.aspx).\n\n2. Save the text file as **myrequest.txt**.\n\n3. From the **Start Screen** or **Start Menu**, run **cmd.exe**.\n\n4. From the command prompt, use the following command to create the certificate request file:\n\n        certreq -new \\path\\to\\myrequest.txt \\path\\to\\create\\myrequest.csr\n\n    Specify the path to the **myrequest.txt** file created in step 1, and the path to use when creating the **myrequest.csr** file.\n\n5. Submit the **myrequest.csr** to a Certificate Authority to obtain an SSL certificate. This may involve uploading the file, or opening the file in Notepad and pasting the contents directly into a web form.\n\n    For a list of Certificate Authorities, see [Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)][cas] on the Microsoft TechNet Wiki.\n\n6. Once the Certificate Authority has provided you with a certificate (.CER) file, save this file to the computer used to generate the request, and then use the following command to accept the request and complete the certificate generation process.\n\n        certreq -accept -user mycert.cer\n\n    In this case, the **mycert.cer** certificate received from the Certificate Authority will be used to complete the signature of the certificate. No file will be created; instead, the certificate will be stored in the Windows certificate store.\n\n6. If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next steps. Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types. Select the version that is provided for Microsoft IIS.\n\n    Once you have downloaded the certificate, right click on it in explorer and select **Install certificate**. Use the default values in the **Certificate Import Wizard**, and continue selecting **Next** until the import has completed.\n\n7. To export the certificate from the certificate store, run **certmgr.msc** from the **Start Screen** or **Start Menu**. When **Certificate Manager** appears, expand the **Personal** folder, and then select **Certificates**. In the **Issued To** field, look for an entry with the custom domain name you requested a certificate for. In the **Issued By** field, it should list the Certificate Authority you used for this certificate.\n\n    ![insert image of cert manager here][certmgr]\n\n9. Right click the certificate and select **All Tasks**, and then select **Export**. In the **Certificate Export Wizard**, click **Next** and then select **Yes, export the private key**. Click **Next**.\n\n    ![Export the private key][certwiz1]\n\n10. Select **Personal Information Exchange - PKCS #12**, **Include all certificates in the certificate chain**, and **Export all extended properties**. Click **Next**.\n\n    ![include all certs and extended properties][certwiz2]\n\n11. Select **Password**, and then enter and confirm the password. Click **Next**.\n\n    ![specify a password][certwiz3]\n\n12. Provide a path and filename that will contain the exported certificate. The filename should have an extension of **.pfx**. Click **Next** to complete the process.\n\n    ![provide a file path][certwiz4]\n\nYou can now upload the exported PFX file to your app in Azure App Service.\n\n<a name=\"bkmk_openssl\"></a>\n### Get a certificate using OpenSSL\n\n1. Generate a private key and Certificate Signing Request by using the following from a command-line, bash or terminal session:\n\n        openssl req -new -nodes -keyout myserver.key -out server.csr -newkey rsa:2048\n\n2. When prompted, enter the appropriate information. For example:\n\n        Country Name (2 letter code)\n        State or Province Name (full name) []: Washington\n        Locality Name (eg, city) []: Redmond\n        Organization Name (eg, company) []: Microsoft\n        Organizational Unit Name (eg, section) []: Azure\n        Common Name (eg, YOUR name) []: www.microsoft.com\n        Email Address []:\n\n        Please enter the following 'extra' attributes to be sent with your certificate request\n\n        A challenge password []:\n\n    Once this process completes, you should have two files; **myserver.key** and **server.csr**. The **server.csr** contains the Certificate Signing Request.\n\n3. Submit your CSR to a Certificate Authority to obtain an SSL certificate. For a list of Certificate Authorities, see [Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)][cas] on the Microsoft TechNet Wiki.\n\n4. Once you have obtained a certificate from a CA, save it to a file named **myserver.crt**. If your CA provided the certificate in a text format, simply paste the certificate text into the **myserver.crt** file. The file contents should be similar to the following when viewed in a text editor:\n\n        -----BEGIN CERTIFICATE-----\n        MIIDJDCCAgwCCQCpCY4o1LBQuzANBgkqhkiG9w0BAQUFADBUMQswCQYDVQQGEwJV\n        UzELMAkGA1UECBMCV0ExEDAOBgNVBAcTB1JlZG1vbmQxEDAOBgNVBAsTB0NvbnRv\n        c28xFDASBgNVBAMTC2NvbnRvc28uY29tMB4XDTE0MDExNjE1MzIyM1oXDTE1MDEx\n        NjE1MzIyM1owVDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdS\n        ZWRtb25kMRAwDgYDVQQLEwdDb250b3NvMRQwEgYDVQQDEwtjb250b3NvLmNvbTCC\n        ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAN96hBX5EDgULtWkCRK7DMM3\n        enae1LT9fXqGlbA7ScFvFivGvOLEqEPD//eLGsf15OYHFOQHK1hwgyfXa9sEDPMT\n        3AsF3iWyF7FiEoR/qV6LdKjeQicJ2cXjGwf3G5vPoIaYifI5r0lhgOUqBxzaBDZ4\n        xMgCh2yv7NavI17BHlWyQo90gS2X5glYGRhzY/fGp10BeUEgIs3Se0kQfBQOFUYb\n        ktA6802lod5K0OxlQy4Oc8kfxTDf8AF2SPQ6BL7xxWrNl/Q2DuEEemjuMnLNxmeA\n        Ik2+6Z6+WdvJoRxqHhleoL8ftOpWR20ToiZXCPo+fcmLod4ejsG5qjBlztVY4qsC\n        AwEAATANBgkqhkiG9w0BAQUFAAOCAQEAVcM9AeeNFv2li69qBZLGDuK0NDHD3zhK\n        Y0nDkqucgjE2QKUuvVSPodz8qwHnKoPwnSrTn8CRjW1gFq5qWEO50dGWgyLR8Wy1\n        F69DYsEzodG+shv/G+vHJZg9QzutsJTB/Q8OoUCSnQS1PSPZP7RbvDV9b7Gx+gtg\n        7kQ55j3A5vOrpI8N9CwdPuimtu6X8Ylw9ejWZsnyy0FMeOPpK3WTkDMxwwGxkU3Y\n        lCRTzkv6vnHrlYQxyBLOSafCB1RWinN/slcWSLHADB6R+HeMiVKkFpooT+ghtii1\n        A9PdUQIhK9bdaFicXPBYZ6AgNVuGtfwyuS5V6ucm7RE6+qf+QjXNFg==\n        -----END CERTIFICATE-----\n\n    Save the file.\n\n5. From the command-line, Bash or terminal session, use the following command to convert the **myserver.key** and **myserver.crt** into **myserver.pfx**, which is the format required by Azure App Service:\n\n        openssl pkcs12 -export -out myserver.pfx -inkey myserver.key -in myserver.crt\n\n    When prompted, enter a password to secure the .pfx file.\n\n    > [AZURE.NOTE] If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step. Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types. Select the version that is provided as a PEM file (.pem file extension.)\n    >\n    > The follow command demonstrates how to create a .pfx file that includes intermediate certificates, which are contained in the **intermediate-cets.pem** file:  \n    >\n    >\n    `````\n    openssl pkcs12 -chain -export -out myserver.pfx -inkey myserver.key -in myserver.crt -certfile intermediate-cets.pem\n    `````\n\n    After running this command, you should have a **myserver.pfx** file suitable for use with Azure App Service.\n\n<a name=\"bkmk_iismgr\"></a>\n### Get a certificate using the IIS Manager\n\nIf you are familiar with IIS Manager, you can use it to generate a certificate that can be used with Azure App Service.\n\n1. Generate a CSR with IIS Manager to send to the Certificate Authority. For more information on generating a CSR, see [Request an Internet Server Certificate (IIS 7)][iiscsr].\n\n2. Submit your CSR to a Certificate Authority to obtain an SSL certificate. For a list of Certificate Authorities, see [Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)][cas] on the Microsoft TechNet Wiki.\n\n3. Complete the CSR with the certificate provided by the Certificate Authority vendor. For more information on completing the CSR, see [Install an Internet Server Certificate (IIS 7)][installcertiis].\n\n4. If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step. Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types. Select the version that is provided for Microsoft IIS.\n\n    Once you have downloaded the certificate, right click on it in explorer and select **Install certificate**. Use the default values in the **Certificate Import Wizard**, and continue selecting **Next** until the import has completed.\n\n4. Export the certificate from IIS Manager For more information on exporting the certificate, see [Export a Server Certificate (IIS 7)][exportcertiis]. The exported file will be used in later steps to upload to Azure for use with your app.\n\n    > [AZURE.NOTE] During the export process, be sure to select the option <strong>Yes, export the private key</strong>. This will include the private key in the exported certificate.\n\n    > [AZURE.NOTE] During the export process, be sure to select the option **include all certs in the certification path** and **Export all extended properties**. This will include any intermediate certificates in the exported certificate.\n\n<a name=\"bkmk_subjectaltname\"></a>\n### Get a SubjectAltName certificate using OpenSSL\n\nOpenSSL can be used to create a certificate request that uses the SubjectAltName extension to support multiple domain names with a single certificate, however it requires a configuration file. The following steps walk through creating a configuration file, and then using it to request a certificate.\n\n1. Create a new file named __sancert.cnf__ and use the following as the contents of the file:\n\n        # -------------- BEGIN custom sancert.cnf -----\n        HOME = .\n        oid_section = new_oids\n        [ new_oids ]\n        [ req ]\n        default_days = 730\n        distinguished_name = req_distinguished_name\n        encrypt_key = no\n        string_mask = nombstr\n        req_extensions = v3_req # Extensions to add to certificate request\n        [ req_distinguished_name ]\n        countryName = Country Name (2 letter code)\n        countryName_default =\n        stateOrProvinceName = State or Province Name (full name)\n        stateOrProvinceName_default =\n        localityName = Locality Name (eg, city)\n        localityName_default =\n        organizationalUnitName  = Organizational Unit Name (eg, section)\n        organizationalUnitName_default  =\n        commonName              = Your common name (eg, domain name)\n        commonName_default      = www.mydomain.com\n        commonName_max = 64\n        [ v3_req ]\n        subjectAltName=DNS:ftp.mydomain.com,DNS:blog.mydomain.com,DNS:*.mydomain.com\n        # -------------- END custom sancert.cnf -----\n\n    Note the line that begins with 'subjectAltName'. Replace the domain names currently listed with domain names you wish to support in addition to the common name. For example:\n\n        subjectAltName=DNS:sales.contoso.com,DNS:support.contoso.com,DNS:fabrikam.com\n\n    You do not need to change the commonName_default field, as you will be prompted to enter your common name in one of the following steps.\n\n2. Save the __sancert.cnf__ file.\n\n1. Generate a private key and Certificate Signing Request by using the sancert.cnf configuration file. From a bash or terminal session, use the following command:\n\n        openssl req -new -nodes -keyout myserver.key -out server.csr -newkey rsa:2048 -config sancert.cnf\n\n2. When prompted, enter the appropriate information. For example:\n\n        Country Name (2 letter code) []: US\n        State or Province Name (full name) []: Washington\n        Locality Name (eg, city) []: Redmond\n        Organizational Unit Name (eg, section) []: Azure\n        Your common name (eg, domain name) []: www.microsoft.com\n\n\n    Once this process completes, you should have two files; **myserver.key** and **server.csr**. The **server.csr** contains the Certificate Signing Request.\n\n3. Submit your CSR to a Certificate Authority to obtain an SSL certificate. For a list of Certificate Authorities, see [Windows and Windows Phone 8 SSL Root Certificate Program (Members CAs)][cas] on the Microsoft TechNet Wiki.\n\n4. Once you have obtained a certificate from a CA, save it to a file named **myserver.crt**. If your CA provided the certificate in a text format, simply paste the certificate text into the **myserver.crt** file. The file contents should be similar to the following when viewed in a text editor:\n\n        -----BEGIN CERTIFICATE-----\n        MIIDJDCCAgwCCQCpCY4o1LBQuzANBgkqhkiG9w0BAQUFADBUMQswCQYDVQQGEwJV\n        UzELMAkGA1UECBMCV0ExEDAOBgNVBAcTB1JlZG1vbmQxEDAOBgNVBAsTB0NvbnRv\n        c28xFDASBgNVBAMTC2NvbnRvc28uY29tMB4XDTE0MDExNjE1MzIyM1oXDTE1MDEx\n        NjE1MzIyM1owVDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdS\n        ZWRtb25kMRAwDgYDVQQLEwdDb250b3NvMRQwEgYDVQQDEwtjb250b3NvLmNvbTCC\n        ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAN96hBX5EDgULtWkCRK7DMM3\n        enae1LT9fXqGlbA7ScFvFivGvOLEqEPD//eLGsf15OYHFOQHK1hwgyfXa9sEDPMT\n        3AsF3iWyF7FiEoR/qV6LdKjeQicJ2cXjGwf3G5vPoIaYifI5r0lhgOUqBxzaBDZ4\n        xMgCh2yv7NavI17BHlWyQo90gS2X5glYGRhzY/fGp10BeUEgIs3Se0kQfBQOFUYb\n        ktA6802lod5K0OxlQy4Oc8kfxTDf8AF2SPQ6BL7xxWrNl/Q2DuEEemjuMnLNxmeA\n        Ik2+6Z6+WdvJoRxqHhleoL8ftOpWR20ToiZXCPo+fcmLod4ejsG5qjBlztVY4qsC\n        AwEAATANBgkqhkiG9w0BAQUFAAOCAQEAVcM9AeeNFv2li69qBZLGDuK0NDHD3zhK\n        Y0nDkqucgjE2QKUuvVSPodz8qwHnKoPwnSrTn8CRjW1gFq5qWEO50dGWgyLR8Wy1\n        F69DYsEzodG+shv/G+vHJZg9QzutsJTB/Q8OoUCSnQS1PSPZP7RbvDV9b7Gx+gtg\n        7kQ55j3A5vOrpI8N9CwdPuimtu6X8Ylw9ejWZsnyy0FMeOPpK3WTkDMxwwGxkU3Y\n        lCRTzkv6vnHrlYQxyBLOSafCB1RWinN/slcWSLHADB6R+HeMiVKkFpooT+ghtii1\n        A9PdUQIhK9bdaFicXPBYZ6AgNVuGtfwyuS5V6ucm7RE6+qf+QjXNFg==\n        -----END CERTIFICATE-----\n\n    Save the file.\n\n5. From the command-line, Bash or terminal session, use the following command to convert the **myserver.key** and **myserver.crt** into **myserver.pfx**, which is the format required by Azure App Service:\n\n        openssl pkcs12 -export -out myserver.pfx -inkey myserver.key -in myserver.crt\n\n    When prompted, enter a password to secure the .pfx file.\n\n    > [AZURE.NOTE] If your CA uses intermediate certificates, you must install these certificates before exporting the certificate in the next step. Usually these certificates are provided as a separate download from your CA, and are provided in several formats for different web server types. Select the version that is provided as a PEM file (.pem file extension.)  \n    >\n    > The follow command demonstrates how to create a .pfx file that includes intermediate certificates, which are contained in the **intermediate-cets.pem** file:  \n    >\n    >\n    `````\n    openssl pkcs12 -chain -export -out myserver.pfx -inkey myserver.key -in myserver.crt -certfile intermediate-cets.pem\n    `````\n\n    After running this command, you should have a **myserver.pfx** file suitable for use with Azure App Service.\n\n<a name=\"bkmk_selfsigned\"></a>\n### Generate a self-signed certificate (for testing only)\n\nIn some cases you may wish to obtain a certificate for testing, and delay purchasing one from a trusted CA until you go into production. Self-signed certificates can fill this gap. A self-signed certificate is a certificate you create and sign as if you were a Certificate Authority. While this certificate can be used to secure an app, most browsers will return errors when visiting the app as the certificate was not signed by a trusted CA. Some browsers may even refuse to allow you to view the app.\n\n- [Generate a self-signed certificate using makecert](#bkmk_ssmakecert)\n- [Generate a self-signed certificate using OpenSSL](#bkmk_ssopenssl)\n\n<a name=\"bkmk_ssmakecert\"></a>\n#### Generate a self-signed certificate using makecert ####\n\nYou can create a test certificate from a Windows system that has Visual Studio installed by performing the following steps:\n\n1. From the **Start Menu** or **Start Screen**, search for **Developer Command Prompt**. Finally, right-click **Developer Command Prompt** and select **Run As Administrator**.\n\n    If you receive a User Account Control dialog, select **Yes** to continue.\n\n2. From the Developer Command Prompt, use the following command to create a new self-signed certificate. You must substitute **serverdnsname** with the DNS of your app.\n\n        makecert -r -pe -b 01/01/2013 -e 01/01/2014 -eku 1.3.6.1.5.5.7.3.1 -ss My -n CN=serverdnsname -sky exchange -sp \"Microsoft RSA SChannel Cryptographic Provider\" -sy 12 -len 2048\n\n    This command will create a certificate that is good between the dates of 01/01/2013 and 01/01/2014, and will store the location in the CurrentUser certificate store.\n\n3. From the **Start Menu** or **Start Screen**, search for **Windows PowerShell** and start this application.\n\n4. From the Windows PowerShell prompt, use the following commands to export the certificate created previously:\n\n        $mypwd = ConvertTo-SecureString -String \"password\" -Force -AsPlainText\n        get-childitem cert:\\currentuser\\my -dnsname serverdnsname | export-pfxcertificate -filepath file-to-export-to.pfx -password $mypwd\n\n    This stores the specified password as a secure string in $mypwd, then finds the certificate by using the DNS name specified by the **dnsname** parameter, and exports to the file specified by the **filepath** parameter. The secure string containing the password is used to secure the exported file.\n\n<a name=\"bkmk_ssopenssl\"></a>\n####Generate a self-signed certificate using OpenSSL ####\n\n1. Create a new document named **serverauth.cnf**, using the following as the contents of this file:\n\n        [ req ]\n        default_bits           = 2048\n        default_keyfile        = privkey.pem\n        distinguished_name     = req_distinguished_name\n        attributes             = req_attributes\n        x509_extensions        = v3_ca\n\n        [ req_distinguished_name ]\n        countryName         = Country Name (2 letter code)\n        countryName_min         = 2\n        countryName_max         = 2\n        stateOrProvinceName     = State or Province Name (full name)\n        localityName            = Locality Name (eg, city)\n        0.organizationName      = Organization Name (eg, company)\n        organizationalUnitName      = Organizational Unit Name (eg, section)\n        commonName          = Common Name (eg, your app's domain name)\n        commonName_max          = 64\n        emailAddress            = Email Address\n        emailAddress_max        = 40\n\n        [ req_attributes ]\n        challengePassword       = A challenge password\n        challengePassword_min       = 4\n        challengePassword_max       = 20\n\n        [ v3_ca ]\n         subjectKeyIdentifier=hash\n         authorityKeyIdentifier=keyid:always,issuer:always\n         basicConstraints = CA:false\n         keyUsage=nonRepudiation, digitalSignature, keyEncipherment\n         extendedKeyUsage = serverAuth\n\n    This specifies the configuration settings required to produce an SSL certificate that can be used by Azure App Service.\n\n2. Generate a new self-signed certificate by using the following from a command-line, bash or terminal session:\n\n        openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout myserver.key -out myserver.crt -config serverauth.cnf\n\n    This creates a new certificate using the configuration settings specified in the **serverauth.cnf** file.\n\n3. To export the certificate to a .PFX file that can be uploaded to an app in Azure App Service, use the following command:\n\n        openssl pkcs12 -export -out myserver.pfx -inkey myserver.key -in myserver.crt\n\n    When prompted, enter a password to secure the .pfx file.\n\n    The **myserver.pfx** produced by this command can be used to secure your app for testing purposes.\n\n<a name=\"bkmk_standardmode\"></a>\n## 2. Configure Standard or Premium pricing tier\n\nEnabling HTTPS for a custom domain is only available for the **Standard** and **Premium** pricing tiers in Azure App Service. Use the following steps to switch your App Service plan to **Standard** tier.\n\n> [AZURE.NOTE] Before switching an app from the **Free** tier to **Standard** tier, you should remove spending caps in place for your subscription, otherwise you risk your app becoming unavailable if you reach your caps before the billing period ends. For more information on shared and **Standard** tier, see [Pricing Details][pricing].\n\n1.  In your browser, open the [Azure Portal](https://portal.azure.com).\n    \n2.  Click the **App Service** option on the left side of the page.\n\n4.  Click the name of your app.\n\n5.  In the **Essentials** page, click **Settings**.\n\n6.  Click **Scale Up**\n    \n    ![The scale tab][scale]\n\n7.  In the **Scale Up** section, set the App Service plan mode by clicking **Select**.\n\n    > [AZURE.NOTE] If you receive a \"Configuring scale for web app '&lt;app name&gt;' failed\" error you can use the details button to get more information. You may receive a \"Not enough available standard instance servers to satisfy this request.\" error. If you receive this error, please contact [Azure support](/support/options/).\n\n<a name=\"bkmk_configuressl\"></a>\n## 3. Configure SSL in your app\n\nBefore performing the steps in this section, you must have associated a custom domain name with your app. For more information, see [Configuring a custom domain name for a web app][customdomain].\n\n1.  In your browser, open the [Azure Portal](https://portal.azure.com).\n\n2.  Click the **App Service** option on the left side of the page.\n\n4.  Click the name of your app.\n\n5.  In the **Essentials** page, click **Settings**.\n\n6.  Click **Custom domains and SSL**.\n\n    ![The config tab][configure]\n\n7.  In the **certificates** section, click **Upload**\n\n8.  Using the **Upload a certificate** dialog, select the .pfx certificate file created earlier using the IIS Manager or OpenSSL. Specify the password, if any, that was used to secure the .pfx file. Finally, click the **Save** to upload the certificate.\n\n    ![ssl upload][uploadcert]\n\n9. In the **ssl bindings** section of the **SSL Settings** tab, use the dropdowns to select the domain name to secure with SSL, and the certificate to use. You may also select whether to use [Server Name Indication][sni] (SNI) or IP based SSL.\n\n    ![ssl bindings][sslbindings]\n\n    * IP based SSL associates a certificate with a domain name by mapping the dedicated public IP address of the server to the domain name. This requires each domain name (contoso.com, fabricam.com, etc.) associated with your service to have a dedicated IP address. This is the traditional method of associating SSL certificates with a web server.\n\n    * SNI based SSL is an extension to SSL and [Transport Layer Security][tls] (TLS) that allows multiple domains to share the same IP address, with separate security certificates for each domain. Most modern browsers (including Internet Explorer, Chrome, Firefox and Opera) support SNI, however older browsers may not support SNI. For more information on SNI, see the [Server Name Indication][sni] article on Wikipedia.\n\n10. Click **Save** to save the changes and enable SSL.\n\n> [AZURE.NOTE] If you selected **IP based SSL** and your custom domain is configured using an A record, you must perform the following additional steps:\n>\n> 1. After you have configured an IP based SSL binding, a dedicated IP address is assigned to your app. You can find this IP address on the **Dashboard** page of your app, in the **quick glance** section. It will be listed as **Virtual IP Address**:\n>    \n>     ![Virtual IP address](./media/configure-ssl-web-site/staticip.png)\n>    \n>     Note that this IP address will be different than the virtual IP address used previously to configure the A record for your domain. If you are configured to use SNI based SSL, or are not configured to use SSL, no address will be listed for this entry.\n>\n> 2. Using the tools provided by your domain name registrar, modify the A record for your custom domain name to point to the IP address from the previous step.\n\n\nAt this point, you should be able to visit your app using `HTTPS://` instead of `HTTP://` to verify that the certificate has been configured correctly.\n\n<a name=\"bkmk_enforce\"></a>\n## 4. Enforce HTTPS on your app\n\nAzure App Service do *not* enforce HTTPS. Visitors may still access your app using HTTP, which may compromise your app's security. If you want to enforce HTTPS for your app, you can use the **URL Rewrite** module. The URL Rewrite module is included with Azure App Service, and enables you to define rules that are applied to incoming requests before the requests are handed to your application. **It can be used for applications written in any programming language supported by Azure .**\n\n> [AZURE.NOTE] .NET MVC applications should use the [RequireHttps](http://msdn.microsoft.com/library/system.web.mvc.requirehttpsattribute.aspx) filter instead of URL Rewrite. For more information on using RequireHttps, see [Deploy a secure ASP.NET MVC 5 app to a web app](../articles/app-service-web/web-sites-dotnet-deploy-aspnet-mvc-app-membership-oauth-sql-database.md).\n>\n> For information on programmatic redirection of requests using other programming languages and frameworks, consult the documentation for those technologies.\n\nURL Rewrite rules are defined in a **web.config** file stored in the root of your application. The following example contains a basic URL Rewrite rule that forces all incoming traffic to use HTTPS.\n\n<a name=\"example\"></a>**URL Rewrite Example Web.Config**\n\n    <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n    <configuration>\n      <system.webServer>\n        <rewrite>\n          <rules>\n            <rule name=\"Force HTTPS\" enabled=\"true\">\n              <match url=\"(.*)\" ignoreCase=\"false\" />\n              <conditions>\n                <add input=\"{HTTPS}\" pattern=\"off\" />\n              </conditions>\n              <action type=\"Redirect\" url=\"https://{HTTP_HOST}/{R:1}\" appendQueryString=\"true\" redirectType=\"Permanent\" />\n            </rule>\n          </rules>\n        </rewrite>\n      </system.webServer>\n    </configuration>\n\nThis rule works by returning an HTTP status code of 301 (permanent redirect) when the user requests a page using HTTP. The 301 redirects the request to the same URL as the visitor requested, but replaces the HTTP portion of the request with HTTPS. For example, HTTP://contoso.com would be redirected to HTTPS://contoso.com.\n\n> [AZURE.NOTE] If your application is written in  **Node.js**, **PHP**, **Python Django**, or **Java**, it probably doesn't include a web.config file. However **Node.js**, **Python Django**, and **Java** all actually do use a web.config when hosted on Azure App Service- Azure creates the file automatically during deployment, so you never see it. If you include one as part of your application, it will override the one that Azure automatically generates.\n\n###.NET\n\nFor .NET applications, modify the web.config file for your application and add the **&lt;rewrite>** section from the [example](#example) to the **&lt;system.WebServer>** section.\n\nIf your web.config file already includes a **&lt;rewrite>** section, add the **&lt;rule>** from the [example](#example) as the first entry in the **&lt;rules>** section.\n\n###PHP\n\nFor PHP applications, simply save the [example](#example) as a web.config file in the root of your application, then re-deploy the application to your app.\n\n###Node.js, Python Django, and Java\n\nA web.config file is automatically created for Node.js, Python Django, and Java apps if they don't already provide one, but it only exists on the server since it is created during deployment. The automatically generated file contains settings that tell Azure how to host your application.\n\nTo retrieve and modify the auto-generated file from the app, use the following steps.\n\n1. Download the file using FTP (see [Uploading/downloading files over FTP and collecting diagnostics logs](http://blogs.msdn.com/b/avkashchauhan/archive/2012/06/19/windows-azure-website-uploading-downloading-files-over-ftp-and-collecting-diagnostics-logs.aspx)).\n\n2. Add it to the root of your application.\n\n3. Add the rewrite rules using the following information.\n\n    * **Node.js and Python Django**\n\n        The web.config file generated for Node.js and Python Django applications will already have a **&lt;rewrite>** section, containing **&lt;rule>** entries that are required for the proper functioning of the app. To force the app to use HTTPS, add the **&lt;rule>** from the example as the first entry in the **&lt;rules>** section. This will force HTTPS, while leaving the rest of the rules intact.\n\n    * **Java**\n\n        The web.config file for Java applications using Apache Tomcat do not contain a **&lt;rewrite>** section, so you must add the **&lt;rewrite>** section from the example into the **&lt;system.webServer>** section.\n\n4. Redeploy the project (including the updated web.config,) to Azure\n\nOnce you deploy a web.config with a rewrite rule to force HTTPS, it should take effect immediately and redirect all requests to HTTPS.\n\nFor more information on the IIS URL Rewrite module, see the [URL Rewrite](http://www.iis.net/downloads/microsoft/url-rewrite) documentation.\n\n## More Resources ##\n- [Microsoft Azure Trust Center](/support/trust-center/security/)\n- [Configuration options unlocked in Azure Web Sites](/blog/2014/01/28/more-to-explore-configuration-options-unlocked-in-windows-azure-web-sites/)\n- [Enable diagnostic logging](../articles/app-service-web/web-sites-enable-diagnostic-log.md)\n- [Configure web apps in Azure App Service](../articles/app-service-web/web-sites-configure.md)\n- [Azure Management Portal](https://manage.windowsazure.com)\n\n>[AZURE.NOTE] If you want to get started with Azure App Service before signing up for an Azure account, go to [Try App Service](http://go.microsoft.com/fwlink/?LinkId=523751), where you can immediately create a short-lived starter app in App Service. No credit cards required; no commitments.\n\n## What's changed\n* For a guide to the change from Websites to App Service see: [Azure App Service and Its Impact on Existing Azure Services](http://go.microsoft.com/fwlink/?LinkId=529714)\n\n[customdomain]: ../articles/app-service-web/web-sites-custom-domain-name.md\n[iiscsr]: http://technet.microsoft.com/library/cc732906(WS.10).aspx\n[cas]: http://go.microsoft.com/fwlink/?LinkID=269988\n[installcertiis]: http://technet.microsoft.com/library/cc771816(WS.10).aspx\n[exportcertiis]: http://technet.microsoft.com/library/cc731386(WS.10).aspx\n[openssl]: http://www.openssl.org/\n[portal]: https://manage.windowsazure.com/\n[tls]: http://en.wikipedia.org/wiki/Transport_Layer_Security\n[staticip]: ./media/configure-ssl-web-site/staticip.png\n[website]: ./media/configure-ssl-web-site/sslwebsite.png\n[scale]: ./media/configure-ssl-web-site/sslscale.png\n[standard]: ./media/configure-ssl-web-site/sslreserved.png\n[pricing]: /pricing/details/\n[configure]: ./media/configure-ssl-web-site/sslconfig.png\n[uploadcert]: ./media/configure-ssl-web-site/ssluploadcert.png\n[uploadcertdlg]: ./media/configure-ssl-web-site/ssluploaddlg.png\n[sslbindings]: ./media/configure-ssl-web-site/sslbindings.png\n[sni]: http://en.wikipedia.org/wiki/Server_Name_Indication\n[certmgr]: ./media/configure-ssl-web-site/waws-certmgr.png\n[certwiz1]: ./media/configure-ssl-web-site/waws-certwiz1.png\n[certwiz2]: ./media/configure-ssl-web-site/waws-certwiz2.png\n[certwiz3]: ./media/configure-ssl-web-site/waws-certwiz3.png\n[certwiz4]: ./media/configure-ssl-web-site/waws-certwiz4.png\n"
+}

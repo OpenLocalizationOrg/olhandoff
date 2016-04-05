@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        4,
+        119
+      ],
+      "content": "In <bpt id=\"p1\">**</bpt>Project Explorer<ept id=\"p1\">**</ept> in Android Studio, open the ToDoActivity.java file and add the following import statements."
+    },
+    {
+      "pos": [
+        588,
+        643
+      ],
+      "content": "Add the following method to the <bpt id=\"p1\">**</bpt>ToDoActivity<ept id=\"p1\">**</ept> class:"
+    },
+    {
+      "content": "This creates a new method to handle the authentication process.",
+      "pos": [
+        1486,
+        1549
+      ]
+    },
+    {
+      "content": "The user is authenticated by using a Google login.",
+      "pos": [
+        1550,
+        1600
+      ]
+    },
+    {
+      "content": "A dialog is displayed which displays the ID of the authenticated user.",
+      "pos": [
+        1601,
+        1671
+      ]
+    },
+    {
+      "content": "You cannot proceed without a positive authentication.",
+      "pos": [
+        1672,
+        1725
+      ]
+    },
+    {
+      "pos": [
+        1733,
+        1958
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you are using an identity provider other than Google, change the value passed to the <bpt id=\"p1\">**</bpt>login<ept id=\"p1\">**</ept> method above to one of the following: <bpt id=\"p2\">_</bpt>MicrosoftAccount<ept id=\"p2\">_</ept>, <bpt id=\"p3\">_</bpt>Facebook<ept id=\"p3\">_</ept>, <bpt id=\"p4\">_</bpt>Twitter<ept id=\"p4\">_</ept>, or <bpt id=\"p5\">_</bpt>windowsazureactivedirectory<ept id=\"p5\">_</ept>."
+    },
+    {
+      "pos": [
+        1963,
+        2088
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>onCreate<ept id=\"p1\">**</ept> method, add the following line of code after the code that instantiates the <ph id=\"ph1\">`MobileServiceClient`</ph> object."
+    },
+    {
+      "content": "This call starts the authentication process.",
+      "pos": [
+        2119,
+        2163
+      ]
+    },
+    {
+      "pos": [
+        2168,
+        2298
+      ],
+      "content": "Move the remaining code after <ph id=\"ph1\">`authenticate();`</ph> in the <bpt id=\"p1\">**</bpt>onCreate<ept id=\"p1\">**</ept> method to a new <bpt id=\"p2\">**</bpt>createTable<ept id=\"p2\">**</ept> method, which looks like this:"
+    },
+    {
+      "pos": [
+        2893,
+        3003
+      ],
+      "content": "From the <bpt id=\"p1\">**</bpt>Run<ept id=\"p1\">**</ept> menu, then click <bpt id=\"p2\">**</bpt>Run app<ept id=\"p2\">**</ept> to start the app and sign in with your chosen identity provider."
+    },
+    {
+      "content": "When you are successfully logged-in, the app should run without errors, and you should be able to query the backend service and make updates to data.",
+      "pos": [
+        3010,
+        3159
+      ]
+    }
+  ],
+  "content": "\n1. In **Project Explorer** in Android Studio, open the ToDoActivity.java file and add the following import statements.\n\n        import java.util.concurrent.ExecutionException;\n        import java.util.concurrent.atomic.AtomicBoolean;\n\n        import android.content.Context;\n        import android.content.SharedPreferences;\n        import android.content.SharedPreferences.Editor;\n\n        import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;\n        import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;\n\n2. Add the following method to the **ToDoActivity** class: \n    \n        private void authenticate() {\n            // Login using the Google provider.\n            \n            ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);\n    \n            Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {\n                @Override\n                public void onFailure(Throwable exc) {\n                    createAndShowDialog((Exception) exc, \"Error\");\n                }           \n                @Override\n                public void onSuccess(MobileServiceUser user) {\n                    createAndShowDialog(String.format(\n                            \"You are now logged in - %1$2s\",\n                            user.getUserId()), \"Success\");\n                    createTable();  \n                }\n            });     \n        }\n\n\n    This creates a new method to handle the authentication process. The user is authenticated by using a Google login. A dialog is displayed which displays the ID of the authenticated user. You cannot proceed without a positive authentication.\n\n    > [AZURE.NOTE] If you are using an identity provider other than Google, change the value passed to the **login** method above to one of the following: _MicrosoftAccount_, _Facebook_, _Twitter_, or _windowsazureactivedirectory_.\n\n3. In the **onCreate** method, add the following line of code after the code that instantiates the `MobileServiceClient` object.\n\n        authenticate();\n\n    This call starts the authentication process.\n\n4. Move the remaining code after `authenticate();` in the **onCreate** method to a new **createTable** method, which looks like this:\n\n        private void createTable() {\n    \n            // Get the table instance to use.\n            mToDoTable = mClient.getTable(ToDoItem.class);\n    \n            mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);\n    \n            // Create an adapter to bind the items with the view.\n            mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);\n            ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);\n            listViewToDo.setAdapter(mAdapter);\n    \n            // Load the items from Azure.\n            refreshItemsFromTable();\n        }\n\n9. From the **Run** menu, then click **Run app** to start the app and sign in with your chosen identity provider. \n\n    When you are successfully logged-in, the app should run without errors, and you should be able to query the backend service and make updates to data."
+}

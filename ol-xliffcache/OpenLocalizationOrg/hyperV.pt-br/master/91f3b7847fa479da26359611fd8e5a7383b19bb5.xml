@@ -1,0 +1,33 @@
+{
+  "nodes": [
+    {
+      "pos": [
+        184,
+        270
+      ],
+      "content": "In Visual Studio, update the <ph id=\"ph1\">`PostTodoItem`</ph> method definition with the following code:"
+    },
+    {
+      "content": "This code sends a template notification only to registrations tagged with the current user's SID.",
+      "pos": [
+        2202,
+        2299
+      ]
+    },
+    {
+      "content": "Note that the SID value can change since it derived from the authentication provider's token.",
+      "pos": [
+        2300,
+        2393
+      ]
+    },
+    {
+      "content": "Republish the server project.",
+      "pos": [
+        2400,
+        2429
+      ]
+    }
+  ],
+  "content": "<!---Use the procedure that matches your backend project type&mdash;either [.NET backend](#dotnet) or [Node.js backend](#nodejs).\n\n### <a name=\"dotnet\"></a>.NET backend project -->\n1. In Visual Studio, update the `PostTodoItem` method definition with the following code:  \n\n        public async Task<IHttpActionResult> PostTodoItem(TodoItem item)\n        {\n            TodoItem current = await InsertAsync(item);\n    \n            // Get the settings for the server project.\n            HttpConfiguration config = this.Configuration;\n            MobileAppSettingsDictionary settings =\n                this.Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();\n    \n            // Get the Notification Hubs credentials for the Mobile App.\n            string notificationHubName = settings.NotificationHubName;\n            string notificationHubConnection = settings\n                .Connections[MobileAppSettingsKeys.NotificationHubConnectionString].ConnectionString;\n    \n            // Create the notification hub client.\n            NotificationHubClient hub = NotificationHubClient\n                .CreateClientFromConnectionString(notificationHubConnection, notificationHubName);\n    \n            // Get the current user SID and create a tag for the current user.\n            var claimsPrincipal = this.User as ClaimsPrincipal;\n            string sid = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value;\n            string userTag = \"_UserId:\" + sid;\n    \n            // Define push message text.\n            var messageText = string.Format(\"New item added: {0}\", item.Text);\n    \n            // Build a dictionary for the template.\n            var notification = new Dictionary<string, string> { { \"message\", messageText } };\n    \n            try\n            {\n                // Send a template notification to the user ID.\n                await hub.SendTemplateNotificationAsync(notification, userTag);\n            }\n            catch (System.Exception)\n            {\n                throw new HttpResponseException(System.Net.HttpStatusCode.InternalServerError);\n            }\n            return CreatedAtRoute(\"Tables\", new { id = current.Id }, current);\n        }\n\n    This code sends a template notification only to registrations tagged with the current user's SID. Note that the SID value can change since it derived from the authentication provider's token. \n \n2. Republish the server project.\n\n<!---### <a name=\"nodejs\"></a>Node.js backend project\n\n1. Replace the existing code in the todoitem.js file with the following:\n\n        var azureMobileApps = require('azure-mobile-apps'),\n        promises = require('azure-mobile-apps/src/utilities/promises'),\n        logger = require('azure-mobile-apps/src/logger');\n    \n        var table = azureMobileApps.table();\n        \n        table.insert(function (context) {\n        // For more information about the Notification Hubs JavaScript SDK, \n        // see http://aka.ms/nodejshubs\n        logger.info('Running TodoItem.insert');\n\n        // Get the current user SID and create a tag for the current user.\n        string userTag = context.user.Id;\n        \n        // Define the template payload.\n        var payload = '{\"message\": context.item.text}'; \n        \n        // Execute the insert.  The insert returns the results as a Promise,\n        // Do the push as a post-execute action within the promise flow.\n        return context.execute()\n            .then(function (results) {\n                // Only do the push if configured\n                if (context.push) {\n                    // Send a template notification.\n                    context.push.send(userTag, payload, function (error) {\n                        if (error) {\n                            logger.error('Error while sending push notification: ', error);\n                        } else {\n                            logger.info('Push notification sent successfully!');\n                        }\n                    });\n                }\n                // Don't forget to return the results from the context.execute()\n                return results;\n            })\n            .catch(function (error) {\n                logger.error('Error while running context.execute: ', error);\n            });\n        });\n\n        module.exports = table;  \n\n    This sends a template notification only to registrations tagged with the current user's SID. Note that the SID value can change since it derived from the authentication provider's token. \n\n2. When editing the file in your local computer, republish the server project.-->"
+}

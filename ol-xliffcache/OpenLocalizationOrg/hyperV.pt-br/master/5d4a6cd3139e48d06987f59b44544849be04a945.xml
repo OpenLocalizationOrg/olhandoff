@@ -1,0 +1,54 @@
+{
+  "nodes": [
+    {
+      "content": "In Visual Studio Solution Explorer, expand the <bpt id=\"p1\">**</bpt>Controllers<ept id=\"p1\">**</ept> folder in the mobile service project.",
+      "pos": [
+        4,
+        104
+      ]
+    },
+    {
+      "content": "Open TodoItemController.cs and update the <ph id=\"ph1\">`PostTodoItem`</ph> method definition with the following code:",
+      "pos": [
+        105,
+        204
+      ]
+    },
+    {
+      "content": "This code sends a push notification (with the text of the inserted item) after inserting a todo item.",
+      "pos": [
+        1318,
+        1419
+      ]
+    },
+    {
+      "content": "In the event of an error, the code will add an error log entry which is viewable on the <bpt id=\"p1\">**</bpt>Logs<ept id=\"p1\">**</ept> tab of the mobile service in the <bpt id=\"p2\">[</bpt>Azure classic portal<ept id=\"p2\">](https://manage.windowsazure.com/)</ept>.",
+      "pos": [
+        1420,
+        1607
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> You can use template notifications to send a single push notification to clients on multiple platforms.",
+      "pos": [
+        1614,
+        1730
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Supporting multiple device platforms from a single mobile service<ept id=\"p1\">](../articles/mobile-services-how-to-use-multiple-clients-single-service.md#push)</ept>.",
+      "pos": [
+        1731,
+        1905
+      ]
+    },
+    {
+      "content": "Republish the mobile service project to Azure.",
+      "pos": [
+        1910,
+        1956
+      ]
+    }
+  ],
+  "content": "\n1. In Visual Studio Solution Explorer, expand the **Controllers** folder in the mobile service project. Open TodoItemController.cs and update the `PostTodoItem` method definition with the following code:  \n\n        public async Task<IHttpActionResult> PostTodoItem(TodoItem item)\n        {\n            TodoItem current = await InsertAsync(item);\n\n            // Create a WNS native toast.\n            WindowsPushMessage message = new WindowsPushMessage();\n\n            // Define the XML paylod for a WNS native toast notification \n            // that contains the text of the inserted item.\n            message.XmlPayload = @\"<?xml version=\"\"1.0\"\" encoding=\"\"utf-8\"\"?>\" +\n                                 @\"<toast><visual><binding template=\"\"ToastText01\"\">\" +\n                                 @\"<text id=\"\"1\"\">\" + item.Text + @\"</text>\" +\n                                 @\"</binding></visual></toast>\";\n            try\n            {\n                var result = await Services.Push.SendAsync(message);\n                Services.Log.Info(result.State.ToString());\n            }\n            catch (System.Exception ex)\n            {\n                Services.Log.Error(ex.Message, null, \"Push.SendAsync Error\");\n            }\n            return CreatedAtRoute(\"Tables\", new { id = current.Id }, current);\n        }\n\n    This code sends a push notification (with the text of the inserted item) after inserting a todo item. In the event of an error, the code will add an error log entry which is viewable on the **Logs** tab of the mobile service in the [Azure classic portal](https://manage.windowsazure.com/).\n\n    >[AZURE.NOTE] You can use template notifications to send a single push notification to clients on multiple platforms. For more information, see [Supporting multiple device platforms from a single mobile service](../articles/mobile-services-how-to-use-multiple-clients-single-service.md#push).\n\n2. Republish the mobile service project to Azure.\n\n\n"
+}

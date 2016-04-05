@@ -1,0 +1,1299 @@
+{
+  "nodes": [
+    {
+      "content": "Configuring a custom domain name for an Azure website",
+      "pos": [
+        1,
+        54
+      ]
+    },
+    {
+      "content": "When you create a website, Azure provides a friendly subdomain on the azurewebsites.net domain so your users can access your website using a URL like http://&amp;lt;mysite&gt;.azurewebsites.net.",
+      "pos": [
+        56,
+        243
+      ]
+    },
+    {
+      "content": "However, if you configure your websites for Shared or Standard mode, you can map your website to your own domain name.",
+      "pos": [
+        244,
+        362
+      ]
+    },
+    {
+      "content": "Optionally, you can use Azure Traffic Manager to load balance incoming traffic to your website.",
+      "pos": [
+        364,
+        459
+      ]
+    },
+    {
+      "content": "For more information on how Traffic Manager works with Websites, see <bpt id=\"p1\">[</bpt>Controlling Azure Web Sites Traffic with Azure Traffic Manager<ept id=\"p1\">][trafficmanager]</ept>.",
+      "pos": [
+        460,
+        610
+      ]
+    },
+    {
+      "pos": [
+        614,
+        798
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The procedures in this task apply to Azure Websites; for Cloud Services, see <ph id=\"ph2\">&lt;a href=\"/develop/net/common-tasks/custom-dns/\"&gt;</ph>Configuring a Custom Domain Name in Azure<ph id=\"ph3\">&lt;/a&gt;</ph>."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The steps in this task require you to configure your websites for Shared or Standard mode, which may change how much you are billed for your subscription.",
+      "pos": [
+        802,
+        969
+      ]
+    },
+    {
+      "content": "See <ph id=\"ph1\">&lt;a href=\"/pricing/details/web-sites/\"&gt;</ph>Websites Pricing Details<ph id=\"ph2\">&lt;/a&gt;</ph> for more information.",
+      "pos": [
+        970,
+        1062
+      ]
+    },
+    {
+      "content": "In this article:",
+      "pos": [
+        1064,
+        1080
+      ]
+    },
+    {
+      "content": "Understanding CNAME and A records",
+      "pos": [
+        1087,
+        1120
+      ]
+    },
+    {
+      "content": "Configure your web sites for shared or standard mode",
+      "pos": [
+        1151,
+        1203
+      ]
+    },
+    {
+      "content": "Add your web sites to Traffic Manager",
+      "pos": [
+        1234,
+        1271
+      ]
+    },
+    {
+      "content": "Add a CNAME for your custom domain",
+      "pos": [
+        1295,
+        1329
+      ]
+    },
+    {
+      "content": "Add an A record for your custom domain",
+      "pos": [
+        1358,
+        1396
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">&lt;a name=\"understanding-records\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Understand CNAME and A records",
+      "pos": [
+        1427,
+        1493
+      ]
+    },
+    {
+      "content": "CNAME (or alias records) and A records both allow you to associate a domain name with a website, however they each work differently.",
+      "pos": [
+        1500,
+        1632
+      ]
+    },
+    {
+      "content": "CNAME or Alias record",
+      "pos": [
+        1637,
+        1658
+      ]
+    },
+    {
+      "content": "A CNAME record maps a <bpt id=\"p1\">*</bpt>specific<ept id=\"p1\">*</ept> domain, such as <bpt id=\"p2\">**</bpt>contoso.com<ept id=\"p2\">**</ept> or <bpt id=\"p3\">**</bpt>www.contoso.com<ept id=\"p3\">**</ept>, to a canonical domain name.",
+      "pos": [
+        1660,
+        1776
+      ]
+    },
+    {
+      "content": "In this case, the canonical domain name is the either the <bpt id=\"p1\">**</bpt>&amp;lt;myapp&gt;.azurewebsites.net<ept id=\"p1\">**</ept> domain name of your Azure website or the <bpt id=\"p2\">**</bpt>&amp;lt;myapp&gt;.trafficmgr.com<ept id=\"p2\">**</ept> domain name of your Traffic Manager profile.",
+      "pos": [
+        1777,
+        1983
+      ]
+    },
+    {
+      "content": "Once created, the CNAME creates an alias for the <bpt id=\"p1\">**</bpt>&amp;lt;myapp&gt;.azurewebsites.net<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>&amp;lt;myapp&gt;.trafficmgr.com<ept id=\"p2\">**</ept> domain name.",
+      "pos": [
+        1984,
+        2111
+      ]
+    },
+    {
+      "content": "The CNAME entry will resolve to the IP address of your <bpt id=\"p1\">**</bpt>&amp;lt;myapp&gt;.azurewebsites.net<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>&amp;lt;myapp&gt;.trafficmgr.com<ept id=\"p2\">**</ept> domain name automatically, so if the IP address of the website changes, you do not have to take any action.",
+      "pos": [
+        2112,
+        2340
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Some domain registrars only allow you to map subdomains when using a CNAME record, such as www.contoso.com, and not root names, such as contoso.com.",
+      "pos": [
+        2344,
+        2505
+      ]
+    },
+    {
+      "content": "For more information on CNAME records, see the documentation provided by your registrar, <ph id=\"ph1\">&lt;a href=\"http://en.wikipedia.org/wiki/CNAME_record\"&gt;</ph>the Wikipedia entry on CNAME record<ph id=\"ph2\">&lt;/a&gt;</ph>, or the <ph id=\"ph3\">&lt;a href=\"http://tools.ietf.org/html/rfc1035\"&gt;</ph>IETF Domain Names - Implementation and Specification<ph id=\"ph4\">&lt;/a&gt;</ph> document.",
+      "pos": [
+        2506,
+        2806
+      ]
+    },
+    {
+      "content": "A record",
+      "pos": [
+        2811,
+        2819
+      ]
+    },
+    {
+      "content": "An A record maps a domain, such as <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept> or <bpt id=\"p2\">**</bpt>www.contoso.com<ept id=\"p2\">**</ept>, <bpt id=\"p3\">*</bpt>or a wildcard domain<ept id=\"p3\">*</ept> such as <bpt id=\"p4\">**</bpt>\\*.contoso.com<ept id=\"p4\">**</ept>, to an IP address.",
+      "pos": [
+        2821,
+        2964
+      ]
+    },
+    {
+      "content": "In the case of an Azure Website, either the virtual IP of the service or a specific IP address that you purchased for your website.",
+      "pos": [
+        2965,
+        3096
+      ]
+    },
+    {
+      "content": "So the main benefit of an A record over a CNAME record is that you can have one entry that uses a wildcard, such as *<bpt id=\"p1\">**</bpt>.contoso.com<ept id=\"p1\">**</ept>, which would handle requests for multiple sub-domains such as <bpt id=\"p2\">**</bpt>mail.contoso.com<ept id=\"p2\">**</ept>, <bpt id=\"p3\">**</bpt>login.contoso.com<ept id=\"p3\">**</ept>, or <bpt id=\"p4\">**</bpt>www.contso.com<ept id=\"p4\">**</ept>.",
+      "pos": [
+        3097,
+        3360
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Since an A record is mapped to a static IP address, it cannot automatically resolve changes to the IP address of your website.",
+      "pos": [
+        3364,
+        3503
+      ]
+    },
+    {
+      "content": "An IP address for use with A records is provided when you configure custom domain name settings for your website; however, this value may change if you delete and recreate your website, or change the website mode to back to free.",
+      "pos": [
+        3504,
+        3733
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> A records cannot be used for load balancing with Traffic Manager.",
+      "pos": [
+        3737,
+        3815
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Controlling Azure Web Sites Traffic with Azure Traffic Manager<ept id=\"p1\">][trafficmanager]</ept>.",
+      "pos": [
+        3816,
+        3923
+      ]
+    },
+    {
+      "content": "Configure your websites for shared or standard mode",
+      "pos": [
+        3965,
+        4016
+      ]
+    },
+    {
+      "content": "Setting a custom domain name on a website is only available for the Shared and Standard modes for Azure websites.",
+      "pos": [
+        4023,
+        4136
+      ]
+    },
+    {
+      "content": "Before switching a website from the Free website mode to the Shared or Standard website mode, you must first remove spending caps in place for your Website subscription.",
+      "pos": [
+        4137,
+        4306
+      ]
+    },
+    {
+      "content": "For more information on Shared and Standard mode pricing, see <bpt id=\"p1\">[</bpt>Pricing Details<ept id=\"p1\">][PricingDetails]</ept>.",
+      "pos": [
+        4307,
+        4403
+      ]
+    },
+    {
+      "pos": [
+        4408,
+        4462
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Management Portal<ept id=\"p1\">][portal]</ept>."
+    },
+    {
+      "pos": [
+        4466,
+        4519
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Websites<ept id=\"p1\">**</ept> tab, click the name of your site."
+    },
+    {
+      "pos": [
+        4548,
+        4572
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>SCALE<ept id=\"p1\">**</ept> tab."
+    },
+    {
+      "pos": [
+        4602,
+        4674
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>general<ept id=\"p1\">**</ept> section, set the website mode by clicking <bpt id=\"p2\">**</bpt>SHARED<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        4706,
+        4827
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you will be using Traffic Manager with this website, you must use select Standard mode instead of Shared."
+    },
+    {
+      "pos": [
+        4832,
+        4847
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Save<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        4851,
+        4982
+      ],
+      "content": "When prompted about the increase in cost for Shared mode (or for Standard mode if you choose Standard), click <bpt id=\"p1\">**</bpt>Yes<ept id=\"p1\">**</ept> if you agree."
+    },
+    {
+      "pos": [
+        5019,
+        5171
+      ],
+      "content": "**Note**<br />\n If you receive a \"Configuring scale for website 'website name' failed\" error, you can use the details button to get more information.",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Note",
+          "pos": [
+            2,
+            6
+          ]
+        },
+        {
+          "content": "If you receive a \"Configuring scale for website 'website name' failed\" error, you can use the details button to get more information.",
+          "pos": [
+            16,
+            149
+          ]
+        }
+      ]
+    },
+    {
+      "content": "(Optional) Add your websites to Traffic Manager",
+      "pos": [
+        5206,
+        5253
+      ]
+    },
+    {
+      "content": "If you want to use your website with Traffic Manager, perform the following steps.",
+      "pos": [
+        5260,
+        5342
+      ]
+    },
+    {
+      "content": "If you do not already have a Traffic Manager profile, use the information in <bpt id=\"p1\">[</bpt>Create a Traffic Manager profile using Quick Create<ept id=\"p1\">][createprofile]</ept> to create one.",
+      "pos": [
+        5347,
+        5507
+      ]
+    },
+    {
+      "content": "Note the <bpt id=\"p1\">**</bpt>.trafficmgr.com<ept id=\"p1\">**</ept> domain name associated with your Traffic Manager profile.",
+      "pos": [
+        5508,
+        5594
+      ]
+    },
+    {
+      "content": "This will be used in a later step.",
+      "pos": [
+        5595,
+        5629
+      ]
+    },
+    {
+      "pos": [
+        5634,
+        5763
+      ],
+      "content": "Use the information in <bpt id=\"p1\">[</bpt>Add or Delete Endpoints<ept id=\"p1\">][addendpoint]</ept> to add your website as an endpoint in your Traffic Manager profile."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If your website is not listed when adding an endpoint, verify that it is configured for Standard mode.",
+      "pos": [
+        5771,
+        5886
+      ]
+    },
+    {
+      "content": "You must use Standard mode for your website in order to work with Traffic Manager.",
+      "pos": [
+        5887,
+        5969
+      ]
+    },
+    {
+      "content": "Log on to your DNS registrar's website, and go to the page for managing DNS.",
+      "pos": [
+        5974,
+        6050
+      ]
+    },
+    {
+      "content": "Look for links or areas of the site labeled as <bpt id=\"p1\">**</bpt>Domain Name<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>DNS<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Name Server Management<ept id=\"p3\">**</ept>.",
+      "pos": [
+        6051,
+        6154
+      ]
+    },
+    {
+      "content": "Now find where you can select or enter CNAME records.",
+      "pos": [
+        6159,
+        6212
+      ]
+    },
+    {
+      "content": "You may have to select the record type from a drop down, or go to an advanced settings page.",
+      "pos": [
+        6213,
+        6305
+      ]
+    },
+    {
+      "content": "You should look for the words <bpt id=\"p1\">**</bpt>CNAME<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Alias<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Subdomains<ept id=\"p3\">**</ept>.",
+      "pos": [
+        6306,
+        6376
+      ]
+    },
+    {
+      "content": "You must also provide the domain or subdomain alias for the CNAME.",
+      "pos": [
+        6381,
+        6447
+      ]
+    },
+    {
+      "content": "For example, <bpt id=\"p1\">**</bpt>www<ept id=\"p1\">**</ept> if you want to create an alias for <bpt id=\"p2\">**</bpt>www.customdomain.com<ept id=\"p2\">**</ept>.",
+      "pos": [
+        6448,
+        6529
+      ]
+    },
+    {
+      "content": "You must also provide a host name that is the canonical domain name for this CNAME alias.",
+      "pos": [
+        6534,
+        6623
+      ]
+    },
+    {
+      "content": "This is the <bpt id=\"p1\">**</bpt>.trafficmgr.com<ept id=\"p1\">**</ept> name for your website.",
+      "pos": [
+        6624,
+        6678
+      ]
+    },
+    {
+      "pos": [
+        6680,
+        6826
+      ],
+      "content": "For example, the following CNAME record forwards all traffic from <bpt id=\"p1\">**</bpt>www.contoso.com<ept id=\"p1\">**</ept> to <bpt id=\"p2\">**</bpt>contoso.trafficmgr.com<ept id=\"p2\">**</ept>, the domain name of a website:"
+    },
+    {
+      "content": "Alias/Host name/Subdomain",
+      "pos": [
+        6931,
+        6956
+      ]
+    },
+    {
+      "content": "Canonical domain",
+      "pos": [
+        6983,
+        6999
+      ]
+    },
+    {
+      "content": "www",
+      "pos": [
+        7029,
+        7032
+      ]
+    },
+    {
+      "content": "contoso.trafficmgr.com",
+      "pos": [
+        7042,
+        7064
+      ]
+    },
+    {
+      "content": "A visitor of <bpt id=\"p1\">**</bpt>www.contoso.com<ept id=\"p1\">**</ept> will never see the true host",
+      "pos": [
+        7086,
+        7147
+      ]
+    },
+    {
+      "content": "(contoso.azurewebsite.net), so the forwarding process is invisible to the end user.",
+      "pos": [
+        7148,
+        7231
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> If you are using Traffic Manager with a website, you do not need to follow the steps in the following sections, '<bpt id=\"p1\">**</bpt>Add a CNAME for your custom domain<ept id=\"p1\">**</ept>' and '<bpt id=\"p2\">**</bpt>Add an A record for your custom domain<ept id=\"p2\">**</ept>'.",
+      "pos": [
+        7235,
+        7450
+      ]
+    },
+    {
+      "content": "The CNAME record created in the previous steps will route incoming traffic to Traffic Manager, which then routes the traffic to the website endpoint(s).",
+      "pos": [
+        7451,
+        7603
+      ]
+    },
+    {
+      "content": "Add a CNAME for your custom domain",
+      "pos": [
+        7643,
+        7677
+      ]
+    },
+    {
+      "content": "To create a CNAME record, you must add a new entry in the DNS table for your custom domain by using tools provided by your registrar.",
+      "pos": [
+        7684,
+        7817
+      ]
+    },
+    {
+      "content": "Each registrar has a similar but slightly different method of specifying a CNAME record, but the concepts are the same.",
+      "pos": [
+        7818,
+        7937
+      ]
+    },
+    {
+      "pos": [
+        7942,
+        8038
+      ],
+      "content": "Use one of these methods to find the <bpt id=\"p1\">**</bpt>.azurewebsite.net<ept id=\"p1\">**</ept> domain name assigned to your website."
+    },
+    {
+      "pos": [
+        8046,
+        8206
+      ],
+      "content": "Login to the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">][portal]</ept>, select your website, select <bpt id=\"p2\">**</bpt>Dashboard<ept id=\"p2\">**</ept>, and then find the <bpt id=\"p3\">**</bpt>Site URL<ept id=\"p3\">**</ept> entry in the <bpt id=\"p4\">**</bpt>quick glance<ept id=\"p4\">**</ept> section."
+    },
+    {
+      "pos": [
+        8214,
+        8342
+      ],
+      "content": "Install and configure <bpt id=\"p1\">[</bpt>Azure Powershell<ept id=\"p1\">](/manage/install-and-configure-windows-powershell/)</ept>, and then use the following command:"
+    },
+    {
+      "pos": [
+        8412,
+        8541
+      ],
+      "content": "Install and configure the <bpt id=\"p1\">[</bpt>Azure Command Line Interface<ept id=\"p1\">](/manage/install-and-configure-cli/)</ept>, and then use the following command:"
+    },
+    {
+      "pos": [
+        8596,
+        8676
+      ],
+      "content": "Save this <bpt id=\"p1\">**</bpt>.azurewebsite.net<ept id=\"p1\">**</ept> name, as it will be used in the following steps."
+    },
+    {
+      "content": "Log on to your DNS registrar's website, and go to the page for managing DNS.",
+      "pos": [
+        8681,
+        8757
+      ]
+    },
+    {
+      "content": "Look for links or areas of the site labeled as <bpt id=\"p1\">**</bpt>Domain Name<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>DNS<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Name Server Management<ept id=\"p3\">**</ept>.",
+      "pos": [
+        8758,
+        8861
+      ]
+    },
+    {
+      "content": "Now find where you can select or enter CNAME records.",
+      "pos": [
+        8866,
+        8919
+      ]
+    },
+    {
+      "content": "You may have to select the record type from a drop down, or go to an advanced settings page.",
+      "pos": [
+        8920,
+        9012
+      ]
+    },
+    {
+      "content": "You should look for the words <bpt id=\"p1\">**</bpt>CNAME<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>Alias<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Subdomains<ept id=\"p3\">**</ept>.",
+      "pos": [
+        9013,
+        9083
+      ]
+    },
+    {
+      "content": "You must also provide the domain or subdomain alias for the CNAME.",
+      "pos": [
+        9088,
+        9154
+      ]
+    },
+    {
+      "content": "For example, <bpt id=\"p1\">**</bpt>www<ept id=\"p1\">**</ept> if you want to create an alias for <bpt id=\"p2\">**</bpt>www.customdomain.com<ept id=\"p2\">**</ept>.",
+      "pos": [
+        9155,
+        9236
+      ]
+    },
+    {
+      "content": "If you want to create an alias for the root domain, it may be listed as the '<bpt id=\"p1\">**</bpt>@<ept id=\"p1\">**</ept>' symbol in your registrar's DNS tools.",
+      "pos": [
+        9237,
+        9358
+      ]
+    },
+    {
+      "content": "You must also provide a host name that is the canonical domain name for this CNAME alias.",
+      "pos": [
+        9363,
+        9452
+      ]
+    },
+    {
+      "content": "This is the <bpt id=\"p1\">**</bpt>.azurewebsite.net<ept id=\"p1\">**</ept> name for your website.",
+      "pos": [
+        9453,
+        9509
+      ]
+    },
+    {
+      "pos": [
+        9511,
+        9659
+      ],
+      "content": "For example, the following CNAME record forwards all traffic from <bpt id=\"p1\">**</bpt>www.contoso.com<ept id=\"p1\">**</ept> to <bpt id=\"p2\">**</bpt>contoso.azurewebsite.net<ept id=\"p2\">**</ept>, the domain name of a website:"
+    },
+    {
+      "content": "Alias/Host name/Subdomain",
+      "pos": [
+        9764,
+        9789
+      ]
+    },
+    {
+      "content": "Canonical domain",
+      "pos": [
+        9816,
+        9832
+      ]
+    },
+    {
+      "content": "www",
+      "pos": [
+        9862,
+        9865
+      ]
+    },
+    {
+      "content": "contoso.azurewebsite.net",
+      "pos": [
+        9875,
+        9899
+      ]
+    },
+    {
+      "content": "A visitor of <bpt id=\"p1\">**</bpt>www.contoso.com<ept id=\"p1\">**</ept> will never see the true host",
+      "pos": [
+        9921,
+        9982
+      ]
+    },
+    {
+      "content": "(contoso.azurewebsite.net), so the forwarding process is invisible to the",
+      "pos": [
+        9983,
+        10056
+      ]
+    },
+    {
+      "content": "end user.",
+      "pos": [
+        10057,
+        10066
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The example above only applies to traffic at the <bpt id=\"p1\">__</bpt>www<ept id=\"p1\">__</ept> subdomain.",
+      "pos": [
+        10070,
+        10150
+      ]
+    },
+    {
+      "content": "Since you cannot use wildcards with CNAME records, you must create one CNAME for each domain/subdomain.",
+      "pos": [
+        10151,
+        10254
+      ]
+    },
+    {
+      "content": "If you want to direct  traffic from subdomains, such as *.contoso.com, to your azurewebsite.net address, you can configure a <bpt id=\"p1\">__</bpt>URL Redirect<ept id=\"p1\">__</ept> or <bpt id=\"p2\">__</bpt>URL Forward<ept id=\"p2\">__</ept> entry in your DNS settings, or create an A record.",
+      "pos": [
+        10255,
+        10466
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> It can take some time for your CNAME to propagate through the DNS system.",
+      "pos": [
+        10470,
+        10556
+      ]
+    },
+    {
+      "content": "You cannot set the CNAME for the website until the CNAME has propagated.",
+      "pos": [
+        10557,
+        10629
+      ]
+    },
+    {
+      "content": "You can use a service such as <ph id=\"ph1\">&lt;a href=\"http://www.digwebinterface.com/\"&gt;</ph>http://www.digwebinterface.com/<ph id=\"ph2\">&lt;/a&gt;</ph> to verify that the CNAME is available.",
+      "pos": [
+        10630,
+        10776
+      ]
+    },
+    {
+      "content": "Add the domain name to your website",
+      "pos": [
+        10781,
+        10816
+      ]
+    },
+    {
+      "content": "After the CNAME record for domain name has propagated, you must associate it with your website.",
+      "pos": [
+        10818,
+        10913
+      ]
+    },
+    {
+      "content": "You can add the custom domain name defined by the CNAME record to your website by using either the Azure Command-Line Interface (Azure CLI) or by using the Azure Management Portal.",
+      "pos": [
+        10914,
+        11094
+      ]
+    },
+    {
+      "content": "To add a domain name using the command-line tools",
+      "pos": [
+        11098,
+        11147
+      ]
+    },
+    {
+      "pos": [
+        11151,
+        11280
+      ],
+      "content": "Install and configure the <bpt id=\"p1\">[</bpt>Azure Command-Line Interface<ept id=\"p1\">](/manage/install-and-configure-cli/)</ept>, and then use the following command:"
+    },
+    {
+      "pos": [
+        11335,
+        11459
+      ],
+      "content": "For example, the following will add a custom domain name of <bpt id=\"p1\">**</bpt>www.contoso.com<ept id=\"p1\">**</ept> to the <bpt id=\"p2\">**</bpt>contoso.azurewebsite.net<ept id=\"p2\">**</ept> website:"
+    },
+    {
+      "content": "You can confirm that the custom domain name was added to the website by using the following command:",
+      "pos": [
+        11512,
+        11612
+      ]
+    },
+    {
+      "pos": [
+        11655,
+        11779
+      ],
+      "content": "The list returned by this command should contain the custom domain name, as well as the default <bpt id=\"p1\">**</bpt>.azurewebsite.net<ept id=\"p1\">**</ept> entry."
+    },
+    {
+      "content": "To add a domain name using the Azure Management Portal",
+      "pos": [
+        11783,
+        11837
+      ]
+    },
+    {
+      "pos": [
+        11844,
+        11904
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">][portal]</ept>."
+    },
+    {
+      "pos": [
+        11909,
+        12048
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Websites<ept id=\"p1\">**</ept> tab, click the name of your site, select <bpt id=\"p2\">**</bpt>Dashboard<ept id=\"p2\">**</ept>, and then select <bpt id=\"p3\">**</bpt>Manage Domains<ept id=\"p3\">**</ept> from the bottom of the page."
+    },
+    {
+      "pos": [
+        12073,
+        12153
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>DOMAIN NAMES<ept id=\"p1\">**</ept> text box, type the domain name that you have configured."
+    },
+    {
+      "content": "Click the check mark to accept the domain name.",
+      "pos": [
+        12178,
+        12225
+      ]
+    },
+    {
+      "pos": [
+        12227,
+        12373
+      ],
+      "content": "Once configuration has completed, the custom domain name will be listed in the <bpt id=\"p1\">**</bpt>domain names<ept id=\"p1\">**</ept> section of the <bpt id=\"p2\">**</bpt>Configure<ept id=\"p2\">**</ept> page of your website."
+    },
+    {
+      "content": "Add an A Record for your custom domain",
+      "pos": [
+        12415,
+        12453
+      ]
+    },
+    {
+      "content": "To create an A record, you must first find the IP address of your website.",
+      "pos": [
+        12460,
+        12534
+      ]
+    },
+    {
+      "content": "Then add an entry in the DNS table for your custom domain by using the tools provided by your registrar.",
+      "pos": [
+        12535,
+        12639
+      ]
+    },
+    {
+      "content": "Each registrar has a similar but slightly different method of specifying an A record, but the concepts are the same.",
+      "pos": [
+        12640,
+        12756
+      ]
+    },
+    {
+      "content": "In addition to creating an A record, you must also create a CNAME record that Azure uses to verify the A record.",
+      "pos": [
+        12757,
+        12869
+      ]
+    },
+    {
+      "pos": [
+        12874,
+        12934
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">][portal]</ept>."
+    },
+    {
+      "pos": [
+        12939,
+        13080
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Websites<ept id=\"p1\">**</ept> tab, click the name of your site, select <bpt id=\"p2\">**</bpt>Dashboard<ept id=\"p2\">**</ept>, and then select <bpt id=\"p3\">**</bpt>Manage Domains<ept id=\"p3\">**</ept> from the bottom of the screen."
+    },
+    {
+      "content": "On the <bpt id=\"p1\">**</bpt>Manage custom domains<ept id=\"p1\">**</ept> dialog, locate <bpt id=\"p2\">**</bpt>The IP Address to use when configuring A records<ept id=\"p2\">**</ept>.",
+      "pos": [
+        13105,
+        13206
+      ]
+    },
+    {
+      "content": "Copy the IP address.",
+      "pos": [
+        13207,
+        13227
+      ]
+    },
+    {
+      "content": "This will be used when creating the A record.",
+      "pos": [
+        13228,
+        13273
+      ]
+    },
+    {
+      "content": "On the <bpt id=\"p1\">**</bpt>Manage custom domains<ept id=\"p1\">**</ept> dialog, note awverify domain name at the end of the text at the top of the dialog.",
+      "pos": [
+        13278,
+        13393
+      ]
+    },
+    {
+      "content": "It should be <bpt id=\"p1\">**</bpt>awverify.mysite.azurewebsites.net<ept id=\"p1\">**</ept> where <bpt id=\"p2\">**</bpt>mysite<ept id=\"p2\">**</ept> is the name of your website.",
+      "pos": [
+        13394,
+        13490
+      ]
+    },
+    {
+      "content": "Copy this, as it is the domain name used when creating the verification CNAME record.",
+      "pos": [
+        13491,
+        13576
+      ]
+    },
+    {
+      "content": "Log on to your DNS registrar's website, and go to the page for managing DNS.",
+      "pos": [
+        13581,
+        13657
+      ]
+    },
+    {
+      "content": "Look for links or areas of the site labeled as <bpt id=\"p1\">**</bpt>Domain Name<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>DNS<ept id=\"p2\">**</ept>, or <bpt id=\"p3\">**</bpt>Name Server Management<ept id=\"p3\">**</ept>.",
+      "pos": [
+        13658,
+        13761
+      ]
+    },
+    {
+      "content": "Find where you can select or enter A and CNAME records.",
+      "pos": [
+        13766,
+        13821
+      ]
+    },
+    {
+      "content": "You may have to select the record type from a drop down, or go to an advanced settings page.",
+      "pos": [
+        13822,
+        13914
+      ]
+    },
+    {
+      "content": "Perform the following steps to create the A record:",
+      "pos": [
+        13919,
+        13970
+      ]
+    },
+    {
+      "content": "Select or enter the domain or subdomain that will use the A record.",
+      "pos": [
+        13979,
+        14046
+      ]
+    },
+    {
+      "content": "For example, select <bpt id=\"p1\">**</bpt>www<ept id=\"p1\">**</ept> if you want to create an alias for <bpt id=\"p2\">**</bpt>www.customdomain.com<ept id=\"p2\">**</ept>.",
+      "pos": [
+        14047,
+        14135
+      ]
+    },
+    {
+      "content": "If you want to create a wildcard entry for all subdomains, enter '<bpt id=\"p1\">__</bpt>*<ept id=\"p1\">__</ept>'.",
+      "pos": [
+        14136,
+        14209
+      ]
+    },
+    {
+      "content": "This will cover all sub-domains such as <bpt id=\"p1\">**</bpt>mail.customdomain.com<ept id=\"p1\">**</ept>, <bpt id=\"p2\">**</bpt>login.customdomain.com<ept id=\"p2\">**</ept>, and <bpt id=\"p3\">**</bpt>www.customdomain.com<ept id=\"p3\">**</ept>.",
+      "pos": [
+        14210,
+        14334
+      ]
+    },
+    {
+      "pos": [
+        14344,
+        14468
+      ],
+      "content": "If you want to create an A record for the root domain, it may be listed as the '<bpt id=\"p1\">**</bpt>@<ept id=\"p1\">**</ept>' symbol in your registrar's DNS tools."
+    },
+    {
+      "content": "Enter the IP address of your cloud service in the provided field.",
+      "pos": [
+        14477,
+        14542
+      ]
+    },
+    {
+      "content": "This associates the domain entry used in the A record with the IP address of your cloud service deployment.",
+      "pos": [
+        14543,
+        14650
+      ]
+    },
+    {
+      "pos": [
+        14660,
+        14804
+      ],
+      "content": "For example, the following A record forwards all traffic from <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept> to <bpt id=\"p2\">**</bpt>137.135.70.239<ept id=\"p2\">**</ept>, the IP address of our deployed application:"
+    },
+    {
+      "pos": [
+        14814,
+        15120
+      ],
+      "content": "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n <tr>\n <td><strong>Host name/Subdomain</strong></td>\n <td><strong>IP address</strong></td>\n </tr>\n <tr>\n <td>@</td>\n <td>137.135.70.239</td>\n </tr>\n </table>",
+      "leadings": [
+        "",
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "       "
+      ],
+      "nodes": [
+        {
+          "content": "<ph id=\"ph1\">&lt;strong&gt;</ph>Host name/Subdomain<ph id=\"ph2\">&lt;/strong&gt;</ph>",
+          "pos": [
+            97,
+            133
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\">&lt;strong&gt;</ph>IP address<ph id=\"ph2\">&lt;/strong&gt;</ph>",
+          "pos": [
+            144,
+            171
+          ]
+        },
+        {
+          "content": "@",
+          "pos": [
+            195,
+            196
+          ]
+        },
+        {
+          "content": "137.135.70.239",
+          "pos": [
+            207,
+            221
+          ]
+        }
+      ]
+    },
+    {
+      "content": "This example demonstrates creating an A record for the root domain.",
+      "pos": [
+        15130,
+        15197
+      ]
+    },
+    {
+      "content": "If you wish to create a wildcard entry to cover all subdomains, you would enter '<bpt id=\"p1\">__</bpt>*<ept id=\"p1\">__</ept>' as the subdomain.",
+      "pos": [
+        15198,
+        15303
+      ]
+    },
+    {
+      "pos": [
+        15308,
+        15461
+      ],
+      "content": "Next, create a CNAME record that has an alias of <bpt id=\"p1\">**</bpt>awverify<ept id=\"p1\">**</ept>, and a canonical domain of <bpt id=\"p2\">**</bpt>awverify.mysite.azurewebsites.net<ept id=\"p2\">**</ept> that you obtained earlier."
+    },
+    {
+      "pos": [
+        15469,
+        15655
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> While an alias of awverify may work for some registrars, others may require the full alias domain name of awverify.www.customdomainname.com or awverify.customdomainname.com."
+    },
+    {
+      "content": "For example, the following will create an CNAME record that Azure can use to verify the A record configuration.",
+      "pos": [
+        15661,
+        15772
+      ]
+    },
+    {
+      "pos": [
+        15778,
+        16087
+      ],
+      "content": "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n <tr>\n <td><strong>Alias/Host name/Subdomain</strong></td>\n <td><strong>Canonical domain</strong></td>\n </tr>\n <tr>\n <td>awverify</td>\n <td>awverify.contoso.azurewebsites.net</td>\n </tr>\n </table>",
+      "leadings": [
+        "",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   ",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "<ph id=\"ph1\">&lt;strong&gt;</ph>Alias/Host name/Subdomain<ph id=\"ph2\">&lt;/strong&gt;</ph>",
+          "pos": [
+            97,
+            139
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\">&lt;strong&gt;</ph>Canonical domain<ph id=\"ph2\">&lt;/strong&gt;</ph>",
+          "pos": [
+            150,
+            183
+          ]
+        },
+        {
+          "content": "awverify",
+          "pos": [
+            207,
+            215
+          ]
+        },
+        {
+          "content": "awverify.contoso.azurewebsites.net",
+          "pos": [
+            226,
+            260
+          ]
+        }
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> It can take some time for the awverify CNAME to propagate through the DNS system.",
+      "pos": [
+        16091,
+        16185
+      ]
+    },
+    {
+      "content": "You cannot set the custom domain name defined by the A record for the website until the awverify CNAME has propagated.",
+      "pos": [
+        16186,
+        16304
+      ]
+    },
+    {
+      "content": "You can use a service such as <ph id=\"ph1\">&lt;a href=\"http://www.digwebinterface.com/\"&gt;</ph>http://www.digwebinterface.com/<ph id=\"ph2\">&lt;/a&gt;</ph> to verify that the CNAME is available.",
+      "pos": [
+        16305,
+        16451
+      ]
+    },
+    {
+      "content": "Add the domain name to your website",
+      "pos": [
+        16456,
+        16491
+      ]
+    },
+    {
+      "content": "After the <bpt id=\"p1\">**</bpt>awverify<ept id=\"p1\">**</ept> CNAME record for domain name has propagated, you can then associate the custom domain defined by the A record with your website.",
+      "pos": [
+        16493,
+        16644
+      ]
+    },
+    {
+      "content": "You can add the custom domain name defined by the A record to your website by using either the Azure CLI or by using the Azure Management Portal.",
+      "pos": [
+        16645,
+        16790
+      ]
+    },
+    {
+      "content": "To add a domain name using the Azure Command-Line Interface (Azure CLI)",
+      "pos": [
+        16794,
+        16865
+      ]
+    },
+    {
+      "pos": [
+        16869,
+        16979
+      ],
+      "content": "Install and configure the <bpt id=\"p1\">[</bpt>Azure CLI<ept id=\"p1\">](/manage/install-and-configure-cli/)</ept>, and then use the following command:"
+    },
+    {
+      "pos": [
+        17034,
+        17154
+      ],
+      "content": "For example, the following will add a custom domain name of <bpt id=\"p1\">**</bpt>contoso.com<ept id=\"p1\">**</ept> to the <bpt id=\"p2\">**</bpt>contoso.azurewebsite.net<ept id=\"p2\">**</ept> website:"
+    },
+    {
+      "content": "You can confirm that the custom domain name was added to the website by using the following command:",
+      "pos": [
+        17203,
+        17303
+      ]
+    },
+    {
+      "pos": [
+        17346,
+        17470
+      ],
+      "content": "The list returned by this command should contain the custom domain name, as well as the default <bpt id=\"p1\">**</bpt>.azurewebsite.net<ept id=\"p1\">**</ept> entry."
+    },
+    {
+      "content": "To add a domain name using the Azure Management Portal",
+      "pos": [
+        17474,
+        17528
+      ]
+    },
+    {
+      "pos": [
+        17535,
+        17595
+      ],
+      "content": "In your browser, open the <bpt id=\"p1\">[</bpt>Azure Management Portal<ept id=\"p1\">][portal]</ept>."
+    },
+    {
+      "pos": [
+        17600,
+        17739
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>Websites<ept id=\"p1\">**</ept> tab, click the name of your site, select <bpt id=\"p2\">**</bpt>Dashboard<ept id=\"p2\">**</ept>, and then select <bpt id=\"p3\">**</bpt>Manage Domains<ept id=\"p3\">**</ept> from the bottom of the page."
+    },
+    {
+      "pos": [
+        17764,
+        17844
+      ],
+      "content": "In the <bpt id=\"p1\">**</bpt>DOMAIN NAMES<ept id=\"p1\">**</ept> text box, type the domain name that you have configured."
+    },
+    {
+      "content": "Click the check mark to accept the domain name.",
+      "pos": [
+        17869,
+        17916
+      ]
+    },
+    {
+      "pos": [
+        17918,
+        18064
+      ],
+      "content": "Once configuration has completed, the custom domain name will be listed in the <bpt id=\"p1\">**</bpt>domain names<ept id=\"p1\">**</ept> section of the <bpt id=\"p2\">**</bpt>Configure<ept id=\"p2\">**</ept> page of your website."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> After you have added the custom domain name defined by the A record to your website, you can remove the awverify CNAME record using the tools provided by your registrar.",
+      "pos": [
+        18068,
+        18250
+      ]
+    },
+    {
+      "content": "However, if you wish to add another A record in the future, you will have to recreate the awverify record before you can associate the new domain name defined by the new A record with the website.",
+      "pos": [
+        18251,
+        18447
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        18452,
+        18462
+      ]
+    },
+    {
+      "content": "How to manage web sites",
+      "pos": [
+        18469,
+        18492
+      ]
+    },
+    {
+      "content": "Configure an SSL certificate for Web Sites",
+      "pos": [
+        18552,
+        18594
+      ]
+    }
+  ],
+  "content": "#Configuring a custom domain name for an Azure website\n\nWhen you create a website, Azure provides a friendly subdomain on the azurewebsites.net domain so your users can access your website using a URL like http://&lt;mysite>.azurewebsites.net. However, if you configure your websites for Shared or Standard mode, you can map your website to your own domain name.\n\nOptionally, you can use Azure Traffic Manager to load balance incoming traffic to your website. For more information on how Traffic Manager works with Websites, see [Controlling Azure Web Sites Traffic with Azure Traffic Manager][trafficmanager].\n\n> [AZURE.NOTE] The procedures in this task apply to Azure Websites; for Cloud Services, see <a href=\"/develop/net/common-tasks/custom-dns/\">Configuring a Custom Domain Name in Azure</a>.\n\n> [AZURE.NOTE] The steps in this task require you to configure your websites for Shared or Standard mode, which may change how much you are billed for your subscription. See <a href=\"/pricing/details/web-sites/\">Websites Pricing Details</a> for more information.\n\nIn this article:\n\n-   [Understanding CNAME and A records](#understanding-records)\n-   [Configure your web sites for shared or standard mode](#bkmk_configsharedmode)\n-   [Add your web sites to Traffic Manager](#trafficmanager)\n-   [Add a CNAME for your custom domain](#bkmk_configurecname)\n-   [Add an A record for your custom domain](#bkmk_configurearecord)\n\n<h2><a name=\"understanding-records\"></a>Understand CNAME and A records</h2>\n\nCNAME (or alias records) and A records both allow you to associate a domain name with a website, however they each work differently.\n\n###CNAME or Alias record\n\nA CNAME record maps a *specific* domain, such as **contoso.com** or **www.contoso.com**, to a canonical domain name. In this case, the canonical domain name is the either the **&lt;myapp>.azurewebsites.net** domain name of your Azure website or the **&lt;myapp>.trafficmgr.com** domain name of your Traffic Manager profile. Once created, the CNAME creates an alias for the **&lt;myapp>.azurewebsites.net** or **&lt;myapp>.trafficmgr.com** domain name. The CNAME entry will resolve to the IP address of your **&lt;myapp>.azurewebsites.net** or **&lt;myapp>.trafficmgr.com** domain name automatically, so if the IP address of the website changes, you do not have to take any action.\n\n> [AZURE.NOTE] Some domain registrars only allow you to map subdomains when using a CNAME record, such as www.contoso.com, and not root names, such as contoso.com. For more information on CNAME records, see the documentation provided by your registrar, <a href=\"http://en.wikipedia.org/wiki/CNAME_record\">the Wikipedia entry on CNAME record</a>, or the <a href=\"http://tools.ietf.org/html/rfc1035\">IETF Domain Names - Implementation and Specification</a> document.\n\n###A record\n\nAn A record maps a domain, such as **contoso.com** or **www.contoso.com**, *or a wildcard domain* such as **\\*.contoso.com**, to an IP address. In the case of an Azure Website, either the virtual IP of the service or a specific IP address that you purchased for your website. So the main benefit of an A record over a CNAME record is that you can have one entry that uses a wildcard, such as ***.contoso.com**, which would handle requests for multiple sub-domains such as **mail.contoso.com**, **login.contoso.com**, or **www.contso.com**.\n\n> [AZURE.NOTE] Since an A record is mapped to a static IP address, it cannot automatically resolve changes to the IP address of your website. An IP address for use with A records is provided when you configure custom domain name settings for your website; however, this value may change if you delete and recreate your website, or change the website mode to back to free.\n\n> [AZURE.NOTE] A records cannot be used for load balancing with Traffic Manager. For more information, see [Controlling Azure Web Sites Traffic with Azure Traffic Manager][trafficmanager].\n\n<a name=\"bkmk_configsharedmode\"></a><h2>Configure your websites for shared or standard mode</h2>\n\nSetting a custom domain name on a website is only available for the Shared and Standard modes for Azure websites. Before switching a website from the Free website mode to the Shared or Standard website mode, you must first remove spending caps in place for your Website subscription. For more information on Shared and Standard mode pricing, see [Pricing Details][PricingDetails].\n\n1. In your browser, open the [Management Portal][portal].\n2. In the **Websites** tab, click the name of your site.\n\n    ![][standardmode1]\n\n3. Click the **SCALE** tab.\n\n    ![][standardmode2]\n\n\n4. In the **general** section, set the website mode by clicking **SHARED**.\n\n    ![][standardmode3]\n\n    > [AZURE.NOTE] If you will be using Traffic Manager with this website, you must use select Standard mode instead of Shared.\n\n5. Click **Save**.\n6. When prompted about the increase in cost for Shared mode (or for Standard mode if you choose Standard), click **Yes** if you agree.\n\n    <!--![][standardmode4]-->\n\n    **Note**<br />\n    If you receive a \"Configuring scale for website 'website name' failed\" error, you can use the details button to get more information.\n\n<a name=\"trafficmanager\"></a><h2>(Optional) Add your websites to Traffic Manager</h2>\n\nIf you want to use your website with Traffic Manager, perform the following steps.\n\n1. If you do not already have a Traffic Manager profile, use the information in [Create a Traffic Manager profile using Quick Create][createprofile] to create one. Note the **.trafficmgr.com** domain name associated with your Traffic Manager profile. This will be used in a later step.\n\n2. Use the information in [Add or Delete Endpoints][addendpoint] to add your website as an endpoint in your Traffic Manager profile.\n\n    > [AZURE.NOTE] If your website is not listed when adding an endpoint, verify that it is configured for Standard mode. You must use Standard mode for your website in order to work with Traffic Manager.\n\n3. Log on to your DNS registrar's website, and go to the page for managing DNS. Look for links or areas of the site labeled as **Domain Name**, **DNS**, or **Name Server Management**.\n\n4. Now find where you can select or enter CNAME records. You may have to select the record type from a drop down, or go to an advanced settings page. You should look for the words **CNAME**, **Alias**, or **Subdomains**.\n\n5. You must also provide the domain or subdomain alias for the CNAME. For example, **www** if you want to create an alias for **www.customdomain.com**.\n\n5. You must also provide a host name that is the canonical domain name for this CNAME alias. This is the **.trafficmgr.com** name for your website.\n\nFor example, the following CNAME record forwards all traffic from **www.contoso.com** to **contoso.trafficmgr.com**, the domain name of a website:\n\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n<tr>\n<td><strong>Alias/Host name/Subdomain</strong></td>\n<td><strong>Canonical domain</strong></td>\n</tr>\n<tr>\n<td>www</td>\n<td>contoso.trafficmgr.com</td>\n</tr>\n</table>\n\nA visitor of **www.contoso.com** will never see the true host\n(contoso.azurewebsite.net), so the forwarding process is invisible to the end user.\n\n> [AZURE.NOTE] If you are using Traffic Manager with a website, you do not need to follow the steps in the following sections, '**Add a CNAME for your custom domain**' and '**Add an A record for your custom domain**'. The CNAME record created in the previous steps will route incoming traffic to Traffic Manager, which then routes the traffic to the website endpoint(s).\n\n<a name=\"bkmk_configurecname\"></a><h2>Add a CNAME for your custom domain</h2>\n\nTo create a CNAME record, you must add a new entry in the DNS table for your custom domain by using tools provided by your registrar. Each registrar has a similar but slightly different method of specifying a CNAME record, but the concepts are the same.\n\n1. Use one of these methods to find the **.azurewebsite.net** domain name assigned to your website.\n\n    * Login to the [Azure Management Portal][portal], select your website, select **Dashboard**, and then find the **Site URL** entry in the **quick glance** section.\n\n    * Install and configure [Azure Powershell](/manage/install-and-configure-windows-powershell/), and then use the following command:\n\n            get-azurewebsite yoursitename | select hostnames\n\n    * Install and configure the [Azure Command Line Interface](/manage/install-and-configure-cli/), and then use the following command:\n\n            azure site domain list yoursitename\n\n    Save this **.azurewebsite.net** name, as it will be used in the following steps.\n\n3. Log on to your DNS registrar's website, and go to the page for managing DNS. Look for links or areas of the site labeled as **Domain Name**, **DNS**, or **Name Server Management**.\n\n4. Now find where you can select or enter CNAME records. You may have to select the record type from a drop down, or go to an advanced settings page. You should look for the words **CNAME**, **Alias**, or **Subdomains**.\n\n5. You must also provide the domain or subdomain alias for the CNAME. For example, **www** if you want to create an alias for **www.customdomain.com**. If you want to create an alias for the root domain, it may be listed as the '**@**' symbol in your registrar's DNS tools.\n\n5. You must also provide a host name that is the canonical domain name for this CNAME alias. This is the **.azurewebsite.net** name for your website.\n\nFor example, the following CNAME record forwards all traffic from **www.contoso.com** to **contoso.azurewebsite.net**, the domain name of a website:\n\n<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n<tr>\n<td><strong>Alias/Host name/Subdomain</strong></td>\n<td><strong>Canonical domain</strong></td>\n</tr>\n<tr>\n<td>www</td>\n<td>contoso.azurewebsite.net</td>\n</tr>\n</table>\n\nA visitor of **www.contoso.com** will never see the true host\n(contoso.azurewebsite.net), so the forwarding process is invisible to the\nend user.\n\n> [AZURE.NOTE] The example above only applies to traffic at the __www__ subdomain. Since you cannot use wildcards with CNAME records, you must create one CNAME for each domain/subdomain. If you want to direct  traffic from subdomains, such as *.contoso.com, to your azurewebsite.net address, you can configure a __URL Redirect__ or __URL Forward__ entry in your DNS settings, or create an A record.\n\n> [AZURE.NOTE] It can take some time for your CNAME to propagate through the DNS system. You cannot set the CNAME for the website until the CNAME has propagated. You can use a service such as <a href=\"http://www.digwebinterface.com/\">http://www.digwebinterface.com/</a> to verify that the CNAME is available.\n\n###Add the domain name to your website\n\nAfter the CNAME record for domain name has propagated, you must associate it with your website. You can add the custom domain name defined by the CNAME record to your website by using either the Azure Command-Line Interface (Azure CLI) or by using the Azure Management Portal.\n\n**To add a domain name using the command-line tools**\n\nInstall and configure the [Azure Command-Line Interface](/manage/install-and-configure-cli/), and then use the following command:\n\n    azure site domain add customdomain yoursitename\n\nFor example, the following will add a custom domain name of **www.contoso.com** to the **contoso.azurewebsite.net** website:\n\n    azure site domain add www.contoso.com contoso\n\nYou can confirm that the custom domain name was added to the website by using the following command:\n\n    azure site domain list yoursitename\n\nThe list returned by this command should contain the custom domain name, as well as the default **.azurewebsite.net** entry.\n\n**To add a domain name using the Azure Management Portal**\n\n1. In your browser, open the [Azure Management Portal][portal].\n\n2. In the **Websites** tab, click the name of your site, select **Dashboard**, and then select **Manage Domains** from the bottom of the page.\n\n    ![][setcname2]\n\n6. In the **DOMAIN NAMES** text box, type the domain name that you have configured.\n\n    ![][setcname3]\n\n6. Click the check mark to accept the domain name.\n\nOnce configuration has completed, the custom domain name will be listed in the **domain names** section of the **Configure** page of your website.\n\n<a name=\"bkmk_configurearecord\"></a><h2>Add an A Record for your custom domain</h2>\n\nTo create an A record, you must first find the IP address of your website. Then add an entry in the DNS table for your custom domain by using the tools provided by your registrar. Each registrar has a similar but slightly different method of specifying an A record, but the concepts are the same. In addition to creating an A record, you must also create a CNAME record that Azure uses to verify the A record.\n\n1. In your browser, open the [Azure Management Portal][portal].\n\n2. In the **Websites** tab, click the name of your site, select **Dashboard**, and then select **Manage Domains** from the bottom of the screen.\n\n    ![][setcname2]\n\n5. On the **Manage custom domains** dialog, locate **The IP Address to use when configuring A records**. Copy the IP address. This will be used when creating the A record.\n\n5. On the **Manage custom domains** dialog, note awverify domain name at the end of the text at the top of the dialog. It should be **awverify.mysite.azurewebsites.net** where **mysite** is the name of your website. Copy this, as it is the domain name used when creating the verification CNAME record.\n\n6. Log on to your DNS registrar's website, and go to the page for managing DNS. Look for links or areas of the site labeled as **Domain Name**, **DNS**, or **Name Server Management**.\n\n6. Find where you can select or enter A and CNAME records. You may have to select the record type from a drop down, or go to an advanced settings page.\n\n7. Perform the following steps to create the A record:\n\n    1. Select or enter the domain or subdomain that will use the A record. For example, select **www** if you want to create an alias for **www.customdomain.com**. If you want to create a wildcard entry for all subdomains, enter '__*__'. This will cover all sub-domains such as **mail.customdomain.com**, **login.customdomain.com**, and **www.customdomain.com**.\n\n        If you want to create an A record for the root domain, it may be listed as the '**@**' symbol in your registrar's DNS tools.\n\n    2. Enter the IP address of your cloud service in the provided field. This associates the domain entry used in the A record with the IP address of your cloud service deployment.\n\n        For example, the following A record forwards all traffic from **contoso.com** to **137.135.70.239**, the IP address of our deployed application:\n\n        <table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n        <tr>\n        <td><strong>Host name/Subdomain</strong></td>\n        <td><strong>IP address</strong></td>\n        </tr>\n        <tr>\n        <td>@</td>\n        <td>137.135.70.239</td>\n        </tr>\n        </table>\n\n        This example demonstrates creating an A record for the root domain. If you wish to create a wildcard entry to cover all subdomains, you would enter '__*__' as the subdomain.\n\n7. Next, create a CNAME record that has an alias of **awverify**, and a canonical domain of **awverify.mysite.azurewebsites.net** that you obtained earlier.\n\n    > [AZURE.NOTE] While an alias of awverify may work for some registrars, others may require the full alias domain name of awverify.www.customdomainname.com or awverify.customdomainname.com.\n\n    For example, the following will create an CNAME record that Azure can use to verify the A record configuration.\n\n    <table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" style=\"border: 1px solid #000000;\">\n    <tr>\n    <td><strong>Alias/Host name/Subdomain</strong></td>\n    <td><strong>Canonical domain</strong></td>\n    </tr>\n    <tr>\n    <td>awverify</td>\n    <td>awverify.contoso.azurewebsites.net</td>\n    </tr>\n    </table>\n\n> [AZURE.NOTE] It can take some time for the awverify CNAME to propagate through the DNS system. You cannot set the custom domain name defined by the A record for the website until the awverify CNAME has propagated. You can use a service such as <a href=\"http://www.digwebinterface.com/\">http://www.digwebinterface.com/</a> to verify that the CNAME is available.\n\n###Add the domain name to your website\n\nAfter the **awverify** CNAME record for domain name has propagated, you can then associate the custom domain defined by the A record with your website. You can add the custom domain name defined by the A record to your website by using either the Azure CLI or by using the Azure Management Portal.\n\n**To add a domain name using the Azure Command-Line Interface (Azure CLI)**\n\nInstall and configure the [Azure CLI](/manage/install-and-configure-cli/), and then use the following command:\n\n    azure site domain add customdomain yoursitename\n\nFor example, the following will add a custom domain name of **contoso.com** to the **contoso.azurewebsite.net** website:\n\n    azure site domain add contoso.com contoso\n\nYou can confirm that the custom domain name was added to the website by using the following command:\n\n    azure site domain list yoursitename\n\nThe list returned by this command should contain the custom domain name, as well as the default **.azurewebsite.net** entry.\n\n**To add a domain name using the Azure Management Portal**\n\n1. In your browser, open the [Azure Management Portal][portal].\n\n2. In the **Websites** tab, click the name of your site, select **Dashboard**, and then select **Manage Domains** from the bottom of the page.\n\n    ![][setcname2]\n\n6. In the **DOMAIN NAMES** text box, type the domain name that you have configured.\n\n    ![][setcname3]\n\n6. Click the check mark to accept the domain name.\n\nOnce configuration has completed, the custom domain name will be listed in the **domain names** section of the **Configure** page of your website.\n\n> [AZURE.NOTE] After you have added the custom domain name defined by the A record to your website, you can remove the awverify CNAME record using the tools provided by your registrar. However, if you wish to add another A record in the future, you will have to recreate the awverify record before you can associate the new domain name defined by the new A record with the website.\n\n## Next steps\n\n-   [How to manage web sites](/manage/services/web-sites/how-to-manage-websites/)\n\n-   [Configure an SSL certificate for Web Sites](/develop/net/common-tasks/enable-ssl-web-site/)\n\n\n<!-- Bookmarks -->\n\n[Configure your web sites for shared mode]: #bkmk_configsharedmode\n[Configure the CNAME on your domain registrar]: #bkmk_configurecname\n[Configure a CNAME verification record on your domain registrar]: #bkmk_configurecname\n[Configure an A record for the domain name]:#bkmk_configurearecord\n[Set the domain name in management portal]: #bkmk_setcname\n\n<!-- Links -->\n\n[PricingDetails]: /pricing/details/\n[portal]: http://manage.windowsazure.com\n[digweb]: http://www.digwebinterface.com/\n[cloudservicedns]: ../articles/custom-dns.md\n[trafficmanager]: ../articles/app-service-web/web-sites-traffic-manager.md\n[addendpoint]: ../articles/traffic-manager/traffic-manager-endpoints.md\n[createprofile]: ../articles/traffic-manager/traffic-manager-manage-profiles.md\n\n<!-- images -->\n\n[setcname1]: ../media/dncmntask-cname-5.png\n\n\n<!-- images -->\n[standardmode1]: ./media/custom-dns-web-site/dncmntask-cname-1.png\n[standardmode2]: ./media/custom-dns-web-site/dncmntask-cname-2.png\n[standardmode3]: ./media/custom-dns-web-site/dncmntask-cname-3.png\n[standardmode4]: ./media/custom-dns-web-site/dncmntask-cname-4.png\n\n\n[setcname2]: ./media/custom-dns-web-site/dncmntask-cname-6.png\n[setcname3]: ./media/custom-dns-web-site/dncmntask-cname-7.png\n"
+}
