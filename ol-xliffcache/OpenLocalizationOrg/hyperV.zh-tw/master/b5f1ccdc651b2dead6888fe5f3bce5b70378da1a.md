@@ -209,3 +209,8 @@ In a Web API project you can install the [Microsoft.AspNet.WebApi.Cors](https://
 In this tutorial you saw how to enable App Service CORS support so that client JavaScript code can call to an API in a different domain. In the next article in the API Apps getting started series, you'll learn about [authentication for App Service API apps](app-service-api-authentication.md).
 
 
+
+
+<!--HONumber=Mar16_HO4-->
+
+
