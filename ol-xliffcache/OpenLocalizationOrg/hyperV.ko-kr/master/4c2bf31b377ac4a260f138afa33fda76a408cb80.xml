@@ -1,0 +1,586 @@
+{
+  "nodes": [
+    {
+      "content": "Maximize Batch node use with parallel tasks | Microsoft Azure",
+      "pos": [
+        27,
+        88
+      ]
+    },
+    {
+      "content": "Increase efficiency and lower costs by using fewer compute nodes while running concurrent tasks on each node in an Azure Batch pool",
+      "pos": [
+        107,
+        238
+      ]
+    },
+    {
+      "content": "Maximize Azure Batch compute resource usage with concurrent node tasks",
+      "pos": [
+        543,
+        613
+      ]
+    },
+    {
+      "content": "In this article, you will learn how to run more than one task simultaneously on each compute node within your Azure Batch pool.",
+      "pos": [
+        615,
+        742
+      ]
+    },
+    {
+      "content": "By enabling concurrent task execution on a pool's compute nodes, you can maximize resource usage on a smaller number of nodes within the pool.",
+      "pos": [
+        743,
+        885
+      ]
+    },
+    {
+      "content": "For some workloads, this can save you both time and money.",
+      "pos": [
+        886,
+        944
+      ]
+    },
+    {
+      "content": "While some scenarios benefit from all of a node's resources being available for allocation to a single task, a number of situations benefit from allowing multiple tasks to share those resources:",
+      "pos": [
+        946,
+        1140
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Minimizing data transfer<ept id=\"p1\">**</ept> when tasks are able to share data.",
+      "pos": [
+        1145,
+        1208
+      ]
+    },
+    {
+      "content": "In this scenario, you can dramatically reduce data transfer charges by copying shared data to a smaller number of nodes and executing tasks in parallel on each node.",
+      "pos": [
+        1209,
+        1374
+      ]
+    },
+    {
+      "content": "This especially applies if the data to be copied to each node must be transferred between geographic regions.",
+      "pos": [
+        1375,
+        1484
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Maximizing memory usage<ept id=\"p1\">**</ept> when tasks require a large amount of memory, but only during short periods of time, and at variable times during execution.",
+      "pos": [
+        1489,
+        1640
+      ]
+    },
+    {
+      "content": "You can employ fewer, but larger, compute nodes with more memory to efficiently handle such spikes.",
+      "pos": [
+        1641,
+        1740
+      ]
+    },
+    {
+      "content": "These nodes would have multiple tasks running in parallel on each node, but each task would take advantage of the nodes' plentiful memory at different times.",
+      "pos": [
+        1741,
+        1898
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Mitigating node number limits<ept id=\"p1\">**</ept> when inter-node communication is required within a pool.",
+      "pos": [
+        1903,
+        1993
+      ]
+    },
+    {
+      "content": "Currently, pools configured for inter-node communication are limited to 50 compute nodes.",
+      "pos": [
+        1994,
+        2083
+      ]
+    },
+    {
+      "content": "Therefore, a greater number of tasks can be executed simultaneously if each node in such a pool is able to execute tasks in parallel.",
+      "pos": [
+        2084,
+        2217
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Replicating an on-premises compute cluster<ept id=\"p1\">**</ept>, such as when you first move a compute environment to Azure.",
+      "pos": [
+        2222,
+        2329
+      ]
+    },
+    {
+      "content": "You can increase the maximum number of node tasks to more closely mirror an existing physical configuration if that configuration currently executes multiple tasks per compute node.",
+      "pos": [
+        2330,
+        2511
+      ]
+    },
+    {
+      "content": "Example scenario",
+      "pos": [
+        2516,
+        2532
+      ]
+    },
+    {
+      "content": "Here's an example that illustrates the benefits of parallel task execution.",
+      "pos": [
+        2534,
+        2609
+      ]
+    },
+    {
+      "content": "Let's say that your task application has CPU and memory requirements such that a Standard\\_D1 node size is suitable.",
+      "pos": [
+        2610,
+        2726
+      ]
+    },
+    {
+      "content": "But in order to execute the job in the required time, 1,000 such nodes are needed.",
+      "pos": [
+        2727,
+        2809
+      ]
+    },
+    {
+      "content": "Instead of using Standard\\_D1 nodes which have 1 CPU core, you could employ Standard\\_D14 nodes that have 16 cores each, and enable parallel task execution.",
+      "pos": [
+        2811,
+        2967
+      ]
+    },
+    {
+      "content": "In this case, <bpt id=\"p1\">*</bpt>16 times fewer nodes<ept id=\"p1\">*</ept> could therefore be used--instead of 1,000 nodes, only 63 would be required.",
+      "pos": [
+        2968,
+        3080
+      ]
+    },
+    {
+      "content": "This will greatly improve job execution time and efficiency if large application files or reference data are required for each node.",
+      "pos": [
+        3081,
+        3213
+      ]
+    },
+    {
+      "content": "Enable parallel task execution",
+      "pos": [
+        3218,
+        3248
+      ]
+    },
+    {
+      "content": "You configure the compute nodes in your Batch solution for parallel task execution at the pool level.",
+      "pos": [
+        3250,
+        3351
+      ]
+    },
+    {
+      "content": "When using the Batch .NET library, you set the <bpt id=\"p1\">[</bpt>CloudPool.MaxTasksPerComputeNode<ph id=\"ph1\">][</ph>maxtasks_net<ept id=\"p1\">]</ept> property when you create a pool.",
+      "pos": [
+        3352,
+        3480
+      ]
+    },
+    {
+      "content": "If you are using the Batch REST API, you set the <bpt id=\"p1\">[</bpt>maxTasksPerNode<ph id=\"ph1\">][</ph>rest_addpool<ept id=\"p1\">]</ept> element in the request body during pool creation.",
+      "pos": [
+        3481,
+        3611
+      ]
+    },
+    {
+      "content": "Azure Batch allows you to set maximum tasks per node up to four times (4x) the number of node cores.",
+      "pos": [
+        3613,
+        3713
+      ]
+    },
+    {
+      "content": "For example, if the pool is configured with nodes of size \"Large\" (four cores), then <ph id=\"ph1\">`maxTasksPerNode`</ph> may be set to 16.",
+      "pos": [
+        3714,
+        3834
+      ]
+    },
+    {
+      "content": "For details on the number of cores for each of the node sizes, see <bpt id=\"p1\">[</bpt>Sizes for Cloud Services<ept id=\"p1\">](./../cloud-services/cloud-services-sizes-specs.md)</ept>.",
+      "pos": [
+        3835,
+        3980
+      ]
+    },
+    {
+      "content": "For more information on service limits, see <bpt id=\"p1\">[</bpt>Quotas and limits for the Azure Batch service<ept id=\"p1\">](batch-quota-limit.md)</ept>.",
+      "pos": [
+        3981,
+        4095
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> Be sure to take into account the <ph id=\"ph2\">`maxTasksPerNode`</ph> value when you construct an <bpt id=\"p1\">[</bpt>autoscale formula<ph id=\"ph3\">][</ph>enable_autoscaling<ept id=\"p1\">]</ept> for your pool.",
+      "pos": [
+        4099,
+        4244
+      ]
+    },
+    {
+      "content": "For example, a formula that evaluates <ph id=\"ph1\">`$RunningTasks`</ph> could be dramatically affected by an increase in tasks per node.",
+      "pos": [
+        4245,
+        4363
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Automatically scale compute nodes in an Azure Batch pool<ept id=\"p1\">](batch-automatic-scaling.md)</ept> for more information.",
+      "pos": [
+        4364,
+        4476
+      ]
+    },
+    {
+      "content": "Distribution of tasks",
+      "pos": [
+        4481,
+        4502
+      ]
+    },
+    {
+      "content": "When the compute nodes within a pool are able to execute tasks concurrently, it is important to specify how you want your tasks distributed across the nodes within the pool.",
+      "pos": [
+        4504,
+        4677
+      ]
+    },
+    {
+      "content": "By using the <bpt id=\"p1\">[</bpt>CloudPool.TaskSchedulingPolicy<ph id=\"ph1\">][</ph>task_schedule<ept id=\"p1\">]</ept> property, you can specify that tasks should be assigned evenly across all nodes in the pool (\"spreading\").",
+      "pos": [
+        4679,
+        4846
+      ]
+    },
+    {
+      "content": "Or you can specify that as many tasks as possible should be assigned to each node before tasks are assigned to another node in the pool (\"packing\").",
+      "pos": [
+        4847,
+        4995
+      ]
+    },
+    {
+      "content": "As an example of how this feature is valuable, consider the pool of Standard\\_D14 nodes (in the example above) that is configured with a <bpt id=\"p1\">[</bpt>CloudPool.MaxTasksPerComputeNode<ph id=\"ph1\">][</ph>maxtasks_net<ept id=\"p1\">]</ept> value of 16.",
+      "pos": [
+        4997,
+        5195
+      ]
+    },
+    {
+      "content": "If the <bpt id=\"p1\">[</bpt>CloudPool.TaskSchedulingPolicy<ph id=\"ph1\">][</ph>task_schedule<ept id=\"p1\">]</ept> is configured with a <bpt id=\"p2\">[</bpt>ComputeNodeFillType<ph id=\"ph2\">][</ph>fill_type<ept id=\"p2\">]</ept> of <bpt id=\"p3\">*</bpt>Pack<ept id=\"p3\">*</ept>, it would maximize usage of all 16 cores of each node and allow an <bpt id=\"p4\">[</bpt>autoscaling pool<ept id=\"p4\">](./batch-automatic-scaling.md)</ept> to prune unused nodes from the pool (nodes without any tasks assigned).",
+      "pos": [
+        5196,
+        5502
+      ]
+    },
+    {
+      "content": "This minimizes resource usage and saves money.",
+      "pos": [
+        5503,
+        5549
+      ]
+    },
+    {
+      "content": "Batch .NET example",
+      "pos": [
+        5554,
+        5572
+      ]
+    },
+    {
+      "content": "This <bpt id=\"p1\">[</bpt>Batch .NET<ph id=\"ph1\">][</ph>api_net<ept id=\"p1\">]</ept> API code snippet shows a request to create a pool that contains four large nodes with a maximum of four tasks per node.",
+      "pos": [
+        5574,
+        5720
+      ]
+    },
+    {
+      "content": "It specifies a task scheduling policy that will fill each node with tasks prior to assigning tasks to another node in the pool.",
+      "pos": [
+        5721,
+        5848
+      ]
+    },
+    {
+      "content": "For more information on adding pools by using the Batch .NET API, see <bpt id=\"p1\">[</bpt>BatchClient.PoolOperations.CreatePool<ph id=\"ph1\">][</ph>poolcreate_net<ept id=\"p1\">]</ept>.",
+      "pos": [
+        5849,
+        5975
+      ]
+    },
+    {
+      "content": "Batch REST example",
+      "pos": [
+        6350,
+        6368
+      ]
+    },
+    {
+      "content": "This <bpt id=\"p1\">[</bpt>Batch REST<ph id=\"ph1\">][</ph>api_rest<ept id=\"p1\">]</ept> API snippet shows a request to create a pool that contains two large nodes with a maximum of four tasks per node.",
+      "pos": [
+        6370,
+        6511
+      ]
+    },
+    {
+      "content": "For more information on adding pools by using the REST API, see <bpt id=\"p1\">[</bpt>Add a pool to an account<ph id=\"ph1\">][</ph>rest_addpool<ept id=\"p1\">]</ept>.",
+      "pos": [
+        6512,
+        6617
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> You can set the <ph id=\"ph2\">`maxTasksPerNode`</ph> element and <bpt id=\"p1\">[</bpt>MaxTasksPerComputeNode<ph id=\"ph3\">][</ph>maxtasks_net<ept id=\"p1\">]</ept> property only at pool creation time.",
+      "pos": [
+        6930,
+        7064
+      ]
+    },
+    {
+      "content": "They cannot be modified after a pool has already been created.",
+      "pos": [
+        7065,
+        7127
+      ]
+    },
+    {
+      "content": "Explore the sample project",
+      "pos": [
+        7132,
+        7158
+      ]
+    },
+    {
+      "content": "Check out the <bpt id=\"p1\">[</bpt>ParallelNodeTasks<ph id=\"ph1\">][</ph>parallel_tasks_sample<ept id=\"p1\">]</ept> project on GitHub.",
+      "pos": [
+        7160,
+        7235
+      ]
+    },
+    {
+      "content": "It is a working code sample that illustrates the use of <bpt id=\"p1\">[</bpt>CloudPool.MaxTasksPerComputeNode<ph id=\"ph1\">][</ph>maxtasks_net<ept id=\"p1\">]</ept>.",
+      "pos": [
+        7236,
+        7341
+      ]
+    },
+    {
+      "content": "This C# console application uses the <bpt id=\"p1\">[</bpt>Batch .NET<ph id=\"ph1\">][</ph>api_net<ept id=\"p1\">]</ept> library to create a pool with one or more compute nodes.",
+      "pos": [
+        7343,
+        7458
+      ]
+    },
+    {
+      "content": "It executes a configurable number of tasks on those nodes to simulate variable load.",
+      "pos": [
+        7459,
+        7543
+      ]
+    },
+    {
+      "content": "Output from the application specifies which nodes executed each task.",
+      "pos": [
+        7544,
+        7613
+      ]
+    },
+    {
+      "content": "The application also provides a summary of the job parameters and duration.",
+      "pos": [
+        7614,
+        7689
+      ]
+    },
+    {
+      "content": "The summary portion of the output from two different runs of the sample application appears below.",
+      "pos": [
+        7690,
+        7788
+      ]
+    },
+    {
+      "content": "The first execution of the sample application shows that with a single node in the pool and the default setting of one task per node, the job duration is over 30 minutes.",
+      "pos": [
+        7884,
+        8054
+      ]
+    },
+    {
+      "content": "The second run of the sample shows a significant decrease in job duration.",
+      "pos": [
+        8150,
+        8224
+      ]
+    },
+    {
+      "content": "This is because the pool was configured with four tasks per node, which allows for parallel task execution to complete the job in nearly a quarter of the time.",
+      "pos": [
+        8225,
+        8384
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> The job durations in the summaries above do not include pool creation time.",
+      "pos": [
+        8388,
+        8476
+      ]
+    },
+    {
+      "content": "Each of the jobs above was submitted to previously created pools whose compute nodes were in the <bpt id=\"p1\">*</bpt>Idle<ept id=\"p1\">*</ept> state at submission time.",
+      "pos": [
+        8477,
+        8606
+      ]
+    },
+    {
+      "content": "Batch Explorer Heat Map",
+      "pos": [
+        8611,
+        8634
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt>Azure Batch Explorer<ph id=\"ph1\">][</ph>batch_explorer<ept id=\"p1\">]</ept>, one of the Azure Batch <bpt id=\"p2\">[</bpt>sample applications<ph id=\"ph2\">][</ph>github_samples<ept id=\"p2\">]</ept>, contains a <bpt id=\"p3\">*</bpt>Heat Map<ept id=\"p3\">*</ept> feature that provides visualization of task execution.",
+      "pos": [
+        8636,
+        8818
+      ]
+    },
+    {
+      "content": "When you're executing the <bpt id=\"p1\">[</bpt>ParallelTasks<ph id=\"ph1\">][</ph>parallel_tasks_sample<ept id=\"p1\">]</ept> sample application, you can use the Heat Map feature to easily visualize the execution of parallel tasks on each node.",
+      "pos": [
+        8819,
+        9002
+      ]
+    },
+    {
+      "content": "Batch Explorer Heat Map",
+      "pos": [
+        9006,
+        9029
+      ]
+    },
+    {
+      "content": "Batch Explorer Heat Map showing a pool of four nodes, with each node currently executing four tasks",
+      "pos": [
+        9036,
+        9135
+      ]
+    },
+    {
+      "pos": [
+        9138,
+        9202
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_net<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/mt348682.aspx</ph>"
+    },
+    {
+      "pos": [
+        9203,
+        9268
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_rest<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/dn820158.aspx</ph>"
+    },
+    {
+      "pos": [
+        9269,
+        9364
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_explorer<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer</ph>"
+    },
+    {
+      "pos": [
+        9365,
+        9455
+      ],
+      "content": "<ph id=\"ph1\">[</ph>cloudpool<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.aspx</ph>"
+    },
+    {
+      "pos": [
+        9456,
+        9532
+      ],
+      "content": "<ph id=\"ph1\">[</ph>enable_autoscaling<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820173.aspx</ph>"
+    },
+    {
+      "pos": [
+        9533,
+        9634
+      ],
+      "content": "<ph id=\"ph1\">[</ph>fill_type<ph id=\"ph2\">]: https://msdn.microsoft.com/library/microsoft.azure.batch.common.computenodefilltype.aspx</ph>"
+    },
+    {
+      "pos": [
+        9635,
+        9697
+      ],
+      "content": "<ph id=\"ph1\">[</ph>github_samples<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples</ph>"
+    },
+    {
+      "pos": [
+        9698,
+        9813
+      ],
+      "content": "<ph id=\"ph1\">[</ph>maxtasks_net<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.maxtaskspercomputenode.aspx</ph>"
+    },
+    {
+      "pos": [
+        9814,
+        9884
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_addpool<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820174.aspx</ph>"
+    },
+    {
+      "pos": [
+        9885,
+        10003
+      ],
+      "content": "<ph id=\"ph1\">[</ph>parallel_tasks_sample<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/ParallelTasks</ph>"
+    },
+    {
+      "pos": [
+        10004,
+        10115
+      ],
+      "content": "<ph id=\"ph1\">[</ph>poolcreate_net<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.createpool.aspx</ph>"
+    },
+    {
+      "pos": [
+        10116,
+        10225
+      ],
+      "content": "<ph id=\"ph1\">[</ph>task_schedule<ph id=\"ph2\">]: https://msdn.microsoft.com/library/microsoft.azure.batch.cloudpool.taskschedulingpolicy.aspx</ph>"
+    },
+    {
+      "pos": [
+        10227,
+        10278
+      ],
+      "content": "<ph id=\"ph1\">[</ph>1<ph id=\"ph2\">]: ./media/batch-parallel-node-tasks\\heat_map.png</ph>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Maximize Batch node use with parallel tasks | Microsoft Azure\"\n    description=\"Increase efficiency and lower costs by using fewer compute nodes while running concurrent tasks on each node in an Azure Batch pool\"\n    services=\"batch\"\n    documentationCenter=\".net\"\n    authors=\"mmacy\"\n    manager=\"timlt\"\n    editor=\"\" />\n\n<tags\n    ms.service=\"batch\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.tgt_pltfrm=\"vm-windows\"\n    ms.workload=\"big-compute\"\n    ms.date=\"01/22/2016\"\n    ms.author=\"marsma\" />\n\n# Maximize Azure Batch compute resource usage with concurrent node tasks\n\nIn this article, you will learn how to run more than one task simultaneously on each compute node within your Azure Batch pool. By enabling concurrent task execution on a pool's compute nodes, you can maximize resource usage on a smaller number of nodes within the pool. For some workloads, this can save you both time and money.\n\nWhile some scenarios benefit from all of a node's resources being available for allocation to a single task, a number of situations benefit from allowing multiple tasks to share those resources:\n\n - **Minimizing data transfer** when tasks are able to share data. In this scenario, you can dramatically reduce data transfer charges by copying shared data to a smaller number of nodes and executing tasks in parallel on each node. This especially applies if the data to be copied to each node must be transferred between geographic regions.\n\n - **Maximizing memory usage** when tasks require a large amount of memory, but only during short periods of time, and at variable times during execution. You can employ fewer, but larger, compute nodes with more memory to efficiently handle such spikes. These nodes would have multiple tasks running in parallel on each node, but each task would take advantage of the nodes' plentiful memory at different times.\n\n - **Mitigating node number limits** when inter-node communication is required within a pool. Currently, pools configured for inter-node communication are limited to 50 compute nodes. Therefore, a greater number of tasks can be executed simultaneously if each node in such a pool is able to execute tasks in parallel.\n\n - **Replicating an on-premises compute cluster**, such as when you first move a compute environment to Azure. You can increase the maximum number of node tasks to more closely mirror an existing physical configuration if that configuration currently executes multiple tasks per compute node.\n\n## Example scenario\n\nHere's an example that illustrates the benefits of parallel task execution. Let's say that your task application has CPU and memory requirements such that a Standard\\_D1 node size is suitable. But in order to execute the job in the required time, 1,000 such nodes are needed.\n\nInstead of using Standard\\_D1 nodes which have 1 CPU core, you could employ Standard\\_D14 nodes that have 16 cores each, and enable parallel task execution. In this case, *16 times fewer nodes* could therefore be used--instead of 1,000 nodes, only 63 would be required. This will greatly improve job execution time and efficiency if large application files or reference data are required for each node.\n\n## Enable parallel task execution\n\nYou configure the compute nodes in your Batch solution for parallel task execution at the pool level. When using the Batch .NET library, you set the [CloudPool.MaxTasksPerComputeNode][maxtasks_net] property when you create a pool. If you are using the Batch REST API, you set the [maxTasksPerNode][rest_addpool] element in the request body during pool creation.\n\nAzure Batch allows you to set maximum tasks per node up to four times (4x) the number of node cores. For example, if the pool is configured with nodes of size \"Large\" (four cores), then `maxTasksPerNode` may be set to 16. For details on the number of cores for each of the node sizes, see [Sizes for Cloud Services](./../cloud-services/cloud-services-sizes-specs.md). For more information on service limits, see [Quotas and limits for the Azure Batch service](batch-quota-limit.md).\n\n> [AZURE.TIP] Be sure to take into account the `maxTasksPerNode` value when you construct an [autoscale formula][enable_autoscaling] for your pool. For example, a formula that evaluates `$RunningTasks` could be dramatically affected by an increase in tasks per node. See [Automatically scale compute nodes in an Azure Batch pool](batch-automatic-scaling.md) for more information.\n\n## Distribution of tasks\n\nWhen the compute nodes within a pool are able to execute tasks concurrently, it is important to specify how you want your tasks distributed across the nodes within the pool.\n\nBy using the [CloudPool.TaskSchedulingPolicy][task_schedule] property, you can specify that tasks should be assigned evenly across all nodes in the pool (\"spreading\"). Or you can specify that as many tasks as possible should be assigned to each node before tasks are assigned to another node in the pool (\"packing\").\n\nAs an example of how this feature is valuable, consider the pool of Standard\\_D14 nodes (in the example above) that is configured with a [CloudPool.MaxTasksPerComputeNode][maxtasks_net] value of 16. If the [CloudPool.TaskSchedulingPolicy][task_schedule] is configured with a [ComputeNodeFillType][fill_type] of *Pack*, it would maximize usage of all 16 cores of each node and allow an [autoscaling pool](./batch-automatic-scaling.md) to prune unused nodes from the pool (nodes without any tasks assigned). This minimizes resource usage and saves money.\n\n## Batch .NET example\n\nThis [Batch .NET][api_net] API code snippet shows a request to create a pool that contains four large nodes with a maximum of four tasks per node. It specifies a task scheduling policy that will fill each node with tasks prior to assigning tasks to another node in the pool. For more information on adding pools by using the Batch .NET API, see [BatchClient.PoolOperations.CreatePool][poolcreate_net].\n\n```\nCloudPool pool =\n    batchClient.PoolOperations.CreatePool(\n        poolId: \"mypool\",\n        targetDedicated: 4\n        virtualMachineSize: \"large\",\n        cloudServiceConfiguration: new CloudServiceConfiguration(osFamily: \"4\"));\n\npool.MaxTasksPerComputeNode = 4;\npool.TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Pack);\npool.Commit();\n```\n\n## Batch REST example\n\nThis [Batch REST][api_rest] API snippet shows a request to create a pool that contains two large nodes with a maximum of four tasks per node. For more information on adding pools by using the REST API, see [Add a pool to an account][rest_addpool].\n\n```\n{\n  \"odata.metadata\":\"https://myaccount.myregion.batch.azure.com/$metadata#pools/@Element\",\n  \"id\":\"mypool\",\n  \"vmSize\":\"large\",\n  \"cloudServiceConfiguration\": {\n    \"osFamily\":\"4\",\n    \"targetOSVersion\":\"*\",\n  }\n  \"targetDedicated\":2,\n  \"maxTasksPerNode\":4,\n  \"enableInterNodeCommunication\":true,\n}\n```\n\n> [AZURE.NOTE] You can set the `maxTasksPerNode` element and [MaxTasksPerComputeNode][maxtasks_net] property only at pool creation time. They cannot be modified after a pool has already been created.\n\n## Explore the sample project\n\nCheck out the [ParallelNodeTasks][parallel_tasks_sample] project on GitHub. It is a working code sample that illustrates the use of [CloudPool.MaxTasksPerComputeNode][maxtasks_net].\n\nThis C# console application uses the [Batch .NET][api_net] library to create a pool with one or more compute nodes. It executes a configurable number of tasks on those nodes to simulate variable load. Output from the application specifies which nodes executed each task. The application also provides a summary of the job parameters and duration. The summary portion of the output from two different runs of the sample application appears below.\n\n```\nNodes: 1\nNode size: large\nMax tasks per node: 1\nTasks: 32\nDuration: 00:30:01.4638023\n```\n\nThe first execution of the sample application shows that with a single node in the pool and the default setting of one task per node, the job duration is over 30 minutes.\n\n```\nNodes: 1\nNode size: large\nMax tasks per node: 4\nTasks: 32\nDuration: 00:08:48.2423500\n```\n\nThe second run of the sample shows a significant decrease in job duration. This is because the pool was configured with four tasks per node, which allows for parallel task execution to complete the job in nearly a quarter of the time.\n\n> [AZURE.NOTE] The job durations in the summaries above do not include pool creation time. Each of the jobs above was submitted to previously created pools whose compute nodes were in the *Idle* state at submission time.\n\n## Batch Explorer Heat Map\n\nThe [Azure Batch Explorer][batch_explorer], one of the Azure Batch [sample applications][github_samples], contains a *Heat Map* feature that provides visualization of task execution. When you're executing the [ParallelTasks][parallel_tasks_sample] sample application, you can use the Heat Map feature to easily visualize the execution of parallel tasks on each node.\n\n![Batch Explorer Heat Map][1]\n\n*Batch Explorer Heat Map showing a pool of four nodes, with each node currently executing four tasks*\n\n[api_net]: http://msdn.microsoft.com/library/azure/mt348682.aspx\n[api_rest]: http://msdn.microsoft.com/library/azure/dn820158.aspx\n[batch_explorer]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer\n[cloudpool]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.aspx\n[enable_autoscaling]: https://msdn.microsoft.com/library/azure/dn820173.aspx\n[fill_type]: https://msdn.microsoft.com/library/microsoft.azure.batch.common.computenodefilltype.aspx\n[github_samples]: https://github.com/Azure/azure-batch-samples\n[maxtasks_net]: http://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.maxtaskspercomputenode.aspx\n[rest_addpool]: https://msdn.microsoft.com/library/azure/dn820174.aspx\n[parallel_tasks_sample]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/ParallelTasks\n[poolcreate_net]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.createpool.aspx\n[task_schedule]: https://msdn.microsoft.com/library/microsoft.azure.batch.cloudpool.taskschedulingpolicy.aspx\n\n[1]: ./media/batch-parallel-node-tasks\\heat_map.png\n"
+}

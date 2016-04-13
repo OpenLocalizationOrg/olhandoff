@@ -1,0 +1,866 @@
+{
+  "nodes": [
+    {
+      "content": "Run MPI applications in Azure Batch with multi-instance tasks | Microsoft Azure",
+      "pos": [
+        27,
+        106
+      ]
+    },
+    {
+      "content": "Learn how to execute Message Passing Interface (MPI) applications using the multi-instance task type in Azure Batch.",
+      "pos": [
+        125,
+        241
+      ]
+    },
+    {
+      "content": "Use multi-instance tasks to run Message Passing Interface (MPI) applications in Azure Batch",
+      "pos": [
+        546,
+        637
+      ]
+    },
+    {
+      "content": "With multi-instance tasks, you can run an Azure Batch task on multiple compute nodes simultaneously to enable high performance computing scenarios like Message Passing Interface (MPI) applications.",
+      "pos": [
+        639,
+        836
+      ]
+    },
+    {
+      "content": "In this article, you will learn how to execute multi-instance tasks using the <bpt id=\"p1\">[</bpt>Batch .NET<ph id=\"ph1\">][</ph>api_net<ept id=\"p1\">]</ept> library.",
+      "pos": [
+        837,
+        945
+      ]
+    },
+    {
+      "content": "Multi-instance task overview",
+      "pos": [
+        950,
+        978
+      ]
+    },
+    {
+      "content": "In Batch, each task is normally executed on a single compute node--you submit multiple tasks to a job, and the Batch service schedules each task for execution on a node.",
+      "pos": [
+        980,
+        1149
+      ]
+    },
+    {
+      "content": "However, by configuring a task's <bpt id=\"p1\">**</bpt>multi-instance settings<ept id=\"p1\">**</ept>, you can instruct Batch to split that task into subtasks for execution on multiple nodes.",
+      "pos": [
+        1150,
+        1300
+      ]
+    },
+    {
+      "content": "Multi-instance task overview",
+      "pos": [
+        1304,
+        1332
+      ]
+    },
+    {
+      "content": "When you submit a task with multi-instance settings to a job, Batch performs several steps unique to multi-instance tasks:",
+      "pos": [
+        1338,
+        1460
+      ]
+    },
+    {
+      "content": "The Batch service automatically splits the task into one <bpt id=\"p1\">**</bpt>primary<ept id=\"p1\">**</ept> and many <bpt id=\"p2\">**</bpt>subtasks<ept id=\"p2\">**</ept>.",
+      "pos": [
+        1465,
+        1556
+      ]
+    },
+    {
+      "content": "Batch then schedules the primary and subtasks for execution on the pool's compute nodes.",
+      "pos": [
+        1557,
+        1645
+      ]
+    },
+    {
+      "pos": [
+        1649,
+        1784
+      ],
+      "content": "These tasks, both the primary and the subtasks, download any <bpt id=\"p1\">**</bpt>common resource files<ept id=\"p1\">**</ept> that you specify in the multi-instance settings."
+    },
+    {
+      "content": "After the common resource files have been downloaded, the <bpt id=\"p1\">**</bpt>coordination command<ept id=\"p1\">**</ept> that you specify in the multi-instance settings is executed by the primary and subtasks.",
+      "pos": [
+        1788,
+        1959
+      ]
+    },
+    {
+      "content": "This coordination command is typically used to start a background service (such as <bpt id=\"p1\">[</bpt>Microsoft MPI<ph id=\"ph1\">][</ph>msmpi_msdn<ept id=\"p1\">]</ept>'s <ph id=\"ph2\">`smpd.exe`</ph>) and may also verify that the nodes are ready to process inter-node messages.",
+      "pos": [
+        1960,
+        2161
+      ]
+    },
+    {
+      "content": "When the coordination command has been completed successfully by the primary and all subtasks, the multi-instance task's <bpt id=\"p1\">**</bpt>command line<ept id=\"p1\">**</ept> (the \"application command\") is executed <bpt id=\"p2\">*</bpt>only<ept id=\"p2\">*</ept> by the <bpt id=\"p3\">**</bpt>primary task<ept id=\"p3\">**</ept>.",
+      "pos": [
+        2165,
+        2374
+      ]
+    },
+    {
+      "content": "For example, in an <bpt id=\"p1\">[</bpt>MS-MPI<ph id=\"ph1\">][</ph>msmpi_msdn<ept id=\"p1\">]</ept>-based solution, this is where you execute your MPI-enabled application using <ph id=\"ph2\">`mpiexec.exe`</ph>.",
+      "pos": [
+        2375,
+        2506
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Though it is functionally distinct, the \"multi-instance task\" is not a unique task type like the <bpt id=\"p1\">[</bpt>StartTask<ph id=\"ph2\">][</ph>net_starttask<ept id=\"p1\">]</ept> or <bpt id=\"p2\">[</bpt>JobPreparationTask<ph id=\"ph3\">][</ph>net_jobprep<ept id=\"p2\">]</ept>.",
+      "pos": [
+        2510,
+        2684
+      ]
+    },
+    {
+      "content": "The multi-instance task is simply a standard Batch task (<bpt id=\"p1\">[</bpt>CloudTask<ph id=\"ph1\">][</ph>net_task<ept id=\"p1\">]</ept> in Batch .NET) whose multi-instance settings have been configured.",
+      "pos": [
+        2685,
+        2830
+      ]
+    },
+    {
+      "content": "In this article, we refer to this as the <bpt id=\"p1\">**</bpt>multi-instance task<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2831,
+        2896
+      ]
+    },
+    {
+      "content": "Requirements for multi-instance tasks",
+      "pos": [
+        2901,
+        2938
+      ]
+    },
+    {
+      "content": "Multi-instance tasks require a pool with <bpt id=\"p1\">**</bpt>inter-node communication enabled<ept id=\"p1\">**</ept>, and with <bpt id=\"p2\">**</bpt>concurrent task execution disabled<ept id=\"p2\">**</ept>.",
+      "pos": [
+        2940,
+        3067
+      ]
+    },
+    {
+      "content": "If you try to run a multi-instance task in a pool with internode communication disabled, or with a <bpt id=\"p1\">*</bpt>maxTasksPerNode<ept id=\"p1\">*</ept> value greater than 1, the task will never be scheduled--it will remain indefinitely in the \"active\" state.",
+      "pos": [
+        3068,
+        3291
+      ]
+    },
+    {
+      "content": "This code snippet shows the creation of such a pool using the Batch .NET library.",
+      "pos": [
+        3292,
+        3373
+      ]
+    },
+    {
+      "pos": [
+        3851,
+        3954
+      ],
+      "content": "Additionally, multi-instance tasks will execute <bpt id=\"p1\">*</bpt>only<ept id=\"p1\">*</ept> on nodes in <bpt id=\"p2\">**</bpt>pools created after 14-Dec-2015<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> When you use size <bpt id=\"p1\">[</bpt>A8 or A9 compute nodes<ept id=\"p1\">](../virtual-machines/virtual-machines-windows-a8-a9-a10-a11-specs.md)</ept> in your Batch pool, your MPI application can take advantage of Azure's high-performance, low-latency remote direct memory access (RDMA) network.",
+      "pos": [
+        3958,
+        4226
+      ]
+    },
+    {
+      "content": "You can see the full list of compute node sizes available for Batch pools in <bpt id=\"p1\">[</bpt>Sizes for Cloud Services<ept id=\"p1\">](./../cloud-services/cloud-services-sizes-specs.md)</ept>.",
+      "pos": [
+        4227,
+        4382
+      ]
+    },
+    {
+      "content": "Use a StartTask for MPI application installation",
+      "pos": [
+        4388,
+        4436
+      ]
+    },
+    {
+      "content": "To run MPI applications with a multi-instance task, you first need to get your MPI software onto the compute nodes in the pool.",
+      "pos": [
+        4438,
+        4565
+      ]
+    },
+    {
+      "content": "This is a great time to use a <bpt id=\"p1\">[</bpt>StartTask<ph id=\"ph1\">][</ph>net_starttask<ept id=\"p1\">]</ept>, which executes whenever a node joins a pool, or is restarted.",
+      "pos": [
+        4566,
+        4685
+      ]
+    },
+    {
+      "content": "This code snippet creates a StartTask that specifies the MS-MPI setup package as a <bpt id=\"p1\">[</bpt>resource file<ph id=\"ph1\">][</ph>net_resourcefile<ept id=\"p1\">]</ept>, and the command line that will be executed after the resource file is downloaded to the node.",
+      "pos": [
+        4686,
+        4897
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> You are not limited to using MS-MPI when implementing an MPI solution with multi-instance tasks in Batch.",
+      "pos": [
+        5539,
+        5657
+      ]
+    },
+    {
+      "content": "You may use any implementation of the MPI standard that is compatible with the operating system you specify for the compute nodes in your pool.",
+      "pos": [
+        5658,
+        5801
+      ]
+    },
+    {
+      "content": "Create a multi-instance task with Batch .NET",
+      "pos": [
+        5806,
+        5850
+      ]
+    },
+    {
+      "content": "Now that we've covered the pool requirements and MPI package installation, let's create the multi-instance task.",
+      "pos": [
+        5852,
+        5964
+      ]
+    },
+    {
+      "content": "In this snippet, we create a standard <bpt id=\"p1\">[</bpt>CloudTask<ph id=\"ph1\">][</ph>net_task<ept id=\"p1\">]</ept>, then configure its <bpt id=\"p2\">[</bpt>MultiInstanceSettings<ph id=\"ph2\">][</ph>net_multiinstance_prop<ept id=\"p2\">]</ept> property.",
+      "pos": [
+        5965,
+        6102
+      ]
+    },
+    {
+      "content": "As mentioned above, the multi-instance task is not a distinct task type, but a standard Batch task configured with multi-instance settings.",
+      "pos": [
+        6103,
+        6242
+      ]
+    },
+    {
+      "content": "Primary task and subtasks",
+      "pos": [
+        7359,
+        7384
+      ]
+    },
+    {
+      "content": "When you create the multi-instance settings for a task, you specify the number of number of compute nodes that are to execute the task.",
+      "pos": [
+        7386,
+        7521
+      ]
+    },
+    {
+      "content": "When you submit the task to a job, the Batch service creates one <bpt id=\"p1\">**</bpt>primary<ept id=\"p1\">**</ept> task and enough <bpt id=\"p2\">**</bpt>subtasks<ept id=\"p2\">**</ept> that together match the number of nodes you specified.",
+      "pos": [
+        7522,
+        7682
+      ]
+    },
+    {
+      "content": "These tasks are assigned an integer id in the range of 0 to <bpt id=\"p1\">*</bpt>numberOfInstances - 1<ept id=\"p1\">*</ept>.",
+      "pos": [
+        7684,
+        7768
+      ]
+    },
+    {
+      "content": "The task with id 0 is the primary task, and all other ids are subtasks.",
+      "pos": [
+        7769,
+        7840
+      ]
+    },
+    {
+      "content": "For example, if you create the following multi-instance settings for a task, the primary task would have an id of 0, and the subtasks would have ids 1 through 9.",
+      "pos": [
+        7841,
+        8002
+      ]
+    },
+    {
+      "content": "Coordination and application commands",
+      "pos": [
+        8126,
+        8163
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>coordination command<ept id=\"p1\">**</ept> is executed by both the primary and subtasks.",
+      "pos": [
+        8165,
+        8239
+      ]
+    },
+    {
+      "content": "Once the primary task and all subtasks have finished executing the coordination command, the multi-instance task's command line is executed by the primary task <bpt id=\"p1\">*</bpt>only<ept id=\"p1\">*</ept>.",
+      "pos": [
+        8240,
+        8407
+      ]
+    },
+    {
+      "content": "We will call this command line the <bpt id=\"p1\">**</bpt>application command<ept id=\"p1\">**</ept> to distinguish it from the coordination command.",
+      "pos": [
+        8408,
+        8515
+      ]
+    },
+    {
+      "content": "The invocation of the coordination command is blocking--Batch does not execute the application command until the coordination command has returned successfully for all subtasks.",
+      "pos": [
+        8517,
+        8694
+      ]
+    },
+    {
+      "content": "The coordination command should therefore start any required background services, verify that they are ready for use, and then exit.",
+      "pos": [
+        8695,
+        8827
+      ]
+    },
+    {
+      "content": "For example, this coordination command for a solution using MS-MPI version 7 starts the SMPD service on the node, then exits:",
+      "pos": [
+        8828,
+        8953
+      ]
+    },
+    {
+      "content": "Note the use of <ph id=\"ph1\">`start`</ph> in this coordination command.",
+      "pos": [
+        9012,
+        9065
+      ]
+    },
+    {
+      "content": "This is required because the <ph id=\"ph1\">`smpd.exe`</ph> application does not return immediately after execution.",
+      "pos": [
+        9066,
+        9162
+      ]
+    },
+    {
+      "content": "Without the use of the <bpt id=\"p1\">[</bpt>start<ph id=\"ph1\">][</ph>cmd_start<ept id=\"p1\">]</ept> command, this coordination command would not return, and would therefore block the application command from running.",
+      "pos": [
+        9163,
+        9321
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>application command<ept id=\"p1\">**</ept>, the command line specified for the multi-instance task, is executed <bpt id=\"p2\">*</bpt>only<ept id=\"p2\">*</ept> by the primary task.",
+      "pos": [
+        9323,
+        9447
+      ]
+    },
+    {
+      "content": "For MS-MPI applications, this will be the execution of your MPI-enabled application using <ph id=\"ph1\">`mpiexec.exe`</ph>.",
+      "pos": [
+        9448,
+        9552
+      ]
+    },
+    {
+      "content": "For example, here is an application command for a solution using MS-MPI version 7:",
+      "pos": [
+        9553,
+        9635
+      ]
+    },
+    {
+      "content": "Resource files",
+      "pos": [
+        9743,
+        9757
+      ]
+    },
+    {
+      "pos": [
+        9759,
+        10028
+      ],
+      "content": "There are two sets of resource files to consider for multi-instance tasks: <bpt id=\"p1\">**</bpt>common resource files<ept id=\"p1\">**</ept> that <bpt id=\"p2\">*</bpt>all<ept id=\"p2\">*</ept> tasks download (both primary and subtasks), and the <bpt id=\"p3\">**</bpt>resource files<ept id=\"p3\">**</ept> specified for the multi-instance task itself, which <bpt id=\"p4\">*</bpt>only the primary<ept id=\"p4\">*</ept> task downloads."
+    },
+    {
+      "content": "You can specify one or more <bpt id=\"p1\">**</bpt>common resource files<ept id=\"p1\">**</ept> in the multi-instance settings for a task.",
+      "pos": [
+        10030,
+        10126
+      ]
+    },
+    {
+      "content": "These common resource files are downloaded from <bpt id=\"p1\">[</bpt>Azure Storage<ept id=\"p1\">](./../storage/storage-introduction.md)</ept> into each node's task shared directory by the primary and all subtasks.",
+      "pos": [
+        10127,
+        10300
+      ]
+    },
+    {
+      "content": "You can access the task shared directory from application and coordination command lines by using the <ph id=\"ph1\">`AZ_BATCH_TASK_SHARED_DIR`</ph> environment variable.",
+      "pos": [
+        10301,
+        10451
+      ]
+    },
+    {
+      "pos": [
+        10453,
+        10711
+      ],
+      "content": "Resource files that you specify for the multi-instance task itself are downloaded to the task's working directory, <ph id=\"ph1\">`AZ_BATCH_TASK_WORKING_DIR`</ph>, by the primary task <bpt id=\"p1\">*</bpt>only<ept id=\"p1\">*</ept>--the subtasks do not download the resource files specified for the multi-instance task."
+    },
+    {
+      "content": "The contents of the <ph id=\"ph1\">`AZ_BATCH_TASK_SHARED_DIR`</ph> are accessible by the primary and all subtasks that execute on a node.",
+      "pos": [
+        10713,
+        10830
+      ]
+    },
+    {
+      "content": "An example task shared directory is <ph id=\"ph1\">`tasks/mybatchjob/job-1/mymultiinstancetask/`</ph>.",
+      "pos": [
+        10831,
+        10913
+      ]
+    },
+    {
+      "content": "The primary and each subtask also have a working directory that is accessible by that task only, and is accessed by using the environment variable <ph id=\"ph1\">`AZ_BATCH_TASK_WORKING_DIR`</ph>.",
+      "pos": [
+        10914,
+        11089
+      ]
+    },
+    {
+      "pos": [
+        11091,
+        11331
+      ],
+      "content": "Note that in the code samples in this article, we do not specify resource files for the multi-instance task itself, only for the pool's StartTask and the <bpt id=\"p1\">[</bpt>CommonResourceFiles<ph id=\"ph1\">][</ph>net_multiinsance_commonresfiles<ept id=\"p1\">]</ept> of the multi-instance settings."
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.IMPORTANT]</ph> Always use the environment variables <ph id=\"ph2\">`AZ_BATCH_TASK_SHARED_DIR`</ph> and <ph id=\"ph3\">`AZ_BATCH_TASK_WORKING_DIR`</ph> to refer to these directories in your command lines.",
+      "pos": [
+        11335,
+        11501
+      ]
+    },
+    {
+      "content": "Do not attempt to construct the paths manually.",
+      "pos": [
+        11502,
+        11549
+      ]
+    },
+    {
+      "content": "Task lifetime",
+      "pos": [
+        11554,
+        11567
+      ]
+    },
+    {
+      "content": "The lifetime of the primary task controls the lifetime of the entire multi-instance task.",
+      "pos": [
+        11569,
+        11658
+      ]
+    },
+    {
+      "content": "When the primary exits, all of the subtasks are terminated.",
+      "pos": [
+        11659,
+        11718
+      ]
+    },
+    {
+      "content": "The exit code of the primary is the exit code of the task, and is therefore used to determine the success or failure of the task for retry purposes.",
+      "pos": [
+        11719,
+        11867
+      ]
+    },
+    {
+      "content": "If any of the subtasks fail, exiting with a non-zero return code, for example, the entire multi-instance task fails.",
+      "pos": [
+        11869,
+        11985
+      ]
+    },
+    {
+      "content": "The multi-instance task is then terminated and retried, up to its retry limit.",
+      "pos": [
+        11986,
+        12064
+      ]
+    },
+    {
+      "content": "When you delete a multi-instance task, the primary and all subtasks are also deleted by the Batch service.",
+      "pos": [
+        12066,
+        12172
+      ]
+    },
+    {
+      "content": "All subtask directories and their files are deleted from the compute nodes, just as for a standard task.",
+      "pos": [
+        12173,
+        12277
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>TaskConstraints<ph id=\"ph1\">][</ph>net_taskconstraints<ept id=\"p1\">]</ept> for a multi-instance task, such as the <bpt id=\"p2\">[</bpt>MaxTaskRetryCount<ph id=\"ph2\">][</ph>net_taskconstraint_maxretry<ept id=\"p2\">]</ept>, <bpt id=\"p3\">[</bpt>MaxWallClockTime<ph id=\"ph3\">][</ph>net_taskconstraint_maxwallclock<ept id=\"p3\">]</ept>, and <bpt id=\"p4\">[</bpt>RetentionTime<ph id=\"ph4\">][</ph>net_taskconstraint_retention<ept id=\"p4\">]</ept> properties, are honored as they are for a standard task, and apply to the primary and all subtasks.",
+      "pos": [
+        12279,
+        12609
+      ]
+    },
+    {
+      "content": "However, if you change the <bpt id=\"p1\">[</bpt>RetentionTime<ph id=\"ph1\">][</ph>net_taskconstraint_retention<ept id=\"p1\">]</ept> property after adding the multi-instance task to the job, this change is applied only to the primary task.",
+      "pos": [
+        12610,
+        12789
+      ]
+    },
+    {
+      "content": "All of the subtasks will continue to use the original <bpt id=\"p1\">[</bpt>RetentionTime<ph id=\"ph1\">][</ph>net_taskconstraint_retention<ept id=\"p1\">]</ept>.",
+      "pos": [
+        12790,
+        12890
+      ]
+    },
+    {
+      "content": "A compute node's recent task list will reflect the id of a subtask if the recent task was part of a multi-instance task.",
+      "pos": [
+        12892,
+        13012
+      ]
+    },
+    {
+      "content": "Obtain information about subtasks",
+      "pos": [
+        13017,
+        13050
+      ]
+    },
+    {
+      "content": "To obtain information on subtasks by using the Batch .NET library, call the <bpt id=\"p1\">[</bpt>CloudTask.ListSubtasks<ph id=\"ph1\">][</ph>net_task_listsubtasks<ept id=\"p1\">]</ept> method.",
+      "pos": [
+        13052,
+        13183
+      ]
+    },
+    {
+      "content": "This method returns information on all subtasks, and information about the compute node that executed the tasks.",
+      "pos": [
+        13184,
+        13296
+      ]
+    },
+    {
+      "content": "From this information, you can determine each subtask's root directory, the pool id, its current state, exit code, and more.",
+      "pos": [
+        13297,
+        13421
+      ]
+    },
+    {
+      "content": "You can use this information in combination with the <bpt id=\"p1\">[</bpt>PoolOperations.GetNodeFile<ph id=\"ph1\">][</ph>poolops_getnodefile<ept id=\"p1\">]</ept> method to obtain the subtask's files.",
+      "pos": [
+        13422,
+        13562
+      ]
+    },
+    {
+      "content": "Note that this method does not return information for the primary task (id 0).",
+      "pos": [
+        13563,
+        13641
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Unless otherwise stated, Batch .NET methods that operate on the multi-instance <bpt id=\"p1\">[</bpt>CloudTask<ph id=\"ph2\">][</ph>net_task<ept id=\"p1\">]</ept> itself apply <bpt id=\"p2\">*</bpt>only<ept id=\"p2\">*</ept> to the primary task.",
+      "pos": [
+        13645,
+        13799
+      ]
+    },
+    {
+      "content": "For example, when you call the <bpt id=\"p1\">[</bpt>CloudTask.ListNodeFiles<ph id=\"ph1\">][</ph>net_task_listnodefiles<ept id=\"p1\">]</ept> method on a multi-instance task, only the primary task's files are returned.",
+      "pos": [
+        13800,
+        13957
+      ]
+    },
+    {
+      "content": "The following code snippet shows how to obtain subtask information, as well as request file contents from the nodes on which they executed.",
+      "pos": [
+        13959,
+        14098
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        15714,
+        15724
+      ]
+    },
+    {
+      "content": "You may want to build a simple MS-MPI application to use while testing multi-instance tasks in Batch.",
+      "pos": [
+        15728,
+        15829
+      ]
+    },
+    {
+      "content": "The Microsoft HPC &amp; Azure Batch Team blog article, <bpt id=\"p1\">[</bpt>How to compile and run a simple MS-MPI program<ph id=\"ph1\">][</ph>msmpi_howto<ept id=\"p1\">]</ept>, contains a walk-through for creating a simple MPI application using MS-MPI.",
+      "pos": [
+        15830,
+        16019
+      ]
+    },
+    {
+      "pos": [
+        16023,
+        16115
+      ],
+      "content": "Check out the <bpt id=\"p1\">[</bpt>Microsoft MPI<ph id=\"ph1\">][</ph>msmpi_msdn<ept id=\"p1\">]</ept> page on MSDN for the latest information on MS-MPI."
+    },
+    {
+      "pos": [
+        16117,
+        16181
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_net<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/mt348682.aspx</ph>"
+    },
+    {
+      "pos": [
+        16182,
+        16247
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_rest<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/dn820158.aspx</ph>"
+    },
+    {
+      "pos": [
+        16248,
+        16343
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_explorer<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer</ph>"
+    },
+    {
+      "pos": [
+        16344,
+        16408
+      ],
+      "content": "<ph id=\"ph1\">[</ph>cmd_start<ph id=\"ph2\">]: https://technet.microsoft.com/library/cc770297.aspx</ph>"
+    },
+    {
+      "pos": [
+        16409,
+        16471
+      ],
+      "content": "<ph id=\"ph1\">[</ph>github_samples<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples</ph>"
+    },
+    {
+      "pos": [
+        16472,
+        16534
+      ],
+      "content": "<ph id=\"ph1\">[</ph>msmpi_msdn<ph id=\"ph2\">]: https://msdn.microsoft.com/library/bb524831.aspx</ph>"
+    },
+    {
+      "pos": [
+        16535,
+        16595
+      ],
+      "content": "<ph id=\"ph1\">[</ph>msmpi_sdk<ph id=\"ph2\">]: http://go.microsoft.com/FWLink/p/?LinkID=389556</ph>"
+    },
+    {
+      "pos": [
+        16596,
+        16719
+      ],
+      "content": "<ph id=\"ph1\">[</ph>msmpi_howto<ph id=\"ph2\">]: http://blogs.technet.com/b/windowshpc/archive/2015/02/02/how-to-compile-and-run-a-simple-ms-mpi-program.aspx</ph>"
+    },
+    {
+      "pos": [
+        16721,
+        16822
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_jobprep<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobpreparationtask.aspx</ph>"
+    },
+    {
+      "pos": [
+        16823,
+        16939
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinstance_class<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.aspx</ph>"
+    },
+    {
+      "pos": [
+        16940,
+        17065
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinstance_prop<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.multiinstancesettings.aspx</ph>"
+    },
+    {
+      "pos": [
+        17066,
+        17210
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinsance_commonresfiles<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.commonresourcefiles.aspx</ph>"
+    },
+    {
+      "pos": [
+        17211,
+        17358
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinstance_coordcmdline<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.coordinationcommandline.aspx</ph>"
+    },
+    {
+      "pos": [
+        17359,
+        17500
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinstance_numinstances<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.numberofinstances.aspx</ph>"
+    },
+    {
+      "pos": [
+        17501,
+        17590
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_pool<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.aspx</ph>"
+    },
+    {
+      "pos": [
+        17591,
+        17703
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_pool_create<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.createpool.aspx</ph>"
+    },
+    {
+      "pos": [
+        17704,
+        17813
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_pool_starttask<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx</ph>"
+    },
+    {
+      "pos": [
+        17814,
+        17914
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_resourcefile<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.resourcefile.aspx</ph>"
+    },
+    {
+      "pos": [
+        17915,
+        18009
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_starttask<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.starttask.aspx</ph>"
+    },
+    {
+      "pos": [
+        18010,
+        18124
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_starttask_cmdline<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.starttask.commandline.aspx</ph>"
+    },
+    {
+      "pos": [
+        18125,
+        18214
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_task<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.aspx</ph>"
+    },
+    {
+      "pos": [
+        18215,
+        18321
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_taskconstraints<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.aspx</ph>"
+    },
+    {
+      "pos": [
+        18322,
+        18454
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_taskconstraint_maxretry<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.maxtaskretrycount.aspx</ph>"
+    },
+    {
+      "pos": [
+        18455,
+        18590
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_taskconstraint_maxwallclock<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.maxwallclocktime.aspx</ph>"
+    },
+    {
+      "pos": [
+        18591,
+        18720
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_taskconstraint_retention<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.retentiontime.aspx</ph>"
+    },
+    {
+      "pos": [
+        18721,
+        18836
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_task_listsubtasks<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listsubtasks.aspx</ph>"
+    },
+    {
+      "pos": [
+        18837,
+        18954
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_task_listnodefiles<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listnodefiles.aspx</ph>"
+    },
+    {
+      "pos": [
+        18955,
+        19072
+      ],
+      "content": "<ph id=\"ph1\">[</ph>poolops_getnodefile<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.getnodefile.aspx</ph>"
+    },
+    {
+      "pos": [
+        19074,
+        19150
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_multiinstance<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt637905.aspx</ph>"
+    },
+    {
+      "pos": [
+        19152,
+        19217
+      ],
+      "content": "<ph id=\"ph1\">[</ph>1<ph id=\"ph2\">]: ./media/batch-mpi/batch_mpi_01.png</ph><ph id=\"ph3\"> \"</ph>Multi-instance overview<ph id=\"ph4\">\"</ph>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Run MPI applications in Azure Batch with multi-instance tasks | Microsoft Azure\"\n    description=\"Learn how to execute Message Passing Interface (MPI) applications using the multi-instance task type in Azure Batch.\"\n    services=\"batch\"\n    documentationCenter=\".net\"\n    authors=\"mmacy\"\n    manager=\"timlt\"\n    editor=\"\" />\n\n<tags\n    ms.service=\"batch\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.tgt_pltfrm=\"vm-windows\"\n    ms.workload=\"big-compute\"\n    ms.date=\"02/19/2016\"\n    ms.author=\"marsma\" />\n\n# Use multi-instance tasks to run Message Passing Interface (MPI) applications in Azure Batch\n\nWith multi-instance tasks, you can run an Azure Batch task on multiple compute nodes simultaneously to enable high performance computing scenarios like Message Passing Interface (MPI) applications. In this article, you will learn how to execute multi-instance tasks using the [Batch .NET][api_net] library.\n\n## Multi-instance task overview\n\nIn Batch, each task is normally executed on a single compute node--you submit multiple tasks to a job, and the Batch service schedules each task for execution on a node. However, by configuring a task's **multi-instance settings**, you can instruct Batch to split that task into subtasks for execution on multiple nodes.\n\n![Multi-instance task overview][1]\n\nWhen you submit a task with multi-instance settings to a job, Batch performs several steps unique to multi-instance tasks:\n\n1. The Batch service automatically splits the task into one **primary** and many **subtasks**. Batch then schedules the primary and subtasks for execution on the pool's compute nodes.\n2. These tasks, both the primary and the subtasks, download any **common resource files** that you specify in the multi-instance settings.\n3. After the common resource files have been downloaded, the **coordination command** that you specify in the multi-instance settings is executed by the primary and subtasks. This coordination command is typically used to start a background service (such as [Microsoft MPI][msmpi_msdn]'s `smpd.exe`) and may also verify that the nodes are ready to process inter-node messages.\n4. When the coordination command has been completed successfully by the primary and all subtasks, the multi-instance task's **command line** (the \"application command\") is executed *only* by the **primary task**. For example, in an [MS-MPI][msmpi_msdn]-based solution, this is where you execute your MPI-enabled application using `mpiexec.exe`.\n\n> [AZURE.NOTE] Though it is functionally distinct, the \"multi-instance task\" is not a unique task type like the [StartTask][net_starttask] or [JobPreparationTask][net_jobprep]. The multi-instance task is simply a standard Batch task ([CloudTask][net_task] in Batch .NET) whose multi-instance settings have been configured. In this article, we refer to this as the **multi-instance task**.\n\n## Requirements for multi-instance tasks\n\nMulti-instance tasks require a pool with **inter-node communication enabled**, and with **concurrent task execution disabled**. If you try to run a multi-instance task in a pool with internode communication disabled, or with a *maxTasksPerNode* value greater than 1, the task will never be scheduled--it will remain indefinitely in the \"active\" state. This code snippet shows the creation of such a pool using the Batch .NET library.\n\n```\nCloudPool myCloudPool =\n    myBatchClient.PoolOperations.CreatePool(\n        poolId: \"MultiInstanceSamplePool\",\n        targetDedicated: 3\n        virtualMachineSize: \"small\",\n        cloudServiceConfiguration: new CloudServiceConfiguration(osFamily: \"4\"));\n\n// Multi-instance tasks require inter-node communication, and those nodes\n// must run only one task at a time.\nmyCloudPool.InterComputeNodeCommunicationEnabled = true;\nmyCloudPool.MaxTasksPerComputeNode = 1;\n```\n\nAdditionally, multi-instance tasks will execute *only* on nodes in **pools created after 14-Dec-2015**.\n\n> [AZURE.TIP] When you use size [A8 or A9 compute nodes](../virtual-machines/virtual-machines-windows-a8-a9-a10-a11-specs.md) in your Batch pool, your MPI application can take advantage of Azure's high-performance, low-latency remote direct memory access (RDMA) network. You can see the full list of compute node sizes available for Batch pools in [Sizes for Cloud Services](./../cloud-services/cloud-services-sizes-specs.md).\n\n### Use a StartTask for MPI application installation\n\nTo run MPI applications with a multi-instance task, you first need to get your MPI software onto the compute nodes in the pool. This is a great time to use a [StartTask][net_starttask], which executes whenever a node joins a pool, or is restarted. This code snippet creates a StartTask that specifies the MS-MPI setup package as a [resource file][net_resourcefile], and the command line that will be executed after the resource file is downloaded to the node.\n\n```\n// Create a StartTask for the pool which we use for installing MS-MPI on\n// the nodes as they join the pool (or when they are restarted).\nStartTask startTask = new StartTask\n{\n    CommandLine = \"cmd /c MSMpiSetup.exe -unattend -force\",\n    ResourceFiles = new List<ResourceFile> { new ResourceFile(\"https://mystorageaccount.blob.core.windows.net/mycontainer/MSMpiSetup.exe\", \"MSMpiSetup.exe\") },\n    RunElevated = true,\n    WaitForSuccess = true\n};\nmyCloudPool.StartTask = startTask;\n\n// Commit the fully configured pool to the Batch service to actually create\n// the pool and its compute nodes.\nawait myCloudPool.CommitAsync();\n```\n\n> [AZURE.NOTE] You are not limited to using MS-MPI when implementing an MPI solution with multi-instance tasks in Batch. You may use any implementation of the MPI standard that is compatible with the operating system you specify for the compute nodes in your pool.\n\n## Create a multi-instance task with Batch .NET\n\nNow that we've covered the pool requirements and MPI package installation, let's create the multi-instance task. In this snippet, we create a standard [CloudTask][net_task], then configure its [MultiInstanceSettings][net_multiinstance_prop] property. As mentioned above, the multi-instance task is not a distinct task type, but a standard Batch task configured with multi-instance settings.\n\n```\n// Create the multi-instance task. Its command line is the \"application command\"\n// and will be executed *only* by the primary, and only after the primary and\n// subtasks execute the CoordinationCommandLine.\nCloudTask myMultiInstanceTask = new CloudTask(id: \"mymultiinstancetask\",\n    commandline: \"cmd /c mpiexec.exe -wdir %AZ_BATCH_TASK_SHARED_DIR% MyMPIApplication.exe\");\n\n// Configure the task's MultiInstanceSettings. The CoordinationCommandLine will be executed by\n// the primary and all subtasks.\nmyMultiInstanceTask.MultiInstanceSettings =\n    new MultiInstanceSettings(numberOfNodes) {\n    CoordinationCommandLine = @\"cmd /c start cmd /c \"\"%MSMPI_BIN%\\smpd.exe\"\" -d\",\n    CommonResourceFiles = new List<ResourceFile> {\n    new ResourceFile(\"https://mystorageaccount.blob.core.windows.net/mycontainer/MyMPIApplication.exe\",\n                     \"MyMPIApplication.exe\")\n    }\n};\n\n// Submit the task to the job. Batch will take care of splitting it into subtasks and\n// scheduling them for execution on the nodes.\nawait myBatchClient.JobOperations.AddTaskAsync(\"mybatchjob\", myMultiInstanceTask);\n```\n\n## Primary task and subtasks\n\nWhen you create the multi-instance settings for a task, you specify the number of number of compute nodes that are to execute the task. When you submit the task to a job, the Batch service creates one **primary** task and enough **subtasks** that together match the number of nodes you specified.\n\nThese tasks are assigned an integer id in the range of 0 to *numberOfInstances - 1*. The task with id 0 is the primary task, and all other ids are subtasks. For example, if you create the following multi-instance settings for a task, the primary task would have an id of 0, and the subtasks would have ids 1 through 9.\n\n```\nint numberOfNodes = 10;\nmyMultiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings(numberOfNodes);\n```\n\n## Coordination and application commands\n\nThe **coordination command** is executed by both the primary and subtasks. Once the primary task and all subtasks have finished executing the coordination command, the multi-instance task's command line is executed by the primary task *only*. We will call this command line the **application command** to distinguish it from the coordination command.\n\nThe invocation of the coordination command is blocking--Batch does not execute the application command until the coordination command has returned successfully for all subtasks. The coordination command should therefore start any required background services, verify that they are ready for use, and then exit. For example, this coordination command for a solution using MS-MPI version 7 starts the SMPD service on the node, then exits:\n\n```\ncmd /c start cmd /c \"\"%MSMPI_BIN%\\smpd.exe\"\" -d\n```\n\nNote the use of `start` in this coordination command. This is required because the `smpd.exe` application does not return immediately after execution. Without the use of the [start][cmd_start] command, this coordination command would not return, and would therefore block the application command from running.\n\nThe **application command**, the command line specified for the multi-instance task, is executed *only* by the primary task. For MS-MPI applications, this will be the execution of your MPI-enabled application using `mpiexec.exe`. For example, here is an application command for a solution using MS-MPI version 7:\n\n```\ncmd /c \"\"%MSMPI_BIN%\\mpiexec.exe\"\" -c 1 -wdir %AZ_BATCH_TASK_SHARED_DIR% MyMPIApplication.exe\n```\n\n## Resource files\n\nThere are two sets of resource files to consider for multi-instance tasks: **common resource files** that *all* tasks download (both primary and subtasks), and the **resource files** specified for the multi-instance task itself, which *only the primary* task downloads.\n\nYou can specify one or more **common resource files** in the multi-instance settings for a task. These common resource files are downloaded from [Azure Storage](./../storage/storage-introduction.md) into each node's task shared directory by the primary and all subtasks. You can access the task shared directory from application and coordination command lines by using the `AZ_BATCH_TASK_SHARED_DIR` environment variable.\n\nResource files that you specify for the multi-instance task itself are downloaded to the task's working directory, `AZ_BATCH_TASK_WORKING_DIR`, by the primary task *only*--the subtasks do not download the resource files specified for the multi-instance task.\n\nThe contents of the `AZ_BATCH_TASK_SHARED_DIR` are accessible by the primary and all subtasks that execute on a node. An example task shared directory is `tasks/mybatchjob/job-1/mymultiinstancetask/`. The primary and each subtask also have a working directory that is accessible by that task only, and is accessed by using the environment variable `AZ_BATCH_TASK_WORKING_DIR`.\n\nNote that in the code samples in this article, we do not specify resource files for the multi-instance task itself, only for the pool's StartTask and the [CommonResourceFiles][net_multiinsance_commonresfiles] of the multi-instance settings.\n\n> [AZURE.IMPORTANT] Always use the environment variables `AZ_BATCH_TASK_SHARED_DIR` and `AZ_BATCH_TASK_WORKING_DIR` to refer to these directories in your command lines. Do not attempt to construct the paths manually.\n\n## Task lifetime\n\nThe lifetime of the primary task controls the lifetime of the entire multi-instance task. When the primary exits, all of the subtasks are terminated. The exit code of the primary is the exit code of the task, and is therefore used to determine the success or failure of the task for retry purposes.\n\nIf any of the subtasks fail, exiting with a non-zero return code, for example, the entire multi-instance task fails. The multi-instance task is then terminated and retried, up to its retry limit.\n\nWhen you delete a multi-instance task, the primary and all subtasks are also deleted by the Batch service. All subtask directories and their files are deleted from the compute nodes, just as for a standard task.\n\n[TaskConstraints][net_taskconstraints] for a multi-instance task, such as the [MaxTaskRetryCount][net_taskconstraint_maxretry], [MaxWallClockTime][net_taskconstraint_maxwallclock], and [RetentionTime][net_taskconstraint_retention] properties, are honored as they are for a standard task, and apply to the primary and all subtasks. However, if you change the [RetentionTime][net_taskconstraint_retention] property after adding the multi-instance task to the job, this change is applied only to the primary task. All of the subtasks will continue to use the original [RetentionTime][net_taskconstraint_retention].\n\nA compute node's recent task list will reflect the id of a subtask if the recent task was part of a multi-instance task.\n\n## Obtain information about subtasks\n\nTo obtain information on subtasks by using the Batch .NET library, call the [CloudTask.ListSubtasks][net_task_listsubtasks] method. This method returns information on all subtasks, and information about the compute node that executed the tasks. From this information, you can determine each subtask's root directory, the pool id, its current state, exit code, and more. You can use this information in combination with the [PoolOperations.GetNodeFile][poolops_getnodefile] method to obtain the subtask's files. Note that this method does not return information for the primary task (id 0).\n\n> [AZURE.NOTE] Unless otherwise stated, Batch .NET methods that operate on the multi-instance [CloudTask][net_task] itself apply *only* to the primary task. For example, when you call the [CloudTask.ListNodeFiles][net_task_listnodefiles] method on a multi-instance task, only the primary task's files are returned.\n\nThe following code snippet shows how to obtain subtask information, as well as request file contents from the nodes on which they executed.\n\n```\n// Obtain the job and the multi-instance task from the Batch service\nCloudJob boundJob = batchClient.JobOperations.GetJob(\"mybatchjob\");\nCloudTask myMultiInstanceTask = boundJob.GetTask(\"mymultiinstancetask\");\n\n// Now obtain the list of subtasks for the task\nIPagedEnumerable<SubtaskInformation> subtasks = myMultiInstanceTask.ListSubtasks();\n\n// Asynchronously iterate over the subtasks and print their stdout and stderr\n// output if the subtask has completed\nawait subtasks.ForEachAsync(async (subtask) =>\n{\n    Console.WriteLine(\"subtask: {0}\", subtask.Id);\n    Console.WriteLine(\"exit code: {0}\", subtask.ExitCode);\n\n    if (subtask.State == TaskState.Completed)\n    {\n        ComputeNode node =\n            await batchClient.PoolOperations.GetComputeNodeAsync(subtask.ComputeNodeInformation.PoolId,\n                                                                 subtask.ComputeNodeInformation.ComputeNodeId);\n\n        NodeFile stdOutFile = await node.GetNodeFileAsync(subtask.ComputeNodeInformation.TaskRootDirectory + \"\\\\\" + Constants.StandardOutFileName);\n        NodeFile stdErrFile = await node.GetNodeFileAsync(subtask.ComputeNodeInformation.TaskRootDirectory + \"\\\\\" + Constants.StandardErrorFileName);\n        stdOut = await stdOutFile.ReadAsStringAsync();\n        stdErr = await stdErrFile.ReadAsStringAsync();\n\n        Console.WriteLine(\"node: {0}:\", node.Id);\n        Console.WriteLine(\"stdout.txt: {0}\", stdOut);\n        Console.WriteLine(\"stderr.txt: {0}\", stdErr);\n    }\n    else\n    {\n        Console.WriteLine(\"\\tSubtask {0} is in state {1}\", subtask.Id, subtask.State);\n    }\n});\n```\n\n## Next steps\n\n- You may want to build a simple MS-MPI application to use while testing multi-instance tasks in Batch. The Microsoft HPC & Azure Batch Team blog article, [How to compile and run a simple MS-MPI program][msmpi_howto], contains a walk-through for creating a simple MPI application using MS-MPI.\n\n- Check out the [Microsoft MPI][msmpi_msdn] page on MSDN for the latest information on MS-MPI.\n\n[api_net]: http://msdn.microsoft.com/library/azure/mt348682.aspx\n[api_rest]: http://msdn.microsoft.com/library/azure/dn820158.aspx\n[batch_explorer]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer\n[cmd_start]: https://technet.microsoft.com/library/cc770297.aspx\n[github_samples]: https://github.com/Azure/azure-batch-samples\n[msmpi_msdn]: https://msdn.microsoft.com/library/bb524831.aspx\n[msmpi_sdk]: http://go.microsoft.com/FWLink/p/?LinkID=389556\n[msmpi_howto]: http://blogs.technet.com/b/windowshpc/archive/2015/02/02/how-to-compile-and-run-a-simple-ms-mpi-program.aspx\n\n[net_jobprep]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobpreparationtask.aspx\n[net_multiinstance_class]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.aspx\n[net_multiinstance_prop]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.multiinstancesettings.aspx\n[net_multiinsance_commonresfiles]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.commonresourcefiles.aspx\n[net_multiinstance_coordcmdline]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.coordinationcommandline.aspx\n[net_multiinstance_numinstances]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.numberofinstances.aspx\n[net_pool]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.aspx\n[net_pool_create]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.createpool.aspx\n[net_pool_starttask]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx\n[net_resourcefile]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.resourcefile.aspx\n[net_starttask]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.starttask.aspx\n[net_starttask_cmdline]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.starttask.commandline.aspx\n[net_task]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.aspx\n[net_taskconstraints]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.aspx\n[net_taskconstraint_maxretry]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.maxtaskretrycount.aspx\n[net_taskconstraint_maxwallclock]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.maxwallclocktime.aspx\n[net_taskconstraint_retention]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.taskconstraints.retentiontime.aspx\n[net_task_listsubtasks]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listsubtasks.aspx\n[net_task_listnodefiles]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listnodefiles.aspx\n[poolops_getnodefile]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.getnodefile.aspx\n\n[rest_multiinstance]: https://msdn.microsoft.com/library/azure/mt637905.aspx\n\n[1]: ./media/batch-mpi/batch_mpi_01.png \"Multi-instance overview\"\n"
+}
