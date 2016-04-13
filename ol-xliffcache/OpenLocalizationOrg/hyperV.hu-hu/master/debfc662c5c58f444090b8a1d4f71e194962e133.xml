@@ -1,0 +1,1385 @@
+{
+  "nodes": [
+    {
+      "content": "Protect VMs in Azure with Azure Backup | Microsoft Azure",
+      "pos": [
+        27,
+        83
+      ]
+    },
+    {
+      "content": "Protect Azure VMs with Azure Backup service.",
+      "pos": [
+        102,
+        146
+      ]
+    },
+    {
+      "content": "Tutorial explains create vault, register VMs, create policy, and protect VMs in Azure.",
+      "pos": [
+        147,
+        233
+      ]
+    },
+    {
+      "content": "First look: Backing up Azure virtual machines",
+      "pos": [
+        554,
+        599
+      ]
+    },
+    {
+      "content": "[AZURE.SELECTOR]",
+      "pos": [
+        603,
+        619
+      ]
+    },
+    {
+      "content": "Back up ARM VMs",
+      "pos": [
+        623,
+        638
+      ]
+    },
+    {
+      "content": "Back up Classic mode VMs",
+      "pos": [
+        679,
+        703
+      ]
+    },
+    {
+      "content": "This article is a tutorial that will take you through the set of steps for preparing your Azure environment to back up an Azure virtual machine (VM).",
+      "pos": [
+        738,
+        887
+      ]
+    },
+    {
+      "content": "This tutorial assumes you already have a VM in your Azure subscription and that you have taken the measures to allow the backup service to access the VM.",
+      "pos": [
+        888,
+        1041
+      ]
+    },
+    {
+      "content": "At a high level, here are the steps that you will complete.",
+      "pos": [
+        1042,
+        1101
+      ]
+    },
+    {
+      "content": "High-level view of VM backup process",
+      "pos": [
+        1107,
+        1143
+      ]
+    },
+    {
+      "content": "Create or sign in to your Azure subscription.",
+      "pos": [
+        1205,
+        1250
+      ]
+    },
+    {
+      "pos": [
+        1254,
+        1345
+      ],
+      "content": "Create a backup vault or identify an existing backup vault <bpt id=\"p1\">*</bpt>in the same region as your VM<ept id=\"p1\">*</ept>."
+    },
+    {
+      "content": "Use the Azure portal to discover and register the virtual machines in the subscription.",
+      "pos": [
+        1349,
+        1436
+      ]
+    },
+    {
+      "content": "Install the VM Agent on the virtual machine (if you are using a VM from the Azure gallery, the VM Agent will already be present).",
+      "pos": [
+        1440,
+        1569
+      ]
+    },
+    {
+      "content": "Create the policy for protecting the virtual machines.",
+      "pos": [
+        1573,
+        1627
+      ]
+    },
+    {
+      "content": "Run the backup.",
+      "pos": [
+        1631,
+        1646
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Azure has two deployment models for creating and working with resources: <bpt id=\"p1\">[</bpt>Resource Manager and classic<ept id=\"p1\">](../resource-manager-deployment-model.md)</ept>.",
+      "pos": [
+        1649,
+        1807
+      ]
+    },
+    {
+      "content": "Currently, the Azure Backup service does not support Azure Resource Manager (ARM)-based virtual machines - also known as IaaS V2 virtual machines.",
+      "pos": [
+        1808,
+        1954
+      ]
+    },
+    {
+      "content": "Since IaaS V2 VMs came about with the release of the new Azure portal, this tutorial is designed for use with the type of VMs that can be created in the Azure classic portal.",
+      "pos": [
+        1955,
+        2129
+      ]
+    },
+    {
+      "content": "Step 1 - Create a backup vault for a VM",
+      "pos": [
+        2135,
+        2174
+      ]
+    },
+    {
+      "content": "A backup vault is an entity that stores all the backups and recovery points that have been created over time.",
+      "pos": [
+        2176,
+        2285
+      ]
+    },
+    {
+      "content": "The backup vault also contains the backup policies that will be applied to the virtual machines being backed up.",
+      "pos": [
+        2286,
+        2398
+      ]
+    },
+    {
+      "content": "This image shows the relationships between the various Azure Backup entities:",
+      "pos": [
+        2400,
+        2477
+      ]
+    },
+    {
+      "content": "Azure Backup entities and relationships",
+      "pos": [
+        2484,
+        2523
+      ]
+    },
+    {
+      "content": "To create a backup vault:",
+      "pos": [
+        2580,
+        2605
+      ]
+    },
+    {
+      "pos": [
+        2610,
+        2673
+      ],
+      "content": "Sign in to the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](http://manage.windowsazure.com/)</ept>."
+    },
+    {
+      "pos": [
+        2678,
+        2816
+      ],
+      "content": "In the Azure portal click <bpt id=\"p1\">**</bpt>New<ept id=\"p1\">**</ept> &gt; <bpt id=\"p2\">**</bpt>Data Services<ept id=\"p2\">**</ept> &gt; <bpt id=\"p3\">**</bpt>Recovery Services<ept id=\"p3\">**</ept> &gt; <bpt id=\"p4\">**</bpt>Backup Vault<ept id=\"p4\">**</ept> &gt; <bpt id=\"p5\">**</bpt>Quick Create<ept id=\"p5\">**</ept> (see the image below)."
+    },
+    {
+      "content": "Create backup vault",
+      "pos": [
+        2824,
+        2843
+      ]
+    },
+    {
+      "content": "For <bpt id=\"p1\">**</bpt>Name<ept id=\"p1\">**</ept>, enter a friendly name to identify the vault.",
+      "pos": [
+        2909,
+        2967
+      ]
+    },
+    {
+      "content": "The name needs to be unique for the Azure subscription.",
+      "pos": [
+        2968,
+        3023
+      ]
+    },
+    {
+      "content": "Type a name that contains between 2 and 50 characters.",
+      "pos": [
+        3024,
+        3078
+      ]
+    },
+    {
+      "content": "It must start with a letter, and can contain only letters, numbers, and hyphens.",
+      "pos": [
+        3079,
+        3159
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>Region<ept id=\"p1\">**</ept>, select the geographic region for the vault.",
+      "pos": [
+        3164,
+        3222
+      ]
+    },
+    {
+      "content": "The vault <bpt id=\"p1\">**</bpt>must<ept id=\"p1\">**</ept> be in the same region as the virtual machines that you want to protect.",
+      "pos": [
+        3223,
+        3313
+      ]
+    },
+    {
+      "content": "If you are unsure of the region in which your VM exists, close out of the vault creation dialog, and go to the list of Virtual Machines in the portal.",
+      "pos": [
+        3319,
+        3469
+      ]
+    },
+    {
+      "content": "If you have virtual machines in multiple regions, you will need to create a backup vault in each region - although complete the creation of the vault in the first region before going to the next.",
+      "pos": [
+        3470,
+        3665
+      ]
+    },
+    {
+      "content": "There is no need to specify storage accounts to store the backup data--the backup vault and the Azure Backup service handle this automatically.",
+      "pos": [
+        3666,
+        3809
+      ]
+    },
+    {
+      "content": "In <bpt id=\"p1\">**</bpt>Subscription<ept id=\"p1\">**</ept> select the subscription you want to associate with the backup vault.",
+      "pos": [
+        3814,
+        3902
+      ]
+    },
+    {
+      "content": "There will be multiple choices only if your organizational account is associated with multiple Azure subscriptions.",
+      "pos": [
+        3903,
+        4018
+      ]
+    },
+    {
+      "content": "Click <bpt id=\"p1\">**</bpt>Create Vault<ept id=\"p1\">**</ept>.",
+      "pos": [
+        4023,
+        4046
+      ]
+    },
+    {
+      "content": "It can take a while for the backup vault to be created.",
+      "pos": [
+        4047,
+        4102
+      ]
+    },
+    {
+      "content": "Monitor the status notifications at the bottom of the portal.",
+      "pos": [
+        4103,
+        4164
+      ]
+    },
+    {
+      "content": "Create vault toast notification",
+      "pos": [
+        4172,
+        4203
+      ]
+    },
+    {
+      "content": "A message will confirm the vault has been successfully created.",
+      "pos": [
+        4269,
+        4332
+      ]
+    },
+    {
+      "content": "It will be listed on the <bpt id=\"p1\">**</bpt>recovery services<ept id=\"p1\">**</ept> page as <bpt id=\"p2\">**</bpt>Active<ept id=\"p2\">**</ept>.",
+      "pos": [
+        4333,
+        4399
+      ]
+    },
+    {
+      "content": "Create vault toast notification",
+      "pos": [
+        4407,
+        4438
+      ]
+    },
+    {
+      "pos": [
+        4511,
+        4627
+      ],
+      "content": "In the list of vaults on <bpt id=\"p1\">**</bpt>Recovery Services<ept id=\"p1\">**</ept> page, click the vault you created to launch the <bpt id=\"p2\">**</bpt>Quick Start<ept id=\"p2\">**</ept> page."
+    },
+    {
+      "content": "List of backup vaults",
+      "pos": [
+        4635,
+        4656
+      ]
+    },
+    {
+      "pos": [
+        4721,
+        4897
+      ],
+      "content": "On the **Quick Start** page, click **Configure** to open the storage replication option.\n ![List of backup vaults](./media/backup-azure-vms-first-look/configure-storage.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p1\">**</bpt>Quick Start<ept id=\"p1\">**</ept> page, click <bpt id=\"p2\">**</bpt>Configure<ept id=\"p2\">**</ept> to open the storage replication option.",
+          "pos": [
+            0,
+            88
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>List of backup vaults<ph id=\"ph2\">](./media/backup-azure-vms-first-look/configure-storage.png)</ph>",
+          "pos": [
+            89,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        4902,
+        4986
+      ],
+      "content": "On the <bpt id=\"p1\">**</bpt>storage replication<ept id=\"p1\">**</ept> option, choose the replication option for your vault."
+    },
+    {
+      "content": "List of backup vaults",
+      "pos": [
+        4994,
+        5015
+      ]
+    },
+    {
+      "content": "By default, your vault has geo-redundant storage.",
+      "pos": [
+        5099,
+        5148
+      ]
+    },
+    {
+      "content": "If you are using Azure as a primary backup storage endpoint, it is recommended that you continue using geo-redundant storage.",
+      "pos": [
+        5149,
+        5274
+      ]
+    },
+    {
+      "content": "If you are using Azure as  non-primary backup storage endpoint, then you can consider choosing locally redundant storage, which will reduce the cost of storing data in Azure.",
+      "pos": [
+        5275,
+        5449
+      ]
+    },
+    {
+      "content": "Read more about <bpt id=\"p1\">[</bpt>geo-redundant<ept id=\"p1\">](../storage/storage-redundancy.md#geo-redundant-storage)</ept> and <bpt id=\"p2\">[</bpt>locally redundant<ept id=\"p2\">](../storage/storage-redundancy.md#locally-redundant-storage)</ept> storage options in this <bpt id=\"p3\">[</bpt>overview<ept id=\"p3\">](../storage/storage-redundancy.md)</ept>.",
+      "pos": [
+        5450,
+        5691
+      ]
+    },
+    {
+      "content": "After choosing the storage option for your vault, you are ready to associate the VM with the vault.",
+      "pos": [
+        5693,
+        5792
+      ]
+    },
+    {
+      "content": "To begin the association, you should discover and register the Azure virtual machines.",
+      "pos": [
+        5793,
+        5879
+      ]
+    },
+    {
+      "content": "Step 2 - Discover and Register Azure virtual machines",
+      "pos": [
+        5884,
+        5937
+      ]
+    },
+    {
+      "content": "Before registering the a VM with a vault, run the discovery process to ensure that any new virtual machines that have been added to the subscription are identified.",
+      "pos": [
+        5938,
+        6102
+      ]
+    },
+    {
+      "content": "The process queries Azure for the list of virtual machines in the subscription, along with additional information like the cloud service name and the region.",
+      "pos": [
+        6103,
+        6260
+      ]
+    },
+    {
+      "pos": [
+        6265,
+        6327
+      ],
+      "content": "Sign in to the <bpt id=\"p1\">[</bpt>Azure portal<ept id=\"p1\">](http://manage.windowsazure.com/)</ept>"
+    },
+    {
+      "pos": [
+        6332,
+        6521
+      ],
+      "content": "In the Azure classic portal, click **Recovery Services** to open the list of Recovery Services vaults.\n ![Select workload](./media/backup-azure-vms-first-look/recovery-services-icon.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "In the Azure classic portal, click <bpt id=\"p1\">**</bpt>Recovery Services<ept id=\"p1\">**</ept> to open the list of Recovery Services vaults.",
+          "pos": [
+            0,
+            102
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Select workload<ph id=\"ph2\">](./media/backup-azure-vms-first-look/recovery-services-icon.png)</ph>",
+          "pos": [
+            103,
+            186
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        6526,
+        6620
+      ],
+      "content": "In the list of <bpt id=\"p1\">**</bpt>Recovery Services<ept id=\"p1\">**</ept> vaults, select the vault you want to use to back up a VM."
+    },
+    {
+      "pos": [
+        6626,
+        6694
+      ],
+      "content": "When you select your vault, it will open in the <bpt id=\"p1\">**</bpt>Quick Start<ept id=\"p1\">**</ept> page"
+    },
+    {
+      "pos": [
+        6699,
+        6772
+      ],
+      "content": "From the vault menu (at the top of the page), click <bpt id=\"p1\">**</bpt>Registered Items<ept id=\"p1\">**</ept>."
+    },
+    {
+      "pos": [
+        6777,
+        6834
+      ],
+      "content": "From the <bpt id=\"p1\">**</bpt>Type<ept id=\"p1\">**</ept> menu, select <bpt id=\"p2\">**</bpt>Azure Virtual Machine<ept id=\"p2\">**</ept>."
+    },
+    {
+      "content": "Select workload",
+      "pos": [
+        6842,
+        6857
+      ]
+    },
+    {
+      "pos": [
+        6919,
+        7038
+      ],
+      "content": "Click **DISCOVER** at the bottom of the page.\n ![Discover button](./media/backup-azure-vms/discover-button-only.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Click <bpt id=\"p1\">**</bpt>DISCOVER<ept id=\"p1\">**</ept> at the bottom of the page.",
+          "pos": [
+            0,
+            45
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Discover button<ph id=\"ph2\">](./media/backup-azure-vms/discover-button-only.png)</ph>",
+          "pos": [
+            46,
+            116
+          ]
+        }
+      ]
+    },
+    {
+      "content": "The discovery process may take a few minutes while the virtual machines are being tabulated.",
+      "pos": [
+        7044,
+        7136
+      ]
+    },
+    {
+      "content": "There is a notification at the bottom of the screen that lets you know that the process is running.",
+      "pos": [
+        7137,
+        7236
+      ]
+    },
+    {
+      "content": "Discover VMs",
+      "pos": [
+        7244,
+        7256
+      ]
+    },
+    {
+      "content": "The notification changes when the process is complete.",
+      "pos": [
+        7309,
+        7363
+      ]
+    },
+    {
+      "content": "Discovery done",
+      "pos": [
+        7371,
+        7385
+      ]
+    },
+    {
+      "pos": [
+        7451,
+        7574
+      ],
+      "content": "Click **REGISTER** at the bottom of the page.\n ![Register button](./media/backup-azure-vms-first-look/register-icon.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Click <bpt id=\"p1\">**</bpt>REGISTER<ept id=\"p1\">**</ept> at the bottom of the page.",
+          "pos": [
+            0,
+            45
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Register button<ph id=\"ph2\">](./media/backup-azure-vms-first-look/register-icon.png)</ph>",
+          "pos": [
+            46,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "content": "In the <bpt id=\"p1\">**</bpt>Register Items<ept id=\"p1\">**</ept> shortcut menu, select the virtual machines that you want to register.",
+      "pos": [
+        7579,
+        7674
+      ]
+    },
+    {
+      "content": "If there are two or more virtual machines with the same name, use the cloud service to distinguish between them.",
+      "pos": [
+        7675,
+        7787
+      ]
+    },
+    {
+      "pos": [
+        7794,
+        7862
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> Multiple virtual machines can be registered at one time."
+    },
+    {
+      "content": "A job is created for each virtual machine that you've selected.",
+      "pos": [
+        7868,
+        7931
+      ]
+    },
+    {
+      "pos": [
+        7936,
+        8002
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>View Job<ept id=\"p1\">**</ept> in the notification to go to the <bpt id=\"p2\">**</bpt>Jobs<ept id=\"p2\">**</ept> page."
+    },
+    {
+      "content": "Register job",
+      "pos": [
+        8010,
+        8022
+      ]
+    },
+    {
+      "content": "The virtual machine also appears in the list of registered items, along with the status of the registration operation.",
+      "pos": [
+        8079,
+        8197
+      ]
+    },
+    {
+      "content": "Registering status 1",
+      "pos": [
+        8205,
+        8225
+      ]
+    },
+    {
+      "pos": [
+        8280,
+        8367
+      ],
+      "content": "When the operation completes, the status will change to reflect the <bpt id=\"p1\">*</bpt>registered<ept id=\"p1\">*</ept> state."
+    },
+    {
+      "content": "Registration status 2",
+      "pos": [
+        8375,
+        8396
+      ]
+    },
+    {
+      "content": "Step 3 - Install the VM Agent on the virtual machine",
+      "pos": [
+        8450,
+        8502
+      ]
+    },
+    {
+      "content": "The Azure VM Agent must be installed on the Azure virtual machine for the Backup extension to work.",
+      "pos": [
+        8504,
+        8603
+      ]
+    },
+    {
+      "content": "If your VM was created from the Azure gallery, then the VM Agent is already present on the virtual machine.",
+      "pos": [
+        8604,
+        8711
+      ]
+    },
+    {
+      "content": "However, VMs that are migrated from on-premises datacenters would not have the VM Agent installed.",
+      "pos": [
+        8712,
+        8810
+      ]
+    },
+    {
+      "content": "In such a case, the VM Agent needs to be installed explicitly.",
+      "pos": [
+        8811,
+        8873
+      ]
+    },
+    {
+      "content": "Before you attempt to back up the Azure VM, check that the Azure VM Agent is correctly installed on the virtual machine (see the table below).",
+      "pos": [
+        8874,
+        9016
+      ]
+    },
+    {
+      "content": "If you creating a custom VM, <bpt id=\"p1\">[</bpt>ensure that the <bpt id=\"p2\">**</bpt>Install the VM Agent<ept id=\"p2\">**</ept> check box is selected<ept id=\"p1\">](../virtual-machines/virtual-machines-windows-classic-agents-and-extensions.md)</ept> before the virtual machine is provisioned.",
+      "pos": [
+        9017,
+        9232
+      ]
+    },
+    {
+      "pos": [
+        9234,
+        9420
+      ],
+      "content": "Learn about the <bpt id=\"p1\">[</bpt>VM Agent<ept id=\"p1\">](https://go.microsoft.com/fwLink/?LinkID=390493&amp;clcid=0x409)</ept> and <bpt id=\"p2\">[</bpt>how to install it<ept id=\"p2\">](../virtual-machines/virtual-machines-windows-classic-manage-extensions.md)</ept>."
+    },
+    {
+      "content": "The following table provides additional information about the VM Agent for Windows and Linux VMs.",
+      "pos": [
+        9422,
+        9519
+      ]
+    },
+    {
+      "content": "Operation",
+      "pos": [
+        9525,
+        9534
+      ]
+    },
+    {
+      "content": "Windows",
+      "pos": [
+        9541,
+        9548
+      ]
+    },
+    {
+      "content": "Linux",
+      "pos": [
+        9555,
+        9560
+      ]
+    },
+    {
+      "content": "Installing the VM Agent",
+      "pos": [
+        9587,
+        9610
+      ]
+    },
+    {
+      "content": "Download and install the <bpt id=\"p1\">[</bpt>agent MSI<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkID=394789&amp;clcid=0x409)</ept>.",
+      "pos": [
+        9617,
+        9713
+      ]
+    },
+    {
+      "content": "You will need Administrator privileges to complete the installation.",
+      "pos": [
+        9714,
+        9782
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>Update the VM property<ept id=\"p1\">](http://blogs.msdn.com/b/mast/archive/2014/04/08/install-the-vm-agent-on-an-existing-azure-vm.aspx)</ept> to indicate that the agent is installed.",
+      "pos": [
+        9787,
+        9951
+      ]
+    },
+    {
+      "content": "Install the latest <bpt id=\"p1\">[</bpt>Linux agent<ept id=\"p1\">](https://github.com/Azure/WALinuxAgent)</ept> from GitHub.",
+      "pos": [
+        9959,
+        10043
+      ]
+    },
+    {
+      "content": "You will need Administrator privileges to complete the installation.",
+      "pos": [
+        10044,
+        10112
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>Update the VM property<ept id=\"p1\">](http://blogs.msdn.com/b/mast/archive/2014/04/08/install-the-vm-agent-on-an-existing-azure-vm.aspx)</ept> to indicate that the agent is installed.",
+      "pos": [
+        10118,
+        10282
+      ]
+    },
+    {
+      "content": "Updating the VM Agent",
+      "pos": [
+        10287,
+        10308
+      ]
+    },
+    {
+      "content": "Updating the VM Agent is as simple as reinstalling the <bpt id=\"p1\">[</bpt>VM Agent binaries<ept id=\"p1\">](http://go.microsoft.com/fwlink/?LinkID=394789&amp;clcid=0x409)</ept>.",
+      "pos": [
+        10311,
+        10445
+      ]
+    },
+    {
+      "content": "Ensure that no backup operation is running while the VM agent is being updated.",
+      "pos": [
+        10450,
+        10529
+      ]
+    },
+    {
+      "content": "Follow the instructions on <bpt id=\"p1\">[</bpt>updating the Linux VM Agent <ept id=\"p1\">](../virtual-machines-linux-update-agent.md)</ept>.",
+      "pos": [
+        10532,
+        10633
+      ]
+    },
+    {
+      "content": "Ensure that no backup operation is running while the VM Agent is being updated.",
+      "pos": [
+        10638,
+        10717
+      ]
+    },
+    {
+      "content": "Validating the VM Agent installation",
+      "pos": [
+        10722,
+        10758
+      ]
+    },
+    {
+      "content": "Navigate to the <bpt id=\"p1\">*</bpt>C:\\WindowsAzure\\Packages<ept id=\"p1\">*</ept> folder in the Azure VM.",
+      "pos": [
+        10765,
+        10831
+      ]
+    },
+    {
+      "content": "You should find the WaAppAgent.exe file present.",
+      "pos": [
+        10836,
+        10884
+      ]
+    },
+    {
+      "content": "Right-click the file, go to <bpt id=\"p1\">**</bpt>Properties<ept id=\"p1\">**</ept>, and then select the <bpt id=\"p2\">**</bpt>Details<ept id=\"p2\">**</ept> tab.",
+      "pos": [
+        10889,
+        10969
+      ]
+    },
+    {
+      "content": "The Product Version field should be 2.6.1198.718 or higher.",
+      "pos": [
+        10970,
+        11029
+      ]
+    },
+    {
+      "content": "N/A",
+      "pos": [
+        11032,
+        11035
+      ]
+    },
+    {
+      "content": "Backup extension",
+      "pos": [
+        11044,
+        11060
+      ]
+    },
+    {
+      "content": "Once the VM Agent is installed on the virtual machine, the Azure Backup service installs the backup extension to the VM Agent.",
+      "pos": [
+        11062,
+        11188
+      ]
+    },
+    {
+      "content": "The Azure Backup service seamlessly upgrades and patches the backup extension without additional user intervention.",
+      "pos": [
+        11189,
+        11304
+      ]
+    },
+    {
+      "content": "The backup extension is installed by the Backup service whether or not the VM is running.",
+      "pos": [
+        11306,
+        11395
+      ]
+    },
+    {
+      "content": "A running VM provides the greatest chance of getting an application-consistent recovery point.",
+      "pos": [
+        11396,
+        11490
+      ]
+    },
+    {
+      "content": "However, the Azure Backup service will continue to back up the VM even if it is turned off, and the extension could not be installed.",
+      "pos": [
+        11491,
+        11624
+      ]
+    },
+    {
+      "content": "This is known as Offline VM.",
+      "pos": [
+        11625,
+        11653
+      ]
+    },
+    {
+      "content": "In this case, the recovery point will be <bpt id=\"p1\">*</bpt>crash consistent<ept id=\"p1\">*</ept>.",
+      "pos": [
+        11654,
+        11714
+      ]
+    },
+    {
+      "content": "Step 4 - Protect Azure virtual machines",
+      "pos": [
+        11720,
+        11759
+      ]
+    },
+    {
+      "content": "Now you can set up a backup and retention policy for the virtual machine.",
+      "pos": [
+        11760,
+        11833
+      ]
+    },
+    {
+      "content": "Multiple virtual machines can be protected by using a single protect action.",
+      "pos": [
+        11834,
+        11910
+      ]
+    },
+    {
+      "content": "Azure Backup vaults created after May 2015 come with a default policy built into the vault.",
+      "pos": [
+        11911,
+        12002
+      ]
+    },
+    {
+      "content": "This default policy comes with a default retention of 30 days and a once-daily backup schedule.",
+      "pos": [
+        12003,
+        12098
+      ]
+    },
+    {
+      "pos": [
+        12103,
+        12217
+      ],
+      "content": "Navigate to the backup vault under <bpt id=\"p1\">**</bpt>Recovery Services<ept id=\"p1\">**</ept> in the Azure portal, and then click <bpt id=\"p2\">**</bpt>Registered Items<ept id=\"p2\">**</ept>."
+    },
+    {
+      "pos": [
+        12221,
+        12278
+      ],
+      "content": "Select <bpt id=\"p1\">**</bpt>Azure Virtual Machine<ept id=\"p1\">**</ept> from the drop-down menu."
+    },
+    {
+      "content": "Select workload in portal",
+      "pos": [
+        12286,
+        12311
+      ]
+    },
+    {
+      "pos": [
+        12363,
+        12482
+      ],
+      "content": "Click **PROTECT** at the bottom of the page.\n ![Click Protect](./media/backup-azure-vms-first-look/protect-icon.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "Click <bpt id=\"p1\">**</bpt>PROTECT<ept id=\"p1\">**</ept> at the bottom of the page.",
+          "pos": [
+            0,
+            44
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Click Protect<ph id=\"ph2\">](./media/backup-azure-vms-first-look/protect-icon.png)</ph>",
+          "pos": [
+            45,
+            116
+          ]
+        }
+      ]
+    },
+    {
+      "pos": [
+        12488,
+        12597
+      ],
+      "content": "The <bpt id=\"p1\">**</bpt>Protect Items wizard<ept id=\"p1\">**</ept> appears and lists <bpt id=\"p2\">*</bpt>only<ept id=\"p2\">*</ept> virtual machines that are registered and not protected."
+    },
+    {
+      "content": "Configure protection at scale",
+      "pos": [
+        12605,
+        12634
+      ]
+    },
+    {
+      "content": "Select the virtual machines that you want to protect.",
+      "pos": [
+        12687,
+        12740
+      ]
+    },
+    {
+      "content": "If there are two or more virtual machines with the same name, use the Cloud Service to distinguish between the virtual machines.",
+      "pos": [
+        12746,
+        12874
+      ]
+    },
+    {
+      "pos": [
+        12879,
+        13008
+      ],
+      "content": "On <bpt id=\"p1\">**</bpt>Configure protection<ept id=\"p1\">**</ept> select an existing policy or create a new policy to protect the virtual machines that you identified."
+    },
+    {
+      "content": "Each backup policy can have multiple virtual machines associated with it.",
+      "pos": [
+        13014,
+        13087
+      ]
+    },
+    {
+      "content": "However, the virtual machine can only be associated with one policy at any given point in time.",
+      "pos": [
+        13088,
+        13183
+      ]
+    },
+    {
+      "content": "Protect with new policy",
+      "pos": [
+        13191,
+        13214
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> A backup policy includes a retention scheme for the scheduled backups.",
+      "pos": [
+        13268,
+        13351
+      ]
+    },
+    {
+      "content": "If you select an existing backup policy, you will be unable to modify the retention options in the next step.",
+      "pos": [
+        13352,
+        13461
+      ]
+    },
+    {
+      "pos": [
+        13466,
+        13572
+      ],
+      "content": "On <bpt id=\"p1\">**</bpt>Retention Range<ept id=\"p1\">**</ept> define the daily, weekly, monthly, and yearly scope for the specific backup points."
+    },
+    {
+      "content": "Protect with flexible retention",
+      "pos": [
+        13580,
+        13611
+      ]
+    },
+    {
+      "content": "Retention policy specifies the length of time for storing a backup.",
+      "pos": [
+        13665,
+        13732
+      ]
+    },
+    {
+      "content": "You can specify different retention policies based on when the backup is taken.",
+      "pos": [
+        13733,
+        13812
+      ]
+    },
+    {
+      "content": "For example, a backup point taken at the end of each quarter may need to be preserved for a longer period (for audit purposes) - while the backup point taken daily (which serves as an operational recovery point) only needs to be preserved for 90 days.",
+      "pos": [
+        13813,
+        14064
+      ]
+    },
+    {
+      "content": "Virtual machine is backed up with recovery point",
+      "pos": [
+        14072,
+        14120
+      ]
+    },
+    {
+      "content": "In this example image:",
+      "pos": [
+        14177,
+        14199
+      ]
+    },
+    {
+      "pos": [
+        14207,
+        14278
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Daily retention policy<ept id=\"p1\">**</ept>: Backups taken daily are stored for 30 days."
+    },
+    {
+      "pos": [
+        14285,
+        14381
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Weekly retention policy<ept id=\"p1\">**</ept>: Backups taken every week on Sunday will be preserved for 104 weeks."
+    },
+    {
+      "pos": [
+        14388,
+        14498
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Monthly retention policy<ept id=\"p1\">**</ept>: Backups taken on the last Sunday of each month will be preserved for 120 months."
+    },
+    {
+      "pos": [
+        14505,
+        14616
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Yearly retention policy<ept id=\"p1\">**</ept>: Backups taken on the first Sunday of every January will be preserved for 99 years."
+    },
+    {
+      "content": "A job is created to configure the protection policy and associate the virtual machines to that policy for each virtual machine that you've selected.",
+      "pos": [
+        14622,
+        14770
+      ]
+    },
+    {
+      "pos": [
+        14775,
+        14867
+      ],
+      "content": "Click <bpt id=\"p1\">**</bpt>Job<ept id=\"p1\">**</ept> and choose the right filter to view the list of <bpt id=\"p2\">**</bpt>Configure Protection<ept id=\"p2\">**</ept> jobs."
+    },
+    {
+      "content": "Configure protection job",
+      "pos": [
+        14875,
+        14899
+      ]
+    },
+    {
+      "content": "Step 5 - Initial backup",
+      "pos": [
+        14964,
+        14987
+      ]
+    },
+    {
+      "content": "Once a virtual machine has been protected with a policy, you can view that relationship on the <bpt id=\"p1\">**</bpt>Protected Items<ept id=\"p1\">**</ept> tab.",
+      "pos": [
+        14989,
+        15108
+      ]
+    },
+    {
+      "content": "Until the initial backup for a VM has occurred, the <bpt id=\"p1\">**</bpt>Protection Status<ept id=\"p1\">**</ept> shows as <bpt id=\"p2\">**</bpt>Protected - (pending initial backup)<ept id=\"p2\">**</ept>.",
+      "pos": [
+        15109,
+        15233
+      ]
+    },
+    {
+      "content": "By default, the first scheduled backup is the <bpt id=\"p1\">*</bpt>initial backup<ept id=\"p1\">*</ept>.",
+      "pos": [
+        15234,
+        15297
+      ]
+    },
+    {
+      "content": "Backup pending",
+      "pos": [
+        15301,
+        15315
+      ]
+    },
+    {
+      "content": "To trigger the initial backup immediately after configuring protection:",
+      "pos": [
+        15385,
+        15456
+      ]
+    },
+    {
+      "pos": [
+        15461,
+        15631
+      ],
+      "content": "On the **Protected Items** page click the **Backup Now** button at the bottom of the page.\n ![Backup Now icon](./media/backup-azure-vms-first-look/backup-now-icon.png)",
+      "leadings": [
+        "",
+        "   "
+      ],
+      "nodes": [
+        {
+          "content": "On the <bpt id=\"p1\">**</bpt>Protected Items<ept id=\"p1\">**</ept> page click the <bpt id=\"p2\">**</bpt>Backup Now<ept id=\"p2\">**</ept> button at the bottom of the page.",
+          "pos": [
+            0,
+            90
+          ]
+        },
+        {
+          "content": "<ph id=\"ph1\"> ![</ph>Backup Now icon<ph id=\"ph2\">](./media/backup-azure-vms-first-look/backup-now-icon.png)</ph>",
+          "pos": [
+            91,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "content": "The Azure Backup service creates a backup job for the initial backup operation.",
+      "pos": [
+        15637,
+        15716
+      ]
+    },
+    {
+      "pos": [
+        15721,
+        15769
+      ],
+      "content": "Click the <bpt id=\"p1\">**</bpt>Jobs<ept id=\"p1\">**</ept> tab to view the list of jobs."
+    },
+    {
+      "content": "Backup in progress",
+      "pos": [
+        15777,
+        15795
+      ]
+    },
+    {
+      "pos": [
+        15863,
+        16052
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> As a part of the backup operation, the Azure Backup service issues a command to the backup extension in each virtual machine to flush all writes and take a consistent snapshot."
+    },
+    {
+      "pos": [
+        16058,
+        16176
+      ],
+      "content": "When initial backup is complete, the status of the virtual machine in the <bpt id=\"p1\">**</bpt>Protected Items<ept id=\"p1\">**</ept> tab will be <bpt id=\"p2\">*</bpt>Protected<ept id=\"p2\">*</ept>."
+    },
+    {
+      "content": "Virtual machine is backed up with recovery point",
+      "pos": [
+        16184,
+        16232
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Backing up virtual machines is a local process.",
+      "pos": [
+        16289,
+        16349
+      ]
+    },
+    {
+      "content": "You cannot back up virtual machines from one region to a backup vault in another region.",
+      "pos": [
+        16350,
+        16438
+      ]
+    },
+    {
+      "content": "So, for every Azure region that has VMs that need to be backed up, at least one backup vault must be created in that region.",
+      "pos": [
+        16439,
+        16563
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        16568,
+        16578
+      ]
+    },
+    {
+      "content": "Now that you have successfully backed up a VM, there are several next steps that could be of interest.",
+      "pos": [
+        16579,
+        16681
+      ]
+    },
+    {
+      "content": "The most logical step is to familiarize yourself with restoring data to a VM, however there are management tasks that will help you understand how to keep your data safe and keep costs down.",
+      "pos": [
+        16682,
+        16872
+      ]
+    },
+    {
+      "content": "Manage and monitor your virtual machines",
+      "pos": [
+        16877,
+        16917
+      ]
+    },
+    {
+      "content": "Restore virtual machines",
+      "pos": [
+        16950,
+        16974
+      ]
+    },
+    {
+      "content": "Troubleshooting guidance",
+      "pos": [
+        17008,
+        17032
+      ]
+    },
+    {
+      "content": "Questions?",
+      "pos": [
+        17073,
+        17083
+      ]
+    },
+    {
+      "pos": [
+        17084,
+        17226
+      ],
+      "content": "If you have questions, or if there is any feature that you would like to see included, <bpt id=\"p1\">[</bpt>send us feedback<ept id=\"p1\">](http://aka.ms/azurebackup_feedback)</ept>."
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Protect VMs in Azure with Azure Backup | Microsoft Azure\"\n    description=\"Protect Azure VMs with Azure Backup service. Tutorial explains create vault, register VMs, create policy, and protect VMs in Azure.\"\n    services=\"backup\"\n    documentationCenter=\"\"\n    authors=\"markgalioto\"\n    manager=\"jwhit\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"backup\"\n    ms.workload=\"storage-backup-recovery\"\n    ms.tgt_pltfrm=\"na\"\n    ms.devlang=\"na\"\n    ms.topic=\"hero-article\"\n    ms.date=\"03/30/2016\"\n    ms.author=\"markgal; jimpark\"/>\n\n\n# First look: Backing up Azure virtual machines\n\n> [AZURE.SELECTOR]\n- [Back up ARM VMs](backup-azure-vms-first-look-arm.md)\n- [Back up Classic mode VMs](backup-azure-vms-first-look.md)\n\nThis article is a tutorial that will take you through the set of steps for preparing your Azure environment to back up an Azure virtual machine (VM). This tutorial assumes you already have a VM in your Azure subscription and that you have taken the measures to allow the backup service to access the VM. At a high level, here are the steps that you will complete.  \n\n![High-level view of VM backup process](./media/backup-azure-vms-first-look/BackupAzureVM.png)\n\n\n1. Create or sign in to your Azure subscription.\n2. Create a backup vault or identify an existing backup vault *in the same region as your VM*.\n3. Use the Azure portal to discover and register the virtual machines in the subscription.\n4. Install the VM Agent on the virtual machine (if you are using a VM from the Azure gallery, the VM Agent will already be present).\n5. Create the policy for protecting the virtual machines.\n6. Run the backup.\n\n>[AZURE.NOTE] Azure has two deployment models for creating and working with resources: [Resource Manager and classic](../resource-manager-deployment-model.md). Currently, the Azure Backup service does not support Azure Resource Manager (ARM)-based virtual machines - also known as IaaS V2 virtual machines. Since IaaS V2 VMs came about with the release of the new Azure portal, this tutorial is designed for use with the type of VMs that can be created in the Azure classic portal.\n\n\n## Step 1 - Create a backup vault for a VM\n\nA backup vault is an entity that stores all the backups and recovery points that have been created over time. The backup vault also contains the backup policies that will be applied to the virtual machines being backed up.\n\nThis image shows the relationships between the various Azure Backup entities:\n    ![Azure Backup entities and relationships](./media/backup-azure-vms-prepare/vault-policy-vm.png)\n\nTo create a backup vault:\n\n1. Sign in to the [Azure portal](http://manage.windowsazure.com/).\n\n2. In the Azure portal click **New** > **Data Services** > **Recovery Services** > **Backup Vault** > **Quick Create** (see the image below).\n\n    ![Create backup vault](./media/backup-azure-vms-first-look/backup-vaultcreate.png)\n\n3. For **Name**, enter a friendly name to identify the vault. The name needs to be unique for the Azure subscription. Type a name that contains between 2 and 50 characters. It must start with a letter, and can contain only letters, numbers, and hyphens.\n\n4. In **Region**, select the geographic region for the vault. The vault **must** be in the same region as the virtual machines that you want to protect.\n\n    If you are unsure of the region in which your VM exists, close out of the vault creation dialog, and go to the list of Virtual Machines in the portal. If you have virtual machines in multiple regions, you will need to create a backup vault in each region - although complete the creation of the vault in the first region before going to the next. There is no need to specify storage accounts to store the backup data--the backup vault and the Azure Backup service handle this automatically.\n\n5. In **Subscription** select the subscription you want to associate with the backup vault. There will be multiple choices only if your organizational account is associated with multiple Azure subscriptions.\n\n6. Click **Create Vault**. It can take a while for the backup vault to be created. Monitor the status notifications at the bottom of the portal.\n\n    ![Create vault toast notification](./media/backup-azure-vms-first-look/create-vault-demo.png)\n\n    A message will confirm the vault has been successfully created. It will be listed on the **recovery services** page as **Active**.\n\n    ![Create vault toast notification](./media/backup-azure-vms-first-look/create-vault-demo-success.png)\n\n7. In the list of vaults on **Recovery Services** page, click the vault you created to launch the **Quick Start** page.\n\n    ![List of backup vaults](./media/backup-azure-vms-first-look/active-vault-demo.png)\n\n8. On the **Quick Start** page, click **Configure** to open the storage replication option.\n    ![List of backup vaults](./media/backup-azure-vms-first-look/configure-storage.png)\n\n9. On the **storage replication** option, choose the replication option for your vault.\n\n    ![List of backup vaults](./media/backup-azure-vms-first-look/backup-vault-storage-options-border.png)\n\n    By default, your vault has geo-redundant storage. If you are using Azure as a primary backup storage endpoint, it is recommended that you continue using geo-redundant storage. If you are using Azure as  non-primary backup storage endpoint, then you can consider choosing locally redundant storage, which will reduce the cost of storing data in Azure. Read more about [geo-redundant](../storage/storage-redundancy.md#geo-redundant-storage) and [locally redundant](../storage/storage-redundancy.md#locally-redundant-storage) storage options in this [overview](../storage/storage-redundancy.md).\n\nAfter choosing the storage option for your vault, you are ready to associate the VM with the vault. To begin the association, you should discover and register the Azure virtual machines.\n\n## Step 2 - Discover and Register Azure virtual machines\nBefore registering the a VM with a vault, run the discovery process to ensure that any new virtual machines that have been added to the subscription are identified. The process queries Azure for the list of virtual machines in the subscription, along with additional information like the cloud service name and the region.\n\n1. Sign in to the [Azure portal](http://manage.windowsazure.com/)\n\n2. In the Azure classic portal, click **Recovery Services** to open the list of Recovery Services vaults.\n    ![Select workload](./media/backup-azure-vms-first-look/recovery-services-icon.png)\n\n3. In the list of **Recovery Services** vaults, select the vault you want to use to back up a VM.\n\n    When you select your vault, it will open in the **Quick Start** page\n\n4. From the vault menu (at the top of the page), click **Registered Items**.\n\n5. From the **Type** menu, select **Azure Virtual Machine**.\n\n    ![Select workload](./media/backup-azure-vms/discovery-select-workload.png)\n\n6. Click **DISCOVER** at the bottom of the page.\n    ![Discover button](./media/backup-azure-vms/discover-button-only.png)\n\n    The discovery process may take a few minutes while the virtual machines are being tabulated. There is a notification at the bottom of the screen that lets you know that the process is running.\n\n    ![Discover VMs](./media/backup-azure-vms/discovering-vms.png)\n\n    The notification changes when the process is complete.\n\n    ![Discovery done](./media/backup-azure-vms-first-look/discovery-complete.png)\n\n7. Click **REGISTER** at the bottom of the page.\n    ![Register button](./media/backup-azure-vms-first-look/register-icon.png)\n\n8. In the **Register Items** shortcut menu, select the virtual machines that you want to register. If there are two or more virtual machines with the same name, use the cloud service to distinguish between them.\n\n    >[AZURE.TIP] Multiple virtual machines can be registered at one time.\n\n    A job is created for each virtual machine that you've selected.\n\n9. Click **View Job** in the notification to go to the **Jobs** page.\n\n    ![Register job](./media/backup-azure-vms/register-create-job.png)\n\n    The virtual machine also appears in the list of registered items, along with the status of the registration operation.\n\n    ![Registering status 1](./media/backup-azure-vms/register-status01.png)\n\n    When the operation completes, the status will change to reflect the *registered* state.\n\n    ![Registration status 2](./media/backup-azure-vms/register-status02.png)\n\n## Step 3 - Install the VM Agent on the virtual machine\n\nThe Azure VM Agent must be installed on the Azure virtual machine for the Backup extension to work. If your VM was created from the Azure gallery, then the VM Agent is already present on the virtual machine. However, VMs that are migrated from on-premises datacenters would not have the VM Agent installed. In such a case, the VM Agent needs to be installed explicitly. Before you attempt to back up the Azure VM, check that the Azure VM Agent is correctly installed on the virtual machine (see the table below). If you creating a custom VM, [ensure that the **Install the VM Agent** check box is selected](../virtual-machines/virtual-machines-windows-classic-agents-and-extensions.md) before the virtual machine is provisioned.\n\nLearn about the [VM Agent](https://go.microsoft.com/fwLink/?LinkID=390493&clcid=0x409) and [how to install it](../virtual-machines/virtual-machines-windows-classic-manage-extensions.md).\n\nThe following table provides additional information about the VM Agent for Windows and Linux VMs.\n\n| **Operation** | **Windows** | **Linux** |\n| --- | --- | --- |\n| Installing the VM Agent | <li>Download and install the [agent MSI](http://go.microsoft.com/fwlink/?LinkID=394789&clcid=0x409). You will need Administrator privileges to complete the installation. <li>[Update the VM property](http://blogs.msdn.com/b/mast/archive/2014/04/08/install-the-vm-agent-on-an-existing-azure-vm.aspx) to indicate that the agent is installed. | <li> Install the latest [Linux agent](https://github.com/Azure/WALinuxAgent) from GitHub. You will need Administrator privileges to complete the installation. <li> [Update the VM property](http://blogs.msdn.com/b/mast/archive/2014/04/08/install-the-vm-agent-on-an-existing-azure-vm.aspx) to indicate that the agent is installed. |\n| Updating the VM Agent | Updating the VM Agent is as simple as reinstalling the [VM Agent binaries](http://go.microsoft.com/fwlink/?LinkID=394789&clcid=0x409). <br>Ensure that no backup operation is running while the VM agent is being updated. | Follow the instructions on [updating the Linux VM Agent ](../virtual-machines-linux-update-agent.md). <br>Ensure that no backup operation is running while the VM Agent is being updated. |\n| Validating the VM Agent installation | <li>Navigate to the *C:\\WindowsAzure\\Packages* folder in the Azure VM. <li>You should find the WaAppAgent.exe file present.<li> Right-click the file, go to **Properties**, and then select the **Details** tab. The Product Version field should be 2.6.1198.718 or higher. | N/A |\n\n\n### Backup extension\n\nOnce the VM Agent is installed on the virtual machine, the Azure Backup service installs the backup extension to the VM Agent. The Azure Backup service seamlessly upgrades and patches the backup extension without additional user intervention.\n\nThe backup extension is installed by the Backup service whether or not the VM is running. A running VM provides the greatest chance of getting an application-consistent recovery point. However, the Azure Backup service will continue to back up the VM even if it is turned off, and the extension could not be installed. This is known as Offline VM. In this case, the recovery point will be *crash consistent*.\n\n\n## Step 4 - Protect Azure virtual machines\nNow you can set up a backup and retention policy for the virtual machine. Multiple virtual machines can be protected by using a single protect action. Azure Backup vaults created after May 2015 come with a default policy built into the vault. This default policy comes with a default retention of 30 days and a once-daily backup schedule.\n\n1. Navigate to the backup vault under **Recovery Services** in the Azure portal, and then click **Registered Items**.\n2. Select **Azure Virtual Machine** from the drop-down menu.\n\n    ![Select workload in portal](./media/backup-azure-vms/select-workload.png)\n\n3. Click **PROTECT** at the bottom of the page.\n    ![Click Protect](./media/backup-azure-vms-first-look/protect-icon.png)\n\n    The **Protect Items wizard** appears and lists *only* virtual machines that are registered and not protected.\n\n    ![Configure protection at scale](./media/backup-azure-vms/protect-at-scale.png)\n\n4. Select the virtual machines that you want to protect.\n\n    If there are two or more virtual machines with the same name, use the Cloud Service to distinguish between the virtual machines.\n\n5. On **Configure protection** select an existing policy or create a new policy to protect the virtual machines that you identified.\n\n    Each backup policy can have multiple virtual machines associated with it. However, the virtual machine can only be associated with one policy at any given point in time.\n\n    ![Protect with new policy](./media/backup-azure-vms/policy-schedule.png)\n\n    >[AZURE.NOTE] A backup policy includes a retention scheme for the scheduled backups. If you select an existing backup policy, you will be unable to modify the retention options in the next step.\n\n6. On **Retention Range** define the daily, weekly, monthly, and yearly scope for the specific backup points.\n\n    ![Protect with flexible retention](./media/backup-azure-vms/policy-retention.png)\n\n    Retention policy specifies the length of time for storing a backup. You can specify different retention policies based on when the backup is taken. For example, a backup point taken at the end of each quarter may need to be preserved for a longer period (for audit purposes) - while the backup point taken daily (which serves as an operational recovery point) only needs to be preserved for 90 days.\n\n    ![Virtual machine is backed up with recovery point](./media/backup-azure-vms/long-term-retention.png)\n\n    In this example image:\n\n    - **Daily retention policy**: Backups taken daily are stored for 30 days.\n    - **Weekly retention policy**: Backups taken every week on Sunday will be preserved for 104 weeks.\n    - **Monthly retention policy**: Backups taken on the last Sunday of each month will be preserved for 120 months.\n    - **Yearly retention policy**: Backups taken on the first Sunday of every January will be preserved for 99 years.\n\n    A job is created to configure the protection policy and associate the virtual machines to that policy for each virtual machine that you've selected.\n\n6. Click **Job** and choose the right filter to view the list of **Configure Protection** jobs.\n\n    ![Configure protection job](./media/backup-azure-vms/protect-configureprotection.png)\n\n\n## Step 5 - Initial backup\n\nOnce a virtual machine has been protected with a policy, you can view that relationship on the **Protected Items** tab. Until the initial backup for a VM has occurred, the **Protection Status** shows as **Protected - (pending initial backup)**. By default, the first scheduled backup is the *initial backup*.\n\n![Backup pending](./media/backup-azure-vms-first-look/protection-pending-border.png)\n\nTo trigger the initial backup immediately after configuring protection:\n\n1. On the **Protected Items** page click the **Backup Now** button at the bottom of the page.\n    ![Backup Now icon](./media/backup-azure-vms-first-look/backup-now-icon.png)\n\n    The Azure Backup service creates a backup job for the initial backup operation.\n\n2. Click the **Jobs** tab to view the list of jobs.\n\n    ![Backup in progress](./media/backup-azure-vms-first-look/protect-inprogress.png)\n\n    >[AZURE.NOTE] As a part of the backup operation, the Azure Backup service issues a command to the backup extension in each virtual machine to flush all writes and take a consistent snapshot.\n\n    When initial backup is complete, the status of the virtual machine in the **Protected Items** tab will be *Protected*.\n\n    ![Virtual machine is backed up with recovery point](./media/backup-azure-vms/protect-backedupvm.png)\n\n    >[AZURE.NOTE] Backing up virtual machines is a local process. You cannot back up virtual machines from one region to a backup vault in another region. So, for every Azure region that has VMs that need to be backed up, at least one backup vault must be created in that region.\n\n## Next steps\nNow that you have successfully backed up a VM, there are several next steps that could be of interest. The most logical step is to familiarize yourself with restoring data to a VM, however there are management tasks that will help you understand how to keep your data safe and keep costs down.\n\n- [Manage and monitor your virtual machines](backup-azure-manage-vms.md)\n- [Restore virtual machines](backup-azure-restore-vms.md)\n- [Troubleshooting guidance](backup-azure-vms-troubleshoot.md)\n\n\n## Questions?\nIf you have questions, or if there is any feature that you would like to see included, [send us feedback](http://aka.ms/azurebackup_feedback).\n"
+}
