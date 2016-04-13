@@ -1,0 +1,901 @@
+{
+  "nodes": [
+    {
+      "content": "Running Windows VMs for a 3-tier architecture | Blueprint | Microsoft Azure",
+      "pos": [
+        26,
+        101
+      ]
+    },
+    {
+      "content": "How to implement a multi-tier architecture on Azure, paying particular attention to availability, security, scalability, and manageability security.",
+      "pos": [
+        119,
+        267
+      ]
+    },
+    {
+      "content": "Running Windows VMs for a 3-tier architecture on Azure",
+      "pos": [
+        557,
+        611
+      ]
+    },
+    {
+      "content": "This article outlines a set of proven practices for running Windows VMs for an application with a 3-tier architecture.",
+      "pos": [
+        613,
+        731
+      ]
+    },
+    {
+      "content": "There are variations of 3-tier architectures.",
+      "pos": [
+        733,
+        778
+      ]
+    },
+    {
+      "content": "For the most part, the differences shouldn't matter for the purposes of these recommendations.",
+      "pos": [
+        779,
+        873
+      ]
+    },
+    {
+      "content": "This article assumes a typical 3-tier web app:",
+      "pos": [
+        874,
+        920
+      ]
+    },
+    {
+      "content": "Web tier.",
+      "pos": [
+        926,
+        935
+      ]
+    },
+    {
+      "content": "Handles incoming HTTP requests.",
+      "pos": [
+        938,
+        969
+      ]
+    },
+    {
+      "content": "Responses are returned through this tier.",
+      "pos": [
+        970,
+        1011
+      ]
+    },
+    {
+      "content": "Business tier.",
+      "pos": [
+        1017,
+        1031
+      ]
+    },
+    {
+      "content": "Implements business processes and other functional logic for the system.",
+      "pos": [
+        1034,
+        1106
+      ]
+    },
+    {
+      "content": "Data tier.",
+      "pos": [
+        1113,
+        1123
+      ]
+    },
+    {
+      "content": "Provides persistent data storage.",
+      "pos": [
+        1126,
+        1159
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Azure has two different deployment models: <bpt id=\"p1\">[</bpt>Resource Manager<ph id=\"ph2\">][</ph>resource-manager-overview<ept id=\"p1\">]</ept> and classic.",
+      "pos": [
+        1163,
+        1277
+      ]
+    },
+    {
+      "content": "This article uses Resource Manager, which Microsoft recommends for new deployments.",
+      "pos": [
+        1278,
+        1361
+      ]
+    },
+    {
+      "pos": [
+        1363,
+        1476
+      ],
+      "content": "The following diagram builds on the topology shown in <bpt id=\"p1\">[</bpt>Running multiple Windows VM instances on Azure<ph id=\"ph1\">][</ph>multi-vm<ept id=\"p1\">]</ept>."
+    },
+    {
+      "content": "IaaS: multi-tier",
+      "pos": [
+        1480,
+        1496
+      ]
+    },
+    {
+      "content": "Availability Sets.",
+      "pos": [
+        1543,
+        1561
+      ]
+    },
+    {
+      "content": "Create an <bpt id=\"p1\">[</bpt>Availability Set<ph id=\"ph1\">][</ph>azure-availability-sets<ept id=\"p1\">]</ept> for each tier, and provision at least two VMs in each tier.",
+      "pos": [
+        1564,
+        1677
+      ]
+    },
+    {
+      "content": "This approach is required to reach the availability <bpt id=\"p1\">[</bpt>SLA<ph id=\"ph1\">][</ph>vm-sla<ept id=\"p1\">]</ept> for VMs.",
+      "pos": [
+        1678,
+        1752
+      ]
+    },
+    {
+      "content": "VNet.",
+      "pos": [
+        1758,
+        1763
+      ]
+    },
+    {
+      "content": "Every VM in Azure is deployed into a virtual network (VNet), which is further divided into subnets.",
+      "pos": [
+        1766,
+        1865
+      ]
+    },
+    {
+      "content": "Create a subnet for each tier.",
+      "pos": [
+        1866,
+        1896
+      ]
+    },
+    {
+      "content": "You should design subnets with functionality and security requirements in mind.",
+      "pos": [
+        1904,
+        1983
+      ]
+    },
+    {
+      "content": "All VMs within the same tier or role should go into the same subnet, which can be a security boundary.",
+      "pos": [
+        1984,
+        2086
+      ]
+    },
+    {
+      "pos": [
+        2094,
+        2254
+      ],
+      "content": "Use a <bpt id=\"p1\">**</bpt><bpt id=\"p2\">[</bpt>Network security group<ph id=\"ph1\">][</ph>nsg<ept id=\"p2\">]</ept><ept id=\"p1\">**</ept> (NSG) on the subnet for the data tier, so that only the business tier and the jumpbox can send traffic to the data tier."
+    },
+    {
+      "content": "Load balancers.",
+      "pos": [
+        2260,
+        2275
+      ]
+    },
+    {
+      "content": "Use an <bpt id=\"p1\">[</bpt>Internet-facing load balancer<ph id=\"ph1\">][</ph>load-balancer-external<ept id=\"p1\">]</ept> to distribute incoming Internet traffic to the web tier, and an <bpt id=\"p2\">[</bpt>internal load balancer<ph id=\"ph2\">][</ph>load-balancer-internal<ept id=\"p2\">]</ept> to distribute network traffic from the web tier to the business tier.",
+      "pos": [
+        2278,
+        2523
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Jumpbox<ept id=\"p1\">**</ept>.",
+      "pos": [
+        2527,
+        2539
+      ]
+    },
+    {
+      "content": "A <bpt id=\"p1\">_</bpt>jumpbox<ept id=\"p1\">_</ept>, also called a <bpt id=\"p2\">[</bpt>bastion host<ept id=\"p2\">]</ept>, is a VM on the network that administrators use to connect to the other VMs.",
+      "pos": [
+        2540,
+        2658
+      ]
+    },
+    {
+      "content": "The jumpbox has an NSG that allows remote desktop (RDP) only from whitelisted public IP addresses.",
+      "pos": [
+        2659,
+        2757
+      ]
+    },
+    {
+      "pos": [
+        2761,
+        2871
+      ],
+      "content": "<bpt id=\"p1\">**</bpt><bpt id=\"p2\">[</bpt>Azure Key Vault<ph id=\"ph1\">][</ph>azure-key-vault<ept id=\"p2\">]</ept><ept id=\"p1\">**</ept> securely stores encryption keys, application secrets, and certificates."
+    },
+    {
+      "content": "Network recommendations",
+      "pos": [
+        2876,
+        2899
+      ]
+    },
+    {
+      "content": "VNet / Subnets",
+      "pos": [
+        2905,
+        2919
+      ]
+    },
+    {
+      "content": "When you create the VNet, specify the address range and subnet mask using <bpt id=\"p1\">[</bpt>CIDR<ept id=\"p1\">]</ept> notation.",
+      "pos": [
+        2923,
+        3013
+      ]
+    },
+    {
+      "content": "The address space must fall within the standard <bpt id=\"p1\">[</bpt>private IP address ranges<ph id=\"ph1\">][</ph>rfc1918<ept id=\"p1\">]</ept>.",
+      "pos": [
+        3014,
+        3099
+      ]
+    },
+    {
+      "content": "Make sure to allocate enough address space for the subnets you will need.",
+      "pos": [
+        3100,
+        3173
+      ]
+    },
+    {
+      "content": "A reasonable default is 10.0.0.0/16.",
+      "pos": [
+        3174,
+        3210
+      ]
+    },
+    {
+      "content": "When you create a subnet, specify the address space for the subnet in CIDR notation.",
+      "pos": [
+        3214,
+        3298
+      ]
+    },
+    {
+      "content": "For example, '10.0.0.0/24' creates a range of 256 IP addresses.",
+      "pos": [
+        3299,
+        3362
+      ]
+    },
+    {
+      "content": "(VMs can use 251 of these; five are reserved.",
+      "pos": [
+        3363,
+        3408
+      ]
+    },
+    {
+      "content": "For more information, see the <bpt id=\"p1\">[</bpt>Virtual Network FAQ<ph id=\"ph1\">][</ph>vnet faq<ept id=\"p1\">]</ept>.) Make sure the address ranges don't overlap across subnets.",
+      "pos": [
+        3409,
+        3531
+      ]
+    },
+    {
+      "content": "Load balancers",
+      "pos": [
+        3537,
+        3551
+      ]
+    },
+    {
+      "content": "The external load balancer distributes Internet traffic to the web tier.",
+      "pos": [
+        3555,
+        3627
+      ]
+    },
+    {
+      "content": "Create a public IP address for this load balancer.",
+      "pos": [
+        3628,
+        3678
+      ]
+    },
+    {
+      "content": "Example:",
+      "pos": [
+        3679,
+        3687
+      ]
+    },
+    {
+      "pos": [
+        4006,
+        4131
+      ],
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Get started creating an Internet facing load balancer using Azure CLI<ph id=\"ph1\">][</ph>load-balancer-external-cli<ept id=\"p1\">]</ept>"
+    },
+    {
+      "content": "The internal load balancer distributes network traffic from the web tier to the business tier.",
+      "pos": [
+        4135,
+        4229
+      ]
+    },
+    {
+      "content": "To give this load balancer a private IP address, create a frontend IP configuration and associate it with the subnet for the business tier.",
+      "pos": [
+        4230,
+        4369
+      ]
+    },
+    {
+      "content": "Example:",
+      "pos": [
+        4370,
+        4378
+      ]
+    },
+    {
+      "pos": [
+        4644,
+        4767
+      ],
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Get started creating an internal load balancer using the Azure CLI<ph id=\"ph1\">][</ph>load-balancer-internal-cli<ept id=\"p1\">]</ept>."
+    },
+    {
+      "content": "Jumpbox",
+      "pos": [
+        4773,
+        4780
+      ]
+    },
+    {
+      "content": "Use a small VM size for the jumpbox, such as Standard A1.",
+      "pos": [
+        4784,
+        4841
+      ]
+    },
+    {
+      "content": "The jumpbox is a single VM, so don't put it in an Availability Set.",
+      "pos": [
+        4842,
+        4909
+      ]
+    },
+    {
+      "content": "The jumpbox belongs to the same VNet as the other VMs, and connects to them through their private IP addresses.",
+      "pos": [
+        4913,
+        5024
+      ]
+    },
+    {
+      "pos": [
+        5028,
+        5117
+      ],
+      "content": "Place the jumpbox in a separate subnet, and create a <bpt id=\"p1\">[</bpt>public IP address<ept id=\"p1\">]</ept> for the jumpbox."
+    },
+    {
+      "content": "To secure the jumpbox, create an NSG and apply it to jumpbox subnet.",
+      "pos": [
+        5121,
+        5189
+      ]
+    },
+    {
+      "content": "Add a NAT rule that allows remote desktop (RDP) only from a whitelisted set of public IP addresses.",
+      "pos": [
+        5190,
+        5289
+      ]
+    },
+    {
+      "content": "The NSG can be attached either to the subnet or to the jumpbox NIC.",
+      "pos": [
+        5295,
+        5362
+      ]
+    },
+    {
+      "content": "In this case, we recommend attaching it to the NIC, so RDP traffic is permitted only to the jumpbox, even if you add other VMs to the same subnet.",
+      "pos": [
+        5363,
+        5509
+      ]
+    },
+    {
+      "content": "Availability",
+      "pos": [
+        5514,
+        5526
+      ]
+    },
+    {
+      "content": "Put each tier or VM role into a separate Availability Set.",
+      "pos": [
+        5530,
+        5588
+      ]
+    },
+    {
+      "content": "If you place two different tiers in the same Availability Set, all the VMs for one tier could get rebooted at once, during <bpt id=\"p1\">[</bpt>planned maintenance<ph id=\"ph1\">][</ph>vm-planned-maintenance<ept id=\"p1\">]</ept>.",
+      "pos": [
+        5589,
+        5758
+      ]
+    },
+    {
+      "content": "The availability SLA for the VMs does not automatically translate into a highly available database.",
+      "pos": [
+        5762,
+        5861
+      ]
+    },
+    {
+      "content": "Design your database tier for reliability by using replication and failover.",
+      "pos": [
+        5862,
+        5938
+      ]
+    },
+    {
+      "content": "Typically the business tier connects to a primary database.",
+      "pos": [
+        5939,
+        5998
+      ]
+    },
+    {
+      "content": "If that VM goes down, the application fails over to a secondary database, either manually or automatically.",
+      "pos": [
+        5999,
+        6106
+      ]
+    },
+    {
+      "pos": [
+        6114,
+        6207
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> For SQL Server, we recommend using <bpt id=\"p1\">[</bpt>AlwaysOn Availability Groups<ph id=\"ph2\">][</ph>sql-alwayson<ept id=\"p1\">]</ept>."
+    },
+    {
+      "content": "Security",
+      "pos": [
+        6212,
+        6220
+      ]
+    },
+    {
+      "content": "The data tier should only accept network traffic from the business tier and the jumpbox.",
+      "pos": [
+        6224,
+        6312
+      ]
+    },
+    {
+      "content": "To enforce this restriction, create an NSG and add it to the subnet for the data tier.",
+      "pos": [
+        6313,
+        6399
+      ]
+    },
+    {
+      "content": "An NSG has <bpt id=\"p1\">[</bpt>default rules<ph id=\"ph1\">][</ph>nsg-rules<ept id=\"p1\">]</ept> that allow inbound traffic from within the VNet, and prohibit inbound traffic from the Internet.",
+      "pos": [
+        6405,
+        6539
+      ]
+    },
+    {
+      "content": "These rules can't be deleted, but you can override them by creating higher-priority rules.",
+      "pos": [
+        6540,
+        6630
+      ]
+    },
+    {
+      "content": "Add a rule that denies inbound traffic from the VNet.",
+      "pos": [
+        6639,
+        6692
+      ]
+    },
+    {
+      "content": "This rule secures the data tier from the other tiers.",
+      "pos": [
+        6693,
+        6746
+      ]
+    },
+    {
+      "content": "(In particular, from the web tier.)",
+      "pos": [
+        6747,
+        6782
+      ]
+    },
+    {
+      "content": "Add a rule with a higher priority that allows inbound traffic from the <bpt id=\"p1\">_</bpt>subnet<ept id=\"p1\">_</ept> that contains the business tier.",
+      "pos": [
+        6791,
+        6903
+      ]
+    },
+    {
+      "content": "This rule enables the business to talk to the data tier.",
+      "pos": [
+        6904,
+        6960
+      ]
+    },
+    {
+      "content": "Add a rule that allows RDP traffic from the jumpbox subnet.",
+      "pos": [
+        6969,
+        7028
+      ]
+    },
+    {
+      "content": "This rule lets administrators connect to the data tier from the jumpbox.",
+      "pos": [
+        7029,
+        7101
+      ]
+    },
+    {
+      "content": "Do not allow RDP access from the public Internet to the VMs that run the application workload.",
+      "pos": [
+        7105,
+        7199
+      ]
+    },
+    {
+      "content": "Instead, all RDP access to these VMs must come through the jumpbox.",
+      "pos": [
+        7200,
+        7267
+      ]
+    },
+    {
+      "content": "An administrator logs into the jumpbox, and then logs into the other VM from the jumpbox.",
+      "pos": [
+        7268,
+        7357
+      ]
+    },
+    {
+      "content": "The jumpbox allows RDP traffic from the Internet, but only from known, whitelisted IP addresses.",
+      "pos": [
+        7358,
+        7454
+      ]
+    },
+    {
+      "content": "Encrypt data at rest.",
+      "pos": [
+        7458,
+        7479
+      ]
+    },
+    {
+      "content": "Use <bpt id=\"p1\">[</bpt>Azure Key Vault<ph id=\"ph1\">][</ph>azure-key-vault<ept id=\"p1\">]</ept> to store encryption keys.",
+      "pos": [
+        7480,
+        7544
+      ]
+    },
+    {
+      "content": "It's also recommended to store application secrets, such as database connection strings, in Key Vault.",
+      "pos": [
+        7545,
+        7647
+      ]
+    },
+    {
+      "content": "Scalability",
+      "pos": [
+        7652,
+        7663
+      ]
+    },
+    {
+      "content": "The load balancers distribute network traffic to the web and business tiers.",
+      "pos": [
+        7667,
+        7743
+      ]
+    },
+    {
+      "content": "Scale horizontally by adding new VM instances.",
+      "pos": [
+        7744,
+        7790
+      ]
+    },
+    {
+      "content": "Note that you can scale the web and data tiers independently, based on load.",
+      "pos": [
+        7791,
+        7867
+      ]
+    },
+    {
+      "content": "To reduce possible complications caused by the need to maintain client affinity, the VMs in the web tier should be stateless.",
+      "pos": [
+        7868,
+        7993
+      ]
+    },
+    {
+      "content": "The VMs hosting the business logic should also be stateless.",
+      "pos": [
+        7994,
+        8054
+      ]
+    },
+    {
+      "content": "Manageability",
+      "pos": [
+        8059,
+        8072
+      ]
+    },
+    {
+      "content": "Individual VMs should have diagnostics enabled to provide health and performance data.",
+      "pos": [
+        8076,
+        8162
+      ]
+    },
+    {
+      "content": "Examine the <bpt id=\"p1\">[</bpt>audit logs<ph id=\"ph1\">][</ph>azure-audit-logs<ept id=\"p1\">]</ept> to view provisioning actions and other events.",
+      "pos": [
+        8163,
+        8252
+      ]
+    },
+    {
+      "content": "Simplify management of the entire system by using centralized administration tools such as <bpt id=\"p1\">[</bpt>Azure Automation<ph id=\"ph1\">][</ph>azure-administration<ept id=\"p1\">]</ept>, <bpt id=\"p2\">[</bpt>Microsoft Operations Management Suite<ph id=\"ph2\">][</ph>operations-management-suite<ept id=\"p2\">]</ept>, <bpt id=\"p3\">[</bpt>Chef<ph id=\"ph3\">][</ph>chef<ept id=\"p3\">]</ept>, or <bpt id=\"p4\">[</bpt>Puppet<ph id=\"ph4\">][</ph>puppet<ept id=\"p4\">]</ept>.",
+      "pos": [
+        8256,
+        8493
+      ]
+    },
+    {
+      "content": "These tools can consolidate diagnostic and health information captured from multiple VMs to provide an overall view of the system.",
+      "pos": [
+        8494,
+        8624
+      ]
+    },
+    {
+      "content": "Example deployment script",
+      "pos": [
+        8629,
+        8654
+      ]
+    },
+    {
+      "pos": [
+        8656,
+        8839
+      ],
+      "content": "The following Windows batch script executes the <bpt id=\"p1\">[</bpt>Azure CLI<ph id=\"ph1\">][</ph>azure-cli<ept id=\"p1\">]</ept> commands to deploy multiple VMs and the related network and storage resources, as shown in the previous diagram."
+    },
+    {
+      "pos": [
+        8841,
+        8966
+      ],
+      "content": "The script uses the naming conventions described in <bpt id=\"p1\">[</bpt>Recommended Naming Conventions for Azure Resources<ph id=\"ph1\">][</ph>naming conventions<ept id=\"p1\">]</ept>."
+    },
+    {
+      "pos": [
+        21417,
+        21474
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-administration<ph id=\"ph2\">]: ../automation/automation-intro.md</ph>"
+    },
+    {
+      "pos": [
+        21475,
+        21521
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-audit-logs<ph id=\"ph2\">]: ../resource-group-audit.md</ph>"
+    },
+    {
+      "pos": [
+        21522,
+        21680
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-availability-sets<ph id=\"ph2\">]: ../virtual-machines/virtual-machines-windows-manage-availability.md#configure-each-application-tier-into-separate-availability-sets</ph>"
+    },
+    {
+      "pos": [
+        21681,
+        21735
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-cli<ph id=\"ph2\">]: ../virtual-machines-command-line-tools.md</ph>"
+    },
+    {
+      "pos": [
+        21736,
+        21804
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-key-vault<ph id=\"ph2\">]: https://azure.microsoft.com/services/key-vault.md</ph>"
+    },
+    {
+      "pos": [
+        21805,
+        21870
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure-load-balancer<ph id=\"ph2\">]: ../load-balancer/load-balancer-overview.md</ph>"
+    },
+    {
+      "pos": [
+        21871,
+        21929
+      ],
+      "content": "<ph id=\"ph1\">[</ph>bastion host<ph id=\"ph2\">]: https://en.wikipedia.org/wiki/Bastion_host</ph>"
+    },
+    {
+      "pos": [
+        21930,
+        21998
+      ],
+      "content": "<ph id=\"ph1\">[</ph>cidr<ph id=\"ph2\">]: https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing</ph>"
+    },
+    {
+      "pos": [
+        21999,
+        22043
+      ],
+      "content": "<ph id=\"ph1\">[</ph>chef<ph id=\"ph2\">]: https://www.chef.io/solutions/azure/</ph>"
+    },
+    {
+      "pos": [
+        22044,
+        22121
+      ],
+      "content": "<ph id=\"ph1\">[</ph>load-balancer-external<ph id=\"ph2\">]: ../load-balancer/load-balancer-internet-overview.md</ph>"
+    },
+    {
+      "pos": [
+        22122,
+        22214
+      ],
+      "content": "<ph id=\"ph1\">[</ph>load-balancer-external-cli<ph id=\"ph2\">]: ../load-balancer/load-balancer-get-started-internet-arm-cli.md</ph>"
+    },
+    {
+      "pos": [
+        22215,
+        22292
+      ],
+      "content": "<ph id=\"ph1\">[</ph>load-balancer-internal<ph id=\"ph2\">]: ../load-balancer/load-balancer-internal-overview.md</ph>"
+    },
+    {
+      "pos": [
+        22293,
+        22380
+      ],
+      "content": "<ph id=\"ph1\">[</ph>load-balancer-internal-cli<ph id=\"ph2\">]: ../load-balancer/load-balancer-get-started-ilb-arm-cli.md</ph>"
+    },
+    {
+      "pos": [
+        22381,
+        22421
+      ],
+      "content": "<ph id=\"ph1\">[</ph>multi-vm<ph id=\"ph2\">]: guidance-compute-multi-vm.md</ph>"
+    },
+    {
+      "pos": [
+        22422,
+        22474
+      ],
+      "content": "<ph id=\"ph1\">[</ph>naming conventions<ph id=\"ph2\">]: guidance-naming-conventions.md</ph>"
+    },
+    {
+      "pos": [
+        22475,
+        22524
+      ],
+      "content": "<ph id=\"ph1\">[</ph>nsg<ph id=\"ph2\">]: ../virtual-network/virtual-networks-nsg.md</ph>"
+    },
+    {
+      "pos": [
+        22525,
+        22608
+      ],
+      "content": "<ph id=\"ph1\">[</ph>nsg-rules<ph id=\"ph2\">]: ../best-practices-resource-manager-security.md#network-security-groups</ph>"
+    },
+    {
+      "pos": [
+        22609,
+        22726
+      ],
+      "content": "<ph id=\"ph1\">[</ph>operations-management-suite<ph id=\"ph2\">]: https://www.microsoft.com/en-us/server-cloud/operations-management-suite/overview.aspx</ph>"
+    },
+    {
+      "pos": [
+        22727,
+        22811
+      ],
+      "content": "<ph id=\"ph1\">[</ph>public IP address<ph id=\"ph2\">]: ../virtual-network/virtual-network-ip-addresses-overview-arm.md</ph>"
+    },
+    {
+      "pos": [
+        22812,
+        22888
+      ],
+      "content": "<ph id=\"ph1\">[</ph>puppet<ph id=\"ph2\">]: https://puppetlabs.com/blog/managing-azure-virtual-machines-puppet</ph>"
+    },
+    {
+      "pos": [
+        22889,
+        22947
+      ],
+      "content": "<ph id=\"ph1\">[</ph>resource-manager-overview<ph id=\"ph2\">]: ../resource-group-overview.md</ph>"
+    },
+    {
+      "pos": [
+        22948,
+        22993
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rfc1918<ph id=\"ph2\">]: http://tools.ietf.org/html/rfc1918</ph>"
+    },
+    {
+      "pos": [
+        22994,
+        23064
+      ],
+      "content": "<ph id=\"ph1\">[</ph>sql-alwayson<ph id=\"ph2\">]: https://msdn.microsoft.com/en-us/library/hh510230.aspx</ph>"
+    },
+    {
+      "pos": [
+        23065,
+        23158
+      ],
+      "content": "<ph id=\"ph1\">[</ph>vm-planned-maintenance<ph id=\"ph2\">]: ../virtual-machines/virtual-machines-windows-planned-maintenance.md</ph>"
+    },
+    {
+      "pos": [
+        23159,
+        23243
+      ],
+      "content": "<ph id=\"ph1\">[</ph>vm-sla<ph id=\"ph2\">]: https://azure.microsoft.com/en-us/support/legal/sla/virtual-machines/v1_0/</ph>"
+    },
+    {
+      "pos": [
+        23244,
+        23298
+      ],
+      "content": "<ph id=\"ph1\">[</ph>vnet faq<ph id=\"ph2\">]: ../virtual-network/virtual-networks-faq.md</ph>"
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Running Windows VMs for a 3-tier architecture | Blueprint | Microsoft Azure\"\n   description=\"How to implement a multi-tier architecture on Azure, paying particular attention to availability, security, scalability, and manageability security.\"\n   services=\"\"\n   documentationCenter=\"na\"\n   authors=\"mikewasson\"\n   manager=\"roshar\"\n   editor=\"\"\n   tags=\"\"/>\n\n<tags\n   ms.service=\"guidance\"\n   ms.devlang=\"na\"\n   ms.topic=\"hero-article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"na\"\n   ms.date=\"03/30/2016\"\n   ms.author=\"mikewasson\"/>\n\n# Running Windows VMs for a 3-tier architecture on Azure\n\nThis article outlines a set of proven practices for running Windows VMs for an application with a 3-tier architecture.\n\nThere are variations of 3-tier architectures. For the most part, the differences shouldn't matter for the purposes of these recommendations. This article assumes a typical 3-tier web app:\n\n- **Web tier.** Handles incoming HTTP requests. Responses are returned through this tier.\n\n- **Business tier.** Implements business processes and other functional logic for the system.\n\n-  **Data tier.** Provides persistent data storage.\n\n> [AZURE.NOTE] Azure has two different deployment models: [Resource Manager][resource-manager-overview] and classic. This article uses Resource Manager, which Microsoft recommends for new deployments.\n\nThe following diagram builds on the topology shown in [Running multiple Windows VM instances on Azure][multi-vm].\n\n![IaaS: multi-tier](media/blueprints/compute-3-tier-vm.png)\n\n- **Availability Sets.** Create an [Availability Set][azure-availability-sets] for each tier, and provision at least two VMs in each tier. This approach is required to reach the availability [SLA][vm-sla] for VMs.\n\n- **VNet.** Every VM in Azure is deployed into a virtual network (VNet), which is further divided into subnets. Create a subnet for each tier.\n\n    - You should design subnets with functionality and security requirements in mind. All VMs within the same tier or role should go into the same subnet, which can be a security boundary.\n\n    - Use a **[Network security group][nsg]** (NSG) on the subnet for the data tier, so that only the business tier and the jumpbox can send traffic to the data tier.\n\n- **Load balancers.** Use an [Internet-facing load balancer][load-balancer-external] to distribute incoming Internet traffic to the web tier, and an [internal load balancer][load-balancer-internal] to distribute network traffic from the web tier to the business tier.\n\n- **Jumpbox**. A _jumpbox_, also called a [bastion host], is a VM on the network that administrators use to connect to the other VMs. The jumpbox has an NSG that allows remote desktop (RDP) only from whitelisted public IP addresses.\n\n- **[Azure Key Vault][azure-key-vault]** securely stores encryption keys, application secrets, and certificates.\n\n## Network recommendations\n\n### VNet / Subnets\n\n- When you create the VNet, specify the address range and subnet mask using [CIDR] notation. The address space must fall within the standard [private IP address ranges][rfc1918]. Make sure to allocate enough address space for the subnets you will need. A reasonable default is 10.0.0.0/16.\n\n- When you create a subnet, specify the address space for the subnet in CIDR notation. For example, '10.0.0.0/24' creates a range of 256 IP addresses. (VMs can use 251 of these; five are reserved. For more information, see the [Virtual Network FAQ][vnet faq].) Make sure the address ranges don't overlap across subnets.\n\n### Load balancers\n\n- The external load balancer distributes Internet traffic to the web tier. Create a public IP address for this load balancer. Example:\n\n    ```text\n    azure network public-ip create --name pip1 --location westus --resource-group rg1\n    azure network lb create --name lb1 --location --location westus --resource-group rg1\n    azure network lb frontend-ip create --name lb1-frontend --lb-name lb1 --public-ip-name pip1 --resource-group rg1\n    ```\n\n    For more information, see [Get started creating an Internet facing load balancer using Azure CLI][load-balancer-external-cli]\n\n- The internal load balancer distributes network traffic from the web tier to the business tier. To give this load balancer a private IP address, create a frontend IP configuration and associate it with the subnet for the business tier. Example:\n\n    ```text\n    azure network lb create --name lb2 --location --location westus --resource-group rg1\n    azure network lb frontend-ip create --name lb2-frontend --lb-name lb2 --subnet-name subnet1\n        --subnet-vnet-name vnet1 --resource-group rg1\n    ```\n\n    For more information, see [Get started creating an internal load balancer using the Azure CLI][load-balancer-internal-cli].\n\n### Jumpbox\n\n- Use a small VM size for the jumpbox, such as Standard A1. The jumpbox is a single VM, so don't put it in an Availability Set.\n\n- The jumpbox belongs to the same VNet as the other VMs, and connects to them through their private IP addresses.\n\n- Place the jumpbox in a separate subnet, and create a [public IP address] for the jumpbox.\n\n- To secure the jumpbox, create an NSG and apply it to jumpbox subnet. Add a NAT rule that allows remote desktop (RDP) only from a whitelisted set of public IP addresses.\n\n    The NSG can be attached either to the subnet or to the jumpbox NIC. In this case, we recommend attaching it to the NIC, so RDP traffic is permitted only to the jumpbox, even if you add other VMs to the same subnet.\n\n## Availability\n\n- Put each tier or VM role into a separate Availability Set. If you place two different tiers in the same Availability Set, all the VMs for one tier could get rebooted at once, during [planned maintenance][vm-planned-maintenance].\n\n- The availability SLA for the VMs does not automatically translate into a highly available database. Design your database tier for reliability by using replication and failover. Typically the business tier connects to a primary database. If that VM goes down, the application fails over to a secondary database, either manually or automatically.\n\n    > [AZURE.NOTE] For SQL Server, we recommend using [AlwaysOn Availability Groups][sql-alwayson].\n\n## Security\n\n- The data tier should only accept network traffic from the business tier and the jumpbox. To enforce this restriction, create an NSG and add it to the subnet for the data tier.\n\n    An NSG has [default rules][nsg-rules] that allow inbound traffic from within the VNet, and prohibit inbound traffic from the Internet. These rules can't be deleted, but you can override them by creating higher-priority rules.\n\n    1. Add a rule that denies inbound traffic from the VNet. This rule secures the data tier from the other tiers. (In particular, from the web tier.)\n\n    2. Add a rule with a higher priority that allows inbound traffic from the _subnet_ that contains the business tier. This rule enables the business to talk to the data tier.\n\n    3. Add a rule that allows RDP traffic from the jumpbox subnet. This rule lets administrators connect to the data tier from the jumpbox.\n\n- Do not allow RDP access from the public Internet to the VMs that run the application workload. Instead, all RDP access to these VMs must come through the jumpbox. An administrator logs into the jumpbox, and then logs into the other VM from the jumpbox. The jumpbox allows RDP traffic from the Internet, but only from known, whitelisted IP addresses.\n\n- Encrypt data at rest. Use [Azure Key Vault][azure-key-vault] to store encryption keys. It's also recommended to store application secrets, such as database connection strings, in Key Vault.\n\n## Scalability\n\n- The load balancers distribute network traffic to the web and business tiers. Scale horizontally by adding new VM instances. Note that you can scale the web and data tiers independently, based on load. To reduce possible complications caused by the need to maintain client affinity, the VMs in the web tier should be stateless. The VMs hosting the business logic should also be stateless.\n\n## Manageability\n\n- Individual VMs should have diagnostics enabled to provide health and performance data. Examine the [audit logs][azure-audit-logs] to view provisioning actions and other events.\n\n- Simplify management of the entire system by using centralized administration tools such as [Azure Automation][azure-administration], [Microsoft Operations Management Suite][operations-management-suite], [Chef][chef], or [Puppet][puppet]. These tools can consolidate diagnostic and health information captured from multiple VMs to provide an overall view of the system.\n\n## Example deployment script\n\nThe following Windows batch script executes the [Azure CLI][azure-cli] commands to deploy multiple VMs and the related network and storage resources, as shown in the previous diagram.\n\nThe script uses the naming conventions described in [Recommended Naming Conventions for Azure Resources][naming conventions].\n\n```bat\n@ECHO OFF\nSETLOCAL\n\nIF \"%3\"==\"\" (\n    ECHO Usage: %0 subscription-id admin-address-whitelist-CIDR-format admin-password\n    ECHO   For example: %0 xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx nnn.nnn.nnn.nnn/mm pwd\n    EXIT /B\n    )\n\n:: Explicitly set the subscription to avoid confusion as to which subscription\n:: is active/default\n\nSET SUBSCRIPTION=%1\nSET ADMIN_ADDRESS_PREFIX=%2\nSET PASSWORD=%3\n\n:: Set up variables to build out the naming conventions for deploying\n:: the cluster\n\n:: The APP_NAME variable must not exceed 4 characters in size.\n:: If it does the 15 character size limitation of the VM name may be exceeded.\nSET APP_NAME=app1\nSET LOCATION=centralus\nSET ENVIRONMENT=dev\nSET USERNAME=testuser\n\nSET NUM_VM_INSTANCES_WEB_TIER=3\nSET NUM_VM_INSTANCES_BIZ_TIER=3\nSET NUM_VM_INSTANCES_DB_TIER=2\nSET NUM_VM_INSTANCES_MANAGE_TIER=1\n\nSET VNET_IP_RANGE=10.0.0.0/16\nSET WEB_SUBNET_IP_RANGE=10.0.0.0/24\nSET BIZ_SUBNET_IP_RANGE=10.0.1.0/24\nSET DB_SUBNET_IP_RANGE=10.0.2.0/24\nSET MANAGE_SUBNET_IP_RANGE=10.0.3.0/24\n\n:: Set IP address of Internal Load Balancer in the high end of subnet's IP range\n:: to keep separate from IP addresses assigned to VM's that start at the low end.\nSET BIZ_ILB_IP=10.0.1.250\n\nSET REMOTE_ACCESS_PORT=3389\n\n:: For Windows, use the following command to get the list of URNs:\n:: azure vm image list %LOCATION% MicrosoftWindowsServer WindowsServer 2012-R2-Datacenter\nSET WINDOWS_BASE_IMAGE=MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:4.0.20160126\n\n:: For a list of VM sizes see: https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-size-specs/\n:: To see the VM sizes available in a region:\n::  azure vm sizes --location <<location>>\nSET VM_SIZE=Standard_DS1\n\n:: Set up the names of things using recommended conventions\nSET RESOURCE_GROUP=%APP_NAME%-%ENVIRONMENT%-rg\nSET VNET_NAME=%APP_NAME%-vnet\nSET PUBLIC_IP_NAME=%APP_NAME%-pip\nSET DIAGNOSTICS_STORAGE=%APP_NAME:-=%diag\nSET JUMPBOX_PUBLIC_IP_NAME=%APP_NAME%-jumpbox-pip\nSET JUMPBOX_NIC_NAME=%APP_NAME%-manage-vm1-nic1\n\n:: Set up the postfix variables attached to most CLI commands\nSET POSTFIX=--resource-group %RESOURCE_GROUP% --subscription %SUBSCRIPTION%\n\nCALL azure config mode arm\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Create root level resources\n\n:: Create the enclosing resource group\nCALL azure group create --name %RESOURCE_GROUP% --location %LOCATION% ^\n  --subscription %SUBSCRIPTION%\n\n:: Create the virtual network\nCALL azure network vnet create --address-prefixes %VNET_IP_RANGE% ^\n  --name %VNET_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the storage account for diagnostics logs\nCALL azure storage account create --type LRS --location %LOCATION% %POSTFIX% ^\n  %DIAGNOSTICS_STORAGE%\n\n:: Create the public IP address (dynamic)\nCALL azure network public-ip create --name %PUBLIC_IP_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the jumpbox public IP address (dynamic)\nCALL azure network public-ip create --name %JUMPBOX_PUBLIC_IP_NAME% --location %LOCATION% %POSTFIX%\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Create the web tier\n:: Web tier has a public IP, load balancer, availability set, and three VMs\n\nSET LB_NAME=%APP_NAME%-web-lb\nSET SUBNET_NAME=%APP_NAME%-web-subnet\nSET AVAILSET_NAME=%APP_NAME%-web-as\nSET USING_AVAILSET=true\n\n:: Create web tier (public) load balancer\nCALL azure network lb create --name %LB_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the subnet\nCALL azure network vnet subnet create --vnet-name %VNET_NAME% --address-prefix ^\n  %WEB_SUBNET_IP_RANGE% --name %SUBNET_NAME% %POSTFIX%\n\n:: Create the availability sets\nCALL azure availset create --name %AVAILSET_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the load balancer frontend-ip using the public IP address\nCALL azure network lb frontend-ip create --name %LB_NAME%-frontend% --lb-name ^\n  %LB_NAME% --public-ip-name %PUBLIC_IP_NAME% %POSTFIX%\n\nCALL :CreateCommonLBResources %LB_NAME%\n\n:: Create VMs and per-VM resources\nFOR /L %%I IN (1,1,%NUM_VM_INSTANCES_WEB_TIER%) DO CALL :CreateVM %%I web %SUBNET_NAME% %USING_AVAILSET% %LB_NAME%\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Create the business tier\n:: Business tier has an internal load balancer, availability set, and three VMs\n\nSET LB_NAME=%APP_NAME%-biz-lb\nSET SUBNET_NAME=%APP_NAME%-biz-subnet\nSET AVAILSET_NAME=%APP_NAME%-biz-as\nSET USING_AVAILSET=true\n\n:: Create the business tier internal load balancer\nCALL azure network lb create --name %LB_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the subnet\nCALL azure network vnet subnet create --vnet-name %VNET_NAME% --address-prefix ^\n  %BIZ_SUBNET_IP_RANGE% --name %SUBNET_NAME% %POSTFIX%\n\n:: Create the availability sets\nCALL azure availset create --name %AVAILSET_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create the load balancer frontend-ip using a private IP address and subnet\nCALL azure network lb frontend-ip create --name %LB_NAME%-frontend --lb-name ^\n  %LB_NAME% --private-ip-address %BIZ_ILB_IP% --subnet-name %SUBNET_NAME% ^\n  --subnet-vnet-name %VNET_NAME% %POSTFIX%\n\nCALL :CreateCommonLBResources %LB_NAME%\n\n:: Create VMs and per-VM resources\nFOR /L %%I IN (1,1,%NUM_VM_INSTANCES_BIZ_TIER%) DO CALL :CreateVM %%I biz %SUBNET_NAME% %USING_AVAILSET% %LB_NAME%\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Create the database tier\n:: Database tier has no load balancer, an availability set, and two VMs.\n\nSET SUBNET_NAME=%APP_NAME%-db-subnet\nSET AVAILSET_NAME=%APP_NAME%-db-as\nSET USING_AVAILSET=true\n\n:: Create the subnet\nCALL azure network vnet subnet create --vnet-name %VNET_NAME% --address-prefix ^\n  %DB_SUBNET_IP_RANGE% --name %SUBNET_NAME% %POSTFIX%\n\n  :: Create the availability sets\n  CALL azure availset create --name %AVAILSET_NAME% --location %LOCATION% %POSTFIX%\n\n:: Create VMs and per-VM resources\nFOR /L %%I IN (1,1,%NUM_VM_INSTANCES_DB_TIER%) DO CALL :CreateVM %%I db %SUBNET_NAME% %USING_AVAILSET%\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Create the management subnet\n:: Management subnet has no load balancer, no availability set, and one VM (jumpbox)\n\nSET SUBNET_NAME=%APP_NAME%-manage-subnet\nSET USING_AVAILSET=false\n\n:: Create the subnet\nCALL azure network vnet subnet create --vnet-name %VNET_NAME% --address-prefix ^\n  %MANAGE_SUBNET_IP_RANGE% --name %SUBNET_NAME% %POSTFIX%\n\n:: Create VMs and per-VM resources\nFOR /L %%I IN (1,1,%NUM_VM_INSTANCES_MANAGE_TIER%) DO CALL :CreateVM %%I manage %SUBNET_NAME% %USING_AVAILSET%\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Network Security Group Rules\n\n:: The Jump box NSG rule allows inbound remote access traffic from admin-address-prefix script parameter.\n:: To view the provisioned NSG rules, go to the portal (portal.azure.com) and view the\n:: Inbound and Outbound rules for the NSG.\n:: Don't forget that there are default rules that are also visible through the portal.\n\nSET MANAGE_NSG_NAME=%APP_NAME%-manage-nsg\n\nCALL azure network nsg create --name %MANAGE_NSG_NAME% --location %LOCATION% %POSTFIX%\nCALL azure network nsg rule create --nsg-name %MANAGE_NSG_NAME% --name admin-rdp-allow ^\n    --access Allow --protocol Tcp --direction Inbound --priority 100 ^\n    --source-address-prefix %ADMIN_ADDRESS_PREFIX% --source-port-range * ^\n    --destination-address-prefix * --destination-port-range %REMOTE_ACCESS_PORT% %POSTFIX%\n\n:: Associate the NSG rule with the jumpbox NIC\nCALL azure network nic set --name %JUMPBOX_NIC_NAME% ^\n    --network-security-group-name %MANAGE_NSG_NAME% %POSTFIX%\n\n:: Make Jump Box publically accessible\nCALL azure network nic set --name %JUMPBOX_NIC_NAME% --public-ip-name %JUMPBOX_PUBLIC_IP_NAME% %POSTFIX%\n\n\n:: DB Tier NSG rule\n\nSET DB_TIER_NSG_NAME=%APP_NAME%-db-nsg\n\nCALL azure network nsg create --name %DB_TIER_NSG_NAME% --location %LOCATION% %POSTFIX%\n\n:: Allow inbound traffic from business tier subnet to the DB tier\nCALL azure network nsg rule create --nsg-name %DB_TIER_NSG_NAME% --name biz-allow ^\n    --access Allow --protocol * --direction Inbound --priority 100 ^\n    --source-address-prefix %BIZ_SUBNET_IP_RANGE% --source-port-range * ^\n    --destination-address-prefix * --destination-port-range * %POSTFIX%\n\n:: Allow inbound remote access traffic from management subnet\nCALL azure network nsg rule create --nsg-name %DB_TIER_NSG_NAME% --name manage-rdp-allow ^\n    --access Allow --protocol Tcp --direction Inbound --priority 200 ^\n    --source-address-prefix %MANAGE_SUBNET_IP_RANGE% --source-port-range * ^\n    --destination-address-prefix * --destination-port-range %REMOTE_ACCESS_PORT% %POSTFIX%\n\n:: Deny all other inbound traffic from within vnet\nCALL azure network nsg rule create --nsg-name %DB_TIER_NSG_NAME% --name vnet-deny ^\n    --access Deny --protocol * --direction Inbound --priority 1000 ^\n    --source-address-prefix VirtualNetwork --source-port-range * ^\n    --destination-address-prefix * --destination-port-range * %POSTFIX%\n\n:: Associate the NSG rule with the subnet\nCALL azure network vnet subnet set --vnet-name %VNET_NAME% --name %APP_NAME%-db-subnet ^\n    --network-security-group-name %DB_TIER_NSG_NAME% %POSTFIX%\n\nGOTO :eof\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Subroutine to create load balancer resouces: back-end address pool, health probe, and rule\n\n:CreateCommonLBResources\n\nECHO Creating resoures for %1\n\nSET LB_NAME=%1\nSET LB_FRONTEND_NAME=%LB_NAME%-frontend\nSET LB_BACKEND_NAME=%LB_NAME%-backend-pool\nSET LB_PROBE_NAME=%LB_NAME%-probe\n\n:: Create LB back-end address pool\nCALL azure network lb address-pool create --name %LB_BACKEND_NAME% --lb-name ^\n  %LB_NAME% %POSTFIX%\n\n:: Create a health probe for an HTTP endpoint\nCALL azure network lb probe create --name %LB_PROBE_NAME% --lb-name %LB_NAME% ^\n  --port 80 --interval 5 --count 2 --protocol http --path / %POSTFIX%\n\n:: Create a load balancer rule for HTTP\nCALL azure network lb rule create --name %LB_NAME%-rule-http --protocol tcp ^\n  --lb-name %LB_NAME% --frontend-port 80 --backend-port 80 --frontend-ip-name ^\n  %LB_FRONTEND_NAME% --probe-name %LB_PROBE_NAME% %POSTFIX%\n\nGOTO :eof\n\n\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n:: Subroutine to create the VMs and per-VM resources\n\n:CreateVm\n\nECHO Creating VM %1\n\nSET TIER_NAME=%2\nSET SUBNET_NAME=%3\nSET NEEDS_AVAILABILITY_SET=%4\nSET LB_NAME=%5\n\nSET AVAILSET_NAME=%APP_NAME%-%TIER_NAME%-as\nSET VM_NAME=%APP_NAME%-%TIER_NAME%-vm%1\nSET NIC_NAME=%VM_NAME%-nic1\nSET VHD_STORAGE=%VM_NAME:-=%st1\nSET /a RDP_PORT=50001 + %1\n\n:: Create NIC for VM1\nCALL azure network nic create --name %NIC_NAME% --subnet-name %SUBNET_NAME% ^\n  --subnet-vnet-name %VNET_NAME% --location %LOCATION% %POSTFIX%\n\nIF NOT \"%LB_NAME%\"==\"\" (\n    :: Add NIC to back-end address pool\n    SET LB_BACKEND_NAME=%LB_NAME%-backend-pool\n    CALL azure network nic address-pool add --name %NIC_NAME% --lb-name %LB_NAME% ^\n      --lb-address-pool-name %LB_BACKEND_NAME% %POSTFIX%\n)\n\n:: Create the storage account for the OS VHD\nCALL azure storage account create --type PLRS --location %LOCATION% ^\n %VHD_STORAGE% %POSTFIX%\n\n:: Create the VM\nIF \"%NEEDS_AVAILABILITY_SET%\"==\"true\" (\n  CALL azure vm create --name %VM_NAME% --os-type Windows --image-urn ^\n    %WINDOWS_BASE_IMAGE% --vm-size %VM_SIZE% --vnet-subnet-name %SUBNET_NAME% ^\n    --nic-name %NIC_NAME% --vnet-name %VNET_NAME% --storage-account-name ^\n    %VHD_STORAGE% --os-disk-vhd \"%VM_NAME%-osdisk.vhd\" --admin-username ^\n    \"%USERNAME%\" --admin-password \"%PASSWORD%\" --boot-diagnostics-storage-uri ^\n    \"https://%DIAGNOSTICS_STORAGE%.blob.core.windows.net/\" --availset-name ^\n    %AVAILSET_NAME% --location %LOCATION% %POSTFIX%\n) ELSE (\n  CALL azure vm create --name %VM_NAME% --os-type Windows --image-urn ^\n    %WINDOWS_BASE_IMAGE% --vm-size %VM_SIZE% --vnet-subnet-name %SUBNET_NAME% ^\n    --nic-name %NIC_NAME% --vnet-name %VNET_NAME% --storage-account-name ^\n    %VHD_STORAGE% --os-disk-vhd \"%VM_NAME%-osdisk.vhd\" --admin-username ^\n    \"%USERNAME%\" --admin-password \"%PASSWORD%\" --boot-diagnostics-storage-uri ^\n    \"https://%DIAGNOSTICS_STORAGE%.blob.core.windows.net/\" ^\n    --location %LOCATION% %POSTFIX%\n)\n\n:: Attach a data disk\nCALL azure vm disk attach-new --vm-name %VM_NAME% --size-in-gb 128 --vhd-name ^\n  %VM_NAME%-data1.vhd --storage-account-name %VHD_STORAGE% %POSTFIX%\n\ngoto :eof\n```\n\n\n<!-- links -->\n\n[azure-administration]: ../automation/automation-intro.md\n[azure-audit-logs]: ../resource-group-audit.md\n[azure-availability-sets]: ../virtual-machines/virtual-machines-windows-manage-availability.md#configure-each-application-tier-into-separate-availability-sets\n[azure-cli]: ../virtual-machines-command-line-tools.md\n[azure-key-vault]: https://azure.microsoft.com/services/key-vault.md\n[azure-load-balancer]: ../load-balancer/load-balancer-overview.md\n[bastion host]: https://en.wikipedia.org/wiki/Bastion_host\n[cidr]: https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing\n[chef]: https://www.chef.io/solutions/azure/\n[load-balancer-external]: ../load-balancer/load-balancer-internet-overview.md\n[load-balancer-external-cli]: ../load-balancer/load-balancer-get-started-internet-arm-cli.md\n[load-balancer-internal]: ../load-balancer/load-balancer-internal-overview.md\n[load-balancer-internal-cli]: ../load-balancer/load-balancer-get-started-ilb-arm-cli.md\n[multi-vm]: guidance-compute-multi-vm.md\n[naming conventions]: guidance-naming-conventions.md\n[nsg]: ../virtual-network/virtual-networks-nsg.md\n[nsg-rules]: ../best-practices-resource-manager-security.md#network-security-groups\n[operations-management-suite]: https://www.microsoft.com/en-us/server-cloud/operations-management-suite/overview.aspx\n[public IP address]: ../virtual-network/virtual-network-ip-addresses-overview-arm.md\n[puppet]: https://puppetlabs.com/blog/managing-azure-virtual-machines-puppet\n[resource-manager-overview]: ../resource-group-overview.md\n[rfc1918]: http://tools.ietf.org/html/rfc1918\n[sql-alwayson]: https://msdn.microsoft.com/en-us/library/hh510230.aspx\n[vm-planned-maintenance]: ../virtual-machines/virtual-machines-windows-planned-maintenance.md\n[vm-sla]: https://azure.microsoft.com/en-us/support/legal/sla/virtual-machines/v1_0/\n[vnet faq]: ../virtual-network/virtual-networks-faq.md\n"
+}
