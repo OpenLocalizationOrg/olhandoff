@@ -1,0 +1,453 @@
+{
+  "nodes": [
+    {
+      "content": "Azure Backup - Backup of Azure IaaS VMs with encrypted disks | Microsoft Azure",
+      "pos": [
+        26,
+        104
+      ]
+    },
+    {
+      "content": "Learn how Azure Backup handles data encrypted using BitLocker or dmcrypt during IaaS VM backup.",
+      "pos": [
+        122,
+        217
+      ]
+    },
+    {
+      "content": "This article prepares you for the differences in backup and restore experiences when dealing with encrypted disks.",
+      "pos": [
+        218,
+        332
+      ]
+    },
+    {
+      "content": "Dealing with encrypted disks during VM backup",
+      "pos": [
+        634,
+        679
+      ]
+    },
+    {
+      "content": "For enterprises looking to encrypt their VM data in Azure, the solution to use is Bitlocker on Windows or dmcrypt on Linux machines.",
+      "pos": [
+        681,
+        813
+      ]
+    },
+    {
+      "content": "Both of these are volume-level encryption solutions.",
+      "pos": [
+        814,
+        866
+      ]
+    },
+    {
+      "content": "This article deals with the specifics of setting up backup for such Azure VMs, and the impact on restore workflows because of encrypted data.",
+      "pos": [
+        867,
+        1008
+      ]
+    },
+    {
+      "content": "How backup works",
+      "pos": [
+        1013,
+        1029
+      ]
+    },
+    {
+      "content": "The overall solution consists of two layers - the VM layer and the Storage layer.",
+      "pos": [
+        1031,
+        1112
+      ]
+    },
+    {
+      "content": "The VM layer deals with the data as seen by the guest operating system and the applications running in the virtual machine.",
+      "pos": [
+        1117,
+        1240
+      ]
+    },
+    {
+      "content": "It is also the layer that runs the encryption software (Bitlocker or dmcrypt), transparently encrypting data on the volumes before writing it to the disks.",
+      "pos": [
+        1241,
+        1396
+      ]
+    },
+    {
+      "content": "The Storage layer deals with the page blobs and the disks attached to the VM.",
+      "pos": [
+        1400,
+        1477
+      ]
+    },
+    {
+      "content": "It has no knowledge of the data being written to the disk, and whether it is encrypted or not.",
+      "pos": [
+        1478,
+        1572
+      ]
+    },
+    {
+      "content": "This is the layer at which the VM backup functionality operates.",
+      "pos": [
+        1573,
+        1637
+      ]
+    },
+    {
+      "content": "How Bitlocker encryption and Azure VM backup coexist",
+      "pos": [
+        1641,
+        1693
+      ]
+    },
+    {
+      "content": "The entire encryption of data happens transparently and seamlessly in the VM layer.",
+      "pos": [
+        1750,
+        1833
+      ]
+    },
+    {
+      "content": "Thus the data written to the page blobs attached to the VM is encrypted data.",
+      "pos": [
+        1834,
+        1911
+      ]
+    },
+    {
+      "content": "When <bpt id=\"p1\">[</bpt>Azure Backup takes a snapshot of the VM’s disks and transfers data<ept id=\"p1\">](backup-azure-vms-introduction.md#how-does-azure-back-up-virtual-machines)</ept>, it copies the encrypted data present on the page blobs.",
+      "pos": [
+        1912,
+        2116
+      ]
+    },
+    {
+      "content": "Solution components",
+      "pos": [
+        2121,
+        2140
+      ]
+    },
+    {
+      "content": "There are many parts to this solution that need to be configured and managed correctly for this to work:",
+      "pos": [
+        2142,
+        2246
+      ]
+    },
+    {
+      "content": "Function",
+      "pos": [
+        2250,
+        2258
+      ]
+    },
+    {
+      "content": "Software used",
+      "pos": [
+        2261,
+        2274
+      ]
+    },
+    {
+      "content": "Additional notes",
+      "pos": [
+        2277,
+        2293
+      ]
+    },
+    {
+      "content": "Encryption",
+      "pos": [
+        2337,
+        2347
+      ]
+    },
+    {
+      "content": "Bitlocker or dmcrypt",
+      "pos": [
+        2350,
+        2370
+      ]
+    },
+    {
+      "content": "Because the encryption happens in a <bpt id=\"p1\">*</bpt>different<ept id=\"p1\">*</ept> layer when compared to Azure Backup, it doesn't matter what encryption software is used.",
+      "pos": [
+        2373,
+        2509
+      ]
+    },
+    {
+      "content": "That said, this experience has been validated with only Bitlocker and dmcrypt.",
+      "pos": [
+        2510,
+        2588
+      ]
+    },
+    {
+      "content": "In order to encrypt the data, a key is needed.",
+      "pos": [
+        2597,
+        2643
+      ]
+    },
+    {
+      "content": "The key also needs to be kept safe to ensure authorized access to data.",
+      "pos": [
+        2644,
+        2715
+      ]
+    },
+    {
+      "content": "Key management",
+      "pos": [
+        2721,
+        2735
+      ]
+    },
+    {
+      "content": "CloudLink SecureVM",
+      "pos": [
+        2738,
+        2756
+      ]
+    },
+    {
+      "content": "or Azure KeyVault",
+      "pos": [
+        2760,
+        2777
+      ]
+    },
+    {
+      "content": "The key is essential to encrypting or decrypting the data.",
+      "pos": [
+        2780,
+        2838
+      ]
+    },
+    {
+      "content": "Without the right key, the data cannot be retrieved.",
+      "pos": [
+        2839,
+        2891
+      ]
+    },
+    {
+      "content": "This becomes <bpt id=\"p1\">*</bpt>incredibly<ept id=\"p1\">*</ept> important with:",
+      "pos": [
+        2892,
+        2933
+      ]
+    },
+    {
+      "content": "Key roll-overs",
+      "pos": [
+        2941,
+        2955
+      ]
+    },
+    {
+      "content": "Long term retention",
+      "pos": [
+        2959,
+        2978
+      ]
+    },
+    {
+      "content": "For example, it possible that the key used to backup data 7 years ago is not the same key used today.",
+      "pos": [
+        2986,
+        3087
+      ]
+    },
+    {
+      "content": "Without the key from 7 years ago, it will be impossible to use the data restored from that time.",
+      "pos": [
+        3088,
+        3184
+      ]
+    },
+    {
+      "content": "Data backup",
+      "pos": [
+        3188,
+        3199
+      ]
+    },
+    {
+      "content": "Azure Backup",
+      "pos": [
+        3202,
+        3214
+      ]
+    },
+    {
+      "pos": [
+        3217,
+        3352
+      ],
+      "content": "Use Azure Backup to back up your Azure IaaS VMs using the <bpt id=\"p1\">[</bpt>Azure management portal<ept id=\"p1\">](http://manage.windowsazure.com)</ept> or using PowerShell"
+    },
+    {
+      "content": "Data restore",
+      "pos": [
+        3357,
+        3369
+      ]
+    },
+    {
+      "content": "Azure Backup",
+      "pos": [
+        3372,
+        3384
+      ]
+    },
+    {
+      "content": "Use Azure Backup to restore disks or an entire VM from a recovery point.",
+      "pos": [
+        3387,
+        3459
+      ]
+    },
+    {
+      "content": "Data is not decrypted by Azure Backup as a part of the restore operation.",
+      "pos": [
+        3460,
+        3533
+      ]
+    },
+    {
+      "content": "Decryption",
+      "pos": [
+        3537,
+        3547
+      ]
+    },
+    {
+      "content": "Bitlocker or dmcrypt",
+      "pos": [
+        3550,
+        3570
+      ]
+    },
+    {
+      "content": "In order to read data out of a restored data disk or restored VM, the software needs the key from the Key Management software.",
+      "pos": [
+        3573,
+        3699
+      ]
+    },
+    {
+      "content": "Without the right key, the data cannot be decrypted.",
+      "pos": [
+        3700,
+        3752
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.IMPORTANT]</ph>  Key management - including key rollover - is not a part of Azure Backup.",
+      "pos": [
+        3758,
+        3849
+      ]
+    },
+    {
+      "content": "This aspect needs to be managed independently but is very important to the overall backup/restore operation.",
+      "pos": [
+        3850,
+        3958
+      ]
+    },
+    {
+      "content": "CloudLink SecureVM",
+      "pos": [
+        3963,
+        3981
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>CloudLink SecureVM<ept id=\"p1\">](http://www.cloudlinktech.com/choose-your-cloud/microsoft-azure/)</ept> is a VM encryption solution that can be used to secure your Azure IaaS VM data.",
+      "pos": [
+        3983,
+        4148
+      ]
+    },
+    {
+      "content": "CloudLink SecureVM is supported for use with Azure Backup.",
+      "pos": [
+        4149,
+        4207
+      ]
+    },
+    {
+      "content": "Support information",
+      "pos": [
+        4213,
+        4232
+      ]
+    },
+    {
+      "content": "CloudLink SecureVM version 4.0 (build 21536.121 or higher)",
+      "pos": [
+        4236,
+        4294
+      ]
+    },
+    {
+      "content": "Azure PowerShell version 0.9.8 or higher",
+      "pos": [
+        4297,
+        4337
+      ]
+    },
+    {
+      "content": "Key Management",
+      "pos": [
+        4343,
+        4357
+      ]
+    },
+    {
+      "content": "When you need to roll-over or change keys for VMs that have existing backups, you need to ensure that the keys used at the time of backup are available.",
+      "pos": [
+        4359,
+        4511
+      ]
+    },
+    {
+      "content": "One suggested way is to take a backup of the keystore or the entire SecureVM system.",
+      "pos": [
+        4512,
+        4596
+      ]
+    },
+    {
+      "content": "Documentation &amp; Resources",
+      "pos": [
+        4602,
+        4627
+      ]
+    },
+    {
+      "content": "Deployment guide - PDF",
+      "pos": [
+        4632,
+        4654
+      ]
+    },
+    {
+      "content": "Deploying and using SecureVM - video",
+      "pos": [
+        4731,
+        4767
+      ]
+    }
+  ],
+  "content": "<properties\n   pageTitle=\"Azure Backup - Backup of Azure IaaS VMs with encrypted disks | Microsoft Azure\"\n   description=\"Learn how Azure Backup handles data encrypted using BitLocker or dmcrypt during IaaS VM backup. This article prepares you for the differences in backup and restore experiences when dealing with encrypted disks.\"\n   services=\"backup\"\n   documentationCenter=\"\"\n   authors=\"markgalioto\"\n   manager=\"jwhit\"\n   editor=\"\"/>\n<tags\n   ms.service=\"backup\"\n   ms.devlang=\"na\"\n   ms.topic=\"article\"\n   ms.tgt_pltfrm=\"na\"\n   ms.workload=\"storage-backup-recovery\"\n   ms.date=\"03/14/2016\"\n   ms.author=\"markgal; jimpark\"/>\n\n# Dealing with encrypted disks during VM backup\n\nFor enterprises looking to encrypt their VM data in Azure, the solution to use is Bitlocker on Windows or dmcrypt on Linux machines. Both of these are volume-level encryption solutions. This article deals with the specifics of setting up backup for such Azure VMs, and the impact on restore workflows because of encrypted data.\n\n## How backup works\n\nThe overall solution consists of two layers - the VM layer and the Storage layer.\n\n1. The VM layer deals with the data as seen by the guest operating system and the applications running in the virtual machine. It is also the layer that runs the encryption software (Bitlocker or dmcrypt), transparently encrypting data on the volumes before writing it to the disks.\n2. The Storage layer deals with the page blobs and the disks attached to the VM. It has no knowledge of the data being written to the disk, and whether it is encrypted or not. This is the layer at which the VM backup functionality operates.\n\n![How Bitlocker encryption and Azure VM backup coexist](./media/backup-azure-vms-encryption/how-it-works.png)\n\nThe entire encryption of data happens transparently and seamlessly in the VM layer. Thus the data written to the page blobs attached to the VM is encrypted data. When [Azure Backup takes a snapshot of the VM’s disks and transfers data](backup-azure-vms-introduction.md#how-does-azure-back-up-virtual-machines), it copies the encrypted data present on the page blobs.\n\n## Solution components\n\nThere are many parts to this solution that need to be configured and managed correctly for this to work:\n\n| Function | Software used | Additional notes |\n| -------- | ------------- | ------- |\n| Encryption | Bitlocker or dmcrypt | Because the encryption happens in a *different* layer when compared to Azure Backup, it doesn't matter what encryption software is used. That said, this experience has been validated with only Bitlocker and dmcrypt.<br><br> In order to encrypt the data, a key is needed. The key also needs to be kept safe to ensure authorized access to data.  |\n| Key management | CloudLink SecureVM<br>or Azure KeyVault | The key is essential to encrypting or decrypting the data. Without the right key, the data cannot be retrieved. This becomes *incredibly* important with:<br><li>Key roll-overs<li>Long term retention<br><br>For example, it possible that the key used to backup data 7 years ago is not the same key used today. Without the key from 7 years ago, it will be impossible to use the data restored from that time.|\n| Data backup | Azure Backup | Use Azure Backup to back up your Azure IaaS VMs using the [Azure management portal](http://manage.windowsazure.com) or using PowerShell |\n| Data restore | Azure Backup | Use Azure Backup to restore disks or an entire VM from a recovery point. Data is not decrypted by Azure Backup as a part of the restore operation.|\n| Decryption | Bitlocker or dmcrypt | In order to read data out of a restored data disk or restored VM, the software needs the key from the Key Management software. Without the right key, the data cannot be decrypted. |\n\n> [AZURE.IMPORTANT]  Key management - including key rollover - is not a part of Azure Backup. This aspect needs to be managed independently but is very important to the overall backup/restore operation.\n\n## CloudLink SecureVM\n\n[CloudLink SecureVM](http://www.cloudlinktech.com/choose-your-cloud/microsoft-azure/) is a VM encryption solution that can be used to secure your Azure IaaS VM data. CloudLink SecureVM is supported for use with Azure Backup.\n\n### Support information\n\n- CloudLink SecureVM version 4.0 (build 21536.121 or higher)\n- Azure PowerShell version 0.9.8 or higher\n\n### Key Management\n\nWhen you need to roll-over or change keys for VMs that have existing backups, you need to ensure that the keys used at the time of backup are available. One suggested way is to take a backup of the keystore or the entire SecureVM system.\n\n### Documentation & Resources\n\n- [Deployment guide - PDF](http://www.cloudlinktech.com/Azure/CL_SecureVM_4_0_DG_EMC_Azure_R2.pdf)\n- [Deploying and using SecureVM - video](https://www.youtube.com/watch?v=8AIRe92UDNg)\n"
+}

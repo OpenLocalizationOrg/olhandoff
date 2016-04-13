@@ -1,0 +1,691 @@
+{
+  "nodes": [
+    {
+      "content": "Job preparation and cleanup in Batch | Microsoft Azure",
+      "pos": [
+        27,
+        81
+      ]
+    },
+    {
+      "content": "Employ job-level preparation tasks to minimize data transfer to Azure Batch compute nodes, and release tasks for node cleanup at job completion.",
+      "pos": [
+        100,
+        244
+      ]
+    },
+    {
+      "content": "Run job preparation and completion tasks on Azure Batch compute nodes",
+      "pos": [
+        557,
+        626
+      ]
+    },
+    {
+      "content": "Azure Batch jobs often require some form of setup prior to execution, and similarly, some sort of post-job maintenance after the job's tasks are completed.",
+      "pos": [
+        628,
+        783
+      ]
+    },
+    {
+      "content": "Batch provides the mechanisms for this preparation and maintenance in the form of optional <bpt id=\"p1\">*</bpt>job preparation<ept id=\"p1\">*</ept> and <bpt id=\"p2\">*</bpt>job release<ept id=\"p2\">*</ept> tasks.",
+      "pos": [
+        784,
+        917
+      ]
+    },
+    {
+      "content": "Before any of a job's tasks run, the job preparation task runs on all compute nodes that are scheduled to run tasks.",
+      "pos": [
+        919,
+        1035
+      ]
+    },
+    {
+      "content": "Once the job is completed, the job release task runs on each node in the pool that executed at least one task.",
+      "pos": [
+        1036,
+        1146
+      ]
+    },
+    {
+      "content": "For both job preparation and release tasks, you can specify a command line to invoke when the task is run.",
+      "pos": [
+        1147,
+        1253
+      ]
+    },
+    {
+      "content": "These special tasks offer familiar task features such as file download, elevated execution, custom environment variables, maximum execution duration, retry count, and file retention time.",
+      "pos": [
+        1254,
+        1441
+      ]
+    },
+    {
+      "pos": [
+        1443,
+        1657
+      ],
+      "content": "In the following sections, you'll find out how to use these two special task types by using the <bpt id=\"p1\">[</bpt>JobPreparationTask<ph id=\"ph1\">][</ph>net_job_prep<ept id=\"p1\">]</ept> class and <bpt id=\"p2\">[</bpt>JobReleaseTask<ph id=\"ph2\">][</ph>net_job_release<ept id=\"p2\">]</ept> class in the <bpt id=\"p3\">[</bpt>Batch .NET<ph id=\"ph3\">][</ph>api_net<ept id=\"p3\">]</ept> API."
+    },
+    {
+      "pos": [
+        1661,
+        1882
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> Job preparation and release tasks are especially helpful in \"shared pool\" environments--those environments in which a pool of compute nodes persists between job runs, and is shared between many different jobs."
+    },
+    {
+      "content": "When to use job preparation and release tasks",
+      "pos": [
+        1887,
+        1932
+      ]
+    },
+    {
+      "content": "A number of situations benefit from job preparation and release tasks.",
+      "pos": [
+        1934,
+        2004
+      ]
+    },
+    {
+      "content": "Here are just a few:",
+      "pos": [
+        2005,
+        2025
+      ]
+    },
+    {
+      "content": "Transfer of common task data",
+      "pos": [
+        2029,
+        2057
+      ]
+    },
+    {
+      "content": "Batch jobs often require a common set of data as input for the job's tasks.",
+      "pos": [
+        2061,
+        2136
+      ]
+    },
+    {
+      "content": "For example, in daily risk analysis calculations, market data is job specific, yet common to all of the tasks in the job.",
+      "pos": [
+        2137,
+        2258
+      ]
+    },
+    {
+      "content": "This market data, often several gigabytes in size, should be downloaded to each compute node only once so that any task that runs on a node can use it.",
+      "pos": [
+        2259,
+        2410
+      ]
+    },
+    {
+      "content": "Use a <bpt id=\"p1\">*</bpt>job preparation task<ept id=\"p1\">*</ept> to download the data to each node before the execution of the job's other tasks.",
+      "pos": [
+        2411,
+        2520
+      ]
+    },
+    {
+      "content": "Job data deletion",
+      "pos": [
+        2524,
+        2541
+      ]
+    },
+    {
+      "content": "Within a shared pool environment in which a pool's compute nodes are not decommissioned between jobs, deleting job data between runs might be needed--to conserve disk space on the nodes or to satisfy an organization's security policies.",
+      "pos": [
+        2545,
+        2781
+      ]
+    },
+    {
+      "content": "Use a <bpt id=\"p1\">*</bpt>job release task<ept id=\"p1\">*</ept> to delete data that was downloaded by a job preparation task or generated during task execution.",
+      "pos": [
+        2782,
+        2903
+      ]
+    },
+    {
+      "content": "Log retention",
+      "pos": [
+        2907,
+        2920
+      ]
+    },
+    {
+      "content": "You might want to keep a copy of log files that your tasks generate, or perhaps crash dump files that can be generated by failed applications.",
+      "pos": [
+        2924,
+        3066
+      ]
+    },
+    {
+      "content": "Use a <bpt id=\"p1\">*</bpt>job release task<ept id=\"p1\">*</ept> in such cases to compress and upload this data to an <bpt id=\"p2\">[</bpt>Azure Storage<ph id=\"ph1\">][</ph>azure_storage<ept id=\"p2\">]</ept> account.",
+      "pos": [
+        3067,
+        3184
+      ]
+    },
+    {
+      "content": "Job preparation task",
+      "pos": [
+        3189,
+        3209
+      ]
+    },
+    {
+      "content": "Prior to the execution of a job's tasks, the job preparation task is executed on each compute node that is scheduled to run a task.",
+      "pos": [
+        3211,
+        3342
+      ]
+    },
+    {
+      "content": "By default, the Batch service will wait for the job preparation task to be completed before running the tasks scheduled to execute on the node.",
+      "pos": [
+        3343,
+        3486
+      ]
+    },
+    {
+      "content": "However, you can configure the service not to wait.",
+      "pos": [
+        3487,
+        3538
+      ]
+    },
+    {
+      "content": "The job preparation task will run again on a compute node if the node restarts, but you can also disable this behavior.",
+      "pos": [
+        3539,
+        3658
+      ]
+    },
+    {
+      "content": "The job preparation task is only executed on nodes that are scheduled to run a task.",
+      "pos": [
+        3660,
+        3744
+      ]
+    },
+    {
+      "content": "This prevents the unnecessary execution of a preparation task in case a node is not assigned a task.",
+      "pos": [
+        3745,
+        3845
+      ]
+    },
+    {
+      "content": "This can occur when the number of tasks for a job is less than the number of nodes in a pool.",
+      "pos": [
+        3846,
+        3939
+      ]
+    },
+    {
+      "content": "It also applies when <bpt id=\"p1\">[</bpt>concurrent task execution<ept id=\"p1\">](batch-parallel-node-tasks.md)</ept> is enabled, which leaves some nodes idle if the task count is lower than the total possible concurrent tasks.",
+      "pos": [
+        3940,
+        4128
+      ]
+    },
+    {
+      "content": "By not running the job preparation task on idle nodes, you can spend less money on data transfer charges.",
+      "pos": [
+        4129,
+        4234
+      ]
+    },
+    {
+      "pos": [
+        4238,
+        4491
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> <bpt id=\"p1\">[</bpt>JobPreparationTask<ph id=\"ph2\">][</ph>net_job_prep_cloudjob<ept id=\"p1\">]</ept> differs from <bpt id=\"p2\">[</bpt>CloudPool.StartTask<ph id=\"ph3\">][</ph>pool_starttask<ept id=\"p2\">]</ept> in that JobPreparationTask executes at the start of each job, whereas StartTask executes only when a compute node first joins a pool or restarts."
+    },
+    {
+      "content": "Job release task",
+      "pos": [
+        4496,
+        4512
+      ]
+    },
+    {
+      "content": "Once a job is marked as completed, the job release task is executed on each node in the pool that executed at least one task.",
+      "pos": [
+        4514,
+        4639
+      ]
+    },
+    {
+      "content": "You mark a job as completed by issuing a terminate request.",
+      "pos": [
+        4640,
+        4699
+      ]
+    },
+    {
+      "content": "The Batch service then sets the job state to <bpt id=\"p1\">*</bpt>terminating<ept id=\"p1\">*</ept>, terminates any active or running tasks associated with the job, and runs the job release task.",
+      "pos": [
+        4700,
+        4854
+      ]
+    },
+    {
+      "content": "The job then moves to the <bpt id=\"p1\">*</bpt>completed<ept id=\"p1\">*</ept> state.",
+      "pos": [
+        4855,
+        4899
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> Job deletion also executes the job release task.",
+      "pos": [
+        4903,
+        4964
+      ]
+    },
+    {
+      "content": "However, if a job has already been terminated, the release task is not run a second time if that job is subsequently deleted.",
+      "pos": [
+        4965,
+        5090
+      ]
+    },
+    {
+      "content": "Job preparation and release tasks in the Batch .NET API",
+      "pos": [
+        5095,
+        5150
+      ]
+    },
+    {
+      "content": "To specify a job preparation task, you create and configure a <bpt id=\"p1\">[</bpt>JobPreparationTask<ph id=\"ph1\">][</ph>net_job_prep<ept id=\"p1\">]</ept> object and assign it to your job's <bpt id=\"p2\">[</bpt>CloudJob.JobPreparationTask<ph id=\"ph2\">][</ph>net_job_prep_cloudjob<ept id=\"p2\">]</ept> property.",
+      "pos": [
+        5152,
+        5346
+      ]
+    },
+    {
+      "content": "Similarly, initialize <bpt id=\"p1\">[</bpt>JobReleaseTask<ph id=\"ph1\">][</ph>net_job_release<ept id=\"p1\">]</ept> and assign it to your job's <bpt id=\"p2\">[</bpt>CloudJob.JobReleaseTask<ph id=\"ph2\">][</ph>net_job_prep_cloudjob<ept id=\"p2\">]</ept> property to set the job's release task.",
+      "pos": [
+        5347,
+        5519
+      ]
+    },
+    {
+      "pos": [
+        5521,
+        5685
+      ],
+      "content": "In this code snippet, <ph id=\"ph1\">`myBatchClient`</ph> is a fully initialized instance of <bpt id=\"p1\">[</bpt>BatchClient<ph id=\"ph2\">][</ph>net_batch_client<ept id=\"p1\">]</ept>, and <ph id=\"ph3\">`myPool`</ph> is an existing pool within the Batch account."
+    },
+    {
+      "content": "As mentioned above, the release task is executed when a job is terminated or deleted.",
+      "pos": [
+        6551,
+        6636
+      ]
+    },
+    {
+      "content": "Terminating a job with the Batch .NET API is performed by calling <bpt id=\"p1\">[</bpt>PoolOperations.TerminateJobAsync<ph id=\"ph1\">][</ph>net_job_terminate<ept id=\"p1\">]</ept>.",
+      "pos": [
+        6637,
+        6757
+      ]
+    },
+    {
+      "content": "Job deletion is performed with <bpt id=\"p1\">[</bpt>PoolOperations.DeleteJobAsync<ph id=\"ph1\">][</ph>net_job_delete<ept id=\"p1\">]</ept>.",
+      "pos": [
+        6758,
+        6837
+      ]
+    },
+    {
+      "content": "Both of these actions are typically done when a job's tasks are completed or when a timeout that you've defined has been reached.",
+      "pos": [
+        6838,
+        6967
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        7374,
+        7384
+      ]
+    },
+    {
+      "content": "Sample project on GitHub",
+      "pos": [
+        7390,
+        7414
+      ]
+    },
+    {
+      "content": "Check out the <bpt id=\"p1\">[</bpt>JobPrepRelease<ph id=\"ph1\">][</ph>job_prep_release_sample<ept id=\"p1\">]</ept> sample project on GitHub to see job preparation and release tasks in action.",
+      "pos": [
+        7416,
+        7548
+      ]
+    },
+    {
+      "content": "This console application does the following:",
+      "pos": [
+        7549,
+        7593
+      ]
+    },
+    {
+      "content": "Creates a pool with two \"small\" nodes.",
+      "pos": [
+        7598,
+        7636
+      ]
+    },
+    {
+      "content": "Creates a job with job preparation, release, and standard tasks.",
+      "pos": [
+        7640,
+        7704
+      ]
+    },
+    {
+      "content": "Runs the job preparation task, which first writes the node ID to a text file in a node's \"shared\" directory.",
+      "pos": [
+        7708,
+        7816
+      ]
+    },
+    {
+      "content": "Runs a task on each node that writes its task ID to the same text file.",
+      "pos": [
+        7820,
+        7891
+      ]
+    },
+    {
+      "content": "Once all tasks are completed (or the timeout is reached), prints the contents of each node's text file to the console.",
+      "pos": [
+        7895,
+        8013
+      ]
+    },
+    {
+      "content": "When the job is completed, runs the job release task to delete the file from the node.",
+      "pos": [
+        8017,
+        8103
+      ]
+    },
+    {
+      "content": "Prints the exit codes of the job preparation and release tasks for each node on which they executed.",
+      "pos": [
+        8107,
+        8207
+      ]
+    },
+    {
+      "content": "Pauses execution to allow confirmation of job and/or pool deletion.",
+      "pos": [
+        8211,
+        8278
+      ]
+    },
+    {
+      "content": "Output from the sample application is similar to the following:",
+      "pos": [
+        8280,
+        8343
+      ]
+    },
+    {
+      "content": "Inspect job preparation and release tasks with Batch Explorer",
+      "pos": [
+        9392,
+        9453
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt>Azure Batch Explorer<ph id=\"ph1\">][</ph>batch_explorer_article<ept id=\"p1\">]</ept>, which is also found in the Batch <bpt id=\"p2\">[</bpt>sample code repository<ph id=\"ph2\">][</ph>batch_explorer_project<ept id=\"p2\">]</ept> on GitHub, is an excellent tool to use when you're developing solutions with Azure Batch.",
+      "pos": [
+        9455,
+        9678
+      ]
+    },
+    {
+      "content": "For example, when you're running the above sample application, you can use Batch Explorer to view the properties of the job and its tasks, or even download the shared text file that is modified by the job's tasks.",
+      "pos": [
+        9679,
+        9892
+      ]
+    },
+    {
+      "pos": [
+        9894,
+        10087
+      ],
+      "content": "The screenshot below highlights the job preparation and release task properties that are shown in the <bpt id=\"p1\">**</bpt>Job Details<ept id=\"p1\">**</ept> pane when you select the <bpt id=\"p2\">*</bpt>JobPrepReleaseSampleJob<ept id=\"p2\">*</ept> job on the <bpt id=\"p3\">**</bpt>Jobs<ept id=\"p3\">**</ept> tab."
+    },
+    {
+      "content": "Batch Explorer",
+      "pos": [
+        10091,
+        10105
+      ]
+    },
+    {
+      "content": "Batch Explorer screenshot showing job preparation and release tasks",
+      "pos": [
+        10112,
+        10179
+      ]
+    },
+    {
+      "pos": [
+        10182,
+        10246
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_net<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/mt348682.aspx</ph>"
+    },
+    {
+      "pos": [
+        10247,
+        10357
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_net_listjobs<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobs.aspx</ph>"
+    },
+    {
+      "pos": [
+        10358,
+        10423
+      ],
+      "content": "<ph id=\"ph1\">[</ph>api_rest<ph id=\"ph2\">]: http://msdn.microsoft.com/library/azure/dn820158.aspx</ph>"
+    },
+    {
+      "pos": [
+        10424,
+        10486
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure_storage<ph id=\"ph2\">]: https://azure.microsoft.com/services/storage/</ph>"
+    },
+    {
+      "pos": [
+        10487,
+        10614
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_explorer_article<ph id=\"ph2\">]: http://blogs.technet.com/b/windowshpc/archive/2015/01/20/azure-batch-explorer-sample-walkthrough.aspx</ph>"
+    },
+    {
+      "pos": [
+        10615,
+        10718
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_explorer_project<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer</ph>"
+    },
+    {
+      "pos": [
+        10719,
+        10840
+      ],
+      "content": "<ph id=\"ph1\">[</ph>job_prep_release_sample<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/JobPrepRelease</ph>"
+    },
+    {
+      "pos": [
+        10841,
+        10940
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_batch_client<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.batchclient.aspx</ph>"
+    },
+    {
+      "pos": [
+        10941,
+        11032
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_cloudjob<ph id=\"ph2\">]:https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.aspx</ph>"
+    },
+    {
+      "pos": [
+        11033,
+        11135
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_prep<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobpreparationtask.aspx</ph>"
+    },
+    {
+      "pos": [
+        11136,
+        11256
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_prep_cloudjob<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobpreparationtask.aspx</ph>"
+    },
+    {
+      "pos": [
+        11257,
+        11371
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_delete<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.deletejobasync.aspx</ph>"
+    },
+    {
+      "pos": [
+        11372,
+        11492
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_terminate<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.terminatejobasync.aspx</ph>"
+    },
+    {
+      "pos": [
+        11493,
+        11594
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_release<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobreleasetask.aspx</ph>"
+    },
+    {
+      "pos": [
+        11595,
+        11714
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_job_release_cloudjob<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobreleasetask.aspx</ph>"
+    },
+    {
+      "pos": [
+        11715,
+        11820
+      ],
+      "content": "<ph id=\"ph1\">[</ph>pool_starttask<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx</ph>"
+    },
+    {
+      "pos": [
+        11822,
+        11946
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_certs<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.certificateoperations.listcertificates.aspx</ph>"
+    },
+    {
+      "pos": [
+        11947,
+        12072
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_compute_nodes<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.listcomputenodes.aspx</ph>"
+    },
+    {
+      "pos": [
+        12073,
+        12205
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_job_schedules<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobscheduleoperations.listjobschedules.aspx</ph>"
+    },
+    {
+      "pos": [
+        12206,
+        12353
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_jobprep_status<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobpreparationandreleasetaskstatus.aspx</ph>"
+    },
+    {
+      "pos": [
+        12354,
+        12461
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_jobs<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobs.aspx</ph>"
+    },
+    {
+      "pos": [
+        12462,
+        12579
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_nodefiles<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listnodefiles.aspx</ph>"
+    },
+    {
+      "pos": [
+        12580,
+        12690
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_pools<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.listpools.aspx</ph>"
+    },
+    {
+      "pos": [
+        12691,
+        12815
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_schedule_jobs<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobscheduleoperations.listjobs.aspx</ph>"
+    },
+    {
+      "pos": [
+        12816,
+        12930
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_task_files<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listnodefiles.aspx</ph>"
+    },
+    {
+      "pos": [
+        12931,
+        13040
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_list_tasks<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listtasks.aspx</ph>"
+    },
+    {
+      "pos": [
+        13042,
+        13098
+      ],
+      "content": "<ph id=\"ph1\">[</ph>1<ph id=\"ph2\">]: ./media/batch-job-prep-release/batchexplorer-01.png</ph>"
+    },
+    {
+      "pos": [
+        13099,
+        13155
+      ],
+      "content": "<ph id=\"ph1\">[</ph>2<ph id=\"ph2\">]: ./media/batch-job-prep-release/batchexplorer-02.png</ph>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Job preparation and cleanup in Batch | Microsoft Azure\"\n    description=\"Employ job-level preparation tasks to minimize data transfer to Azure Batch compute nodes, and release tasks for node cleanup at job completion.\"\n    services=\"batch\"\n    documentationCenter=\".net\"\n    authors=\"mmacy\"\n    manager=\"timlt\"\n    editor=\"\" />\n    \n<tags\n    ms.service=\"batch\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"article\"\n    ms.tgt_pltfrm=\"vm-windows\"\n    ms.workload=\"big-compute\"\n    ms.date=\"01/22/2016\"\n    ms.author=\"marsma\" />\n    \n# Run job preparation and completion tasks on Azure Batch compute nodes\n\nAzure Batch jobs often require some form of setup prior to execution, and similarly, some sort of post-job maintenance after the job's tasks are completed. Batch provides the mechanisms for this preparation and maintenance in the form of optional *job preparation* and *job release* tasks.\n\nBefore any of a job's tasks run, the job preparation task runs on all compute nodes that are scheduled to run tasks. Once the job is completed, the job release task runs on each node in the pool that executed at least one task. For both job preparation and release tasks, you can specify a command line to invoke when the task is run. These special tasks offer familiar task features such as file download, elevated execution, custom environment variables, maximum execution duration, retry count, and file retention time.\n\nIn the following sections, you'll find out how to use these two special task types by using the [JobPreparationTask][net_job_prep] class and [JobReleaseTask][net_job_release] class in the [Batch .NET][api_net] API.\n\n> [AZURE.TIP] Job preparation and release tasks are especially helpful in \"shared pool\" environments--those environments in which a pool of compute nodes persists between job runs, and is shared between many different jobs.\n\n## When to use job preparation and release tasks\n\nA number of situations benefit from job preparation and release tasks. Here are just a few:\n\n**Transfer of common task data**\n\nBatch jobs often require a common set of data as input for the job's tasks. For example, in daily risk analysis calculations, market data is job specific, yet common to all of the tasks in the job. This market data, often several gigabytes in size, should be downloaded to each compute node only once so that any task that runs on a node can use it. Use a *job preparation task* to download the data to each node before the execution of the job's other tasks.\n\n**Job data deletion**\n\nWithin a shared pool environment in which a pool's compute nodes are not decommissioned between jobs, deleting job data between runs might be needed--to conserve disk space on the nodes or to satisfy an organization's security policies. Use a *job release task* to delete data that was downloaded by a job preparation task or generated during task execution.\n\n**Log retention**\n\nYou might want to keep a copy of log files that your tasks generate, or perhaps crash dump files that can be generated by failed applications. Use a *job release task* in such cases to compress and upload this data to an [Azure Storage][azure_storage] account.\n\n## Job preparation task\n\nPrior to the execution of a job's tasks, the job preparation task is executed on each compute node that is scheduled to run a task. By default, the Batch service will wait for the job preparation task to be completed before running the tasks scheduled to execute on the node. However, you can configure the service not to wait. The job preparation task will run again on a compute node if the node restarts, but you can also disable this behavior.\n\nThe job preparation task is only executed on nodes that are scheduled to run a task. This prevents the unnecessary execution of a preparation task in case a node is not assigned a task. This can occur when the number of tasks for a job is less than the number of nodes in a pool. It also applies when [concurrent task execution](batch-parallel-node-tasks.md) is enabled, which leaves some nodes idle if the task count is lower than the total possible concurrent tasks. By not running the job preparation task on idle nodes, you can spend less money on data transfer charges.\n\n> [AZURE.NOTE] [JobPreparationTask][net_job_prep_cloudjob] differs from [CloudPool.StartTask][pool_starttask] in that JobPreparationTask executes at the start of each job, whereas StartTask executes only when a compute node first joins a pool or restarts.\n\n## Job release task\n\nOnce a job is marked as completed, the job release task is executed on each node in the pool that executed at least one task. You mark a job as completed by issuing a terminate request. The Batch service then sets the job state to *terminating*, terminates any active or running tasks associated with the job, and runs the job release task. The job then moves to the *completed* state.\n\n> [AZURE.NOTE] Job deletion also executes the job release task. However, if a job has already been terminated, the release task is not run a second time if that job is subsequently deleted.\n\n## Job preparation and release tasks in the Batch .NET API\n\nTo specify a job preparation task, you create and configure a [JobPreparationTask][net_job_prep] object and assign it to your job's [CloudJob.JobPreparationTask][net_job_prep_cloudjob] property. Similarly, initialize [JobReleaseTask][net_job_release] and assign it to your job's [CloudJob.JobReleaseTask][net_job_prep_cloudjob] property to set the job's release task.\n\nIn this code snippet, `myBatchClient` is a fully initialized instance of [BatchClient][net_batch_client], and `myPool` is an existing pool within the Batch account.\n\n        // Create the CloudJob for CloudPool \"myPool\"\n        CloudJob myJob = myBatchClient.JobOperations.CreateJob(\"JobPrepReleaseSampleJob\",\n                                                               new PoolInformation() { PoolId = \"myPool\" });\n\n        // Specify the command lines for the job preparation and release tasks\n        string jobPrepCmdLine = \"cmd /c echo %AZ_BATCH_NODE_ID% > %AZ_BATCH_NODE_SHARED_DIR%\\\\shared_file.txt\";\n        string jobReleaseCmdLine = \"cmd /c del %AZ_BATCH_NODE_SHARED_DIR%\\\\shared_file.txt\";\n\n        // Assign the job preparation task to the job\n        myJob.JobPreparationTask = new JobPreparationTask { CommandLine = jobPrepCmdLine };\n\n        // Assign the job release task to the job\n        myJob.JobReleaseTask = new JobPreparationTask { CommandLine = jobReleaseCmdLine };\n\n        await myJob.CommitAsync();\n\nAs mentioned above, the release task is executed when a job is terminated or deleted. Terminating a job with the Batch .NET API is performed by calling [PoolOperations.TerminateJobAsync][net_job_terminate]. Job deletion is performed with [PoolOperations.DeleteJobAsync][net_job_delete]. Both of these actions are typically done when a job's tasks are completed or when a timeout that you've defined has been reached.\n\n        // Terminate the job to mark it as Completed; this will initiate the Job Release Task on any node\n        // that executed job tasks. Note that the Job Release Task is also executed when a job is deleted,\n        // thus you need not call Terminate if you typically delete your jobs upon task completion.\n        await myBatchClient.JobOperations.TerminateJobAsync(\"JobPrepReleaseSampleJob\");\n\n## Next steps\n\n### Sample project on GitHub\n\nCheck out the [JobPrepRelease][job_prep_release_sample] sample project on GitHub to see job preparation and release tasks in action. This console application does the following:\n\n1. Creates a pool with two \"small\" nodes.\n2. Creates a job with job preparation, release, and standard tasks.\n3. Runs the job preparation task, which first writes the node ID to a text file in a node's \"shared\" directory.\n4. Runs a task on each node that writes its task ID to the same text file.\n5. Once all tasks are completed (or the timeout is reached), prints the contents of each node's text file to the console.\n6. When the job is completed, runs the job release task to delete the file from the node.\n6. Prints the exit codes of the job preparation and release tasks for each node on which they executed.\n7. Pauses execution to allow confirmation of job and/or pool deletion.\n\nOutput from the sample application is similar to the following:\n\n```\nAttempting to create pool: JobPrepReleaseSamplePool\nThe pool already existed when we tried to create it\nChecking for existing job JobPrepReleaseSampleJob...\nJob JobPrepReleaseSampleJob not found, creating...\nSubmitting tasks and awaiting completion...\nAll tasks completed.\n\nContents of shared\\job_prep_and_release.txt on tvm-3105992504_1-20151015t150030z:\n-------------------------------------------\ntvm-3105992504_1-20151015t150030z tasks:\n  task001\n  task002\n  task006\n  task007\n\nContents of shared\\job_prep_and_release.txt on tvm-3105992504_2-20151015t150030z:\n-------------------------------------------\ntvm-3105992504_2-20151015t150030z tasks:\n  task003\n  task005\n  task004\n  task008\n\nWaiting for job JobPrepReleaseSampleJob to reach state Completed\n....\n\ntvm-3105992504_1-20151015t150030z:\n  Prep task exit code:    0\n  Release task exit code: 0\n\ntvm-3105992504_2-20151015t150030z:\n  Prep task exit code:    0\n  Release task exit code: 0\n\nDelete job? [yes] no\nyes\nDelete pool? [yes] no\nno\n\nSample complete, hit ENTER to exit...\n```\n\n### Inspect job preparation and release tasks with Batch Explorer\n\nThe [Azure Batch Explorer][batch_explorer_article], which is also found in the Batch [sample code repository][batch_explorer_project] on GitHub, is an excellent tool to use when you're developing solutions with Azure Batch. For example, when you're running the above sample application, you can use Batch Explorer to view the properties of the job and its tasks, or even download the shared text file that is modified by the job's tasks.\n\nThe screenshot below highlights the job preparation and release task properties that are shown in the **Job Details** pane when you select the *JobPrepReleaseSampleJob* job on the **Jobs** tab.\n\n![Batch Explorer][1]\n\n*Batch Explorer screenshot showing job preparation and release tasks*\n\n[api_net]: http://msdn.microsoft.com/library/azure/mt348682.aspx\n[api_net_listjobs]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobs.aspx\n[api_rest]: http://msdn.microsoft.com/library/azure/dn820158.aspx\n[azure_storage]: https://azure.microsoft.com/services/storage/\n[batch_explorer_article]: http://blogs.technet.com/b/windowshpc/archive/2015/01/20/azure-batch-explorer-sample-walkthrough.aspx\n[batch_explorer_project]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer\n[job_prep_release_sample]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/JobPrepRelease\n[net_batch_client]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.batchclient.aspx\n[net_cloudjob]:https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.aspx\n[net_job_prep]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobpreparationtask.aspx\n[net_job_prep_cloudjob]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobpreparationtask.aspx\n[net_job_delete]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.deletejobasync.aspx\n[net_job_terminate]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.terminatejobasync.aspx\n[net_job_release]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobreleasetask.aspx\n[net_job_release_cloudjob]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobreleasetask.aspx\n[pool_starttask]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx\n\n[net_list_certs]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.certificateoperations.listcertificates.aspx\n[net_list_compute_nodes]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.listcomputenodes.aspx\n[net_list_job_schedules]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobscheduleoperations.listjobschedules.aspx\n[net_list_jobprep_status]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobpreparationandreleasetaskstatus.aspx\n[net_list_jobs]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listjobs.aspx\n[net_list_nodefiles]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listnodefiles.aspx\n[net_list_pools]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.listpools.aspx\n[net_list_schedule_jobs]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.jobscheduleoperations.listjobs.aspx\n[net_list_task_files]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.listnodefiles.aspx\n[net_list_tasks]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.joboperations.listtasks.aspx\n\n[1]: ./media/batch-job-prep-release/batchexplorer-01.png\n[2]: ./media/batch-job-prep-release/batchexplorer-02.png\n"
+}
