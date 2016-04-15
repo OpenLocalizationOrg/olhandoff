@@ -1,0 +1,2679 @@
+{
+  "nodes": [
+    {
+      "content": "Azure Batch feature overview | Microsoft Azure",
+      "pos": [
+        27,
+        73
+      ]
+    },
+    {
+      "content": "Learn the features of the Batch service and its APIs from a development standpoint.",
+      "pos": [
+        92,
+        175
+      ]
+    },
+    {
+      "content": "Overview of Azure Batch features",
+      "pos": [
+        495,
+        527
+      ]
+    },
+    {
+      "content": "This article provides a basic overview of the core API features of the Azure Batch service.",
+      "pos": [
+        529,
+        620
+      ]
+    },
+    {
+      "content": "Whether developing a distributed computational solution using the <bpt id=\"p1\">[</bpt>Batch REST<ph id=\"ph1\">][</ph>batch_rest_api<ept id=\"p1\">]</ept> or <bpt id=\"p2\">[</bpt>Batch .NET<ph id=\"ph2\">][</ph>batch_net_api<ept id=\"p2\">]</ept> APIs, you will use many of the entities and features discussed below.",
+      "pos": [
+        621,
+        816
+      ]
+    },
+    {
+      "pos": [
+        820,
+        941
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> For a higher level technical overview of Batch, please see <bpt id=\"p1\">[</bpt>Azure Batch basics<ept id=\"p1\">](batch-technical-overview.md)</ept>."
+    },
+    {
+      "pos": [
+        946,
+        998
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"workflow\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Workflow of the Batch service"
+    },
+    {
+      "content": "The following high-level workflow is typical of that used by nearly all distributed computational scenarios developed within the Batch service:",
+      "pos": [
+        1000,
+        1143
+      ]
+    },
+    {
+      "content": "Upload the <bpt id=\"p1\">*</bpt>data files<ept id=\"p1\">*</ept> that you want to use in your distributed computational scenario to an <bpt id=\"p2\">[</bpt>Azure Storage<ph id=\"ph1\">][</ph>azure_storage<ept id=\"p2\">]</ept> account.",
+      "pos": [
+        1148,
+        1281
+      ]
+    },
+    {
+      "content": "These files must be in the Storage account so that the Batch service can access them.",
+      "pos": [
+        1282,
+        1367
+      ]
+    },
+    {
+      "content": "Tasks will download these files to <bpt id=\"p1\">[</bpt>compute nodes<ept id=\"p1\">](#computenode)</ept> when they are run.",
+      "pos": [
+        1368,
+        1451
+      ]
+    },
+    {
+      "content": "Upload the dependent <bpt id=\"p1\">*</bpt>binary files<ept id=\"p1\">*</ept> to your Storage account.",
+      "pos": [
+        1456,
+        1516
+      ]
+    },
+    {
+      "content": "These binary files include the program to be run by the tasks, and any of its dependent assemblies.",
+      "pos": [
+        1517,
+        1616
+      ]
+    },
+    {
+      "content": "These files must also be accessed from your Storage account so they can be downloaded to the compute nodes by the tasks.",
+      "pos": [
+        1617,
+        1737
+      ]
+    },
+    {
+      "content": "Create a <bpt id=\"p1\">[</bpt>Pool<ept id=\"p1\">](#pool)</ept> of compute nodes.",
+      "pos": [
+        1742,
+        1782
+      ]
+    },
+    {
+      "content": "You specify the <bpt id=\"p1\">[</bpt>size of the compute nodes<ph id=\"ph1\">][</ph>cloud_service_sizes<ept id=\"p1\">]</ept> to use when the pool is created, and when a task runs, it is assigned a node in this pool.",
+      "pos": [
+        1783,
+        1938
+      ]
+    },
+    {
+      "content": "Create a <bpt id=\"p1\">[</bpt>Job<ept id=\"p1\">](#job)</ept>.",
+      "pos": [
+        1943,
+        1964
+      ]
+    },
+    {
+      "content": "A job enables you to manage a collection tasks.",
+      "pos": [
+        1965,
+        2012
+      ]
+    },
+    {
+      "content": "Add <bpt id=\"p1\">[</bpt>Tasks<ept id=\"p1\">](#task)</ept> to the job.",
+      "pos": [
+        2017,
+        2047
+      ]
+    },
+    {
+      "content": "Each task uses the program that you uploaded to process information in the data file(s) that you uploaded to your Storage account.",
+      "pos": [
+        2048,
+        2178
+      ]
+    },
+    {
+      "content": "Monitor job progress and retrieve the results.",
+      "pos": [
+        2183,
+        2229
+      ]
+    },
+    {
+      "pos": [
+        2233,
+        2443
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> You will need a <bpt id=\"p1\">[</bpt>Batch account<ept id=\"p1\">](batch-account-create-portal.md)</ept> to use the Batch service, and nearly all solutions will use an <bpt id=\"p2\">[</bpt>Azure Storage<ph id=\"ph2\">][</ph>azure_storage<ept id=\"p2\">]</ept> account for file storage and retrieval."
+    },
+    {
+      "content": "In the sections below, you'll learn about each of the resources mentioned in the above workflow, as well as many other features of Batch that will enable your distributed computational scenario.",
+      "pos": [
+        2445,
+        2639
+      ]
+    },
+    {
+      "pos": [
+        2644,
+        2698
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"resource\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph> Resources of the Batch service"
+    },
+    {
+      "content": "When you use Batch, you will use many of the following resources.",
+      "pos": [
+        2700,
+        2765
+      ]
+    },
+    {
+      "content": "Some of these resources, such as accounts, compute nodes, pools, jobs, and tasks, are used in all Batch solutions.",
+      "pos": [
+        2766,
+        2880
+      ]
+    },
+    {
+      "content": "Others, such as job schedules and application packages, are helpful but optional features.",
+      "pos": [
+        2881,
+        2971
+      ]
+    },
+    {
+      "content": "Account",
+      "pos": [
+        2976,
+        2983
+      ]
+    },
+    {
+      "content": "Compute node",
+      "pos": [
+        2998,
+        3010
+      ]
+    },
+    {
+      "content": "Pool",
+      "pos": [
+        3029,
+        3033
+      ]
+    },
+    {
+      "content": "Job",
+      "pos": [
+        3045,
+        3048
+      ]
+    },
+    {
+      "content": "Task",
+      "pos": [
+        3059,
+        3063
+      ]
+    },
+    {
+      "content": "Start task",
+      "pos": [
+        3079,
+        3089
+      ]
+    },
+    {
+      "content": "Job manager task",
+      "pos": [
+        3110,
+        3126
+      ]
+    },
+    {
+      "content": "Job preparation and release tasks",
+      "pos": [
+        3152,
+        3185
+      ]
+    },
+    {
+      "content": "Multi-instance tasks",
+      "pos": [
+        3211,
+        3231
+      ]
+    },
+    {
+      "content": "Task dependencies",
+      "pos": [
+        3256,
+        3273
+      ]
+    },
+    {
+      "content": "Job schedules",
+      "pos": [
+        3288,
+        3301
+      ]
+    },
+    {
+      "content": "Application packages",
+      "pos": [
+        3320,
+        3340
+      ]
+    },
+    {
+      "pos": [
+        3355,
+        3384
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"account\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Account"
+    },
+    {
+      "content": "A Batch account is a uniquely identified entity within the Batch service.",
+      "pos": [
+        3386,
+        3459
+      ]
+    },
+    {
+      "content": "All processing is associated with a Batch account.",
+      "pos": [
+        3460,
+        3510
+      ]
+    },
+    {
+      "content": "When you perform operations with the Batch service, you need both the account name and the account key.",
+      "pos": [
+        3511,
+        3614
+      ]
+    },
+    {
+      "content": "To create a batch account, check out <bpt id=\"p1\">[</bpt>Create and manage an Azure Batch account in the Azure portal<ept id=\"p1\">](batch-account-create-portal.md)</ept>.",
+      "pos": [
+        3615,
+        3747
+      ]
+    },
+    {
+      "pos": [
+        3753,
+        3791
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"computenode\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Compute node"
+    },
+    {
+      "content": "A compute node is an Azure virtual machine that is dedicated to a specific workload for your application.",
+      "pos": [
+        3793,
+        3898
+      ]
+    },
+    {
+      "content": "The size of a node determines the number of CPU cores, the memory capacity, and the local file system size that is allocated to the node.",
+      "pos": [
+        3899,
+        4036
+      ]
+    },
+    {
+      "content": "A node can be any of the <bpt id=\"p1\">[</bpt>cloud service node sizes<ph id=\"ph1\">][</ph>cloud_service_sizes<ept id=\"p1\">]</ept>, except for A0.",
+      "pos": [
+        4037,
+        4125
+      ]
+    },
+    {
+      "content": "Nodes can run executables and scripts, including executables (.exe), command (.cmd) files, batch (.bat) files, and PowerShell scripts.",
+      "pos": [
+        4127,
+        4261
+      ]
+    },
+    {
+      "content": "A node also has the following attributes:",
+      "pos": [
+        4262,
+        4303
+      ]
+    },
+    {
+      "content": "A standard <bpt id=\"p1\">**</bpt>folder structure<ept id=\"p1\">**</ept> and associated <bpt id=\"p2\">**</bpt>environment variables<ept id=\"p2\">**</ept> detailing their paths are created on each compute node.",
+      "pos": [
+        4307,
+        4435
+      ]
+    },
+    {
+      "content": "See <bpt id=\"p1\">[</bpt>Files and directories<ept id=\"p1\">](#files)</ept> below for more information.",
+      "pos": [
+        4436,
+        4499
+      ]
+    },
+    {
+      "pos": [
+        4502,
+        4561
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Environment variables<ept id=\"p1\">**</ept> available for reference by tasks."
+    },
+    {
+      "pos": [
+        4564,
+        4624
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Firewall<ept id=\"p1\">**</ept> settings that are configured to control access."
+    },
+    {
+      "pos": [
+        4627,
+        4799
+      ],
+      "content": "If <bpt id=\"p1\">**</bpt>remote access<ept id=\"p1\">**</ept> to a compute node is required (for debugging, for example), an RDP file can be obtained which may then be used to access the node via <bpt id=\"p2\">*</bpt>Remote Desktop<ept id=\"p2\">*</ept>."
+    },
+    {
+      "pos": [
+        4805,
+        4828
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"pool\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Pool"
+    },
+    {
+      "content": "A pool is a collection of nodes on which your application runs.",
+      "pos": [
+        4830,
+        4893
+      ]
+    },
+    {
+      "content": "The pool can be created manually by you, or by the Batch service automatically when you specify the work to be done.",
+      "pos": [
+        4894,
+        5010
+      ]
+    },
+    {
+      "content": "You can create and manage a pool that meets the needs of your application, and pools may be used only by the Batch account in which it was created.",
+      "pos": [
+        5011,
+        5158
+      ]
+    },
+    {
+      "content": "A Batch account can have more than one pool.",
+      "pos": [
+        5159,
+        5203
+      ]
+    },
+    {
+      "content": "Azure Batch pools build on top of the core Azure compute platform: Batch pools provide large-scale allocation, application installation, data distribution, and health monitoring, as well as the flexible adjustment of the number of compute nodes within a pool (scaling).",
+      "pos": [
+        5205,
+        5474
+      ]
+    },
+    {
+      "content": "Every node that is added to a pool is assigned a unique name and IP address.",
+      "pos": [
+        5476,
+        5552
+      ]
+    },
+    {
+      "content": "When a node is removed from a pool, any changes made to the operating system or files are lost, and its name and IP address are released for future use.",
+      "pos": [
+        5553,
+        5705
+      ]
+    },
+    {
+      "content": "When a node leaves a pool, its lifetime is over.",
+      "pos": [
+        5706,
+        5754
+      ]
+    },
+    {
+      "content": "You can configure a pool to allow communication between the nodes within it.",
+      "pos": [
+        5756,
+        5832
+      ]
+    },
+    {
+      "content": "If intra-pool communication is requested for a pool, the Batch service enables ports greater than 1100 on each node in the pool.",
+      "pos": [
+        5833,
+        5961
+      ]
+    },
+    {
+      "content": "Each node in the pool is configured to allow incoming connections to this port range only, and only from other nodes within the pool.",
+      "pos": [
+        5962,
+        6095
+      ]
+    },
+    {
+      "content": "If your application does not require communication between nodes, the Batch service can allocate a potentially large number of nodes to the pool from many different clusters and data centers to enable increased parallel processing power.",
+      "pos": [
+        6096,
+        6333
+      ]
+    },
+    {
+      "content": "When you create a pool, you can specify the following attributes:",
+      "pos": [
+        6335,
+        6400
+      ]
+    },
+    {
+      "pos": [
+        6404,
+        6437
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Size of the nodes<ept id=\"p1\">**</ept> in the pool"
+    },
+    {
+      "content": "An appropriate node size should be chosen, taking into account the characteristics and requirements of the application or applications that are going to be run on the nodes.",
+      "pos": [
+        6444,
+        6617
+      ]
+    },
+    {
+      "content": "The node size is typically selected assuming one task will run on the node at a time.",
+      "pos": [
+        6618,
+        6703
+      ]
+    },
+    {
+      "content": "Considering aspects such as whether the application is multi-threaded and how much memory it consumes will help determine the most suitable and cost-effective node size.",
+      "pos": [
+        6704,
+        6873
+      ]
+    },
+    {
+      "content": "It is possible to have multiple tasks assigned and multiple application instances run in parallel, in which case a larger node is typically chosen - see \"Task scheduling policy\" below for more information.",
+      "pos": [
+        6874,
+        7079
+      ]
+    },
+    {
+      "content": "All of the nodes in a pool must be the same size.",
+      "pos": [
+        7086,
+        7135
+      ]
+    },
+    {
+      "content": "If different applications are to be run with differing system requirements and/or load levels, separate pools should be created.",
+      "pos": [
+        7136,
+        7264
+      ]
+    },
+    {
+      "pos": [
+        7271,
+        7367
+      ],
+      "content": "All <bpt id=\"p1\">[</bpt>cloud service node sizes<ph id=\"ph1\">][</ph>cloud_service_sizes<ept id=\"p1\">]</ept> can be configured for a pool, except for A0."
+    },
+    {
+      "pos": [
+        7371,
+        7437
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Operating system family<ept id=\"p1\">**</ept> and <bpt id=\"p2\">**</bpt>version<ept id=\"p2\">**</ept> that runs on the nodes"
+    },
+    {
+      "pos": [
+        7444,
+        7694
+      ],
+      "content": "As with worker roles within Cloud Services, the <bpt id=\"p1\">*</bpt>OS Family<ept id=\"p1\">*</ept> and <bpt id=\"p2\">*</bpt>OS Version<ept id=\"p2\">*</ept> can be specified (for more information on worker roles, see the <bpt id=\"p3\">[</bpt>Tell me about cloud services<ph id=\"ph1\">][</ph>about_cloud_services<ept id=\"p3\">]</ept> section in <bpt id=\"p4\">*</bpt>Compute Hosting Options Provided by Azure<ept id=\"p4\">*</ept>)."
+    },
+    {
+      "content": "The OS Family also determines which versions of .NET are installed with the OS.",
+      "pos": [
+        7701,
+        7780
+      ]
+    },
+    {
+      "content": "As with worker roles, it is recommended that <ph id=\"ph1\">`*`</ph> be specified for the OS Version so that the nodes are automatically upgraded, and there is no work required to cater to newly released versions.",
+      "pos": [
+        7787,
+        7980
+      ]
+    },
+    {
+      "content": "The primary use case for picking a specific OS version is to ensure that application compatibility is maintained, allowing backward compatibility testing to be performed before allowing the version to be updated.",
+      "pos": [
+        7981,
+        8193
+      ]
+    },
+    {
+      "content": "Once validated, the OS version for the pool can be updated and the new OS image installed–any running task will be interrupted and re-queued.",
+      "pos": [
+        8194,
+        8335
+      ]
+    },
+    {
+      "pos": [
+        8339,
+        8403
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Target number of nodes<ept id=\"p1\">**</ept> that should be available for the pool"
+    },
+    {
+      "pos": [
+        8407,
+        8438
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Scaling policy<ept id=\"p1\">**</ept> for the pool"
+    },
+    {
+      "content": "In addition to the number of nodes, you can also specify an <bpt id=\"p1\">[</bpt>auto-scaling formula<ept id=\"p1\">](batch-automatic-scaling.md)</ept> for a pool.",
+      "pos": [
+        8445,
+        8567
+      ]
+    },
+    {
+      "content": "The Batch service will execute the formula and adjust the number of nodes within the pool based on various pool, job, and task parameters that you can specify.",
+      "pos": [
+        8568,
+        8727
+      ]
+    },
+    {
+      "pos": [
+        8731,
+        8757
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Task scheduling<ept id=\"p1\">**</ept> policy"
+    },
+    {
+      "pos": [
+        8764,
+        8936
+      ],
+      "content": "The <bpt id=\"p1\">[</bpt>max tasks per node<ept id=\"p1\">](batch-parallel-node-tasks.md)</ept> configuration option determines the maximum number of tasks that can be run in parallel on each node within the pool."
+    },
+    {
+      "content": "The default configuration is for one task to be run on a compute node at a time, but there are scenarios where it is beneficial to have more than one task executed on a node at the same time.",
+      "pos": [
+        8943,
+        9134
+      ]
+    },
+    {
+      "content": "One example is to increase node utilization if an application has to wait for I/O.",
+      "pos": [
+        9135,
+        9217
+      ]
+    },
+    {
+      "content": "Having more than one application executed concurrently will increase CPU utilization.",
+      "pos": [
+        9218,
+        9303
+      ]
+    },
+    {
+      "content": "Another example is to reduce the number of nodes in the pool.",
+      "pos": [
+        9304,
+        9365
+      ]
+    },
+    {
+      "content": "This could reduce the amount of data transfer required for large reference data sets - if an A1 node size is sufficient for an application, then the A4 node size could instead be chosen and the pool configured for 8 parallel tasks, each using a core.",
+      "pos": [
+        9366,
+        9616
+      ]
+    },
+    {
+      "content": "A \"fill type\" can also be specified which determines whether Batch spreads the tasks evenly across all nodes, or packs each node with the maximum number of tasks before assigning tasks to another node in the pool.",
+      "pos": [
+        9623,
+        9836
+      ]
+    },
+    {
+      "pos": [
+        9840,
+        9889
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Communication status<ept id=\"p1\">**</ept> of the nodes in the pool"
+    },
+    {
+      "content": "A pool may be configured to allow communication between the nodes in the pool which determines its underlying network infrastructure.",
+      "pos": [
+        9896,
+        10029
+      ]
+    },
+    {
+      "content": "Note that this also impacts placement of the nodes within clusters.",
+      "pos": [
+        10030,
+        10097
+      ]
+    },
+    {
+      "content": "In most scenarios, tasks operate independently and do not need to communicate with one another, but there may be some applications in which tasks must communicate.",
+      "pos": [
+        10104,
+        10267
+      ]
+    },
+    {
+      "pos": [
+        10271,
+        10307
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Start task<ept id=\"p1\">**</ept> for nodes in the pool"
+    },
+    {
+      "content": "A <bpt id=\"p1\">*</bpt>start task<ept id=\"p1\">*</ept> may be specified which is executed each time a compute node joins the pool, and when a node is restarted.",
+      "pos": [
+        10314,
+        10434
+      ]
+    },
+    {
+      "content": "This is often used to install an application to be used by the tasks running on the node.",
+      "pos": [
+        10435,
+        10524
+      ]
+    },
+    {
+      "pos": [
+        10530,
+        10551
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"job\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Job"
+    },
+    {
+      "content": "A job is a collection of tasks, and specifies how computation is performed on compute nodes in a pool.",
+      "pos": [
+        10553,
+        10655
+      ]
+    },
+    {
+      "content": "The job specifies the <bpt id=\"p1\">**</bpt>pool<ept id=\"p1\">**</ept> in which the work will be run.",
+      "pos": [
+        10659,
+        10720
+      ]
+    },
+    {
+      "content": "The pool can be an existing pool, previously created for use by many jobs, or created on-demand for each job associated with a job schedule, or for all jobs associated with a job schedule.",
+      "pos": [
+        10721,
+        10909
+      ]
+    },
+    {
+      "content": "An optional <bpt id=\"p1\">**</bpt>job priority<ept id=\"p1\">**</ept> can be specified.",
+      "pos": [
+        10912,
+        10958
+      ]
+    },
+    {
+      "content": "When a job is submitted with a higher priority than jobs currently in progress, the higher priority job's tasks are inserted into the queue ahead of the lower priority job tasks.",
+      "pos": [
+        10959,
+        11137
+      ]
+    },
+    {
+      "content": "Lower priority tasks that are already running will not be pre-empted.",
+      "pos": [
+        11138,
+        11207
+      ]
+    },
+    {
+      "pos": [
+        11210,
+        11267
+      ],
+      "content": "Job <bpt id=\"p1\">**</bpt>constraints<ept id=\"p1\">**</ept> specify certain limits for your jobs."
+    },
+    {
+      "content": "A <bpt id=\"p1\">**</bpt>maximum wallclock time<ept id=\"p1\">**</ept> can be set for jobs.",
+      "pos": [
+        11274,
+        11323
+      ]
+    },
+    {
+      "content": "If the jobs runs for longer than the maximum wallclock time specified, then the job and all associated tasks will be ended.",
+      "pos": [
+        11324,
+        11447
+      ]
+    },
+    {
+      "content": "Azure Batch can detect tasks that fail and retry the tasks.",
+      "pos": [
+        11454,
+        11513
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>maximum number of task retries<ept id=\"p1\">**</ept> can be specified as a constraint, including whether a task is always or never retried.",
+      "pos": [
+        11514,
+        11639
+      ]
+    },
+    {
+      "content": "Retrying a task means that the task is re-queued to be run again.",
+      "pos": [
+        11640,
+        11705
+      ]
+    },
+    {
+      "content": "Tasks can be added to the job by your client application, or a <bpt id=\"p1\">[</bpt>Job Manager task<ept id=\"p1\">](#jobmanagertask)</ept> may be specified.",
+      "pos": [
+        11708,
+        11824
+      ]
+    },
+    {
+      "content": "A job manager task uses the Batch API and contains the information necessary to create the required tasks for a job, with the task being run on one of the compute nodes within the pool.",
+      "pos": [
+        11825,
+        12010
+      ]
+    },
+    {
+      "content": "The job manager task is handled specifically by Batch–it is queued as soon as the job is created, and restarted if it fails.",
+      "pos": [
+        12011,
+        12135
+      ]
+    },
+    {
+      "content": "A Job Manager task is required for jobs created by a job schedule as it is the only way to define the tasks before the job is instantiated.",
+      "pos": [
+        12136,
+        12275
+      ]
+    },
+    {
+      "content": "More information on job manager tasks appears below.",
+      "pos": [
+        12276,
+        12328
+      ]
+    },
+    {
+      "pos": [
+        12334,
+        12357
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"task\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Task"
+    },
+    {
+      "content": "A task is a unit of computation that is associated with a job and runs on a node.",
+      "pos": [
+        12359,
+        12440
+      ]
+    },
+    {
+      "content": "Tasks are assigned to a node for execution, or are queued until a node becomes free.",
+      "pos": [
+        12441,
+        12525
+      ]
+    },
+    {
+      "content": "A task uses the following resources:",
+      "pos": [
+        12526,
+        12562
+      ]
+    },
+    {
+      "pos": [
+        12566,
+        12628
+      ],
+      "content": "The application specified in the <bpt id=\"p1\">**</bpt>command line<ept id=\"p1\">**</ept> of the task."
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Resource files<ept id=\"p1\">**</ept> that contain the data to be processed.",
+      "pos": [
+        12632,
+        12689
+      ]
+    },
+    {
+      "content": "These files are automatically copied to the node from blob storage in an Azure Storage account.",
+      "pos": [
+        12690,
+        12785
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Files and directories<ept id=\"p1\">](#files)</ept> below.",
+      "pos": [
+        12786,
+        12850
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>environment variables<ept id=\"p1\">**</ept> that are required by the application.",
+      "pos": [
+        12854,
+        12921
+      ]
+    },
+    {
+      "content": "For more information, see <bpt id=\"p1\">[</bpt>Environment settings for tasks<ept id=\"p1\">](#environment)</ept> below.",
+      "pos": [
+        12922,
+        13001
+      ]
+    },
+    {
+      "content": "The <bpt id=\"p1\">**</bpt>constraints<ept id=\"p1\">**</ept> under which the computation should occur.",
+      "pos": [
+        13005,
+        13066
+      ]
+    },
+    {
+      "content": "For example, the maximum time in which the task is allowed to run, the maximum number of times that a task should be retried if it fails, and the maximum time that files in the working directory are retained.",
+      "pos": [
+        13067,
+        13275
+      ]
+    },
+    {
+      "content": "In addition to tasks that you define to perform computation on a node, the following special tasks are also provided by the Batch service:",
+      "pos": [
+        13277,
+        13415
+      ]
+    },
+    {
+      "content": "Start task",
+      "pos": [
+        13420,
+        13430
+      ]
+    },
+    {
+      "content": "Job manager task",
+      "pos": [
+        13447,
+        13463
+      ]
+    },
+    {
+      "content": "Job preparation and release tasks",
+      "pos": [
+        13485,
+        13518
+      ]
+    },
+    {
+      "content": "Multi-instance tasks",
+      "pos": [
+        13540,
+        13560
+      ]
+    },
+    {
+      "content": "Task dependencies",
+      "pos": [
+        13581,
+        13598
+      ]
+    },
+    {
+      "pos": [
+        13616,
+        13650
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"starttask\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Start task"
+    },
+    {
+      "content": "By associating a <bpt id=\"p1\">**</bpt>start task<ept id=\"p1\">**</ept> with a pool, you can configure the operating environment of its nodes, performing actions such as installing software or starting background processes.",
+      "pos": [
+        13652,
+        13835
+      ]
+    },
+    {
+      "content": "The start task runs every time a node starts for as long as it remains in the pool, including when the node is first added to the pool.",
+      "pos": [
+        13836,
+        13971
+      ]
+    },
+    {
+      "content": "A primary benefit of the start task is that it contains all of the information necessary to configure compute nodes and install applications necessary for job task execution.",
+      "pos": [
+        13972,
+        14146
+      ]
+    },
+    {
+      "content": "Thus, increasing the number of nodes in a pool is as simple as specifying the new target node count - Batch already has all of the information needed to configure the new nodes and get them ready for accepting tasks.",
+      "pos": [
+        14147,
+        14363
+      ]
+    },
+    {
+      "content": "As with any Batch task, a list of <bpt id=\"p1\">**</bpt>resource files<ept id=\"p1\">**</ept> in <bpt id=\"p2\">[</bpt>Azure Storage<ph id=\"ph1\">][</ph>azure_storage<ept id=\"p2\">]</ept> can be specified, in addition to a <bpt id=\"p3\">**</bpt>command line<ept id=\"p3\">**</ept> to be executed.",
+      "pos": [
+        14365,
+        14519
+      ]
+    },
+    {
+      "content": "Azure Batch will first copy the files from Azure Storage, then run the command line.",
+      "pos": [
+        14520,
+        14604
+      ]
+    },
+    {
+      "content": "For a pool start task, the file list usually contains the application package or files, but it could also include reference data to be used by all tasks running on the compute nodes.",
+      "pos": [
+        14605,
+        14787
+      ]
+    },
+    {
+      "content": "The start task's command line could execute a PowerShell script or perform a <ph id=\"ph1\">`robocopy`</ph> operation, for example, to copy application files to the \"shared\" folder, then subsequently run an MSI or <ph id=\"ph2\">`setup.exe`</ph>.",
+      "pos": [
+        14788,
+        14994
+      ]
+    },
+    {
+      "content": "It is typically desirable for the Batch service to wait for the start task to complete before considering the node ready to be assigned tasks, but this is configurable.",
+      "pos": [
+        14996,
+        15164
+      ]
+    },
+    {
+      "content": "If a start task fails on a compute node, then the state of the node is updated to reflect the failure, and the node will not be available for tasks to be assigned.",
+      "pos": [
+        15166,
+        15329
+      ]
+    },
+    {
+      "content": "A start task can fail if there is an issue copying its resource files from storage, or if the process executed by its command line returns a non-zero exit code.",
+      "pos": [
+        15330,
+        15490
+      ]
+    },
+    {
+      "pos": [
+        15497,
+        15542
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"jobmanagertask\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Job manager task"
+    },
+    {
+      "content": "A <bpt id=\"p1\">**</bpt>Job Manager task<ept id=\"p1\">**</ept> is typically used in controlling and/or monitoring job execution.",
+      "pos": [
+        15544,
+        15632
+      ]
+    },
+    {
+      "content": "For example, creating and submitting the tasks for a job, determining additional tasks to run, and determining when work is complete.",
+      "pos": [
+        15633,
+        15766
+      ]
+    },
+    {
+      "content": "A Job Manager task is not restricted to these activities, however - it is a fully fledged task that can perform any actions required for the job.",
+      "pos": [
+        15767,
+        15912
+      ]
+    },
+    {
+      "content": "For example, a Job Manager task might download a file specified as a parameter, analyze the contents of that file, and submit additional tasks based on those contents.",
+      "pos": [
+        15913,
+        16080
+      ]
+    },
+    {
+      "content": "A job manager task is started before all other tasks and provides the following features:",
+      "pos": [
+        16082,
+        16171
+      ]
+    },
+    {
+      "content": "It is automatically submitted as a task by the Batch service when the job is created.",
+      "pos": [
+        16175,
+        16260
+      ]
+    },
+    {
+      "content": "It is scheduled to execute before the other tasks in a job.",
+      "pos": [
+        16264,
+        16323
+      ]
+    },
+    {
+      "content": "Its associated node is the last to be removed from a pool when the pool is being downsized.",
+      "pos": [
+        16327,
+        16418
+      ]
+    },
+    {
+      "content": "Its termination can be tied to the termination of all tasks in the job.",
+      "pos": [
+        16422,
+        16493
+      ]
+    },
+    {
+      "content": "The job manager task is given the highest priority when it needs to be restarted.",
+      "pos": [
+        16497,
+        16578
+      ]
+    },
+    {
+      "content": "If an idle node is not available, the Batch service may terminate one of the other running tasks in the pool to make room for the job manager task to run.",
+      "pos": [
+        16579,
+        16733
+      ]
+    },
+    {
+      "content": "A job manager task in one job does not have priority over the tasks of other jobs.",
+      "pos": [
+        16737,
+        16819
+      ]
+    },
+    {
+      "content": "Across jobs, only job-level priorities are observed.",
+      "pos": [
+        16820,
+        16872
+      ]
+    },
+    {
+      "pos": [
+        16879,
+        16941
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"jobpreprelease\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Job preparation and release tasks"
+    },
+    {
+      "content": "Batch provides the job preparation task for pre-job execution setup, and the job release task for post-job maintenance or cleanup.",
+      "pos": [
+        16943,
+        17073
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Job preparation task<ept id=\"p1\">**</ept> - The job preparation task runs on all compute nodes scheduled to run tasks, before any of the other job tasks are executed.",
+      "pos": [
+        17077,
+        17226
+      ]
+    },
+    {
+      "content": "Use the job preparation task to copy data shared by all tasks, but unique to the job, for example.",
+      "pos": [
+        17227,
+        17325
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Job release task<ept id=\"p1\">**</ept> - When a job has completed, the job release task runs on each node in the pool that executed at least one task.",
+      "pos": [
+        17328,
+        17460
+      ]
+    },
+    {
+      "content": "Use the job release task to delete data copied by the job preparation task, or compress and upload diagnostic log data, for example.",
+      "pos": [
+        17461,
+        17593
+      ]
+    },
+    {
+      "content": "Both job preparation and release tasks allow you to specify a command line to run when the task is invoked, and offer features such as file download, elevated execution, custom environment variables, maximum execution duration, retry count, and file retention time.",
+      "pos": [
+        17595,
+        17860
+      ]
+    },
+    {
+      "pos": [
+        17862,
+        18024
+      ],
+      "content": "For more information on job preparation and release tasks, see <bpt id=\"p1\">[</bpt>Run job preparation and completion tasks on Azure Batch compute nodes<ept id=\"p1\">](batch-job-prep-release.md)</ept>."
+    },
+    {
+      "pos": [
+        18031,
+        18079
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"multiinstance\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Multi-instance tasks"
+    },
+    {
+      "content": "A <bpt id=\"p1\">[</bpt>multi-instance task<ept id=\"p1\">](batch-mpi.md)</ept> is a task that is configured to run on more than one compute node simultaneously.",
+      "pos": [
+        18081,
+        18200
+      ]
+    },
+    {
+      "content": "With multi-instance tasks, you can enable high performance computing scenarios like Message Passing Interface (MPI) that require a group of compute nodes allocated together to process a single workload.",
+      "pos": [
+        18201,
+        18403
+      ]
+    },
+    {
+      "pos": [
+        18405,
+        18608
+      ],
+      "content": "For a detailed discussion on running MPI jobs in Batch using the Batch .NET library, check out <bpt id=\"p1\">[</bpt>Use multi-instance tasks to run Message Passing Interface (MPI) applications in Azure Batch<ept id=\"p1\">](batch-mpi.md)</ept>."
+    },
+    {
+      "pos": [
+        18615,
+        18654
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"taskdep\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Task dependencies"
+    },
+    {
+      "content": "Task dependencies, as the name implies, allow you to specify that a task depends on the completion of other tasks before its execution.",
+      "pos": [
+        18656,
+        18791
+      ]
+    },
+    {
+      "content": "This feature provides support for situations in which a \"downstream\" task consumes the output of an \"upstream\" task, or when an upstream task performs some initialization that is required by a downstream task.",
+      "pos": [
+        18792,
+        19001
+      ]
+    },
+    {
+      "content": "To use this feature, you must first enable task dependencies on your Batch job.",
+      "pos": [
+        19002,
+        19081
+      ]
+    },
+    {
+      "content": "Then, for each task that depends on another (or many others), you specify the tasks which that task depends on.",
+      "pos": [
+        19082,
+        19193
+      ]
+    },
+    {
+      "content": "With task dependencies, you can configure scenarios such as the following:",
+      "pos": [
+        19195,
+        19269
+      ]
+    },
+    {
+      "pos": [
+        19273,
+        19362
+      ],
+      "content": "<bpt id=\"p1\">*</bpt>taskB<ept id=\"p1\">*</ept> depends on <bpt id=\"p2\">*</bpt>taskA<ept id=\"p2\">*</ept> (<bpt id=\"p3\">*</bpt>taskB<ept id=\"p3\">*</ept> will not begin execution until <bpt id=\"p4\">*</bpt>taskA<ept id=\"p4\">*</ept> has completed)"
+    },
+    {
+      "pos": [
+        19365,
+        19408
+      ],
+      "content": "<bpt id=\"p1\">*</bpt>taskC<ept id=\"p1\">*</ept> depends on both <bpt id=\"p2\">*</bpt>taskA<ept id=\"p2\">*</ept> and <bpt id=\"p3\">*</bpt>taskB<ept id=\"p3\">*</ept>"
+    },
+    {
+      "pos": [
+        19411,
+        19498
+      ],
+      "content": "<bpt id=\"p1\">*</bpt>taskD<ept id=\"p1\">*</ept> depends on a range of tasks, such as tasks <bpt id=\"p2\">*</bpt>1<ept id=\"p2\">*</ept> through <bpt id=\"p3\">*</bpt>10<ept id=\"p3\">*</ept>, before it executes"
+    },
+    {
+      "content": "Check out the <bpt id=\"p1\">[</bpt>TaskDependencies<ph id=\"ph1\">][</ph>github_sample_taskdeps<ept id=\"p1\">]</ept> code sample in the <bpt id=\"p2\">[</bpt>azure-batch-samples<ph id=\"ph2\">][</ph>github_samples<ept id=\"p2\">]</ept> GitHub repository.",
+      "pos": [
+        19500,
+        19632
+      ]
+    },
+    {
+      "content": "In it, you will see how to configure tasks that depend on other tasks using the <bpt id=\"p1\">[</bpt>Batch .NET<ph id=\"ph1\">][</ph>batch_net_api<ept id=\"p1\">]</ept> library.",
+      "pos": [
+        19633,
+        19749
+      ]
+    },
+    {
+      "pos": [
+        19755,
+        19795
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"jobschedule\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Scheduled jobs"
+    },
+    {
+      "content": "Job schedules enable you to create recurring jobs within the Batch service.",
+      "pos": [
+        19797,
+        19872
+      ]
+    },
+    {
+      "content": "A job schedule specifies when to run jobs and includes the specifications for the jobs to be run.",
+      "pos": [
+        19873,
+        19970
+      ]
+    },
+    {
+      "content": "A job schedule allows for the specification of the duration of the schedule - how long and when the schedule is in effect - and how often during that time period jobs should be created.",
+      "pos": [
+        19971,
+        20156
+      ]
+    },
+    {
+      "pos": [
+        20162,
+        20202
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"appkg\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Application packages"
+    },
+    {
+      "content": "The <bpt id=\"p1\">[</bpt>application packages<ept id=\"p1\">](batch-application-packages.md)</ept> feature provides easy management and deployment of applications to the compute nodes in your pools.",
+      "pos": [
+        20204,
+        20361
+      ]
+    },
+    {
+      "content": "With application packages, you can easily upload and manage multiple versions of the applications run by your tasks, including binaries and support files, then automatically deploy one or more of these applications to the compute nodes in your pool.",
+      "pos": [
+        20362,
+        20611
+      ]
+    },
+    {
+      "content": "Batch handles the details of working with Azure Storage in the background to securely store and deploy your application packages to compute nodes, so both your code and your management overhead can be simplified.",
+      "pos": [
+        20613,
+        20825
+      ]
+    },
+    {
+      "pos": [
+        20827,
+        20987
+      ],
+      "content": "To find out more about the application package feature, check out <bpt id=\"p1\">[</bpt>Application deployment with Azure Batch application packages<ept id=\"p1\">](batch-application-packages.md)</ept>."
+    },
+    {
+      "pos": [
+        20992,
+        21033
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"files\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Files and directories"
+    },
+    {
+      "content": "Each task has a working directory under which it creates zero or more files and directories for storing the program that is run by the task, the data that it processes, and the output of the processing performed by the task.",
+      "pos": [
+        21035,
+        21259
+      ]
+    },
+    {
+      "content": "These files and directories are then available for use by other tasks during the running of a job.",
+      "pos": [
+        21260,
+        21358
+      ]
+    },
+    {
+      "content": "All tasks, files, and directories on a node are owned by a single user account.",
+      "pos": [
+        21359,
+        21438
+      ]
+    },
+    {
+      "content": "The Batch service exposes a portion of the file system on a node as the \"root directory.\"",
+      "pos": [
+        21440,
+        21529
+      ]
+    },
+    {
+      "content": "The root directory is available to a task by accessing the <ph id=\"ph1\">`%AZ_BATCH_NODE_ROOT_DIR%`</ph> environment variable.",
+      "pos": [
+        21530,
+        21637
+      ]
+    },
+    {
+      "content": "For more information about using environment variables, see <bpt id=\"p1\">[</bpt>Environment settings for tasks<ept id=\"p1\">](#environment)</ept>.",
+      "pos": [
+        21638,
+        21745
+      ]
+    },
+    {
+      "content": "Compute node directory structure",
+      "pos": [
+        21749,
+        21781
+      ]
+    },
+    {
+      "content": "The root directory contains the following directory structure:",
+      "pos": [
+        21787,
+        21849
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Shared<ept id=\"p1\">**</ept> – This location is a shared directory for all tasks that run on a node, regardless of job.",
+      "pos": [
+        21853,
+        21954
+      ]
+    },
+    {
+      "content": "On the node, the shared directory is accessed via  <ph id=\"ph1\">`%AZ_BATCH_NODE_SHARED_DIR%`</ph>.",
+      "pos": [
+        21955,
+        22035
+      ]
+    },
+    {
+      "content": "This directory provides read/write access to all tasks that execute on the node.",
+      "pos": [
+        22036,
+        22116
+      ]
+    },
+    {
+      "content": "Tasks can create, read, update, and delete files in this directory.",
+      "pos": [
+        22117,
+        22184
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Startup<ept id=\"p1\">**</ept> – This location is used by a start task as its working directory.",
+      "pos": [
+        22188,
+        22265
+      ]
+    },
+    {
+      "content": "All of the files that are downloaded by the Batch service to launch the start task are also stored under this directory.",
+      "pos": [
+        22266,
+        22386
+      ]
+    },
+    {
+      "content": "On the node, the start directory is available via the <ph id=\"ph1\">`%AZ_BATCH_NODE_STARTUP_DIR%`</ph> environment variable.",
+      "pos": [
+        22387,
+        22492
+      ]
+    },
+    {
+      "content": "The start task can create, read, update, and delete files under this directory, and this directory can be used by start tasks to configure the operating system.",
+      "pos": [
+        22493,
+        22653
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">**</bpt>Tasks<ept id=\"p1\">**</ept> - A directory is created for each task that runs on the node, accessed via <ph id=\"ph1\">`%AZ_BATCH_TASK_DIR%`</ph>.",
+      "pos": [
+        22657,
+        22764
+      ]
+    },
+    {
+      "content": "Within each task directory, the Batch service creates a working directory (<ph id=\"ph1\">`wd`</ph>) whose unique path is specified by the <ph id=\"ph2\">`%AZ_BATCH_TASK_WORKING_DIR%`</ph> environment variable.",
+      "pos": [
+        22765,
+        22935
+      ]
+    },
+    {
+      "content": "This directory provides read/write access to the task.",
+      "pos": [
+        22936,
+        22990
+      ]
+    },
+    {
+      "content": "The task can create, read, update, and delete files under this directory, and this directory is retained based on the <bpt id=\"p1\">*</bpt>RetentionTime<ept id=\"p1\">*</ept> constraint specified for the task.",
+      "pos": [
+        22991,
+        23159
+      ]
+    },
+    {
+      "pos": [
+        23164,
+        23272
+      ],
+      "content": "<ph id=\"ph1\">`stdout.txt`</ph> and <ph id=\"ph2\">`stderr.txt`</ph> - These files are written to the task folder during the execution of the task."
+    },
+    {
+      "content": "When a node is removed from the pool, all of the files that are stored on the node are removed.",
+      "pos": [
+        23274,
+        23369
+      ]
+    },
+    {
+      "pos": [
+        23374,
+        23427
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"lifetime\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Pool and compute node lifetime"
+    },
+    {
+      "content": "When designing your Azure Batch solution, a design decision must be made with regard to how and when pools are created, and how long compute nodes within those pools are kept available.",
+      "pos": [
+        23429,
+        23614
+      ]
+    },
+    {
+      "content": "On one end of the spectrum, a pool could be created for each job when the job is submitted, and its nodes removed as soon as tasks finish execution.",
+      "pos": [
+        23616,
+        23764
+      ]
+    },
+    {
+      "content": "This will maximize utilization as the nodes are only allocated when absolutely needed, and shutdown as soon as they become idle.",
+      "pos": [
+        23765,
+        23893
+      ]
+    },
+    {
+      "content": "While this means that the job must wait for the nodes to be allocated, it is important to note that tasks will be scheduled to nodes as soon as they are individually available, allocated, and the start task has completed.",
+      "pos": [
+        23894,
+        24115
+      ]
+    },
+    {
+      "content": "Batch does <bpt id=\"p1\">*</bpt>not<ept id=\"p1\">*</ept> wait until all nodes within a pool are available before assigning tasks, thus ensuring maximum utilization of all available nodes.",
+      "pos": [
+        24116,
+        24263
+      ]
+    },
+    {
+      "content": "At the other end of the spectrum, if having jobs start immediately is the highest priority, a pool may be created ahead of time and its nodes made available before jobs are submitted.",
+      "pos": [
+        24265,
+        24448
+      ]
+    },
+    {
+      "content": "In this scenario, job tasks can start immediately, but nodes may sit idle while waiting for tasks to be assigned.",
+      "pos": [
+        24449,
+        24562
+      ]
+    },
+    {
+      "content": "A combined approach, typically used for handling variable but ongoing load, is to have a pool to which multiple jobs are submitted, but scale the number of nodes up or down according to the job load (see <bpt id=\"p1\">*</bpt>Scaling applications<ept id=\"p1\">*</ept> below).",
+      "pos": [
+        24564,
+        24798
+      ]
+    },
+    {
+      "content": "This can be done reactively, based on current load, or proactively if load can be predicted.",
+      "pos": [
+        24799,
+        24891
+      ]
+    },
+    {
+      "pos": [
+        24896,
+        24938
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"scaling\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Scaling applications"
+    },
+    {
+      "content": "With <bpt id=\"p1\">[</bpt>automatic scaling<ept id=\"p1\">](batch-automatic-scaling.md)</ept>, you can have the Batch service dynamically adjust the number of compute nodes in a pool according to the current workload and resource usage of your compute scenario.",
+      "pos": [
+        24940,
+        25160
+      ]
+    },
+    {
+      "content": "This allows you to lower the overall cost of running your application by using only the resources you need, and releasing those you don't.",
+      "pos": [
+        25161,
+        25299
+      ]
+    },
+    {
+      "content": "You can specify the automatic scaling settings for a pool when it is created, or enable scaling later, and you can update the scaling settings on an automatic scaling-enabled pool.",
+      "pos": [
+        25300,
+        25480
+      ]
+    },
+    {
+      "content": "Automatic scaling is performed by specifying an <bpt id=\"p1\">**</bpt>automatic scaling formula<ept id=\"p1\">**</ept> for a pool.",
+      "pos": [
+        25482,
+        25571
+      ]
+    },
+    {
+      "content": "The Batch service uses this formula to determine the target number of nodes in the pool for the next scaling interval (an interval which you can specify).",
+      "pos": [
+        25572,
+        25726
+      ]
+    },
+    {
+      "content": "For example, perhaps a job requires that you submit a large number of tasks to be scheduled for execution.",
+      "pos": [
+        25728,
+        25834
+      ]
+    },
+    {
+      "content": "You can assign a scaling formula to the pool that adjusts number of nodes in the pool based on the current number of pending tasks, and the completion rate of those tasks.",
+      "pos": [
+        25835,
+        26006
+      ]
+    },
+    {
+      "content": "The Batch service periodically evaluates the formula, and resizes the pool based on workload and your formula settings.",
+      "pos": [
+        26007,
+        26126
+      ]
+    },
+    {
+      "content": "A scaling formula can be based on the following metrics:",
+      "pos": [
+        26128,
+        26184
+      ]
+    },
+    {
+      "pos": [
+        26188,
+        26289
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Time metrics<ept id=\"p1\">**</ept> – Based on statistics collected every five minutes in the specified number of hours."
+    },
+    {
+      "pos": [
+        26293,
+        26387
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Resource metrics<ept id=\"p1\">**</ept> – Based on CPU usage, bandwidth usage, memory usage, and number of nodes."
+    },
+    {
+      "pos": [
+        26391,
+        26479
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Task metrics<ept id=\"p1\">**</ept> – Based on the status of tasks, such as Active, Pending, and Completed."
+    },
+    {
+      "content": "When automatic scaling decreases the number of compute nodes in a pool, currently running tasks must be considered.",
+      "pos": [
+        26481,
+        26596
+      ]
+    },
+    {
+      "content": "To accommodate this, your formula can include a node de-allocation policy setting that specifies whether running tasks are stopped immediately, or allowed to finish before the node is removed from the pool.",
+      "pos": [
+        26597,
+        26803
+      ]
+    },
+    {
+      "pos": [
+        26807,
+        26955
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.TIP]</ph> To maximize compute resource utilization, set the target number of nodes to zero at the end of a job, but allow running tasks to finish."
+    },
+    {
+      "pos": [
+        26957,
+        27113
+      ],
+      "content": "For more information about automatically scaling an application, see <bpt id=\"p1\">[</bpt>Automatically scale compute nodes in an Azure Batch pool<ept id=\"p1\">](batch-automatic-scaling.md)</ept>."
+    },
+    {
+      "pos": [
+        27118,
+        27163
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"cert\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Security with certificates"
+    },
+    {
+      "content": "You typically need to use certificates when encrypting or decrypting sensitive information for tasks, such as the key for an <bpt id=\"p1\">[</bpt>Azure Storage account<ph id=\"ph1\">][</ph>azure_storage<ept id=\"p1\">]</ept>.",
+      "pos": [
+        27165,
+        27329
+      ]
+    },
+    {
+      "content": "To support this, certificates can be installed on nodes.",
+      "pos": [
+        27330,
+        27386
+      ]
+    },
+    {
+      "content": "Encrypted secrets are passed to tasks via command-line parameters or embedded in one of the task resources, and the installed certificates can be used to decrypt them.",
+      "pos": [
+        27387,
+        27554
+      ]
+    },
+    {
+      "content": "You use the <bpt id=\"p1\">[</bpt>Add certificate<ph id=\"ph1\">][</ph>rest_add_cert<ept id=\"p1\">]</ept> operation (Batch REST API) or <bpt id=\"p2\">[</bpt>CertificateOperations.CreateCertificate<ph id=\"ph2\">][</ph>net_create_cert<ept id=\"p2\">]</ept> method (Batch .NET API) to add a certificate to a Batch account.",
+      "pos": [
+        27556,
+        27754
+      ]
+    },
+    {
+      "content": "You can then associate the certificate to a new or existing pool.",
+      "pos": [
+        27755,
+        27820
+      ]
+    },
+    {
+      "content": "When a certificate is associated with a pool, the Batch service installs the certificate on each node in the pool.",
+      "pos": [
+        27821,
+        27935
+      ]
+    },
+    {
+      "content": "The Batch service installs the appropriate certificates when the node starts up, before launching any tasks including start and job manager tasks.",
+      "pos": [
+        27936,
+        28082
+      ]
+    },
+    {
+      "pos": [
+        28087,
+        28131
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"scheduling\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Scheduling priority"
+    },
+    {
+      "content": "You can assign a priority to jobs you create in Batch.",
+      "pos": [
+        28133,
+        28187
+      ]
+    },
+    {
+      "content": "The Batch service uses the priority value of the job to determine the order of job scheduling within an account.",
+      "pos": [
+        28188,
+        28300
+      ]
+    },
+    {
+      "content": "The priority values range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest.",
+      "pos": [
+        28301,
+        28411
+      ]
+    },
+    {
+      "content": "You can update the priority of a job by using the <bpt id=\"p1\">[</bpt>Update the properties of a job<ph id=\"ph1\">][</ph>rest_update_job<ept id=\"p1\">]</ept> operation (Batch REST API) or by modifying the <bpt id=\"p2\">[</bpt>CloudJob.Priority<ph id=\"ph2\">][</ph>net_cloudjob_priority<ept id=\"p2\">]</ept> property (Batch .NET API).",
+      "pos": [
+        28412,
+        28628
+      ]
+    },
+    {
+      "content": "Within the same account, higher priority jobs have scheduling precedence over lower priority jobs.",
+      "pos": [
+        28630,
+        28728
+      ]
+    },
+    {
+      "content": "A job with a higher priority value in one account does not have scheduling precedence over another job with a lower priority value in a different account.",
+      "pos": [
+        28729,
+        28883
+      ]
+    },
+    {
+      "content": "Job scheduling across pools is independent.",
+      "pos": [
+        28885,
+        28928
+      ]
+    },
+    {
+      "content": "Between different pools, it is not guaranteed that a higher priority job will be scheduled first if its associated pool is short of idle nodes.",
+      "pos": [
+        28929,
+        29072
+      ]
+    },
+    {
+      "content": "In the same pool, jobs with the same priority level have an equal chance of being scheduled.",
+      "pos": [
+        29073,
+        29165
+      ]
+    },
+    {
+      "pos": [
+        29170,
+        29226
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"environment\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Environment settings for tasks"
+    },
+    {
+      "content": "Each task that executes within a Batch job has access to environment variables set both by the Batch service (system-defined, see table below) as well as user-defined environment variables.",
+      "pos": [
+        29228,
+        29417
+      ]
+    },
+    {
+      "content": "Applications and scripts run by tasks on compute nodes have access to these environment variables during execution on the node.",
+      "pos": [
+        29418,
+        29545
+      ]
+    },
+    {
+      "pos": [
+        29547,
+        29789
+      ],
+      "content": "Set user-defined environment variables when using the <bpt id=\"p1\">[</bpt>Add a task to a job<ph id=\"ph1\">][</ph>rest_add_task<ept id=\"p1\">]</ept> operation (Batch REST API) or by modifying the <bpt id=\"p2\">[</bpt>CloudTask.EnvironmentSettings<ph id=\"ph2\">][</ph>net_cloudtask_env<ept id=\"p2\">]</ept> property (Batch .NET API) when adding tasks to a job."
+    },
+    {
+      "content": "Get a task's environment variables, both system- and user-defined, by using the <bpt id=\"p1\">[</bpt>Get information about a task<ph id=\"ph1\">][</ph>rest_get_task_info<ept id=\"p1\">]</ept> operation (Batch REST API) or by accessing the <bpt id=\"p2\">[</bpt>CloudTask.EnvironmentSettings<ph id=\"ph2\">][</ph>net_cloudtask_env<ept id=\"p2\">]</ept> property (Batch .NET API).",
+      "pos": [
+        29791,
+        30046
+      ]
+    },
+    {
+      "content": "As mentioned, processes executing on a compute node can also access all environment variables, for example by using the familiar <ph id=\"ph1\">`%VARIABLE_NAME%`</ph> syntax.",
+      "pos": [
+        30047,
+        30201
+      ]
+    },
+    {
+      "content": "For every task that is scheduled within a job, the following set of system-defined environment variables is set by the Batch service:",
+      "pos": [
+        30203,
+        30336
+      ]
+    },
+    {
+      "content": "Environment Variable Name",
+      "pos": [
+        30340,
+        30365
+      ]
+    },
+    {
+      "content": "Description",
+      "pos": [
+        30374,
+        30385
+      ]
+    },
+    {
+      "content": "The name of the account to which the task belongs.",
+      "pos": [
+        30596,
+        30646
+      ]
+    },
+    {
+      "content": "The ID of the job to which the task belongs.",
+      "pos": [
+        30707,
+        30751
+      ]
+    },
+    {
+      "content": "The full path of the job preparation task directory on the node.",
+      "pos": [
+        30818,
+        30882
+      ]
+    },
+    {
+      "content": "The full path of the job preparation task working directory on the node.",
+      "pos": [
+        30929,
+        31001
+      ]
+    },
+    {
+      "content": "The ID of the node on which the task is running.",
+      "pos": [
+        31040,
+        31088
+      ]
+    },
+    {
+      "content": "The full path of the root directory on the node.",
+      "pos": [
+        31151,
+        31199
+      ]
+    },
+    {
+      "content": "The full path of the shared directory on the node.",
+      "pos": [
+        31262,
+        31312
+      ]
+    },
+    {
+      "content": "The full path of the compute node startup task directory on the node.",
+      "pos": [
+        31373,
+        31442
+      ]
+    },
+    {
+      "content": "The ID of the pool on which the task is running.",
+      "pos": [
+        31484,
+        31532
+      ]
+    },
+    {
+      "content": "The full path of the task directory on the node.",
+      "pos": [
+        31595,
+        31643
+      ]
+    },
+    {
+      "content": "The ID of the current task.",
+      "pos": [
+        31706,
+        31733
+      ]
+    },
+    {
+      "content": "The full path of the task working directory on the node.",
+      "pos": [
+        31817,
+        31873
+      ]
+    },
+    {
+      "pos": [
+        31894,
+        31991
+      ],
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> You cannot overwrite any of the above system-defined variables - they are read-only."
+    },
+    {
+      "pos": [
+        31996,
+        32038
+      ],
+      "content": "<ph id=\"ph1\">&lt;a name=\"errorhandling\"&gt;</ph><ph id=\"ph2\">&lt;/a&gt;</ph>Error handling"
+    },
+    {
+      "content": "You may find it necessary to handle both task and application failures within your Batch solution.",
+      "pos": [
+        32040,
+        32138
+      ]
+    },
+    {
+      "content": "Task failure handling",
+      "pos": [
+        32144,
+        32165
+      ]
+    },
+    {
+      "content": "Task failures fall into these categories:",
+      "pos": [
+        32166,
+        32207
+      ]
+    },
+    {
+      "content": "Scheduling failures",
+      "pos": [
+        32213,
+        32232
+      ]
+    },
+    {
+      "content": "If the transfer of files specified for a task fails for any reason, a \"scheduling error\" is set for the task.",
+      "pos": [
+        32241,
+        32350
+      ]
+    },
+    {
+      "content": "Causes of scheduling errors could be because the files have moved, the Storage account is no longer available, or another issue was encountered that prevented the successful copying of files to the node.",
+      "pos": [
+        32357,
+        32560
+      ]
+    },
+    {
+      "content": "Application failures",
+      "pos": [
+        32565,
+        32585
+      ]
+    },
+    {
+      "content": "The process specified by the task's command line can also fail.",
+      "pos": [
+        32594,
+        32657
+      ]
+    },
+    {
+      "content": "The process is deemed to have failed when a non-zero exit code is returned by the process executed by the task.",
+      "pos": [
+        32658,
+        32769
+      ]
+    },
+    {
+      "content": "For application failures, it is possible to configure Batch to automatically retry the task up to a specified number of times.",
+      "pos": [
+        32776,
+        32902
+      ]
+    },
+    {
+      "content": "Constraint failures",
+      "pos": [
+        32907,
+        32926
+      ]
+    },
+    {
+      "content": "A constraint can be set that specifies the maximum execution duration for a job or task, the <bpt id=\"p1\">*</bpt>maxWallClockTime<ept id=\"p1\">*</ept>.",
+      "pos": [
+        32935,
+        33047
+      ]
+    },
+    {
+      "content": "This can be useful for terminating \"hung\" tasks.",
+      "pos": [
+        33048,
+        33096
+      ]
+    },
+    {
+      "pos": [
+        33103,
+        33326
+      ],
+      "content": "When the maximum amount of time has been exceeded, the task is marked as <bpt id=\"p1\">*</bpt>completed<ept id=\"p1\">*</ept> but the exit code is set to <ph id=\"ph1\">`0xC000013A`</ph>, and the <bpt id=\"p2\">*</bpt>schedulingError<ept id=\"p2\">*</ept> field will be marked as <ph id=\"ph2\">`{ category:\"ServerError\", code=\"TaskEnded\"}`</ph>."
+    },
+    {
+      "content": "Debugging application failures",
+      "pos": [
+        33332,
+        33362
+      ]
+    },
+    {
+      "content": "During execution, an application may produce diagnostic output which can be used to troubleshoot issues.",
+      "pos": [
+        33364,
+        33468
+      ]
+    },
+    {
+      "content": "As mentioned in <bpt id=\"p1\">[</bpt>Files and directories<ept id=\"p1\">](#files)</ept> above, the Batch service sends stdout and stderr output to <ph id=\"ph1\">`stdout.txt`</ph> and <ph id=\"ph2\">`stderr.txt`</ph> files located in the task directory on the compute node.",
+      "pos": [
+        33469,
+        33662
+      ]
+    },
+    {
+      "content": "By using <bpt id=\"p1\">[</bpt>ComputeNode.GetNodeFile<ph id=\"ph1\">][</ph>net_getfile_node<ept id=\"p1\">]</ept> and <bpt id=\"p2\">[</bpt>CloudTask.GetNodeFile<ph id=\"ph2\">][</ph>net_getfile_task<ept id=\"p2\">]</ept> in the Batch .NET API, you can retrieve these and other files for troubleshooting purposes.",
+      "pos": [
+        33663,
+        33853
+      ]
+    },
+    {
+      "content": "Even more extensive debugging can be performed by logging in to a compute node using <bpt id=\"p1\">*</bpt>Remote Desktop<ept id=\"p1\">*</ept>.",
+      "pos": [
+        33855,
+        33957
+      ]
+    },
+    {
+      "content": "You can <bpt id=\"p1\">[</bpt>get a remote desktop protocol file from a node<ph id=\"ph1\">][</ph>rest_rdp<ept id=\"p1\">]</ept> (Batch REST API) or the use the <bpt id=\"p2\">[</bpt>ComputeNode.GetRDPFile<ph id=\"ph2\">][</ph>net_rdp<ept id=\"p2\">]</ept> method (Batch .NET API) for remote login.",
+      "pos": [
+        33958,
+        34132
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.NOTE]</ph> To connect to a node via RDP, you must first create a user on the node.",
+      "pos": [
+        34135,
+        34219
+      ]
+    },
+    {
+      "content": "<bpt id=\"p1\">[</bpt>Add a user account to a node<ph id=\"ph1\">][</ph>rest_create_user<ept id=\"p1\">]</ept> in the Batch REST API or the use the <bpt id=\"p2\">[</bpt>ComputeNode.CreateComputeNodeUser<ph id=\"ph2\">][</ph>net_create_user<ept id=\"p2\">]</ept> method in Batch .NET.",
+      "pos": [
+        34220,
+        34380
+      ]
+    },
+    {
+      "content": "Accounting for task failures or interruptions",
+      "pos": [
+        34386,
+        34431
+      ]
+    },
+    {
+      "content": "Tasks may occasionally fail or be interrupted.",
+      "pos": [
+        34433,
+        34479
+      ]
+    },
+    {
+      "content": "The task application itself may fail, the node on which the task is running could be rebooted, or the node might be removed from the pool during a resize operation if the pool's de-allocation policy is set to remove nodes immediately without waiting for tasks to finish.",
+      "pos": [
+        34480,
+        34750
+      ]
+    },
+    {
+      "content": "In all cases, the task can be automatically re-queued by Batch for execution on another node.",
+      "pos": [
+        34751,
+        34844
+      ]
+    },
+    {
+      "content": "It is also possible for an intermittent issue to cause a task to hang or take too long to execute.",
+      "pos": [
+        34846,
+        34944
+      ]
+    },
+    {
+      "content": "The maximum execution time can be set for a task, and if exceeded, Batch will interrupt the task application.",
+      "pos": [
+        34945,
+        35054
+      ]
+    },
+    {
+      "content": "Troubleshooting \"bad\" compute nodes",
+      "pos": [
+        35060,
+        35095
+      ]
+    },
+    {
+      "content": "In situations where some of your tasks are failing, your Batch client application or service can examine the metadata of the failed tasks to identify a misbehaving node.",
+      "pos": [
+        35097,
+        35266
+      ]
+    },
+    {
+      "content": "Each node in a pool is given a unique ID, and the node on which a task runs is included in the task metadata.",
+      "pos": [
+        35267,
+        35376
+      ]
+    },
+    {
+      "content": "Once identified, you can take several actions:",
+      "pos": [
+        35377,
+        35423
+      ]
+    },
+    {
+      "pos": [
+        35427,
+        35489
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Reboot the node<ept id=\"p1\">**</ept> (<bpt id=\"p2\">[</bpt>REST<ph id=\"ph1\">][</ph>rest_reboot<ept id=\"p2\">]</ept> | <bpt id=\"p3\">[</bpt>.NET<ph id=\"ph2\">][</ph>net_reboot<ept id=\"p3\">]</ept>)"
+    },
+    {
+      "content": "Restarting the node can sometimes clear up latent issues such as stuck or crashed processes.",
+      "pos": [
+        35495,
+        35587
+      ]
+    },
+    {
+      "content": "Note that if your pool uses a start task or your job uses a job preparation task, they will be executed when the node restarts.",
+      "pos": [
+        35588,
+        35715
+      ]
+    },
+    {
+      "pos": [
+        35719,
+        35784
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Reimage the node<ept id=\"p1\">**</ept> (<bpt id=\"p2\">[</bpt>REST<ph id=\"ph1\">][</ph>rest_reimage<ept id=\"p2\">]</ept> | <bpt id=\"p3\">[</bpt>.NET<ph id=\"ph2\">][</ph>net_reimage<ept id=\"p3\">]</ept>)"
+    },
+    {
+      "content": "This reinstalls the operating system on the node.",
+      "pos": [
+        35790,
+        35839
+      ]
+    },
+    {
+      "content": "As with rebooting a node, start tasks and job preparation tasks are rerun after the node has been reimaged.",
+      "pos": [
+        35840,
+        35947
+      ]
+    },
+    {
+      "pos": [
+        35951,
+        36027
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Remove the node from the pool<ept id=\"p1\">**</ept> (<bpt id=\"p2\">[</bpt>REST<ph id=\"ph1\">][</ph>rest_remove<ept id=\"p2\">]</ept> | <bpt id=\"p3\">[</bpt>.NET<ph id=\"ph2\">][</ph>net_remove<ept id=\"p3\">]</ept>)"
+    },
+    {
+      "content": "Sometimes it is necessary to completely remove the node from the pool.",
+      "pos": [
+        36033,
+        36103
+      ]
+    },
+    {
+      "pos": [
+        36107,
+        36191
+      ],
+      "content": "<bpt id=\"p1\">**</bpt>Disable task scheduling on the node<ept id=\"p1\">**</ept> (<bpt id=\"p2\">[</bpt>REST<ph id=\"ph1\">][</ph>rest_offline<ept id=\"p2\">]</ept> | <bpt id=\"p3\">[</bpt>.NET<ph id=\"ph2\">][</ph>net_offline<ept id=\"p3\">]</ept>)"
+    },
+    {
+      "content": "This effectively takes the node \"offline\" so that no further tasks will be assigned to it, but allows the node to remain running and in the pool.",
+      "pos": [
+        36197,
+        36342
+      ]
+    },
+    {
+      "content": "This enables you to perform further investigation into the cause of the failures without losing the failed task's data, and without the node causing additional task failures.",
+      "pos": [
+        36343,
+        36517
+      ]
+    },
+    {
+      "content": "For example, you can disable task scheduling on the node, then log in remotely to examine the node's event logs, or perform other troubleshooting.",
+      "pos": [
+        36518,
+        36664
+      ]
+    },
+    {
+      "content": "Once you've finished your investigation, you can then bring the node back online by enabling task scheduling (<bpt id=\"p1\">[</bpt>REST<ph id=\"ph1\">][</ph>rest_online<ept id=\"p1\">]</ept>, <bpt id=\"p2\">[</bpt>.NET<ph id=\"ph2\">][</ph>net_online<ept id=\"p2\">]</ept>), or perform one of the other actions discussed above.",
+      "pos": [
+        36665,
+        36869
+      ]
+    },
+    {
+      "content": "<ph id=\"ph1\">[AZURE.IMPORTANT]</ph> With each action above--reboot, reimage, remove, disable task scheduling--you are able to specify how tasks currently running on the node are handled when you perform the action.",
+      "pos": [
+        36873,
+        37069
+      ]
+    },
+    {
+      "content": "For example, when you disable task scheduling on a node with the Batch .NET client library, you can specify a <bpt id=\"p1\">[</bpt>DisableComputeNodeSchedulingOption<ph id=\"ph1\">][</ph>net_offline_option<ept id=\"p1\">]</ept> enum value to specify whether to <bpt id=\"p2\">**</bpt>Terminate<ept id=\"p2\">**</ept> running tasks, <bpt id=\"p3\">**</bpt>Requeue<ept id=\"p3\">**</ept> them for scheduling on other nodes, or allow running tasks to complete before performing the action (<bpt id=\"p4\">**</bpt>TaskCompletion<ept id=\"p4\">**</ept>).",
+      "pos": [
+        37070,
+        37432
+      ]
+    },
+    {
+      "content": "Next steps",
+      "pos": [
+        37437,
+        37447
+      ]
+    },
+    {
+      "pos": [
+        37451,
+        37593
+      ],
+      "content": "Create your first Batch application by following the steps in <bpt id=\"p1\">[</bpt>Get started with the Azure Batch Library for .NET<ept id=\"p1\">](batch-dotnet-get-started.md)</ept>"
+    },
+    {
+      "content": "Download and build the <bpt id=\"p1\">[</bpt>Batch Explorer<ph id=\"ph1\">][</ph>batch_explorer_project<ept id=\"p1\">]</ept> sample project for use while you develop your Batch solutions.",
+      "pos": [
+        37596,
+        37722
+      ]
+    },
+    {
+      "content": "Using the Batch Explorer, you can perform the following and more:",
+      "pos": [
+        37723,
+        37788
+      ]
+    },
+    {
+      "content": "Monitor and manipulate pools, jobs, and tasks within your Batch account",
+      "pos": [
+        37793,
+        37864
+      ]
+    },
+    {
+      "pos": [
+        37869,
+        37932
+      ],
+      "content": "Download <ph id=\"ph1\">`stdout.txt`</ph>, <ph id=\"ph2\">`stderr.txt`</ph>, and other files from nodes"
+    },
+    {
+      "content": "Create users on nodes and download RDP files for remote login",
+      "pos": [
+        37937,
+        37998
+      ]
+    },
+    {
+      "pos": [
+        38000,
+        38055
+      ],
+      "content": "<ph id=\"ph1\">[</ph>1<ph id=\"ph2\">]: ./media/batch-api-basics/node-folder-structure.png</ph>"
+    },
+    {
+      "pos": [
+        38057,
+        38193
+      ],
+      "content": "<ph id=\"ph1\">[</ph>about_cloud_services<ph id=\"ph2\">]: https://azure.microsoft.com/documentation/articles/fundamentals-application-models/#tell-me-about-cloud-services</ph>"
+    },
+    {
+      "pos": [
+        38194,
+        38256
+      ],
+      "content": "<ph id=\"ph1\">[</ph>azure_storage<ph id=\"ph2\">]: https://azure.microsoft.com/services/storage/</ph>"
+    },
+    {
+      "pos": [
+        38257,
+        38360
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_explorer_project<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer</ph>"
+    },
+    {
+      "pos": [
+        38361,
+        38462
+      ],
+      "content": "<ph id=\"ph1\">[</ph>cloud_service_sizes<ph id=\"ph2\">]: https://azure.microsoft.com/documentation/articles/cloud-services-sizes-specs/</ph>"
+    },
+    {
+      "pos": [
+        38463,
+        38520
+      ],
+      "content": "<ph id=\"ph1\">[</ph>msmpi<ph id=\"ph2\">]: https://msdn.microsoft.com/library/bb524831.aspx</ph>"
+    },
+    {
+      "pos": [
+        38521,
+        38583
+      ],
+      "content": "<ph id=\"ph1\">[</ph>github_samples<ph id=\"ph2\">]: https://github.com/Azure/azure-batch-samples</ph>"
+    },
+    {
+      "pos": [
+        38584,
+        38707
+      ],
+      "content": "<ph id=\"ph1\">[</ph>github_sample_taskdeps<ph id=\"ph2\">]:  https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/TaskDependencies</ph>"
+    },
+    {
+      "pos": [
+        38709,
+        38780
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_net_api<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt348682.aspx</ph>"
+    },
+    {
+      "pos": [
+        38781,
+        38903
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_cloudjob_jobmanagertask<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobmanagertask.aspx</ph>"
+    },
+    {
+      "pos": [
+        38904,
+        39014
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_cloudjob_priority<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.priority.aspx</ph>"
+    },
+    {
+      "pos": [
+        39015,
+        39129
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_cloudpool_starttask<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx</ph>"
+    },
+    {
+      "pos": [
+        39130,
+        39248
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_cloudtask_env<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.environmentsettings.aspx</ph>"
+    },
+    {
+      "pos": [
+        39249,
+        39375
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_create_cert<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.certificateoperations.createcertificate.aspx</ph>"
+    },
+    {
+      "pos": [
+        39376,
+        39496
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_create_user<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.createcomputenodeuser.aspx</ph>"
+    },
+    {
+      "pos": [
+        39497,
+        39608
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_getfile_node<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.getnodefile.aspx</ph>"
+    },
+    {
+      "pos": [
+        39609,
+        39718
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_getfile_task<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.getnodefile.aspx</ph>"
+    },
+    {
+      "pos": [
+        39719,
+        39837
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_multiinstancesettings<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.aspx</ph>"
+    },
+    {
+      "pos": [
+        39838,
+        39939
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_rdp<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.getrdpfile.aspx</ph>"
+    },
+    {
+      "pos": [
+        39940,
+        40008
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_reboot<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt631495.aspx</ph>"
+    },
+    {
+      "pos": [
+        40009,
+        40078
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_reimage<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt631496.aspx</ph>"
+    },
+    {
+      "pos": [
+        40079,
+        40195
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_remove<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.removefrompoolasync.aspx</ph>"
+    },
+    {
+      "pos": [
+        40196,
+        40313
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_offline<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.disableschedulingasync.aspx</ph>"
+    },
+    {
+      "pos": [
+        40314,
+        40429
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_online<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.enableschedulingasync.aspx</ph>"
+    },
+    {
+      "pos": [
+        40430,
+        40561
+      ],
+      "content": "<ph id=\"ph1\">[</ph>net_offline_option<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.common.disablecomputenodeschedulingoption.aspx</ph>"
+    },
+    {
+      "pos": [
+        40563,
+        40635
+      ],
+      "content": "<ph id=\"ph1\">[</ph>batch_rest_api<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/Dn820158.aspx</ph>"
+    },
+    {
+      "pos": [
+        40636,
+        40706
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_add_job<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt282178.aspx</ph>"
+    },
+    {
+      "pos": [
+        40707,
+        40778
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_add_pool<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820174.aspx</ph>"
+    },
+    {
+      "pos": [
+        40779,
+        40850
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_add_cert<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820169.aspx</ph>"
+    },
+    {
+      "pos": [
+        40851,
+        40922
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_add_task<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820105.aspx</ph>"
+    },
+    {
+      "pos": [
+        40923,
+        40997
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_create_user<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820137.aspx</ph>"
+    },
+    {
+      "pos": [
+        40998,
+        41074
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_get_task_info<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820133.aspx</ph>"
+    },
+    {
+      "pos": [
+        41075,
+        41151
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_multiinstance<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt637905.aspx</ph>"
+    },
+    {
+      "pos": [
+        41152,
+        41258
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_multiinstancesettings<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820105.aspx#multiInstanceSettings</ph>"
+    },
+    {
+      "pos": [
+        41259,
+        41332
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_update_job<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820162.aspx</ph>"
+    },
+    {
+      "pos": [
+        41333,
+        41399
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_rdp<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820120.aspx</ph>"
+    },
+    {
+      "pos": [
+        41400,
+        41469
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_reboot<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820171.aspx</ph>"
+    },
+    {
+      "pos": [
+        41470,
+        41540
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_reimage<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820157.aspx</ph>"
+    },
+    {
+      "pos": [
+        41541,
+        41610
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_remove<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/dn820194.aspx</ph>"
+    },
+    {
+      "pos": [
+        41611,
+        41681
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_offline<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt637904.aspx</ph>"
+    },
+    {
+      "pos": [
+        41682,
+        41751
+      ],
+      "content": "<ph id=\"ph1\">[</ph>rest_online<ph id=\"ph2\">]: https://msdn.microsoft.com/library/azure/mt637907.aspx</ph>"
+    }
+  ],
+  "content": "<properties\n    pageTitle=\"Azure Batch feature overview | Microsoft Azure\"\n    description=\"Learn the features of the Batch service and its APIs from a development standpoint.\"\n    services=\"batch\"\n    documentationCenter=\".net\"\n    authors=\"yidingzhou\"\n    manager=\"timlt\"\n    editor=\"\"/>\n\n<tags\n    ms.service=\"batch\"\n    ms.devlang=\"multiple\"\n    ms.topic=\"get-started-article\"\n    ms.tgt_pltfrm=\"na\"\n    ms.workload=\"big-compute\"\n    ms.date=\"03/11/2016\"\n    ms.author=\"yidingz;marsma\"/>\n\n# Overview of Azure Batch features\n\nThis article provides a basic overview of the core API features of the Azure Batch service. Whether developing a distributed computational solution using the [Batch REST][batch_rest_api] or [Batch .NET][batch_net_api] APIs, you will use many of the entities and features discussed below.\n\n> [AZURE.TIP] For a higher level technical overview of Batch, please see [Azure Batch basics](batch-technical-overview.md).\n\n## <a name=\"workflow\"></a>Workflow of the Batch service\n\nThe following high-level workflow is typical of that used by nearly all distributed computational scenarios developed within the Batch service:\n\n1. Upload the *data files* that you want to use in your distributed computational scenario to an [Azure Storage][azure_storage] account. These files must be in the Storage account so that the Batch service can access them. Tasks will download these files to [compute nodes](#computenode) when they are run.\n\n2. Upload the dependent *binary files* to your Storage account. These binary files include the program to be run by the tasks, and any of its dependent assemblies. These files must also be accessed from your Storage account so they can be downloaded to the compute nodes by the tasks.\n\n3. Create a [Pool](#pool) of compute nodes. You specify the [size of the compute nodes][cloud_service_sizes] to use when the pool is created, and when a task runs, it is assigned a node in this pool.\n\n4. Create a [Job](#job). A job enables you to manage a collection tasks.\n\n5. Add [Tasks](#task) to the job. Each task uses the program that you uploaded to process information in the data file(s) that you uploaded to your Storage account.\n\n6. Monitor job progress and retrieve the results.\n\n> [AZURE.NOTE] You will need a [Batch account](batch-account-create-portal.md) to use the Batch service, and nearly all solutions will use an [Azure Storage][azure_storage] account for file storage and retrieval.\n\nIn the sections below, you'll learn about each of the resources mentioned in the above workflow, as well as many other features of Batch that will enable your distributed computational scenario.\n\n## <a name=\"resource\"></a> Resources of the Batch service\n\nWhen you use Batch, you will use many of the following resources. Some of these resources, such as accounts, compute nodes, pools, jobs, and tasks, are used in all Batch solutions. Others, such as job schedules and application packages, are helpful but optional features.\n\n- [Account](#account)\n- [Compute node](#computenode)\n- [Pool](#pool)\n- [Job](#job)\n- [Task](#task)\n    - [Start task](#starttask)\n    - [Job manager task](#jobmanagertask)\n    - [Job preparation and release tasks](#jobpreprelease)\n    - [Multi-instance tasks](#multiinstance)\n    - [Task dependencies](#taskdep)\n- [Job schedules](#jobschedule)\n- [Application packages](#appkg)\n\n### <a name=\"account\"></a>Account\n\nA Batch account is a uniquely identified entity within the Batch service. All processing is associated with a Batch account. When you perform operations with the Batch service, you need both the account name and the account key. To create a batch account, check out [Create and manage an Azure Batch account in the Azure portal](batch-account-create-portal.md).\n\n### <a name=\"computenode\"></a>Compute node\n\nA compute node is an Azure virtual machine that is dedicated to a specific workload for your application. The size of a node determines the number of CPU cores, the memory capacity, and the local file system size that is allocated to the node. A node can be any of the [cloud service node sizes][cloud_service_sizes], except for A0.\n\nNodes can run executables and scripts, including executables (.exe), command (.cmd) files, batch (.bat) files, and PowerShell scripts. A node also has the following attributes:\n\n- A standard **folder structure** and associated **environment variables** detailing their paths are created on each compute node. See [Files and directories](#files) below for more information.\n- **Environment variables** available for reference by tasks.\n- **Firewall** settings that are configured to control access.\n- If **remote access** to a compute node is required (for debugging, for example), an RDP file can be obtained which may then be used to access the node via *Remote Desktop*.\n\n### <a name=\"pool\"></a>Pool\n\nA pool is a collection of nodes on which your application runs. The pool can be created manually by you, or by the Batch service automatically when you specify the work to be done. You can create and manage a pool that meets the needs of your application, and pools may be used only by the Batch account in which it was created. A Batch account can have more than one pool.\n\nAzure Batch pools build on top of the core Azure compute platform: Batch pools provide large-scale allocation, application installation, data distribution, and health monitoring, as well as the flexible adjustment of the number of compute nodes within a pool (scaling).\n\nEvery node that is added to a pool is assigned a unique name and IP address. When a node is removed from a pool, any changes made to the operating system or files are lost, and its name and IP address are released for future use. When a node leaves a pool, its lifetime is over.\n\nYou can configure a pool to allow communication between the nodes within it. If intra-pool communication is requested for a pool, the Batch service enables ports greater than 1100 on each node in the pool. Each node in the pool is configured to allow incoming connections to this port range only, and only from other nodes within the pool. If your application does not require communication between nodes, the Batch service can allocate a potentially large number of nodes to the pool from many different clusters and data centers to enable increased parallel processing power.\n\nWhen you create a pool, you can specify the following attributes:\n\n- **Size of the nodes** in the pool\n    - An appropriate node size should be chosen, taking into account the characteristics and requirements of the application or applications that are going to be run on the nodes. The node size is typically selected assuming one task will run on the node at a time. Considering aspects such as whether the application is multi-threaded and how much memory it consumes will help determine the most suitable and cost-effective node size. It is possible to have multiple tasks assigned and multiple application instances run in parallel, in which case a larger node is typically chosen - see \"Task scheduling policy\" below for more information.\n    - All of the nodes in a pool must be the same size. If different applications are to be run with differing system requirements and/or load levels, separate pools should be created.\n    - All [cloud service node sizes][cloud_service_sizes] can be configured for a pool, except for A0.\n\n- **Operating system family** and **version** that runs on the nodes\n    - As with worker roles within Cloud Services, the *OS Family* and *OS Version* can be specified (for more information on worker roles, see the [Tell me about cloud services][about_cloud_services] section in *Compute Hosting Options Provided by Azure*).\n    - The OS Family also determines which versions of .NET are installed with the OS.\n    - As with worker roles, it is recommended that `*` be specified for the OS Version so that the nodes are automatically upgraded, and there is no work required to cater to newly released versions. The primary use case for picking a specific OS version is to ensure that application compatibility is maintained, allowing backward compatibility testing to be performed before allowing the version to be updated. Once validated, the OS version for the pool can be updated and the new OS image installed–any running task will be interrupted and re-queued.\n\n- **Target number of nodes** that should be available for the pool\n\n- **Scaling policy** for the pool\n    - In addition to the number of nodes, you can also specify an [auto-scaling formula](batch-automatic-scaling.md) for a pool. The Batch service will execute the formula and adjust the number of nodes within the pool based on various pool, job, and task parameters that you can specify.\n\n- **Task scheduling** policy\n    - The [max tasks per node](batch-parallel-node-tasks.md) configuration option determines the maximum number of tasks that can be run in parallel on each node within the pool.\n    - The default configuration is for one task to be run on a compute node at a time, but there are scenarios where it is beneficial to have more than one task executed on a node at the same time. One example is to increase node utilization if an application has to wait for I/O. Having more than one application executed concurrently will increase CPU utilization. Another example is to reduce the number of nodes in the pool. This could reduce the amount of data transfer required for large reference data sets - if an A1 node size is sufficient for an application, then the A4 node size could instead be chosen and the pool configured for 8 parallel tasks, each using a core.\n    - A \"fill type\" can also be specified which determines whether Batch spreads the tasks evenly across all nodes, or packs each node with the maximum number of tasks before assigning tasks to another node in the pool.\n\n- **Communication status** of the nodes in the pool\n    - A pool may be configured to allow communication between the nodes in the pool which determines its underlying network infrastructure. Note that this also impacts placement of the nodes within clusters.\n    - In most scenarios, tasks operate independently and do not need to communicate with one another, but there may be some applications in which tasks must communicate.\n\n- **Start task** for nodes in the pool\n    - A *start task* may be specified which is executed each time a compute node joins the pool, and when a node is restarted. This is often used to install an application to be used by the tasks running on the node.\n\n### <a name=\"job\"></a>Job\n\nA job is a collection of tasks, and specifies how computation is performed on compute nodes in a pool.\n\n- The job specifies the **pool** in which the work will be run. The pool can be an existing pool, previously created for use by many jobs, or created on-demand for each job associated with a job schedule, or for all jobs associated with a job schedule.\n- An optional **job priority** can be specified. When a job is submitted with a higher priority than jobs currently in progress, the higher priority job's tasks are inserted into the queue ahead of the lower priority job tasks. Lower priority tasks that are already running will not be pre-empted.\n- Job **constraints** specify certain limits for your jobs.\n    - A **maximum wallclock time** can be set for jobs. If the jobs runs for longer than the maximum wallclock time specified, then the job and all associated tasks will be ended.\n    - Azure Batch can detect tasks that fail and retry the tasks. The **maximum number of task retries** can be specified as a constraint, including whether a task is always or never retried. Retrying a task means that the task is re-queued to be run again.\n- Tasks can be added to the job by your client application, or a [Job Manager task](#jobmanagertask) may be specified. A job manager task uses the Batch API and contains the information necessary to create the required tasks for a job, with the task being run on one of the compute nodes within the pool. The job manager task is handled specifically by Batch–it is queued as soon as the job is created, and restarted if it fails. A Job Manager task is required for jobs created by a job schedule as it is the only way to define the tasks before the job is instantiated. More information on job manager tasks appears below.\n\n### <a name=\"task\"></a>Task\n\nA task is a unit of computation that is associated with a job and runs on a node. Tasks are assigned to a node for execution, or are queued until a node becomes free. A task uses the following resources:\n\n- The application specified in the **command line** of the task.\n\n- **Resource files** that contain the data to be processed. These files are automatically copied to the node from blob storage in an Azure Storage account. For more information, see [Files and directories](#files) below.\n\n- The **environment variables** that are required by the application. For more information, see [Environment settings for tasks](#environment) below.\n\n- The **constraints** under which the computation should occur. For example, the maximum time in which the task is allowed to run, the maximum number of times that a task should be retried if it fails, and the maximum time that files in the working directory are retained.\n\nIn addition to tasks that you define to perform computation on a node, the following special tasks are also provided by the Batch service:\n\n- [Start task](#starttask)\n- [Job manager task](#jobmanagertask)\n- [Job preparation and release tasks](#jobmanagertask)\n- [Multi-instance tasks](#multiinstance)\n- [Task dependencies](#taskdep)\n\n#### <a name=\"starttask\"></a>Start task\n\nBy associating a **start task** with a pool, you can configure the operating environment of its nodes, performing actions such as installing software or starting background processes. The start task runs every time a node starts for as long as it remains in the pool, including when the node is first added to the pool. A primary benefit of the start task is that it contains all of the information necessary to configure compute nodes and install applications necessary for job task execution. Thus, increasing the number of nodes in a pool is as simple as specifying the new target node count - Batch already has all of the information needed to configure the new nodes and get them ready for accepting tasks.\n\nAs with any Batch task, a list of **resource files** in [Azure Storage][azure_storage] can be specified, in addition to a **command line** to be executed. Azure Batch will first copy the files from Azure Storage, then run the command line. For a pool start task, the file list usually contains the application package or files, but it could also include reference data to be used by all tasks running on the compute nodes. The start task's command line could execute a PowerShell script or perform a `robocopy` operation, for example, to copy application files to the \"shared\" folder, then subsequently run an MSI or `setup.exe`.\n\nIt is typically desirable for the Batch service to wait for the start task to complete before considering the node ready to be assigned tasks, but this is configurable.\n\nIf a start task fails on a compute node, then the state of the node is updated to reflect the failure, and the node will not be available for tasks to be assigned. A start task can fail if there is an issue copying its resource files from storage, or if the process executed by its command line returns a non-zero exit code.\n\n#### <a name=\"jobmanagertask\"></a>Job manager task\n\nA **Job Manager task** is typically used in controlling and/or monitoring job execution. For example, creating and submitting the tasks for a job, determining additional tasks to run, and determining when work is complete. A Job Manager task is not restricted to these activities, however - it is a fully fledged task that can perform any actions required for the job. For example, a Job Manager task might download a file specified as a parameter, analyze the contents of that file, and submit additional tasks based on those contents.\n\nA job manager task is started before all other tasks and provides the following features:\n\n- It is automatically submitted as a task by the Batch service when the job is created.\n\n- It is scheduled to execute before the other tasks in a job.\n\n- Its associated node is the last to be removed from a pool when the pool is being downsized.\n\n- Its termination can be tied to the termination of all tasks in the job.\n\n- The job manager task is given the highest priority when it needs to be restarted. If an idle node is not available, the Batch service may terminate one of the other running tasks in the pool to make room for the job manager task to run.\n\n- A job manager task in one job does not have priority over the tasks of other jobs. Across jobs, only job-level priorities are observed.\n\n#### <a name=\"jobpreprelease\"></a>Job preparation and release tasks\n\nBatch provides the job preparation task for pre-job execution setup, and the job release task for post-job maintenance or cleanup.\n\n- **Job preparation task** - The job preparation task runs on all compute nodes scheduled to run tasks, before any of the other job tasks are executed. Use the job preparation task to copy data shared by all tasks, but unique to the job, for example.\n- **Job release task** - When a job has completed, the job release task runs on each node in the pool that executed at least one task. Use the job release task to delete data copied by the job preparation task, or compress and upload diagnostic log data, for example.\n\nBoth job preparation and release tasks allow you to specify a command line to run when the task is invoked, and offer features such as file download, elevated execution, custom environment variables, maximum execution duration, retry count, and file retention time.\n\nFor more information on job preparation and release tasks, see [Run job preparation and completion tasks on Azure Batch compute nodes](batch-job-prep-release.md).\n\n#### <a name=\"multiinstance\"></a>Multi-instance tasks\n\nA [multi-instance task](batch-mpi.md) is a task that is configured to run on more than one compute node simultaneously. With multi-instance tasks, you can enable high performance computing scenarios like Message Passing Interface (MPI) that require a group of compute nodes allocated together to process a single workload.\n\nFor a detailed discussion on running MPI jobs in Batch using the Batch .NET library, check out [Use multi-instance tasks to run Message Passing Interface (MPI) applications in Azure Batch](batch-mpi.md).\n\n#### <a name=\"taskdep\"></a>Task dependencies\n\nTask dependencies, as the name implies, allow you to specify that a task depends on the completion of other tasks before its execution. This feature provides support for situations in which a \"downstream\" task consumes the output of an \"upstream\" task, or when an upstream task performs some initialization that is required by a downstream task. To use this feature, you must first enable task dependencies on your Batch job. Then, for each task that depends on another (or many others), you specify the tasks which that task depends on.\n\nWith task dependencies, you can configure scenarios such as the following:\n\n* *taskB* depends on *taskA* (*taskB* will not begin execution until *taskA* has completed)\n* *taskC* depends on both *taskA* and *taskB*\n* *taskD* depends on a range of tasks, such as tasks *1* through *10*, before it executes\n\nCheck out the [TaskDependencies][github_sample_taskdeps] code sample in the [azure-batch-samples][github_samples] GitHub repository. In it, you will see how to configure tasks that depend on other tasks using the [Batch .NET][batch_net_api] library.\n\n### <a name=\"jobschedule\"></a>Scheduled jobs\n\nJob schedules enable you to create recurring jobs within the Batch service. A job schedule specifies when to run jobs and includes the specifications for the jobs to be run. A job schedule allows for the specification of the duration of the schedule - how long and when the schedule is in effect - and how often during that time period jobs should be created.\n\n### <a name=\"appkg\"></a>Application packages\n\nThe [application packages](batch-application-packages.md) feature provides easy management and deployment of applications to the compute nodes in your pools. With application packages, you can easily upload and manage multiple versions of the applications run by your tasks, including binaries and support files, then automatically deploy one or more of these applications to the compute nodes in your pool.\n\nBatch handles the details of working with Azure Storage in the background to securely store and deploy your application packages to compute nodes, so both your code and your management overhead can be simplified.\n\nTo find out more about the application package feature, check out [Application deployment with Azure Batch application packages](batch-application-packages.md).\n\n## <a name=\"files\"></a>Files and directories\n\nEach task has a working directory under which it creates zero or more files and directories for storing the program that is run by the task, the data that it processes, and the output of the processing performed by the task. These files and directories are then available for use by other tasks during the running of a job. All tasks, files, and directories on a node are owned by a single user account.\n\nThe Batch service exposes a portion of the file system on a node as the \"root directory.\" The root directory is available to a task by accessing the `%AZ_BATCH_NODE_ROOT_DIR%` environment variable. For more information about using environment variables, see [Environment settings for tasks](#environment).\n\n![Compute node directory structure][1]\n\nThe root directory contains the following directory structure:\n\n- **Shared** – This location is a shared directory for all tasks that run on a node, regardless of job. On the node, the shared directory is accessed via  `%AZ_BATCH_NODE_SHARED_DIR%`. This directory provides read/write access to all tasks that execute on the node. Tasks can create, read, update, and delete files in this directory.\n\n- **Startup** – This location is used by a start task as its working directory. All of the files that are downloaded by the Batch service to launch the start task are also stored under this directory. On the node, the start directory is available via the `%AZ_BATCH_NODE_STARTUP_DIR%` environment variable. The start task can create, read, update, and delete files under this directory, and this directory can be used by start tasks to configure the operating system.\n\n- **Tasks** - A directory is created for each task that runs on the node, accessed via `%AZ_BATCH_TASK_DIR%`. Within each task directory, the Batch service creates a working directory (`wd`) whose unique path is specified by the `%AZ_BATCH_TASK_WORKING_DIR%` environment variable. This directory provides read/write access to the task. The task can create, read, update, and delete files under this directory, and this directory is retained based on the *RetentionTime* constraint specified for the task.\n  - `stdout.txt` and `stderr.txt` - These files are written to the task folder during the execution of the task.\n\nWhen a node is removed from the pool, all of the files that are stored on the node are removed.\n\n## <a name=\"lifetime\"></a>Pool and compute node lifetime\n\nWhen designing your Azure Batch solution, a design decision must be made with regard to how and when pools are created, and how long compute nodes within those pools are kept available.\n\nOn one end of the spectrum, a pool could be created for each job when the job is submitted, and its nodes removed as soon as tasks finish execution. This will maximize utilization as the nodes are only allocated when absolutely needed, and shutdown as soon as they become idle. While this means that the job must wait for the nodes to be allocated, it is important to note that tasks will be scheduled to nodes as soon as they are individually available, allocated, and the start task has completed. Batch does *not* wait until all nodes within a pool are available before assigning tasks, thus ensuring maximum utilization of all available nodes.\n\nAt the other end of the spectrum, if having jobs start immediately is the highest priority, a pool may be created ahead of time and its nodes made available before jobs are submitted. In this scenario, job tasks can start immediately, but nodes may sit idle while waiting for tasks to be assigned.\n\nA combined approach, typically used for handling variable but ongoing load, is to have a pool to which multiple jobs are submitted, but scale the number of nodes up or down according to the job load (see *Scaling applications* below). This can be done reactively, based on current load, or proactively if load can be predicted.\n\n## <a name=\"scaling\"></a>Scaling applications\n\nWith [automatic scaling](batch-automatic-scaling.md), you can have the Batch service dynamically adjust the number of compute nodes in a pool according to the current workload and resource usage of your compute scenario. This allows you to lower the overall cost of running your application by using only the resources you need, and releasing those you don't. You can specify the automatic scaling settings for a pool when it is created, or enable scaling later, and you can update the scaling settings on an automatic scaling-enabled pool.\n\nAutomatic scaling is performed by specifying an **automatic scaling formula** for a pool. The Batch service uses this formula to determine the target number of nodes in the pool for the next scaling interval (an interval which you can specify).\n\nFor example, perhaps a job requires that you submit a large number of tasks to be scheduled for execution. You can assign a scaling formula to the pool that adjusts number of nodes in the pool based on the current number of pending tasks, and the completion rate of those tasks. The Batch service periodically evaluates the formula, and resizes the pool based on workload and your formula settings.\n\nA scaling formula can be based on the following metrics:\n\n- **Time metrics** – Based on statistics collected every five minutes in the specified number of hours.\n\n- **Resource metrics** – Based on CPU usage, bandwidth usage, memory usage, and number of nodes.\n\n- **Task metrics** – Based on the status of tasks, such as Active, Pending, and Completed.\n\nWhen automatic scaling decreases the number of compute nodes in a pool, currently running tasks must be considered. To accommodate this, your formula can include a node de-allocation policy setting that specifies whether running tasks are stopped immediately, or allowed to finish before the node is removed from the pool.\n\n> [AZURE.TIP] To maximize compute resource utilization, set the target number of nodes to zero at the end of a job, but allow running tasks to finish.\n\nFor more information about automatically scaling an application, see [Automatically scale compute nodes in an Azure Batch pool](batch-automatic-scaling.md).\n\n## <a name=\"cert\"></a>Security with certificates\n\nYou typically need to use certificates when encrypting or decrypting sensitive information for tasks, such as the key for an [Azure Storage account][azure_storage]. To support this, certificates can be installed on nodes. Encrypted secrets are passed to tasks via command-line parameters or embedded in one of the task resources, and the installed certificates can be used to decrypt them.\n\nYou use the [Add certificate][rest_add_cert] operation (Batch REST API) or [CertificateOperations.CreateCertificate][net_create_cert] method (Batch .NET API) to add a certificate to a Batch account. You can then associate the certificate to a new or existing pool. When a certificate is associated with a pool, the Batch service installs the certificate on each node in the pool. The Batch service installs the appropriate certificates when the node starts up, before launching any tasks including start and job manager tasks.\n\n## <a name=\"scheduling\"></a>Scheduling priority\n\nYou can assign a priority to jobs you create in Batch. The Batch service uses the priority value of the job to determine the order of job scheduling within an account. The priority values range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest. You can update the priority of a job by using the [Update the properties of a job][rest_update_job] operation (Batch REST API) or by modifying the [CloudJob.Priority][net_cloudjob_priority] property (Batch .NET API).\n\nWithin the same account, higher priority jobs have scheduling precedence over lower priority jobs. A job with a higher priority value in one account does not have scheduling precedence over another job with a lower priority value in a different account.\n\nJob scheduling across pools is independent. Between different pools, it is not guaranteed that a higher priority job will be scheduled first if its associated pool is short of idle nodes. In the same pool, jobs with the same priority level have an equal chance of being scheduled.\n\n## <a name=\"environment\"></a>Environment settings for tasks\n\nEach task that executes within a Batch job has access to environment variables set both by the Batch service (system-defined, see table below) as well as user-defined environment variables. Applications and scripts run by tasks on compute nodes have access to these environment variables during execution on the node.\n\nSet user-defined environment variables when using the [Add a task to a job][rest_add_task] operation (Batch REST API) or by modifying the [CloudTask.EnvironmentSettings][net_cloudtask_env] property (Batch .NET API) when adding tasks to a job.\n\nGet a task's environment variables, both system- and user-defined, by using the [Get information about a task][rest_get_task_info] operation (Batch REST API) or by accessing the [CloudTask.EnvironmentSettings][net_cloudtask_env] property (Batch .NET API). As mentioned, processes executing on a compute node can also access all environment variables, for example by using the familiar `%VARIABLE_NAME%` syntax.\n\nFor every task that is scheduled within a job, the following set of system-defined environment variables is set by the Batch service:\n\n| Environment Variable Name       | Description                                                              |\n|---------------------------------|--------------------------------------------------------------------------|\n| `AZ_BATCH_ACCOUNT_NAME`         | The name of the account to which the task belongs.                       |\n| `AZ_BATCH_JOB_ID`               | The ID of the job to which the task belongs.                             |\n| `AZ_BATCH_JOB_PREP_DIR`         | The full path of the job preparation task directory on the node.         |\n| `AZ_BATCH_JOB_PREP_WORKING_DIR` | The full path of the job preparation task working directory on the node. |\n| `AZ_BATCH_NODE_ID`              | The ID of the node on which the task is running.                         |\n| `AZ_BATCH_NODE_ROOT_DIR`        | The full path of the root directory on the node.                         |\n| `AZ_BATCH_NODE_SHARED_DIR`      | The full path of the shared directory on the node.                       |\n| `AZ_BATCH_NODE_STARTUP_DIR`     | The full path of the compute node startup task directory on the node.    |\n| `AZ_BATCH_POOL_ID`              | The ID of the pool on which the task is running.                         |\n| `AZ_BATCH_TASK_DIR`             | The full path of the task directory on the node.                         |\n| `AZ_BATCH_TASK_ID`              | The ID of the current task.                                              |\n| `AZ_BATCH_TASK_WORKING_DIR`     | The full path of the task working directory on the node.                 |\n\n>[AZURE.NOTE] You cannot overwrite any of the above system-defined variables - they are read-only.\n\n## <a name=\"errorhandling\"></a>Error handling\n\nYou may find it necessary to handle both task and application failures within your Batch solution.\n\n### Task failure handling\nTask failures fall into these categories:\n\n- **Scheduling failures**\n    - If the transfer of files specified for a task fails for any reason, a \"scheduling error\" is set for the task.\n    - Causes of scheduling errors could be because the files have moved, the Storage account is no longer available, or another issue was encountered that prevented the successful copying of files to the node.\n- **Application failures**\n    - The process specified by the task's command line can also fail. The process is deemed to have failed when a non-zero exit code is returned by the process executed by the task.\n    - For application failures, it is possible to configure Batch to automatically retry the task up to a specified number of times.\n- **Constraint failures**\n    - A constraint can be set that specifies the maximum execution duration for a job or task, the *maxWallClockTime*. This can be useful for terminating \"hung\" tasks.\n    - When the maximum amount of time has been exceeded, the task is marked as *completed* but the exit code is set to `0xC000013A`, and the *schedulingError* field will be marked as `{ category:\"ServerError\", code=\"TaskEnded\"}`.\n\n### Debugging application failures\n\nDuring execution, an application may produce diagnostic output which can be used to troubleshoot issues. As mentioned in [Files and directories](#files) above, the Batch service sends stdout and stderr output to `stdout.txt` and `stderr.txt` files located in the task directory on the compute node. By using [ComputeNode.GetNodeFile][net_getfile_node] and [CloudTask.GetNodeFile][net_getfile_task] in the Batch .NET API, you can retrieve these and other files for troubleshooting purposes.\n\nEven more extensive debugging can be performed by logging in to a compute node using *Remote Desktop*. You can [get a remote desktop protocol file from a node][rest_rdp] (Batch REST API) or the use the [ComputeNode.GetRDPFile][net_rdp] method (Batch .NET API) for remote login.\n\n>[AZURE.NOTE] To connect to a node via RDP, you must first create a user on the node. [Add a user account to a node][rest_create_user] in the Batch REST API or the use the [ComputeNode.CreateComputeNodeUser][net_create_user] method in Batch .NET.\n\n### Accounting for task failures or interruptions\n\nTasks may occasionally fail or be interrupted. The task application itself may fail, the node on which the task is running could be rebooted, or the node might be removed from the pool during a resize operation if the pool's de-allocation policy is set to remove nodes immediately without waiting for tasks to finish. In all cases, the task can be automatically re-queued by Batch for execution on another node.\n\nIt is also possible for an intermittent issue to cause a task to hang or take too long to execute. The maximum execution time can be set for a task, and if exceeded, Batch will interrupt the task application.\n\n### Troubleshooting \"bad\" compute nodes\n\nIn situations where some of your tasks are failing, your Batch client application or service can examine the metadata of the failed tasks to identify a misbehaving node. Each node in a pool is given a unique ID, and the node on which a task runs is included in the task metadata. Once identified, you can take several actions:\n\n- **Reboot the node** ([REST][rest_reboot] | [.NET][net_reboot])\n\n    Restarting the node can sometimes clear up latent issues such as stuck or crashed processes. Note that if your pool uses a start task or your job uses a job preparation task, they will be executed when the node restarts.\n\n- **Reimage the node** ([REST][rest_reimage] | [.NET][net_reimage])\n\n    This reinstalls the operating system on the node. As with rebooting a node, start tasks and job preparation tasks are rerun after the node has been reimaged.\n\n- **Remove the node from the pool** ([REST][rest_remove] | [.NET][net_remove])\n\n    Sometimes it is necessary to completely remove the node from the pool.\n\n- **Disable task scheduling on the node** ([REST][rest_offline] | [.NET][net_offline])\n\n    This effectively takes the node \"offline\" so that no further tasks will be assigned to it, but allows the node to remain running and in the pool. This enables you to perform further investigation into the cause of the failures without losing the failed task's data, and without the node causing additional task failures. For example, you can disable task scheduling on the node, then log in remotely to examine the node's event logs, or perform other troubleshooting. Once you've finished your investigation, you can then bring the node back online by enabling task scheduling ([REST][rest_online], [.NET][net_online]), or perform one of the other actions discussed above.\n\n> [AZURE.IMPORTANT] With each action above--reboot, reimage, remove, disable task scheduling--you are able to specify how tasks currently running on the node are handled when you perform the action. For example, when you disable task scheduling on a node with the Batch .NET client library, you can specify a [DisableComputeNodeSchedulingOption][net_offline_option] enum value to specify whether to **Terminate** running tasks, **Requeue** them for scheduling on other nodes, or allow running tasks to complete before performing the action (**TaskCompletion**).\n\n## Next steps\n\n- Create your first Batch application by following the steps in [Get started with the Azure Batch Library for .NET](batch-dotnet-get-started.md)\n- Download and build the [Batch Explorer][batch_explorer_project] sample project for use while you develop your Batch solutions. Using the Batch Explorer, you can perform the following and more:\n  - Monitor and manipulate pools, jobs, and tasks within your Batch account\n  - Download `stdout.txt`, `stderr.txt`, and other files from nodes\n  - Create users on nodes and download RDP files for remote login\n\n[1]: ./media/batch-api-basics/node-folder-structure.png\n\n[about_cloud_services]: https://azure.microsoft.com/documentation/articles/fundamentals-application-models/#tell-me-about-cloud-services\n[azure_storage]: https://azure.microsoft.com/services/storage/\n[batch_explorer_project]: https://github.com/Azure/azure-batch-samples/tree/master/CSharp/BatchExplorer\n[cloud_service_sizes]: https://azure.microsoft.com/documentation/articles/cloud-services-sizes-specs/\n[msmpi]: https://msdn.microsoft.com/library/bb524831.aspx\n[github_samples]: https://github.com/Azure/azure-batch-samples\n[github_sample_taskdeps]:  https://github.com/Azure/azure-batch-samples/tree/master/CSharp/ArticleProjects/TaskDependencies\n\n[batch_net_api]: https://msdn.microsoft.com/library/azure/mt348682.aspx\n[net_cloudjob_jobmanagertask]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.jobmanagertask.aspx\n[net_cloudjob_priority]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudjob.priority.aspx\n[net_cloudpool_starttask]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudpool.starttask.aspx\n[net_cloudtask_env]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.environmentsettings.aspx\n[net_create_cert]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.certificateoperations.createcertificate.aspx\n[net_create_user]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.createcomputenodeuser.aspx\n[net_getfile_node]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.getnodefile.aspx\n[net_getfile_task]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.cloudtask.getnodefile.aspx\n[net_multiinstancesettings]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.multiinstancesettings.aspx\n[net_rdp]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.getrdpfile.aspx\n[net_reboot]: https://msdn.microsoft.com/library/azure/mt631495.aspx\n[net_reimage]: https://msdn.microsoft.com/library/azure/mt631496.aspx\n[net_remove]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.pooloperations.removefrompoolasync.aspx\n[net_offline]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.disableschedulingasync.aspx\n[net_online]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.computenode.enableschedulingasync.aspx\n[net_offline_option]: https://msdn.microsoft.com/library/azure/microsoft.azure.batch.common.disablecomputenodeschedulingoption.aspx\n\n[batch_rest_api]: https://msdn.microsoft.com/library/azure/Dn820158.aspx\n[rest_add_job]: https://msdn.microsoft.com/library/azure/mt282178.aspx\n[rest_add_pool]: https://msdn.microsoft.com/library/azure/dn820174.aspx\n[rest_add_cert]: https://msdn.microsoft.com/library/azure/dn820169.aspx\n[rest_add_task]: https://msdn.microsoft.com/library/azure/dn820105.aspx\n[rest_create_user]: https://msdn.microsoft.com/library/azure/dn820137.aspx\n[rest_get_task_info]: https://msdn.microsoft.com/library/azure/dn820133.aspx\n[rest_multiinstance]: https://msdn.microsoft.com/library/azure/mt637905.aspx\n[rest_multiinstancesettings]: https://msdn.microsoft.com/library/azure/dn820105.aspx#multiInstanceSettings\n[rest_update_job]: https://msdn.microsoft.com/library/azure/dn820162.aspx\n[rest_rdp]: https://msdn.microsoft.com/library/azure/dn820120.aspx\n[rest_reboot]: https://msdn.microsoft.com/library/azure/dn820171.aspx\n[rest_reimage]: https://msdn.microsoft.com/library/azure/dn820157.aspx\n[rest_remove]: https://msdn.microsoft.com/library/azure/dn820194.aspx\n[rest_offline]: https://msdn.microsoft.com/library/azure/mt637904.aspx\n[rest_online]: https://msdn.microsoft.com/library/azure/mt637907.aspx\n"
+}
