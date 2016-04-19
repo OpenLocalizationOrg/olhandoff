@@ -1,20 +1,20 @@
 <properties
-	pageTitle="Easy application installation and management in Azure Batch | Microsoft Azure"
-	description="Use the application packages feature of Azure Batch to easily manage multiple applications and versions for installation on Batch compute nodes."
-	services="batch"
-	documentationCenter=".net"
-	authors="mmacy"
-	manager="timlt"
-	editor="" />
+    pageTitle="Easy application installation and management in Azure Batch | Microsoft Azure"
+    description="Use the application packages feature of Azure Batch to easily manage multiple applications and versions for installation on Batch compute nodes."
+    services="batch"
+    documentationCenter=".net"
+    authors="mmacy"
+    manager="timlt"
+    editor="" />
 
 <tags
-	ms.service="batch"
-	ms.devlang="multiple"
-	ms.topic="article"
-	ms.tgt_pltfrm="vm-windows"
-	ms.workload="big-compute"
-	ms.date="03/14/2016"
-	ms.author="marsma" />
+    ms.service="batch"
+    ms.devlang="multiple"
+    ms.topic="article"
+    ms.tgt_pltfrm="vm-windows"
+    ms.workload="big-compute"
+    ms.date="03/14/2016"
+    ms.author="marsma" />
 
 # Application deployment with Azure Batch application packages
 
@@ -316,3 +316,7 @@ With application packages, you can more easily provide your customers with the a
 [11]: ./media/batch-application-packages/app_pkg_11.png "Update package blade in Azure portal"
 [12]: ./media/batch-application-packages/app_pkg_12.png "Delete package confirmation dialog in Azure portal"
 [13]: ./media/batch-application-packages/app_pkg_13.png "Metadata file selection detail"
+
+<!--HONumber=Apr16_HO2-->
+
+
