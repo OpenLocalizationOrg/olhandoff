@@ -16,9 +16,9 @@ For details about what a package includes and how it must be structured, see [Ap
 
 To upload packages, drag them into the upload field or click to browse your files. The **Packages** page will let you upload .xap, .appx, .appxupload, and/or .appxbundle files.
 
-**Note**  For Windows 10, you should always upload the .appxupload file here, not the .appx or .appxbundle. For more info about packaging UWP apps for the Store, see [Packaging Universal Windows apps for Windows 10](http://go.microsoft.com/fwlink/p/?LinkId=620193 ).
+**Note**  For Windows 10, you should always upload the .appxupload file here, not the .appx or .appxbundle. For more info about packaging UWP apps for the Store, see [Packaging Universal Windows apps for Windows 10](http://go.microsoft.com/fwlink/p/?LinkId=620193 ).
 
- 
+ 
 
 If we detect issues with your packages while validating them, you'll need to remove the package, fix the issue, and then try uploading it again. For more info, see [Resolve package upload errors](resolve-package-upload-errors.md).
 
@@ -45,10 +45,15 @@ When we detect that you have redundant packages, we'll provide an option to remo
 
 We recommend that you use [Visual Studio Application Insights](http://go.microsoft.com/fwlink/?LinkId=615086) in your packages (or enable it by checking the box for “Show telemetry in the Windows Dev Center” when building your package) so that we can provide you with [app usage telemetry details](usage-report.md). If you didn’t configure Application Insights in Microsoft Visual Studio, when we detect that a package includes it, we'll display a message confirming that by submitting your package, you agree to enable app usage telemetry about your developer account. You can disable app usage telemetry at any time in your **Account settings**.
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=Mar16_HO2-->
 
 

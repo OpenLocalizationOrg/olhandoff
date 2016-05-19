@@ -57,7 +57,7 @@ A variety of words could replace {0}, such as appointment, task, or document. Wh
 | The task could not be synchronized.        | Die Aufgabe konnte nicht synchronisiert werden.  |
 | The document could not be synchronized.    | Das Dokument konnte nicht synchronisiert werden. |
 
- 
+ 
 
 As another example, consider the sentence "Remind me in {0} minute(s)." While using "minute(s)" works for the English language, other languages might use different terms. For example, the Polish language uses "minuta", "minuty", or "minut" depending on the context.
 
@@ -84,7 +84,7 @@ Localize specific strings, not tags. Consider the following examples:
 | &lt;link&gt;terms of use&lt;/link&gt;   | terms of use               |
 | &lt;link&gt;privacy policy&lt;/link&gt; | privacy policy             |
 
- 
+ 
 
 Including the above &lt;link&gt; tag in the resources means that it too will be localized. This renders the tag not valid. Only the strings themselves should be localized. Generally, you should think of tags as code that should be kept separate from localizable content. However, some long strings should include markup to keep context and ensure ordering.
 
@@ -178,4 +178,9 @@ Sorting follows the **Regional Control Panel** format:
 * [Globalization and localization do's and don'ts](guidelines-and-checklist-for-globalizing-your-app.md)
 * [Put UI strings into resources](put-ui-strings-into-resources.md)
 * [How to name resources using qualifiers](https://msdn.microsoft.com/library/windows/apps/xaml/hh965324)
- 
+ 
+
+
+<!--HONumber=Mar16_HO2-->
+
+

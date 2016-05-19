@@ -5,14 +5,14 @@ November 12, 2015
 
 **Applies to:**
 
-* Windows 10
-* Windows 10 Mobile
+* Windows 10
+* Windows 10 Mobile
 
-If you have specific web sites and apps that you know have compatibility problems with Microsoft Edge, you can use the Enterprise Mode site list so that the web sites will automatically open using Internet Explorer 11. Additionally, if you know that your intranet sites aren't going to work properly with Microsoft Edge, you can set all intranet sites to automatically open using IE11.
+If you have specific web sites and apps that you know have compatibility problems with Microsoft Edge, you can use the Enterprise Mode site list so that the web sites will automatically open using Internet Explorer 11. Additionally, if you know that your intranet sites aren't going to work properly with Microsoft Edge, you can set all intranet sites to automatically open using IE11.
 
 Using Enterprise Mode means that you can continue to use Microsoft Edge as your default browser, while also ensuring that your apps continue working on IE11.
 
-**Note**  
+**Note**  
 If you want to use Group Policy to set Internet Explorer as your default browser, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
 
 
@@ -75,7 +75,7 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 ## Fix your intranet sites
 You can add the **Send all intranet traffic over to Internet Explorer** Group Policy setting for Windows 10 so that all of your intranet sites open in IE11. This means that even if your employees are using Microsoft Edge, they will automatically switch to IE11 while viewing the intranet.
 
-**Note**  
+**Note**  
 If you want to use Group Policy to set IE as the default browser for Internet sites, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
 
 **To turn on Sends all intranet traffic over to Internet Explorer using Group Policy**
@@ -93,9 +93,14 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 * [Enterprise Mode Site List Manager download](http://go.microsoft.com/fwlink/?LinkId=394378)
 * [Enterprise Mode for Internet Explorer 11 (IE11)](http://go.microsoft.com/fwlink/p/?linkid=618377)
 * [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714)
- 
+ 
 
- 
+ 
 
+
+
+
+
+<!--HONumber=Mar16_HO2-->
 
 
