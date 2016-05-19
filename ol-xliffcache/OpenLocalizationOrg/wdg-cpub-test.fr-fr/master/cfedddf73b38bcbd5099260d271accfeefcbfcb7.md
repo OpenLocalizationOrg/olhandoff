@@ -4,7 +4,7 @@
 
 This article guides you through the steps to target various deployment and debugging targets.
 
-Microsoft Visual Studio allows you to deploy and debug your Universal Windows Platform (UWP) apps on a variety of Windows 10 devices. Visual Studio will handle the process of building and registering the application on the target device.
+Microsoft Visual Studio allows you to deploy and debug your Universal Windows Platform (UWP) apps on a variety of Windows 10 devices. Visual Studio will handle the process of building and registering the application on the target device.
 
 ## Picking a deployment target
 
@@ -15,7 +15,7 @@ To pick a target, navigate to the debug target dropdown next to the **Start Debu
 -   **Local Machine** will deploy the application to your current development machine. This option is only available if your application's **Target Platform Min. Version** is less than or equal to the operating system on your development machine.
 -   **Simulator** will deploy the application to a simulated environment on your current development machine. This option is only available if your application's **Target Platform Min. Version** is less than or equal to the operating system on your development machine.
 -   **Device** will deploy the application to a USB connected device. The device must be developer unlocked and have the screen unlocked.
--   An **Emulator** target will boot up and deploy the application to an emulator with the configuration specified in the name. Emulators are only available on Hyper-V enabled machines running Windows 8.1 or beyond.
+-   An **Emulator** target will boot up and deploy the application to an emulator with the configuration specified in the name. Emulators are only available on Hyper-V enabled machines running Windows 8.1 or beyond.
 -   **Remote Machine** will let you specify a remote target to deploy the application. More information about deploying to a remote machine can be found in [Specifying a remote device](#specifying-a-remote-device).
 
 ## Specifying a remote device
@@ -34,7 +34,7 @@ To deploy an application to a remote PC, you will also need to download and inst
 
 ### C++ and JavaScript
 
-To specify a remote machine target for a C++ or JavaScript UWP app, go to project properties by right clicking on the project in the **Solution Explorer**, and clicking **Properties**. Navigate to **Debugging** settings and change **Debugger to launch** to **Remote Machine**. Then fill in the **Machine Name** (or click **Locate…** to find one) and set the **Authentication Type** property.
+To specify a remote machine target for a C++ or JavaScript UWP app, go to project properties by right clicking on the project in the **Solution Explorer**, and clicking **Properties**. Navigate to **Debugging** settings and change **Debugger to launch** to **Remote Machine**. Then fill in the **Machine Name** (or click **Locate…** to find one) and set the **Authentication Type** property.
 
 ![](images/debug-property-pages.png)
 After the machine is specified, you can select **Remote Machine** in the debug target dropdown to return to that specified machine. Only one remote machine can be selected at a time.
@@ -55,7 +55,7 @@ There are three authentication modes for remote machine deployment:
 
 ## Debugging options
 
-On Windows 10, the startup performance of UWP apps is improved by proactively launching and then suspending apps in a technique called [prelaunch](https://msdn.microsoft.com/library/windows/apps/Mt593297). Many applications will not need to do anything special to work in this mode, but some applications may need to adjust their behavior. To help debug any issues in these code paths you can start debugging the app from Visual Studio in prelaunch mode. Debugging is supported both from a Visual Studio project (**Debug** -&gt; **Other Debug Targets** -&gt; **Debug Universal Windows App Prelaunch**), and for apps already installed on the machine (**Debug** -&gt; **Other Debug Targets** -&gt; **Debug Installed App Package**, and check the box for **Activate app with Prelaunch**). For more information read about how to [Debug UWP Prelaunch]( http://go.microsoft.com/fwlink/?LinkId=717245).
+On Windows 10, the startup performance of UWP apps is improved by proactively launching and then suspending apps in a technique called [prelaunch](https://msdn.microsoft.com/library/windows/apps/Mt593297). Many applications will not need to do anything special to work in this mode, but some applications may need to adjust their behavior. To help debug any issues in these code paths you can start debugging the app from Visual Studio in prelaunch mode. Debugging is supported both from a Visual Studio project (**Debug** -&gt; **Other Debug Targets** -&gt; **Debug Universal Windows App Prelaunch**), and for apps already installed on the machine (**Debug** -&gt; **Other Debug Targets** -&gt; **Debug Installed App Package**, and check the box for **Activate app with Prelaunch**). For more information read about how to [Debug UWP Prelaunch]( http://go.microsoft.com/fwlink/?LinkId=717245).
 
 You can set the following deployment options on the **Debug** property page of the startup project.
 
@@ -65,19 +65,14 @@ For security reasons, a UWP app that is installed in the standard manner is not 
 
 To remove the network loopback exemption from the app:
 
--   On the C\# and Visual Basic **Debug** property page, clear the **Allow Network Loopback** check box.
+-   On the C\# and Visual Basic **Debug** property page, clear the **Allow Network Loopback** check box.
 -   On the JavaScript and C++ **Debugging** property page, set the **Allow Network Loopback** value to **No**.
 
 **Do not launch, but debug my code when it starts (C\# and Visual Basic) / Launch App (JavaScript and C++)**
 
 To configure the deployment to automatically start a debugging session when the app is launched:
 
--   On the C\# and Visual Basic **Debug** property page, check the **Do not launch, but debug my code when it starts** check box.
+-   On the C\# and Visual Basic **Debug** property page, check the **Do not launch, but debug my code when it starts** check box.
 -   On the JavaScript and C++ **Debugging** property page, set the **Launch Application** value to **Yes**.
-
-
-
-
-<!--HONumber=Mar16_HO2-->
 
 

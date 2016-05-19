@@ -131,7 +131,7 @@ private void ShowAccessibleUICheckBox_Click(object sender, RoutedEventArgs e)
 
 For more info about accessibility declarations and publishing your app, see [Accessibility in the Store](accessibility-in-the-store.md).
 
-**Note**  Declaring the app as accessible is only relevant to the Windows Store.
+**Note**  Declaring the app as accessible is only relevant to the Windows Store.
 
 ## Assistive technology support in custom controls
 
@@ -146,14 +146,9 @@ Related topics
 * [**Windows.UI.Xaml.Automation**](https://msdn.microsoft.com/library/windows/apps/BR209179)
 * [Design for accessibility](https://msdn.microsoft.com/library/windows/apps/Hh700407)
 * [XAML accessibility sample](http://go.microsoft.com/fwlink/p/?linkid=238570)
- 
+ 
 
- 
+ 
 
-
-
-
-
-<!--HONumber=Mar16_HO2-->
 
 

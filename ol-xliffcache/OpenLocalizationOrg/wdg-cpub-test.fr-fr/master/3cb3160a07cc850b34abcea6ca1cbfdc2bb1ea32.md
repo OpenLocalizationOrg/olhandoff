@@ -32,9 +32,9 @@ Learn how to schedule a one-time background task, or run a periodic background t
 
     -   If *FreshnessTime* is set to 15 minutes and *OneShot* is false, the task will run every 15 minutes starting between 0 and 15 minutes from the time it is registered.
 
-    **Note**  If *FreshnessTime* is set to less than 15 minutes, an exception is thrown when attempting to register the background task.
+    **Note**  If *FreshnessTime* is set to less than 15 minutes, an exception is thrown when attempting to register the background task.
 
-     
+     
 
     For example, this trigger will cause a background task to run once an hour:
 
@@ -95,14 +95,14 @@ Learn how to schedule a one-time background task, or run a periodic background t
     > BackgroundTaskRegistration ^ task = RegisterBackgroundTask(entryPoint, taskName, hourlyTrigger, userCondition);
     > ```
     
-    > **Note**  Background task registration parameters are validated at the time of registration. An error is returned if any of the registration parameters are invalid. Ensure that your app gracefully handles scenarios where background task registration fails - if instead your app depends on having a valid registration object after attempting to register a task, it may crash.
+    > **Note**  Background task registration parameters are validated at the time of registration. An error is returned if any of the registration parameters are invalid. Ensure that your app gracefully handles scenarios where background task registration fails - if instead your app depends on having a valid registration object after attempting to register a task, it may crash.
 
    
 ## Remarks
 
-> **Note**  Starting with Windows 10, it is no longer necessary for the user to add your app to the lock screen in order to utilize background tasks. For guidance on the types of background task triggers, see [Support your app with background tasks](support-your-app-with-background-tasks.md).
+> **Note**  Starting with Windows 10, it is no longer necessary for the user to add your app to the lock screen in order to utilize background tasks. For guidance on the types of background task triggers, see [Support your app with background tasks](support-your-app-with-background-tasks.md).
 
-> **Note**  This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
+> **Note**  This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
 
 ## Related topics
@@ -122,14 +122,9 @@ Learn how to schedule a one-time background task, or run a periodic background t
 * [Debug a background task](debug-a-background-task.md)
 * [How to trigger suspend, resume, and background events in Windows Store apps (when debugging)](http://go.microsoft.com/fwlink/p/?linkid=254345)
 
- 
+ 
 
- 
+ 
 
-
-
-
-
-<!--HONumber=Mar16_HO2-->
 
 

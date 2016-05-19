@@ -127,17 +127,12 @@ When you enumerate output MIDI devices using the technique described above, your
 2.  Expand the **Universal Windows** node.
 3.  Select **Extensions**.
 4.  From the list of extensions, select **Microsoft General MIDI DLS for Universal Windows Apps**.
-    **Note**  If there are multiple versions of the extension, be sure to select the version that matches the target for your app. You can see which SDK version your app is targeting on the **Application** tab of the project Properties.
+    **Note**  If there are multiple versions of the extension, be sure to select the version that matches the target for your app. You can see which SDK version your app is targeting on the **Application** tab of the project Properties.
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=Mar16_HO2-->
 
 

@@ -1,34 +1,34 @@
 ---
 ms.assetid: e4582717-afb5-4cde-86bb-31fb1c5fc8f3
-description: This topic presents a case study of porting a very simple Windows Phone Silverlight app to a Windows 10&\#160;Universal Windows Platform (UWP) app.
-title: Windows Phone Silverlight to UWP case study: Bookstore1
+description: This topic presents a case study of porting a very simple Windows Phone Silverlight app to a Windows 10&\#160;Universal Windows Platform (UWP) app.
+title: Windows Phone Silverlight to UWP case study: Bookstore1
 ---
 
-# Windows Phone Silverlight to UWP case study: Bookstore1
+# Windows Phone Silverlight to UWP case study: Bookstore1
 
 \[ Updated for UWP apps on Windows 10. For Windows 8.x articles, see the [archive](http://go.microsoft.com/fwlink/p/?linkid=619132) \]
 
-This topic presents a case study of porting a very simple Windows Phone Silverlight app to a Windows 10 Universal Windows Platform (UWP) app. With Windows 10, you can create a single app package that your customers can install onto a wide range of devices, and that's what we'll do in this case study. See [Guide to UWP apps](https://msdn.microsoft.com/library/windows/apps/dn894631).
+This topic presents a case study of porting a very simple Windows Phone Silverlight app to a Windows 10 Universal Windows Platform (UWP) app. With Windows 10, you can create a single app package that your customers can install onto a wide range of devices, and that's what we'll do in this case study. See [Guide to UWP apps](https://msdn.microsoft.com/library/windows/apps/dn894631).
 
 The app we'll port consists of a **ListBox** bound to a view model. The view model has a list of books that shows title, author, and book cover. The book cover images have **Build Action** set to **Content** and **Copy to Output Directory** set to **Do not copy**.
 
 The previous topics in this section describe the differences between the platforms, and they give details and guidance on the porting process for various aspects of an app from XAML markup, through binding to a view model, down to accessing data. A case study aims to complement that guidance by showing it in action in a real example. The case studies assume you've read the guidance, which they do not repeat.
 
-**Note**   When opening Bookstore1Universal\_10 in Visual Studio, if you see the message "Visual Studio update required", then follow the steps in [TargetPlatformVersion](wpsl-to-uwp-troubleshooting.md#targetplatformversion).
+**Note**   When opening Bookstore1Universal\_10 in Visual Studio, if you see the message "Visual Studio update required", then follow the steps in [TargetPlatformVersion](wpsl-to-uwp-troubleshooting.md#targetplatformversion).
 
 ## Downloads
 
-[Download the Bookstore1WPSL8 Windows Phone Silverlight app](http://go.microsoft.com/fwlink/?linkid=517053).
+[Download the Bookstore1WPSL8 Windows Phone Silverlight app](http://go.microsoft.com/fwlink/?linkid=517053).
 
-[Download the Bookstore1Universal\_10 Windows 10 app](http://go.microsoft.com/fwlink/?linkid=532950).
+[Download the Bookstore1Universal\_10 Windows 10 app](http://go.microsoft.com/fwlink/?linkid=532950).
 
-## The Windows Phone Silverlight app
+## The Windows Phone Silverlight app
 
 Here’s what Bookstore1WPSL8—the app that we're going to port—looks like. It's just a vertically-scrolling list box of books beneath the heading of the app's name and page title.
 
 ![how bookstore1wpsl8 looks](images/wpsl-to-uwp-case-studies/c01-01-wpsl-how-the-app-looks.png)
 
-## Porting to a Windows 10 project
+## Porting to a Windows 10 project
 
 It's a very quick task to create a new project in Visual Studio, copy files over to it from Bookstore1WPSL8, and include the copied files in the new project. Start by creating a new Blank Application (Windows Universal) project. Name it Bookstore1Universal\_10. These are the files to copy over from Bookstore1WPSL8 to Bookstore1Universal\_10.
 
@@ -36,7 +36,7 @@ It's a very quick task to create a new project in Visual Studio, copy files over
 -   Copy the folder containing the view model source file (the folder is \\ViewModel).
 -   Copy MainPage.xaml and replace the file in the destination.
 
-We can keep the App.xaml, and App.xaml.cs that Visual Studio generated for us in the Windows 10 project.
+We can keep the App.xaml, and App.xaml.cs that Visual Studio generated for us in the Windows 10 project.
 
 Edit the source code and markup files that you just copied and change any references to the Bookstore1WPSL8 namespace to Bookstore1Universal\_10. A quick way to do that is to use the **Replace In Files** feature. In the imperative code in the view model source file, these porting changes are needed:
 
@@ -68,9 +68,9 @@ The view and the view model are working together correctly, and the **ListBox** 
 
 ## Paying off the debt items, and some initial styling
 
-By default, all orientations are supported. The Windows Phone Silverlight app explicitly constrains itself to portrait-only, though, so debt items \#1 and \#2 are paid off by going into the app package manifest in the new project and checking **Portrait** under **Supported orientations**.
+By default, all orientations are supported. The Windows Phone Silverlight app explicitly constrains itself to portrait-only, though, so debt items \#1 and \#2 are paid off by going into the app package manifest in the new project and checking **Portrait** under **Supported orientations**.
 
-For this app, item \#3 is not a debt since the status bar (formerly called the system tray) is shown by default. For items \#4 and \#5, we need to find four Universal Windows Platform (UWP) **TextBlock** styles that correspond to the Windows Phone Silverlight styles that we were using. You can run the Windows Phone Silverlight app in the emulator and compare it side-by-side with the illustration in the [Text](wpsl-to-uwp-porting-xaml-and-ui.md#text) section. From doing that, and from looking at the properties of the Windows Phone Silverlight system styles, we can make this table.
+For this app, item \#3 is not a debt since the status bar (formerly called the system tray) is shown by default. For items \#4 and \#5, we need to find four Universal Windows Platform (UWP) **TextBlock** styles that correspond to the Windows Phone Silverlight styles that we were using. You can run the Windows Phone Silverlight app in the emulator and compare it side-by-side with the illustration in the [Text](wpsl-to-uwp-porting-xaml-and-ui.md#text) section. From doing that, and from looking at the properties of the Windows Phone Silverlight system styles, we can make this table.
 
 | Windows Phone Silverlight style key | UWP style key          |
 |-------------------------------------|------------------------|
@@ -78,7 +78,7 @@ For this app, item \#3 is not a debt since the status bar (formerly called the s
 | PhoneTextSubtleStyle                | SubtitleTextBlockStyle |
 | PhoneTextNormalStyle                | CaptionTextBlockStyle  |
 | PhoneTextTitle1Style                | HeaderTextBlockStyle   |
- 
+ 
 To set those styles, you can just type them into the markup editor or you can use the Visual Studio XAML Tools and set them without typing a thing. To do that, you right-click a **TextBlock** and click **Edit Style** &gt; **Apply Resource**. To do that with the **TextBlock**s in the item template, right click the **ListBox** and click **Edit Additional Templates** &gt; **Edit Generated Items (ItemTemplate)**.
 
 There is an 80% opaque white background behind the items, because the default style of the **ListBox** control sets its background to the `ListBoxBackgroundThemeBrush` system resource. Set `Background="Transparent"` on the **ListBox** to clear that background. To left-align the **TextBlock**s in the item template, edit it again the same way as described above and set a **Margin** of `"9.6,0"` on both **TextBlock**s.
@@ -117,7 +117,7 @@ See [Theme changes](wpsl-to-uwp-porting-xaml-and-ui.md#theme-changes) to see how
 
 ![the ported windows 10 app](images/w8x-to-uwp-case-studies/c01-07-mob10-ported.png)
 
-The ported Windows 10 app running on a Mobile device
+The ported Windows 10 app running on a Mobile device
 
 ## An optional adjustment to the list box for Mobile devices
 
@@ -128,8 +128,3 @@ When the app is running on a Mobile device, the background of a list box is ligh
 This case study showed the process of porting a very simple app—arguably an unrealistically simple one. For instance, list controls can be used for selection or for establishing a context for navigation; the app navigates to a page with more details about the item that was tapped. This particular app does nothing with the user's selection, and it has no navigation. Even so, the case study served to break the ice, to introduce the porting process, and to demonstrate important techniques that you can use in real UWP apps.
 
 The next case study is [Bookstore2](wpsl-to-uwp-case-study-bookstore2.md), in which we look at accessing and displaying grouped data.
-
-
-<!--HONumber=Mar16_HO2-->
-
-
