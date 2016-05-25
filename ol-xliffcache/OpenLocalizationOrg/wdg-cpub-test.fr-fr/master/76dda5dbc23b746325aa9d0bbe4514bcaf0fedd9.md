@@ -49,7 +49,7 @@ Here are a few instances in which instructional UI can help your users learn:
     |----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
     | ![screen shot of windows mail app](images/instructional-ui-mail.png) | ![screen shot of windows mail app with an extended settings flyout](images/instructional-ui-mail-flyout.png) |
 
-     
+     
 
 -   **Introducing UI changes.** If you made significant UI changes in the latest version of your app, users might like tips on new features or specific details about how your app has changed.
 
@@ -64,10 +64,15 @@ Here are a few instances in which instructional UI can help your users learn:
 ## <span id="related_topics"></span>Related articles
 
 * [Guidelines for app help](guidelines-for-app-help.md)
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=May16_HO4-->
 
 

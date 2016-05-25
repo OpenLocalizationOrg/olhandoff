@@ -21,7 +21,7 @@ Getting to know the devices that support Universal Windows Platform (UWP) apps w
 
 The most widely-used of all computing devices, phones can do a lot with limited screen real estate and basic inputs. Phones are available in a variety of sizes; larger phones are called phablets. App experiences on phablets are similar to those on phones, but the increased screen real estate of phablets enable some key changes in content consumption.
 
-With Continuum for Phones, a new experience for compatible Windows 10 mobile devices, users can connect their phones to a monitor and even use a mouse and keyboard to make their phones work like a laptop. (For more info, see the [Continuum for Phone article](http://go.microsoft.com/fwlink/p/?LinkID=699431).)
+With Continuum for Phones, a new experience for compatible Windows 10 mobile devices, users can connect their phones to a monitor and even use a mouse and keyboard to make their phones work like a laptop. (For more info, see the [Continuum for Phone article](http://go.microsoft.com/fwlink/p/?LinkID=699431).)
 
 Screen sizes
 -   4'' to 5'' for phone
@@ -54,7 +54,7 @@ Typical device capabilities
 -   Movement sensors
 -   Location sensors
 
- 
+ 
 
 ## <span id="Tablets"></span><span id="tablets"></span><span id="TABLETS"></span>Tablets
 
@@ -89,7 +89,7 @@ Typical device capabilities
 -   Movement sensors
 -   Location sensors
 
- 
+ 
 
 ## <span id="PCs_and_laptops"></span><span id="pcs_and_laptops"></span><span id="PCS_AND_LAPTOPS"></span>PCs and laptops
 
@@ -121,7 +121,7 @@ Typical device capabilities
 -   Camera
 -   Microphone
 
- 
+ 
 
 ## <span id="Surface_Hub_devices"></span><span id="surface_hub_devices"></span><span id="SURFACE_HUB_DEVICES"></span>Surface Hub devices
 
@@ -154,7 +154,7 @@ Typical device capabilities
 -   Camera
 -   Microphone
 
- 
+ 
 
 ## <span id="Windows_IoT_devices"></span><span id="windows_iot_devices"></span><span id="WINDOWS_IOT_DEVICES"></span>Windows IoT devices
 
@@ -184,14 +184,19 @@ Inputs
 Typical device capabilities
 -   Variable, depending on the device
 
- 
+ 
 
-\[This article contains information that is specific to UWP apps and Windows 10. For Windows 8.1 guidance, please download the [Windows 8.1 guidelines PDF](https://go.microsoft.com/fwlink/p/?linkid=258743).\]
+\[This article contains information that is specific to UWP apps and Windows 10. For Windows 8.1 guidance, please download the [Windows 8.1 guidelines PDF](https://go.microsoft.com/fwlink/p/?linkid=258743).\]
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=May16_HO4-->
 
 

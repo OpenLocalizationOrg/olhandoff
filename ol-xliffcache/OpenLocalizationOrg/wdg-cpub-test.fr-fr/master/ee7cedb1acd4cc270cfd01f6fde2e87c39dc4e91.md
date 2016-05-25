@@ -11,9 +11,9 @@
 
 Get properties—top-level, basic, and extended—for a file represented by a [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) object.
 
-**Note**  Also see the [File access sample](http://go.microsoft.com/fwlink/p/?linkid=619995).
+**Note**  Also see the [File access sample](http://go.microsoft.com/fwlink/p/?linkid=619995).
 
- 
+ 
 
 
 ## Prerequisites
@@ -30,9 +30,9 @@ Get properties—top-level, basic, and extended—for a file represented by a [*
 
 Many top-level file properties are accessible as members of the [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) class. These properties include the files attributes, content type, creation date, display name, file type, and so on.
 
-**Note**  Remember to declare the **picturesLibrary** capability.
+**Note**  Remember to declare the **picturesLibrary** capability.
 
- 
+ 
 
 This example enumerates all of the files in the Pictures library, accessing a few of each file's top-level properties.
 
@@ -121,9 +121,14 @@ foreach (Windows.Storage.StorageFile file in files)
 }
 ```
 
- 
+ 
 
- 
+ 
 
+
+
+
+
+<!--HONumber=May16_HO4-->
 
 
