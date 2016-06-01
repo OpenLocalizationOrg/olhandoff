@@ -24,9 +24,9 @@ We also focused first on adding 3-D assets and then on 2-D assets. For example, 
 
 We also needed to iterate through some of these steps multiple times during the development process. For example, as we make changes to the mesh and marble models, we had to also change some of the shader code that supports those models.
 
-> **Note**   The sample code that corresponds to this document is found in the [DirectX Marble Maze game sample](http://go.microsoft.com/fwlink/?LinkId=624011).
+> **Note**   The sample code that corresponds to this document is found in the [DirectX Marble Maze game sample](http://go.microsoft.com/fwlink/?LinkId=624011).
 
- 
+ 
 Here are some of the key points that this document discusses for when you work with DirectX and visual game content, namely, when you initialize the DirectX graphics libraries, load scene resources, and update and render the scene:
 
 -   Adding game content typically involves many steps. These steps also often require iteration. Game developers often focus first on adding 3-D game content and then on adding 2-D content.
@@ -242,9 +242,9 @@ DX::ThrowIfFailed(
 
 The **DeviceResources::CreateWindowSizeDependentResources** method initializes graphics resources in a way that works for most games.
 
-> **Note**   The term *view* has a different meaning in the Windows Runtime than it has in Direct3D. In the Windows Runtime, a view refers to the collection of user interface settings for an app, including the display area and the input behaviors, plus the thread it uses for processing. You specify the configuration and settings you need when you create a view. The process of setting up the app view is described in [Marble Maze application structure](marble-maze-application-structure.md). In Direct3D, the term view has multiple meanings. First, a resource view defines the subresources that a resource can access. For example, when a texture object is associated with a shader resource view, that shader can later access the texture. One advantage of a resource view is that you can interpret data in different ways at different stages in the rendering pipeline. For more information about resource views, see [Texture Views (Direct3D 10)](https://msdn.microsoft.com/library/windows/desktop/bb205128). When used in the context of a view transform or view transform matrix, view refers to the location and orientation of the camera. A view transform relocates objects in the world around the camera’s position and orientation. For more information about view transforms, see [View Transform (Direct3D 9)](https://msdn.microsoft.com/library/windows/desktop/bb206342). How Marble Maze uses resource and matrix views is described in greater detail in this topic.
+> **Note**   The term *view* has a different meaning in the Windows Runtime than it has in Direct3D. In the Windows Runtime, a view refers to the collection of user interface settings for an app, including the display area and the input behaviors, plus the thread it uses for processing. You specify the configuration and settings you need when you create a view. The process of setting up the app view is described in [Marble Maze application structure](marble-maze-application-structure.md). In Direct3D, the term view has multiple meanings. First, a resource view defines the subresources that a resource can access. For example, when a texture object is associated with a shader resource view, that shader can later access the texture. One advantage of a resource view is that you can interpret data in different ways at different stages in the rendering pipeline. For more information about resource views, see [Texture Views (Direct3D 10)](https://msdn.microsoft.com/library/windows/desktop/bb205128). When used in the context of a view transform or view transform matrix, view refers to the location and orientation of the camera. A view transform relocates objects in the world around the camera’s position and orientation. For more information about view transforms, see [View Transform (Direct3D 9)](https://msdn.microsoft.com/library/windows/desktop/bb206342). How Marble Maze uses resource and matrix views is described in greater detail in this topic.
 
- 
+ 
 
 ## Loading scene resources
 
@@ -299,9 +299,9 @@ protected:
 
 By providing a common base class for UI elements, the **UserInterface** class, which manages the user interface, need only hold a collection of **ElementBase** objects, which simplifies UI management and provides a user interface manager that is reusable. Marble Maze defines types that derive from **ElementBase** that implement game-specific behaviors. For example, **HighScoreTable** defines the behavior for the high score table. For more info about these types, refer to the source code.
 
-> **Note**   Because XAML enables you to more easily create complex user interfaces, like those found in simulation and strategy games, consider whether to use XAML to define your UI. For info about how to develop a user interface in XAML in a DirectX UWP game, see [Extend the game sample (Windows)](tutorial-resources.md). This document refers to the DirectX 3-D shooting game sample.
+> **Note**   Because XAML enables you to more easily create complex user interfaces, like those found in simulation and strategy games, consider whether to use XAML to define your UI. For info about how to develop a user interface in XAML in a DirectX UWP game, see [Extend the game sample (Windows)](tutorial-resources.md). This document refers to the DirectX 3-D shooting game sample.
 
- 
+ 
 
 ###  Loading shaders
 
@@ -371,9 +371,9 @@ float4 main(sPSInput input) : SV_TARGET
 }
 ```
 
-> **Caution**  The compiled pixel shader contains 32 arithmetic instructions and 1 texture instruction. This shader should perform well on desktop computers and higher-end tablets. However, a lower-end computer might not be able to process this shader and still provide an interactive frame rate. Consider the typical hardware of your target audience and design your shaders to meet the capabilities of that hardware.
+> **Caution**  The compiled pixel shader contains 32 arithmetic instructions and 1 texture instruction. This shader should perform well on desktop computers and higher-end tablets. However, a lower-end computer might not be able to process this shader and still provide an interactive frame rate. Consider the typical hardware of your target audience and design your shaders to meet the capabilities of that hardware.
 
- 
+ 
 
 The **MarbleMaze::LoadDeferredResources** method uses the **BasicLoader::LoadShader** method to load the shaders. The following example loads the vertex shader. The run-time format for this shader is BasicVertexShader.cso. The **m\_vertexShader** member variable is an [**ID3D11VertexShader**](https://msdn.microsoft.com/library/windows/desktop/ff476641) object.
 
@@ -435,9 +435,9 @@ sPSInput main(sVSInput input)
 
 The document [Semantics](https://msdn.microsoft.com/library/windows/desktop/bb509647) describes each of the available semantics in greater detail.
 
-> **Note**   In a layout, you can specify additional components that are not used to enable multiple shaders to share the same layout. For example, the **TANGENT** element is not used by the shader. You can use the **TANGENT** element if you want to experiment with techniques such as normal mapping. By using normal mapping, also known as bump mapping, you can create the effect of bumps on the surfaces of objects. For more information about bump mapping, see [Bump Mapping (Direct3D 9)](https://msdn.microsoft.com/library/windows/desktop/bb172379).
+> **Note**   In a layout, you can specify additional components that are not used to enable multiple shaders to share the same layout. For example, the **TANGENT** element is not used by the shader. You can use the **TANGENT** element if you want to experiment with techniques such as normal mapping. By using normal mapping, also known as bump mapping, you can create the effect of bumps on the surfaces of objects. For more information about bump mapping, see [Bump Mapping (Direct3D 9)](https://msdn.microsoft.com/library/windows/desktop/bb172379).
 
- 
+ 
 
 For more information about the input assembly stage state, see [Input-Assembler Stage](https://msdn.microsoft.com/library/windows/desktop/bb205116) and [Getting Started with the Input-Assembler Stage](https://msdn.microsoft.com/library/windows/desktop/bb205117).
 
@@ -511,9 +511,9 @@ The **MarbleMaze::LoadDeferredResources** method loads mesh data after it loads 
 
 Marble Maze uses the **SDKMesh** class to manage meshes. This class is declared in SDKMesh.h. **SDKMesh** provides methods to load, render, and destroy mesh data.
 
-> **Important**   Marble Maze uses the SDK-Mesh format and provides the **SDKMesh** class for illustration only. Although the SDK-Mesh format is useful for learning, and for creating prototypes, it is a very basic format that might not meet the requirements of most game development. We recommend that you use a mesh format that meets the specific requirements of your game.
+> **Important**   Marble Maze uses the SDK-Mesh format and provides the **SDKMesh** class for illustration only. Although the SDK-Mesh format is useful for learning, and for creating prototypes, it is a very basic format that might not meet the requirements of most game development. We recommend that you use a mesh format that meets the specific requirements of your game.
 
- 
+ 
 
 The following example shows how the **MarbleMaze::LoadDeferredResources** method uses the **SDKMesh::Create** method to load mesh data for the maze and for the ball.
 
@@ -726,9 +726,9 @@ Before you render the scene objects, perform the following steps to prepare the 
 2.  Set the vertex and pixel shaders as the current shaders.
 3.  Update any constant buffers with data that you have to pass to the shaders.
 
-> **Important**  Marble Maze uses one pair of vertex and pixel shaders for all 3-D objects. If your game uses more than one pair of shaders, you must perform these steps each time you draw objects that use different shaders. To reduce the overhead that is associated with changing the shader state, we recommend that you group render calls for all objects that use the same shaders.
+> **Important**  Marble Maze uses one pair of vertex and pixel shaders for all 3-D objects. If your game uses more than one pair of shaders, you must perform these steps each time you draw objects that use different shaders. To reduce the overhead that is associated with changing the shader state, we recommend that you group render calls for all objects that use the same shaders.
 
- 
+ 
 
 The section [Loading shaders](#loading_shaders) in this document describes how the input layout is created when the vertex shader is created. The following example shows how the **MarbleMaze::Render** method uses the [**ID3D11DeviceContext::IASetInputLayout**](https://msdn.microsoft.com/library/windows/desktop/ff476454) method to set this layout as the current layout.
 
@@ -890,15 +890,10 @@ Read [Adding input and interactivity to the Marble Maze sample](adding-input-and
 * [Marble Maze application structure](marble-maze-application-structure.md)
 * [Developing Marble Maze, a UWP game in C++ and DirectX](developing-marble-maze-a-windows-store-game-in-cpp-and-directx.md)
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=May16_HO4-->
 
 

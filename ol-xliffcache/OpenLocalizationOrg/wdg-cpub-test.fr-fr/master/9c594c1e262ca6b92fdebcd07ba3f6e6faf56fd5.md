@@ -9,11 +9,11 @@ ms.assetid: 97F77EBA-EBA1-4308-8F64-F40988BCBB2C
 
 To understand your tax considerations for price selection, payout implications, and tax responsibility, see your countries/regions of distribution in the tables below.
 
-> **Note**  The Commerce Expansion Adjustment may have payout implications in a limited set of countries/regions. For further details about the Commerce Expansion Adjustment and the markets where it applies, see the [App Developer Agreement](https://msdn.microsoft.com/library/windows/apps/hh694058) and the list of [affected countries/regions](define-pricing-and-market-selection.md#price-considerations-for-specific-markets).
+> **Note**  The Commerce Expansion Adjustment may have payout implications in a limited set of countries/regions. For further details about the Commerce Expansion Adjustment and the markets where it applies, see the [App Developer Agreement](https://msdn.microsoft.com/library/windows/apps/hh694058) and the list of [affected countries/regions](define-pricing-and-market-selection.md#price-considerations-for-specific-markets).
 
-> **Note**  Tax rates are subject to change at any time. Microsoft cannot guarantee that the rates in the tables below will always be accurate.
+> **Note**  Tax rates are subject to change at any time. Microsoft cannot guarantee that the rates in the tables below will always be accurate.
 
- 
+ 
 
 | Country/region                   | Tax consideration for price selection                                                                                                             | Payout implication                    | Tax responsibility |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|--------------------|
@@ -210,7 +210,7 @@ To understand your tax considerations for price selection, payout implications, 
 | Zambia                           | Price being selected is the final sale price and includes any applicable taxes.                                                                   | 70% of selected price                 | Developer          |
 | Zimbabwe                         | Price being selected is the final sale price and includes any applicable taxes.                                                                   | 70% of selected price                 | Developer          |
 
- 
+ 
 
 ## Mixed remittance countries/regions
 
@@ -239,7 +239,7 @@ Certain Microsoft billing partners may collect and remit sales, use, goods and s
 | South Africa                       |
 | Vietnam                            |
 
- 
+ 
 
 ## Reseller countries/regions
 
@@ -251,7 +251,7 @@ In certain countries/regions, Microsoft acts as a reseller, rather than your age
 | China (except on mobile communication devices running Windows Phone 7.x and on personal computers running Windows 8.x) |
 | Brazil (only for purchases made via devices running Windows 10 and purchases made through mobile operator billing)     |
 
- 
+ 
 
 ## Tax reporting for India developers
 
@@ -268,15 +268,10 @@ To obtain information relevant to remitting taxes for your Store transactions in
 
 Each row of the report contains the date and time of the transaction and, if available, the India state where the transaction occurred.
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=May16_HO4-->
 
 

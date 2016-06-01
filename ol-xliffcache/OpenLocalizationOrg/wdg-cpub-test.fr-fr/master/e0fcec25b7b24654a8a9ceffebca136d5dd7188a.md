@@ -22,16 +22,11 @@ Modifies XAML compilation behavior, such that fields for named object references
 
 ## Remarks
 
-The value for the **x:FieldModifier** attribute will vary by programming language. The string to use will depend on how each language implements its **CodeDomProvider** and the type converters it returns to define the meanings for **TypeAttributes.Public** and **TypeAttributes.NotPublic**. For C#, Microsoft Visual Basic or Visual C++ component extensions (C++/CX), you can give the string value "public" or "Public"; the parser doesn't enforce case on this attribute value.
+The value for the **x:FieldModifier** attribute will vary by programming language. The string to use will depend on how each language implements its **CodeDomProvider** and the type converters it returns to define the meanings for **TypeAttributes.Public** and **TypeAttributes.NotPublic**. For C#, Microsoft Visual Basic or Visual C++ component extensions (C++/CX), you can give the string value "public" or "Public"; the parser doesn't enforce case on this attribute value.
 
 You can also specify **NonPublic** (**internal** in C# or C++/CX, **Friend** in Visual Basic) but this is uncommon. Internal access doesn't have any application to the Windows Runtime XAML code generation model. Private access is the default.
 
 **x:FieldModifier** is only relevant for elements with an [x:Name attribute](x-name-attribute.md), because that name is used to reference the field once it is public.
 
-**Note**  Windows Runtime XAML doesn't support **x:ClassModifier** or **x:Subclass**.
-
-
-
-<!--HONumber=May16_HO4-->
-
+**Note**  Windows Runtime XAML doesn't support **x:ClassModifier** or **x:Subclass**.
 

@@ -304,7 +304,7 @@ Now, whenever a collision between the ammo and a target occurs, a call to **Soun
 ## Next steps
 
 
-That was a whirlwind tour of Universal Windows Platform (UWP) DirectX game development! At this point, you have an idea of what you need to do to make your own game for Windows 8 a great experience. Remember, your game can be played on a wide variety of Windows 8 devices and platforms, so design your components: your graphics, your controls, your user interface, and your audio for as wide a set of configurations as you can!
+That was a whirlwind tour of Universal Windows Platform (UWP) DirectX game development! At this point, you have an idea of what you need to do to make your own game for Windows 8 a great experience. Remember, your game can be played on a wide variety of Windows 8 devices and platforms, so design your components: your graphics, your controls, your user interface, and your audio for as wide a set of configurations as you can!
 
 For more info about ways to modify the game sample provided in these documents, see [Extending the game sample](tutorial-resources.md).
 
@@ -549,15 +549,10 @@ void SoundEffect::PlaySound(_In_ float volume)
 }
 ```
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=May16_HO4-->
 
 
