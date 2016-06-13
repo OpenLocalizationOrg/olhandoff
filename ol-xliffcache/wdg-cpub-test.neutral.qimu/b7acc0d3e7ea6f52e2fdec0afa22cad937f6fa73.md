@@ -13,9 +13,9 @@ Learn how to add basic touch controls to your Universal Windows Platform (UWP) C
 
 You can incorporate these controls in games where you want the player to drag to scroll or pan over a 3D environment, such as a map or playfield. For example, in a strategy or puzzle game, you can use these controls to let the player view a game environment that is larger than the screen by panning left or right.
 
-> **Note**  Our code also works with mouse-based panning controls. The pointer related events are abstracted by the Windows Runtime APIs, so they can handle either touch- or mouse-based pointer events.
+> **Note**  Our code also works with mouse-based panning controls. The pointer related events are abstracted by the Windows Runtime APIs, so they can handle either touch- or mouse-based pointer events.
 
- 
+ 
 
 ## Objectives
 
@@ -333,15 +333,20 @@ We can now obtain a scene space coordinate that our camera is focused on, and wh
 
 Congratulations! You've implemented a simple set of camera panning touch controls in your game.
 
-> **Note**  
+> **Note**  
 This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
- 
+ 
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=Jun16_HO1-->
 
 

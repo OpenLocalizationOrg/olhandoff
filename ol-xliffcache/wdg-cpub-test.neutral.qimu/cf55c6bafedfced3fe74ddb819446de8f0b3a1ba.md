@@ -12,9 +12,9 @@ Track files that your user accesses frequently by adding them to your app's most
 
 Your app's MRU is represented by the [**StorageItemMostRecentlyUsedList**](https://msdn.microsoft.com/library/windows/apps/br207475) class, which you obtain from the static [**StorageApplicationPermissions.MostRecentlyUsedList**](https://msdn.microsoft.com/library/windows/apps/br207458) property. MRU items are stored as [**IStorageItem**](https://msdn.microsoft.com/library/windows/apps/br227129) objects, so both [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) objects (which represent files) and [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) objects (which represent folders) can be added to the MRU.
 
-**Note**  Also see the [File picker sample](http://go.microsoft.com/fwlink/p/?linkid=619994) and the [File access sample](http://go.microsoft.com/fwlink/p/?linkid=619995).
+**Note**  Also see the [File picker sample](http://go.microsoft.com/fwlink/p/?linkid=619994) and the [File access sample](http://go.microsoft.com/fwlink/p/?linkid=619995).
 
- 
+ 
 
 ## Prerequisites
 
@@ -45,9 +45,9 @@ Your app's MRU is represented by the [**StorageItemMostRecentlyUsedList**](https
     
     [**StorageItemMostRecentlyUsedList.Add**](https://msdn.microsoft.com/library/windows/apps/br207476) is overloaded. In the example, we use [**Add(IStorageItem, String)**](https://msdn.microsoft.com/library/windows/apps/br207481) so that we can associate metadata with the file. Setting metadata lets you record the item's purpose, for example "profile pic". You can also add the file to the MRU without metadata by calling [**Add(IStorageItem)**](https://msdn.microsoft.com/library/windows/apps/br207480). When you add an item to the MRU, the method returns a uniquely identifying string, called a token, which is used to retrieve the item.
 
-    **Tip**   You'll need the token to retrieve an item from the MRU, so persist it somewhere. For more info about app data, see [Managing application data](https://msdn.microsoft.com/library/windows/apps/hh465109).
+    **Tip**   You'll need the token to retrieve an item from the MRU, so persist it somewhere. For more info about app data, see [Managing application data](https://msdn.microsoft.com/library/windows/apps/hh465109).
 
-     
+     
 
 ## Use a token to retrieve an item from the MRU
 
@@ -90,9 +90,14 @@ When a user picks an item, consider adding it to your future-access list as well
 -   The [**FutureAccessList**](https://msdn.microsoft.com/library/windows/apps/br207457) can hold up to 1000 items. Remember: it can hold folders as well as files, so that's a lot of folders.
 -   The platform never removes items from the [**FutureAccessList**](https://msdn.microsoft.com/library/windows/apps/br207457) for you. When you reach the 1000-item limit, you can't add another until you make room with the [**Remove**](https://msdn.microsoft.com/library/windows/apps/br207497) method.
 
- 
+ 
 
- 
+ 
 
+
+
+
+
+<!--HONumber=Jun16_HO1-->
 
 

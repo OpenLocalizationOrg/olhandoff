@@ -1,18 +1,17 @@
 # Use Enterprise Mode to improve compatibility
 
-**Last updated:**
-November 12, 2015
+**Last updated:** November 12, 2015
 
 **Applies to:**
 
-* Windows 10
-* Windows 10 Mobile
+* Windows 10
+* Windows 10 Mobile
 
-If you have specific web sites and apps that you know have compatibility problems with Microsoft Edge, you can use the Enterprise Mode site list so that the web sites will automatically open using Internet Explorer 11. Additionally, if you know that your intranet sites aren't going to work properly with Microsoft Edge, you can set all intranet sites to automatically open using IE11.
+If you have specific web sites and apps that you know have compatibility problems with Microsoft Edge, you can use the Enterprise Mode site list so that the web sites will automatically open using Internet Explorer 11. Additionally, if you know that your intranet sites aren't going to work properly with Microsoft Edge, you can set all intranet sites to automatically open using IE11.
 
 Using Enterprise Mode means that you can continue to use Microsoft Edge as your default browser, while also ensuring that your apps continue working on IE11.
 
-**Note**  
+**Note**  
 If you want to use Group Policy to set Internet Explorer as your default browser, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
 
 
@@ -20,12 +19,10 @@ If you want to use Group Policy to set Internet Explorer as your default browser
 Microsoft Edge doesn't support ActiveX controls, Browser Helper Objects, VBScript, or other legacy technology. If you have websites or web apps that still use this technology and need IE11, you can add them to the Enterprise Mode site list, using the Enterprise Mode Site List Manager.
 
 **To add sites to your list**
-1. In the Enterprise Mode Site List Manager tool, click **Add**. <p> 
-If you already have an existing site list, you can import it into the tool. After it's in the tool, the xml updates the list, checking **Open in IE** for each site. For info about importing the site list, see [Import your Enterprise Mode site list to the Enterprise Mode Site List Manager](http://go.microsoft.com/fwlink/?LinkId=618322). <p>
+1. In the Enterprise Mode Site List Manager tool, click **Add**. <p> If you already have an existing site list, you can import it into the tool. After it's in the tool, the xml updates the list, checking **Open in IE** for each site. For info about importing the site list, see [Import your Enterprise Mode site list to the Enterprise Mode Site List Manager](http://go.microsoft.com/fwlink/?LinkId=618322). <p>
 ![Enterprise Mode Site List Manager with Open in IE box](images/EmIEOpeninIE.png)
 
-2. Type or paste the URL for the website that’s experiencing compatibility problems, like *&lt;domain&gt;.com* or *&lt;domain&gt;.com/&lt;path&gt;* into the **URL** box. <p> 
-You don’t need to include the http:// or https:// designation. The tool will automatically try both versions during validation.
+2. Type or paste the URL for the website that’s experiencing compatibility problems, like *&lt;domain&gt;.com* or *&lt;domain&gt;.com/&lt;path&gt;* into the **URL** box. <p> You don’t need to include the http:// or https:// designation. The tool will automatically try both versions during validation.
 
 3. Type any comments about the website into the **Notes about URL** box. <p>
 Administrators can only see comments while they’re in this tool.
@@ -33,8 +30,7 @@ Administrators can only see comments while they’re in this tool.
 4.  Click **Open in IE** next to the URL that should automatically open in IE11. <p>
 The path within a domain can require a different compatibility mode from the domain itself. For example, the domain might look fine in the default IE11 browser, but the path might have problems and require the use of Enterprise Mode. If you added the domain previously, your original compatibility choice is still selected. However, if the domain is new, Enterprise Mode is automatically selected.
 
-5. Click **Save** to validate your website and to add it to the site list for your enterprise. <p> 
-If your site passes validation, it’s added to the global compatibility list. If the site doesn’t pass validation, you’ll get an error message explaining the problem. You’ll then be able to either cancel the site or ignore the validation problem and add it to your list anyway.
+5. Click **Save** to validate your website and to add it to the site list for your enterprise. <p> If your site passes validation, it’s added to the global compatibility list. If the site doesn’t pass validation, you’ll get an error message explaining the problem. You’ll then be able to either cancel the site or ignore the validation problem and add it to your list anyway.
 
 6.  On the **File** menu, go to where you want to save the file, and then click **Save to XML**. <p>
 You can save the file locally or to a network share. However, you must make sure you deploy it to the location specified in your Group Policy setting. For more info, see [Turn on Enterprise Mode and use a site list](http://go.microsoft.com/fwlink/?LinkId=618952).
@@ -75,7 +71,7 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 ## Fix your intranet sites
 You can add the **Send all intranet traffic over to Internet Explorer** Group Policy setting for Windows 10 so that all of your intranet sites open in IE11. This means that even if your employees are using Microsoft Edge, they will automatically switch to IE11 while viewing the intranet.
 
-**Note**  
+**Note**  
 If you want to use Group Policy to set IE as the default browser for Internet sites, you can find the info here, [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714).
 
 **To turn on Sends all intranet traffic over to Internet Explorer using Group Policy**
@@ -93,9 +89,14 @@ The site shows a message in Microsoft Edge, saying that the page needs IE. At th
 * [Enterprise Mode Site List Manager download](http://go.microsoft.com/fwlink/?LinkId=394378)
 * [Enterprise Mode for Internet Explorer 11 (IE11)](http://go.microsoft.com/fwlink/p/?linkid=618377)
 * [Set the default browser using Group Policy]( http://go.microsoft.com/fwlink/?LinkId=620714)
- 
+ 
 
- 
+ 
 
+
+
+
+
+<!--HONumber=Jun16_HO1-->
 
 

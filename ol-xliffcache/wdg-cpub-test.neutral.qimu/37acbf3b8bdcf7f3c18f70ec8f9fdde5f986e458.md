@@ -19,7 +19,7 @@ To see a few different ways in which your app can access contacts and appointmen
 | [Send an SMS message](sending-an-sms-message.md) | This topic shows you how to launch the compose SMS dialog to allow the user to send an SMS message. You can pre-populate the fields of the SMS with data before showing the dialog. The message will not be sent until the user taps the send button. |
 | [Manage appointments](managing-appointments.md) | Through the [<strong>Windows.ApplicationModel.Appointments</strong>](https://msdn.microsoft.com/library/windows/apps/Dn263359) namespace, you can create and manage appointments in a user's calendar app. Here, we'll show you how to create an appointment, add it to a calendar app, replace it in the calendar app, and remove it from the calendar app. We'll also show how to display a time span for a calendar app and create an appointment-recurrence object. |
 
- 
+ 
 
 ## Related topics
 
@@ -28,5 +28,10 @@ To see a few different ways in which your app can access contacts and appointmen
 * [Contact Picker app sample](http://go.microsoft.com/fwlink/p/?linkid=231575)
 * [Handling Contact Actions sample](http://go.microsoft.com/fwlink/p/?LinkID=320151)
 
+
+
+
+
+<!--HONumber=Jun16_HO1-->
 
 

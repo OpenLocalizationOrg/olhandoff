@@ -42,12 +42,12 @@ This walkthrough demonstrates how to render shadow volumes using depth maps, usi
 </tbody>
 </table>
 
- 
+ 
 
 ## Shadow mapping application to Direct3D 9 desktop porting
 
 
-Windows 8 adde d depth comparison functionality to feature level 9\_1 and 9\_3. Now you can migrate rendering code with shadow volumes to DirectX 11, and the Direct3D 11 renderer will be downlevel compatible with feature level 9 devices. This walkthrough shows how any Direct3D 11 app or game can implement traditional shadow volumes using depth testing. The code covers the following process:
+Windows 8 adde d depth comparison functionality to feature level 9\_1 and 9\_3. Now you can migrate rendering code with shadow volumes to DirectX 11, and the Direct3D 11 renderer will be downlevel compatible with feature level 9 devices. This walkthrough shows how any Direct3D 11 app or game can implement traditional shadow volumes using depth testing. The code covers the following process:
 
 1.  Creating Direct3D device resources for shadow mapping.
 2.  Adding a rendering pass to create the depth map.
@@ -60,7 +60,7 @@ Upon completing this walkthrough, you should be familiar with how to implement a
 ## Prerequisites
 
 
-You should [Prepare your dev environment for Universal Windows Platform (UWP) DirectX game development](prepare-your-dev-environment-for-windows-store-directx-game-development.md). You don't need a template yet, but you'll need Microsoft Visual Studio 2015 to build the code sample for this walkthrough.
+You should [Prepare your dev environment for Universal Windows Platform (UWP) DirectX game development](prepare-your-dev-environment-for-windows-store-directx-game-development.md). You don't need a template yet, but you'll need Microsoft Visual Studio 2015 to build the code sample for this walkthrough.
 
 ## Related topics
 
@@ -75,10 +75,15 @@ You should [Prepare your dev environment for Universal Windows Platform (UWP) Di
 * [Common Techniques to Improve Shadow Depth Maps](https://msdn.microsoft.com/library/windows/desktop/ee416324)
 * [Cascaded Shadow Maps](https://msdn.microsoft.com/library/windows/desktop/ee416307)
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=Jun16_HO1-->
 
 

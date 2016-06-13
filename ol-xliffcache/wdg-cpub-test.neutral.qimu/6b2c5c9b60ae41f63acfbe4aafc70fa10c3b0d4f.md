@@ -21,3 +21,8 @@ Currently EF only supports SQLite on UWP. A detailed walkthrough on installing E
 -   [Create your database](http://ef.readthedocs.org/en/latest/getting-started/uwp.html#create-your-database)
 -   [Use your model](http://ef.readthedocs.org/en/latest/getting-started/uwp.html#use-your-model)
 
+
+
+<!--HONumber=Jun16_HO1-->
+
+
