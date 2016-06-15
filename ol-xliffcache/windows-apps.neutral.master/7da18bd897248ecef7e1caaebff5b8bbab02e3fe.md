@@ -102,7 +102,8 @@ Here, the ItemsSource is bound to a [**CollectionViewSource**](https://msdn.micr
           ItemsSource="{Binding Source={StaticResource itemsViewSource}}"/>
 ```
 
->**Note**&nbsp;&nbsp;You can populate a flip view either by adding items to its Items collection, or by setting its ItemsSource property, but you can't use both ways at the same time. If you set the ItemsSource property and you add an item in XAML, the added item is ignored. If you set the ItemsSource property and you add an item to the Items collection in code, an exception is thrown.
+>**Note**
+            &nbsp;&nbsp;You can populate a flip view either by adding items to its Items collection, or by setting its ItemsSource property, but you can't use both ways at the same time. If you set the ItemsSource property and you add an item in XAML, the added item is ignored. If you set the ItemsSource property and you add an item to the Items collection in code, an exception is thrown.
 
 ### Specify the look of the items
 
@@ -205,3 +206,8 @@ For larger collections (10-25 items), consider using an indicator that provides 
 - [Guidelines for lists](https://msdn.microsoft.com/library/windows/apps/mt186889)
 - [**FlipView class (XAML)**](https://msdn.microsoft.com/library/windows/apps/br242678)
 - [**CarouselPanel class (XAML)**](https://msdn.microsoft.com/library/windows/apps/hh967950)
+
+
+<!--HONumber=Jun16_HO2-->
+
+

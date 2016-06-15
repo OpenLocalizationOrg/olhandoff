@@ -25,7 +25,7 @@ Describes the structure of the 3D Manufacturing Format document and how it can b
 
 The 3D Manufacturing Format is a set of conventions for using XML to describe the appearance and structure of 3D models for the purpose of manufacturing (3D printing). It defines a set of parts (some required and some optional) and their relationships, with the goal of providing all necessary information to a 3D manufacturing device. A data set that adheres to the 3D Manufacturing Format can be saved as a file with the .3mf extension.
 
-In Windows 10, the [**Printing3D3MFPackage**](https://msdn.microsoft.com/library/windows/apps/windows.graphics.printing3d.printing3d3mfpackage.aspx) class in the **Windows.Graphics.Printing3D** namespace is analogous to a single .3mf file, and other classes map to the particular XML elements in the file. This guide describes how each of the main parts of a 3MF document can be created and set programmatically, how the 3MF Materials Extension can be utilized, and finally how a **Printing3D3MFPackage** object in C\# can be converted and saved as a .3mf file. For more information on the standards of 3MF or the 3MF Materials Extension, see the [3MF Specification](http://3mf.io/what-is-3mf/3mf-specification/).
+In Windows 10, the [**Printing3D3MFPackage**](https://msdn.microsoft.com/library/windows/apps/windows.graphics.printing3d.printing3d3mfpackage.aspx) class in the **Windows.Graphics.Printing3D** namespace is analogous to a single .3mf file, and other classes map to the particular XML elements in the file. This guide describes how each of the main parts of a 3MF document can be created and set programmatically, how the 3MF Materials Extension can be utilized, and finally how a **Printing3D3MFPackage** object in C\# can be converted and saved as a .3mf file. For more information on the standards of 3MF or the 3MF Materials Extension, see the [3MF Specification](http://3mf.io/what-is-3mf/3mf-specification/).
 
 <!-- >**Note** This guide describes how to construct a 3MF document from scratch. If you wish to make changes to an already existing 3MF document provided in the form of a .3mf file, you simply need to convert it to a **Printing3D3MFPackage** and alter the contained classes/properties in the same way (see [link]) below). -->
 
@@ -78,7 +78,7 @@ The default material type is **Base Material**, which has both a **Color Materia
 
 [!code-cs[BaseMaterialGroup](./code/3dprinthowto/cs/Generate3MFMethods.cs#SnippetBaseMaterialGroup)]
 
-**Note**  The 3D manufacturing device will determine which available physical materials map to which virtual material elements stored in the 3MF. Material mapping doesn't have to be 1:1: if a 3D printer only uses one material, it will print the whole model in that material, regardless of which objects or faces were assigned different materials.
+**Note**  The 3D manufacturing device will determine which available physical materials map to which virtual material elements stored in the 3MF. Material mapping doesn't have to be 1:1: if a 3D printer only uses one material, it will print the whole model in that material, regardless of which objects or faces were assigned different materials.
 
 ### Color materials
 
@@ -135,6 +135,11 @@ The following method takes a finished **Printing3D3MFPackage** and saves its dat
 
 [3D printing from your app](https://msdn.microsoft.com/windows/uwp/devices-sensors/3d-print-from-app)
 
- 
+ 
 
- 
+ 
+
+
+<!--HONumber=Jun16_HO2-->
+
+

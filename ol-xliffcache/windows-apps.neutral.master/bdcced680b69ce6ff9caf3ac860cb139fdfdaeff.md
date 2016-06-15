@@ -18,12 +18,11 @@ Integrate speech recognition and text-to-speech (also known as TTS, or speech sy
 -   See the [Cortana design guidelines](cortana-interactions.md) if you are exposing app functionality in the **Cortana** UI.
 
 
-**Speech recognition:  **converts words spoken by the user into text for form input, for text dictation, to specify an action or command, and to accomplish tasks. Both pre-defined grammars for free-text dictation and web search, and custom grammars authored using Speech Recognition Grammar Specification (SRGS) Version 1.0 are supported.
+**Speech recognition:  **converts words spoken by the user into text for form input, for text dictation, to specify an action or command, and to accomplish tasks. Both pre-defined grammars for free-text dictation and web search, and custom grammars authored using Speech Recognition Grammar Specification (SRGS) Version 1.0 are supported.
 
-**TTS:  **uses a speech synthesis engine (voice) to convert a text string into spoken words. The input string can be either basic, unadorned text or more complex Speech Synthesis Markup Language (SSML). SSML provides a standard way to control characteristics of speech output, such as pronunciation, volume, pitch, rate or speed, and emphasis.
+**TTS:  **uses a speech synthesis engine (voice) to convert a text string into spoken words. The input string can be either basic, unadorned text or more complex Speech Synthesis Markup Language (SSML). SSML provides a standard way to control characteristics of speech output, such as pronunciation, volume, pitch, rate or speed, and emphasis.
 
-> [!NOTE] 
-> Using **Cortana** and customized voice commands, your app can be launched in the foreground (the app takes focus, just as if it was launched from the Start menu) or activated as a background service (**Cortana** retains focus but provides results from the app). 
+> [!NOTE] Using **Cortana** and customized voice commands, your app can be launched in the foreground (the app takes focus, just as if it was launched from the Start menu) or activated as a background service (**Cortana** retains focus but provides results from the app). 
 > Commands that require additional context or user input (such as sending a message to a specific contact) are best handled in a foreground app, while basic commands can be handled in **Cortana** through a background app.
 > If you are exposing functionality as a background service through voice commands in the **Cortana** UI, see the [Cortana design guidelines](cortana-design-guidelines.md).
 
@@ -155,8 +154,7 @@ Predefined dictation and web-search grammars provide speech recognition for your
 -   The default free-text dictation grammar can recognize most words and phrases that a user can say in a particular language, and is optimized to recognize short phrases. Free-text dictation is useful when you don't want to limit the kinds of things a user can say. Typical uses include creating notes or dictating the content for a message.
 -   The web-search grammar, like a dictation grammar, contains a large number of words and phrases that a user might say. However, it is optimized to recognize terms that people typically use when searching the web.
 
-> [!NOTE]
-> Because predefined dictation and web-search grammars can be large, and because they are online (not on the device), performance might not be as fast as with a custom grammar installed on the device.
+> [!NOTE] Because predefined dictation and web-search grammars can be large, and because they are online (not on the device), performance might not be as fast as with a custom grammar installed on the device.
 
 These predefined grammars can be used to recognize up to 10 seconds of speech input and require no authoring effort on your part. However, they do require connection to a network.
 
@@ -226,11 +224,18 @@ Both issues can be addressed bu using SSML instead of plain text as input to the
 
 * [Speech interactions](https://msdn.microsoft.com/library/windows/apps/mt185614)
 * [Cortana interactions](https://msdn.microsoft.com/library/windows/apps/mt185598)
- **Samples**
+             
+          
+            **Samples**
 * [Speech recognition and speech synthesis sample](http://go.microsoft.com/fwlink/p/?LinkID=619897)
- 
+ 
 
- 
+ 
 
+
+
+
+
+<!--HONumber=Jun16_HO2-->
 
 

@@ -13,7 +13,7 @@ __Note__ Enterprise data protection (EDP) policy cannot be applied on Windows 10
 
 This topic shows examples of the coding tasks needed to achieve some of the most common data-transfer-related enterprise data protection (EDP) scenarios. For the full developer picture of how EDP relates to files, streams, the clipboard, networking, background tasks, and data protection under lock, see [enterprise data protection (EDP)](../enterprise/edp-hub.md).
 
-**Note**  The [enterprise data protection (EDP) sample](http://go.microsoft.com/fwlink/p/?LinkId=620031&clcid=0x409) covers many of the same scenarios demonstrated in this topic.
+**Note**  The [enterprise data protection (EDP) sample](http://go.microsoft.com/fwlink/p/?LinkId=620031&clcid=0x409) covers many of the same scenarios demonstrated in this topic.
 
 ## Prerequisites
 
@@ -208,7 +208,7 @@ Your app has a new and empty document open, which is assumed to be neutral as lo
 
 When you support the Share contract in your app, to set up a share source, set the enterprise identity context in the [**DataPackage**](https://msdn.microsoft.com/library/windows/apps/br205873) as shown in this code example.
 
-**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
+**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
 
 
 
@@ -301,7 +301,7 @@ protected override async void OnShareTargetActivated(ShareTargetActivatedEventAr
 
 In this scenario, your app enables paste UI only when data is on the clipboard. For this feature, you can use the [**ProtectionPolicyManager.CheckAccess**](https://msdn.microsoft.com/library/windows/apps/dn705783) method, which allows a passive check of policy.
 
-**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
+**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
 
 
 
@@ -334,7 +334,7 @@ private bool IsClipboardPeekAllowedAsync()
 
 This scenario shows how to check access for a paste operation.
 
-**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
+**Note**  This code example depends on you having already set the identity on the protection policy manager object for your current view (see [Tag specific window with enterprise identity](#tag_window_with_id)); otherwise, the [**ProtectionPolicyManager.Identity**](https://msdn.microsoft.com/library/windows/apps/dn705785) property will contain the empty string.
 
 
 
@@ -378,7 +378,7 @@ private async void OnPasteWithRequestAccess()
 }
 ```
 
-**Note**  This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
+**Note**  This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
 
 
@@ -391,5 +391,10 @@ private async void OnPasteWithRequestAccess()
 
 
 
+
+
+
+
+<!--HONumber=Jun16_HO2-->
 
 
