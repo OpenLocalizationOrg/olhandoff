@@ -8,7 +8,7 @@ ms.assetid: 09970DE3-461A-4E2A-88E3-68F2399BBCC8
 # Monetize with ads
 
 
-If your app uses an **AdMediatorControl**, **AdControl**, or **InterstitialAd** control to display banner or video interstitial ads, use the **Monetization** &gt; **Monetize with ads** page to manage your use of ads.
+If your app uses an **AdMediatorControl**, **AdControl**, or **InterstitialAd** control to display banner or video interstitial ads, use the **Monetization**&gt;**Monetize with ads** page to manage your use of ads.
 
 ## Windows ad mediation
 
@@ -29,7 +29,7 @@ Check the box in this section if you want to show Microsoft affiliate ads in you
 
 If you change this selection, you do not need to republish your app for the changes to take effect. For more information about Microsoft affiliate ads, see [About affiliate ads](about-affiliate-ads.md).
 
-> **Note**  If your app uses ad mediation (that is, it uses an **AdMediatorControl** to display ads), your app can show affiliate ads only if your ad mediation settings are configured to show ads from Microsoft.
+> **Note**  If your app uses ad mediation (that is, it uses an **AdMediatorControl** to display ads), your app can show affiliate ads only if your ad mediation settings are configured to show ads from Microsoft.
 
 ## Community ads
 
@@ -56,10 +56,15 @@ Your ad units appear in a table at the bottom of this section. For each ad unit 
 -   If your app shows banner ads, assign these values to the [ApplicationId](https://msdn.microsoft.com/library/mt313174.aspx) and [AdUnitId](https://msdn.microsoft.com/library/mt313171.aspx) properties of your [AdControl](https://msdn.microsoft.com/library/mt313154.aspx) object.
 -   If your app shows video interstitial ads, pass these values to the [RequestAd](https://msdn.microsoft.com/library/mt313192.aspx) method of your [InterstitialAd](https://msdn.microsoft.com/library/mt313189.aspx) object.
 
-> **Note**  If your app uses ad mediation to show banner ads from Microsoft Advertising (that is, it uses an **AdMediatorControl** object), you do not need to request ad units. In this scenario, Microsoft Advertising ad units are automatically generated for you.
+> **Note**  If your app uses ad mediation to show banner ads from Microsoft Advertising (that is, it uses an **AdMediatorControl** object), you do not need to request ad units. In this scenario, Microsoft Advertising ad units are automatically generated for you.
 
- 
+ 
 
- 
+ 
 
- 
+ 
+
+
+<!--HONumber=Jun16_HO3-->
+
+

@@ -28,7 +28,7 @@ When you create a new app, you can access the following file system locations by
         var installDirectory = Windows.ApplicationModel.Package.current.installedLocation;
         ```
 
-       You can then access files and folders in the directory using [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) methods. In the example, this **StorageFolder** is stored in the `installDirectory` variable. You can learn more about working with your app package and install directory by downloading the [App package information sample](http://go.microsoft.com/fwlink/p/?linkid=231526) for Windows 8.1 and re-using its source code in your Windows 10 app.
+       You can then access files and folders in the directory using [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) methods. In the example, this **StorageFolder** is stored in the `installDirectory` variable. You can learn more about working with your app package and install directory by downloading the [App package information sample](http://go.microsoft.com/fwlink/p/?linkid=231526) for Windows 8.1 and re-using its source code in your Windows 10 app.
 
     2.  You can retrieve a file directly from your app's install directory by using an app URI, like this:
         > [!div class="tabbedCodeSnippets"]
@@ -70,7 +70,7 @@ When you create a new app, you can access the following file system locations by
  
         If you want to access your app's roaming or temporary folder, use the [**RoamingFolder**](https://msdn.microsoft.com/library/windows/apps/br241623) or [**TemporaryFolder**](https://msdn.microsoft.com/library/windows/apps/br241629) property instead.
 
-        After you retrieve a [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) that represents an app data location, you can access files and folders in that location by using **StorageFolder** methods. In the example, these **StorageFolder** objects are stored in the `localFolder` variable. You can learn more about using app data locations in [Managing application data](https://msdn.microsoft.com/library/windows/apps/hh465109), and by downloading the [Application data sample](http://go.microsoft.com/fwlink/p/?linkid=231478) for Windows 8.1 and re-using its source code in your Windows 10 app.
+        After you retrieve a [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) that represents an app data location, you can access files and folders in that location by using **StorageFolder** methods. In the example, these **StorageFolder** objects are stored in the `localFolder` variable. You can learn more about using app data locations in [Managing application data](https://msdn.microsoft.com/library/windows/apps/hh465109), and by downloading the [Application data sample](http://go.microsoft.com/fwlink/p/?linkid=231478) for Windows 8.1 and re-using its source code in your Windows 10 app.
 
     2.  For example, you can retrieve a file directly from your app's local folder by using an app URI, like this:
         > [!div class="tabbedCodeSnippets"]
@@ -98,9 +98,9 @@ When you create a new app, you can access the following file system locations by
 
     Of course, you can also gain access to files and folders on a removable device by calling the file picker (using [**FileOpenPicker**](https://msdn.microsoft.com/library/windows/apps/br207847) and [**FolderPicker**](https://msdn.microsoft.com/library/windows/apps/br207881)) and letting the user pick files and folders for your app to access. Learn how to use the file picker in [Open files and folders with a picker](quickstart-using-file-and-folder-pickers.md).
 
-    **Note**  For more info about accessing an SD card from a mobile app, see [Access the SD card](access-the-sd-card.md).
+    **Note**  For more info about accessing an SD card from a mobile app, see [Access the SD card](access-the-sd-card.md).
 
-     
+     
 
 ## Locations Windows Store apps can access
 
@@ -122,7 +122,9 @@ When you create a new app, you can access the following file system locations by
         );
         ```
  
-        [**DownloadsFolder**](https://msdn.microsoft.com/library/windows/apps/br241632).[**CreateFileAsync**](https://msdn.microsoft.com/library/windows/apps/hh996761) is overloaded so that you can specify what the system should do if there is already an existing file in the Downloads folder that has the same name. When these methods complete, they return a [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) that represents the file that was created. This file is called `newFile` in the example.
+        [
+              **DownloadsFolder**
+            ](https://msdn.microsoft.com/library/windows/apps/br241632).[**CreateFileAsync**](https://msdn.microsoft.com/library/windows/apps/hh996761) is overloaded so that you can specify what the system should do if there is already an existing file in the Downloads folder that has the same name. When these methods complete, they return a [**StorageFile**](https://msdn.microsoft.com/library/windows/apps/br227171) that represents the file that was created. This file is called `newFile` in the example.
 
     -   You can create a subfolder in the user's Downloads folder like this:
         > [!div class="tabbedCodeSnippets"]
@@ -138,7 +140,9 @@ When you create a new app, you can access the following file system locations by
         );
         ```
  
-        [**DownloadsFolder**](https://msdn.microsoft.com/library/windows/apps/br241632).[**CreateFolderAsync**](https://msdn.microsoft.com/library/windows/apps/hh996763) is overloaded so that you can specify what the system should do if there is already an existing subfolder in the Downloads folder that has the same name. When these methods complete, they return a [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) that represents the subfolder that was created. This file is called `newFolder` in the example.
+        [
+              **DownloadsFolder**
+            ](https://msdn.microsoft.com/library/windows/apps/br241632).[**CreateFolderAsync**](https://msdn.microsoft.com/library/windows/apps/hh996763) is overloaded so that you can specify what the system should do if there is already an existing subfolder in the Downloads folder that has the same name. When these methods complete, they return a [**StorageFolder**](https://msdn.microsoft.com/library/windows/apps/br227230) that represents the subfolder that was created. This file is called `newFolder` in the example.
 
     If you create a file or folder in the Downloads folder, we recommend that you add that item to your app's [**FutureAccessList**](https://msdn.microsoft.com/library/windows/apps/br207457) so that your app can readily access that item in the future.
 
@@ -158,4 +162,9 @@ The following table lists additional locations that you can access by declaring 
 | Homegroup libraries  | At least one of the following capabilities is needed. <br>- MusicLibrary <br>- PicturesLibrary <br>- VideosLibrary | [KnownFolders.HomeGroup](https://msdn.microsoft.com/library/windows/apps/br227153) |      
 | Media server devices (DLNA) | At least one of the following capabilities is needed. <br>- MusicLibrary <br>- PicturesLibrary <br>- VideosLibrary | [KnownFolders.MediaServerDevices](https://msdn.microsoft.com/library/windows/apps/br227154) | 
 | Universal Naming Convention (UNC) folders | A combination of the following capabilities is needed. <br><br>The home and work networks capability: <br>- PrivateNetworkClientServer <br><br>And at least one internet and public networks capability: <br>- InternetClient <br>- InternetClientServer <br><br>And, if applicable, the domain credentials capability:<br>- EnterpriseAuthentication <br><br>Note: You must add File Type Associations to your app manifest that declare specific file types that your app can access in this location. | Retrieve a folder using: <br>[StorageFolder.GetFolderFromPathAsync](https://msdn.microsoft.com/library/windows/apps/br227278) <br><br>Retrieve a file using: <br>[StorageFile.GetFileFromPathAsync](https://msdn.microsoft.com/library/windows/apps/br227206) |
+
+
+
+<!--HONumber=Jun16_HO3-->
+
 

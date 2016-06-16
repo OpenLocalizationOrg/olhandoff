@@ -64,15 +64,18 @@ The [**OnActivated**](https://msdn.microsoft.com/library/windows/apps/br242330) 
 | Closed by the user, or process-terminated by user                             | **ClosedByUser**                                                                                        | Start with default data |
 | Unexpectedly terminated, or app has not run during the *current user session* | **NotRunning**                                                                                          | Start with default data |
 
- 
+ 
 
-**Note**  *Current user session* is based on Windows logon. So long as the current user hasn't explicitly logged off, shut down, or Windows hasn't restarted for other reasons, the current user session persists across events such as lock screen authentication, switch-user and so on.
+**Note**
+            *Current user session* is based on Windows logon. So long as the current user hasn't explicitly logged off, shut down, or Windows hasn't restarted for other reasons, the current user session persists across events such as lock screen authentication, switch-user and so on.
 
- 
+ 
 
-[**PreviousExecutionState**](https://msdn.microsoft.com/library/windows/apps/br224729) could also have a value of **Running** or **Suspended**, but in these cases your app was not previously terminated and therefore you don’t have to restore any data because everything is already in memory.
+[
+              **PreviousExecutionState**
+            ](https://msdn.microsoft.com/library/windows/apps/br224729) could also have a value of **Running** or **Suspended**, but in these cases your app was not previously terminated and therefore you don’t have to restore any data because everything is already in memory.
 
-**Note**  
+**Note**  
 
 If you log on using the computer's Administrator account, you can't activate any UWP apps.
 
@@ -103,7 +106,7 @@ There are some app scenarios where the app must continue to run to complete back
 
 For guidelines, see [Guidelines for app suspend and resume](https://msdn.microsoft.com/library/windows/apps/hh465088).
 
-**A note about debugging using Visual Studio:  **Visual Studio prevents Windows from suspending an app that is attached to the debugger. This is to allow the user to view the Visual Studio debug UI while the app is running. When you're debugging an app, you can send it a suspend event using Visual Studio. Make sure the **Debug Location** toolbar is being shown, then click the **Suspend** icon.
+**A note about debugging using Visual Studio:  **Visual Studio prevents Windows from suspending an app that is attached to the debugger. This is to allow the user to view the Visual Studio debug UI while the app is running. When you're debugging an app, you can send it a suspend event using Visual Studio. Make sure the **Debug Location** toolbar is being shown, then click the **Suspend** icon.
 
 ## App visibility
 
@@ -125,9 +128,9 @@ If a suspended app is activated to participate in an app contract or extension, 
 
 While an app is suspended, it does not receive any of the network events that it registered to receive. These network events are not queued--they are simply missed. Therefore, your app should test the network status when it is resumed.
 
-**Note**  Because the [**Resuming**](https://msdn.microsoft.com/library/windows/apps/br242339) event is not raised from the UI thread, a dispatcher must be used if the code in your resume handler communicates with your UI.
+**Note**  Because the [**Resuming**](https://msdn.microsoft.com/library/windows/apps/br242339) event is not raised from the UI thread, a dispatcher must be used if the code in your resume handler communicates with your UI.
 
- 
+ 
 
 For guidelines, see [Guidelines for app suspend and resume](https://msdn.microsoft.com/library/windows/apps/hh465088).
 
@@ -140,11 +143,11 @@ There's no special event to indicate that the user closed the app.
 
 After an app has been closed by the user, it's first suspended and then terminated, and enters the **NotRunning** state.
 
-In Windows 8.1 and later, after an app has been closed by the user, the app is removed from the screen and switch list but not explicitly terminated.
+In Windows 8.1 and later, after an app has been closed by the user, the app is removed from the screen and switch list but not explicitly terminated.
 
 If an app has registered an event handler for the **Suspending** event, it is called when the app is suspended. You can use this event handler to save relevant application and user data to persistent storage.
 
-**Closed-by-user behavior:  **If your app needs to do something different when it is closed by the user than when it is closed by Windows, you can use the activation event handler to determine whether the app was terminated by the user or by Windows. See the descriptions of **ClosedByUser** and **Terminated** states in the reference for the [**ApplicationExecutionState**](https://msdn.microsoft.com/library/windows/apps/br224694) enumeration.
+**Closed-by-user behavior:  **If your app needs to do something different when it is closed by the user than when it is closed by Windows, you can use the activation event handler to determine whether the app was terminated by the user or by Windows. See the descriptions of **ClosedByUser** and **Terminated** states in the reference for the [**ApplicationExecutionState**](https://msdn.microsoft.com/library/windows/apps/br224694) enumeration.
 
 We recommend that apps not close themselves programmatically unless absolutely necessary. For example, if an app detects a memory leak, it can close itself to ensure the security of the user's personal data. When you close an app programmatically, the system treats it as an app crash.
 
@@ -170,16 +173,26 @@ The basic code that is relevant to the app lifecycle is provided in the starting
 ## Application lifecycle key APIs
 
 
--   [**Windows.ApplicationModel**](https://msdn.microsoft.com/library/windows/apps/br224691) namespace
--   [**Windows.ApplicationModel.Activation**](https://msdn.microsoft.com/library/windows/apps/br224766) namespace
--   [**Windows.ApplicationModel.Core**](https://msdn.microsoft.com/library/windows/apps/br205865) namespace
--   [**Windows.UI.Xaml.Application**](https://msdn.microsoft.com/library/windows/apps/br242324) class (XAML)
--   [**Windows.UI.Xaml.Window**](https://msdn.microsoft.com/library/windows/apps/br209041) class (XAML)
+-   [
+              **Windows.ApplicationModel**
+            ](https://msdn.microsoft.com/library/windows/apps/br224691) namespace
+-   [
+              **Windows.ApplicationModel.Activation**
+            ](https://msdn.microsoft.com/library/windows/apps/br224766) namespace
+-   [
+              **Windows.ApplicationModel.Core**
+            ](https://msdn.microsoft.com/library/windows/apps/br205865) namespace
+-   [
+              **Windows.UI.Xaml.Application**
+            ](https://msdn.microsoft.com/library/windows/apps/br242324) class (XAML)
+-   [
+              **Windows.UI.Xaml.Window**
+            ](https://msdn.microsoft.com/library/windows/apps/br209041) class (XAML)
 
-**Note**  
+**Note**  
 This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
- 
+ 
 
 ## Related topics
 
@@ -190,6 +203,11 @@ This article is for Windows 10 developers writing Universal Windows Platform (UW
 * [Handle app suspend](suspend-an-app.md)
 * [Handle app resume](resume-an-app.md)
 
- 
+ 
 
- 
+ 
+
+
+<!--HONumber=Jun16_HO3-->
+
+

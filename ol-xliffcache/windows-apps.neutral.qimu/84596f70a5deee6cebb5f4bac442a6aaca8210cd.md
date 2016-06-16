@@ -15,7 +15,7 @@ This article discusses the use of certificates in Universal Windows Platform (UW
 
 ### Shared certificate stores
 
-UWP apps use the new isolationist application model introduced in Windows 8. In this model, apps run in low-level operating system construct, called an app container, that prohibits the app from accessing resources or files outside of itself unless explicitly permitted to do so. The following sections describe the implications this has on public key infrastructure (PKI).
+UWP apps use the new isolationist application model introduced in Windows 8. In this model, apps run in low-level operating system construct, called an app container, that prohibits the app from accessing resources or files outside of itself unless explicitly permitted to do so. The following sections describe the implications this has on public key infrastructure (PKI).
 
 ### Certificate storage per app container
 
@@ -60,7 +60,7 @@ Some of these fields and extensions can be specified directly when you use the [
 | Subject             | Contains an X.500 distinguished name of the entity associated with the public key contained in the certificate.                                                                                                                                                             |
 | Public Key          | Contains the public key and associated algorithm information.                                                                                                                                                                                                               |
 
- 
+ 
 
 ### Version 2 fields
 
@@ -70,7 +70,7 @@ An X.509 version 2 certificate contains the basic fields defined in version 1 an
 |---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | Issuer Unique Identifier  | Contains a unique value that can be used to make the X.500 name of the CA unambiguous when reused by different entities over time.                  |
 | Subject Unique Identifier | Contains a unique value that can be used to make the X.500 name of the certificate subject unambiguous when reused by different entities over time. |
- 
+ 
 
 ### Version 3 extensions
 
@@ -92,4 +92,9 @@ An X.509 version 3 certificate contains the fields defined in version 1 and vers
 | Subject Alternative Name     | Specifies one or more alternative name forms for the subject of the certificate request. Example alternative forms include email addresses, DNS names, IP addresses, and URIs.                           |
 | Subject Directory Attributes | Conveys identification attributes such as the nationality of the certificate subject. The extension value is a sequence of OID-value pairs.                                                              |
 | Subject Key Identifier       | Differentiates between multiple public keys held by the certificate subject. The extension value is typically a SHA-1 hash of the key.                                                                   |
+
+
+
+<!--HONumber=Jun16_HO3-->
+
 

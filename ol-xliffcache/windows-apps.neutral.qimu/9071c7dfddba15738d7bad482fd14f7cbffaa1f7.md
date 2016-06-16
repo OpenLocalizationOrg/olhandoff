@@ -10,7 +10,7 @@ template: detail.hbs
 
 # Guidelines for Segoe MDL2 icons
 
-This article lists and provides usage guidance for the glyphs that come with the Segoe MDL2 Assets font. To obtain the font, you must install Windows 10.
+This article lists and provides usage guidance for the glyphs that come with the Segoe MDL2 Assets font. To obtain the font, you must install Windows 10.
 
 **Important APIs**
 
@@ -27,11 +27,11 @@ This article lists and provides usage guidance for the glyphs that come with the
 ## <span id="Additional_usage_guidance"></span><span id="additional_usage_guidance"></span><span id="ADDITIONAL_USAGE_GUIDANCE"></span>Additional usage guidance
 
 
-The Windows 8/8.1 **Segoe UI Symbol** icon font has been replaced with the **Segoe MDL2 Assets** font effective with the release of Windows 10. It can be used in much the same manner as the older font, but many glyphs have been redrawn in the Windows 10 icon style with the font’s metrics set so that icons are aligned within the font’s em-square instead of on a typographic baseline.
+The Windows 8/8.1 **Segoe UI Symbol** icon font has been replaced with the **Segoe MDL2 Assets** font effective with the release of Windows 10. It can be used in much the same manner as the older font, but many glyphs have been redrawn in the Windows 10 icon style with the font’s metrics set so that icons are aligned within the font’s em-square instead of on a typographic baseline.
 
-**Note**   An **Em** is a unit of measure in the font. 1 Em in the font is equal to 100% of the specified point value at 72ppi. For example 16pt is equal to 16px at 72ppi (aka 100% Plateau). The new MDL2 fonts are designed so that the footprint of the icon area is a square Em. So if you put 16px for Width and Height in the code, you get a 16x16px icon footprint. That does not always mean the icon will be the full dimension of the footprint.
+**Note**   An **Em** is a unit of measure in the font. 1 Em in the font is equal to 100% of the specified point value at 72ppi. For example 16pt is equal to 16px at 72ppi (aka 100% Plateau). The new MDL2 fonts are designed so that the footprint of the icon area is a square Em. So if you put 16px for Width and Height in the code, you get a 16x16px icon footprint. That does not always mean the icon will be the full dimension of the footprint.
 
- 
+ 
 
 The **Segoe UI Symbol** will still be available as a "legacy" resource. But it is advised that all applications be updated to use the new **Segoe MDL2 Assets**.
 
@@ -105,7 +105,7 @@ Also, keep in mind that the **Segoe MDL2 Assets** font includes many more icons 
 </tbody>
 </table>
 
- 
+ 
 
 ## <span id="Rating_stars"></span><span id="rating_stars"></span><span id="RATING_STARS"></span>Rating stars
 
@@ -171,7 +171,7 @@ Also, keep in mind that the **Segoe MDL2 Assets** font includes many more icons 
 </tbody>
 </table>
 
- 
+ 
 
 ## <span id="Checkbox_components"></span><span id="checkbox_components"></span><span id="CHECKBOX_COMPONENTS"></span>Checkbox components
 
@@ -194,7 +194,7 @@ Also, keep in mind that the **Segoe MDL2 Assets** font includes many more icons 
 | U+E73D | ![checkboxcompositereversed](images/checkboxcompositereversed.png)             | CheckboxCompositeReversed       | Reversed composite      |
 | U+E73E | ![checkmark](images/checkmark.png)                                             | CheckMark                       | Check mark              |
 
- 
+ 
 
 ## <span id="Miscellaneous"></span><span id="miscellaneous"></span><span id="MISCELLANEOUS"></span>Miscellaneous
 
@@ -338,7 +338,7 @@ Also, keep in mind that the **Segoe MDL2 Assets** font includes many more icons 
 </tbody>
 </table>
 
- 
+ 
 
 ## <span id="Scroll_bar_arrows"></span><span id="scroll_bar_arrows"></span><span id="SCROLL_BAR_ARROWS"></span>Scroll bar arrows
 
@@ -354,7 +354,7 @@ Also, keep in mind that the **Segoe MDL2 Assets** font includes many more icons 
 | U+E018 | ![scrollchevronupboldlegacy](images/scrollchevronupboldlegacy.png)       | ScrollChevronUpBoldLegacy    |
 | U+E019 | ![scrollchevrondownboldlegacy](images/scrollchevrondownboldlegacy.png)   | ScrollChevronDownBoldLegacy  |
 
- 
+ 
 
 ## <span id="Back_buttons"></span><span id="back_buttons"></span><span id="BACK_BUTTONS"></span>Back buttons
 
@@ -370,7 +370,7 @@ Legacy glyphs for back buttons are available in 2 different sizes so that the we
 | U+E830 | ![chromeback](images/chromeback.png)                                       | ChromeBack                    | Chrome back button                        |
 | U+EA47 | ![chromebackmirrored](images/chromebackmirrored.png)                       | ChromeBackMirrored            | Chrome back mirrored button               |
 
- 
+ 
 
 ## <span id="Back_arrows_for_HTML"></span><span id="back_arrows_for_html"></span><span id="BACK_ARROWS_FOR_HTML"></span>Back arrows for HTML
 
@@ -382,7 +382,7 @@ Add additional code to create circles around these glyphs.
 | U+E0D5 | ![arrowhtmllegacy](images/arrowhtmllegacy.png)                 | ArrowHTMLLegacy         | Arrow for HTML use         |
 | U+E0AE | ![arrowhtmlmirroredlegacy](images/arrowhtmlmirroredlegacy.png) | ArrowHTMLMirroredLegacy | Mirrored version of U+E0D5 |
 
- 
+ 
 
 ## <span id="AppBar_glyphs"></span><span id="appbar_glyphs"></span><span id="APPBAR_GLYPHS"></span>AppBar glyphs
 
@@ -1548,7 +1548,7 @@ Use glyphs from the following list for an [**AppBar**](https://msdn.microsoft.co
 </tbody>
 </table>
 
- 
+ 
 
 ## <span id="Battery_icons"></span><span id="battery_icons"></span><span id="BATTERY_ICONS"></span>Battery icons
 
@@ -1590,7 +1590,7 @@ Use glyphs from the following list for an [**AppBar**](https://msdn.microsoft.co
 | EA94 | ![batterysaver9](images/batterysaver9.png)         | BatterySaver9     | EBBF | ![mobbatterysaver9](images/mobbatterysaver9.png)        | MobBatterySaver9    |
 | EA95 | ![batterysaver10](images/batterysaver10.png)       | BatterySaver10    | EBC0 | ![mobbatterysaver10](images/mobbatterysaver10.png)      | MobBatterySaver10   |
 
- 
+ 
 
 ## <span id="related_topics"></span>Related topics
 
@@ -1598,12 +1598,19 @@ Use glyphs from the following list for an [**AppBar**](https://msdn.microsoft.co
 **For designers**
 * [Guidelines for fonts](fonts.md)
 * [W3C on which languages are written right-to-left (RTL)?](http://www.i18nguy.com/temp/rtl.mdl)
-**For developers (XAML)**
+            
+          
+            **For developers (XAML)**
 * [**Symbol enumeration**](https://msdn.microsoft.com/library/windows/apps/dn252842)
 
 
- 
+ 
 
 
+
+
+
+
+<!--HONumber=Jun16_HO3-->
 
 

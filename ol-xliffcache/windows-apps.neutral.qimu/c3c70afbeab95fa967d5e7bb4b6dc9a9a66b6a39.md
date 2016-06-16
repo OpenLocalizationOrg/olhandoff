@@ -71,7 +71,7 @@ Device capabilities allow your app to access peripheral and internal devices. De
 
 ## Special and restricted capabilities
 
-**Important**  
+**Important**  
 Special and restricted capabilities are intended for very specific scenarios. The use of these capabilities is highly restricted and subject to additional Store onboarding policy and review.
 
 There are cases where such capabilities are necessary and appropriate, such as banking with two-factor authentication, where users provide a smart card with a digital certificate that confirms their identity. Other apps may be designed primarily for enterprise customers and may need access to corporate resources that cannot be accessed without the user’s domain credentials.
@@ -103,11 +103,11 @@ You must also add the **xmlns:rescap** namespace declaration in the top of the P
 | **Shared user certificates** | The **sharedUserCertificates** special capability enables an app to add and access software and hardware-based certificates in the Shared User store, such as certificates stored on a smart card. This capability is typically used for financial or enterprise apps that require a smart card for authentication.<br /><br />The **sharedUserCertificates** capability must include the **uap** namespace when you declare it in your app's package manifest as shown below.<br /><br /><div class="code"><span codelanguage="XML"></span><table><colgroup><col width="100%" /></colgroup><thead><tr class="header"><th align="left">XML</th></tr></thead><tbody><tr class="odd"><td align="left"><pre><code>&lt;Capabilities&gt;&lt;uap:Capability Name="sharedUserCertificates"/&gt;&lt;/Capabilities&gt;</code></pre></td></tr></tbody></table></div>
 |**Documents**\* | The **documentsLibrary** special capability provides programmatic access to the user's Documents, filtered to the file type associations declared in the package manifest, to support offline access to OneDrive. For example, if a DOC reader app declared a .doc file type association, it can open .doc files in Documents, but not other types of files.<br /><br />Apps that declare the **documentsLibrary** special capability can't access Documents on Home Group computers. The [file picker](https://msdn.microsoft.com/library/windows/apps/Hh465174) provides a robust UI mechanism that enables users to open files for use with an app. Declare the **documentsLibrary** special capability only when you cannot use the file picker.<br /><br />To use the **documentsLibrary** special capability, an app must:<ul><li>Facilitate cross-platform offline access to specific OneDrive content using valid OneDrive URLs or Resource IDs</li><li>Save open files to the user’s OneDrive automatically while offline</li></ul>Apps that use the **documentsLibrary** special capability for these two purposes may also optionally use the capability to open embedded content within another document. Only the above uses of the **documentsLibrary** special capability are accepted.<ul><li>Your app can't access the Documents library in the phone's internal storage. If another app creates a Documents folder on the optional SD card, however, your app can see that folder.</li></ul>The **documentsLibrary** capability must include the **uap** namespace when you declare it in your app's package manifest as shown below.<div class="code"><span codelanguage="XML"></span><table><colgroup><col width="100%" /></colgroup><thead><tr class="header"><th align="left">XML</th></tr></thead><tbody><tr class="odd"><td align="left"><pre><code>&lt;Capabilities&gt;&lt;uap:Capability Name="documentsLibrary"/&gt;&lt;/Capabilities&gt;</code></pre></td></tr></tbody></table></div>
 | **Game DVR Settings** | The **appCaptureSettings** restricted capability allows apps to control the user settings for the Game DVR.<br /><br />This capability is required to use some APIs in the [**Windows.Media.Capture**](https://msdn.microsoft.com/library/windows/apps/BR226738) namespace.
-| **Cellular** | The **cellularDeviceControl** restricted capability allows apps to have control over the cellular device.<br /><br />The **cellularDeviceIdentity** capability allows apps to access cellular identification data.<br /><br />The **cellularMessaging** capability allows apps to make use of SMS and RCS.<br /><br />These capabilities are required to use some APIs in the [**Windows.Devices.Sms**](https://msdn.microsoft.com/library/windows/apps/BR206567) namespaces.<br /><br />Starting in Windows 10, apps calling [**AppIDList**](https://msdn.microsoft.com/library/windows/apps/Dn393996)).
+| **Cellular** | The **cellularDeviceControl** restricted capability allows apps to have control over the cellular device.<br /><br />The **cellularDeviceIdentity** capability allows apps to access cellular identification data.<br /><br />The **cellularMessaging** capability allows apps to make use of SMS and RCS.<br /><br />These capabilities are required to use some APIs in the [**Windows.Devices.Sms**](https://msdn.microsoft.com/library/windows/apps/BR206567) namespaces.<br /><br />Starting in Windows 10, apps calling [**AppIDList**](https://msdn.microsoft.com/library/windows/apps/Dn393996)).
 | **Device Unlock** | The **deviceUnlock** restricted capability allows apps to unlock a device for developer and enterprise sideloading scenarios.
 | **Dual SIM Tiles** | The **dualSimTiles** restricted capability allows apps to create an additional app list entry on devices that have multiple SIMs.<br /><br />This capability is required to use some APIs in the [**Windows.UI.StartScreen**](https://msdn.microsoft.com/library/windows/apps/BR242235) namespace.
 | **Enterprise Shared Storage** | The **enterpriseDeviceLockdown** restricted capability allows apps to use the device lock down API and access the enterprise shared storage folders.
-| **System Input Injection** | The **inputInjection** restricted capability allows apps to inject various forms of input such as HID, touch, pen, keyboard or mouse into the system programmatically. This capability is typically used for collaboration apps that can take control of the system.<br /><br /><div class="alert">**Note**  For a PC, input injection from an app that has this capability will only be received by processes in the same App Container.</div>
+| **System Input Injection** | The **inputInjection** restricted capability allows apps to inject various forms of input such as HID, touch, pen, keyboard or mouse into the system programmatically. This capability is typically used for collaboration apps that can take control of the system.<br /><br /><div class="alert">**Note**  For a PC, input injection from an app that has this capability will only be received by processes in the same App Container.</div>
 | **Observe Input**\* | The **inputObservation** restricted capability allows apps to observe various forms of raw input such as HID, touch, pen, keyboard, or mouse being received by the system regardless of its final destination.
 | **Suppress Input** | The **inputSuppression** restricted capability allows apps to suppress various forms of raw input such as HID, touch, pen, keyboard, or mouse from being received by the system.
 | **VPN App** | The **networkingVpnProvider** restricted capability allows apps to have full access to VPN features, including the ability to manage connections and provide VPN Plugin functionality.<br /><br />This capability is required to use some APIs in the [**Windows.Networking.Vpn**](https://msdn.microsoft.com/library/windows/apps/Dn434040) namespace.
@@ -152,7 +152,7 @@ You must also add the **xmlns:rescap** namespace declaration in the top of the P
 
 
 
-**Note**  
+**Note**  
 This article is for Windows 10 developers writing UWP apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
 ## Related topics
@@ -161,4 +161,9 @@ This article is for Windows 10 developers writing UWP apps. If you’re developi
 * [Guidelines for privacy-aware apps](https://msdn.microsoft.com/library/windows/apps/Hh768223)
 * [How to specify capabilities in a package manifest](https://msdn.microsoft.com/library/windows/apps/BR211477)
 * [How to specify device capabilities in a package manifest](https://msdn.microsoft.com/library/windows/apps/Dn263092)
- 
+ 
+
+
+<!--HONumber=Jun16_HO3-->
+
+

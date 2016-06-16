@@ -186,8 +186,7 @@ Windows 10, version 1607 introduces a new media control called [**MediaPlayerEle
 
 However, if the app runs on a device that’s running a version of Windows 10 older than version 1607, you must use the [**MediaElement**](https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.controls.mediaelement.aspx) control instead of the new **MediaPlayerElement** control. You can use the [**ApiInformation.IsTypePresent**](https://msdn.microsoft.com/library/windows/apps/windows.foundation.metadata.apiinformation.istypepresent.aspx) method to check for the presence of the MediaPlayerElement control at runtime, and load whichever control is suitable for the system where the app is running.
 
-This example shows how to create an app that uses either the new MediaPlayerElement or the old MediaElement depending on whether MediaPlayerElement type is present. 
-In this code, you use the [UserControl](https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.controls.usercontrol.aspx) class to componentize the controls and their related UI and code so that you can switch them in and out based on the OS version. As an alternative, you can use a custom control, which provides more functionality and custom behavior than what’s needed for this simple example.
+This example shows how to create an app that uses either the new MediaPlayerElement or the old MediaElement depending on whether MediaPlayerElement type is present. In this code, you use the [UserControl](https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.controls.usercontrol.aspx) class to componentize the controls and their related UI and code so that you can switch them in and out based on the OS version. As an alternative, you can use a custom control, which provides more functionality and custom behavior than what’s needed for this simple example.
  
 **MediaPlayerUserControl** 
 
@@ -240,8 +239,8 @@ namespace MediaApp
             // The markup code compiler runs against the Minimum OS version so MediaPlayerElement must be created in app code
             MPE = new MediaPlayerElement();
             Uri videoSource = new Uri("ms-appx:///Assets/UWPDesign.mp4");
-	        MPE.Source = MediaSource.CreateFromUri(videoSource);
-	        MPE.AreTransportControlsEnabled = true;
+            MPE.Source = MediaSource.CreateFromUri(videoSource);
+            MPE.AreTransportControlsEnabled = true;
             MPE.MediaPlayer.AutoPlay = true;
 
             // Add MediaPlayerElement to the Grid
@@ -468,3 +467,8 @@ class IsEnumPresentTrigger : StateTriggerBase
 
 - [Guide to UWP apps](https://msdn.microsoft.com/windows/uwp/get-started/universal-application-platform-guide)
 - [Dynamically detecting features with API contracts](https://blogs.windows.com/buildingapps/2015/09/15/dynamically-detecting-features-with-api-contracts-10-by-10/)
+
+
+<!--HONumber=Jun16_HO3-->
+
+
