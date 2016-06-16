@@ -58,9 +58,4 @@ For detailed tutorials, advanced functions, or libraries of help topics too larg
 
 [See guidelines for external help](external-help.md)
 
-\[This article contains information that is specific to Universal Windows Platform (UWP) apps and Windows 10. For Windows 8.1 guidance, please download the [Windows 8.1 guidelines PDF](https://go.microsoft.com/fwlink/p/?linkid=258743).\]
-
-
-<!--HONumber=Jun16_HO3-->
-
-
+\[This article contains information that is specific to Universal Windows Platform (UWP) apps and Windows 10. For Windows 8.1 guidance, please download the [Windows 8.1 guidelines PDF](https://go.microsoft.com/fwlink/p/?linkid=258743).\]

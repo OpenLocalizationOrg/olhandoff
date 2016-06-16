@@ -29,7 +29,7 @@ To launch Feedback Hub from your app:
   * Set the text in the control to the hexadecimal Unicode character code E939. This is the character code for the recommended feedback icon in the **Segoe MDL2 Assets** font.
   * Set the visibility of the control to hidden.
 
-    > **Note**  Feedback Hub is available only on devices that are running Windows 10 version 10.0.14271 or later. We recommend that you hide your feedback control by default and show it in your initialization code only if the Feedback Hub is available on the user's device. The next step demonstrates how to do this.
+    > **Note**  Feedback Hub is available only on devices that are running Windows 10 version 10.0.14271 or later. We recommend that you hide your feedback control by default and show it in your initialization code only if the Feedback Hub is available on the user's device. The next step demonstrates how to do this.
 
   The following code demonstrates the XAML definition of a [Button](https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.controls.button.aspx) that is configured as described above.
   ```xml
@@ -71,8 +71,3 @@ We also recommend that you use one or more of the following placement options fo
 ## Related topics
 
 * [Feedback report](../publish/feedback-report.md)
-
-
-<!--HONumber=Jun16_HO3-->
-
-

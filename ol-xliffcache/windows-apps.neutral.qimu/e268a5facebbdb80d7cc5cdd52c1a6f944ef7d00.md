@@ -177,8 +177,3 @@ To easily open a context menu or flyout in response to any of the above actions,
 - [**MenuFlyout class**](https://msdn.microsoft.com/library/windows/apps/dn299030)
 - [**Flyout class**](https://msdn.microsoft.com/library/windows/apps/dn279496)
 - [**ContentDialog class**](https://msdn.microsoft.com/library/windows/apps/windows.ui.xaml.controls.contentdialog.aspx)
-
-
-<!--HONumber=Jun16_HO3-->
-
-

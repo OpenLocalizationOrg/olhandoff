@@ -35,7 +35,7 @@ You might have multiple accounts in pubCenter and Dev Center, and your migration
 -   Your payout reports are now available in your Dev Center account. For more information on payout reports in Dev Center, see [Payout summary](payout-summary.md).
 -   All your app promotion campaigns are now associated with your Dev Center account and you can manage them from Dev Center directly.
 
-> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
+> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
 
 ## Scenario \#2: You have a Dev Center account and a pubCenter account with the same Microsoft account, but registered in different countries/regions
 
@@ -53,7 +53,7 @@ You might have multiple accounts in pubCenter and Dev Center, and your migration
 -   Your payout reports are now available in your Dev Center account. For more information on payout reports in Dev Center, see [Payout summary](payout-summary.md).
 -   All your app promotion campaigns are now associated with your Dev Center account and you can manage them from Dev Center directly.
 
-> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
+> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
 
 ## Scenario \#3: You have Dev Center and pubCenter accounts registered with different Microsoft accounts
 
@@ -65,7 +65,7 @@ You might have multiple accounts in pubCenter and Dev Center, and your migration
 1.  Sign in to the pubCenter account you wish to link.
 2.  On this account's **My information** page, you will find a **pubCenter Account Linking Code**. Keep this code available.
 
-    > **Note**  A new account linking code is generated every 60 minutes.
+    > **Note**  A new account linking code is generated every 60 minutes.
 
 3.  Sign out of your pubCenter account.
 4.  Sign in to your [Dev Center account](https://dev.windows.com/).
@@ -73,7 +73,7 @@ You might have multiple accounts in pubCenter and Dev Center, and your migration
 6.  Enter the email address associated with the pubCenter account and the account linking code.
 7.  Click **Link account** and your pubCenter account will be linked to your Dev Center account.
 
-    > **Note**  You can link one or more pubCenter accounts to your Dev Center account. However, each of your pubCenter accounts can be linked to only one Dev Center account.
+    > **Note**  You can link one or more pubCenter accounts to your Dev Center account. However, each of your pubCenter accounts can be linked to only one Dev Center account.
 
 After your pubCenter account is linked to a Dev Center account:
 
@@ -86,7 +86,7 @@ After your pubCenter account is linked to a Dev Center account:
 -   Your pubCenter payout reports are now available in your Dev Center account. For more information on payout reports in Dev Center, see [Payout summary](payout-summary.md).
 -   All of the app promotion campaigns you set up in pubCenter will be automatically paused. Please create new campaigns in Dev Center going forward.
 
-> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
+> **Note**  You will no longer be able to create ad units or new app promotion campaigns in pubCenter. For information on how to create ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md). For information on how to create app promotion campaigns in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
 
 ## Additional notes and recommendations
 
@@ -114,7 +114,7 @@ Creating new ad units is no longer supported in pubCenter. If you have integrate
 
 ### How do I create ad units in Dev Center?
 
-From your app's page in Dev Center, click **Monetization**&gt;**Monetize with ads**. For more information on creating ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md).
+From your app's page in Dev Center, click **Monetization** &gt; **Monetize with ads**. For more information on creating ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md).
 
 ### I installed the latest version of the ad mediator extension and I added the ad mediator control to my app. Do I also need to go to pubCenter and create a new ad unit?
 
@@ -122,7 +122,7 @@ If you are using the latest version of the [ad mediator extension](http://go.mic
 
 ### I am still using an older version of the ad mediator control in my app and I need to get a new ad unit ID. How do I create ad units?
 
-You can create a new ad unit for your app in the Dev Center dashboard. From your app's page in Dev Center, click **Monetization**&gt;**Monetize with ads**. For more information on creating ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md).
+You can create a new ad unit for your app in the Dev Center dashboard. From your app's page in Dev Center, click **Monetization** &gt; **Monetize with ads**. For more information on creating ad units in Dev Center, see [Monetize with ads](monetize-with-ads.md).
 
 ### My ad units got created automatically because I used the ad mediator control, and I confirmed that ads are being served. I also manually created several other ad units from Dev Center. Do I need to do anything more to get paid for earnings on these ad units?
 
@@ -134,11 +134,11 @@ You will only be able to create app promotion campaigns in Dev Center going forw
 
 ### How do I create app promotion campaigns in Dev Center?
 
-From your app's page in Dev Center, click **Monetization**&gt;**Promote your app**. For more information on creating ad campaigns for your apps in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
+From your app's page in Dev Center, click **Monetization** &gt; **Promote your app**. For more information on creating ad campaigns for your apps in Dev Center, see [Create an ad campaign for your app](create-an-ad-campaign-for-your-app.md).
 
 ### Where can I see performance data in Dev Center?
 
-From your app's page in Dev Center, click **Analytics**&gt;**Microsoft Advertising performance**. For more information, see [Advertising performance report](advertising-performance-report.md).
+From your app's page in Dev Center, click **Analytics** &gt; **Microsoft Advertising performance**. For more information, see [Advertising performance report](advertising-performance-report.md).
 
 ### How do I manage my payment method and tax details in Dev Center?
 
@@ -172,15 +172,10 @@ As part of the pubCenter-Dev Center integration, a new pubCenter account may hav
 
 Yes, there could be a slight difference in the data shown in pubCenter and Dev Center reports. This could be because data in pubCenter is reported in the time zone of the pubCenter account and data in Dev Center is reported in UTC.
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=Jun16_HO3-->
 
 

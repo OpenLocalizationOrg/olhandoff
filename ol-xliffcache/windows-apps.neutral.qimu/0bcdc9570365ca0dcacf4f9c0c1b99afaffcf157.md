@@ -1,6 +1,6 @@
 ---
 author: mijacobs
-Description: Adaptive tile templates are a new feature in Windows 10, allowing you to design your own tile notification content using a simple and flexible markup language that adapts to different screen densities.
+Description: Adaptive tile templates are a new feature in Windows 10, allowing you to design your own tile notification content using a simple and flexible markup language that adapts to different screen densities.
 title: Create adaptive tiles
 ms.assetid: 1246B58E-D6E3-48C7-AD7F-475D113600F9
 label: Create adaptive tiles
@@ -13,9 +13,9 @@ template: detail.hbs
 
 
 
-Adaptive tile templates are a new feature in Windows 10, allowing you to design your own tile notification content using a simple and flexible markup language that adapts to different screen densities. This article tells you how to create adaptive live tiles for your Universal Windows Platform (UWP) app. For the complete list of adaptive elements and attributes, see the [Adaptive tiles schema](tiles-and-notifications-adaptive-tiles-schema.md).
+Adaptive tile templates are a new feature in Windows 10, allowing you to design your own tile notification content using a simple and flexible markup language that adapts to different screen densities. This article tells you how to create adaptive live tiles for your Universal Windows Platform (UWP) app. For the complete list of adaptive elements and attributes, see the [Adaptive tiles schema](tiles-and-notifications-adaptive-tiles-schema.md).
 
-(If you'd like, you can still use the preset templates from the [Windows 8 tile template catalog](https://msdn.microsoft.com/library/windows/apps/hh761491) when designing notifications for Windows 10.)
+(If you'd like, you can still use the preset templates from the [Windows 8 tile template catalog](https://msdn.microsoft.com/library/windows/apps/hh761491) when designing notifications for Windows 10.)
 
 ## <span id="Getting_started"></span><span id="getting_started"></span><span id="GETTING_STARTED"></span>Getting started
 
@@ -198,9 +198,9 @@ TileContent content = new TileContent()
 
 You can control the branding on the bottom of a live tile (the display name and corner logo) by using the branding attribute on the notification payload. You can choose to display "none," only the "name," only the "logo," or both with "nameAndLogo."
 
-**Note**  Windows Phone doesn't support the corner logo, so "logo" and "nameAndLogo" default to "name" on phone.
+**Note**  Windows Phone doesn't support the corner logo, so "logo" and "nameAndLogo" default to "name" on phone.
 
- 
+ 
 
 ```XML
 <visual branding="logo">
@@ -229,7 +229,8 @@ new TileVisual()
 Branding can be applied for specific tile sizes one of two ways:
 
 1. By applying the attribute on the [&lt;binding&gt;](tiles-and-notifications-adaptive-tiles-schema.md) element
-2. By applying the attribute on the [&lt;visual&gt;](tiles-and-notifications-adaptive-tiles-schema.md) element, which affects the entire notification payload If you don't specify branding for a binding, it will use the branding that's provided on the visual element.
+2. By applying the attribute on the [&lt;visual&gt;](tiles-and-notifications-adaptive-tiles-schema.md) element, which affects the entire notification payload
+If you don't specify branding for a binding, it will use the branding that's provided on the visual element.
 
 ```XML
 <tile>
@@ -276,9 +277,9 @@ TileContent content = new TileContent()
 
 If you don't specify the branding in your notification payload, the base tile's properties will determine the branding. If the base tile shows the display name, then the branding will default to "name." Otherwise, the branding will default to "none" if the display name isn't shown.
 
-**Note**   This is a change from Windows 8.x, in which the default branding was "logo."
+**Note**   This is a change from Windows 8.x, in which the default branding was "logo."
 
- 
+ 
 
 ## <span id="Display_name"></span><span id="display_name"></span><span id="DISPLAY_NAME"></span>Display name
 
@@ -426,9 +427,9 @@ new TileText()
 
 ![adaptive tiles text styles](images/adaptive-tiles-textstyles.png)
 
-**Note**  The style defaults to caption if hint-style isn't specified.
+**Note**  The style defaults to caption if hint-style isn't specified.
 
- 
+ 
 
 **Basic text styles**
 
@@ -443,7 +444,7 @@ new TileText()
 | subheader                      | 34 epx                    | Light       |
 | header                         | 46 epx                    | Light       |
 
- 
+ 
 
 **Numeral text style variations**
 
@@ -455,7 +456,7 @@ These variations reduce the line height so that content above and below come muc
 | subheaderNumeral |
 | headerNumeral    |
 
- 
+ 
 
 **Subtle text style variations**
 
@@ -474,7 +475,7 @@ Each style has a subtle variation that gives the text a 60% opacity, which usual
 | headerSubtle           |
 | headerNumeralSubtle    |
 
- 
+ 
 
 ## <span id="Text_alignment"></span><span id="text_alignment"></span><span id="TEXT_ALIGNMENT"></span>Text alignment
 
@@ -518,9 +519,9 @@ Groups allow you to semantically declare that the content inside the group is re
 
 To provide the best experience across devices and screens, provide multiple groups. Having multiple groups allows your tile to adapt to larger screens.
 
-**Note**  The only valid child of a group is a subgroup.
+**Note**  The only valid child of a group is a subgroup.
 
- 
+ 
 
 ```XML
 ...
@@ -653,7 +654,7 @@ The **hint-weight** attribute lets you to control the widths of columns. The val
 </tbody>
 </table>
 
- 
+ 
 
 ![subgroups, even columns](images/adaptive-tiles-subgroups01.png)
 
@@ -684,7 +685,7 @@ To make one column twice as large as another column, assign the smaller column a
 </tbody>
 </table>
 
- 
+ 
 
 ![subgroups, one column twice the size of the other](images/adaptive-tiles-subgroups02.png)
 
@@ -715,13 +716,13 @@ If you want your first column to take up 20% of the total width and your second 
 </tbody>
 </table>
 
- 
+ 
 
 ![subgroups, with weights totalling 100](images/adaptive-tiles-subgroups03.png)
 
-**Note**  An 8-pixel margin is automatically added between the columns.
+**Note**  An 8-pixel margin is automatically added between the columns.
 
- 
+ 
 
 When you have more than two subgroups, you should specify the **hint-weight**, which only accepts positive integers. If you don't specify hint-weight for the first subgroup, it will be assigned a weight of 50. The next subgroup that doesn't have a specified hint-weight will be assigned a weight equal to 100 minus the sum of the preceding weights, or to 1 if the result is zero. The remaining subgroups that don't have specified hint-weights will be assigned a weight of 1.
 
@@ -843,9 +844,9 @@ private static TileSubgroup CreateSubgroup(string day, string image, string high
 
 The &lt;image&gt; element is used to display images on the tile notification. Images can be placed inline within the tile content (default), as a background image behind your content, or as a peek image that animates in from the top of the notification.
 
-**Note**   There are [restrictions on the file size and dimensions of images](https://msdn.microsoft.com/library/windows/apps/hh781198).
+**Note**   There are [restrictions on the file size and dimensions of images](https://msdn.microsoft.com/library/windows/apps/hh781198).
 
- 
+ 
 
 With no extra behaviors specified, images will uniformly shrink or expand to fill the available width. The sample below shows a tile using two columns and inline images. The inline images stretch to fill the width of the column.
 
@@ -1479,15 +1480,10 @@ TileWide = new TileBinding()
 * [Adaptive tiles schema](tiles-and-notifications-adaptive-tiles-schema.md)
 * [NotificationsExtensions on GitHub](https://github.com/WindowsNotifications/NotificationsExtensions/wiki)
 * [Special tile templates catalog](tiles-and-notifications-special-tile-templates-catalog.md)
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=Jun16_HO3-->
 
 

@@ -18,7 +18,7 @@ First, you need Visual Studio.
 ## Get Visual Studio
 
 
-[Download and install Microsoft Visual Studio 2015](https://www.visualstudio.com/vs-2015-product-editions).
+[Download and install Microsoft Visual Studio 2015](https://www.visualstudio.com/vs-2015-product-editions).
 
 <table>
 <colgroup>
@@ -47,7 +47,7 @@ First, you need Visual Studio.
 </tbody>
 </table>
 
- 
+ 
 
 ## Next steps
 
@@ -62,20 +62,15 @@ If you are creating a new DirectX game, see the following topics.
 -   [Create a simple UWP game with DirectX](tutorial--create-your-first-metro-style-directx-game.md)
 -   [Developing Marble Maze, a Universal Windows Platform game in C++ and DirectX](developing-marble-maze-a-windows-store-game-in-cpp-and-directx.md)
 
-> **Note**  
+> **Note**  
 This article is for Windows 10 developers writing Universal Windows Platform (UWP) apps. If you’re developing for Windows 8.x or Windows Phone 8.x, see the [archived documentation](http://go.microsoft.com/fwlink/p/?linkid=619132).
 
- 
+ 
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=Jun16_HO3-->
 
 

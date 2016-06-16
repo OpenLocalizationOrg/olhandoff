@@ -16,7 +16,7 @@ An audio graph is a set of interconnected audio nodes through which audio data f
 
 Additional scenarios are enabled with the addition of audio effects to the audio graph. Every node in an audio graph can be populated with zero or more audio effects that perform audio processing on the audio passing through the node. There are several built-in effects such as echo, equalizer, limiting, and reverb that can be attached to an audio node with just a few lines of code. You can also create your own custom audio effects that work exactly the same as the built-in effects.
 
-**Note**  
+**Note**  
 The [AudioGraph UWP sample](http://go.microsoft.com/fwlink/?LinkId=619481) implements the code discussed in this overview. You can download the sample to see the code in context or to use as a starting point for your own app.
 
 ## Choosing Windows Runtime AudioGraph or XAudio2
@@ -26,7 +26,7 @@ The Windows Runtime audio graph APIs offer functionality that can also be implem
 -   The Windows Runtime audio graph APIs are significantly easier to use than XAudio2.
 -   The Windows Runtime audio graph APIs can be used from C# - in addition to being supported for C++.
 -   The Windows Runtime audio graph APIs can use audio files, including compressed file formats, directly. XAudio2 only operates on audio buffers and does not provide any file I/O capabilities.
--   The Windows Runtime audio graph APIs can use the low-latency audio pipeline in Windows 10.
+-   The Windows Runtime audio graph APIs can use the low-latency audio pipeline in Windows 10.
 -   The Windows Runtime audio graph APIs supports automatic endpoint switching when default endpoint parameters are used. For example, if the user switches from a device's speaker to a headset, the audio is automatically redirected to the new input.
 
 ## AudioGraph class
@@ -38,9 +38,7 @@ The [**AudioGraph**](https://msdn.microsoft.com/library/windows/apps/dn914176) c
 [!code-cs[InitAudioGraph](./code/AudioGraph/cs/MainPage.xaml.cs#SnippetInitAudioGraph)]
 
 -   All audio node types are created by using the Create\* methods of the **AudioGraph** class.
--   The [**AudioGraph.Start**](https://msdn.microsoft.com/library/windows/apps/dn914244) method causes the audio graph to start processing audio data. The [**AudioGraph.Stop**](https://msdn.microsoft.com/library/windows/apps/dn914245) method stops audio processing. Each node in the graph can be started and stopped independently while the graph is running, but no nodes are active when the graph is stopped. [
-              **ResetAllNodes**
-            ](https://msdn.microsoft.com/library/windows/apps/dn914242) causes all nodes in the graph to discard any data currently in their audio buffers.
+-   The [**AudioGraph.Start**](https://msdn.microsoft.com/library/windows/apps/dn914244) method causes the audio graph to start processing audio data. The [**AudioGraph.Stop**](https://msdn.microsoft.com/library/windows/apps/dn914245) method stops audio processing. Each node in the graph can be started and stopped independently while the graph is running, but no nodes are active when the graph is stopped. [**ResetAllNodes**](https://msdn.microsoft.com/library/windows/apps/dn914242) causes all nodes in the graph to discard any data currently in their audio buffers.
 -   The [**QuantumStarted**](https://msdn.microsoft.com/library/windows/apps/dn914241) event occurs when the graph is starting the processing of a new quantum of audio data. The [**QuantumProcessed**](https://msdn.microsoft.com/library/windows/apps/dn914240) event occurs when the processing of a quantum is completed.
 
 -   The only [**AudioGraphSettings**](https://msdn.microsoft.com/library/windows/apps/dn914185) property that is required is [**AudioRenderCategory**](https://msdn.microsoft.com/library/windows/apps/dn297724). Specifying this value allows the system to optimize the audio pipeline for the specified category.
@@ -198,15 +196,10 @@ The audio graph API allows you to add audio effects to every type of node in a g
 -   You can create your own audio effects that implement [**IAudioEffectDefinition**](https://msdn.microsoft.com/library/windows/apps/dn608044) and apply them to any node in an audio graph.
 -   Every node type exposes a **DisableEffectsByDefinition** method that disables all effects in the node's **EffectDefinitions** list that were added using the specified definition. **EnableEffectsByDefinition** enables the effects with the specified definition.
 
- 
+ 
 
- 
-
-
+ 
 
 
-
-
-<!--HONumber=Jun16_HO3-->
 
 

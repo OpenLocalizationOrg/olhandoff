@@ -94,13 +94,8 @@ namespace BasicCSharpInterstitialUWP
 }
 ```
 
- 
+ 
 ## Related topics
 
 * [Advertising samples on GitHub](http://aka.ms/githubads)
- 
-
-
-<!--HONumber=Jun16_HO3-->
-
-
+ 
