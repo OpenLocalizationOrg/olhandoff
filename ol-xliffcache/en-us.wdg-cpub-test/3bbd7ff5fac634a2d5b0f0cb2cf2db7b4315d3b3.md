@@ -5,6 +5,10 @@ ms.assetid: C89D79C2-B830-493D-B020-F3FF8EB5FFDD
 title: Accessibility
 label: Accessibility
 template: detail.hbs
+translationtype: Human Translation
+ms.sourcegitcommit: 0488d4aeac70461ef53eaaa1d4b81321bf06a151
+ms.openlocfilehash: 3bbd7ff5fac634a2d5b0f0cb2cf2db7b4315d3b3
+
 ---
 
 # Accessibility  
@@ -37,3 +41,9 @@ Accessibility is about building experiences that make your application available
 <span id="related_topics"/>
 ## Related topics  
 * [**Windows.UI.Xaml.Automation**](https://msdn.microsoft.com/library/windows/apps/BR209179)
+
+
+
+<!--HONumber=Jul16_HO3-->
+
+

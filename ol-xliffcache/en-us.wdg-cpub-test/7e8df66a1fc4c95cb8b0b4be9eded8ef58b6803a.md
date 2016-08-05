@@ -3,6 +3,10 @@ author: drewbatgit
 ms.assetid: CB924E17-C726-48E7-A445-364781F4CCA1
 description: This article shows how to use the APIs in the Windows.Media.Audio namespace to create audio graphs for audio routing, mixing, and processing scenarios.
 title: Audio Graphs
+translationtype: Human Translation
+ms.sourcegitcommit: 015108445108522621f90863a4d5a9637f8484dd
+ms.openlocfilehash: 7e8df66a1fc4c95cb8b0b4be9eded8ef58b6803a
+
 ---
 
 # Audio Graphs
@@ -16,7 +20,7 @@ An audio graph is a set of interconnected audio nodes through which audio data f
 
 Additional scenarios are enabled with the addition of audio effects to the audio graph. Every node in an audio graph can be populated with zero or more audio effects that perform audio processing on the audio passing through the node. There are several built-in effects such as echo, equalizer, limiting, and reverb that can be attached to an audio node with just a few lines of code. You can also create your own custom audio effects that work exactly the same as the built-in effects.
 
-**Note**  
+**Note**  
 The [AudioGraph UWP sample](http://go.microsoft.com/fwlink/?LinkId=619481) implements the code discussed in this overview. You can download the sample to see the code in context or to use as a starting point for your own app.
 
 ## Choosing Windows Runtime AudioGraph or XAudio2
@@ -26,7 +30,7 @@ The Windows Runtime audio graph APIs offer functionality that can also be implem
 -   The Windows Runtime audio graph APIs are significantly easier to use than XAudio2.
 -   The Windows Runtime audio graph APIs can be used from C# - in addition to being supported for C++.
 -   The Windows Runtime audio graph APIs can use audio files, including compressed file formats, directly. XAudio2 only operates on audio buffers and does not provide any file I/O capabilities.
--   The Windows Runtime audio graph APIs can use the low-latency audio pipeline in Windows 10.
+-   The Windows Runtime audio graph APIs can use the low-latency audio pipeline in Windows 10.
 -   The Windows Runtime audio graph APIs supports automatic endpoint switching when default endpoint parameters are used. For example, if the user switches from a device's speaker to a headset, the audio is automatically redirected to the new input.
 
 ## AudioGraph class
@@ -196,10 +200,16 @@ The audio graph API allows you to add audio effects to every type of node in a g
 -   You can create your own audio effects that implement [**IAudioEffectDefinition**](https://msdn.microsoft.com/library/windows/apps/dn608044) and apply them to any node in an audio graph.
 -   Every node type exposes a **DisableEffectsByDefinition** method that disables all effects in the node's **EffectDefinitions** list that were added using the specified definition. **EnableEffectsByDefinition** enables the effects with the specified definition.
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+
+<!--HONumber=Jul16_HO3-->
 
 

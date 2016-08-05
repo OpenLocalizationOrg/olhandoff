@@ -3,6 +3,10 @@ author: drewbatgit
 ms.assetid: 9347AD7C-3A90-4073-BFF4-9E8237398343
 description: This article lists the audio and video codec and format support for UWP apps.
 title: Supported codecs
+translationtype: Human Translation
+ms.sourcegitcommit: 015108445108522621f90863a4d5a9637f8484dd
+ms.openlocfilehash: 00fbbdde8d805ce7ae07df1d52dd8171de7d58ab
+
 ---
 
 # Supported codecs
@@ -18,10 +22,10 @@ In the tables below "D" indicates decoder support and "E" indicates encoder supp
 
 The following tables show the audio codec and format support for each device family.
 
-**Note**  
+**Note**  
 -   Where AMR-NB support is indicated, this codec is not supported on Server SKUs.
 
- 
+ 
 
 ### Desktop
 
@@ -332,7 +336,7 @@ The following tables show the audio codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### Mobile
 
@@ -643,7 +647,7 @@ The following tables show the audio codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### IoT Core (x86)
 
@@ -954,7 +958,7 @@ The following tables show the audio codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### IoT Core (ARM)
 
@@ -1265,7 +1269,7 @@ The following tables show the audio codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### XBox
 
@@ -1576,17 +1580,17 @@ The following tables show the audio codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ## Video codec & format support
 
 The following tables show the video codec and format support for each device family.
 
-**Note**  
+**Note**  
 -   Where H.265 support is indicated, it is not necessarily supported by all devices within the device family.
 -   Where MPEG-2/MPEG-1 support is indicated, it is only supported with the installation of the optional Microsoft DVD Universal Windows app.
 
- 
+ 
 
 ### Desktop
 
@@ -1805,7 +1809,7 @@ The following tables show the video codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### Mobile
 
@@ -2024,7 +2028,7 @@ The following tables show the video codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### IoT Core (x86)
 
@@ -2243,7 +2247,7 @@ The following tables show the video codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### IoT (ARM)
 
@@ -2462,7 +2466,7 @@ The following tables show the video codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
 ### XBox
 
@@ -2681,12 +2685,18 @@ The following tables show the video codec and format support for each device fam
 </tbody>
 </table>
 
- 
+ 
 
- 
+ 
 
- 
+ 
 
 
+
+
+
+
+
+<!--HONumber=Jul16_HO3-->
 
 
